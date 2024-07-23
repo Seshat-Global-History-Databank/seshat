@@ -18,6 +18,13 @@
 <body>
     {% block content %}
     {% if content.include_polity_map %}
+        <svg id="svg-filters" style="height: 0; width: 0; position: absolute; visibility: hidden;">
+            <defs>
+                <filter id="shape-blur">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+                </filter>
+            </defs>
+        </svg>
         <div style="display: flex;">
             <div style="width: 20%">
                 <fieldset>
@@ -215,6 +222,13 @@
                                     };
                                 },
                                 onEachFeature: function (feature, layer) {
+                                    layer.on('add', function () {
+                                        // Apply the blur filter to this layer's path elements
+                                        if (layer._path) {
+                                            layer._path.style.filter = 'url(#shape-blur)';
+                                        }
+                                    });
+
                                     var popupContent = `
                                                 <table>
                                                     <tr>
@@ -235,7 +249,9 @@
                                             `;
                                     layer.bindPopup(popupContent);
                                 }
-                            }).addTo(map);
+                            });
+
+                            geoJSONLayer.addTo(map);
 
                             // Plot capital markers       
                             var markers = L.markerClusterGroup({
