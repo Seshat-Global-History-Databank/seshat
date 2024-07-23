@@ -859,27 +859,6 @@
                                             if (shape2.name === shape.name) {                                           
                                                 shapesData[i]['weight'] = newWeight;
                                             }
-                                            // Set the weight for shapes with multiple seshat_ids e.g. personal unions TODO: fixme (this results in lots of things getting their weight updated)
-                                            // if (shape2.seshat_id.includes(shape.seshat_id) && shape2.seshat_id.includes(';') && shape2.seshat_id != shape.seshat_id) {
-                                            //     shapesData[i]['weight'] = newWeight;
-                                            //     // Split shape2.seshat_id into an array of seshat_ids
-                                            //     var seshat_ids = shape2.seshat_id.split(';');
-                                            //     // Update the weight of the corresponding layer
-                                            //     map.eachLayer(function (layer) {
-                                            //         if (layer.feature && layer.feature.properties && seshat_ids.includes(layer.feature.properties.seshat_id)) {
-                                            //             layer.setStyle({
-                                            //                 weight: newWeight
-                                            //             });
-                                            //             j = 0;
-                                            //             shapesData.forEach(function (shape3) {
-                                            //                 if (layer.feature.properties.seshat_id === shape3.seshat_id) {
-                                            //                     shapesData[j]['weight'] = newWeight;
-                                            //                 }
-                                            //                 j++;
-                                            //             });
-                                            //         }
-                                            //     });
-                                            // }
                                             i++;
                                         });
                                         updateLegend();
@@ -895,28 +874,6 @@
                                 });
                             }
                         }).addTo(map);
-
-                        // Ensure that shapes with multiple seshat_ids are behind their components
-                        if (shape['seshat_id'].includes(';')) {
-                            geoJSONLayer.bringToBack();
-                        }
-
-                        // Click outside a shape on the map to clear legend
-                        // REMOVED: This is very slow and I don't think it's necessary, leave it in case we want to re-enable it
-                        // map.on('click', function () {
-                        //     if(variable == 'polity'){
-                        //         // Update weights in shapesData
-                        //         shapesData = shapesData.map(shape => ({...shape, weight: 0}));
-
-                        //         // Reset the weight of all layers when the map is clicked
-                        //         geoJSONLayer.eachLayer(function (layer) {
-                        //             layer.setStyle({
-                        //                 weight: 0
-                        //             });
-                        //         });
-                        //         updateLegend();
-                        //     };
-                        // });
 
                         // Open the corresponding Seshat page in a new browser tab when a shape is double-clicked
                         geoJSONLayer.on('dblclick', function (event) {
