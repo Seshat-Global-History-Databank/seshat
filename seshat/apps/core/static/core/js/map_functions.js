@@ -451,8 +451,14 @@ function populateVariableDropdown(variables) {
 }
 
 function setBlur() {
-    var selectedYear = document.getElementById('dateSlide').value;
-    var stdDeviationValue = selectedYear < 1500 ? 5 : 0;
+    var selectedYear = parseInt(document.getElementById('dateSlide').value);
+    if (selectedYear < 0) {
+        stdDeviationValue = 2;
+    } else if (selectedYear < 1500) {
+        stdDeviationValue = 1;
+    } else {
+        stdDeviationValue = 0;
+    }
     var filter = document.getElementById('shape-blur');
     var feGaussianBlur = filter.querySelector('feGaussianBlur');
     feGaussianBlur.setAttribute('stdDeviation', stdDeviationValue);
