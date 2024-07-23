@@ -146,6 +146,13 @@
     <div class="inner-content">
     {% include "core/partials/_navbar_home.html" %}
     {% block content %}
+    <svg id="svg-filters" style="height: 0; width: 0; position: absolute; visibility: hidden;">
+        <defs>
+            <filter id="shape-blur">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+            </filter>
+        </defs>
+    </svg>
     <div style="display: flex; height: 85vh;">
         <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;">
             <fieldset>
@@ -660,6 +667,13 @@
                                 return style;
                             },
                             onEachFeature: function (feature, layer) {
+                                layer.on('add', function () {
+                                    // Apply the blur filter to this layer's path elements
+                                    if (layer._path) {
+                                        layer._path.style.filter = 'url(#shape-blur)';
+                                    }
+                                });
+
                                 // Add seshat_id to the layer and add a blank string if it doesn't exist
                                 layer.feature.properties.seshat_id = shape.seshat_id || '';
                                 // Add polity name to the layer
