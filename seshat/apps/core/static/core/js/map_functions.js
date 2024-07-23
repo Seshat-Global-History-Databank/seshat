@@ -449,3 +449,11 @@ function populateVariableDropdown(variables) {
         }
     });
 }
+
+function setBlur() {
+    var selectedYear = document.getElementById('dateSlide').value;
+    var stdDeviationValue = selectedYear < 1500 ? 5 : 0;
+    var filter = document.getElementById('shape-blur');
+    var feGaussianBlur = filter.querySelector('feGaussianBlur');
+    feGaussianBlur.setAttribute('stdDeviation', stdDeviationValue);
+}
