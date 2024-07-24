@@ -130,7 +130,7 @@ class PolityForm(forms.ModelForm):
         'end_year': 'End Year',
         'home_seshat_region': 'Home Seshat Region',
         'polity_tag': 'Polity Tag',
-        'shapefile_name': 'Shapefile name',
+        'shapefile_name': 'Shape ID',
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
 
@@ -171,7 +171,7 @@ class PolityUpdateForm(forms.ModelForm):
         'start_year': 'Start Year',
         'end_year': 'End Year',
         'home_seshat_region': 'Home Seshat Region',
-        'shapefile_name': 'Shapefile name',
+        'shapefile_name': 'Shape ID',
         'polity_tag': 'Polity Tag',
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
