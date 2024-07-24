@@ -667,12 +667,6 @@
                                 return style;
                             },
                             onEachFeature: function (feature, layer) {
-                                layer.on('add', function () {
-                                    // Apply the blur filter to this layer's path elements
-                                    if (layer._path) {
-                                        layer._path.style.filter = 'url(#shape-blur)';
-                                    }
-                                });
 
                                 // Add seshat_id to the layer and add a blank string if it doesn't exist
                                 layer.feature.properties.seshat_id = shape.seshat_id || '';
@@ -680,6 +674,14 @@
                                 layer.feature.properties.name = shape.name;
                                 // Add the colour to the layer
                                 layer.feature.properties.colour = shapeColour;
+                                // Add the polity start year to the layer
+                                layer.feature.properties.polity_start_year = shape.polity_start_year;
+
+                                layer.on('add', function () {
+                                    if (layer._path) {
+                                        setBlur(layer);
+                                    };
+                                });
 
                                 var popupContent = `
                                     <table>
@@ -970,8 +972,6 @@
             if (!atLeastOnePolityHighlighted){
                 document.getElementById('popup').innerHTML = '';
             }
-
-            setBlur();
 
         }
 

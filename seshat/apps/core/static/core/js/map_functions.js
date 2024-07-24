@@ -467,11 +467,11 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function setBlur() {
-    var selectedYear = parseInt(document.getElementById('dateSlide').value);
-    if (selectedYear < 0) {
+function setBlur(layer) {
+    var polityYear = layer.feature.properties.polity_start_year;
+    if (polityYear < 0) {
         stdDeviationValue = 2;
-    } else if (selectedYear < 1500) {
+    } else if (polityYear < 1500) {
         stdDeviationValue = 1;
     } else {
         stdDeviationValue = 0;
@@ -479,4 +479,6 @@ function setBlur() {
     var filter = document.getElementById('shape-blur');
     var feGaussianBlur = filter.querySelector('feGaussianBlur');
     feGaussianBlur.setAttribute('stdDeviation', stdDeviationValue);
+    // Apply the blur filter to this layer's path elements
+    layer._path.style.filter = 'url(#shape-blur)';
 }
