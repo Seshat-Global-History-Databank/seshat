@@ -1121,7 +1121,7 @@ class Religion(models.Model):
 
 # Shapefile models
 
-class VideoShapefile(models.Model):
+class Cliopatria(models.Model):
     """
     Model representing Cliopatria polity borders dataset.
     """

@@ -3,7 +3,7 @@ import json
 from django.contrib.gis.geos import GEOSGeometry, MultiPolygon
 from django.core.management.base import BaseCommand
 from django.db import connection
-from seshat.apps.core.models import VideoShapefile
+from seshat.apps.core.models import Cliopatria
 
 
 class Command(BaseCommand):
@@ -30,23 +30,23 @@ class Command(BaseCommand):
             cliopatria_data = json.load(f)
         self.stdout.write(self.style.SUCCESS(f"Successfully loaded Cliopatria shape dataset from {cliopatria_geojson_path}"))
 
-        # Clear the VideoShapefile table
-        self.stdout.write(self.style.SUCCESS('Clearing VideoShapefile table...'))
-        VideoShapefile.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS('VideoShapefile table cleared'))
+        # Clear the Cliopatria table
+        self.stdout.write(self.style.SUCCESS('Clearing Cliopatria table...'))
+        Cliopatria.objects.all().delete()
+        self.stdout.write(self.style.SUCCESS('Cliopatria table cleared'))
 
-        # Iterate through the data and create VideoShapefile instances
+        # Iterate through the data and create Cliopatria instances
         self.stdout.write(self.style.SUCCESS('Adding data to the database...'))
         for feature in cliopatria_data['features']:
             properties = feature['properties']
-            self.stdout.write(self.style.SUCCESS(f"Creating VideoShapefile instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
+            self.stdout.write(self.style.SUCCESS(f"Creating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
             
             # Save geom and convert Polygon to MultiPolygon if necessary
             geom = GEOSGeometry(json.dumps(feature['geometry']))
             if geom.geom_type == 'Polygon':
                 geom = MultiPolygon(geom)
 
-            VideoShapefile.objects.create(
+            Cliopatria.objects.create(
                 geom=geom,
                 name=properties['DisplayName'],
                 wikipedia_name=properties['Wikipedia'],
@@ -72,14 +72,14 @@ class Command(BaseCommand):
         ## Use this code if you want to simplify the geometries
         # with connection.cursor() as cursor:
         #     cursor.execute("""
-        #         UPDATE core_videoshapefile 
+        #         UPDATE core_cliopatria 
         #         SET simplified_geom = ST_Simplify(geom, 0.07);
         #     """)
 
         ## Use this code if you don't need to simplify the geometries
         with connection.cursor() as cursor:
             cursor.execute("""
-                UPDATE core_videoshapefile
+                UPDATE core_cliopatria
                 SET simplified_geom = geom;
             """)
         self.stdout.write(self.style.SUCCESS('Simplified geometries added'))

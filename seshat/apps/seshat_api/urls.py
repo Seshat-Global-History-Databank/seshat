@@ -46,7 +46,7 @@ from .views.core import (
     ScpThroughCtnViewSet,
     SeshatCommonViewSet,
     ReligionViewSet,
-    VideoShapefileViewSet,
+    CliopatriaViewSet,
     GADMShapefileViewSet,
     GADMCountriesViewSet,
     GADMProvincesViewSet,
@@ -97,7 +97,7 @@ router.register(
 router.register(r"core/religions", ReligionViewSet, basename="religion")
 router.register(
     r"core/video-shapefiles",
-    VideoShapefileViewSet,
+    CliopatriaViewSet,
     basename="video-shapefile",
 )
 router.register(

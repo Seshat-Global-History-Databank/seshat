@@ -28,7 +28,7 @@ from ...core.models import (
     ScpThroughCtn,
     SeshatCommon,
     Religion,
-    VideoShapefile,
+    Cliopatria,
     GADMShapefile,
     GADMCountries,
     GADMProvinces,
@@ -245,14 +245,14 @@ class ReligionViewSet(
     pagination_class = SeshatAPIPagination
 
 
-class VideoShapefileViewSet(
+class CliopatriaViewSet(
     MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
 ):
     """
     A viewset for viewing and editing Video Shapefiles.
     """
 
-    model = VideoShapefile
+    model = Cliopatria
     pagination_class = SeshatAPIPagination
 
 

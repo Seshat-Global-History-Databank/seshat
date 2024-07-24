@@ -35,7 +35,7 @@ Cliopatria shape dataset
       $ python cliopatria/convert_data.py /path/to/cliopatria.geojson
 
    Note: this will create a new file with the same name but with the suffix "_seshat_processed.geojson"
-3. Populate ``core_videoshapefile`` table using the following command:
+3. Populate ``core_cliopatria`` table using the following command:
 
    .. code-block:: bash
 

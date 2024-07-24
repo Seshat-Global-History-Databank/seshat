@@ -65,7 +65,7 @@ from ..general.models import Polity_research_assistant, Polity_duration, Polity_
 
 from ..crisisdb.models import Power_transition
 
-from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, VideoShapefile, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
+from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
@@ -3809,7 +3809,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
     Only one of displayed_year or seshat_id should be set; not both.
 
     Note:
-        seshat_id in VideoShapefile is new_name in Polity.
+        seshat_id in Cliopatria is new_name in Polity.
 
     Args:
         displayed_year (str): The year to display the polities for. "all" will return all polities. Any given year will return polities that were active in that year.
@@ -3823,12 +3823,12 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
         raise ValueError("Only one of displayed_year or seshat_id should be set not both.")
 
     if displayed_year != "all":
-        rows = VideoShapefile.objects.filter(polity_start_year__lte=displayed_year, polity_end_year__gte=displayed_year)
+        rows = Cliopatria.objects.filter(polity_start_year__lte=displayed_year, polity_end_year__gte=displayed_year)
     elif seshat_id != "all":
         # Note: this query assumes that some polities have multiple seshat_ids separated by a semicolon, but none are included inside a different longer seshat_id
-        rows = VideoShapefile.objects.filter(seshat_id__contains=seshat_id)
+        rows = Cliopatria.objects.filter(seshat_id__contains=seshat_id)
     else:
-        rows = VideoShapefile.objects.all()
+        rows = Cliopatria.objects.all()
 
     # Convert 'geom' to GeoJSON in the database query
     rows = rows.annotate(geom_json=AsGeoJSON('geom'))
@@ -3845,7 +3845,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
     seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in polity_info}
 
     if 'migrate' not in sys.argv:
-        result = VideoShapefile.objects.aggregate(
+        result = Cliopatria.objects.aggregate(
             min_year=Min('polity_start_year'), 
             max_year=Max('polity_end_year')
         )
@@ -4135,12 +4135,12 @@ def random_polity_shape(from_selection=True):
         ]
         # Select a random polity from the list
         seshat_id = random.choice(selected_polities)
-        shape = VideoShapefile.objects.filter(seshat_id=seshat_id).first()
+        shape = Cliopatria.objects.filter(seshat_id=seshat_id).first()
     else:
-        max_id = VideoShapefile.objects.filter(seshat_id__isnull=False).aggregate(max_id=Max("id"))['max_id']
+        max_id = Cliopatria.objects.filter(seshat_id__isnull=False).aggregate(max_id=Max("id"))['max_id']
         while True:
             pk = random.randint(1, max_id)
-            shape = VideoShapefile.objects.filter(seshat_id__isnull=False, id=pk).first()
+            shape = Cliopatria.objects.filter(seshat_id__isnull=False, id=pk).first()
             if shape:
                 if shape.seshat_id and shape.area > 600000:  # Big empires only
                     break
