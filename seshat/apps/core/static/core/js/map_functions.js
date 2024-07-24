@@ -251,6 +251,10 @@ function updateLegend() {
             var legendTitle = document.createElement('h3');
             legendTitle.textContent = 'Selected Polities';
             legendDiv.appendChild(legendTitle);
+
+            // Create a container for polity items
+            var polityContainer = document.createElement('div');
+
             for (var i = 0; i < addedPolities.length; i++) {
                 var legendItem = document.createElement('p');
                 var colorBox = document.createElement('span');
@@ -262,17 +266,20 @@ function updateLegend() {
                 colorBox.style.marginRight = '10px';
                 legendItem.appendChild(colorBox);
                 legendItem.appendChild(document.createTextNode(addedPolities[i].polity));
-                legendDiv.appendChild(legendItem);
+                polityContainer.appendChild(legendItem); // Append to the container
             }
 
-            // Make the legend scrollable if there are more than 7 polities
+            // Append the container to the legendDiv
+            legendDiv.appendChild(polityContainer);
+
+            // Make the polityContainer scrollable if there are more than 7 polities
             if (addedPolities.length > 7) {
-                legendDiv.style.maxHeight = '420px'; // Adjust based on actual item height
-                legendDiv.style.overflowY = 'scroll';
+                polityContainer.style.maxHeight = '420px'; // Adjust based on actual item height
+                polityContainer.style.overflowY = 'scroll';
             } else {
                 // Reset to default if fewer than 7 polities to ensure it behaves correctly on subsequent updates
-                legendDiv.style.maxHeight = '';
-                legendDiv.style.overflowY = '';
+                polityContainer.style.maxHeight = '';
+                polityContainer.style.overflowY = '';
             }
         }
 
