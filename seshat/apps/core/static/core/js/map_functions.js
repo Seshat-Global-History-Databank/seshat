@@ -469,6 +469,7 @@ function populateVariableDropdown(variables) {
 
 function setBlur(layer) {
     var polityYear = layer.feature.properties.polity_start_year;
+    var stdDeviationValue;
     if (polityYear < 0) {
         stdDeviationValue = 2;
     } else if (polityYear < 1500) {
@@ -476,9 +477,29 @@ function setBlur(layer) {
     } else {
         stdDeviationValue = 0;
     }
-    var filter = document.getElementById('shape-blur');
-    var feGaussianBlur = filter.querySelector('feGaussianBlur');
-    feGaussianBlur.setAttribute('stdDeviation', stdDeviationValue);
-    // Apply the blur filter to this layer's path elements
-    layer._path.style.filter = 'url(#shape-blur)';
+
+    // Generate a unique filter ID based on the stdDeviationValue or another unique property
+    var filterId = 'shape-blur-' + stdDeviationValue;
+
+    // Check if the filter already exists, if not, create it
+    if (!document.getElementById(filterId)) {
+        var svgDefs = document.querySelector('svg defs') || createSvgDefs();
+        var filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+        filter.setAttribute('id', filterId);
+        var feGaussianBlur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
+        feGaussianBlur.setAttribute('stdDeviation', stdDeviationValue);
+        filter.appendChild(feGaussianBlur);
+        svgDefs.appendChild(filter);
+    }
+
+    // Apply the unique filter to this layer's path elements
+    layer._path.style.filter = 'url(#' + filterId + ')';
+}
+
+// Helper function to create SVG defs if it doesn't exist
+function createSvgDefs() {
+    var svgElement = document.querySelector('svg');
+    var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    svgElement.appendChild(defs);
+    return defs;
 }

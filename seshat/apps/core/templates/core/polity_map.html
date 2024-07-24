@@ -18,13 +18,6 @@
 <body>
     {% block content %}
     {% if content.include_polity_map %}
-        <svg id="svg-filters" style="height: 0; width: 0; position: absolute; visibility: hidden;">
-            <defs>
-                <filter id="shape-blur">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
-                </filter>
-            </defs>
-        </svg>
         <div style="display: flex;">
             <div style="width: 20%">
                 <fieldset>

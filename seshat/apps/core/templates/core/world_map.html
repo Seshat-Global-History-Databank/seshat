@@ -146,13 +146,6 @@
     <div class="inner-content">
     {% include "core/partials/_navbar_home.html" %}
     {% block content %}
-    <svg id="svg-filters" style="height: 0; width: 0; position: absolute; visibility: hidden;">
-        <defs>
-            <filter id="shape-blur">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
-            </filter>
-        </defs>
-    </svg>
     <div style="display: flex; height: 85vh;">
         <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;">
             <fieldset>
