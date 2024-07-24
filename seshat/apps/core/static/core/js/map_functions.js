@@ -246,7 +246,7 @@ function updateLegend() {
             return a.polity.localeCompare(b.polity);
         });
 
-        // Add a legend for highlighted polities
+        // After adding polities to the legend
         if (addedPolities.length > 0) {
             var legendTitle = document.createElement('h3');
             legendTitle.textContent = 'Selected Polities';
@@ -264,7 +264,17 @@ function updateLegend() {
                 legendItem.appendChild(document.createTextNode(addedPolities[i].polity));
                 legendDiv.appendChild(legendItem);
             }
-        };
+
+            // Make the legend scrollable if there are more than 7 polities
+            if (addedPolities.length > 7) {
+                legendDiv.style.maxHeight = '420px'; // Adjust based on actual item height
+                legendDiv.style.overflowY = 'scroll';
+            } else {
+                // Reset to default if fewer than 7 polities to ensure it behaves correctly on subsequent updates
+                legendDiv.style.maxHeight = '';
+                legendDiv.style.overflowY = '';
+            }
+        }
 
     } else if (variable in categorical_variables) {
         
