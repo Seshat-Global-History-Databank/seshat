@@ -204,6 +204,18 @@
                                 displayend_year = shape.polity_end_year + ' CE';
                             }
 
+                            if (parseInt(shape.start_year) < 0) {
+                                shapestart_year = Math.abs(parseInt(shape.start_year)) + ' BCE';
+                            } else {
+                                shapestart_year = shape.start_year + ' CE';
+                            }
+
+                            if (parseInt(shape.end_year) < 0) {
+                                shapeend_year = Math.abs(parseInt(shape.end_year)) + ' BCE';
+                            } else {
+                                shapeend_year = shape.end_year + ' CE';
+                            }
+
                             // Add shape
                             var geoJSONLayer = L.geoJSON(JSON.parse(shape.geom_json), {
                                 style: function (feature) {
@@ -230,8 +242,6 @@
                                                         <th>${shape.name}</th>
                                                         <th></th>
                                                     </tr>
-                                            `;
-                                    popupContent = popupContent + `
                                                     <tr>
                                                         <td>Duration</td>
                                                         <td>${displaystart_year} to ${displayend_year}</td>
@@ -239,6 +249,10 @@
                                                     <tr>
                                                         <td>Area (est.)</td>
                                                         <td>${formattedArea} Km<sup>2</sup></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Shape ID: ${parseInt(shape.id).toLocaleString()}</td>
+                                                        <td>${shapestart_year} to ${shapeend_year}</td>
                                                     </tr>
                                                 </table>
                                             `;
