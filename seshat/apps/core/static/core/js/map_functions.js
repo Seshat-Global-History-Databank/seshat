@@ -477,8 +477,7 @@ function setBlur(layer) {
     highBlurValue = 3;
     lowBlurValue = 1.5;
     noBlurValue = 0;
-    console.log(confidence);
-    if (typeof confidence === 'undefined') {
+    if (confidence !== 'None') {
         if (confidence == 1){
             stdDeviationValue = highBlurValue;
         } else if (confidence == 2) {
