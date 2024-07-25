@@ -479,28 +479,28 @@ function blurValue(layer) {
     // Check if confidence is not recorded in the db, blur based on polityYear
     if (confidence === 'None' || confidence === null || typeof confidence === 'undefined') {
         if (polityYear < 0) {
-            confidence = 1;
+            confidenceScore = 1;
         } else if (polityYear < 1500) {
-            confidence = 2;
+            confidenceScore = 2;
         } else {
-            confidence = 3;
+            confidenceScore = 3;
         }
     } else {
         // Convert confidence to a number if it's not 'None'
-        confidence = Number(confidence);
+        confidenceScore = Number(confidence);
     }
 
     // Determine the blur based on the numeric confidence value
-    if (confidence === 1) {
+    if (confidenceScore === 1) {
         stdDeviationValue = highBlurValue;
-    } else if (confidence === 2) {
+    } else if (confidenceScore === 2) {
         stdDeviationValue = lowBlurValue;
-    } else if (confidence === 3) {
+    } else if (confidenceScore === 3) {
         stdDeviationValue = noBlurValue;
     }
 
-    // Return both stdDeviationValue and confidence as an object
-    return { stdDeviationValue, confidence };
+    // Return both stdDeviationValue and confidenceScore as an object
+    return { stdDeviationValue, confidenceScore };
 }
 
 function setBlur(layer) {
@@ -523,6 +523,25 @@ function setBlur(layer) {
 
     // Apply the unique filter to this layer's path elements
     layer._path.style.filter = 'url(#' + filterId + ')';
+}
+
+function formattedConfidence(layer) {
+    var confidence = layer.feature.properties.confidence;
+    var { stdDeviationValue, confidenceScore } = blurValue(layer);
+
+    if (confidenceScore === 1) {
+        var precision = 'Approximate';
+    } else if (confidenceScore === 2) {
+        var precision = 'Moderately precise';
+    } else if (confidenceScore === 3) {
+        var precision = 'Determined by international law';
+    };
+
+    if (confidence === 'None' || confidence === null || typeof confidence === 'undefined') {
+        return 'Uncoded (defaults to ' + confidenceScore + ': ' + precision + ')';
+    } else {
+        return confidenceScore + ': ' + precision;
+    }
 }
 
 // Helper function to create SVG defs if it doesn't exist
