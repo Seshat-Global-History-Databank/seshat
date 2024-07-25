@@ -3833,7 +3833,7 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
     # Convert 'geom' to GeoJSON in the database query
     rows = rows.annotate(geom_json=AsGeoJSON('geom'))
     # Filter the rows to return
-    rows = rows.values('id', 'seshat_id', 'name', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'geom_json', 'components', 'member_of')
+    rows = rows.values('id', 'seshat_id', 'name', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'geom_json', 'components', 'member_of', 'confidence')
     shapes = list(rows)
 
     seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id']]
