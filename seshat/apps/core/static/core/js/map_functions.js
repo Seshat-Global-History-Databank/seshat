@@ -467,33 +467,45 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function setBlur(layer) {
+function blurValue(layer) {
     var polityYear = layer.feature.properties.polity_start_year;
     var confidence = layer.feature.properties.confidence;
     var stdDeviationValue;
 
-    // If the shape has a confidence score, use that to determine the blur
-    // Otherwise, use the polity year to determine the blur
-    highBlurValue = 3;
-    lowBlurValue = 1.5;
-    noBlurValue = 0;
-    if (confidence !== 'None') {
-        if (confidence == 1){
-            stdDeviationValue = highBlurValue;
-        } else if (confidence == 2) {
-            stdDeviationValue = lowBlurValue;
-        } else if (confidence == 3) {
-            stdDeviationValue = noBlurValue;
+    var highBlurValue = 3;
+    var lowBlurValue = 1.5;
+    var noBlurValue = 0;
+
+    // Check if confidence is 'None' and determine the blur based on polityYear
+    if (confidence === 'None') {
+        if (polityYear < 0) {
+            confidence = 1;
+        } else if (polityYear < 1500) {
+            confidence = 2;
+        } else {
+            confidence = 3;
         }
     } else {
-        if (polityYear < 0) {
-            stdDeviationValue = highBlurValue;
-        } else if (polityYear < 1500) {
-            stdDeviationValue = lowBlurValue;
-        } else {
-            stdDeviationValue = noBlurValue;
-        }
+        // Convert confidence to a number if it's not 'None'
+        confidence = Number(confidence);
     }
+
+    // Determine the blur based on the numeric confidence value
+    if (confidence === 1) {
+        stdDeviationValue = highBlurValue;
+    } else if (confidence === 2) {
+        stdDeviationValue = lowBlurValue;
+    } else if (confidence === 3) {
+        stdDeviationValue = noBlurValue;
+    }
+    console.log(stdDeviationValue, confidence);
+    // Return both stdDeviationValue and confidence as an object
+    return { stdDeviationValue, confidence };
+}
+
+function setBlur(layer) {
+    // Use destructuring to capture the returned values
+    var { stdDeviationValue, confidence } = blurValue(layer);
 
     // Generate a unique filter ID based on the stdDeviationValue or another unique property
     var filterId = 'shape-blur-' + stdDeviationValue;
