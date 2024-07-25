@@ -82,10 +82,15 @@
                     </fieldset>
                 </div>
             </div>
-        </div><br>
-        <div id="confidence-scores" style="padding: 5vh"></div>
+        </div>
+        {% if user.is_authenticated %}
+            <br><div id="confidence-scores" style="padding: 5vh"></div>
+        {% endif %}
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
+
+            // Set a JavaScript variable based on the Django template condition
+            var isUserAuthenticated = {% if user.is_authenticated %}true{% else %} false{% endif %};
 
             window.onload = setSliderTicks({{ content.tick_years }});
 
@@ -111,7 +116,9 @@
                 confidenceScoreElement.textContent = "Confidence level for Shape ID: " + parseInt(shape.id).toLocaleString()
                                                      + " (" + shape.start_year + " to " + shape.end_year + ")"
                                                      + " = " + shape.formattedConfidence;
-                document.getElementById("confidence-scores").appendChild(confidenceScoreElement);
+                if (isUserAuthenticated) {
+                    document.getElementById("confidence-scores").appendChild(confidenceScoreElement);
+                }
             });
 
             allPolitiesLoaded = true;
