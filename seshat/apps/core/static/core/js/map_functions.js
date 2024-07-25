@@ -476,8 +476,8 @@ function blurValue(layer) {
     var lowBlurValue = 1.5;
     var noBlurValue = 0;
 
-    // Check if confidence is 'None' and determine the blur based on polityYear
-    if (confidence === 'None') {
+    // Check if confidence is not recorded in the db, blur based on polityYear
+    if (confidence === 'None' || confidence === null || typeof confidence === 'undefined') {
         if (polityYear < 0) {
             confidence = 1;
         } else if (polityYear < 1500) {
@@ -498,7 +498,7 @@ function blurValue(layer) {
     } else if (confidence === 3) {
         stdDeviationValue = noBlurValue;
     }
-    console.log(stdDeviationValue, confidence);
+
     // Return both stdDeviationValue and confidence as an object
     return { stdDeviationValue, confidence };
 }
