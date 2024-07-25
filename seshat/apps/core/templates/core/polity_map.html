@@ -232,7 +232,7 @@
                                     // Add the confidence to the layer
                                     layer.feature.properties.confidence = shape.confidence;
                                     // Get the confidence to display in the popup
-                                    var formattedConfidenceString = formattedConfidence(layer);
+                                    var formattedConfidenceString = formattedConfidence(shape.polity_start_year, shape.confidence);
 
                                     layer.on('add', function () {
                                         if (layer._path) {

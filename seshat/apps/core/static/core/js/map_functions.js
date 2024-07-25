@@ -467,9 +467,7 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function blurValue(layer) {
-    var polityYear = layer.feature.properties.polity_start_year;
-    var confidence = layer.feature.properties.confidence;
+function blurValue(polityYear, confidence) {
     var stdDeviationValue;
 
     var highBlurValue = 3;
@@ -504,8 +502,7 @@ function blurValue(layer) {
 }
 
 function setBlur(layer) {
-    // Use destructuring to capture the returned values
-    var { stdDeviationValue, confidence } = blurValue(layer);
+    var { stdDeviationValue, confidenceScore } = blurValue(layer.feature.properties.polity_start_year, layer.feature.properties.confidence);
 
     // Generate a unique filter ID based on the stdDeviationValue or another unique property
     var filterId = 'shape-blur-' + stdDeviationValue;
@@ -525,9 +522,8 @@ function setBlur(layer) {
     layer._path.style.filter = 'url(#' + filterId + ')';
 }
 
-function formattedConfidence(layer) {
-    var confidence = layer.feature.properties.confidence;
-    var { stdDeviationValue, confidenceScore } = blurValue(layer);
+function formattedConfidence(polityYear, confidence) {
+    var { stdDeviationValue, confidenceScore } = blurValue(polityYear, confidence);
 
     if (confidenceScore === 1) {
         var precision = 'Approximate';
