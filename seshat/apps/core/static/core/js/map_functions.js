@@ -469,13 +469,31 @@ function populateVariableDropdown(variables) {
 
 function setBlur(layer) {
     var polityYear = layer.feature.properties.polity_start_year;
+    var confidence = layer.feature.properties.confidence;
     var stdDeviationValue;
-    if (polityYear < 0) {
-        stdDeviationValue = 3;
-    } else if (polityYear < 1500) {
-        stdDeviationValue = 1.5;
+
+    // If the shape has a confidence score, use that to determine the blur
+    // Otherwise, use the polity year to determine the blur
+    highBlurValue = 3;
+    lowBlurValue = 1.5;
+    noBlurValue = 0;
+    console.log(confidence);
+    if (typeof confidence === 'undefined') {
+        if (confidence == 1){
+            stdDeviationValue = highBlurValue;
+        } else if (confidence == 2) {
+            stdDeviationValue = lowBlurValue;
+        } else if (confidence == 3) {
+            stdDeviationValue = noBlurValue;
+        }
     } else {
-        stdDeviationValue = 0;
+        if (polityYear < 0) {
+            stdDeviationValue = highBlurValue;
+        } else if (polityYear < 1500) {
+            stdDeviationValue = lowBlurValue;
+        } else {
+            stdDeviationValue = noBlurValue;
+        }
     }
 
     // Generate a unique filter ID based on the stdDeviationValue or another unique property

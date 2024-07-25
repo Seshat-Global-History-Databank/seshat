@@ -669,6 +669,8 @@
                                 layer.feature.properties.colour = shapeColour;
                                 // Add the polity start year to the layer
                                 layer.feature.properties.polity_start_year = shape.polity_start_year;
+                                // Add the confidence to the layer
+                                layer.feature.properties.confidence = shape.confidence;
 
                                 layer.on('add', function () {
                                     if (layer._path) {
