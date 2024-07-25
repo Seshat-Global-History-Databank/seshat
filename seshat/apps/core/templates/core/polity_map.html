@@ -82,8 +82,8 @@
                     </fieldset>
                 </div>
             </div>
-            <div id="confidence-scores"></div>
-        </div>
+        </div><br>
+        <div id="confidence-scores" style="padding: 5vh"></div>
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
 
@@ -107,6 +107,11 @@
             // Iterate through the polityMapShapesData and get confidence scores
             polityMapShapesData.forEach(function (shape) {
                 shape.formattedConfidence = formattedConfidence(shape.polity_start_year, shape.confidence);
+                var confidenceScoreElement = document.createElement("p");
+                confidenceScoreElement.textContent = "Confidence level for Shape ID: " + parseInt(shape.id).toLocaleString()
+                                                     + " (" + shape.start_year + " to " + shape.end_year + ")"
+                                                     + " = " + shape.formattedConfidence;
+                document.getElementById("confidence-scores").appendChild(confidenceScoreElement);
             });
 
             allPolitiesLoaded = true;
