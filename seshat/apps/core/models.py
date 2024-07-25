@@ -1139,6 +1139,12 @@ class Cliopatria(models.Model):
     colour=models.CharField(max_length=7)
     components=models.CharField(max_length=500, null=True)
     member_of=models.CharField(max_length=500, null=True)
+    CONFIDENCE_CHOICES = [
+        (1, 'Approximate'),
+        (2, 'Moderate precision'),
+        (3, 'Determined by international law'),
+    ]
+    confidence = models.IntegerField(choices=CONFIDENCE_CHOICES, null=True)
 
     def __str__(self):
         return "Name: %s" % self.name
