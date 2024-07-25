@@ -471,9 +471,9 @@ function setBlur(layer) {
     var polityYear = layer.feature.properties.polity_start_year;
     var stdDeviationValue;
     if (polityYear < 0) {
-        stdDeviationValue = 2;
+        stdDeviationValue = 3;
     } else if (polityYear < 1500) {
-        stdDeviationValue = 1;
+        stdDeviationValue = 1.5;
     } else {
         stdDeviationValue = 0;
     }
