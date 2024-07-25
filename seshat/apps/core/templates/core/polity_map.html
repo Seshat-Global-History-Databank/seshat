@@ -82,6 +82,7 @@
                     </fieldset>
                 </div>
             </div>
+            <div id="confidence-scores"></div>
         </div>
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
@@ -102,6 +103,11 @@
                     },
                 {% endfor %}
             ];
+
+            // Iterate through the polityMapShapesData and get confidence scores
+            polityMapShapesData.forEach(function (shape) {
+                shape.formattedConfidence = formattedConfidence(shape.polity_start_year, shape.confidence);
+            });
 
             allPolitiesLoaded = true;
 
@@ -231,8 +237,6 @@
                                     layer.feature.properties.polity_start_year = shape.polity_start_year;
                                     // Add the confidence to the layer
                                     layer.feature.properties.confidence = shape.confidence;
-                                    // Get the confidence to display in the popup
-                                    var formattedConfidenceString = formattedConfidence(shape.polity_start_year, shape.confidence);
 
                                     layer.on('add', function () {
                                         if (layer._path) {
@@ -260,7 +264,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Confidence</td>
-                                                        <td>${formattedConfidenceString}</td>
+                                                        <td>${shape.formattedConfidence}</td>
                                                     </tr>
                                                 </table>
                                             `;
