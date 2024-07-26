@@ -3,12 +3,38 @@ from rest_framework import viewsets
 from ._permissions import ONLY_ADMIN_PERMISSIONS
 
 from ._mixins import (
+    FilterBackends,
     MixinSeshatAPIAuth,
     MixinSeshatAPISerializer,
     SeshatAPIPagination,
+    SeshatAPIRestrictedPagination
+)
+from ..filters.core import (
+    PrivateCommentFilter,
+    PrivateCommentsPartFilter,
+    MacroRegionFilter,
+    SeshatRegionFilter,
+    NGAFilter,
+    PolityFilter,
+    CapitalFilter,
+    NGAPolityRelationsFilter,
+    CountryFilter,
+    SectionFilter,
+    SubsectionFilter,
+    VariableHierarchyFilter,
+    ReferenceFilter,
+    CitationFilter,
+    SeshatCommentFilter,
+    SeshatCommentPartFilter,
+    ScpThroughCtnFilter,
+    ReligionFilter,
+    VideoShapefileFilter,
+    GADMShapefileFilter,
+    GADMCountriesFilter,
+    GADMProvincesFilter,
 )
 
-from ...core.models import (
+from ..models import (
     SeshatPrivateComment,
     SeshatPrivateCommentPart,
     Macro_region,
@@ -26,7 +52,6 @@ from ...core.models import (
     SeshatComment,
     SeshatCommentPart,
     ScpThroughCtn,
-    SeshatCommon,
     Religion,
     Cliopatria,
     GADMShapefile,
@@ -36,7 +61,10 @@ from ...core.models import (
 
 
 class PrivateCommentsViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Private Comments.
@@ -45,10 +73,14 @@ class PrivateCommentsViewSet(
     model = SeshatPrivateComment
     pagination_class = SeshatAPIPagination
     permissions_dict = ONLY_ADMIN_PERMISSIONS
+    filterset_class = PrivateCommentFilter
 
 
 class PrivateCommentsPartsViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Private Comment Parts.
@@ -57,10 +89,14 @@ class PrivateCommentsPartsViewSet(
     model = SeshatPrivateCommentPart
     pagination_class = SeshatAPIPagination
     permissions_dict = ONLY_ADMIN_PERMISSIONS
+    filterset_class = PrivateCommentsPartFilter
 
 
 class MacroRegionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Macro Regions.
@@ -68,10 +104,14 @@ class MacroRegionViewSet(
 
     model = Macro_region
     pagination_class = SeshatAPIPagination
+    filterset_class = MacroRegionFilter
 
 
 class RegionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Regions.
@@ -79,19 +119,29 @@ class RegionViewSet(
 
     model = Seshat_region
     pagination_class = SeshatAPIPagination
+    filterset_class = SeshatRegionFilter
 
 
-class NGAViewSet(MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet):
+class NGAViewSet(
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
+):
     """
     A viewset for viewing and editing NGAs, Natural Geographic Areas.
     """
 
     model = Nga
     pagination_class = SeshatAPIPagination
+    filterset_class = NGAFilter
 
 
 class PolityViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polities.
@@ -99,10 +149,15 @@ class PolityViewSet(
 
     model = Polity
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityFilter
+    search_fields = ["@long_name", "@new_name"]
 
 
 class CapitalViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Capitals.
@@ -110,10 +165,14 @@ class CapitalViewSet(
 
     model = Capital
     pagination_class = SeshatAPIPagination
+    filterset_class = CapitalFilter
 
 
 class NGAPolityRelationsViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing NGA Polity Relations.
@@ -121,10 +180,14 @@ class NGAPolityRelationsViewSet(
 
     model = Ngapolityrel
     pagination_class = SeshatAPIPagination
+    filterset_class = NGAPolityRelationsFilter
 
 
 class CountryViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Countries.
@@ -132,10 +195,14 @@ class CountryViewSet(
 
     model = Country
     pagination_class = SeshatAPIPagination
+    filterset_class = CountryFilter
 
 
 class SectionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Sections.
@@ -143,10 +210,14 @@ class SectionViewSet(
 
     model = Section
     pagination_class = SeshatAPIPagination
+    filterset_class = SectionFilter
 
 
 class SubsectionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Subsections.
@@ -154,10 +225,14 @@ class SubsectionViewSet(
 
     model = Subsection
     pagination_class = SeshatAPIPagination
+    filterset_class = SubsectionFilter
 
 
 class VariableHierarchyViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Variable Hierarchies.
@@ -165,10 +240,14 @@ class VariableHierarchyViewSet(
 
     model = Variablehierarchy
     pagination_class = SeshatAPIPagination
+    filterset_class = VariableHierarchyFilter
 
 
 class ReferenceViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing References.
@@ -176,10 +255,14 @@ class ReferenceViewSet(
 
     model = Reference
     pagination_class = SeshatAPIPagination
+    filterset_class = ReferenceFilter
 
 
 class CitationViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Citations.
@@ -187,10 +270,14 @@ class CitationViewSet(
 
     model = Citation
     pagination_class = SeshatAPIPagination
+    filterset_class = CitationFilter
 
 
 class SeshatCommentViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comments.
@@ -198,10 +285,15 @@ class SeshatCommentViewSet(
 
     model = SeshatComment
     pagination_class = SeshatAPIPagination
+    permissions_dict = ONLY_ADMIN_PERMISSIONS
+    filterset_class = SeshatCommentFilter
 
 
 class SeshatCommentPartViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comment Parts.
@@ -209,10 +301,15 @@ class SeshatCommentPartViewSet(
 
     model = SeshatCommentPart
     pagination_class = SeshatAPIPagination
+    permissions_dict = ONLY_ADMIN_PERMISSIONS
+    filterset_class = SeshatCommentPartFilter
 
 
 class ScpThroughCtnViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Seshat Comment Parts' relations to
@@ -221,21 +318,15 @@ class ScpThroughCtnViewSet(
 
     model = ScpThroughCtn
     pagination_class = SeshatAPIPagination
-
-
-class SeshatCommonViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
-):
-    """
-    A viewset for viewing and editing Seshat Common.
-    """
-
-    model = SeshatCommon
-    pagination_class = SeshatAPIPagination
+    permissions_dict = ONLY_ADMIN_PERMISSIONS
+    filterset_class = ScpThroughCtnFilter
 
 
 class ReligionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Religions.
@@ -243,47 +334,66 @@ class ReligionViewSet(
 
     model = Religion
     pagination_class = SeshatAPIPagination
+    filterset_class = ReligionFilter
 
 
 class CliopatriaViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Video Shapefiles.
     """
 
     model = Cliopatria
-    pagination_class = SeshatAPIPagination
+    pagination_class = SeshatAPIRestrictedPagination
+    filterset_class = VideoShapefileFilter
 
 
 class GADMShapefileViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing GADM Shapefiles.
     """
 
     model = GADMShapefile
-    pagination_class = SeshatAPIPagination
+    pagination_class = SeshatAPIRestrictedPagination
+    filterset_class = GADMShapefileFilter
 
 
 class GADMCountriesViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing GADM Countries.
     """
 
     model = GADMCountries
-    pagination_class = SeshatAPIPagination
+    pagination_class = SeshatAPIRestrictedPagination
+    filterset_class = GADMCountriesFilter
 
+
+from rest_framework.renderers import TemplateHTMLRenderer
 
 class GADMProvincesViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing GADM Provinces.
     """
 
     model = GADMProvinces
-    pagination_class = SeshatAPIPagination
+    pagination_class = SeshatAPIRestrictedPagination
+    filterset_class = GADMProvincesFilter

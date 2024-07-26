@@ -19,6 +19,7 @@ django_geojson==4.0.0
 django-heroku==0.3.1
 django-mathfilters==1.0.0
 djangorestframework==3.13.1
+djangorestframework-gis==1.0
 django-recaptcha==4.0.0
 feedparser==6.0.10
 geopandas==0.13.2

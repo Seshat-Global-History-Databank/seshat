@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     "django_filters",
     "corsheaders",
     "rest_framework",
+    "rest_framework_gis",
     "mathfilters",
     # all-auth
     'allauth',
@@ -414,6 +415,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 """
 REST_FRAMEWORK defines the default settings for the Django REST framework.

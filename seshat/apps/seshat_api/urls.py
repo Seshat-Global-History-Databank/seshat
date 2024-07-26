@@ -44,7 +44,6 @@ from .views.core import (
     SeshatCommentViewSet,
     SeshatCommentPartViewSet,
     ScpThroughCtnViewSet,
-    SeshatCommonViewSet,
     ReligionViewSet,
     CliopatriaViewSet,
     GADMShapefileViewSet,

@@ -1,12 +1,43 @@
 from rest_framework import viewsets
 
+from ._permissions import ONLY_ADMIN_PERMISSIONS
 from ._mixins import (
+    FilterBackends,
     MixinSeshatAPIAuth,
     MixinSeshatAPISerializer,
     SeshatAPIPagination,
 )
 
-from ...general.models import (
+from ..filters.general import (
+    PolityResearchAssistantFilter,
+    PolityOriginalNameFilter,
+    PolityAlternativeNameFilter,
+    PolityDurationFilter,
+    PolityPeakYearsFilter,
+    PolityDegreeOfCentralizationFilter,
+    PolitySuprapolityRelationsFilter,
+    PolityUTMZoneFilter,
+    PolityCapitalFilter,
+    PolityLanguageFilter,
+    PolityLinguisticFamilyFilter,
+    PolityLanguageGenusFilter,
+    PolityReligionGenusFilter,
+    PolityReligionFamilyFilter,
+    PolityReligionFilter,
+    PolityRelationshipToPrecedingEntityFilter,
+    PolityPrecedingEntityFilter,
+    PolitySucceedingEntityFilter,
+    PolitySupraculturalEntityFilter,
+    PolityScaleOfSupraculturalInteractionFilter,
+    PolityAlternateReligionGenusFilter,
+    PolityAlternateReligionFamilyFilter,
+    PolityAlternateReligionFilter,
+    PolityExpertFilter,
+    PolityEditorFilter,
+    PolityReligiousTraditionFilter,
+)
+
+from ..models import (
     Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
@@ -37,260 +68,392 @@ from ...general.models import (
 
 
 class PolityResearchAssistantViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Research Assistants.
     """
+
     model = Polity_research_assistant
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityResearchAssistantFilter
 
 
 class PolityOriginalNameViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Original Names.
     """
+
     model = Polity_original_name
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityOriginalNameFilter
 
 
 class PolityAlternativeNameViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternative Names.
     """
+
     model = Polity_alternative_name
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityAlternativeNameFilter
 
 
 class PolityDurationViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Durations.
     """
+
     model = Polity_duration
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityDurationFilter
 
 
 class PolityPeakYearsViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Peak Years.
     """
+
     model = Polity_peak_years
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityPeakYearsFilter
 
 
 class PolityDegreeOfCentralizationViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Degrees of Centralization.
     """
+
     model = Polity_degree_of_centralization
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityDegreeOfCentralizationFilter
 
 
 class PolitySuprapolityRelationsViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Suprapolity Relations.
     """
+
     model = Polity_suprapolity_relations
     pagination_class = SeshatAPIPagination
+    filterset_class = PolitySuprapolityRelationsFilter
 
 
 class PolityUTMZoneViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity UTM Zones.
     """
+
     model = Polity_utm_zone
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityUTMZoneFilter
 
 
 class PolityCapitalViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Capitals.
     """
+
     model = Polity_capital
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityCapitalFilter
 
 
 class PolityLanguageViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Languages.
     """
+
     model = Polity_language
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityLanguageFilter
 
 
 class PolityLinguisticFamilyViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Linguistic Families.
     """
+
     model = Polity_linguistic_family
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityLinguisticFamilyFilter
 
 
 class PolityLanguageGenusViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Language Genuses.
     """
+
     model = Polity_language_genus
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityLanguageGenusFilter
 
 
 class PolityReligionGenusViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religion Genuses.
     """
+
     model = Polity_religion_genus
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityReligionGenusFilter
 
 
 class PolityReligionFamilyViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religion Families.
     """
+
     model = Polity_religion_family
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityReligionFamilyFilter
 
 
 class PolityReligionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religions.
     """
+
     model = Polity_religion
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityReligionFilter
 
 
 class PolityRelationshipToPrecedingEntityViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Relationships to Preceding Entities.
     """
+
     model = Polity_relationship_to_preceding_entity
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityRelationshipToPrecedingEntityFilter
 
 
 class PolityPrecedingEntityViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Preceding Entities.
     """
+
     model = Polity_preceding_entity
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityPrecedingEntityFilter
 
 
 class PolitySucceedingEntityViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Succeeding Entities.
     """
+
     model = Polity_succeeding_entity
     pagination_class = SeshatAPIPagination
+    filterset_class = PolitySucceedingEntityFilter
 
 
 class PolitySupraculturalEntityViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Supracultural Entities.
     """
+
     model = Polity_supracultural_entity
     pagination_class = SeshatAPIPagination
+    filterset_class = PolitySupraculturalEntityFilter
 
 
 class PolityScaleOfSupraculturalInteractionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Scales of Supracultural Interaction.
     """
+
     model = Polity_scale_of_supracultural_interaction
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityScaleOfSupraculturalInteractionFilter
 
 
 class PolityAlternateReligionGenusViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religion Genuses.
     """
+
     model = Polity_alternate_religion_genus
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityAlternateReligionGenusFilter
 
 
 class PolityAlternateReligionFamilyViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religion Families.
     """
+
     model = Polity_alternate_religion_family
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityAlternateReligionFamilyFilter
 
 
 class PolityAlternateReligionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Alternate Religions.
     """
+
     model = Polity_alternate_religion
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityAlternateReligionFilter
 
 
 class PolityExpertViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Experts.
     """
+
     model = Polity_expert
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityExpertFilter
+    permissions_dict = ONLY_ADMIN_PERMISSIONS
 
 
 class PolityEditorViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Editors.
     """
+
     model = Polity_editor
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityEditorFilter
+    permissions_dict = ONLY_ADMIN_PERMISSIONS
 
 
 class PolityReligiousTraditionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polity Religious Traditions.
     """
+
     model = Polity_religious_tradition
     pagination_class = SeshatAPIPagination
+    filterset_class = PolityReligiousTraditionFilter

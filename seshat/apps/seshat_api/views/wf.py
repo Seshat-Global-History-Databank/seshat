@@ -1,18 +1,65 @@
 from rest_framework import viewsets
 
-from rest_framework.generics import (
-    ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-)
-
 from ._mixins import (
+    FilterBackends,
     MixinSeshatAPIAuth,
     MixinSeshatAPISerializer,
     SeshatAPIPagination,
 )
 
+from ..filters.wf import (
+    LongWallFilter,
+    CopperFilter,
+    BronzeFilter,
+    IronFilter,
+    SteelFilter,
+    JavelinFilter,
+    AtlatlFilter,
+    SlingFilter,
+    SelfBowFilter,
+    CompositeBowFilter,
+    CrossbowFilter,
+    TensionSiegeEngineFilter,
+    SlingSiegeEngineFilter,
+    GunpowderSiegeArtilleryFilter,
+    HandheldFirearmFilter,
+    WarClubFilter,
+    BattleAxeFilter,
+    DaggerFilter,
+    SwordFilter,
+    SpearFilter,
+    PolearmFilter,
+    DogFilter,
+    DonkeyFilter,
+    HorseFilter,
+    CamelFilter,
+    ElephantFilter,
+    WoodBarkEtcFilter,
+    LeatherClothFilter,
+    ShieldFilter,
+    HelmetFilter,
+    BreastplateFilter,
+    LimbProtectionFilter,
+    ScaledArmorFilter,
+    LaminarArmorFilter,
+    PlateArmorFilter,
+    SmallVesselsCanoesEtcFilter,
+    MerchantShipsPressedIntoServiceFilter,
+    SpecializedMilitaryVesselFilter,
+    SettlementsInADefensivePositionFilter,
+    WoodenPalisadeFilter,
+    EarthRampartFilter,
+    DitchFilter,
+    MoatFilter,
+    StoneWallsNonMortaredFilter,
+    StoneWallsMortaredFilter,
+    FortifiedCampFilter,
+    ComplexFortificationFilter,
+    ModernFortificationFilter,
+    ChainmailFilter,
+)
 
-from ...wf.models import (
+from ..models import (
     Long_wall,
     Copper,
     Bronze,
@@ -66,490 +113,735 @@ from ...wf.models import (
 
 
 class LongWallViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Long Walls.
     """
+
     model = Long_wall
     pagination_class = SeshatAPIPagination
+    filterset_class = LongWallFilter
 
 
 class CopperViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Coppers.
     """
+
     model = Copper
     pagination_class = SeshatAPIPagination
+    filterset_class = CopperFilter
 
 
 class BronzeViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Bronzes.
     """
+
     model = Bronze
     pagination_class = SeshatAPIPagination
+    filterset_class = BronzeFilter
 
 
 class IronViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Irons.
     """
+
     model = Iron
     pagination_class = SeshatAPIPagination
+    filterset_class = IronFilter
 
 
 class SteelViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Steels.
     """
+
     model = Steel
     pagination_class = SeshatAPIPagination
+    filterset_class = SteelFilter
 
 
 class JavelinViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Javelins.
     """
+
     model = Javelin
     pagination_class = SeshatAPIPagination
+    filterset_class = JavelinFilter
 
 
 class AtlatlViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Atlatls.
     """
+
     model = Atlatl
     pagination_class = SeshatAPIPagination
+    filterset_class = AtlatlFilter
 
 
 class SlingViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Slings.
     """
+
     model = Sling
     pagination_class = SeshatAPIPagination
+    filterset_class = SlingFilter
 
 
 class SelfBowViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Self Bows.
     """
+
     model = Self_bow
     pagination_class = SeshatAPIPagination
+    filterset_class = SelfBowFilter
 
 
 class CompositeBowViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Composite Bows.
     """
+
     model = Composite_bow
     pagination_class = SeshatAPIPagination
+    filterset_class = CompositeBowFilter
 
 
 class CrossbowViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Crossbows.
     """
+
     model = Crossbow
     pagination_class = SeshatAPIPagination
+    filterset_class = CrossbowFilter
 
 
 class TensionSiegeEngineViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Tension Siege Engines.
     """
+
     model = Tension_siege_engine
     pagination_class = SeshatAPIPagination
+    filterset_class = TensionSiegeEngineFilter
 
 
 class SlingSiegeEngineViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Sling Siege Engines.
     """
+
     model = Sling_siege_engine
     pagination_class = SeshatAPIPagination
+    filterset_class = SlingSiegeEngineFilter
 
 
 class GunpowderSiegeArtilleryViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Gunpowder Siege Artilleries.
     """
+
     model = Gunpowder_siege_artillery
     pagination_class = SeshatAPIPagination
+    filterset_class = GunpowderSiegeArtilleryFilter
 
 
 class HandheldFirearmViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Handheld Firearms.
     """
+
     model = Handheld_firearm
     pagination_class = SeshatAPIPagination
+    filterset_class = HandheldFirearmFilter
 
 
 class WarClubViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing War Clubs.
     """
+
     model = War_club
     pagination_class = SeshatAPIPagination
+    filterset_class = WarClubFilter
 
 
 class BattleAxeViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Battle Axes.
     """
+
     model = Battle_axe
     pagination_class = SeshatAPIPagination
+    filterset_class = BattleAxeFilter
 
 
 class DaggerViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Daggers.
     """
+
     model = Dagger
     pagination_class = SeshatAPIPagination
+    filterset_class = DaggerFilter
 
 
 class SwordViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Swords.
     """
+
     model = Sword
     pagination_class = SeshatAPIPagination
+    filterset_class = SwordFilter
 
 
 class SpearViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Spears.
     """
+
     model = Spear
     pagination_class = SeshatAPIPagination
+    filterset_class = SpearFilter
 
 
 class PolearmViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Polearms.
     """
+
     model = Polearm
     pagination_class = SeshatAPIPagination
+    filterset_class = PolearmFilter
 
 
 class DogViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Dogs.
     """
+
     model = Dog
     pagination_class = SeshatAPIPagination
+    filterset_class = DogFilter
 
 
 class DonkeyViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Donkeys.
     """
+
     model = Donkey
     pagination_class = SeshatAPIPagination
+    filterset_class = DonkeyFilter
 
 
 class HorseViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Horses.
     """
+
     model = Horse
     pagination_class = SeshatAPIPagination
+    filterset_class = HorseFilter
 
 
 class CamelViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Camels.
     """
+
     model = Camel
     pagination_class = SeshatAPIPagination
+    filterset_class = CamelFilter
 
 
 class ElephantViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Elephants.
     """
+
     model = Elephant
     pagination_class = SeshatAPIPagination
+    filterset_class = ElephantFilter
 
 
 class WoodBarkEtcViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Wood bark, etc.
     """
+
     model = Wood_bark_etc
     pagination_class = SeshatAPIPagination
+    filterset_class = WoodBarkEtcFilter
 
 
 class LeatherClothViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Leather Cloth.
     """
+
     model = Leather_cloth
     pagination_class = SeshatAPIPagination
+    filterset_class = LeatherClothFilter
 
 
 class ShieldViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Shields.
     """
+
     model = Shield
     pagination_class = SeshatAPIPagination
+    filterset_class = ShieldFilter
 
 
 class HelmetViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Helmets.
     """
+
     model = Helmet
     pagination_class = SeshatAPIPagination
+    filterset_class = HelmetFilter
 
 
 class BreastplateViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Breastplates.
     """
+
     model = Breastplate
     pagination_class = SeshatAPIPagination
+    filterset_class = BreastplateFilter
 
 
 class LimbProtectionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Limb Protections.
     """
+
     model = Limb_protection
     pagination_class = SeshatAPIPagination
+    filterset_class = LimbProtectionFilter
 
 
 class ScaledArmorViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Scaled Armors.
     """
+
     model = Scaled_armor
     pagination_class = SeshatAPIPagination
+    filterset_class = ScaledArmorFilter
 
 
 class LaminarArmorViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Laminar Armors.
     """
+
     model = Laminar_armor
     pagination_class = SeshatAPIPagination
+    filterset_class = LaminarArmorFilter
 
 
 class PlateArmorViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Plate Armors.
     """
+
     model = Plate_armor
     pagination_class = SeshatAPIPagination
+    filterset_class = PlateArmorFilter
 
 
 class SmallVesselsCanoesEtcViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Small Vessels, Canoes, etc.
     """
+
     model = Small_vessels_canoes_etc
     pagination_class = SeshatAPIPagination
+    filterset_class = SmallVesselsCanoesEtcFilter
 
 
 class MerchantShipPressedIntoServiceViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Merchant Ships Pressed Into Services.
     """
+
     model = Merchant_ships_pressed_into_service
     pagination_class = SeshatAPIPagination
+    filterset_class = MerchantShipsPressedIntoServiceFilter
 
 
 class SpecializedMilitaryVesselViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Specialized Military Vessels.
     """
+
     model = Specialized_military_vessel
     pagination_class = SeshatAPIPagination
+    filterset_class = SpecializedMilitaryVesselFilter
 
 
 class SettlementInADefensivePositionViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Settlements in a Defensive Position.
     """
+
     model = Settlements_in_a_defensive_position
     pagination_class = SeshatAPIPagination
+    filterset_class = SettlementsInADefensivePositionFilter
 
 
 class WoodenPalisadeViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Wooden Palisades.
     """
+
     model = Wooden_palisade
     pagination_class = SeshatAPIPagination
+    filterset_class = WoodenPalisadeFilter
 
 
 class EarthRampartViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Earth Ramparts.
     """
+
     model = Earth_rampart
     pagination_class = SeshatAPIPagination
+    filterset_class = EarthRampartFilter
 
 
 class DitchViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Ditches.
     """
+
     model = Ditch
     pagination_class = SeshatAPIPagination
+    filterset_class = DitchFilter
 
 
 class MoatViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Moats.
     """
+
     model = Moat
     pagination_class = SeshatAPIPagination
+    filterset_class = MoatFilter
 
 
 class StoneWallsNonMortaredViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Stone Walls Non Mortared.
     """
+
     model = Stone_walls_non_mortared
     pagination_class = SeshatAPIPagination
+    filterset_class = StoneWallsNonMortaredFilter
 
 
 class StoneWallsMortaredViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Stone Walls Mortared.
     """
+
     model = Stone_walls_mortared
     pagination_class = SeshatAPIPagination
+    filterset_class = StoneWallsMortaredFilter
 
 
 class FortifiedCampViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Fortified Camps.
     """
+
     model = Fortified_camp
     pagination_class = SeshatAPIPagination
+    filterset_class = FortifiedCampFilter
 
 
 class ComplexFortificationViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Complex Fortifications.
     """
+
     model = Complex_fortification
     pagination_class = SeshatAPIPagination
+    filterset_class = ComplexFortificationFilter
 
 
 class ModernFortificationViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Modern Fortifications.
     """
+
     model = Modern_fortification
     pagination_class = SeshatAPIPagination
+    filterset_class = ModernFortificationFilter
 
 
 class ChainmailViewSet(
-    MixinSeshatAPISerializer, MixinSeshatAPIAuth, viewsets.ModelViewSet
+    FilterBackends,
+    MixinSeshatAPISerializer,
+    MixinSeshatAPIAuth,
+    viewsets.ModelViewSet,
 ):
     """
     A viewset for viewing and editing Chainmails.
     """
+
     model = Chainmail
     pagination_class = SeshatAPIPagination
+    filterset_class = ChainmailFilter

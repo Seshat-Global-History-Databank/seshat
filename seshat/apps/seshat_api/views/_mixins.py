@@ -1,3 +1,5 @@
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -19,15 +21,27 @@ class SeshatAPIPagination(PageNumberPagination):
     """
     Custom pagination class for the API.
     """
+
     page_size = 10
     page_size_query_param = "page_size"
     max_page_size = 100
+
+
+class SeshatAPIRestrictedPagination(PageNumberPagination):
+    """
+    Custom pagination class for the API.
+    """
+
+    page_size = 1
+    page_size_query_param = "page_size"
+    max_page_size = 1
 
 
 class MixinSeshatAPIAuth:
     """
     Mixin class to set the authentication classes for the API.
     """
+
     def get_permissions(self):
         try:
             permissions_dict = self.permissions_dict
@@ -38,6 +52,7 @@ class MixinSeshatAPIAuth:
             permission()
             for permission in permissions_dict[self.request.method]
         ]
+
 
 class MixinSeshatAPISerializer:
     def get_serializer_class(self):
@@ -54,3 +69,12 @@ class MixinSeshatAPISerializer:
 
     def get_queryset(self):
         return self.model.objects.all()
+
+
+class FilterBackends:
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    ordering_fields = "__all__"
