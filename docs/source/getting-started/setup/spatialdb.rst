@@ -39,7 +39,7 @@ Cliopatria shape dataset
 
    .. code-block:: bash
 
-      $ python manage.py populate_videodata /path/to/cliopatria_seshat_processed.geojson
+      $ python manage.py populate_cliopatria /path/to/cliopatria_seshat_processed.geojson
 
 
 GADM
