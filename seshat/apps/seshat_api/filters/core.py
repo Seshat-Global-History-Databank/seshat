@@ -17,7 +17,7 @@ from ..models import (
     SeshatCommentPart,
     ScpThroughCtn,
     Religion,
-    VideoShapefile,
+    Cliopatria,
     GADMShapefile,
     GADMCountries,
     GADMProvinces,
@@ -284,9 +284,9 @@ class ReligionFilter(django_filters.FilterSet):
         }
 
 
-class VideoShapefileFilter(django_filters.FilterSet):
+class CliopatriaFilter(django_filters.FilterSet):
     class Meta:
-        model = VideoShapefile
+        model = Cliopatria
         fields = {
             "name": ["icontains", "exact"],
             "wikipedia_name": ["icontains", "exact"],
@@ -299,6 +299,7 @@ class VideoShapefileFilter(django_filters.FilterSet):
             "colour": ["icontains", "exact"],
             "components": ["icontains", "exact"],
             "member_of": ["icontains", "exact"],
+            "confidence": ["lte", "gte", "exact"],
         }
 
 

@@ -28,7 +28,7 @@ from ..filters.core import (
     SeshatCommentPartFilter,
     ScpThroughCtnFilter,
     ReligionFilter,
-    VideoShapefileFilter,
+    CliopatriaFilter,
     GADMShapefileFilter,
     GADMCountriesFilter,
     GADMProvincesFilter,
@@ -349,7 +349,7 @@ class CliopatriaViewSet(
 
     model = Cliopatria
     pagination_class = SeshatAPIRestrictedPagination
-    filterset_class = VideoShapefileFilter
+    filterset_class = CliopatriaFilter
 
 
 class GADMShapefileViewSet(
