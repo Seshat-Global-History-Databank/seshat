@@ -106,7 +106,9 @@
             ];
 
             // Iterate through the polityMapShapesData and get confidence scores
-            polityMapShapesData.forEach(function (shape) {
+            polityMapShapesData.sort(function(a, b) {
+                return a.id - b.id;
+            }).forEach(function(shape) {
                 shape.formattedConfidence = formattedConfidence(shape.polity_start_year, shape.confidence);
                 var confidenceScoreElement = document.createElement("p");
                 confidenceScoreElement.textContent = "Confidence level for Shape ID: " + parseInt(shape.id).toLocaleString()
