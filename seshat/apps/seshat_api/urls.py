@@ -95,9 +95,9 @@ router.register(
 #router.register(r"core/commons", SeshatCommonViewSet, basename="common")
 router.register(r"core/religions", ReligionViewSet, basename="religion")
 router.register(
-    r"core/video-shapefiles",
+    r"core/cliopatria",
     CliopatriaViewSet,
-    basename="video-shapefile",
+    basename="cliopatria",
 )
 router.register(
     r"core/gadm-shapefiles",

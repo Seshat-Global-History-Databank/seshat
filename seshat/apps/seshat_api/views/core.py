@@ -344,7 +344,7 @@ class CliopatriaViewSet(
     viewsets.ModelViewSet,
 ):
     """
-    A viewset for viewing and editing Video Shapefiles.
+    A viewset for viewing and editing the Cliopatria borders dataset.
     """
 
     model = Cliopatria
