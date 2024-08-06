@@ -2,8 +2,7 @@
 {% load mathfilters %}
 
 {% if object.year_from == None %}
-<td style="text-align: center;"> Year Range of <i class="text-secondary">{{ object.polity.long_name }}</i> is assumed. <br>
-    <span class="fw-bold text-secondary">[{{ object.polity.start_year}}, {{ object.polity.end_year}}]</span></td>
+<td style="text-align: center;"> - </td>
 {% elif object.year_from == object.year_to %}
     {% if object.year_from < 0 %}
     <td style="text-align: center;">{{ object.year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </td>

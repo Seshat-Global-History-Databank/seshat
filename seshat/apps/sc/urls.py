@@ -68,7 +68,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
             'x_name': x_name,
             'myvar': myvar,
             'my_exp': sc_var_defs[x_name],
-          'var_section': sec,
+            'var_section': sec,
             'var_subsection': subsec,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-update')

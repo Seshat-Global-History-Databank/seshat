@@ -5,34 +5,55 @@
 
 {% block content %}
 <div class="container">
-    <div class="h3 pt-4">
+    <div class="h3 pt-2">
         <h6 class="lead-2 text-secondary">List of all</h6>
-        <table class="table align-middle table-striped mb-4">
+        <table class="table align-middle mb-2">
             <tr class="col-md-12">
                 <td class="col-md-5">
-                    <h2>References: <a href="{% url 'no_zotero_refs_list' %}" class="lead ">(See the Refs with No Zotero)</a></h2>
+                    <h2>References:</h2>
                 </td>
                 <td class="col-md-5" style="text-align: right">
-                    <span class="h6 px-4">
+                    <span class="h6 px-2">
                         Sync with Zotero:
                     </span>
-                    <a href="{% url 'synczotero100' %}" class="btn btn-success" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"><i class="fa-solid fa-arrows-rotate"></i> &nbsp; <b>last 100</b></a><span class="h6 text-secondary px-1"><i class="fa-solid fa-stopwatch"></i> < 1 min</span>
+                    <a href="{% url 'synczotero100' %}" class="btn btn-success" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"><i class="fa-solid fa-arrows-rotate"></i> <b>last 100</b></a><span class="h6 text-secondary px-1"><i class="fa-solid fa-stopwatch"></i> < 1 min</span>
                 </td>
             </tr>
         </table>
     </div>
     {% if object_list %}
-    <div class="table-responsive">
-        <table id="table_id" class="table align-middle table-striped table-bordered">
+    <div class="table-responsive row">
+        {% if is_paginated %}
+        <div class="col-md-12 pagination pb-2">
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}"><button class="btn btn-primary btn-md"> <i class="fas fa-step-backward"></i> Prev </button></a>
+              {% else %}
+              <button class="btn btn-outline-primary btn-md" disabled> <i class="fas fa-step-backward"></i>  Prev</button>
+              {% endif %}
+              <span class="page-current">
+                  &nbsp; Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}. &nbsp; 
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}"><button class="btn btn-primary btn-md"> Next <i class="fas fa-step-forward"></i></button></a>
+                  {% else %}
+                  <button class="btn btn-outline-primary btn-md" disabled> Next <i class="fas fa-step-forward"></i></button>
+              {% endif %}
+          </span>
+          </div>
+          
+        {% endif %}
+
+
+        <table id="table_id" class="table align-middle">
             <thead>
               <tr>
                 <th scope="col" class="text-secondary">#</th>
-                <th scope="col" style="text-align: left" class="fw-light"> Title</th>
-                <th scope="col" style="text-align: center" class="fw-light"> Creator(s)</th>
-                <th scope="col" style="text-align: center" class="fw-light"> Year</th>
-                <th scope="col" style="text-align: center" class="fw-light"> Zotero link</th>
-                <th scope="col" style="text-align: center" class="fw-light"> Created</th>
-                <th scope="col" style="text-align: center" class="fw-light">Add Citation</th>
+                <th scope="col" style="text-align: left" class="fw-bold"> Item Type</th>
+                <th scope="col" style="text-align: left" class="fw-bold"> Title</th>
+                <th scope="col" style="text-align: left" class="fw-bold"> Creator(s)</th>
+                <th scope="col" style="text-align: left" class="fw-bold"> Year</th>
+                <th scope="col" style="text-align: right" class="fw-bold"> Added</th>
               </tr>
             </thead>
             <tbody>
@@ -40,31 +61,39 @@
                 <tr>
                     <div>
                         <td class="text-secondary" scope="row">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                        <td scope="row">{{ obj.item_type }}</td>
                         <td style="text-align: left;">
                             {% if "NOZOTERO_LINK" in obj.zotero_link %}
                                 <span>{{ obj.reference_short_title }}</span>
+
+                            {% elif obj.title == "NO_TITLE_PROVIDED_IN_ZOTERO"  %}
+                            <span>                                
+                                <a class="greenlink" href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.zotero_link }}">(No Title)</a>
+                            </span>
+                            {% elif obj.title == "OOPSI_TITLE"  %}
+                            <span>                                
+                                <a class="greenlink" href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.zotero_link }}">(No Title)</a>
+                            </span>
                             {% else %}
                                 <a class="greenlink" href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.zotero_link }}">{{ obj.reference_short_title }}</a>
                             {% endif %}
                         </td>
-                        <td style="text-align: center;">
-                            <i>{{ obj.creator }}</i>
-                        </td>
-                        <td style="text-align: center;">
-                            {{ obj.year }}
-                        </td>
-                        <td style="text-align: center;">
-                            {% if "NOZOTERO_LINK" in obj.zotero_link %}
-                            <span><u>No Zotero</u></span>
+                        <td style="text-align: left;">
+                            {% if obj.creator == "NO_CREATOR" %}
+                            -
                             {% else %}
-                                <a class="greenlink" href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.zotero_link }}"><u>Zotero</u></a>
+                            {{ obj.creator }}
                             {% endif %}
                         </td>
-                        <td style="text-align: center;" class="text-secondary">
-                            <span>{{ obj.created_date|date:"j/n/Y" }}</span>
+                        <td style="text-align: left;">
+                            {% if obj.year <= 1 %}
+                            -
+                            {% else %}
+                            {{ obj.year }}
+                            {% endif %}
                         </td>
-                        <td style="text-align: center;">
-                            <a href="{% url 'citation-create' %}" ><button class="btn btn-primary btn-sm"> <i class="fa-solid fa-plus"></i></button></a>
+                        <td style="text-align: right;" class="text-secondary">
+                            <span>{{ obj.created_date|date:"j.n.Y" }}</span>
                         </td>
                     </div>
                 </tr>

@@ -47,7 +47,6 @@ def min_max_years(values):
 
     return f"{min_year} - {max_year}"
 
-
 @register.filter
 def beginswith(value, arg):
     return value.startswith(arg)
@@ -55,6 +54,7 @@ def beginswith(value, arg):
 @register.filter
 def username_from_email(email):
     return email.split('@')[0]
+
 
 # @register.filter
 # def make_references_look_nicer(value):

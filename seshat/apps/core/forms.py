@@ -359,7 +359,7 @@ class ReferenceWithPageForm(forms.Form):
         queryset=Reference.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-select mb-1 js-example-basic-single', 'text':'ref',}),
         label='',
-        empty_label="Please choose a Reference ..." ,
+        empty_label="Reference ..." ,
 
     ) 
 

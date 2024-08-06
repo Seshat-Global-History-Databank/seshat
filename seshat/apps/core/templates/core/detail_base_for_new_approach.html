@@ -16,15 +16,24 @@ input[type="number"] {
     -moz-appearance: textfield; /* For Firefox */
 }
 </style>
+
 <div class="container">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <h6 class="lead-2 text-success pt-3">You entered the following data for:</h6>
       <h3 class="mb-4 mt-2">{{var_name_display}}  </h3>
     </div>
-    <div class="col-md-3"> 
+    <div class="col-md-4"> 
         {% block addmore %}
         {% endblock addmore %}
+
+          <span class="col-md-4 align-right mt-1">
+              <a href="{% url 'synczotero100' %}" class="btn btn-outline-success pb-0 pt-1 mb-2 mt-1 float-end" id="syncBtn" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');">
+                  <b>Sync Refs with Zotero: <i class="fa-solid fa-arrows-rotate"></i> &nbsp; Last 100</b>
+              </a>
+              <span class="h6 text-secondary px-1"></span>
+          </span>
+      
     </div>
   </div>
   {% if messages %}
@@ -91,7 +100,7 @@ input[type="number"] {
               <td style="text-align: center;">
                 {% with object.clean_name|add:"-update" as meat %}
                 <div class="py-1">
-                  <a href="{% url meat object.id %}"><button class="btn btn-warning btn-sm btn-block">Update</button></a>
+                  <a href="{% url meat object.id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
                 </div>
                 {% endwith %}
 
@@ -101,16 +110,20 @@ input[type="number"] {
     </tbody>
   </table>
 
-  <form method="post" action="{% url 'seshatcommentpart-create2-inline' app_name='rt' model_name=object.clean_name instance_id=object.id %}">
+  <form method="post" action="{% url 'seshatcommentpart-create2-inline' app_name=db_section model_name=object.clean_name instance_id=object.id %}">
       {% csrf_token %}
       <div class="row">
         <div class="col-md-5">
           <br>
-          <span class="fs-5 fw-bold text-secondary">* Insert the first chunk of the description here:</span>
+          <span class="fs-6 fw-bold text-dark">- Insert the <u>first</u>  subdescription text here*:</span>
 
-          {{ form.comment_text.label_tag }} {{ form.comment_text }}<br>
+          {{ form.comment_text.label_tag }} {{ form.comment_text }}
           {{ form.formset.management_form }}
           {{ form.management_form }}
+          <div class="pt-0">
+            <span class="text-secondary pt-0">* Use &lt;br&gt;
+                for new paragraphs.</span>
+        </div>
           <div class="row">
             <div class="col-md-12"  style="display: none;">
               {{ form.comment_order|as_crispy_field }}
@@ -123,20 +136,27 @@ input[type="number"] {
     </div>
         <div class="col-md-7">
           <div id="formset-container">
+            {% autoescape off %}
               {% for form1 in form.formset %}
-  
-
                     <div class="formset-item">
                         {{ form.id }} {# Include the form ID for proper formset rendering #}
                       <div class="row">
                         <div class="col-md-12 pt-4">
-                          <span class="badge bg-secondary fs-6">Citation #{{ forloop.counter}}</span>                          
-                          <span class="float-end text-secondary">Delete
+                          <span class="badge fs-6" style="background: cadetblue;">Citation #{{ forloop.counter}}</span>                          
+                          <span class="float-end text-secondary"><i class="fa-solid fa-trash-can"></i>
                             {{ form1.DELETE }} 
                           </span>  
                         </div>
                         <div class="col-md-12 pb-1">
-                            {{ form1.ref|as_crispy_field }} 
+                          <div id="div_id_refs-{{ forloop.counter0 }}-ref" class="control-group">
+                            <div class="controls">
+                              <select class="ref-dropdown form-control form-select mb-1 p-1 js-example-basic-single select2-hidden-accessible" text="ref" name="refs-{{ forloop.counter0 }}-ref" id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref" tabindex="-1" aria-hidden="true" style="width:100%; "  data-selected-value="{{ form1.ref.value }}">
+                                <option value="" selected data-select2-id="{{ forloop.counter0 }}">Reference ...</option>
+
+                              </select>
+                            </div>
+                          </div>
+
                         </div>
                         <div class="col-md-2">
                             {{ form1.page_from|as_crispy_field }}
@@ -152,7 +172,8 @@ input[type="number"] {
     
                     </div>
               {% endfor %}
-  
+              {% endautoescape %}
+
             </div>
   
           </div>
@@ -166,16 +187,61 @@ input[type="number"] {
     </div>
     </form>
   <!-- seshatcommentpart_create.html -->
-  <script>
-  
-  
-          $(document).ready(function() {
-            // Initialize Select2 with an empty dataset
-            $('.js-example-basic-single').select2();
-  
-  });
-      
-  </script>
-
 </div>
+
+<script>
+  $(document).ready(function() {
+    // Initialize Select2 with an empty dataset
+    $('.js-example-basic-single').select2();
+
+    $('.ref-dropdown').each(function() {
+        var selectElement = $(this);
+        var selectedValue = selectElement.data('selected-value');
+
+        $.ajax({
+            url: '{% url "get_ref_options" %}', // Update this URL to your actual endpoint
+            method: 'GET',
+            success: function(data) {
+                data.options.forEach(function(option) {
+                    var optionElement = $('<option></option>')
+                        .attr('value', option.value)
+                        .text(option.label);
+
+                    if (option.value == selectedValue) {
+                        optionElement.attr('selected', 'selected');
+                    }
+
+                    selectElement.append(optionElement);
+                });
+
+                // Re-initialize Select2 to apply the new options
+                selectElement.select2();
+            },
+            error: function(error) {
+                console.error('Error fetching options:', error);
+            }
+        });
+    });
+});
+  function DisplayProgressMessage(ctl, msg) {
+    var originalText = $(ctl).html();
+    $(ctl).data('original-text', originalText);
+    $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end disabled");
+    $(ctl).html(msg);
+
+    // Simulate the end of the syncing process
+    setTimeout(function() {
+        RestoreOriginalMessage(ctl);
+    }, 5000); // Change 5000 to the actual duration of the sync process in milliseconds
+
+    return true;
+  }
+
+  function RestoreOriginalMessage(ctl) {
+    var originalText = $(ctl).data('original-text');
+    $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end");
+    $(ctl).html(originalText);
+  }
+</script>
+
   {% endblock %}

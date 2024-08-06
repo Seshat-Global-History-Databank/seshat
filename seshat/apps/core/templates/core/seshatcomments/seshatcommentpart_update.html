@@ -77,9 +77,23 @@
         })
 
         function DisplayProgressMessage(ctl, msg) {
-            $(ctl).prop("class", "btn btn-success px-4 disabled");
-            $(ctl).text(msg);
+            var originalText = $(ctl).html();
+            $(ctl).data('original-text', originalText);
+            $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end disabled");
+            $(ctl).html(msg);
+    
+            // Simulate the end of the syncing process
+            setTimeout(function() {
+                RestoreOriginalMessage(ctl);
+            }, 5000); // Change 5000 to the actual duration of the sync process in milliseconds
+    
             return true;
+        }
+    
+        function RestoreOriginalMessage(ctl) {
+            var originalText = $(ctl).data('original-text');
+            $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end");
+            $(ctl).html(originalText);
         }
     </script>
   {% endblock %}

@@ -83,12 +83,12 @@
 
         .blinking-circle {
             display: inline-block; /* Ensure it's treated as an inline element */
-            width: 10px;
-            height: 20px;
+            width: 70px;
+            height: 10px;
             padding: 0px;
             margin: 0px;
 
-            background-color: coral;
+            background-color: cadetblue;
             animation: blink 1s infinite alternate;
         }
     
@@ -101,14 +101,33 @@
                 opacity: 0;
             }
         }
+
+        .btn {
+            cursor: pointer;
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
 </style>
 
 <div class="container pt-2">
 
 <!-- seshatcommentpart_create.html -->
 {% autoescape off %}
-How it appears on a page (parent): <br>
-<div class="border p-2 border-dark bg-light rounded border-3">
+<div class="row py-2">
+    <div class="col-md-8">
+      <b>Description:</b>  
+    </div>
+    <div class="col-md-4 align-right">
+        <a href="{% url 'synczotero100' %}" class="btn btn-outline-success pb-0 pt-1 mb-2 float-end" id="syncBtn" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');">
+            <b>Sync Refs with Zotero: <i class="fa-solid fa-arrows-rotate"></i> &nbsp; Last 100</b>
+        </a>
+        <span class="h6 text-secondary px-1"></span>
+    </div>
+
+</div>
+<div class="border-start px-2 border-secondary border-4">
     {% for subcom in parent_par.inner_comments_related.all %}
     {% if subcom_order == subcom.comment_order|add:"1" %}
     <span>{{subcom}}</span>
@@ -127,11 +146,15 @@ How it appears on a page (parent): <br>
     <div class="row">
       <div class="col-md-5">
         <br>
-        <span class="fs-5 fw-bold text-secondary">* Insert the description text here:</span>
+        <span class="fs-6 fw-bold text-dark">- Insert the subdescription text here*:</span>
 
-        {{ form.comment_text.label_tag }} {{ form.comment_text }}<br>
+        {{ form.comment_text.label_tag }} {{ form.comment_text }}
         {{ form.formset.management_form }}
         {{ form.management_form }}
+        <div class="pt-0">
+            <span class="text-secondary pt-0">* Use &lt;br&gt;
+                for new paragraphs.</span>
+        </div>
         <div class="row">
           <div class="col-md-12"  style="display: none;">
             {{ form.comment_order|as_crispy_field }}
@@ -144,6 +167,7 @@ How it appears on a page (parent): <br>
   </div>
       <div class="col-md-7">
         <div id="formset-container">
+
             {% for form1 in form.formset %}
 
 
@@ -151,14 +175,20 @@ How it appears on a page (parent): <br>
                       {{ form1.id }} {# Include the form ID for proper formset rendering #}
                     <div class="row">
                       <div class="col-md-12 pt-4">
-                        <span class="badge bg-secondary fs-6">Citation #{{ forloop.counter}}</span>                          
-                        <span class="float-end text-secondary">Delete
+                        <span class="badge fs-6" style="background: cadetblue;">Citation #{{ forloop.counter}}</span>                          
+                        <span class="float-end text-secondary"><i class="fa-solid fa-trash-can"></i>
                           {{ form1.DELETE }} 
                         </span>  
                       </div>
                       <div class="col-md-12 pb-1">
-                          {{ form1.ref|as_crispy_field }} 
-                      </div>
+                        <div id="div_id_refs-{{ forloop.counter0 }}-ref" class="control-group">
+                            <div class="controls">
+                              <select class="ref-dropdown form-control form-select mb-1 p-1 js-example-basic-single select2-hidden-accessible" text="ref" name="refs-{{ forloop.counter0 }}-ref" id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref" tabindex="-1" aria-hidden="true" style="width:100%; " data-selected-value="{{ form1.ref.value }}">
+                                <option value="" selected data-select2-id="{{ forloop.counter0 }}">Reference ...</option>
+
+                              </select>
+                            </div>
+                          </div>                        </div>
                       <div class="col-md-2">
                           {{ form1.page_from|as_crispy_field }}
                       </div>
@@ -191,15 +221,59 @@ How it appears on a page (parent): <br>
 </div>
 <!-- seshatcommentpart_create.html -->
 <script>
-
-
-        $(document).ready(function() {
-          // Initialize Select2 with an empty dataset
-          $('.js-example-basic-single').select2();
-
-});
+    $(document).ready(function() {
+        // Initialize Select2 with an empty dataset
+        $('.js-example-basic-single').select2();
     
-</script>
+        $('.ref-dropdown').each(function() {
+            var selectElement = $(this);
+            var selectedValue = selectElement.data('selected-value');
+    
+            $.ajax({
+                url: '{% url "get_ref_options" %}', // Update this URL to your actual endpoint
+                method: 'GET',
+                success: function(data) {
+                    data.options.forEach(function(option) {
+                        var optionElement = $('<option></option>')
+                            .attr('value', option.value)
+                            .text(option.label);
+    
+                        if (option.value == selectedValue) {
+                            optionElement.attr('selected', 'selected');
+                        }
+    
+                        selectElement.append(optionElement);
+                    });
+    
+                    // Re-initialize Select2 to apply the new options
+                    selectElement.select2();
+                },
+                error: function(error) {
+                    console.error('Error fetching options:', error);
+                }
+            });
+        });
+    });
+    function DisplayProgressMessage(ctl, msg) {
+        var originalText = $(ctl).html();
+        $(ctl).data('original-text', originalText);
+        $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end disabled");
+        $(ctl).html(msg);
+
+        // Simulate the end of the syncing process
+        setTimeout(function() {
+            RestoreOriginalMessage(ctl);
+        }, 5000); // Change 5000 to the actual duration of the sync process in milliseconds
+
+        return true;
+    }
+
+    function RestoreOriginalMessage(ctl) {
+        var originalText = $(ctl).data('original-text');
+        $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end");
+        $(ctl).html(originalText);
+    }
+    </script>
  
 {% endblock %}
 

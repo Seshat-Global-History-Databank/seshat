@@ -86,6 +86,27 @@
                           <tbody>
 
                               {% for a_private_comment_part in facts_verified_by_user %}
+                              {% if a_private_comment_part.is_done %}
+                              <tr style="background:lightgray">
+                                <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                    {% autoescape off %}
+                                    <span class="fw-light">
+                                      <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
+                                      
+                                      {{a_private_comment_part.private_comment_part_text}}</span>
+                                    {% endautoescape %}
+
+                                </td>                                    
+                                <td  class="col-md-2"  style="text-align: center">
+                                  <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                  </span></a>
+                                </td>
+
+                                {% autoescape off %}
+                                <td  class="col-md-2"  style="text-align: right">{{a_private_comment_part.last_modified_date|naturaltime}}</td>
+                                {% endautoescape %}
+                            </tr>
+                              {% else %}
                               <tr>
                                   <td  class="col-md-8" scope="col" class="text-danger col-md-2">
                                       {% autoescape off %}
@@ -105,6 +126,8 @@
                                   <td  class="col-md-2"  style="text-align: right">{{a_private_comment_part.last_modified_date|naturaltime}}</td>
                                   {% endautoescape %}
                               </tr>
+                              {% endif %}
+
                               {% endfor %}
 
                           </tbody>

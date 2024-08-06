@@ -257,7 +257,8 @@ class SeshatPrivateCommentPart(models.Model):
                                related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     private_comment_reader = models.ManyToManyField(Seshat_Expert,  related_name="%(app_label)s_%(class)s_readers_related",
                                related_query_name="%(app_label)s_%(class)ss_readers", blank=True,)
-    created_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+    is_done = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     last_modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def get_absolute_url(self):
@@ -590,20 +591,27 @@ class Reference(models.Model):
     creator = models.CharField(max_length=500, )
     zotero_link = models.CharField(max_length=500, blank=True, null=True)
     long_name = models.CharField(max_length=500, blank=True, null=True)
+    item_type = models.CharField(max_length=100, blank=True, null=True)
     url_link = models.TextField(max_length=500, validators=[URLValidator()], blank=True, null=True)
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_date = models.DateTimeField(blank=True, null=True)
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self) -> str:
         original_title = self.title
+        if self.item_type:
+            my_item = self.item_type
+        else:
+            my_item = 'No_Item_Type'
         if len(original_title) > 60:
             shorter_title = original_title[0:60] + original_title[60:].split(" ")[0] + " ..."
         else:
             shorter_title = original_title
-        if self.year:
-            return "(%s_%s): %s" % (self.creator, self.year, shorter_title,)
+        if self.year and self.year > 1:
+            return "%s: (%s_%s) %s" % (my_item, self.creator, self.year, shorter_title,)
         else:
-            return "(%s_XXXX): %s" % (self.creator, shorter_title,)
+            return "%s: (%s) %s" % (my_item, self.creator, shorter_title,)
+
+
 
     @property
     def reference_short_title(self):

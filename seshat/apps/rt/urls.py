@@ -44,6 +44,8 @@ urlpatterns = [
     path('download_csv_religious_landscape/', views.download_csv_religious_landscape,name='download_csv_religious_landscape'),
     path('download_csv_government_restrictions/', views.download_csv_government_restrictions,name='download_csv_government_restrictions'),
     path('download_csv_societal_restrictions/', views.download_csv_societal_restrictions,name='download_csv_societal_restrictions'),
+
+    path('get_ref_options/', views.get_ref_options, name='get_ref_options'),
     #  path('download_csv_professions/', views.download_csv_professions,name='download_csv_professions'),
     #  path('download_csv_bureaucracy_characteristics/', views.download_csv_bureaucracy_characteristics,name='download_csv_bureaucracy_characteristics'),
     #  path('download_csv_hierarchical_complexity/', views.download_csv_hierarchical_complexity,name='download_csv_hierarchical_complexity'),

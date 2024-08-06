@@ -16,6 +16,7 @@
             <thead>
               <tr>
                 <th scope="col" class="text-secondary">#</th>
+                <th scope="col" style="text-align: left" class="fw-light"> Item Type</th>
                 <th scope="col" style="text-align: left" class="fw-light"> Title</th>
                 <th scope="col" style="text-align: center" class="fw-light"> Year</th>
                 <th scope="col" style="text-align: center" class="fw-light"> Creator(s)</th>
@@ -27,11 +28,12 @@
                 <tr>
                     <div>
                         <td class="text-secondary" scope="row">{{ forloop.counter0|add:1 }}</td>
+                        <td scope="row">{{ obj.item_type }}</td>
                         <td style="text-align: left;"><a href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.zotero_link }}">{{ obj.title }}</a>
                         </td>
                         <td style="text-align: center;">{{ obj.year }}
                         </td>
-                        <td style="text-align: center;"><a href="">{{ obj.mainCreator }}</a>
+                        <td style="text-align: center;">{{ obj.mainCreator }}
                         </td>
                         <td style="text-align: center;"><a href="https://www.zotero.org/groups/1051264/seshat_databank/items/{{ obj.key }}"><u>Zotero</u></a>
                         </td>
@@ -64,11 +66,15 @@
     <div class="row">
         <div class="col-md-12 mt-4">
             <h5 class="text-success"><i class="fa-solid fa-square-check"></i> Your database is already up to date.</h5>
-            <a href="{% url 'references' %}" class="btn btn-outline-success"><i class="fa-solid fa-circle-arrow-left"></i> &nbsp; Back to References</a>
+            <h6 class="pt-2">
+                <a href="{% url 'references' %}" class="btn btn-outline-success"><i class="fa-solid fa-circle-arrow-left"></i> &nbsp; Back to References</a>
+            </h6>
+
         </div>
     </div>
     {% endif %}
     </div>
+</div>
     <script>
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
         var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

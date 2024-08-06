@@ -23,7 +23,7 @@ def notifications(request):
     if request.user.is_authenticated:
         try:
             my_expert =  Seshat_Expert.objects.get(user_id=request.user.id)
-            all_my_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id)
+            all_my_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id).exclude(is_done=True)
             notifications_count = len(all_my_private_comments)
         except:
             notifications_count = 0

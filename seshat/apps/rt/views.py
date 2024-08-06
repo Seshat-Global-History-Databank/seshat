@@ -174,6 +174,8 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
         HttpResponse: The response object that contains the rendered detail page.
     """
     # Retrieve the object for the given model class
+    #import time
+    #start_time = time.time()
     obj = get_object_or_404(model_class, pk=pk)
     form_inline_new = SeshatCommentPartForm2(request.POST)
 
@@ -185,7 +187,10 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
         'see_all_url': myvar+"s_all",
         'letsdo': 'Let us do it!!!',
         'form': form_inline_new,
+        'db_section': 'rt',
     }
+    #end_time = time.time()
+    #print('elapsed_time RT', end_time-start_time)
 
     return render(request, 'rt/rt_detail.html', context)
 
@@ -851,3 +856,11 @@ def download_csv_societal_restrictions(request):
                             obj.expert_reviewed, obj.drb_reviewed,])
 
     return response
+
+def get_ref_options(request):
+    options = Reference.objects.all()
+    options_list = [{'value': option.id, 'label': str(option),} for option in options]
+    return JsonResponse({'options': options_list})
+    # options = Reference.objects.values('id', 'title', '__str__')  # Update with actual fields
+    # options_list = [{'value': option['id'], 'label': option['title'],} for option in options]
+    # return JsonResponse({'options': options_list})

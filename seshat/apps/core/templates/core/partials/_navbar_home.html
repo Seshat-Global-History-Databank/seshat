@@ -60,7 +60,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                    <a class="nav-link active fw-bold" href="https://seshatdatabank.info" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link active fw-bold" href="https://seshatdatabank.info" id="navbarDropdown" role="button" aria-expanded="false">
                         Project Home
                     </a>
                 </li>
@@ -123,6 +123,9 @@
                         <li>
                             <a class="dropdown-item fw-bold" href="{% url 'capitals' %}">Capitals</a>
                         </li>
+                        <li>
+                            <a class="dropdown-item fw-bold" href="{% url 'references' %}">References</a>
+                        </li>
                      </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -131,8 +134,7 @@
                 <li class="nav-item">
                     <a href="{% url 'world_map' %}" class="nav-link  active"><strong>World Map </strong></a>
                 </li>
-
-		<li class="nav-item mx-5">
+                <li class="nav-item mx-5">
                     {% autoescape off %}
     
                     <div class="search-container" >
@@ -152,19 +154,19 @@
         <ul class="navbar-nav ms-auto d-lg-inline-flex">
             {% if user.is_authenticated %}
             <li class="nav-item mx-1">
-                <a href="{% url 'account_logout' %}" class="pe-1  fw-light nav-link active" style="color:rgba(255,255,255,.55)"><strong>Logout </strong></a>
+                <a href="{% url 'account_logout' %}" class="pe-3  fw-light nav-link active" style="color:rgba(255,255,255,.55)"><strong>Logout </strong></a>
             </li>
 
             {%  if  'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-            <li class="nav-item">
-                <a href="{% url 'user-profile' %}" class="text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp;<strong> {{ user.email|username_from_email }} </strong>
+            <li class="nav-item mx-1">
+                <a href="{% url 'user-profile' %}" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i><strong> {{ user.email|username_from_email }} </strong>
                     <sup class="badge rounded-pill  fw-bold" style="padding: 3px 5px 2px 5px; color:#782823; background-color:#fffdf2;">{{ notifications_count }}</sup>
                 </a>
             </li>
 
             {% else %}
             <li class="nav-item mx-1">
-                <a href="#" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp;<strong> {{ user.email|username_from_email }} </strong>
+                <a href="#" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i><strong> {{ user.email|username_from_email }} </strong>
                 </a>
             </li>
             {% endif %}
@@ -296,7 +298,6 @@
 
 
 </script>
-
 
 
 

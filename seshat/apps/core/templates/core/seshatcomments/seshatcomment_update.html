@@ -1,6 +1,8 @@
 {% extends "core/seshat-base.html" %}
 {% load crispy_forms_tags %}
 {% load mathfilters %}
+{% load custom_filters %}
+
 
 {% load humanize %}
 
@@ -16,12 +18,12 @@
 {% else %}
 <div class="container table-responsive pt-2">
 
-    <table class="table align-middle table-striped">
+    <table class="table align-middle">
         <thead>        
           <tr>
             <th style="text-align: left;" scope="col">Variable</th>
             <th style="text-align: left;" scope="col">Coded Value</th>
-            <th style="text-align: center;" scope="col">Polity</th>
+            <th style="text-align: left;" scope="col">Polity</th>
             <th style="text-align: center;" scope="col">Year Range</th>
             <th scope="col" style="text-align: center">Certainty</th>
     
@@ -34,13 +36,12 @@
                   <td style="text-align: left;">{{ my_inst.my_var_name }}</td>
                   <td style="text-align: left;">{{ my_inst.my_value }}</td>
 
-                  <td style="text-align: center;">
-                    <span><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
+                  <td style="text-align: left;">
+                    <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
                     
                     </td>
                     {% if my_inst.year_from == None %}
-                        <td style="text-align: center;"> Full Year Range of Polity
-                        </td>
+                        <td style="text-align: center;"> - </td>
                     {% elif my_inst.year_from == my_inst.year_to %}
                         {% if my_inst.year_from < 0 %}
                         <td style="text-align: center;">{{ my_inst.year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </td>
@@ -87,7 +88,7 @@
       <div class="pt-3 fs-6 fw-bold">
         Description:
       </div>
-    <div class="border p-2 border-secondary rounded border-2 fs-6">
+    <div class="border-start px-2 border-secondary border-4 fs-6">
        
 
         {% autoescape off %}
@@ -96,35 +97,46 @@
 
             <span>
                 <span class="jidtext_{{ forloop.counter }}">
-                        {{ subcom.comment_part_text }}
+                    {% if forloop.counter0 == 0 %}
+                        <span class="fw-bold rounded">
+                        <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:0 %}" data-counter="0"><i class="fa-regular fa-square-plus text-primary ms-1 "></i>
+                            <span class="hidden_jid_new_0" style="display:none">
+                                <span class="fw-bold text-primary"><u>&nbsp;Insert Text Here</u></span>
+                            </span>
+                        </a>
+                         </span>
+                         {{ subcom.comment_part_text }}
+
+                    {% else %}
+                    {{ subcom.comment_part_text }}
+                    {% endif %}
                 </span>
-                <span  class="jidtextref_{{ forloop.counter }} fw-bold">
+                <span  class="jidtextref_{{ forloop.counter }}">
                     {% if subcom.display_citations_plus %}
                         {{ subcom.display_citations_plus }}
                     {% else %}
                     <span class="text-danger">[No Refs]</span>
                     {% endif %}
                 </span>
-                <sup class="border-bottom pt-1 pb-0 px-1 m-1 fw-bold border-dark border-3 rounded" style="background:rgb(233, 233, 233)">
-
-                {% if subcom.citations_count >= 10 %}
-                    <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square"></i></a>
-                {% else %}
-                    <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square"></i></a>
-
-                {% endif %}
-
-
-                    <a class="underline-trigger" href="{% url 'seshatcommentpart-delete' subcom.pk %}" data-counter="{{ forloop.counter }}">
-                        <i class="fa-solid fa-trash-can"></i>
+                <span>
+                    <span class="ps-1">
+                        {% if subcom.citations_count >= 10 %}
+                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" style="color:#ED820E"></i></a>
+                    {% else %}
+                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" style="color:#ED820E"></i></a>
+                    {% endif %}
+                    </span>
+                    <span class="pe-1">
+                        <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-square-plus text-primary"></i>
+                            <span class="hidden_jid_new_{{ forloop.counter }}" style="display:none">
+                                <span class="fw-bold text-primary"><u>&nbsp;Insert Text Here</u></span>
+                            </span>
                         </a>
-                </sup>
-            </span>
-            <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-solid fa-feather"></i>
-                <span class="hidden_jid_new_{{ forloop.counter }}" style="display:none">
-                    <sup class="badge bg-warning fw-bold text-dark" style="padding-bottom:3px; padding-top:3px;  margin-bottom:2px;">Insert Text</sup>
+                    </span>
                 </span>
-            </a>
+
+        </span>
+
 
         {% endfor %}
 
@@ -133,14 +145,13 @@
     </div>
 
                 <div class="col-md-12 pb-2">
+                <h5 class="pt-3">Notes:</h5>
 
-
-
-
-                    <h6 class="lead-2 text-secondary pt-2">- Note that each description has several <u>subdescriptions</u><sup>*</sup>.
-                        <br>
-                        * A subdescription is a combination of some text and its corresponding citation(s).
-                    </h6>
+                <ul>
+                    <li class="text-secondary">Each description has several <u>subdescriptions</u></li>
+                    <li class="text-secondary">A subdescription is a combination of some text and its corresponding citation(s).</li>
+                    <li class="text-secondary">Use &lt;br&gt; in your text to indicate new paragraphs.</li>
+                </ul>
                 </div>
 </div>
 
@@ -168,10 +179,10 @@
                 const jidtext = document.querySelector(`.jidtext_${counter}`);
                 const jidtextref = document.querySelector(`.jidtextref_${counter}`);
                 if (jidtext) {
-                    jidtext.style.textDecoration = 'underline';
+                    jidtext.style.backgroundColor = 'lightgray';  
                 }
                 if (jidtextref) {
-                    jidtextref.style.textDecoration = 'underline';
+                    jidtextref.style.backgroundColor = 'lightgray';  
                 }
             });
     
@@ -181,10 +192,11 @@
                 const jidtextref = document.querySelector(`.jidtextref_${counter}`);
 
                 if (jidtext) {
-                    jidtext.style.textDecoration = 'none';
+                    jidtext.style.backgroundColor = 'transparent';  
                 }
                 if (jidtextref) {
-                    jidtextref.style.textDecoration = 'none';
+                    jidtextref.style.backgroundColor = 'transparent';
+
                 }
             });
         });

@@ -153,6 +153,8 @@ urlpatterns += [
 
     path('core/seshatprivatecommentparts/<int:pk>/update/<int:private_com_id>/',
          views.SeshatPrivateCommentPartUpdate.as_view(), name="seshatprivatecommentpart-update"),
+    path('core/xxyyzz/<int:com_id>/',
+         views.xxyyzz, name="xxyyzz"),
 
     # Download
     #path('balancedownload/', views.balance_download,

@@ -172,7 +172,7 @@
 
       {% endif %}
 
-    <form action="" method="post">
+    <form action="{% url 'xxyyzz' com_id=object.id %}" method="post">
             {% csrf_token %}
             <legend>
                 <div class="row d-flex align-items-center">
@@ -197,7 +197,8 @@
                             <span class="text-secondary">(Only visisble to Selected Seshat Experts/RAs)</span>
                         </th>
                           <th class="col-md-2" scope="col" style="text-align: left"> Target Experts</th>
-                          <th class="col-md-2" scope="col" style="text-align: right"> Last Modified</th>
+                          <th class="col-md-2" scope="col" style="text-align: right"> Created</th>
+                          <th class="col-md-2" scope="col" style="text-align: right">                        <input type="submit" class="btn border border-dark bg-info fw-bold pt-1 pb-0 px-1"  value="Set Done"></th>
                     </div>
                 </tr>
               </thead>
@@ -207,28 +208,39 @@
                 {% if object.inner_private_comments_related.all %}
                 {% for subcom in object.inner_private_comments_related.all %}
 
-                    <tr class="py-1" >
+                    <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
                         <div class="row">
 
-                        <td class="col-md-8 text-dark py-1" style="text-align: left;">
-                            <span class="badge text-dark fs-6 border border-dark" style="background: {{subcom.private_comment_owner.id|give_me_a_color}};">{{subcom.private_comment_owner}}</span>
-                                {{ subcom.private_comment_part_text }}                                 
-                                <a href="{% url 'seshatprivatecommentpart-update' pk=subcom.pk  private_com_id=subcom.private_comment_id %}"><i class="fa-regular fa-sm fa-pen-to-square text-danger"></i></a>
+                        <td class="col-md-8 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
+                            <span class="badge text-dark  {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span>
+                                {{ subcom.private_comment_part_text }}    
+                                {% if subcom.is_done %}    
+                                
+                                {% else %}
+                                <a href="{% url 'seshatprivatecommentpart-update' pk=subcom.pk  private_com_id=subcom.private_comment_id %}"><i class="fa-regular fa-sm fa-pen-to-square text-danger "></i></a>
+                                {% endif %}
+
                         </td>
                         <td class="col-md-2" style="text-align: left">
                             {% for an_expert in  subcom.private_comment_reader.all %}
-                            <span class="badge text-dark" style="background: {{an_expert.id|give_me_a_color}};">{{an_expert}}</span>
+                            <span class="badge text-dark" style="background: {% if subcom.is_done %}lightgray{% else %} {{an_expert.id|give_me_a_color}}{% endif %};">{{an_expert}}</span>
                             {% endfor %}
                         </td>
                         <td class="col-md-2" style="text-align: right">
-                            {% if subcom.last_modified_date %}
-                                {{ subcom.last_modified_date|naturaltime }}
+                            {% if subcom.created_date %}
+                                {{ subcom.created_date|naturaltime }}
                             {% else %}
                             <i class="fa-solid fa-minus text-danger"></i>
                             {% endif %}
                         </td>
+                        <td class="col-md-1" style="text-align: center">
+                            <!-- Checkbox input -->
+                            <input type="checkbox" name="selected_items" value="{{ subcom.pk }}" {% if subcom.is_done %}checked disabled {% endif %}>
+                        </td>
+
                         </div>
                     </tr>
+
                 {% endfor %}
                 {% else %}
                 <tr>
@@ -246,8 +258,10 @@
                 {% endif %}
 
                 {% endautoescape %}
+
             </tbody>
           </table>
+         
         </form>
         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
         <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=object.id %}">

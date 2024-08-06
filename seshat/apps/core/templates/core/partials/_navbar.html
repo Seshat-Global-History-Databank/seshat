@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 
 <style>
     .search-container {
@@ -148,14 +149,14 @@
 
             {%  if  'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
             <li class="nav-item mx-1">
-                <a href="{% url 'user-profile' %}" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp; Logged in as: <strong> {{ user.email }} </strong>
+                <a href="{% url 'user-profile' %}" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp; Logged in as: <strong> {{ user.email|username_from_email }} </strong>
                     <sup class="badge rounded-pill  fw-bold" style="padding: 3px 5px 2px 5px; color:#782823; background-color:#fffdf2;">{{ notifications_count }}</sup>
                 </a>
             </li>
 
             {% else %}
             <li class="nav-item mx-1">
-                <a href="#" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp; Logged in as: <strong> {{ user.email }} </strong>
+                <a href="#" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i> &nbsp; Logged in as: <strong> {{ user.email|username_from_email }} </strong>
                 </a>
             </li>
             {% endif %}

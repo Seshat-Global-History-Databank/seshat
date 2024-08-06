@@ -183,6 +183,7 @@ def profile(request):
     print(f"my_user_id: {request.user.id}")
 
     all_my_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id)
+    #all_my_active_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id).exclude(is_done=True)
     print(f"my_expert_id: {my_expert.id}")
 
     # try:
@@ -215,6 +216,7 @@ def profile(request):
     #print(my_user_name.user_id)
     context = {
         "facts_verified_by_user": all_my_private_comments,
+        #"open_facts_for_user": all_my_active_private_comments,
         "all_facts": all_facts,
         'all_tasks_given': all_tasks_given
         }
