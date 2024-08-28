@@ -7,13 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0011_alter_citation_ref'),
+        ("core", "0011_alter_citation_ref"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='citation',
-            name='ref',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='citation', to='core.reference'),
+            model_name="citation",
+            name="ref",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="citation",
+                to="core.reference",
+            ),
         ),
     ]

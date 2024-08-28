@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0060_alter_us_violence_violence_type'),
+        ("crisisdb", "0060_alter_us_violence_violence_type"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='us_location',
-            options={'ordering': ['us_state', '-city', '-county', '-special_place']},
+            name="us_location",
+            options={"ordering": ["us_state", "-city", "-county", "-special_place"]},
         ),
         migrations.AlterModelOptions(
-            name='us_violence',
-            options={'ordering': ['-violence_date', '-fatalities']},
+            name="us_violence",
+            options={"ordering": ["-violence_date", "-fatalities"]},
         ),
     ]

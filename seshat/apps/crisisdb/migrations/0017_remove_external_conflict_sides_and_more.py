@@ -7,25 +7,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0016_alter_agricultural_population_unique_together_and_more'),
+        ("crisisdb", "0016_alter_agricultural_population_unique_together_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='sides',
+            model_name="external_conflict",
+            name="sides",
         ),
         migrations.RemoveField(
-            model_name='external_conflict_side',
-            name='casualty',
+            model_name="external_conflict_side",
+            name="casualty",
         ),
         migrations.RemoveField(
-            model_name='external_conflict_side',
-            name='conflict',
+            model_name="external_conflict_side",
+            name="conflict",
         ),
         migrations.AddField(
-            model_name='external_conflict_side',
-            name='conflict_id',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='External_conflicts', to='crisisdb.external_conflict'),
+            model_name="external_conflict_side",
+            name="conflict_id",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="External_conflicts",
+                to="crisisdb.external_conflict",
+            ),
         ),
     ]

@@ -6,13 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0035_polity_new_name'),
+        ("core", "0035_polity_new_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='nga',
-            name='world_region',
-            field=models.CharField(choices=[('Europe', 'Europe'), ('SouthwestAsia', 'Southwest Asia'), ('Africa', 'Africa'), ('CentralEurasia', 'Central Eurasia'), ('SouthAsia', 'South Asia'), ('SoutheastAsia', 'Southeast Asia'), ('EastAsia', 'East Asia'), ('Oceania-Australia', 'Oceania-Australia'), ('NorthAmerica', 'North America'), ('SouthAmerica', 'South America')], default='Europe', max_length=100),
+            model_name="nga",
+            name="world_region",
+            field=models.CharField(
+                choices=[
+                    ("Europe", "Europe"),
+                    ("SouthwestAsia", "Southwest Asia"),
+                    ("Africa", "Africa"),
+                    ("CentralEurasia", "Central Eurasia"),
+                    ("SouthAsia", "South Asia"),
+                    ("SoutheastAsia", "Southeast Asia"),
+                    ("EastAsia", "East Asia"),
+                    ("Oceania-Australia", "Oceania-Australia"),
+                    ("NorthAmerica", "North America"),
+                    ("SouthAmerica", "South America"),
+                ],
+                default="Europe",
+                max_length=100,
+            ),
         ),
     ]

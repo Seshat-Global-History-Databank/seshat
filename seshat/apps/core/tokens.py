@@ -20,7 +20,11 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
         Returns:
             str: The hash value.
         """
-        return (six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.profile.email_confirmed))
+        return (
+            six.text_type(user.pk)
+            + six.text_type(timestamp)
+            + six.text_type(user.profile.email_confirmed)
+        )
 
 
 account_activation_token = AccountActivationTokenGenerator()

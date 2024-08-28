@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0049_alter_nga_world_region'),
+        ("core", "0049_alter_nga_world_region"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='polity_tag',
-            field=models.CharField(blank=True, choices=[('LEGACY', 'Legacy'), ('POL_AFR_EAST', 'POL_AFR_EAST'), ('POL_AFR_WEST', 'POL_AFR_WEST'), ('POL_AFR_SA', 'POL_AFR_SA'), ('POL_SA_SI', 'POL_SA_SI')], default='LEGACY', max_length=100, null=True),
+            model_name="polity",
+            name="polity_tag",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("LEGACY", "Legacy"),
+                    ("POL_AFR_EAST", "POL_AFR_EAST"),
+                    ("POL_AFR_WEST", "POL_AFR_WEST"),
+                    ("POL_AFR_SA", "POL_AFR_SA"),
+                    ("POL_SA_SI", "POL_SA_SI"),
+                ],
+                default="LEGACY",
+                max_length=100,
+                null=True,
+            ),
         ),
     ]

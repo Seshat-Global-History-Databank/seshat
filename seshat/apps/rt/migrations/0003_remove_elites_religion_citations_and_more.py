@@ -6,80 +6,80 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rt', '0002_rename_religion_a_religion_alter_a_religion_options'),
+        ("rt", "0002_rename_religion_a_religion_alter_a_religion_options"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='elites_religion',
-            name='citations',
+            model_name="elites_religion",
+            name="citations",
         ),
         migrations.RemoveField(
-            model_name='elites_religion',
-            name='comment',
+            model_name="elites_religion",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='elites_religion',
-            name='curator',
+            model_name="elites_religion",
+            name="curator",
         ),
         migrations.RemoveField(
-            model_name='elites_religion',
-            name='elites_religion',
+            model_name="elites_religion",
+            name="elites_religion",
         ),
         migrations.RemoveField(
-            model_name='elites_religion',
-            name='polity',
+            model_name="elites_religion",
+            name="polity",
         ),
         migrations.RemoveField(
-            model_name='official_religion',
-            name='citations',
+            model_name="official_religion",
+            name="citations",
         ),
         migrations.RemoveField(
-            model_name='official_religion',
-            name='comment',
+            model_name="official_religion",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='official_religion',
-            name='curator',
+            model_name="official_religion",
+            name="curator",
         ),
         migrations.RemoveField(
-            model_name='official_religion',
-            name='official_religion',
+            model_name="official_religion",
+            name="official_religion",
         ),
         migrations.RemoveField(
-            model_name='official_religion',
-            name='polity',
+            model_name="official_religion",
+            name="polity",
         ),
         migrations.RemoveField(
-            model_name='widespread_religion',
-            name='citations',
+            model_name="widespread_religion",
+            name="citations",
         ),
         migrations.RemoveField(
-            model_name='widespread_religion',
-            name='comment',
+            model_name="widespread_religion",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='widespread_religion',
-            name='curator',
+            model_name="widespread_religion",
+            name="curator",
         ),
         migrations.RemoveField(
-            model_name='widespread_religion',
-            name='polity',
+            model_name="widespread_religion",
+            name="polity",
         ),
         migrations.RemoveField(
-            model_name='widespread_religion',
-            name='widespread_religion',
+            model_name="widespread_religion",
+            name="widespread_religion",
         ),
         migrations.DeleteModel(
-            name='A_religion',
+            name="A_religion",
         ),
         migrations.DeleteModel(
-            name='Elites_religion',
+            name="Elites_religion",
         ),
         migrations.DeleteModel(
-            name='Official_religion',
+            name="Official_religion",
         ),
         migrations.DeleteModel(
-            name='Widespread_religion',
+            name="Widespread_religion",
         ),
     ]

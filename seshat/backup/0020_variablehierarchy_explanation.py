@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0019_remove_citation_no_page_to_or_from_and_more'),
+        ("core", "0019_remove_citation_no_page_to_or_from_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='variablehierarchy',
-            name='explanation',
+            model_name="variablehierarchy",
+            name="explanation",
             field=models.TextField(blank=True, null=True),
         ),
     ]

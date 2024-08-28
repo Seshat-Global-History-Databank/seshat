@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0061_alter_us_location_options_alter_us_violence_options'),
+        ("crisisdb", "0061_alter_us_location_options_alter_us_violence_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='us_violence_data_source',
-            name='url_address',
+            model_name="us_violence_data_source",
+            name="url_address",
             field=models.URLField(blank=True, max_length=500, null=True),
         ),
     ]

@@ -6,88 +6,88 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0030_alter_agricultural_population_comment_and_more'),
+        ("crisisdb", "0030_alter_agricultural_population_comment_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='agricultural_population',
-            name='comment',
+            model_name="agricultural_population",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='arable_land',
-            name='comment',
+            model_name="arable_land",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='arable_land_per_farmer',
-            name='comment',
+            model_name="arable_land_per_farmer",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='crop_failure_event',
-            name='comment',
+            model_name="crop_failure_event",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='disease_outbreak',
-            name='comment',
+            model_name="disease_outbreak",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='drought_event',
-            name='comment',
+            model_name="drought_event",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='comment',
+            model_name="external_conflict",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='external_conflict_side',
-            name='comment',
+            model_name="external_conflict_side",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='famine_event',
-            name='comment',
+            model_name="famine_event",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='gdp_per_capita',
-            name='comment',
+            model_name="gdp_per_capita",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='gross_grain_shared_per_agricultural_population',
-            name='comment',
+            model_name="gross_grain_shared_per_agricultural_population",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='internal_conflict',
-            name='comment',
+            model_name="internal_conflict",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='locust_event',
-            name='comment',
+            model_name="locust_event",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='military_expense',
-            name='comment',
+            model_name="military_expense",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='net_grain_shared_per_agricultural_population',
-            name='comment',
+            model_name="net_grain_shared_per_agricultural_population",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='silver_inflow',
-            name='comment',
+            model_name="silver_inflow",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='silver_stock',
-            name='comment',
+            model_name="silver_stock",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='socioeconomic_turmoil_event',
-            name='comment',
+            model_name="socioeconomic_turmoil_event",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='surplus',
-            name='comment',
+            model_name="surplus",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='total_population',
-            name='comment',
+            model_name="total_population",
+            name="comment",
         ),
     ]

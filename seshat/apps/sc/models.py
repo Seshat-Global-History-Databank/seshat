@@ -11,34 +11,35 @@ from ..accounts.models import Seshat_Expert
 
 ########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
-('present', 'present'),
-('absent', 'absent'),
-('unknown', 'unknown'),
-('A~P', 'Transitional (Absent -> Present)'),
-('P~A', 'Transitional (Present -> Absent)'),
+    ("present", "present"),
+    ("absent", "absent"),
+    ("unknown", "unknown"),
+    ("A~P", "Transitional (Absent -> Present)"),
+    ("P~A", "Transitional (Present -> Absent)"),
 )
 
 SOURCE_OF_SUPPORT_CHOICES = (
-('state salary', 'state salary'),
-('pensions', 'pensions'),
-('enoblement', 'enoblement'),
-('suspected unknown', 'suspected unknown'),
-('unknown', 'unknown'),
-('land', 'land'),
-('absent', 'absent'),
-('cash', 'cash'),
-('salary', 'salary'),
-('state', 'state'),
-('governed population', 'governed population'),
-('none', 'none'),
-('cattle', 'cattle'),
+    ("state salary", "state salary"),
+    ("pensions", "pensions"),
+    ("enoblement", "enoblement"),
+    ("suspected unknown", "suspected unknown"),
+    ("unknown", "unknown"),
+    ("land", "land"),
+    ("absent", "absent"),
+    ("cash", "cash"),
+    ("salary", "salary"),
+    ("state", "state"),
+    ("governed population", "governed population"),
+    ("none", "none"),
+    ("cattle", "cattle"),
 )
 
-########## TUPLE CHOICES THAT ARE THE SAME 
+########## TUPLE CHOICES THAT ARE THE SAME
 
 ########## END of tuple choices for general Models
 
 ########## Beginning of Function Definitions for General (Vars) Models
+
 
 def call_my_name(self):
     """
@@ -59,9 +60,20 @@ def call_my_name(self):
         str: The name of the model instance.
     """
     if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
-        return self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
+        return (
+            self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
+        )
     else:
-        return self.name + " [for " + self.polity.name + " from " + str(self.year_from) + " to " + str(self.year_to) + "]"
+        return (
+            self.name
+            + " [for "
+            + self.polity.name
+            + " from "
+            + str(self.year_from)
+            + " to "
+            + str(self.year_to)
+            + "]"
+        )
 
 
 def return_citations(self):
@@ -83,7 +95,13 @@ def return_citations(self):
     Returns:
         str: The citations of the model instance, separated by comma.
     """
-    return ', '.join(['<a href="' + citation.zoteroer() + '">' + citation.__str__() + ' </a>' for citation in self.citations.all()[:2]])
+    return ", ".join(
+        [
+            '<a href="' + citation.zoteroer() + '">' + citation.__str__() + " </a>"
+            for citation in self.citations.all()[:2]
+        ]
+    )
+
 
 def clean_times(self):
     """
@@ -110,45 +128,71 @@ def clean_times(self):
         ValidationError: If the year_to is out of range.
     """
     if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
+                ),
+            }
+        )
     if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
+                ),
+            }
+        )
     if self.year_from and (self.year_from < self.polity.start_year):
-        raise ValidationError({
-            'year_from': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'
+                ),
+            }
+        )
     if self.year_to and (self.year_to > self.polity.end_year):
-        raise ValidationError({
-            'year_to':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_to": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'
+                ),
+            }
+        )
     if self.year_to and (self.year_to > date.today().year):
-        raise ValidationError({
-            'year_to': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_to": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'
+                ),
+            }
+        )
 
 
 ########## End of Function Definitions for General (Vars) Models
 
 ########## Beginning of class Definitions for general Models
 
+
 class Ra(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Ra")
-    sc_ra = models.ForeignKey(Seshat_Expert, on_delete=models.SET_NULL, null=True, related_name="sc_research_assistant")
+    sc_ra = models.ForeignKey(
+        Seshat_Expert,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="sc_research_assistant",
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Ra'
-        verbose_name_plural = 'Ras'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Ra"
+        verbose_name_plural = "Ras"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -193,7 +237,7 @@ class Ra(SeshatCommon):
             model instead.
         """
         return "ra"
-    
+
     def show_value(self):
         if self.sc_ra:
             return self.sc_ra
@@ -205,10 +249,10 @@ class Ra(SeshatCommon):
             return self.sc_ra
         else:
             return None
-        
+
     def show_value_to(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -218,16 +262,15 @@ class Ra(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('ra-detail', args=[str(self.id)])
+        return reverse("ra-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Polity_territory(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Polity_territory")
     polity_territory_from = models.IntegerField(blank=True, null=True)
     polity_territory_to = models.IntegerField(blank=True, null=True)
@@ -236,9 +279,10 @@ class Polity_territory(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Polity_territory'
-        verbose_name_plural = 'Polity_territories'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Polity_territory"
+        verbose_name_plural = "Polity_territories"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -283,19 +327,30 @@ class Polity_territory(SeshatCommon):
             model instead.
         """
         return "Polity Territory"
-    
+
     def show_value(self):
-        if self.polity_territory_from is not None and self.polity_territory_to is not None and self.polity_territory_to == self.polity_territory_from:
-            return mark_safe(f"{self.polity_territory_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
-        elif self.polity_territory_from is not None and self.polity_territory_to is not None:
-            return mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.polity_territory_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_territory_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
+        if (
+            self.polity_territory_from is not None
+            and self.polity_territory_to is not None
+            and self.polity_territory_to == self.polity_territory_from
+        ):
+            return mark_safe(
+                f"{self.polity_territory_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
+            )
+        elif (
+            self.polity_territory_from is not None
+            and self.polity_territory_to is not None
+        ):
+            return mark_safe(
+                f"<span class='fw-light text-secondary'> [</span>{self.polity_territory_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_territory_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
+            )
         elif self.polity_territory_from is not None:
             return f"[{self.polity_territory_from:,}, ...]"
         elif self.polity_territory_to is not None:
             return f"[..., {self.polity_territory_to:,}]"
         else:
             return " - "
-  
+
     def show_value_from(self):
         if self.polity_territory_from is not None:
             return self.polity_territory_from
@@ -313,7 +368,7 @@ class Polity_territory(SeshatCommon):
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -323,16 +378,15 @@ class Polity_territory(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('polity_territory-detail', args=[str(self.id)])
+        return reverse("polity_territory-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Polity_population(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Polity_population")
     polity_population_from = models.IntegerField(blank=True, null=True)
     polity_population_to = models.IntegerField(blank=True, null=True)
@@ -341,9 +395,10 @@ class Polity_population(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Polity_population'
-        verbose_name_plural = 'Polity_populations'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Polity_population"
+        verbose_name_plural = "Polity_populations"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -388,19 +443,30 @@ class Polity_population(SeshatCommon):
             model instead.
         """
         return "Polity Population"
-    
+
     def show_value(self):
-        if self.polity_population_from is not None and self.polity_population_to is not None and self.polity_population_to == self.polity_population_from:
-            return mark_safe(f"{self.polity_population_from:,}<span class='fw-light fs-6 text-secondary'> people </span>")
-        elif self.polity_population_from is not None and self.polity_population_to is not None:
-            return  mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.polity_population_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_population_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>")
+        if (
+            self.polity_population_from is not None
+            and self.polity_population_to is not None
+            and self.polity_population_to == self.polity_population_from
+        ):
+            return mark_safe(
+                f"{self.polity_population_from:,}<span class='fw-light fs-6 text-secondary'> people </span>"
+            )
+        elif (
+            self.polity_population_from is not None
+            and self.polity_population_to is not None
+        ):
+            return mark_safe(
+                f"<span class='fw-light text-secondary'> [</span>{self.polity_population_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_population_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>"
+            )
         elif self.polity_population_from is not None:
             return f"[{self.polity_population_from:,}, ...]"
         elif self.polity_population_to is not None:
             return f"[..., {self.polity_population_to:,}]"
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.polity_population_from is not None:
             return self.polity_population_from
@@ -411,14 +477,14 @@ class Polity_population(SeshatCommon):
         if self.polity_population_to is not None:
             return self.polity_population_to
         else:
-            return None   
-        
+            return None
+
     def subsection(self):
         return "Social Scale"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -428,27 +494,31 @@ class Polity_population(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('polity_population-detail', args=[str(self.id)])
+        return reverse("polity_population-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Population_of_the_largest_settlement(SeshatCommon):
-    """
-    
-    """
-    name = models.CharField(max_length=100, default="Population_of_the_largest_settlement")
-    population_of_the_largest_settlement_from = models.IntegerField(blank=True, null=True)
+    """ """
+
+    name = models.CharField(
+        max_length=100, default="Population_of_the_largest_settlement"
+    )
+    population_of_the_largest_settlement_from = models.IntegerField(
+        blank=True, null=True
+    )
     population_of_the_largest_settlement_to = models.IntegerField(blank=True, null=True)
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Population_of_the_largest_settlement'
-        verbose_name_plural = 'Population_of_the_largest_settlements'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Population_of_the_largest_settlement"
+        verbose_name_plural = "Population_of_the_largest_settlements"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -493,12 +563,24 @@ class Population_of_the_largest_settlement(SeshatCommon):
             model instead.
         """
         return "Population of the Largest Settlement"
-    
+
     def show_value(self):
-        if self.population_of_the_largest_settlement_from is not None and self.population_of_the_largest_settlement_to is not None and self.population_of_the_largest_settlement_to == self.population_of_the_largest_settlement_from:
-            return mark_safe(f"{self.population_of_the_largest_settlement_from:,} <span class='fw-light fs-6 text-secondary'> people </span>")
-        elif self.population_of_the_largest_settlement_from is not None and self.population_of_the_largest_settlement_to is not None:
-            return mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.population_of_the_largest_settlement_from:,} <span class='fw-light text-secondary'> to </span> {self.population_of_the_largest_settlement_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>")
+        if (
+            self.population_of_the_largest_settlement_from is not None
+            and self.population_of_the_largest_settlement_to is not None
+            and self.population_of_the_largest_settlement_to
+            == self.population_of_the_largest_settlement_from
+        ):
+            return mark_safe(
+                f"{self.population_of_the_largest_settlement_from:,} <span class='fw-light fs-6 text-secondary'> people </span>"
+            )
+        elif (
+            self.population_of_the_largest_settlement_from is not None
+            and self.population_of_the_largest_settlement_to is not None
+        ):
+            return mark_safe(
+                f"<span class='fw-light text-secondary'> [</span>{self.population_of_the_largest_settlement_from:,} <span class='fw-light text-secondary'> to </span> {self.population_of_the_largest_settlement_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>"
+            )
         elif self.population_of_the_largest_settlement_from is not None:
             return f"[{self.population_of_the_largest_settlement_from:,}, ...]"
         elif self.population_of_the_largest_settlement_to is not None:
@@ -506,7 +588,6 @@ class Population_of_the_largest_settlement(SeshatCommon):
         else:
             return " - "
 
-        
     def show_value_from(self):
         if self.population_of_the_largest_settlement_from is not None:
             return self.population_of_the_largest_settlement_from
@@ -517,14 +598,14 @@ class Population_of_the_largest_settlement(SeshatCommon):
         if self.population_of_the_largest_settlement_to is not None:
             return self.population_of_the_largest_settlement_to
         else:
-            return None   
+            return None
 
     def subsection(self):
         return "Social Scale"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -534,16 +615,17 @@ class Population_of_the_largest_settlement(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('population_of_the_largest_settlement-detail', args=[str(self.id)])
+        return reverse(
+            "population_of_the_largest_settlement-detail", args=[str(self.id)]
+        )
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Settlement_hierarchy(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Settlement_hierarchy")
     settlement_hierarchy_from = models.IntegerField(blank=True, null=True)
     settlement_hierarchy_to = models.IntegerField(blank=True, null=True)
@@ -552,9 +634,10 @@ class Settlement_hierarchy(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Settlement_hierarchy'
-        verbose_name_plural = 'Settlement_hierarchies'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Settlement_hierarchy"
+        verbose_name_plural = "Settlement_hierarchies"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -599,11 +682,18 @@ class Settlement_hierarchy(SeshatCommon):
             model instead.
         """
         return "Settlement Hierarchy"
-    
+
     def show_value(self):
-        if self.settlement_hierarchy_from is not None and self.settlement_hierarchy_to is not None and self.settlement_hierarchy_to == self.settlement_hierarchy_from:
+        if (
+            self.settlement_hierarchy_from is not None
+            and self.settlement_hierarchy_to is not None
+            and self.settlement_hierarchy_to == self.settlement_hierarchy_from
+        ):
             return self.settlement_hierarchy_from
-        elif self.settlement_hierarchy_from is not None and self.settlement_hierarchy_to is not None:
+        elif (
+            self.settlement_hierarchy_from is not None
+            and self.settlement_hierarchy_to is not None
+        ):
             return f"[{self.settlement_hierarchy_from:,} to {self.settlement_hierarchy_to:,}]"
         elif self.settlement_hierarchy_from is not None:
             return f"[{self.settlement_hierarchy_from:,}, ...]"
@@ -611,8 +701,7 @@ class Settlement_hierarchy(SeshatCommon):
             return f"[..., {self.settlement_hierarchy_to:,}]"
         else:
             return " - "
-        
-        
+
     def show_value_from(self):
         if self.settlement_hierarchy_from is not None:
             return self.settlement_hierarchy_from
@@ -623,14 +712,14 @@ class Settlement_hierarchy(SeshatCommon):
         if self.settlement_hierarchy_to is not None:
             return self.settlement_hierarchy_to
         else:
-            return None  
+            return None
 
     def subsection(self):
         return "Hierarchical Complexity"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -640,16 +729,15 @@ class Settlement_hierarchy(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('settlement_hierarchy-detail', args=[str(self.id)])
+        return reverse("settlement_hierarchy-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Administrative_level(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Administrative_level")
     administrative_level_from = models.IntegerField(blank=True, null=True)
     administrative_level_to = models.IntegerField(blank=True, null=True)
@@ -658,9 +746,10 @@ class Administrative_level(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Administrative_level'
-        verbose_name_plural = 'Administrative_levels'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Administrative_level"
+        verbose_name_plural = "Administrative_levels"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -705,11 +794,18 @@ class Administrative_level(SeshatCommon):
             model instead.
         """
         return "Administrative Level"
-    
+
     def show_value(self):
-        if self.administrative_level_from is not None and self.administrative_level_to is not None and self.administrative_level_to == self.administrative_level_from:
+        if (
+            self.administrative_level_from is not None
+            and self.administrative_level_to is not None
+            and self.administrative_level_to == self.administrative_level_from
+        ):
             return self.administrative_level_from
-        elif self.administrative_level_from is not None and self.administrative_level_to is not None:
+        elif (
+            self.administrative_level_from is not None
+            and self.administrative_level_to is not None
+        ):
             return f"[{self.administrative_level_from:,} to {self.administrative_level_to:,}]"
         elif self.administrative_level_from is not None:
             return f"[{self.administrative_level_from:,}, ...]"
@@ -717,8 +813,7 @@ class Administrative_level(SeshatCommon):
             return f"[..., {self.administrative_level_to:,}]"
         else:
             return " - "
-        
-        
+
     def show_value_from(self):
         if self.administrative_level_from is not None:
             return self.administrative_level_from
@@ -729,14 +824,14 @@ class Administrative_level(SeshatCommon):
         if self.administrative_level_to is not None:
             return self.administrative_level_to
         else:
-            return None  
-        
+            return None
+
     def subsection(self):
         return "Hierarchical Complexity"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -746,16 +841,15 @@ class Administrative_level(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('administrative_level-detail', args=[str(self.id)])
+        return reverse("administrative_level-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Religious_level(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Religious_level")
     religious_level_from = models.IntegerField(blank=True, null=True)
     religious_level_to = models.IntegerField(blank=True, null=True)
@@ -764,9 +858,10 @@ class Religious_level(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Religious_level'
-        verbose_name_plural = 'Religious_levels'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Religious_level"
+        verbose_name_plural = "Religious_levels"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -811,11 +906,18 @@ class Religious_level(SeshatCommon):
             model instead.
         """
         return "Religious Level"
-    
+
     def show_value(self):
-        if self.religious_level_from is not None and self.religious_level_to is not None and self.religious_level_to == self.religious_level_from:
+        if (
+            self.religious_level_from is not None
+            and self.religious_level_to is not None
+            and self.religious_level_to == self.religious_level_from
+        ):
             return self.religious_level_from
-        elif self.religious_level_from is not None and self.religious_level_to is not None:
+        elif (
+            self.religious_level_from is not None
+            and self.religious_level_to is not None
+        ):
             return f"[{self.religious_level_from:,} to {self.religious_level_to:,}]"
         elif self.religious_level_from is not None:
             return f"[{self.religious_level_from:,}, ...]"
@@ -823,7 +925,7 @@ class Religious_level(SeshatCommon):
             return f"[..., {self.religious_level_to:,}]"
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.religious_level_from is not None:
             return self.religious_level_from
@@ -834,14 +936,14 @@ class Religious_level(SeshatCommon):
         if self.religious_level_to is not None:
             return self.religious_level_to
         else:
-            return None  
+            return None
 
     def subsection(self):
         return "Hierarchical Complexity"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -851,16 +953,15 @@ class Religious_level(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('religious_level-detail', args=[str(self.id)])
+        return reverse("religious_level-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Military_level(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Military_level")
     military_level_from = models.IntegerField(blank=True, null=True)
     military_level_to = models.IntegerField(blank=True, null=True)
@@ -869,9 +970,10 @@ class Military_level(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Military_level'
-        verbose_name_plural = 'Military_levels'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Military_level"
+        verbose_name_plural = "Military_levels"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -916,11 +1018,17 @@ class Military_level(SeshatCommon):
             model instead.
         """
         return "Military Level"
-    
+
     def show_value(self):
-        if self.military_level_from is not None and self.military_level_to is not None and self.military_level_to == self.military_level_from:
+        if (
+            self.military_level_from is not None
+            and self.military_level_to is not None
+            and self.military_level_to == self.military_level_from
+        ):
             return self.military_level_from
-        elif self.military_level_from is not None and self.military_level_to is not None:
+        elif (
+            self.military_level_from is not None and self.military_level_to is not None
+        ):
             return f"[{self.military_level_from:,} to {self.military_level_to:,}]"
         elif self.military_level_from is not None:
             return f"[{self.military_level_from:,}, ...]"
@@ -928,7 +1036,7 @@ class Military_level(SeshatCommon):
             return f"[..., {self.military_level_to:,}]"
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.military_level_from is not None:
             return self.military_level_from
@@ -939,14 +1047,14 @@ class Military_level(SeshatCommon):
         if self.military_level_to is not None:
             return self.military_level_to
         else:
-            return None  
-        
+            return None
+
     def subsection(self):
         return "Hierarchical Complexity"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -956,26 +1064,28 @@ class Military_level(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('military_level-detail', args=[str(self.id)])
+        return reverse("military_level-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Professional_military_officer(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Professional_military_officer")
-    professional_military_officer = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    professional_military_officer = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Professional_military_officer'
-        verbose_name_plural = 'Professional_military_officers'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Professional_military_officer"
+        verbose_name_plural = "Professional_military_officers"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1020,13 +1130,13 @@ class Professional_military_officer(SeshatCommon):
             model instead.
         """
         return "Professional Military Officer"
-    
+
     def show_value(self):
         if self.professional_military_officer:
             return self.get_professional_military_officer_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.professional_military_officer:
             return self.professional_military_officer
@@ -1034,14 +1144,14 @@ class Professional_military_officer(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Professions"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1051,26 +1161,28 @@ class Professional_military_officer(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('professional_military_officer-detail', args=[str(self.id)])
+        return reverse("professional_military_officer-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Professional_soldier(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Professional_soldier")
-    professional_soldier = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    professional_soldier = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Professional_soldier'
-        verbose_name_plural = 'Professional_soldiers'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Professional_soldier"
+        verbose_name_plural = "Professional_soldiers"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1115,13 +1227,13 @@ class Professional_soldier(SeshatCommon):
             model instead.
         """
         return "Professional Soldier"
-    
+
     def show_value(self):
         if self.professional_soldier:
             return self.get_professional_soldier_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.professional_soldier:
             return self.professional_soldier
@@ -1129,14 +1241,14 @@ class Professional_soldier(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Professions"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1146,26 +1258,28 @@ class Professional_soldier(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('professional_soldier-detail', args=[str(self.id)])
+        return reverse("professional_soldier-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Professional_priesthood(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Professional_priesthood")
-    professional_priesthood = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    professional_priesthood = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Professional_priesthood'
-        verbose_name_plural = 'Professional_priesthoods'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Professional_priesthood"
+        verbose_name_plural = "Professional_priesthoods"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1210,13 +1324,13 @@ class Professional_priesthood(SeshatCommon):
             model instead.
         """
         return "Professional Priesthood"
-    
+
     def show_value(self):
         if self.professional_priesthood:
             return self.get_professional_priesthood_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.professional_priesthood:
             return self.professional_priesthood
@@ -1224,8 +1338,8 @@ class Professional_priesthood(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Professions"
 
@@ -1241,26 +1355,28 @@ class Professional_priesthood(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('professional_priesthood-detail', args=[str(self.id)])
+        return reverse("professional_priesthood-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Full_time_bureaucrat(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Full_time_bureaucrat")
-    full_time_bureaucrat = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    full_time_bureaucrat = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Full_time_bureaucrat'
-        verbose_name_plural = 'Full_time_bureaucrats'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Full_time_bureaucrat"
+        verbose_name_plural = "Full_time_bureaucrats"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1305,13 +1421,13 @@ class Full_time_bureaucrat(SeshatCommon):
             model instead.
         """
         return "Full Time Bureaucrat"
-    
+
     def show_value(self):
         if self.full_time_bureaucrat:
             return self.get_full_time_bureaucrat_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.full_time_bureaucrat:
             return self.full_time_bureaucrat
@@ -1319,15 +1435,14 @@ class Full_time_bureaucrat(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Bureaucracy Characteristics"
 
     def sub_subsection(self):
         return None
-        
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1337,26 +1452,28 @@ class Full_time_bureaucrat(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('full_time_bureaucrat-detail', args=[str(self.id)])
+        return reverse("full_time_bureaucrat-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Examination_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Examination_system")
-    examination_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    examination_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Examination_system'
-        verbose_name_plural = 'Examination_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Examination_system"
+        verbose_name_plural = "Examination_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1401,7 +1518,7 @@ class Examination_system(SeshatCommon):
             model instead.
         """
         return "Examination System"
-    
+
     def show_value(self):
         if self.examination_system:
             return self.get_examination_system_display()
@@ -1415,14 +1532,14 @@ class Examination_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Bureaucracy Characteristics"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1432,16 +1549,15 @@ class Examination_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('examination_system-detail', args=[str(self.id)])
+        return reverse("examination_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Merit_promotion(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Merit_promotion")
     merit_promotion = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1449,9 +1565,10 @@ class Merit_promotion(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Merit_promotion'
-        verbose_name_plural = 'Merit_promotions'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Merit_promotion"
+        verbose_name_plural = "Merit_promotions"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1496,13 +1613,13 @@ class Merit_promotion(SeshatCommon):
             model instead.
         """
         return "Merit Promotion"
-    
+
     def show_value(self):
         if self.merit_promotion:
             return self.get_merit_promotion_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.merit_promotion:
             return self.merit_promotion
@@ -1510,14 +1627,14 @@ class Merit_promotion(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Bureaucracy Characteristics"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1527,26 +1644,28 @@ class Merit_promotion(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('merit_promotion-detail', args=[str(self.id)])
+        return reverse("merit_promotion-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Specialized_government_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Specialized_government_building")
-    specialized_government_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    specialized_government_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Specialized_government_building'
-        verbose_name_plural = 'Specialized_government_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Specialized_government_building"
+        verbose_name_plural = "Specialized_government_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1591,13 +1710,13 @@ class Specialized_government_building(SeshatCommon):
             model instead.
         """
         return "Specialized Government Building"
-    
+
     def show_value(self):
         if self.specialized_government_building:
             return self.get_specialized_government_building_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.specialized_government_building:
             return self.specialized_government_building
@@ -1605,15 +1724,14 @@ class Specialized_government_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Bureaucracy Characteristics"
 
     def sub_subsection(self):
         return None
-        
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1623,16 +1741,15 @@ class Specialized_government_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('specialized_government_building-detail', args=[str(self.id)])
+        return reverse("specialized_government_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Formal_legal_code(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Formal_legal_code")
     formal_legal_code = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1640,9 +1757,10 @@ class Formal_legal_code(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Formal_legal_code'
-        verbose_name_plural = 'Formal_legal_codes'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Formal_legal_code"
+        verbose_name_plural = "Formal_legal_codes"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1687,7 +1805,7 @@ class Formal_legal_code(SeshatCommon):
             model instead.
         """
         return "Formal Legal Code"
-    
+
     def show_value(self):
         if self.formal_legal_code:
             return self.get_formal_legal_code_display()
@@ -1701,15 +1819,14 @@ class Formal_legal_code(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Law"
 
     def sub_subsection(self):
         return None
-        
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1719,16 +1836,15 @@ class Formal_legal_code(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('formal_legal_code-detail', args=[str(self.id)])
+        return reverse("formal_legal_code-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Judge(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Judge")
     judge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1736,9 +1852,10 @@ class Judge(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Judge'
-        verbose_name_plural = 'Judges'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Judge"
+        verbose_name_plural = "Judges"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1783,13 +1900,13 @@ class Judge(SeshatCommon):
             model instead.
         """
         return "Judge"
-    
+
     def show_value(self):
         if self.judge:
             return self.get_judge_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.judge:
             return self.judge
@@ -1797,14 +1914,14 @@ class Judge(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Law"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1814,16 +1931,15 @@ class Judge(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('judge-detail', args=[str(self.id)])
+        return reverse("judge-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Court(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Court")
     court = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1831,9 +1947,10 @@ class Court(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Court'
-        verbose_name_plural = 'Courts'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Court"
+        verbose_name_plural = "Courts"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1878,13 +1995,13 @@ class Court(SeshatCommon):
             model instead.
         """
         return "Court"
-    
+
     def show_value(self):
         if self.court:
             return self.get_court_display()
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.court:
             return self.court
@@ -1892,14 +2009,14 @@ class Court(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Law"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1909,26 +2026,28 @@ class Court(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('court-detail', args=[str(self.id)])
+        return reverse("court-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Professional_lawyer(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Professional_lawyer")
-    professional_lawyer = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    professional_lawyer = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Professional_lawyer'
-        verbose_name_plural = 'Professional_lawyers'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Professional_lawyer"
+        verbose_name_plural = "Professional_lawyers"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1973,7 +2092,7 @@ class Professional_lawyer(SeshatCommon):
             model instead.
         """
         return "Professional Lawyer"
-    
+
     def show_value(self):
         if self.professional_lawyer:
             return self.get_professional_lawyer_display()
@@ -1987,14 +2106,14 @@ class Professional_lawyer(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Law"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2004,16 +2123,15 @@ class Professional_lawyer(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('professional_lawyer-detail', args=[str(self.id)])
+        return reverse("professional_lawyer-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Irrigation_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Irrigation_system")
     irrigation_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2021,9 +2139,10 @@ class Irrigation_system(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Irrigation_system'
-        verbose_name_plural = 'Irrigation_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Irrigation_system"
+        verbose_name_plural = "Irrigation_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2068,7 +2187,7 @@ class Irrigation_system(SeshatCommon):
             model instead.
         """
         return "Irrigation System"
-    
+
     def show_value(self):
         if self.irrigation_system:
             return self.get_irrigation_system_display()
@@ -2082,14 +2201,14 @@ class Irrigation_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-    
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2099,26 +2218,28 @@ class Irrigation_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('irrigation_system-detail', args=[str(self.id)])
+        return reverse("irrigation_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Drinking_water_supply_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Drinking_water_supply_system")
-    drinking_water_supply_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    drinking_water_supply_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Drinking_water_supply_system'
-        verbose_name_plural = 'Drinking_water_supply_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Drinking_water_supply_system"
+        verbose_name_plural = "Drinking_water_supply_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2163,7 +2284,7 @@ class Drinking_water_supply_system(SeshatCommon):
             model instead.
         """
         return "Drinking Water Supply System"
-    
+
     def show_value(self):
         if self.drinking_water_supply_system:
             return self.get_drinking_water_supply_system_display()
@@ -2177,14 +2298,14 @@ class Drinking_water_supply_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2194,16 +2315,15 @@ class Drinking_water_supply_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('drinking_water_supply_system-detail', args=[str(self.id)])
+        return reverse("drinking_water_supply_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Market(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Market")
     market = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2211,9 +2331,10 @@ class Market(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Market'
-        verbose_name_plural = 'Markets'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Market"
+        verbose_name_plural = "Markets"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2258,7 +2379,7 @@ class Market(SeshatCommon):
             model instead.
         """
         return "Market"
-    
+
     def show_value(self):
         if self.market:
             return self.get_market_display()
@@ -2272,14 +2393,14 @@ class Market(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2289,16 +2410,15 @@ class Market(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('market-detail', args=[str(self.id)])
+        return reverse("market-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Food_storage_site(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Food_storage_site")
     food_storage_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2306,9 +2426,10 @@ class Food_storage_site(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Food_storage_site'
-        verbose_name_plural = 'Food_storage_sites'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Food_storage_site"
+        verbose_name_plural = "Food_storage_sites"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2353,7 +2474,7 @@ class Food_storage_site(SeshatCommon):
             model instead.
         """
         return "Food Storage Site"
-    
+
     def show_value(self):
         if self.food_storage_site:
             return self.get_food_storage_site_display()
@@ -2367,14 +2488,14 @@ class Food_storage_site(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2384,16 +2505,15 @@ class Food_storage_site(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('food_storage_site-detail', args=[str(self.id)])
+        return reverse("food_storage_site-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Road(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Road")
     road = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2401,9 +2521,10 @@ class Road(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Road'
-        verbose_name_plural = 'Roads'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Road"
+        verbose_name_plural = "Roads"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2448,7 +2569,7 @@ class Road(SeshatCommon):
             model instead.
         """
         return "Road"
-    
+
     def show_value(self):
         if self.road:
             return self.get_road_display()
@@ -2462,14 +2583,14 @@ class Road(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Transport Infrastructure"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2479,16 +2600,15 @@ class Road(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('road-detail', args=[str(self.id)])
+        return reverse("road-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Bridge(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Bridge")
     bridge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2496,9 +2616,10 @@ class Bridge(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Bridge'
-        verbose_name_plural = 'Bridges'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Bridge"
+        verbose_name_plural = "Bridges"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2543,7 +2664,7 @@ class Bridge(SeshatCommon):
             model instead.
         """
         return "Bridge"
-    
+
     def show_value(self):
         if self.bridge:
             return self.get_bridge_display()
@@ -2557,14 +2678,14 @@ class Bridge(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Transport Infrastructure"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2574,16 +2695,15 @@ class Bridge(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('bridge-detail', args=[str(self.id)])
+        return reverse("bridge-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Canal(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Canal")
     canal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2591,9 +2711,10 @@ class Canal(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Canal'
-        verbose_name_plural = 'Canals'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Canal"
+        verbose_name_plural = "Canals"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2638,7 +2759,7 @@ class Canal(SeshatCommon):
             model instead.
         """
         return "Canal"
-    
+
     def show_value(self):
         if self.canal:
             return self.get_canal_display()
@@ -2652,14 +2773,14 @@ class Canal(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Transport Infrastructure"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2669,16 +2790,15 @@ class Canal(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('canal-detail', args=[str(self.id)])
+        return reverse("canal-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Port(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Port")
     port = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2686,9 +2806,10 @@ class Port(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Port'
-        verbose_name_plural = 'Ports'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Port"
+        verbose_name_plural = "Ports"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2733,7 +2854,7 @@ class Port(SeshatCommon):
             model instead.
         """
         return "Port"
-    
+
     def show_value(self):
         if self.port:
             return self.get_port_display()
@@ -2747,14 +2868,14 @@ class Port(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Transport Infrastructure"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2764,16 +2885,15 @@ class Port(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('port-detail', args=[str(self.id)])
+        return reverse("port-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Mines_or_quarry(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Mines_or_quarry")
     mines_or_quarry = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2781,9 +2901,10 @@ class Mines_or_quarry(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Mines_or_quarry'
-        verbose_name_plural = 'Mines_or_quarries'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Mines_or_quarry"
+        verbose_name_plural = "Mines_or_quarries"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2828,7 +2949,7 @@ class Mines_or_quarry(SeshatCommon):
             model instead.
         """
         return "Mines or Quarry"
-    
+
     def show_value(self):
         if self.mines_or_quarry:
             return self.get_mines_or_quarry_display()
@@ -2842,14 +2963,14 @@ class Mines_or_quarry(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2859,16 +2980,15 @@ class Mines_or_quarry(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('mines_or_quarry-detail', args=[str(self.id)])
+        return reverse("mines_or_quarry-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Mnemonic_device(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Mnemonic_device")
     mnemonic_device = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2876,9 +2996,10 @@ class Mnemonic_device(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Mnemonic_device'
-        verbose_name_plural = 'Mnemonic_devices'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Mnemonic_device"
+        verbose_name_plural = "Mnemonic_devices"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2923,7 +3044,7 @@ class Mnemonic_device(SeshatCommon):
             model instead.
         """
         return "Mnemonic Device"
-    
+
     def show_value(self):
         if self.mnemonic_device:
             return self.get_mnemonic_device_display()
@@ -2937,14 +3058,14 @@ class Mnemonic_device(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -2954,16 +3075,15 @@ class Mnemonic_device(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('mnemonic_device-detail', args=[str(self.id)])
+        return reverse("mnemonic_device-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Nonwritten_record(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Nonwritten_record")
     nonwritten_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2971,9 +3091,10 @@ class Nonwritten_record(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Nonwritten_record'
-        verbose_name_plural = 'Nonwritten_records'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Nonwritten_record"
+        verbose_name_plural = "Nonwritten_records"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3018,7 +3139,7 @@ class Nonwritten_record(SeshatCommon):
             model instead.
         """
         return "Nonwritten Record"
-    
+
     def show_value(self):
         if self.nonwritten_record:
             return self.get_nonwritten_record_display()
@@ -3032,14 +3153,14 @@ class Nonwritten_record(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3049,16 +3170,15 @@ class Nonwritten_record(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('nonwritten_record-detail', args=[str(self.id)])
+        return reverse("nonwritten_record-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Written_record(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Written_record")
     written_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -3066,9 +3186,10 @@ class Written_record(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Written_record'
-        verbose_name_plural = 'Written_records'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Written_record"
+        verbose_name_plural = "Written_records"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3113,7 +3234,7 @@ class Written_record(SeshatCommon):
             model instead.
         """
         return "Written Record"
-    
+
     def show_value(self):
         if self.written_record:
             return self.get_written_record_display()
@@ -3127,14 +3248,14 @@ class Written_record(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3144,16 +3265,15 @@ class Written_record(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('written_record-detail', args=[str(self.id)])
+        return reverse("written_record-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Script(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Script")
     script = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -3161,9 +3281,10 @@ class Script(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Script'
-        verbose_name_plural = 'Scripts'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Script"
+        verbose_name_plural = "Scripts"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3208,7 +3329,7 @@ class Script(SeshatCommon):
             model instead.
         """
         return "Script"
-    
+
     def show_value(self):
         if self.script:
             return self.get_script_display()
@@ -3222,14 +3343,14 @@ class Script(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3239,26 +3360,28 @@ class Script(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('script-detail', args=[str(self.id)])
+        return reverse("script-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Non_phonetic_writing(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Non_phonetic_writing")
-    non_phonetic_writing = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    non_phonetic_writing = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Non_phonetic_writing'
-        verbose_name_plural = 'Non_phonetic_writings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Non_phonetic_writing"
+        verbose_name_plural = "Non_phonetic_writings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3303,7 +3426,7 @@ class Non_phonetic_writing(SeshatCommon):
             model instead.
         """
         return "Non Phonetic Writing"
-    
+
     def show_value(self):
         if self.non_phonetic_writing:
             return self.get_non_phonetic_writing_display()
@@ -3317,14 +3440,14 @@ class Non_phonetic_writing(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3334,26 +3457,28 @@ class Non_phonetic_writing(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('non_phonetic_writing-detail', args=[str(self.id)])
+        return reverse("non_phonetic_writing-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Phonetic_alphabetic_writing(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Phonetic_alphabetic_writing")
-    phonetic_alphabetic_writing = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    phonetic_alphabetic_writing = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Phonetic_alphabetic_writing'
-        verbose_name_plural = 'Phonetic_alphabetic_writings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Phonetic_alphabetic_writing"
+        verbose_name_plural = "Phonetic_alphabetic_writings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3398,7 +3523,7 @@ class Phonetic_alphabetic_writing(SeshatCommon):
             model instead.
         """
         return "Phonetic Alphabetic Writing"
-    
+
     def show_value(self):
         if self.phonetic_alphabetic_writing:
             return self.get_phonetic_alphabetic_writing_display()
@@ -3412,14 +3537,14 @@ class Phonetic_alphabetic_writing(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Writing System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3429,26 +3554,28 @@ class Phonetic_alphabetic_writing(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('phonetic_alphabetic_writing-detail', args=[str(self.id)])
+        return reverse("phonetic_alphabetic_writing-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Lists_tables_and_classification(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Lists_tables_and_classification")
-    lists_tables_and_classification = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    lists_tables_and_classification = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Lists_tables_and_classification'
-        verbose_name_plural = 'Lists_tables_and_classifications'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Lists_tables_and_classification"
+        verbose_name_plural = "Lists_tables_and_classifications"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3493,7 +3620,7 @@ class Lists_tables_and_classification(SeshatCommon):
             model instead.
         """
         return "Lists Tables and Classification"
-    
+
     def show_value(self):
         if self.lists_tables_and_classification:
             return self.get_lists_tables_and_classification_display()
@@ -3507,14 +3634,14 @@ class Lists_tables_and_classification(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3524,16 +3651,15 @@ class Lists_tables_and_classification(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('lists_tables_and_classification-detail', args=[str(self.id)])
+        return reverse("lists_tables_and_classification-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Calendar(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Calendar")
     calendar = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -3541,9 +3667,10 @@ class Calendar(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Calendar'
-        verbose_name_plural = 'Calendars'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Calendar"
+        verbose_name_plural = "Calendars"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3588,7 +3715,7 @@ class Calendar(SeshatCommon):
             model instead.
         """
         return "Calendar"
-    
+
     def show_value(self):
         if self.calendar:
             return self.get_calendar_display()
@@ -3600,7 +3727,7 @@ class Calendar(SeshatCommon):
             return self.calendar
         else:
             return None
-        
+
     def subsection(self):
         return "Information"
 
@@ -3608,8 +3735,8 @@ class Calendar(SeshatCommon):
         return "Kinds of Written Documents"
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3619,16 +3746,15 @@ class Calendar(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('calendar-detail', args=[str(self.id)])
+        return reverse("calendar-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Sacred_text(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Sacred_text")
     sacred_text = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -3636,9 +3762,10 @@ class Sacred_text(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Sacred_text'
-        verbose_name_plural = 'Sacred_texts'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Sacred_text"
+        verbose_name_plural = "Sacred_texts"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3683,7 +3810,7 @@ class Sacred_text(SeshatCommon):
             model instead.
         """
         return "Sacred Text"
-    
+
     def show_value(self):
         if self.sacred_text:
             return self.get_sacred_text_display()
@@ -3697,14 +3824,14 @@ class Sacred_text(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3714,26 +3841,28 @@ class Sacred_text(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('sacred_text-detail', args=[str(self.id)])
+        return reverse("sacred_text-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Religious_literature(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Religious_literature")
-    religious_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    religious_literature = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Religious_literature'
-        verbose_name_plural = 'Religious_literatures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Religious_literature"
+        verbose_name_plural = "Religious_literatures"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3778,7 +3907,7 @@ class Religious_literature(SeshatCommon):
             model instead.
         """
         return "Religious Literature"
-    
+
     def show_value(self):
         if self.religious_literature:
             return self.get_religious_literature_display()
@@ -3792,14 +3921,14 @@ class Religious_literature(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3809,26 +3938,28 @@ class Religious_literature(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('religious_literature-detail', args=[str(self.id)])
+        return reverse("religious_literature-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Practical_literature(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Practical_literature")
-    practical_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    practical_literature = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Practical_literature'
-        verbose_name_plural = 'Practical_literatures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Practical_literature"
+        verbose_name_plural = "Practical_literatures"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3873,7 +4004,7 @@ class Practical_literature(SeshatCommon):
             model instead.
         """
         return "Practical Literature"
-    
+
     def show_value(self):
         if self.practical_literature:
             return self.get_practical_literature_display()
@@ -3887,14 +4018,14 @@ class Practical_literature(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3904,16 +4035,15 @@ class Practical_literature(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('practical_literature-detail', args=[str(self.id)])
+        return reverse("practical_literature-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class History(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="History")
     history = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -3921,9 +4051,10 @@ class History(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'History'
-        verbose_name_plural = 'Histories'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "History"
+        verbose_name_plural = "Histories"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -3968,7 +4099,7 @@ class History(SeshatCommon):
             model instead.
         """
         return "History"
-    
+
     def show_value(self):
         if self.history:
             return self.get_history_display()
@@ -3982,14 +4113,14 @@ class History(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -3999,16 +4130,15 @@ class History(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('history-detail', args=[str(self.id)])
+        return reverse("history-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Philosophy(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Philosophy")
     philosophy = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4016,9 +4146,10 @@ class Philosophy(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Philosophy'
-        verbose_name_plural = 'Philosophies'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Philosophy"
+        verbose_name_plural = "Philosophies"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4063,7 +4194,7 @@ class Philosophy(SeshatCommon):
             model instead.
         """
         return "Philosophy"
-    
+
     def show_value(self):
         if self.philosophy:
             return self.get_philosophy_display()
@@ -4077,14 +4208,14 @@ class Philosophy(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-    
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4094,26 +4225,28 @@ class Philosophy(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('philosophy-detail', args=[str(self.id)])
+        return reverse("philosophy-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Scientific_literature(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Scientific_literature")
-    scientific_literature = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    scientific_literature = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Scientific_literature'
-        verbose_name_plural = 'Scientific_literatures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Scientific_literature"
+        verbose_name_plural = "Scientific_literatures"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4158,7 +4291,7 @@ class Scientific_literature(SeshatCommon):
             model instead.
         """
         return "Scientific Literature"
-    
+
     def show_value(self):
         if self.scientific_literature:
             return self.get_scientific_literature_display()
@@ -4172,14 +4305,14 @@ class Scientific_literature(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Kinds of Written Documents"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4189,16 +4322,15 @@ class Scientific_literature(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('scientific_literature-detail', args=[str(self.id)])
+        return reverse("scientific_literature-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Fiction(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Fiction")
     fiction = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4206,9 +4338,10 @@ class Fiction(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Fiction'
-        verbose_name_plural = 'Fictions'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Fiction"
+        verbose_name_plural = "Fictions"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4253,7 +4386,7 @@ class Fiction(SeshatCommon):
             model instead.
         """
         return "Fiction"
-    
+
     def show_value(self):
         if self.fiction:
             return self.get_fiction_display()
@@ -4267,8 +4400,8 @@ class Fiction(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def subsection(self):
         return "Information"
 
@@ -4284,16 +4417,15 @@ class Fiction(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('fiction-detail', args=[str(self.id)])
+        return reverse("fiction-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Article(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Article")
     article = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4301,9 +4433,10 @@ class Article(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Article'
-        verbose_name_plural = 'Articles'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Article"
+        verbose_name_plural = "Articles"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4348,7 +4481,7 @@ class Article(SeshatCommon):
             model instead.
         """
         return "Article"
-    
+
     def show_value(self):
         if self.article:
             return self.get_article_display()
@@ -4362,14 +4495,14 @@ class Article(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4379,16 +4512,15 @@ class Article(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('article-detail', args=[str(self.id)])
+        return reverse("article-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Token(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Token")
     token = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4396,9 +4528,10 @@ class Token(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Token'
-        verbose_name_plural = 'Tokens'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Token"
+        verbose_name_plural = "Tokens"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4443,7 +4576,7 @@ class Token(SeshatCommon):
             model instead.
         """
         return "Token"
-    
+
     def show_value(self):
         if self.token:
             return self.get_token_display()
@@ -4457,14 +4590,14 @@ class Token(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4474,16 +4607,15 @@ class Token(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('token-detail', args=[str(self.id)])
+        return reverse("token-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Precious_metal(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Precious_metal")
     precious_metal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4491,9 +4623,10 @@ class Precious_metal(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Precious_metal'
-        verbose_name_plural = 'Precious_metals'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Precious_metal"
+        verbose_name_plural = "Precious_metals"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4538,7 +4671,7 @@ class Precious_metal(SeshatCommon):
             model instead.
         """
         return "Precious Metal"
-    
+
     def show_value(self):
         if self.precious_metal:
             return self.get_precious_metal_display()
@@ -4552,14 +4685,14 @@ class Precious_metal(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4569,16 +4702,15 @@ class Precious_metal(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('precious_metal-detail', args=[str(self.id)])
+        return reverse("precious_metal-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Foreign_coin(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Foreign_coin")
     foreign_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4586,9 +4718,10 @@ class Foreign_coin(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Foreign_coin'
-        verbose_name_plural = 'Foreign_coins'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Foreign_coin"
+        verbose_name_plural = "Foreign_coins"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4633,7 +4766,7 @@ class Foreign_coin(SeshatCommon):
             model instead.
         """
         return "Foreign Coin"
-    
+
     def show_value(self):
         if self.foreign_coin:
             return self.get_foreign_coin_display()
@@ -4647,14 +4780,14 @@ class Foreign_coin(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4664,16 +4797,15 @@ class Foreign_coin(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('foreign_coin-detail', args=[str(self.id)])
+        return reverse("foreign_coin-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Indigenous_coin(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Indigenous_coin")
     indigenous_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4681,9 +4813,10 @@ class Indigenous_coin(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Indigenous_coin'
-        verbose_name_plural = 'Indigenous_coins'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Indigenous_coin"
+        verbose_name_plural = "Indigenous_coins"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4728,7 +4861,7 @@ class Indigenous_coin(SeshatCommon):
             model instead.
         """
         return "Indigenous Coin"
-    
+
     def show_value(self):
         if self.indigenous_coin:
             return self.get_indigenous_coin_display()
@@ -4742,8 +4875,8 @@ class Indigenous_coin(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def subsection(self):
         return "Information"
 
@@ -4759,16 +4892,15 @@ class Indigenous_coin(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('indigenous_coin-detail', args=[str(self.id)])
+        return reverse("indigenous_coin-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Paper_currency(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Paper_currency")
     paper_currency = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4776,9 +4908,10 @@ class Paper_currency(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Paper_currency'
-        verbose_name_plural = 'Paper_currencies'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Paper_currency"
+        verbose_name_plural = "Paper_currencies"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4823,7 +4956,7 @@ class Paper_currency(SeshatCommon):
             model instead.
         """
         return "Paper Currency"
-    
+
     def show_value(self):
         if self.paper_currency:
             return self.get_paper_currency_display()
@@ -4837,14 +4970,14 @@ class Paper_currency(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4854,16 +4987,15 @@ class Paper_currency(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('paper_currency-detail', args=[str(self.id)])
+        return reverse("paper_currency-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Courier(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Courier")
     courier = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4871,9 +5003,10 @@ class Courier(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Courier'
-        verbose_name_plural = 'Couriers'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Courier"
+        verbose_name_plural = "Couriers"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -4918,7 +5051,7 @@ class Courier(SeshatCommon):
             model instead.
         """
         return "Courier"
-    
+
     def show_value(self):
         if self.courier:
             return self.get_courier_display()
@@ -4932,14 +5065,14 @@ class Courier(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Postal System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -4949,16 +5082,15 @@ class Courier(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('courier-detail', args=[str(self.id)])
+        return reverse("courier-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class Postal_station(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Postal_station")
     postal_station = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -4966,9 +5098,10 @@ class Postal_station(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Postal_station'
-        verbose_name_plural = 'Postal_stations'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Postal_station"
+        verbose_name_plural = "Postal_stations"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5013,7 +5146,7 @@ class Postal_station(SeshatCommon):
             model instead.
         """
         return "Postal Station"
-    
+
     def show_value(self):
         if self.postal_station:
             return self.get_postal_station_display()
@@ -5027,8 +5160,8 @@ class Postal_station(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-        
+        return None
+
     def subsection(self):
         return "Information"
 
@@ -5044,26 +5177,28 @@ class Postal_station(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('postal_station-detail', args=[str(self.id)])
+        return reverse("postal_station-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 class General_postal_service(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="General_postal_service")
-    general_postal_service = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    general_postal_service = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'General_postal_service'
-        verbose_name_plural = 'General_postal_services'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "General_postal_service"
+        verbose_name_plural = "General_postal_services"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5108,7 +5243,7 @@ class General_postal_service(SeshatCommon):
             model instead.
         """
         return "General Postal Service"
-    
+
     def show_value(self):
         if self.general_postal_service:
             return self.get_general_postal_service_display()
@@ -5122,14 +5257,14 @@ class General_postal_service(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Postal System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5139,20 +5274,19 @@ class General_postal_service(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('general_postal_service-detail', args=[str(self.id)])
+        return reverse("general_postal_service-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-             
-        
+
+
 ########## END of class Definitions for general Models
 
 
 ############################## NEW SC Variables
 class Communal_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Communal_building")
     communal_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -5160,9 +5294,10 @@ class Communal_building(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Communal_building'
-        verbose_name_plural = 'Communal_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Communal_building"
+        verbose_name_plural = "Communal_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5207,7 +5342,7 @@ class Communal_building(SeshatCommon):
             model instead.
         """
         return "Communal Building"
-    
+
     def show_value(self):
         if self.communal_building:
             return self.get_communal_building_display()
@@ -5221,14 +5356,14 @@ class Communal_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5238,26 +5373,28 @@ class Communal_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('communal_building-detail', args=[str(self.id)])
+        return reverse("communal_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
 
 class Utilitarian_public_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Utilitarian_public_building")
-    utilitarian_public_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    utilitarian_public_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Utilitarian_public_building'
-        verbose_name_plural = 'Utilitarian_public_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Utilitarian_public_building"
+        verbose_name_plural = "Utilitarian_public_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5302,7 +5439,7 @@ class Utilitarian_public_building(SeshatCommon):
             model instead.
         """
         return "Utilitarian Public Building"
-    
+
     def show_value(self):
         if self.utilitarian_public_building:
             return self.get_utilitarian_public_building_display()
@@ -5316,14 +5453,14 @@ class Utilitarian_public_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5333,16 +5470,15 @@ class Utilitarian_public_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('utilitarian_public_building-detail', args=[str(self.id)])
+        return reverse("utilitarian_public_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Symbolic_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Symbolic_building")
     symbolic_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -5350,9 +5486,10 @@ class Symbolic_building(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Symbolic_building'
-        verbose_name_plural = 'Symbolic_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Symbolic_building"
+        verbose_name_plural = "Symbolic_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5397,7 +5534,7 @@ class Symbolic_building(SeshatCommon):
             model instead.
         """
         return "Symbolic Building"
-    
+
     def show_value(self):
         if self.symbolic_building:
             return self.get_symbolic_building_display()
@@ -5411,14 +5548,14 @@ class Symbolic_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5428,26 +5565,28 @@ class Symbolic_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('symbolic_building-detail', args=[str(self.id)])
+        return reverse("symbolic_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Entertainment_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Entertainment_building")
-    entertainment_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    entertainment_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Entertainment_building'
-        verbose_name_plural = 'Entertainment_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Entertainment_building"
+        verbose_name_plural = "Entertainment_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5492,7 +5631,7 @@ class Entertainment_building(SeshatCommon):
             model instead.
         """
         return "Entertainment Building"
-    
+
     def show_value(self):
         if self.entertainment_building:
             return self.get_entertainment_building_display()
@@ -5506,14 +5645,14 @@ class Entertainment_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5523,26 +5662,28 @@ class Entertainment_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('entertainment_building-detail', args=[str(self.id)])
+        return reverse("entertainment_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Knowledge_or_information_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Knowledge_or_information_building")
-    knowledge_or_information_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    knowledge_or_information_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Knowledge_or_information_building'
-        verbose_name_plural = 'Knowledge_or_information_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Knowledge_or_information_building"
+        verbose_name_plural = "Knowledge_or_information_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5587,7 +5728,7 @@ class Knowledge_or_information_building(SeshatCommon):
             model instead.
         """
         return "Knowledge Or Information Building"
-    
+
     def show_value(self):
         if self.knowledge_or_information_building:
             return self.get_knowledge_or_information_building_display()
@@ -5601,14 +5742,14 @@ class Knowledge_or_information_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5618,25 +5759,28 @@ class Knowledge_or_information_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('knowledge_or_information_building-detail', args=[str(self.id)])
+        return reverse("knowledge_or_information_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
+
 class Other_utilitarian_public_building(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Other_utilitarian_public_building")
-    other_utilitarian_public_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    other_utilitarian_public_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Other_utilitarian_public_building'
-        verbose_name_plural = 'Other_utilitarian_public_buildings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Other_utilitarian_public_building"
+        verbose_name_plural = "Other_utilitarian_public_buildings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5681,7 +5825,7 @@ class Other_utilitarian_public_building(SeshatCommon):
             model instead.
         """
         return "Other Utilitarian Public Building"
-    
+
     def show_value(self):
         if self.other_utilitarian_public_building:
             return self.get_other_utilitarian_public_building_display()
@@ -5695,14 +5839,14 @@ class Other_utilitarian_public_building(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Specialized Buildings: polity owned"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5712,26 +5856,28 @@ class Other_utilitarian_public_building(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('other_utilitarian_public_building-detail', args=[str(self.id)])
+        return reverse("other_utilitarian_public_building-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Special_purpose_site(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Special_purpose_site")
-    special_purpose_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    special_purpose_site = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Special_purpose_site'
-        verbose_name_plural = 'Special_purpose_sites'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Special_purpose_site"
+        verbose_name_plural = "Special_purpose_sites"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5776,7 +5922,7 @@ class Special_purpose_site(SeshatCommon):
             model instead.
         """
         return "Special Purpose Site"
-    
+
     def show_value(self):
         if self.special_purpose_site:
             return self.get_special_purpose_site_display()
@@ -5790,14 +5936,14 @@ class Special_purpose_site(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5807,16 +5953,15 @@ class Special_purpose_site(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('special_purpose_site-detail', args=[str(self.id)])
+        return reverse("special_purpose_site-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Ceremonial_site(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Ceremonial_site")
     ceremonial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -5824,9 +5969,10 @@ class Ceremonial_site(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Ceremonial_site'
-        verbose_name_plural = 'Ceremonial_sites'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Ceremonial_site"
+        verbose_name_plural = "Ceremonial_sites"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5871,7 +6017,7 @@ class Ceremonial_site(SeshatCommon):
             model instead.
         """
         return "Ceremonial Site"
-    
+
     def show_value(self):
         if self.ceremonial_site:
             return self.get_ceremonial_site_display()
@@ -5885,14 +6031,14 @@ class Ceremonial_site(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5902,16 +6048,15 @@ class Ceremonial_site(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('ceremonial_site-detail', args=[str(self.id)])
+        return reverse("ceremonial_site-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Burial_site(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Burial_site")
     burial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -5919,9 +6064,10 @@ class Burial_site(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Burial_site'
-        verbose_name_plural = 'Burial_sites'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Burial_site"
+        verbose_name_plural = "Burial_sites"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -5966,7 +6112,7 @@ class Burial_site(SeshatCommon):
             model instead.
         """
         return "Burial Site"
-    
+
     def show_value(self):
         if self.burial_site:
             return self.get_burial_site_display()
@@ -5980,14 +6126,14 @@ class Burial_site(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -5997,16 +6143,15 @@ class Burial_site(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('burial_site-detail', args=[str(self.id)])
+        return reverse("burial_site-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Trading_emporia(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Trading_emporia")
     trading_emporia = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -6014,9 +6159,10 @@ class Trading_emporia(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Trading_emporia'
-        verbose_name_plural = 'Trading_emporias'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Trading_emporia"
+        verbose_name_plural = "Trading_emporias"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6061,7 +6207,7 @@ class Trading_emporia(SeshatCommon):
             model instead.
         """
         return "Trading Emporia"
-    
+
     def show_value(self):
         if self.trading_emporia:
             return self.get_trading_emporia_display()
@@ -6075,14 +6221,14 @@ class Trading_emporia(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6092,16 +6238,15 @@ class Trading_emporia(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('trading_emporia-detail', args=[str(self.id)])
+        return reverse("trading_emporia-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Enclosure(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Enclosure")
     enclosure = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -6109,9 +6254,10 @@ class Enclosure(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Enclosure'
-        verbose_name_plural = 'Enclosures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Enclosure"
+        verbose_name_plural = "Enclosures"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6156,7 +6302,7 @@ class Enclosure(SeshatCommon):
             model instead.
         """
         return "Enclosure"
-    
+
     def show_value(self):
         if self.enclosure:
             return self.get_enclosure_display()
@@ -6170,14 +6316,14 @@ class Enclosure(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Special-purpose Sites"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6187,26 +6333,28 @@ class Enclosure(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('enclosure-detail', args=[str(self.id)])
+        return reverse("enclosure-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Length_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Length_measurement_system")
-    length_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    length_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Length_measurement_system'
-        verbose_name_plural = 'Length_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Length_measurement_system"
+        verbose_name_plural = "Length_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6251,7 +6399,7 @@ class Length_measurement_system(SeshatCommon):
             model instead.
         """
         return "Length Measurement System"
-    
+
     def show_value(self):
         if self.length_measurement_system:
             return self.get_length_measurement_system_display()
@@ -6265,14 +6413,14 @@ class Length_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6282,26 +6430,28 @@ class Length_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('length_measurement_system-detail', args=[str(self.id)])
+        return reverse("length_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Area_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Area_measurement_system")
-    area_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    area_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Area_measurement_system'
-        verbose_name_plural = 'Area_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Area_measurement_system"
+        verbose_name_plural = "Area_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6346,7 +6496,7 @@ class Area_measurement_system(SeshatCommon):
             model instead.
         """
         return "Area Measurement System"
-    
+
     def show_value(self):
         if self.area_measurement_system:
             return self.get_area_measurement_system_display()
@@ -6360,14 +6510,14 @@ class Area_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6377,26 +6527,28 @@ class Area_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('area_measurement_system-detail', args=[str(self.id)])
+        return reverse("area_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Volume_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Volume_measurement_system")
-    volume_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    volume_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Volume_measurement_system'
-        verbose_name_plural = 'Volume_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Volume_measurement_system"
+        verbose_name_plural = "Volume_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6441,7 +6593,7 @@ class Volume_measurement_system(SeshatCommon):
             model instead.
         """
         return "Volume Measurement System"
-    
+
     def show_value(self):
         if self.volume_measurement_system:
             return self.get_volume_measurement_system_display()
@@ -6455,14 +6607,14 @@ class Volume_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6472,26 +6624,28 @@ class Volume_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('volume_measurement_system-detail', args=[str(self.id)])
+        return reverse("volume_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Weight_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Weight_measurement_system")
-    weight_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    weight_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Weight_measurement_system'
-        verbose_name_plural = 'Weight_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Weight_measurement_system"
+        verbose_name_plural = "Weight_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6536,7 +6690,7 @@ class Weight_measurement_system(SeshatCommon):
             model instead.
         """
         return "Weight Measurement System"
-    
+
     def show_value(self):
         if self.weight_measurement_system:
             return self.get_weight_measurement_system_display()
@@ -6550,14 +6704,14 @@ class Weight_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6567,26 +6721,28 @@ class Weight_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('weight_measurement_system-detail', args=[str(self.id)])
+        return reverse("weight_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Time_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Time_measurement_system")
-    time_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    time_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Time_measurement_system'
-        verbose_name_plural = 'Time_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Time_measurement_system"
+        verbose_name_plural = "Time_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6631,7 +6787,7 @@ class Time_measurement_system(SeshatCommon):
             model instead.
         """
         return "Time Measurement System"
-    
+
     def show_value(self):
         if self.time_measurement_system:
             return self.get_time_measurement_system_display()
@@ -6645,14 +6801,14 @@ class Time_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6662,26 +6818,28 @@ class Time_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('time_measurement_system-detail', args=[str(self.id)])
+        return reverse("time_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Geometrical_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Geometrical_measurement_system")
-    geometrical_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    geometrical_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Geometrical_measurement_system'
-        verbose_name_plural = 'Geometrical_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Geometrical_measurement_system"
+        verbose_name_plural = "Geometrical_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6726,7 +6884,7 @@ class Geometrical_measurement_system(SeshatCommon):
             model instead.
         """
         return "Geometrical Measurement System"
-    
+
     def show_value(self):
         if self.geometrical_measurement_system:
             return self.get_geometrical_measurement_system_display()
@@ -6740,14 +6898,14 @@ class Geometrical_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6757,26 +6915,28 @@ class Geometrical_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('geometrical_measurement_system-detail', args=[str(self.id)])
+        return reverse("geometrical_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Other_measurement_system(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Other_measurement_system")
-    other_measurement_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    other_measurement_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Other_measurement_system'
-        verbose_name_plural = 'Other_measurement_systems'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Other_measurement_system"
+        verbose_name_plural = "Other_measurement_systems"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6821,7 +6981,7 @@ class Other_measurement_system(SeshatCommon):
             model instead.
         """
         return "Other Measurement System"
-    
+
     def show_value(self):
         if self.other_measurement_system:
             return self.get_other_measurement_system_display()
@@ -6835,14 +6995,14 @@ class Other_measurement_system(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Measurement System"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6852,26 +7012,28 @@ class Other_measurement_system(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('other_measurement_system-detail', args=[str(self.id)])
+        return reverse("other_measurement_system-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Debt_and_credit_structure(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Debt_and_credit_structure")
-    debt_and_credit_structure = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    debt_and_credit_structure = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Debt_and_credit_structure'
-        verbose_name_plural = 'Debt_and_credit_structures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Debt_and_credit_structure"
+        verbose_name_plural = "Debt_and_credit_structures"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -6916,7 +7078,7 @@ class Debt_and_credit_structure(SeshatCommon):
             model instead.
         """
         return "Debt And Credit Structure"
-    
+
     def show_value(self):
         if self.debt_and_credit_structure:
             return self.get_debt_and_credit_structure_display()
@@ -6930,14 +7092,14 @@ class Debt_and_credit_structure(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -6947,16 +7109,15 @@ class Debt_and_credit_structure(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('debt_and_credit_structure-detail', args=[str(self.id)])
+        return reverse("debt_and_credit_structure-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Store_of_wealth(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Store_of_wealth")
     store_of_wealth = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -6964,9 +7125,10 @@ class Store_of_wealth(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Store_of_wealth'
-        verbose_name_plural = 'Store_of_wealths'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Store_of_wealth"
+        verbose_name_plural = "Store_of_wealths"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7011,7 +7173,7 @@ class Store_of_wealth(SeshatCommon):
             model instead.
         """
         return "Store Of Wealth"
-    
+
     def show_value(self):
         if self.store_of_wealth:
             return self.get_store_of_wealth_display()
@@ -7025,14 +7187,14 @@ class Store_of_wealth(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Information"
 
     def sub_subsection(self):
         return "Money"
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -7042,25 +7204,28 @@ class Store_of_wealth(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('store_of_wealth-detail', args=[str(self.id)])
+        return reverse("store_of_wealth-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
+
 class Source_of_support(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Source_of_support")
-    source_of_support = models.CharField(max_length=500, choices=SOURCE_OF_SUPPORT_CHOICES)
+    source_of_support = models.CharField(
+        max_length=500, choices=SOURCE_OF_SUPPORT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Source_of_support'
-        verbose_name_plural = 'Source_of_supports'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Source_of_support"
+        verbose_name_plural = "Source_of_supports"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7105,7 +7270,7 @@ class Source_of_support(SeshatCommon):
             model instead.
         """
         return "Source Of Support"
-    
+
     def show_value(self):
         if self.source_of_support:
             return self.get_source_of_support_display()
@@ -7119,14 +7284,14 @@ class Source_of_support(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Professions"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -7136,25 +7301,28 @@ class Source_of_support(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('source_of_support-detail', args=[str(self.id)])
+        return reverse("source_of_support-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
+
 class Occupational_complexity(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Occupational_complexity")
-    occupational_complexity = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    occupational_complexity = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Occupational_complexity'
-        verbose_name_plural = 'Occupational_complexies'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Occupational_complexity"
+        verbose_name_plural = "Occupational_complexies"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7199,7 +7367,7 @@ class Occupational_complexity(SeshatCommon):
             model instead.
         """
         return "Occupational Complexity"
-    
+
     def show_value(self):
         if self.occupational_complexity:
             return self.get_occupational_complexity_display()
@@ -7213,14 +7381,14 @@ class Occupational_complexity(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
-    
+        return None
+
     def subsection(self):
         return "Professions"
 
     def sub_subsection(self):
         return None
-        
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -7230,26 +7398,28 @@ class Occupational_complexity(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('occupational_complexity-detail', args=[str(self.id)])
+        return reverse("occupational_complexity-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
 
 class Special_purpose_house(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Special_purpose_house")
-    special_purpose_house = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    special_purpose_house = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Special_purpose_house'
-        verbose_name_plural = 'Special Purpose Houses'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Special_purpose_house"
+        verbose_name_plural = "Special Purpose Houses"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7308,7 +7478,7 @@ class Special_purpose_house(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Specialized Buildings: polity owned"
@@ -7325,25 +7495,28 @@ class Special_purpose_house(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('special_purpose_house-detail', args=[str(self.id)])
+        return reverse("special_purpose_house-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
+
 class Other_special_purpose_site(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Other_special_purpose_site")
-    other_special_purpose_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    other_special_purpose_site = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Other_special_purpose_site'
-        verbose_name_plural = 'Other Special Purpose Sites'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Other_special_purpose_site"
+        verbose_name_plural = "Other Special Purpose Sites"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7402,7 +7575,7 @@ class Other_special_purpose_site(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Special-purpose Sites"
@@ -7419,16 +7592,15 @@ class Other_special_purpose_site(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('other_special_purpose_site-detail', args=[str(self.id)])
+        return reverse("other_special_purpose_site-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
 
 class Largest_communication_distance(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Largest_communication_distance")
     largest_communication_distance_from = models.IntegerField(null=True, blank=True)
     largest_communication_distance_to = models.IntegerField(null=True, blank=True)
@@ -7437,9 +7609,10 @@ class Largest_communication_distance(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Largest_communication_distance'
-        verbose_name_plural = 'Largest Communication Distances'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Largest_communication_distance"
+        verbose_name_plural = "Largest Communication Distances"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7486,9 +7659,17 @@ class Largest_communication_distance(SeshatCommon):
         return "Largest Communication Distance"
 
     def show_value(self):
-        if self.largest_communication_distance_from is not None and self.largest_communication_distance_to is not None and self.largest_communication_distance_to == self.largest_communication_distance_from:
+        if (
+            self.largest_communication_distance_from is not None
+            and self.largest_communication_distance_to is not None
+            and self.largest_communication_distance_to
+            == self.largest_communication_distance_from
+        ):
             return self.largest_communication_distance_from
-        elif self.largest_communication_distance_from is not None and self.largest_communication_distance_to is not None:
+        elif (
+            self.largest_communication_distance_from is not None
+            and self.largest_communication_distance_to is not None
+        ):
             return f"[{self.largest_communication_distance_from:,} to {self.largest_communication_distance_to:,}]"
         elif self.largest_communication_distance_from is not None:
             return f"[{self.largest_communication_distance_from:,}, ...]"
@@ -7496,7 +7677,7 @@ class Largest_communication_distance(SeshatCommon):
             return f"[..., {self.largest_communication_distance_to:,}]"
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.largest_communication_distance_from is not None:
             return self.largest_communication_distance_from
@@ -7507,7 +7688,7 @@ class Largest_communication_distance(SeshatCommon):
         if self.largest_communication_distance_to is not None:
             return self.largest_communication_distance_to
         else:
-            return None  
+            return None
 
     def subsection(self):
         return "Social Scale"
@@ -7524,16 +7705,15 @@ class Largest_communication_distance(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('largest_communication_distance-detail', args=[str(self.id)])
+        return reverse("largest_communication_distance-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Fastest_individual_communication(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Fastest_individual_communication")
     fastest_individual_communication_from = models.IntegerField(null=True, blank=True)
     fastest_individual_communication_to = models.IntegerField(null=True, blank=True)
@@ -7542,9 +7722,10 @@ class Fastest_individual_communication(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Fastest_individual_communication'
-        verbose_name_plural = 'Fastest Individual Communications'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Fastest_individual_communication"
+        verbose_name_plural = "Fastest Individual Communications"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -7591,9 +7772,17 @@ class Fastest_individual_communication(SeshatCommon):
         return "Fastest Individual Communication"
 
     def show_value(self):
-        if self.fastest_individual_communication_from is not None and self.fastest_individual_communication_to is not None and self.fastest_individual_communication_to == self.fastest_individual_communication_from:
+        if (
+            self.fastest_individual_communication_from is not None
+            and self.fastest_individual_communication_to is not None
+            and self.fastest_individual_communication_to
+            == self.fastest_individual_communication_from
+        ):
             return self.fastest_individual_communication_from
-        elif self.fastest_individual_communication_from is not None and self.fastest_individual_communication_to is not None:
+        elif (
+            self.fastest_individual_communication_from is not None
+            and self.fastest_individual_communication_to is not None
+        ):
             return f"[{self.fastest_individual_communication_from:,} to {self.fastest_individual_communication_to:,}]"
         elif self.fastest_individual_communication_from is not None:
             return f"[{self.fastest_individual_communication_from:,}, ...]"
@@ -7601,7 +7790,7 @@ class Fastest_individual_communication(SeshatCommon):
             return f"[..., {self.fastest_individual_communication_to:,}]"
         else:
             return " - "
-        
+
     def show_value_from(self):
         if self.fastest_individual_communication_from is not None:
             return self.fastest_individual_communication_from
@@ -7612,7 +7801,7 @@ class Fastest_individual_communication(SeshatCommon):
         if self.fastest_individual_communication_to is not None:
             return self.fastest_individual_communication_to
         else:
-            return None  
+            return None
 
     def subsection(self):
         return "Information"
@@ -7629,7 +7818,7 @@ class Fastest_individual_communication(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('fastest_individual_communication-detail', args=[str(self.id)])
+        return reverse("fastest_individual_communication-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)

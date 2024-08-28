@@ -6,88 +6,120 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0005_alter_balance_options_alter_diding_taxes_options_and_more'),
+        ("crisisdb", "0005_alter_balance_options_alter_diding_taxes_options_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='disease_event',
-            name='elevation',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="disease_event",
+            name="elevation",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='disease_event',
-            name='latitude',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="disease_event",
+            name="latitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='disease_event',
-            name='longitude',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="disease_event",
+            name="longitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='examination',
-            name='passing_ratio',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="examination",
+            name="passing_ratio",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='examination',
-            name='ratio_examiner_per_candidate',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="examination",
+            name="ratio_examiner_per_candidate",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='famine_event',
-            name='elevation',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="famine_event",
+            name="elevation",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='famine_event',
-            name='latitude',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="famine_event",
+            name="latitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='famine_event',
-            name='longitude',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="famine_event",
+            name="longitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='gdp_growth_rate',
-            name='GDP_growth_rate',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="gdp_growth_rate",
+            name="GDP_growth_rate",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='rate_of_gdp_per_capita_growth',
-            name='rate_of_GDP_per_capita_growth',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="rate_of_gdp_per_capita_growth",
+            name="rate_of_GDP_per_capita_growth",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='shares_of_world_gdp',
-            name='shares_of_world_GDP',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="shares_of_world_gdp",
+            name="shares_of_world_GDP",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='wages',
-            name='wages',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="wages",
+            name="wages",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='population_in_millions_in_1787',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="worker_wage",
+            name="population_in_millions_in_1787",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='skilled_construction',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="worker_wage",
+            name="skilled_construction",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='unskilled_arms_manufacturer',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="worker_wage",
+            name="unskilled_arms_manufacturer",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='unskilled_construction',
-            field=models.DecimalField(blank=True, decimal_places=3, max_digits=25, null=True),
+            model_name="worker_wage",
+            name="unskilled_construction",
+            field=models.DecimalField(
+                blank=True, decimal_places=3, max_digits=25, null=True
+            ),
         ),
     ]

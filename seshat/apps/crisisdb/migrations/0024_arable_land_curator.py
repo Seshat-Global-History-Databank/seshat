@@ -9,13 +9,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('crisisdb', '0023_alter_agricultural_population_polity_and_more'),
+        ("crisisdb", "0023_alter_agricultural_population_polity_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='arable_land',
-            name='curator',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="arable_land",
+            name="curator",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

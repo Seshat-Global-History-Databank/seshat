@@ -6,18 +6,42 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rt', '0005_rename_elites_religion_elites_religion_coded_value_and_more'),
+        ("rt", "0005_rename_elites_religion_elites_religion_coded_value_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='widespread_religion',
-            name='degree_of_prevalence',
-            field=models.CharField(blank=True, choices=[('v_m', 'Vast majority'), ('o_h_p', 'Over half of the population'), ('sz_m', 'Sizeable minority'), ('a_m', 'Minority'), ('sm_m', 'Small minority'), ('vs_m', 'Very small minority'), ('unk', 'unknown'), ('unc', 'uncoded'), ('n_d', 'no_data')], max_length=500, null=True),
+            model_name="widespread_religion",
+            name="degree_of_prevalence",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("v_m", "Vast majority"),
+                    ("o_h_p", "Over half of the population"),
+                    ("sz_m", "Sizeable minority"),
+                    ("a_m", "Minority"),
+                    ("sm_m", "Small minority"),
+                    ("vs_m", "Very small minority"),
+                    ("unk", "unknown"),
+                    ("unc", "uncoded"),
+                    ("n_d", "no_data"),
+                ],
+                max_length=500,
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='widespread_religion',
-            name='order',
-            field=models.CharField(choices=[('1', '1. Most widespread'), ('2', '2. Second most widespread'), ('3', '3. Third most widespread'), ('4', '4. Fourth most widespread'), ('9', 'Other')], max_length=10),
+            model_name="widespread_religion",
+            name="order",
+            field=models.CharField(
+                choices=[
+                    ("1", "1. Most widespread"),
+                    ("2", "2. Second most widespread"),
+                    ("3", "3. Third most widespread"),
+                    ("4", "4. Fourth most widespread"),
+                    ("9", "Other"),
+                ],
+                max_length=10,
+            ),
         ),
     ]

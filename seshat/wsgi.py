@@ -13,7 +13,7 @@ from django.core.wsgi import get_wsgi_application
 # This is misleading, because the value that is actually set is
 # `seshat.settings.local` and it is probably `production for the AWS server.`
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seshat.settings.base')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "seshat.settings.base")
 
 # if not os.path.exists(".env"):
 #    os.environ["DJANGO_SETTINGS_MODULE"] = "seshat.settings.production"

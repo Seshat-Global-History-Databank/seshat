@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0050_polity_polity_tag'),
+        ("core", "0050_polity_polity_tag"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='general_description',
+            model_name="polity",
+            name="general_description",
             field=models.TextField(blank=True, null=True),
         ),
     ]

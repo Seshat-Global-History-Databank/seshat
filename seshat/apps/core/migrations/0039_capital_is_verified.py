@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0038_capital_note'),
+        ("core", "0038_capital_note"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='capital',
-            name='is_verified',
+            model_name="capital",
+            name="is_verified",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

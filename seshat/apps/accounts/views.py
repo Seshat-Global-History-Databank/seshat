@@ -27,7 +27,7 @@ def accounts(request):
     Returns:
         HttpResponse: The response object.
     """
-    return HttpResponse('<h1>Hello Accounts.</h1>')
+    return HttpResponse("<h1>Hello Accounts.</h1>")
 
 
 def accounts_new(request):
@@ -43,7 +43,7 @@ def accounts_new(request):
     Returns:
         HttpResponse: The response object.
     """
-    return HttpResponse('<h1>Hello Aiiiiiiiccounts.</h1>')
+    return HttpResponse("<h1>Hello Aiiiiiiiccounts.</h1>")
 
 
 def has_add_scp_prv_permission(user):
@@ -60,7 +60,7 @@ def has_add_scp_prv_permission(user):
     Returns:
         bool: True if the user has the permission, False otherwise.
     """
-    return user.has_perm('core.add_seshatprivatecommentpart')
+    return user.has_perm("core.add_seshatprivatecommentpart")
 
 
 # @login_required
@@ -89,12 +89,13 @@ class ProfileUpdate(PermissionRequiredMixin, UpdateView):
     """
     Generic class-based view for updating a user's profile.
     """
+
     model = Profile
-    context_object_name = 'user'
+    context_object_name = "user"
     form_class = ProfileForm
     template_name = "registration/profile_update.html"
     queryset = Profile.objects.all()
-    permission_required = 'core.add_seshatprivatecommentpart'
+    permission_required = "core.add_seshatprivatecommentpart"
 
     def get_context_data(self, **kwargs):
         """
@@ -110,9 +111,9 @@ class ProfileUpdate(PermissionRequiredMixin, UpdateView):
         """
         context = super(ProfileUpdate, self).get_context_data(**kwargs)
         user = self.request.user
-        context['profile_form'] = ProfileForm(
+        context["profile_form"] = ProfileForm(
             instance=self.request.user.profile,
-            initial={'first_name': user.first_name, 'last_name': user.last_name},
+            initial={"first_name": user.first_name, "last_name": user.last_name},
         )
         return context
 
@@ -128,10 +129,11 @@ class ProfileUpdate(PermissionRequiredMixin, UpdateView):
         """
         profile = form.save()
         user = profile.user
-        user.last_name = form.cleaned_data['last_name']
-        user.first_name = form.cleaned_data['first_name']
+        user.last_name = form.cleaned_data["last_name"]
+        user.first_name = form.cleaned_data["first_name"]
         user.save()
-        return HttpResponseRedirect(reverse_lazy('user-profile'))
+        return HttpResponseRedirect(reverse_lazy("user-profile"))
+
 
 # class UserUpdate(PermissionRequiredMixin, UpdateView):
 #     model = Profile
@@ -139,8 +141,9 @@ class ProfileUpdate(PermissionRequiredMixin, UpdateView):
 #     template_name = "registration/profile_update.html"
 #     permission_required = 'core.add_capital'
 
+
 @login_required
-@permission_required('core.add_seshatprivatecommentpart', raise_exception=True)
+@permission_required("core.add_seshatprivatecommentpart", raise_exception=True)
 def profile(request):
     """
     View function for displaying a user's profile.
@@ -157,14 +160,13 @@ def profile(request):
     """
     # all_vars = []
     # a_huge_context_data_dic = {}
-            #my_data = m.objects.filter(polity = polity_id)
-            #a_huge_context_data_dic[m.__name__ + "_for_polity"] = my_data
-            # coooooooooooool
-            # this gets all the potential keys
-            #print("Data: ", dir(my_data[0]))
-        # else:
-        #     print(polity_id, ": ", m)
-
+    # my_data = m.objects.filter(polity = polity_id)
+    # a_huge_context_data_dic[m.__name__ + "_for_polity"] = my_data
+    # coooooooooooool
+    # this gets all the potential keys
+    # print("Data: ", dir(my_data[0]))
+    # else:
+    #     print(polity_id, ": ", m)
 
     verified_facts = 0
     all_facts = 0
@@ -172,12 +174,14 @@ def profile(request):
     user_profile_id = None
     if request.user.is_authenticated:
         user_profile_id = request.user.profile.id
-    my_user = Profile.objects.get(pk = user_profile_id)
-    my_expert =  Seshat_Expert.objects.get(user_id=request.user.id)
+    my_user = Profile.objects.get(pk=user_profile_id)
+    my_expert = Seshat_Expert.objects.get(user_id=request.user.id)
     print(f"my_profile_id: {user_profile_id}")
     print(f"my_user_id: {request.user.id}")
 
-    all_my_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id)
+    all_my_private_comments = SeshatPrivateCommentPart.objects.filter(
+        private_comment_reader__id=my_expert.id
+    )
     print(f"my_expert_id: {my_expert.id}")
 
     # try:
@@ -193,7 +197,7 @@ def profile(request):
     #                         if curator_person['user_id'] == my_user.id:
     #                             print(curator_person, "YOOOOOOOOOOha")
     #                             verified_facts += 1
-        
+
     #             #print("__")
     #             #print(m.curators.values())
     # except:
@@ -206,25 +210,27 @@ def profile(request):
     #             all_tasks_given.append(task)
     # except:
     #     print("OUT")
-    #print(dir(my_user))
-    #print(my_user_name.user_id)
+    # print(dir(my_user))
+    # print(my_user_name.user_id)
     context = {
         "facts_verified_by_user": all_my_private_comments,
         "all_facts": all_facts,
-        'all_tasks_given': all_tasks_given
-        }
+        "all_tasks_given": all_tasks_given,
+    }
 
     print(my_user)
-    return render(request, 'registration/profile.html', context=context)
+    return render(request, "registration/profile.html", context=context)
+
 
 class Seshat_taskCreate(PermissionRequiredMixin, CreateView):
     """
     Generic class-based view for creating a task.
     """
+
     model = Seshat_Task
     form_class = Seshat_TaskForm
     template_name = "registration/seshat_task/seshat_task_form.html"
-    permission_required = 'core.add_seshatprivatecommentpart'
+    permission_required = "core.add_seshatprivatecommentpart"
 
 
 # class Seshat_taskDelete(PermissionRequiredMixin, DeleteView):
@@ -238,13 +244,16 @@ class Seshat_taskCreate(PermissionRequiredMixin, CreateView):
 #     model = Seshat_Task
 #     template_name = "registration/seshat_task/seshat_task_list.html"
 #     paginate_by = 10
-        
+
+
 class Seshat_taskDetailView(generic.DetailView):
     """
     Generic class-based detail view for a task.
     """
+
     model = Seshat_Task
     template_name = "registration/seshat_task/seshat_task_detail.html"
+
 
 ######EMAIL_CONFIRMATION_BRANCH
 # from allauth.account.views import SignupView
@@ -263,6 +272,7 @@ class Seshat_taskDetailView(generic.DetailView):
 
 from .forms import CustomSignUpForm
 
+
 def signup(request):
     """
     View function for signing up a new user.
@@ -276,16 +286,16 @@ def signup(request):
     Returns:
         HttpResponse: The response object.
     """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CustomSignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             # Authenticate the user
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
             user = authenticate(request, username=username, password=password)
             login(request, user)
-            return redirect('home')  # Replace 'home' with your desired redirect URL
+            return redirect("home")  # Replace 'home' with your desired redirect URL
     else:
         form = CustomSignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, "signup.html", {"form": form})

@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0020_variablehierarchy_explanation'),
+        ("core", "0020_variablehierarchy_explanation"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='reference',
-            name='url_link',
-            field=models.TextField(blank=True, null=True, validators=[django.core.validators.URLValidator()]),
+            model_name="reference",
+            name="url_link",
+            field=models.TextField(
+                blank=True,
+                null=True,
+                validators=[django.core.validators.URLValidator()],
+            ),
         ),
     ]

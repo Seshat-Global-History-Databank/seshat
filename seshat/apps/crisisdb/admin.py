@@ -1,6 +1,33 @@
 from django.contrib import admin
 
-from .models import Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak,  Us_location, Us_violence_subtype, Us_violence_data_source
+from .models import (
+    Power_transition,
+    Crisis_consequence,
+    Human_sacrifice,
+    External_conflict,
+    Internal_conflict,
+    External_conflict_side,
+    Agricultural_population,
+    Arable_land,
+    Arable_land_per_farmer,
+    Gross_grain_shared_per_agricultural_population,
+    Net_grain_shared_per_agricultural_population,
+    Surplus,
+    Military_expense,
+    Silver_inflow,
+    Silver_stock,
+    Total_population,
+    Gdp_per_capita,
+    Drought_event,
+    Locust_event,
+    Socioeconomic_turmoil_event,
+    Crop_failure_event,
+    Famine_event,
+    Disease_outbreak,
+    Us_location,
+    Us_violence_subtype,
+    Us_violence_data_source,
+)
 
 
 admin.site.register(Human_sacrifice)
@@ -30,18 +57,20 @@ admin.site.register(Disease_outbreak)
 
 @admin.register(Us_location)
 class UsLocationAdmin(admin.ModelAdmin):
-    list_display = ['us_state', 'city', 'county', 'special_place']
-    list_filter = ['us_state', 'city', 'county']
-    search_fields = ['us_state', 'city', 'county', 'special_place']
+    list_display = ["us_state", "city", "county", "special_place"]
+    list_filter = ["us_state", "city", "county"]
+    search_fields = ["us_state", "city", "county", "special_place"]
+
 
 @admin.register(Us_violence_subtype)
 class UsViolenceSubtypeAdmin(admin.ModelAdmin):
-    list_display = ['name', 'is_uncertain']
-    list_filter = ['is_uncertain']
-    search_fields = ['name']
+    list_display = ["name", "is_uncertain"]
+    list_filter = ["is_uncertain"]
+    search_fields = ["name"]
+
 
 @admin.register(Us_violence_data_source)
 class UsViolenceDataSourceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'abbreviation', 'is_uncertain', 'attention_tag']
-    list_filter = ['is_uncertain', 'attention_tag']
-    search_fields = ['name', 'abbreviation']
+    list_display = ["name", "abbreviation", "is_uncertain", "attention_tag"]
+    list_filter = ["is_uncertain", "attention_tag"]
+    search_fields = ["name", "abbreviation"]

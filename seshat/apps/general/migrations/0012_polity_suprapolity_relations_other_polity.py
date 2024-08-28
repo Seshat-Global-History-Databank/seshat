@@ -7,14 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0057_scpthroughctn_and_more'),
-        ('general', '0011_alter_polity_alternate_religion_tag_and_more'),
+        ("core", "0057_scpthroughctn_and_more"),
+        ("general", "0011_alter_polity_alternate_religion_tag_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity_suprapolity_relations',
-            name='other_polity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.polity'),
+            model_name="polity_suprapolity_relations",
+            name="other_polity",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="core.polity",
+            ),
         ),
     ]

@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0045_alter_polity_options'),
+        ("core", "0045_alter_polity_options"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='seshatcommentpart',
-            options={'ordering': ['comment_order', 'modified_date']},
+            name="seshatcommentpart",
+            options={"ordering": ["comment_order", "modified_date"]},
         ),
     ]

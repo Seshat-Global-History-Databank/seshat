@@ -7,26 +7,57 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0056_religion'),
+        ("core", "0056_religion"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ScpThroughCtn',
+            name="ScpThroughCtn",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('parent_paragraphs', models.TextField(blank=True, null=True)),
-                ('citation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.citation')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("parent_paragraphs", models.TextField(blank=True, null=True)),
+                (
+                    "citation",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.citation",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='seshatcommentpart',
-            name='comment_citations_plus',
-            field=models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related_through', related_query_name='%(app_label)s_%(class)ss', through='core.ScpThroughCtn', to='core.citation'),
+            model_name="seshatcommentpart",
+            name="comment_citations_plus",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="%(app_label)s_%(class)s_related_through",
+                related_query_name="%(app_label)s_%(class)ss",
+                through="core.ScpThroughCtn",
+                to="core.citation",
+            ),
         ),
         migrations.AddField(
-            model_name='scpthroughctn',
-            name='seshatcommentpart',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcommentpart'),
+            model_name="scpthroughctn",
+            name="seshatcommentpart",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="%(app_label)s_%(class)s_related",
+                related_query_name="%(app_label)s_%(class)s",
+                to="core.seshatcommentpart",
+            ),
         ),
     ]

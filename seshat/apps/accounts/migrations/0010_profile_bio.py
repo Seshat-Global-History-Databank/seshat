@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0009_alter_seshat_expert_role'),
+        ("accounts", "0009_alter_seshat_expert_role"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='bio',
+            model_name="profile",
+            name="bio",
             field=models.TextField(blank=True, null=True),
         ),
     ]

@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0044_agricultural_population_is_disputed_and_more'),
+        ("crisisdb", "0044_agricultural_population_is_disputed_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='human_sacrifice',
-            name='human_sacrifice',
-            field=models.CharField(choices=[('U', 'Unknown'), ('P', 'Present'), ('A~P', 'Transitional (Absent -> Present)'), ('A', 'Absent'), ('P~A', 'Transitional (Present -> Absent)')], max_length=500),
+            model_name="human_sacrifice",
+            name="human_sacrifice",
+            field=models.CharField(
+                choices=[
+                    ("U", "Unknown"),
+                    ("P", "Present"),
+                    ("A~P", "Transitional (Absent -> Present)"),
+                    ("A", "Absent"),
+                    ("P~A", "Transitional (Present -> Absent)"),
+                ],
+                max_length=500,
+            ),
         ),
     ]

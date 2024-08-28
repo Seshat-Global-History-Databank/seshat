@@ -6,18 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='reference',
-            name='long_name',
-            field=models.CharField(blank=True, help_text='Enter the long name', max_length=500, null=True),
+            model_name="reference",
+            name="long_name",
+            field=models.CharField(
+                blank=True, help_text="Enter the long name", max_length=500, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='title',
-            field=models.CharField(help_text='Enter a title', max_length=200),
+            model_name="reference",
+            name="title",
+            field=models.CharField(help_text="Enter a title", max_length=200),
         ),
     ]

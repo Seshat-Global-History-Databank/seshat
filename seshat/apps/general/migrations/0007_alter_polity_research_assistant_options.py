@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('general', '0006_alter_polity_alternate_religion_options_and_more'),
+        ("general", "0006_alter_polity_alternate_religion_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='polity_research_assistant',
-            options={'ordering': ['polity_ra', 'year_from', 'year_to'], 'verbose_name': 'Polity_research_assistant', 'verbose_name_plural': 'Polity_research_assistants'},
+            name="polity_research_assistant",
+            options={
+                "ordering": ["polity_ra", "year_from", "year_to"],
+                "verbose_name": "Polity_research_assistant",
+                "verbose_name_plural": "Polity_research_assistants",
+            },
         ),
     ]

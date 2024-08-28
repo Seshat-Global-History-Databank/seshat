@@ -6,398 +6,1022 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('sc', '0010_other_utilitarian_public_building'),
+        ("sc", "0010_other_utilitarian_public_building"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='administrative_level',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='area_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='article',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='bridge',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='burial_site',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='calendar',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='canal',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='ceremonial_site',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='communal_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='courier',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='court',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='debt_and_credit_structure',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='drinking_water_supply_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='enclosure',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='entertainment_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='examination_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='fastest_individual_communication',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='fiction',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='food_storage_site',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='foreign_coin',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='formal_legal_code',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='full_time_bureaucrat',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='general_postal_service',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='geometrical_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='history',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='indigenous_coin',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='irrigation_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='judge',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='knowledge_or_information_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='largest_communication_distance',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='length_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='lists_tables_and_classification',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='market',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='merit_promotion',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='military_level',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='mines_or_quarry',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='mnemonic_device',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='non_phonetic_writing',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='nonwritten_record',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='occupational_complexity',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='other_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='other_special_purpose_site',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='other_utilitarian_public_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='paper_currency',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='philosophy',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='phonetic_alphabetic_writing',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='polity_population',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='polity_territory',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='population_of_the_largest_settlement',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='port',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='postal_station',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='practical_literature',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='precious_metal',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='professional_lawyer',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='professional_military_officer',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='professional_priesthood',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='professional_soldier',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='ra',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='religious_level',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='religious_literature',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='road',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='sacred_text',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='scientific_literature',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='script',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='settlement_hierarchy',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='source_of_support',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='special_purpose_house',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='special_purpose_site',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='specialized_government_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='store_of_wealth',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='symbolic_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='time_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='token',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='trading_emporia',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='utilitarian_public_building',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='volume_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='weight_measurement_system',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
-        ),
-        migrations.AlterField(
-            model_name='written_record',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Confident'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="administrative_level",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="area_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="article",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="bridge",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="burial_site",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="calendar",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="canal",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="ceremonial_site",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="communal_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="courier",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="court",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="debt_and_credit_structure",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="drinking_water_supply_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="enclosure",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="entertainment_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="examination_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="fastest_individual_communication",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="fiction",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="food_storage_site",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="foreign_coin",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="formal_legal_code",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="full_time_bureaucrat",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="general_postal_service",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="geometrical_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="history",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="indigenous_coin",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="irrigation_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="judge",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="knowledge_or_information_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="largest_communication_distance",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="length_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="lists_tables_and_classification",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="market",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="merit_promotion",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="military_level",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="mines_or_quarry",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="mnemonic_device",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="non_phonetic_writing",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="nonwritten_record",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="occupational_complexity",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="other_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="other_special_purpose_site",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="other_utilitarian_public_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="paper_currency",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="philosophy",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="phonetic_alphabetic_writing",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="polity_population",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="polity_territory",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="population_of_the_largest_settlement",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="port",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="postal_station",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="practical_literature",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="precious_metal",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="professional_lawyer",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="professional_military_officer",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="professional_priesthood",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="professional_soldier",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="ra",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="religious_level",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="religious_literature",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="road",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="sacred_text",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="scientific_literature",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="script",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="settlement_hierarchy",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="source_of_support",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="special_purpose_house",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="special_purpose_site",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="specialized_government_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="store_of_wealth",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="symbolic_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="time_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="token",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="trading_emporia",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="utilitarian_public_building",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="volume_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="weight_measurement_system",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
+        ),
+        migrations.AlterField(
+            model_name="written_record",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Confident"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
     ]

@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0008_alter_citation_options_alter_reference_options'),
+        ("core", "0008_alter_citation_options_alter_reference_options"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='citation',
-            unique_together={('ref', 'page_from', 'page_to')},
+            name="citation",
+            unique_together={("ref", "page_from", "page_to")},
         ),
     ]

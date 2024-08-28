@@ -6,18 +6,49 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('general', '0012_polity_suprapolity_relations_other_polity'),
+        ("general", "0012_polity_suprapolity_relations_other_polity"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='polity_degree_of_centralization',
-            name='degree_of_centralization',
-            field=models.CharField(choices=[('loose', 'loose'), ('confederated state', 'confederated state'), ('unitary state', 'unitary state'), ('nominal', 'nominal'), ('confederate state', 'confederate state'), ('quasi-polity', 'quasi-polity'), ('suspected unknown', 'suspected unknown'), ('none', 'none'), ('unknown', 'unknown'), ('confederation', 'confederation'), ('polity', 'polity'), ('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'), ('nominal allegiance', 'nominal allegiance'), ('unitary', 'unitary'), ('feudal', 'feudal'), ('uncoded', 'uncoded')], max_length=500),
+            model_name="polity_degree_of_centralization",
+            name="degree_of_centralization",
+            field=models.CharField(
+                choices=[
+                    ("loose", "loose"),
+                    ("confederated state", "confederated state"),
+                    ("unitary state", "unitary state"),
+                    ("nominal", "nominal"),
+                    ("confederate state", "confederate state"),
+                    ("quasi-polity", "quasi-polity"),
+                    ("suspected unknown", "suspected unknown"),
+                    ("none", "none"),
+                    ("unknown", "unknown"),
+                    ("confederation", "confederation"),
+                    ("polity", "polity"),
+                    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
+                    ("nominal allegiance", "nominal allegiance"),
+                    ("unitary", "unitary"),
+                    ("feudal", "feudal"),
+                    ("uncoded", "uncoded"),
+                ],
+                max_length=500,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_suprapolity_relations',
-            name='supra_polity_relations',
-            field=models.CharField(choices=[('vassalage', 'vassalage to'), ('alliance', 'alliance with'), ('nominal allegiance', 'nominal allegiance to'), ('personal union', 'personal union with'), ('unknown', 'unknown'), ('uncoded', 'uncoded'), ('none', 'none')], max_length=500),
+            model_name="polity_suprapolity_relations",
+            name="supra_polity_relations",
+            field=models.CharField(
+                choices=[
+                    ("vassalage", "vassalage to"),
+                    ("alliance", "alliance with"),
+                    ("nominal allegiance", "nominal allegiance to"),
+                    ("personal union", "personal union with"),
+                    ("unknown", "unknown"),
+                    ("uncoded", "uncoded"),
+                    ("none", "none"),
+                ],
+                max_length=500,
+            ),
         ),
     ]

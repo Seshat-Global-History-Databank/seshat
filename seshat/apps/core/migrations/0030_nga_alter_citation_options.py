@@ -6,25 +6,49 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0029_alter_seshatcommentpart_options_and_more'),
+        ("core", "0029_alter_seshatcommentpart_options_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Nga',
+            name="Nga",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('subregion', models.CharField(blank=True, max_length=100, null=True)),
-                ('longitude', models.DecimalField(blank=True, decimal_places=4, max_digits=8, null=True)),
-                ('latitude', models.DecimalField(blank=True, decimal_places=4, max_digits=8, null=True)),
-                ('capital_city', models.CharField(blank=True, max_length=100, null=True)),
-                ('nga_code', models.CharField(blank=True, max_length=20, null=True)),
-                ('fao_country', models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                ("subregion", models.CharField(blank=True, max_length=100, null=True)),
+                (
+                    "longitude",
+                    models.DecimalField(
+                        blank=True, decimal_places=4, max_digits=8, null=True
+                    ),
+                ),
+                (
+                    "latitude",
+                    models.DecimalField(
+                        blank=True, decimal_places=4, max_digits=8, null=True
+                    ),
+                ),
+                (
+                    "capital_city",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                ("nga_code", models.CharField(blank=True, max_length=20, null=True)),
+                (
+                    "fao_country",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
             ],
         ),
         migrations.AlterModelOptions(
-            name='citation',
-            options={'ordering': ['-modified_date']},
+            name="citation",
+            options={"ordering": ["-modified_date"]},
         ),
     ]

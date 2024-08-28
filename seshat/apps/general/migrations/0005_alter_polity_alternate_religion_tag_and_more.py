@@ -6,138 +6,346 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('general', '0004_polity_alternate_religion_is_disputed_and_more'),
+        ("general", "0004_polity_alternate_religion_is_disputed_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='polity_alternate_religion',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_alternate_religion",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_alternate_religion_family',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_alternate_religion_family",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_alternate_religion_genus',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_alternate_religion_genus",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_alternative_name',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_alternative_name",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_capital',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_capital",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_degree_of_centralization',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_degree_of_centralization",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_duration',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_duration",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_editor',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_editor",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_expert',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_expert",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_language',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_language",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_language_genus',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_language_genus",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_linguistic_family',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_linguistic_family",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_original_name',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_original_name",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_peak_years',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_peak_years",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_preceding_entity',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_preceding_entity",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_relationship_to_preceding_entity',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_relationship_to_preceding_entity",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_religion',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_religion",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_religion_family',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_religion_family",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_religion_genus',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_religion_genus",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_religious_tradition',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_religious_tradition",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_research_assistant',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_research_assistant",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_scale_of_supracultural_interaction',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_scale_of_supracultural_interaction",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_succeeding_entity',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_succeeding_entity",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_supracultural_entity',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_supracultural_entity",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_suprapolity_relations',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_suprapolity_relations",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
         migrations.AlterField(
-            model_name='polity_utm_zone',
-            name='tag',
-            field=models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5),
+            model_name="polity_utm_zone",
+            name="tag",
+            field=models.CharField(
+                choices=[
+                    ("TRS", "Evidenced"),
+                    ("SSP", "Suspected"),
+                    ("IFR", "Inferred"),
+                ],
+                default="TRS",
+                max_length=5,
+            ),
         ),
     ]

@@ -7,39 +7,126 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0055_polity_private_comment'),
-        ('accounts', '0013_alter_seshat_task_task_url'),
-        ('sc', '0005_weight_measurement_system_volume_measurement_system_and_more'),
+        ("core", "0055_polity_private_comment"),
+        ("accounts", "0013_alter_seshat_task_task_url"),
+        ("sc", "0005_weight_measurement_system_volume_measurement_system_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Source_of_support',
+            name="Source_of_support",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Source_of_support', max_length=100)),
-                ('source_of_support', models.CharField(choices=[('state salary', 'state salary'), ('pensions', 'pensions'), ('enoblement', 'enoblement'), ('suspected unknown', 'suspected unknown'), ('unknown', 'unknown'), ('land', 'land'), ('absent', 'absent'), ('cash', 'cash'), ('salary', 'salary'), ('state', 'state'), ('governed population', 'governed population'), ('none', 'none'), ('cattle', 'cattle')], max_length=500)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                ("name", models.CharField(default="Source_of_support", max_length=100)),
+                (
+                    "source_of_support",
+                    models.CharField(
+                        choices=[
+                            ("state salary", "state salary"),
+                            ("pensions", "pensions"),
+                            ("enoblement", "enoblement"),
+                            ("suspected unknown", "suspected unknown"),
+                            ("unknown", "unknown"),
+                            ("land", "land"),
+                            ("absent", "absent"),
+                            ("cash", "cash"),
+                            ("salary", "salary"),
+                            ("state", "state"),
+                            ("governed population", "governed population"),
+                            ("none", "none"),
+                            ("cattle", "cattle"),
+                        ],
+                        max_length=500,
+                    ),
+                ),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Source_of_support',
-                'verbose_name_plural': 'Source_of_supports',
-                'ordering': ['year_from', 'year_to'],
+                "verbose_name": "Source_of_support",
+                "verbose_name_plural": "Source_of_supports",
+                "ordering": ["year_from", "year_to"],
             },
         ),
     ]

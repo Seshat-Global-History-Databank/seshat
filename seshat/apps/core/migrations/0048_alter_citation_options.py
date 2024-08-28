@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0047_polity_home_nga'),
+        ("core", "0047_polity_home_nga"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='citation',
-            options={'ordering': ['-modified_date']},
+            name="citation",
+            options={"ordering": ["-modified_date"]},
         ),
     ]

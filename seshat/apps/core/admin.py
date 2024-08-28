@@ -1,5 +1,21 @@
 from django.contrib import admin
-from .models import Macro_region, Seshat_region, Polity, Country, Section, Subsection, Citation, Reference, Variablehierarchy, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Religion
+from .models import (
+    Macro_region,
+    Seshat_region,
+    Polity,
+    Country,
+    Section,
+    Subsection,
+    Citation,
+    Reference,
+    Variablehierarchy,
+    SeshatComment,
+    SeshatCommentPart,
+    Nga,
+    Ngapolityrel,
+    Capital,
+    Religion,
+)
 
 admin.site.register(Macro_region)
 admin.site.register(Seshat_region)
@@ -19,7 +35,11 @@ admin.site.register(Religion)
 
 
 class CustomReferenceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_date', 'creator',)
+    list_display = (
+        "title",
+        "created_date",
+        "creator",
+    )
 
 
 admin.site.unregister(Reference)

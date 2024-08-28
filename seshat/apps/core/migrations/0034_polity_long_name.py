@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0033_alter_ngapolityrel_is_home_nga'),
+        ("core", "0033_alter_ngapolityrel_is_home_nga"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='long_name',
+            model_name="polity",
+            name="long_name",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

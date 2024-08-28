@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0012_seshat_task_task_url'),
+        ("accounts", "0012_seshat_task_task_url"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='seshat_task',
-            name='task_url',
+            model_name="seshat_task",
+            name="task_url",
             field=models.URLField(blank=True, null=True),
         ),
     ]

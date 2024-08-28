@@ -7,27 +7,71 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0009_alter_seshat_expert_role'),
-        ('core', '0024_alter_country_options_alter_polity_options_and_more'),
+        ("accounts", "0009_alter_seshat_expert_role"),
+        ("core", "0024_alter_country_options_alter_polity_options_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SeshatComment',
+            name="SeshatComment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='SeshatCommentPart',
+            name="SeshatCommentPart",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment_part_text', models.TextField(blank=True, null=True)),
-                ('comment_order', models.IntegerField(blank=True, null=True)),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='inner_comments_related', related_query_name='inner_comments_related', to='core.seshatcomment')),
-                ('comment_citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment_curator', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='accounts.seshat_expert')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comment_part_text", models.TextField(blank=True, null=True)),
+                ("comment_order", models.IntegerField(blank=True, null=True)),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="inner_comments_related",
+                        related_query_name="inner_comments_related",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "comment_citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment_curator",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
             ],
         ),
     ]

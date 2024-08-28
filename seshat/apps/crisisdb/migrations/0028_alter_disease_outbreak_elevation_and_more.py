@@ -6,43 +6,57 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0027_agricultural_population_curator_and_more'),
+        ("crisisdb", "0027_agricultural_population_curator_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='disease_outbreak',
-            name='elevation',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="disease_outbreak",
+            name="elevation",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='disease_outbreak',
-            name='latitude',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="disease_outbreak",
+            name="latitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='disease_outbreak',
-            name='longitude',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="disease_outbreak",
+            name="longitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='external_conflict_side',
-            name='expenditure',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="external_conflict_side",
+            name="expenditure",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='gdp_per_capita',
-            name='gdp_per_capita',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="gdp_per_capita",
+            name="gdp_per_capita",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='internal_conflict',
-            name='expenditure',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="internal_conflict",
+            name="expenditure",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='military_expense',
-            name='expenditure',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=25, null=True),
+            model_name="military_expense",
+            name="expenditure",
+            field=models.DecimalField(
+                blank=True, decimal_places=0, max_digits=25, null=True
+            ),
         ),
     ]

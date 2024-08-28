@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0007_alter_examination_examination_and_more'),
+        ("crisisdb", "0007_alter_examination_examination_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='rate_of_return',
-            name='rate_of_return',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=25, null=True),
+            model_name="rate_of_return",
+            name="rate_of_return",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=25, null=True
+            ),
         ),
     ]

@@ -7,141 +7,315 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0024_alter_country_options_alter_polity_options_and_more'),
-        ('crisisdb', '0014_agricultural_population_arable_land_and_more'),
+        ("core", "0024_alter_country_options_alter_polity_options_and_more"),
+        ("crisisdb", "0014_agricultural_population_arable_land_and_more"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='agricultural_population',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'agricultural_population')},
+            name="agricultural_population",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "agricultural_population")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='arable_land',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'arable_land')},
+            name="arable_land",
+            unique_together={("polity", "year_from", "year_to", "tag", "arable_land")},
         ),
         migrations.AlterUniqueTogether(
-            name='arable_land_per_farmer',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'arable_land_per_farmer')},
+            name="arable_land_per_farmer",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "arable_land_per_farmer")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='crop_failure_event',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'crop_failure_event')},
+            name="crop_failure_event",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "crop_failure_event")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='disease_outbreak',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'longitude', 'latitude', 'elevation', 'sub_category', 'magnitude', 'duration')},
+            name="disease_outbreak",
+            unique_together={
+                (
+                    "polity",
+                    "year_from",
+                    "year_to",
+                    "tag",
+                    "longitude",
+                    "latitude",
+                    "elevation",
+                    "sub_category",
+                    "magnitude",
+                    "duration",
+                )
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='drought_event',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'drought_event')},
+            name="drought_event",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "drought_event")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='famine_event',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'famine_event')},
+            name="famine_event",
+            unique_together={("polity", "year_from", "year_to", "tag", "famine_event")},
         ),
         migrations.AlterUniqueTogether(
-            name='gdp_per_capita',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'gdp_per_capita')},
+            name="gdp_per_capita",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "gdp_per_capita")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='gross_grain_shared_per_agricultural_population',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'gross_grain_shared_per_agricultural_population')},
+            name="gross_grain_shared_per_agricultural_population",
+            unique_together={
+                (
+                    "polity",
+                    "year_from",
+                    "year_to",
+                    "tag",
+                    "gross_grain_shared_per_agricultural_population",
+                )
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='locust_event',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'locust_event')},
+            name="locust_event",
+            unique_together={("polity", "year_from", "year_to", "tag", "locust_event")},
         ),
         migrations.AlterUniqueTogether(
-            name='military_expense',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure')},
+            name="military_expense",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "conflict", "expenditure")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='net_grain_shared_per_agricultural_population',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'net_grain_shared_per_agricultural_population')},
+            name="net_grain_shared_per_agricultural_population",
+            unique_together={
+                (
+                    "polity",
+                    "year_from",
+                    "year_to",
+                    "tag",
+                    "net_grain_shared_per_agricultural_population",
+                )
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='silver_inflow',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'silver_inflow')},
+            name="silver_inflow",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "silver_inflow")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='silver_stock',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'silver_stock')},
+            name="silver_stock",
+            unique_together={("polity", "year_from", "year_to", "tag", "silver_stock")},
         ),
         migrations.AlterUniqueTogether(
-            name='socioeconomic_turmoil_event',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'socioeconomic_turmoil_event')},
+            name="socioeconomic_turmoil_event",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "socioeconomic_turmoil_event")
+            },
         ),
         migrations.AlterUniqueTogether(
-            name='surplus',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'surplus')},
+            name="surplus",
+            unique_together={("polity", "year_from", "year_to", "tag", "surplus")},
         ),
         migrations.AlterUniqueTogether(
-            name='total_population',
-            unique_together={('polity', 'year_from', 'year_to', 'tag', 'total_population')},
-        ),
-        migrations.CreateModel(
-            name='External_conflict_side',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('DSP', 'Disputed'), ('SSP', 'Suspected'), ('IFR', 'Inferred'), ('UNK', 'Unknown')], default='TRS', max_length=5)),
-                ('name', models.CharField(default='External_conflict_side', max_length=100)),
-                ('conflict', models.CharField(blank=True, max_length=500, null=True)),
-                ('expenditure', models.DecimalField(blank=True, decimal_places=10, max_digits=25, null=True)),
-                ('leader', models.CharField(blank=True, max_length=500, null=True)),
-                ('casualty', models.IntegerField(blank=True, null=True)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('polity', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
-            ],
-            options={
-                'verbose_name': 'External_conflict_side',
-                'verbose_name_plural': 'External_conflict_sides',
-                'unique_together': {('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure', 'leader', 'casualty')},
+            name="total_population",
+            unique_together={
+                ("polity", "year_from", "year_to", "tag", "total_population")
             },
         ),
         migrations.CreateModel(
-            name='External_Conflict',
+            name="External_conflict_side",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('sides', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='crisisdb.external_conflict_side')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("DSP", "Disputed"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                            ("UNK", "Unknown"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(default="External_conflict_side", max_length=100),
+                ),
+                ("conflict", models.CharField(blank=True, max_length=500, null=True)),
+                (
+                    "expenditure",
+                    models.DecimalField(
+                        blank=True, decimal_places=10, max_digits=25, null=True
+                    ),
+                ),
+                ("leader", models.CharField(blank=True, max_length=500, null=True)),
+                ("casualty", models.IntegerField(blank=True, null=True)),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'External_Conflict',
-                'verbose_name_plural': 'External_Conflicts',
+                "verbose_name": "External_conflict_side",
+                "verbose_name_plural": "External_conflict_sides",
+                "unique_together": {
+                    (
+                        "polity",
+                        "year_from",
+                        "year_to",
+                        "tag",
+                        "conflict",
+                        "expenditure",
+                        "leader",
+                        "casualty",
+                    )
+                },
             },
         ),
         migrations.CreateModel(
-            name='Internal_conflict',
+            name="External_Conflict",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('DSP', 'Disputed'), ('SSP', 'Suspected'), ('IFR', 'Inferred'), ('UNK', 'Unknown')], default='TRS', max_length=5)),
-                ('name', models.CharField(default='Internal_conflict', max_length=100)),
-                ('conflict', models.CharField(blank=True, max_length=500, null=True)),
-                ('expenditure', models.DecimalField(blank=True, decimal_places=10, max_digits=25, null=True)),
-                ('leader', models.CharField(blank=True, max_length=500, null=True)),
-                ('casualty', models.IntegerField(blank=True, null=True)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('polity', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                (
+                    "sides",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="crisisdb.external_conflict_side",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Internal_conflict',
-                'verbose_name_plural': 'Internal_conflicts',
-                'unique_together': {('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure', 'leader', 'casualty')},
+                "verbose_name": "External_Conflict",
+                "verbose_name_plural": "External_Conflicts",
+            },
+        ),
+        migrations.CreateModel(
+            name="Internal_conflict",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("DSP", "Disputed"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                            ("UNK", "Unknown"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                ("name", models.CharField(default="Internal_conflict", max_length=100)),
+                ("conflict", models.CharField(blank=True, max_length=500, null=True)),
+                (
+                    "expenditure",
+                    models.DecimalField(
+                        blank=True, decimal_places=10, max_digits=25, null=True
+                    ),
+                ),
+                ("leader", models.CharField(blank=True, max_length=500, null=True)),
+                ("casualty", models.IntegerField(blank=True, null=True)),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Internal_conflict",
+                "verbose_name_plural": "Internal_conflicts",
+                "unique_together": {
+                    (
+                        "polity",
+                        "year_from",
+                        "year_to",
+                        "tag",
+                        "conflict",
+                        "expenditure",
+                        "leader",
+                        "casualty",
+                    )
+                },
             },
         ),
     ]

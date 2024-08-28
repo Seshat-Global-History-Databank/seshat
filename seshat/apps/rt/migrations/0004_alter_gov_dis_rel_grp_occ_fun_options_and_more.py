@@ -7,165 +7,497 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0056_religion'),
-        ('accounts', '0013_alter_seshat_task_task_url'),
-        ('rt', '0003_remove_elites_religion_citations_and_more'),
+        ("core", "0056_religion"),
+        ("accounts", "0013_alter_seshat_task_task_url"),
+        ("rt", "0003_remove_elites_religion_citations_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='gov_dis_rel_grp_occ_fun',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_dis_rel_grp_occ_fun', 'verbose_name_plural': 'Government Discrimination Against Religious Groups Taking up Certain Occupations or Functionss'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_obl_rel_grp_ofc_reco',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_obl_rel_grp_ofc_reco', 'verbose_name_plural': 'Governmental Obligations for Religious Groups to Apply for Official Recognitions'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_press_conv',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_press_conv', 'verbose_name_plural': 'Government Pressure to Converts'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_press_conv_for_aga',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_press_conv_for_aga', 'verbose_name_plural': 'Societal Pressure to Convert or Against Conversions'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_cir_rel_lit',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_cir_rel_lit', 'verbose_name_plural': 'Government Restrictions on Circulation of Religious Literatures'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_cons_rel_buil',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_cons_rel_buil', 'verbose_name_plural': 'Government Restrictions on Construction of Religious Buildingss'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_conv',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_conv', 'verbose_name_plural': 'Government Restrictions on Conversions'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_prop_own_for_rel_grp',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_prop_own_for_rel_grp', 'verbose_name_plural': 'Government Restrictions on Property Ownership for Adherents of Any Religious Groups'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_pub_pros',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_pub_pros', 'verbose_name_plural': 'Government Restrictions on Public Proselytizings'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_pub_wor',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_pub_wor', 'verbose_name_plural': 'Government Restrictions on Public Worships'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_res_rel_edu',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_res_rel_edu', 'verbose_name_plural': 'Government Restrictions on Religious Educations'},
-        ),
-        migrations.AlterModelOptions(
-            name='gov_vio_freq_rel_grp',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Gov_vio_freq_rel_grp', 'verbose_name_plural': 'Frequency of Governmental Violence Against Religious Groupss'},
-        ),
-        migrations.AlterModelOptions(
-            name='soc_dis_rel_grp_occ_fun',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Soc_dis_rel_grp_occ_fun', 'verbose_name_plural': 'Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functionss'},
-        ),
-        migrations.AlterModelOptions(
-            name='soc_vio_freq_rel_grp',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Soc_vio_freq_rel_grp', 'verbose_name_plural': 'Frequency of Societal Violence Against Religious Groupss'},
-        ),
-        migrations.AlterModelOptions(
-            name='sync_rel_pra_ind_beli',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Sync_rel_pra_ind_beli', 'verbose_name_plural': 'Syncretism of Religious Practices at the Level of Individual Believerss'},
-        ),
-        migrations.AlterModelOptions(
-            name='tax_rel_adh_act_ins',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Tax_rel_adh_act_ins', 'verbose_name_plural': 'Taxes Based on Religious Adherence or on Religious Activities and Institutionss'},
-        ),
-        migrations.AlterModelOptions(
-            name='theo_sync_dif_rel',
-            options={'ordering': ['year_from', 'year_to'], 'verbose_name': 'Theo_sync_dif_rel', 'verbose_name_plural': 'Theological Syncretism of Different Religionss'},
-        ),
-        migrations.CreateModel(
-            name='Widespread_religion',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Widespread_religion', max_length=100)),
-                ('order', models.CharField(choices=[('1', 'most widespread'), ('2', 'second most widespread'), ('3', 'third most widespread'), ('4', 'fourth most widespread'), ('9', 'other')], max_length=10)),
-                ('degree_of_prevalence', models.CharField(blank=True, choices=[('v_m', 'vast majority'), ('o_h_p', 'over half of the population'), ('sz_m', 'sizeable minority'), ('a_m', 'minority'), ('sm_m', 'small minority'), ('vs_m', 'very small minority'), ('unk', 'unknown'), ('unc', 'uncoded'), ('n_d', 'no_data')], max_length=500, null=True)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
-                ('widespread_religion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.religion')),
-            ],
+            name="gov_dis_rel_grp_occ_fun",
             options={
-                'verbose_name': 'Widespread_religion',
-                'verbose_name_plural': 'Widespread_religions',
-                'ordering': ['order'],
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_dis_rel_grp_occ_fun",
+                "verbose_name_plural": "Government Discrimination Against Religious Groups Taking up Certain Occupations or Functionss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_obl_rel_grp_ofc_reco",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_obl_rel_grp_ofc_reco",
+                "verbose_name_plural": "Governmental Obligations for Religious Groups to Apply for Official Recognitions",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_press_conv",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_press_conv",
+                "verbose_name_plural": "Government Pressure to Converts",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_press_conv_for_aga",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_press_conv_for_aga",
+                "verbose_name_plural": "Societal Pressure to Convert or Against Conversions",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_cir_rel_lit",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_cir_rel_lit",
+                "verbose_name_plural": "Government Restrictions on Circulation of Religious Literatures",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_cons_rel_buil",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_cons_rel_buil",
+                "verbose_name_plural": "Government Restrictions on Construction of Religious Buildingss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_conv",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_conv",
+                "verbose_name_plural": "Government Restrictions on Conversions",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_prop_own_for_rel_grp",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_prop_own_for_rel_grp",
+                "verbose_name_plural": "Government Restrictions on Property Ownership for Adherents of Any Religious Groups",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_pub_pros",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_pub_pros",
+                "verbose_name_plural": "Government Restrictions on Public Proselytizings",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_pub_wor",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_pub_wor",
+                "verbose_name_plural": "Government Restrictions on Public Worships",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_res_rel_edu",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_res_rel_edu",
+                "verbose_name_plural": "Government Restrictions on Religious Educations",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="gov_vio_freq_rel_grp",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Gov_vio_freq_rel_grp",
+                "verbose_name_plural": "Frequency of Governmental Violence Against Religious Groupss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="soc_dis_rel_grp_occ_fun",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Soc_dis_rel_grp_occ_fun",
+                "verbose_name_plural": "Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functionss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="soc_vio_freq_rel_grp",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Soc_vio_freq_rel_grp",
+                "verbose_name_plural": "Frequency of Societal Violence Against Religious Groupss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="sync_rel_pra_ind_beli",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Sync_rel_pra_ind_beli",
+                "verbose_name_plural": "Syncretism of Religious Practices at the Level of Individual Believerss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="tax_rel_adh_act_ins",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Tax_rel_adh_act_ins",
+                "verbose_name_plural": "Taxes Based on Religious Adherence or on Religious Activities and Institutionss",
+            },
+        ),
+        migrations.AlterModelOptions(
+            name="theo_sync_dif_rel",
+            options={
+                "ordering": ["year_from", "year_to"],
+                "verbose_name": "Theo_sync_dif_rel",
+                "verbose_name_plural": "Theological Syncretism of Different Religionss",
             },
         ),
         migrations.CreateModel(
-            name='Official_religion',
+            name="Widespread_religion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Official_religion', max_length=100)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('official_religion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.religion')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "name",
+                    models.CharField(default="Widespread_religion", max_length=100),
+                ),
+                (
+                    "order",
+                    models.CharField(
+                        choices=[
+                            ("1", "most widespread"),
+                            ("2", "second most widespread"),
+                            ("3", "third most widespread"),
+                            ("4", "fourth most widespread"),
+                            ("9", "other"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "degree_of_prevalence",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("v_m", "vast majority"),
+                            ("o_h_p", "over half of the population"),
+                            ("sz_m", "sizeable minority"),
+                            ("a_m", "minority"),
+                            ("sm_m", "small minority"),
+                            ("vs_m", "very small minority"),
+                            ("unk", "unknown"),
+                            ("unc", "uncoded"),
+                            ("n_d", "no_data"),
+                        ],
+                        max_length=500,
+                        null=True,
+                    ),
+                ),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
+                (
+                    "widespread_religion",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.religion",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Official_religion',
-                'verbose_name_plural': 'Official_religions',
+                "verbose_name": "Widespread_religion",
+                "verbose_name_plural": "Widespread_religions",
+                "ordering": ["order"],
             },
         ),
         migrations.CreateModel(
-            name='Elites_religion',
+            name="Official_religion",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Elites_religion', max_length=100)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('elites_religion', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.religion')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                ("name", models.CharField(default="Official_religion", max_length=100)),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "official_religion",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.religion",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Elites_religion',
-                'verbose_name_plural': 'Elites_religions',
+                "verbose_name": "Official_religion",
+                "verbose_name_plural": "Official_religions",
+            },
+        ),
+        migrations.CreateModel(
+            name="Elites_religion",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                ("name", models.CharField(default="Elites_religion", max_length=100)),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "elites_religion",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.religion",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Elites_religion",
+                "verbose_name_plural": "Elites_religions",
             },
         ),
     ]

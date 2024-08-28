@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0032_ngapolityrel'),
+        ("core", "0032_ngapolityrel"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='ngapolityrel',
-            name='is_home_nga',
+            model_name="ngapolityrel",
+            name="is_home_nga",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0001_initial'),
+        ("crisisdb", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='population',
-            name='total_population',
+            model_name="population",
+            name="total_population",
             field=models.PositiveBigIntegerField(blank=True, null=True),
         ),
     ]

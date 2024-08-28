@@ -6,13 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0063_us_violence_url_address'),
+        ("crisisdb", "0063_us_violence_url_address"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='us_violence',
-            name='violence_type',
-            field=models.CharField(blank=True, choices=[('lynching', 'lynching'), ('riot', 'riot'), ('executions', 'executions'), ('war', 'war'), ('assassination', 'assassination'), ('compilation', 'compilation'), ('terrorism', 'terrorism'), ('insurrection', 'insurrection'), ('mass suicide', 'mass suicide'), ('unknown', 'unknown'), ('revenge', 'revenge')], max_length=50, null=True),
+            model_name="us_violence",
+            name="violence_type",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("lynching", "lynching"),
+                    ("riot", "riot"),
+                    ("executions", "executions"),
+                    ("war", "war"),
+                    ("assassination", "assassination"),
+                    ("compilation", "compilation"),
+                    ("terrorism", "terrorism"),
+                    ("insurrection", "insurrection"),
+                    ("mass suicide", "mass suicide"),
+                    ("unknown", "unknown"),
+                    ("revenge", "revenge"),
+                ],
+                max_length=50,
+                null=True,
+            ),
         ),
     ]

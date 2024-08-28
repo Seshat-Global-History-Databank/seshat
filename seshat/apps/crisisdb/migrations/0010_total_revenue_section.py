@@ -7,14 +7,21 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_reference_long_name_alter_reference_title'),
-        ('crisisdb', '0009_remove_total_revenue_section_and_more'),
+        ("core", "0002_reference_long_name_alter_reference_title"),
+        ("crisisdb", "0009_remove_total_revenue_section_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='total_revenue',
-            name='section',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.section'),
+            model_name="total_revenue",
+            name="section",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="%(app_label)s_%(class)s_related",
+                related_query_name="%(app_label)s_%(class)ss",
+                to="core.section",
+            ),
         ),
     ]

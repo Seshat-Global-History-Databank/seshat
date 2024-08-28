@@ -7,28 +7,38 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0021_reference_url_link'),
+        ("core", "0021_reference_url_link"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='reference',
-            name='creator',
-            field=models.CharField(help_text='Creator of pub', max_length=500),
+            model_name="reference",
+            name="creator",
+            field=models.CharField(help_text="Creator of pub", max_length=500),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='title',
-            field=models.CharField(help_text='Enter a title', max_length=500),
+            model_name="reference",
+            name="title",
+            field=models.CharField(help_text="Enter a title", max_length=500),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='url_link',
-            field=models.TextField(blank=True, max_length=500, null=True, validators=[django.core.validators.URLValidator()]),
+            model_name="reference",
+            name="url_link",
+            field=models.TextField(
+                blank=True,
+                max_length=500,
+                null=True,
+                validators=[django.core.validators.URLValidator()],
+            ),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='zotero_link',
-            field=models.CharField(blank=True, help_text='choose the 8-digit Zotero link', max_length=500, null=True),
+            model_name="reference",
+            name="zotero_link",
+            field=models.CharField(
+                blank=True,
+                help_text="choose the 8-digit Zotero link",
+                max_length=500,
+                null=True,
+            ),
         ),
     ]

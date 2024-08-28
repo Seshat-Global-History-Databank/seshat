@@ -6,73 +6,73 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0006_alter_disease_event_elevation_and_more'),
+        ("crisisdb", "0006_alter_disease_event_elevation_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='examination',
-            name='examination',
+            model_name="examination",
+            name="examination",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='examination',
-            name='place',
+            model_name="examination",
+            name="place",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='jinshi_degrees_awarded',
-            name='emperor',
+            model_name="jinshi_degrees_awarded",
+            name="emperor",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='civil_examination',
+            model_name="taiping_rebellion",
+            name="civil_examination",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='ethnic_composition',
+            model_name="taiping_rebellion",
+            name="ethnic_composition",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='family_background',
+            model_name="taiping_rebellion",
+            name="family_background",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='place',
+            model_name="taiping_rebellion",
+            name="place",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='rank',
+            model_name="taiping_rebellion",
+            name="rank",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='rebel',
+            model_name="taiping_rebellion",
+            name="rebel",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='role',
+            model_name="taiping_rebellion",
+            name="role",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='taiping_rebellion',
-            name='taiping_rebellion',
+            model_name="taiping_rebellion",
+            name="taiping_rebellion",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='area',
+            model_name="worker_wage",
+            name="area",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='worker_wage',
-            name='worker_wage',
+            model_name="worker_wage",
+            name="worker_wage",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
     ]

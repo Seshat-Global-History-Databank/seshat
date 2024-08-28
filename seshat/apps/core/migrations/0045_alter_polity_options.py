@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0044_alter_citation_options'),
+        ("core", "0044_alter_citation_options"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='polity',
-            options={'ordering': ['long_name']},
+            name="polity",
+            options={"ordering": ["long_name"]},
         ),
     ]

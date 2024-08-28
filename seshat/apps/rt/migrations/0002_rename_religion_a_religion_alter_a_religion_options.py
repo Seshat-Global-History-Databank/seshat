@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rt', '0001_initial'),
+        ("rt", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Religion',
-            new_name='A_religion',
+            old_name="Religion",
+            new_name="A_religion",
         ),
         migrations.AlterModelOptions(
-            name='a_religion',
-            options={'ordering': ['name']},
+            name="a_religion",
+            options={"ordering": ["name"]},
         ),
     ]

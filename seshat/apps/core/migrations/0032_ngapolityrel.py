@@ -7,20 +7,44 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0031_alter_nga_latitude_alter_nga_longitude'),
+        ("core", "0031_alter_nga_latitude_alter_nga_longitude"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Ngapolityrel',
+            name="Ngapolityrel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=200, null=True)),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('is_home_nga', models.BooleanField(default=False)),
-                ('nga_party', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='nga_sides', to='core.nga')),
-                ('polity_party', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='polity_sides', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=200, null=True)),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("is_home_nga", models.BooleanField(default=False)),
+                (
+                    "nga_party",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="nga_sides",
+                        to="core.nga",
+                    ),
+                ),
+                (
+                    "polity_party",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="polity_sides",
+                        to="core.polity",
+                    ),
+                ),
             ],
         ),
     ]

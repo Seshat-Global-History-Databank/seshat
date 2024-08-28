@@ -6,32 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0006_alter_variablehierarchy_unique_together'),
+        ("core", "0006_alter_variablehierarchy_unique_together"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='reference',
-            options={'ordering': ['-year']},
+            name="reference",
+            options={"ordering": ["-year"]},
         ),
         migrations.AddField(
-            model_name='citation',
-            name='created_date',
+            model_name="citation",
+            name="created_date",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='citation',
-            name='modified_date',
+            model_name="citation",
+            name="modified_date",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='reference',
-            name='created_date',
+            model_name="reference",
+            name="created_date",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='reference',
-            name='modified_date',
+            model_name="reference",
+            name="modified_date",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
     ]

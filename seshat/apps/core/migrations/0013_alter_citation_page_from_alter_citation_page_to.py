@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0012_alter_citation_ref'),
+        ("core", "0012_alter_citation_ref"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='citation',
-            name='page_from',
+            model_name="citation",
+            name="page_from",
             field=models.IntegerField(blank=True, default=0, null=True),
         ),
         migrations.AlterField(
-            model_name='citation',
-            name='page_to',
+            model_name="citation",
+            name="page_to",
             field=models.IntegerField(blank=True, default=0, null=True),
         ),
     ]

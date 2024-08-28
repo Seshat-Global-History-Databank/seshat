@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0007_alter_reference_options_citation_created_date_and_more'),
+        ("core", "0007_alter_reference_options_citation_created_date_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='citation',
-            options={'ordering': ['-created_date']},
+            name="citation",
+            options={"ordering": ["-created_date"]},
         ),
         migrations.AlterModelOptions(
-            name='reference',
-            options={'ordering': ['-modified_date']},
+            name="reference",
+            options={"ordering": ["-modified_date"]},
         ),
     ]

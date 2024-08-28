@@ -6,48 +6,48 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0020_alter_external_conflict_options_and_more'),
+        ("crisisdb", "0020_alter_external_conflict_options_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='citations',
+            model_name="external_conflict",
+            name="citations",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='created_date',
+            model_name="external_conflict",
+            name="created_date",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='description',
+            model_name="external_conflict",
+            name="description",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='finalized',
+            model_name="external_conflict",
+            name="finalized",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='modified_date',
+            model_name="external_conflict",
+            name="modified_date",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='note',
+            model_name="external_conflict",
+            name="note",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='polity',
+            model_name="external_conflict",
+            name="polity",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='tag',
+            model_name="external_conflict",
+            name="tag",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='year_from',
+            model_name="external_conflict",
+            name="year_from",
         ),
         migrations.RemoveField(
-            model_name='external_conflict',
-            name='year_to',
+            model_name="external_conflict",
+            name="year_to",
         ),
     ]

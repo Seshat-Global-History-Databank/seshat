@@ -7,70 +7,226 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0013_alter_seshat_task_task_url'),
-        ('core', '0055_polity_private_comment'),
-        ('sc', '0007_special_purpose_house_other_special_purpose_site_and_more'),
+        ("accounts", "0013_alter_seshat_task_task_url"),
+        ("core", "0055_polity_private_comment"),
+        ("sc", "0007_special_purpose_house_other_special_purpose_site_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Largest_communication_distance',
+            name="Largest_communication_distance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Largest_communication_distance', max_length=100)),
-                ('largest_communication_distance_from', models.FloatField(blank=True, null=True)),
-                ('largest_communication_distance_to', models.FloatField(blank=True, null=True)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        default="Largest_communication_distance", max_length=100
+                    ),
+                ),
+                (
+                    "largest_communication_distance_from",
+                    models.FloatField(blank=True, null=True),
+                ),
+                (
+                    "largest_communication_distance_to",
+                    models.FloatField(blank=True, null=True),
+                ),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Largest_communication_distance',
-                'verbose_name_plural': 'Largest Communication Distances',
-                'ordering': ['year_from', 'year_to'],
+                "verbose_name": "Largest_communication_distance",
+                "verbose_name_plural": "Largest Communication Distances",
+                "ordering": ["year_from", "year_to"],
             },
         ),
         migrations.CreateModel(
-            name='Fastest_individual_communication',
+            name="Fastest_individual_communication",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('note', models.TextField(blank=True, null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Evidenced'), ('SSP', 'Suspected'), ('IFR', 'Inferred')], default='TRS', max_length=5)),
-                ('is_disputed', models.BooleanField(blank=True, default=False, null=True)),
-                ('is_uncertain', models.BooleanField(blank=True, default=False, null=True)),
-                ('expert_reviewed', models.BooleanField(blank=True, default=True, null=True)),
-                ('drb_reviewed', models.BooleanField(blank=True, default=False, null=True)),
-                ('name', models.CharField(default='Fastest_individual_communication', max_length=100)),
-                ('fastest_individual_communication_from', models.FloatField(blank=True, null=True)),
-                ('fastest_individual_communication_to', models.FloatField(blank=True, null=True)),
-                ('citations', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.seshatcomment')),
-                ('curator', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
-                ('polity', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='core.polity')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                ("note", models.TextField(blank=True, null=True)),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Evidenced"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                (
+                    "is_disputed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "is_uncertain",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "expert_reviewed",
+                    models.BooleanField(blank=True, default=True, null=True),
+                ),
+                (
+                    "drb_reviewed",
+                    models.BooleanField(blank=True, default=False, null=True),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        default="Fastest_individual_communication", max_length=100
+                    ),
+                ),
+                (
+                    "fastest_individual_communication_from",
+                    models.FloatField(blank=True, null=True),
+                ),
+                (
+                    "fastest_individual_communication_to",
+                    models.FloatField(blank=True, null=True),
+                ),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.seshatcomment",
+                    ),
+                ),
+                (
+                    "curator",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="core.polity",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Fastest_individual_communication',
-                'verbose_name_plural': 'Fastest Individual Communications',
-                'ordering': ['year_from', 'year_to'],
+                "verbose_name": "Fastest_individual_communication",
+                "verbose_name_plural": "Fastest Individual Communications",
+                "ordering": ["year_from", "year_to"],
             },
         ),
     ]

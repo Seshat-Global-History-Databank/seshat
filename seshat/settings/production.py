@@ -1,6 +1,7 @@
 """
 Settings for production development of the Seshat project.
 """
+
 from .base import config
 
 # ==============================================================================
@@ -17,7 +18,7 @@ my_current_server = "www.majidbenam.com"
 
 
 # Secret Key
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 """
 Set the secret key for the production environment.
 :noindex:

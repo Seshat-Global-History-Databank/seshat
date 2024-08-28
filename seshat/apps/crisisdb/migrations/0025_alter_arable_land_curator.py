@@ -7,14 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0007_alter_seshat_expert_role'),
-        ('crisisdb', '0024_arable_land_curator'),
+        ("accounts", "0007_alter_seshat_expert_role"),
+        ("crisisdb", "0024_arable_land_curator"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='arable_land',
-            name='curator',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='accounts.seshat_expert'),
+            model_name="arable_land",
+            name="curator",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="accounts.seshat_expert",
+            ),
         ),
     ]

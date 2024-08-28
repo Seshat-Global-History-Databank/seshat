@@ -2,6 +2,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def get_attributes(obj):
     """
@@ -14,6 +15,7 @@ def get_attributes(obj):
         dict: A dictionary of the object's attributes.
     """
     return vars(obj)
+
 
 @register.filter
 def zip_lists(a, b):
@@ -28,4 +30,3 @@ def zip_lists(a, b):
         zip: A zip object of the two lists.
     """
     return zip(a, b)
-

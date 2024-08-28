@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0042_alter_nga_world_region'),
+        ("core", "0042_alter_nga_world_region"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='reference',
-            options={'ordering': ['-created_date', 'title']},
+            name="reference",
+            options={"ordering": ["-created_date", "title"]},
         ),
         migrations.AlterUniqueTogether(
-            name='reference',
-            unique_together={('zotero_link',)},
+            name="reference",
+            unique_together={("zotero_link",)},
         ),
     ]

@@ -7,17 +7,39 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0010_profile_bio'),
+        ("accounts", "0010_profile_bio"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Seshat_Task',
+            name="Seshat_Task",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('task_description', models.TextField(blank=True, null=True)),
-                ('giver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='accounts.seshat_expert')),
-                ('taker', models.ManyToManyField(blank=True, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='accounts.seshat_expert')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("task_description", models.TextField(blank=True, null=True)),
+                (
+                    "giver",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="accounts.seshat_expert",
+                    ),
+                ),
+                (
+                    "taker",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
             ],
         ),
     ]

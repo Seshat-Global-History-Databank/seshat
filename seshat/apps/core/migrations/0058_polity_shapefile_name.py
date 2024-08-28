@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0057_scpthroughctn_and_more'),
+        ("core", "0057_scpthroughctn_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='shapefile_name',
+            model_name="polity",
+            name="shapefile_name",
             field=models.CharField(blank=True, max_length=300, null=True),
         ),
     ]

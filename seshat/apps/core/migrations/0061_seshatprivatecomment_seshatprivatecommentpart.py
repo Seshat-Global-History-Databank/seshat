@@ -7,30 +7,66 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0013_alter_seshat_task_task_url'),
-        ('core', '0060_remove_capital_polity_cap'),
+        ("accounts", "0013_alter_seshat_task_task_url"),
+        ("core", "0060_remove_capital_polity_cap"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SeshatPrivateComment',
+            name="SeshatPrivateComment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('text', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("text", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='SeshatPrivateCommentPart',
+            name="SeshatPrivateCommentPart",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('private_comment_part_text', models.TextField(blank=True, null=True)),
-                ('created_date', models.DateTimeField(auto_now=True, null=True)),
-                ('last_modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('private_comment', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='inner_private_comments_related', related_query_name='inner_private_comments_related', to='core.seshatprivatecomment')),
-                ('private_comment_owner', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)s', to='accounts.seshat_expert')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("private_comment_part_text", models.TextField(blank=True, null=True)),
+                ("created_date", models.DateTimeField(auto_now=True, null=True)),
+                ("last_modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "private_comment",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="inner_private_comments_related",
+                        related_query_name="inner_private_comments_related",
+                        to="core.seshatprivatecomment",
+                    ),
+                ),
+                (
+                    "private_comment_owner",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)s",
+                        to="accounts.seshat_expert",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['created_date', 'last_modified_date'],
+                "ordering": ["created_date", "last_modified_date"],
             },
         ),
     ]

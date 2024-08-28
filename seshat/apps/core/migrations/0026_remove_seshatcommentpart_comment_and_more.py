@@ -6,26 +6,26 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0025_seshatcomment_seshatcommentpart'),
+        ("core", "0025_seshatcomment_seshatcommentpart"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='seshatcommentpart',
-            name='comment',
+            model_name="seshatcommentpart",
+            name="comment",
         ),
         migrations.RemoveField(
-            model_name='seshatcommentpart',
-            name='comment_citations',
+            model_name="seshatcommentpart",
+            name="comment_citations",
         ),
         migrations.RemoveField(
-            model_name='seshatcommentpart',
-            name='comment_curator',
+            model_name="seshatcommentpart",
+            name="comment_curator",
         ),
         migrations.DeleteModel(
-            name='SeshatComment',
+            name="SeshatComment",
         ),
         migrations.DeleteModel(
-            name='SeshatCommentPart',
+            name="SeshatCommentPart",
         ),
     ]

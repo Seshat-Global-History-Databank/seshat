@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rt', '0004_alter_gov_dis_rel_grp_occ_fun_options_and_more'),
+        ("rt", "0004_alter_gov_dis_rel_grp_occ_fun_options_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='elites_religion',
-            old_name='elites_religion',
-            new_name='coded_value',
+            model_name="elites_religion",
+            old_name="elites_religion",
+            new_name="coded_value",
         ),
         migrations.RenameField(
-            model_name='official_religion',
-            old_name='official_religion',
-            new_name='coded_value',
+            model_name="official_religion",
+            old_name="official_religion",
+            new_name="coded_value",
         ),
     ]

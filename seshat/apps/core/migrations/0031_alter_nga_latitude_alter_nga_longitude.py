@@ -6,18 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0030_nga_alter_citation_options'),
+        ("core", "0030_nga_alter_citation_options"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='nga',
-            name='latitude',
-            field=models.DecimalField(blank=True, decimal_places=12, max_digits=16, null=True),
+            model_name="nga",
+            name="latitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=12, max_digits=16, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='nga',
-            name='longitude',
-            field=models.DecimalField(blank=True, decimal_places=12, max_digits=16, null=True),
+            model_name="nga",
+            name="longitude",
+            field=models.DecimalField(
+                blank=True, decimal_places=12, max_digits=16, null=True
+            ),
         ),
     ]

@@ -15,12 +15,38 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('location', models.CharField(blank=True, max_length=30)),
-                ('role', models.PositiveSmallIntegerField(blank=True, choices=[(1, 'Seshat Admin'), (2, 'Research Assistant'), (3, 'Seshat Expert'), (4, 'Public User')], null=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("location", models.CharField(blank=True, max_length=30)),
+                (
+                    "role",
+                    models.PositiveSmallIntegerField(
+                        blank=True,
+                        choices=[
+                            (1, "Seshat Admin"),
+                            (2, "Research Assistant"),
+                            (3, "Seshat Expert"),
+                            (4, "Public User"),
+                        ],
+                        null=True,
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

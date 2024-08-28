@@ -9,31 +9,97 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Population',
+            name="Population",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year_from', models.IntegerField(blank=True, null=True)),
-                ('year_to', models.IntegerField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, help_text='Add an Optional description or a personal comment above.', null=True)),
-                ('finalized', models.BooleanField(default=False)),
-                ('created_date', models.DateTimeField(auto_now_add=True, null=True)),
-                ('modified_date', models.DateTimeField(auto_now=True, null=True)),
-                ('tag', models.CharField(choices=[('TRS', 'Trusted'), ('DSP', 'Disputed'), ('SSP', 'Suspected'), ('IFR', 'Inferred'), ('UNK', 'Unknown')], default='TRS', max_length=5)),
-                ('name', models.CharField(default='Population', max_length=100)),
-                ('total_population', models.IntegerField(blank=True, null=True)),
-                ('citations', models.ManyToManyField(blank=True, help_text='Select one or more references for this fact. Hold CTRL to select multiple.', related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.citation')),
-                ('polity', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.polity')),
-                ('section', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.section')),
-                ('subsection', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='%(app_label)s_%(class)s_related', related_query_name='%(app_label)s_%(class)ss', to='core.subsection')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("year_from", models.IntegerField(blank=True, null=True)),
+                ("year_to", models.IntegerField(blank=True, null=True)),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True,
+                        help_text="Add an Optional description or a personal comment above.",
+                        null=True,
+                    ),
+                ),
+                ("finalized", models.BooleanField(default=False)),
+                ("created_date", models.DateTimeField(auto_now_add=True, null=True)),
+                ("modified_date", models.DateTimeField(auto_now=True, null=True)),
+                (
+                    "tag",
+                    models.CharField(
+                        choices=[
+                            ("TRS", "Trusted"),
+                            ("DSP", "Disputed"),
+                            ("SSP", "Suspected"),
+                            ("IFR", "Inferred"),
+                            ("UNK", "Unknown"),
+                        ],
+                        default="TRS",
+                        max_length=5,
+                    ),
+                ),
+                ("name", models.CharField(default="Population", max_length=100)),
+                ("total_population", models.IntegerField(blank=True, null=True)),
+                (
+                    "citations",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Select one or more references for this fact. Hold CTRL to select multiple.",
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.citation",
+                    ),
+                ),
+                (
+                    "polity",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.polity",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.section",
+                    ),
+                ),
+                (
+                    "subsection",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="%(app_label)s_%(class)s_related",
+                        related_query_name="%(app_label)s_%(class)ss",
+                        to="core.subsection",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Population',
-                'verbose_name_plural': 'Populations',
+                "verbose_name": "Population",
+                "verbose_name_plural": "Populations",
             },
         ),
     ]

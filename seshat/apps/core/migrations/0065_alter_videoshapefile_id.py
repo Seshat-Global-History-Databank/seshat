@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0064_gadmcountries_gadmprovinces_gadmshapefile_and_more'),
+        ("core", "0064_gadmcountries_gadmprovinces_gadmshapefile_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='videoshapefile',
-            name='id',
+            model_name="videoshapefile",
+            name="id",
             field=models.AutoField(primary_key=True, serialize=False),
         ),
     ]

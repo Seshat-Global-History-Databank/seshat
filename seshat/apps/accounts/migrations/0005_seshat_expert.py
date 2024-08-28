@@ -9,16 +9,41 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('accounts', '0004_profile_email_confirmed'),
+        ("accounts", "0004_profile_email_confirmed"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Seshat_Expert',
+            name="Seshat_Expert",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.PositiveSmallIntegerField(blank=True, choices=[(1, 'Seshat Admin'), (2, 'Research Assistant'), (3, 'Seshat Expert')], null=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "role",
+                    models.PositiveSmallIntegerField(
+                        blank=True,
+                        choices=[
+                            (1, "Seshat Admin"),
+                            (2, "Research Assistant"),
+                            (3, "Seshat Expert"),
+                        ],
+                        null=True,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

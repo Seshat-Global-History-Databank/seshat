@@ -6,42 +6,42 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0028_seshatcommentpart_citation_index'),
+        ("core", "0028_seshatcommentpart_citation_index"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='seshatcommentpart',
-            options={'ordering': ['-modified_date']},
+            name="seshatcommentpart",
+            options={"ordering": ["-modified_date"]},
         ),
         migrations.AddField(
-            model_name='seshatcommentpart',
-            name='modified_date',
+            model_name="seshatcommentpart",
+            name="modified_date",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='creator',
+            model_name="reference",
+            name="creator",
             field=models.CharField(max_length=500),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='long_name',
+            model_name="reference",
+            name="long_name",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='title',
+            model_name="reference",
+            name="title",
             field=models.CharField(max_length=500),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='year',
+            model_name="reference",
+            name="year",
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='reference',
-            name='zotero_link',
+            model_name="reference",
+            name="zotero_link",
             field=models.CharField(blank=True, max_length=500, null=True),
         ),
     ]

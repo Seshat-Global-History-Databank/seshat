@@ -10,39 +10,40 @@ from ..core.models import SeshatCommon, Religion
 
 ########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
-('present', 'present'),
-('absent', 'absent'),
-('unknown', 'unknown'),
-('A~P', 'Transitional (Absent -> Present)'),
-('P~A', 'Transitional (Present -> Absent)'),
+    ("present", "present"),
+    ("absent", "absent"),
+    ("unknown", "unknown"),
+    ("A~P", "Transitional (Absent -> Present)"),
+    ("P~A", "Transitional (Present -> Absent)"),
 )
 
 FREQUENCY_CHOICES = (
-('never', 'never (absent)'),
-('vr', 'very rarely'),
-('mftvr', 'more frequently than very rarely'),
-('unknown', 'unknown'),
+    ("never", "never (absent)"),
+    ("vr", "very rarely"),
+    ("mftvr", "more frequently than very rarely"),
+    ("unknown", "unknown"),
 )
 
 PREVALENCE_CHOICES = (
-('v_m', 'Vast majority'),
-('o_h_p', 'Over half of the population'),
-('sz_m', 'Sizeable minority'),
-('a_m', 'Minority'),
-('sm_m', 'Small minority'),
-('vs_m',  'Very small minority'),
-('unk', 'unknown'),   # suspected goes into the tag
-('unc', 'uncoded'),
-('n_d', 'no_data'),   # none
+    ("v_m", "Vast majority"),
+    ("o_h_p", "Over half of the population"),
+    ("sz_m", "Sizeable minority"),
+    ("a_m", "Minority"),
+    ("sm_m", "Small minority"),
+    ("vs_m", "Very small minority"),
+    ("unk", "unknown"),  # suspected goes into the tag
+    ("unc", "uncoded"),
+    ("n_d", "no_data"),  # none
 )
 
 ORDER_CHOICES = (
-('1', '1. Most widespread'),
-('2', '2. Second most widespread'),
-('3', '3. Third most widespread'),
-('4', '4. Fourth most widespread'),
-('9', 'Other'),
+    ("1", "1. Most widespread"),
+    ("2", "2. Second most widespread"),
+    ("3", "3. Third most widespread"),
+    ("4", "4. Fourth most widespread"),
+    ("9", "Other"),
 )
+
 
 ###################
 def call_my_name(self):
@@ -64,9 +65,20 @@ def call_my_name(self):
         str: The name of the model instance.
     """
     if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
-        return self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
+        return (
+            self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
+        )
     else:
-        return self.name + " [for " + self.polity.name + " from " + str(self.year_from) + " to " + str(self.year_to) + "]"
+        return (
+            self.name
+            + " [for "
+            + self.polity.name
+            + " from "
+            + str(self.year_from)
+            + " to "
+            + str(self.year_to)
+            + "]"
+        )
 
 
 def return_citations(self):
@@ -88,7 +100,13 @@ def return_citations(self):
     Returns:
         str: The citations of the model instance, separated by comma.
     """
-    return ', '.join(['<a href="' + citation.zoteroer() + '">' + citation.__str__() + ' </a>' for citation in self.citations.all()[:2]])
+    return ", ".join(
+        [
+            '<a href="' + citation.zoteroer() + '">' + citation.__str__() + " </a>"
+            for citation in self.citations.all()[:2]
+        ]
+    )
+
 
 def clean_times(self):
     """
@@ -115,47 +133,75 @@ def clean_times(self):
         ValidationError: If the year_to is out of range.
     """
     if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
+                ),
+            }
+        )
     if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError({
-            'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
+                ),
+            }
+        )
     if self.year_from and (self.year_from < self.polity.start_year):
-        raise ValidationError({
-            'year_from': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_from": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'
+                ),
+            }
+        )
     if self.year_to and (self.year_to > self.polity.end_year):
-        raise ValidationError({
-            'year_to':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_to": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'
+                ),
+            }
+        )
     if self.year_to and (self.year_to > date.today().year):
-        raise ValidationError({
-            'year_to': mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'),
-        })
+        raise ValidationError(
+            {
+                "year_to": mark_safe(
+                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'
+                ),
+            }
+        )
+
 
 #########################
 
 
-
 class Widespread_religion(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Widespread_religion")
     order = models.CharField(max_length=10, choices=ORDER_CHOICES)
-    widespread_religion = models.ForeignKey(Religion, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
-                               related_query_name="%(app_label)s_%(class)s",null=True, blank=True)
-    degree_of_prevalence = models.CharField(max_length=500, choices=PREVALENCE_CHOICES, null=True, blank=True)
+    widespread_religion = models.ForeignKey(
+        Religion,
+        on_delete=models.SET_NULL,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)s",
+        null=True,
+        blank=True,
+    )
+    degree_of_prevalence = models.CharField(
+        max_length=500, choices=PREVALENCE_CHOICES, null=True, blank=True
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Widespread_religion'
-        verbose_name_plural = 'Widespread_religions'
-        ordering = ['order']
+
+        verbose_name = "Widespread_religion"
+        verbose_name_plural = "Widespread_religions"
+        ordering = ["order"]
 
     @property
     def display_citations(self):
@@ -187,7 +233,6 @@ class Widespread_religion(SeshatCommon):
             str: The name of the model instance.
         """
         return "widespread_religion"
-    
 
     def clean_name_dynamic(self):
         if self.order == "1":
@@ -216,11 +261,26 @@ class Widespread_religion(SeshatCommon):
     def show_value(self):
         if self.widespread_religion:
             if not self.get_degree_of_prevalence_display():
-                return self.get_order_display() + ": " + self.widespread_religion.religion_name
-            elif self.get_degree_of_prevalence_display() in ['uncoded', 'unknown']:
-                return self.get_order_display() + ": " + self.widespread_religion.religion_name
+                return (
+                    self.get_order_display()
+                    + ": "
+                    + self.widespread_religion.religion_name
+                )
+            elif self.get_degree_of_prevalence_display() in ["uncoded", "unknown"]:
+                return (
+                    self.get_order_display()
+                    + ": "
+                    + self.widespread_religion.religion_name
+                )
             else:
-                return self.get_order_display() + ": " + self.widespread_religion.religion_name + " (" + self.get_degree_of_prevalence_display()  + ")" 
+                return (
+                    self.get_order_display()
+                    + ": "
+                    + self.widespread_religion.religion_name
+                    + " ("
+                    + self.get_degree_of_prevalence_display()
+                    + ")"
+                )
         else:
             return " - "
 
@@ -231,7 +291,7 @@ class Widespread_religion(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -248,25 +308,32 @@ class Widespread_religion(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('widespread_religion-detail', args=[str(self.id)])
+        return reverse("widespread_religion-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
 
 class Official_religion(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Official_religion")
-    coded_value = models.ForeignKey(Religion, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s",null=True, blank=True)
+    coded_value = models.ForeignKey(
+        Religion,
+        on_delete=models.SET_NULL,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)s",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Official_religion'
-        verbose_name_plural = 'Official_religions'
+
+        verbose_name = "Official_religion"
+        verbose_name_plural = "Official_religions"
 
     @property
     def display_citations(self):
@@ -322,7 +389,7 @@ class Official_religion(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -339,25 +406,32 @@ class Official_religion(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('official_religion-detail', args=[str(self.id)])
+        return reverse("official_religion-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
-    
+
 
 class Elites_religion(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Elites_religion")
-    coded_value = models.ForeignKey(Religion, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    coded_value = models.ForeignKey(
+        Religion,
+        on_delete=models.SET_NULL,
+        related_name="%(app_label)s_%(class)s_related",
+        related_query_name="%(app_label)s_%(class)s",
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         """
         :noindex:
         """
-        verbose_name = 'Elites_religion'
-        verbose_name_plural = 'Elites_religions'
+
+        verbose_name = "Elites_religion"
+        verbose_name_plural = "Elites_religions"
 
     @property
     def display_citations(self):
@@ -413,7 +487,7 @@ class Elites_religion(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -430,7 +504,7 @@ class Elites_religion(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('elites_religion-detail', args=[str(self.id)])
+        return reverse("elites_religion-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
@@ -438,9 +512,8 @@ class Elites_religion(SeshatCommon):
 
 ############################
 class Theo_sync_dif_rel(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Theo_sync_dif_rel")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -448,9 +521,10 @@ class Theo_sync_dif_rel(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Theo_sync_dif_rel'
-        verbose_name_plural = 'Theological Syncretism of Different Religionss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Theo_sync_dif_rel"
+        verbose_name_plural = "Theological Syncretism of Different Religionss"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -527,7 +601,7 @@ class Theo_sync_dif_rel(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -544,16 +618,15 @@ class Theo_sync_dif_rel(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('theo_sync_dif_rel-detail', args=[str(self.id)])
+        return reverse("theo_sync_dif_rel-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Sync_rel_pra_ind_beli(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Sync_rel_pra_ind_beli")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -561,9 +634,12 @@ class Sync_rel_pra_ind_beli(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Sync_rel_pra_ind_beli'
-        verbose_name_plural = 'Syncretism of Religious Practices at the Level of Individual Believerss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Sync_rel_pra_ind_beli"
+        verbose_name_plural = (
+            "Syncretism of Religious Practices at the Level of Individual Believerss"
+        )
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -640,7 +716,7 @@ class Sync_rel_pra_ind_beli(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -657,16 +733,15 @@ class Sync_rel_pra_ind_beli(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('sync_rel_pra_ind_beli-detail', args=[str(self.id)])
+        return reverse("sync_rel_pra_ind_beli-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Religious_fragmentation(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Religious_fragmentation")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -674,9 +749,10 @@ class Religious_fragmentation(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Religious_fragmentation'
-        verbose_name_plural = 'Religious Fragmentations'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Religious_fragmentation"
+        verbose_name_plural = "Religious Fragmentations"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -753,7 +829,7 @@ class Religious_fragmentation(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Religious Landscape"
@@ -770,16 +846,15 @@ class Religious_fragmentation(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('religious_fragmentation-detail', args=[str(self.id)])
+        return reverse("religious_fragmentation-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_vio_freq_rel_grp(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_vio_freq_rel_grp")
     coded_value = models.CharField(max_length=500, choices=FREQUENCY_CHOICES)
 
@@ -787,9 +862,12 @@ class Gov_vio_freq_rel_grp(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_vio_freq_rel_grp'
-        verbose_name_plural = 'Frequency of Governmental Violence Against Religious Groupss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_vio_freq_rel_grp"
+        verbose_name_plural = (
+            "Frequency of Governmental Violence Against Religious Groupss"
+        )
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -866,7 +944,7 @@ class Gov_vio_freq_rel_grp(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -883,16 +961,15 @@ class Gov_vio_freq_rel_grp(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_vio_freq_rel_grp-detail', args=[str(self.id)])
+        return reverse("gov_vio_freq_rel_grp-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_pub_wor(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_pub_wor")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -900,9 +977,10 @@ class Gov_res_pub_wor(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_pub_wor'
-        verbose_name_plural = 'Government Restrictions on Public Worships'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_pub_wor"
+        verbose_name_plural = "Government Restrictions on Public Worships"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -979,7 +1057,7 @@ class Gov_res_pub_wor(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -996,16 +1074,15 @@ class Gov_res_pub_wor(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_pub_wor-detail', args=[str(self.id)])
+        return reverse("gov_res_pub_wor-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_pub_pros(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_pub_pros")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1013,9 +1090,10 @@ class Gov_res_pub_pros(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_pub_pros'
-        verbose_name_plural = 'Government Restrictions on Public Proselytizings'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_pub_pros"
+        verbose_name_plural = "Government Restrictions on Public Proselytizings"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1092,7 +1170,7 @@ class Gov_res_pub_pros(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1109,16 +1187,15 @@ class Gov_res_pub_pros(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_pub_pros-detail', args=[str(self.id)])
+        return reverse("gov_res_pub_pros-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_conv(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_conv")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1126,9 +1203,10 @@ class Gov_res_conv(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_conv'
-        verbose_name_plural = 'Government Restrictions on Conversions'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_conv"
+        verbose_name_plural = "Government Restrictions on Conversions"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1205,7 +1283,7 @@ class Gov_res_conv(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1222,16 +1300,15 @@ class Gov_res_conv(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_conv-detail', args=[str(self.id)])
+        return reverse("gov_res_conv-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_press_conv(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_press_conv")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1239,9 +1316,10 @@ class Gov_press_conv(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_press_conv'
-        verbose_name_plural = 'Government Pressure to Converts'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_press_conv"
+        verbose_name_plural = "Government Pressure to Converts"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1318,7 +1396,7 @@ class Gov_press_conv(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1335,16 +1413,15 @@ class Gov_press_conv(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_press_conv-detail', args=[str(self.id)])
+        return reverse("gov_press_conv-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_prop_own_for_rel_grp(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_prop_own_for_rel_grp")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1352,9 +1429,10 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_prop_own_for_rel_grp'
-        verbose_name_plural = 'Government Restrictions on Property Ownership for Adherents of Any Religious Groups'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_prop_own_for_rel_grp"
+        verbose_name_plural = "Government Restrictions on Property Ownership for Adherents of Any Religious Groups"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1431,7 +1509,7 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1448,16 +1526,15 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_prop_own_for_rel_grp-detail', args=[str(self.id)])
+        return reverse("gov_res_prop_own_for_rel_grp-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Tax_rel_adh_act_ins(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Tax_rel_adh_act_ins")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1465,9 +1542,10 @@ class Tax_rel_adh_act_ins(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Tax_rel_adh_act_ins'
-        verbose_name_plural = 'Taxes Based on Religious Adherence or on Religious Activities and Institutionss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Tax_rel_adh_act_ins"
+        verbose_name_plural = "Taxes Based on Religious Adherence or on Religious Activities and Institutionss"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1544,7 +1622,7 @@ class Tax_rel_adh_act_ins(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1561,16 +1639,15 @@ class Tax_rel_adh_act_ins(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('tax_rel_adh_act_ins-detail', args=[str(self.id)])
+        return reverse("tax_rel_adh_act_ins-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_obl_rel_grp_ofc_reco(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_obl_rel_grp_ofc_reco")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1578,9 +1655,10 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_obl_rel_grp_ofc_reco'
-        verbose_name_plural = 'Governmental Obligations for Religious Groups to Apply for Official Recognitions'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_obl_rel_grp_ofc_reco"
+        verbose_name_plural = "Governmental Obligations for Religious Groups to Apply for Official Recognitions"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1657,7 +1735,7 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1674,16 +1752,15 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_obl_rel_grp_ofc_reco-detail', args=[str(self.id)])
+        return reverse("gov_obl_rel_grp_ofc_reco-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_cons_rel_buil(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_cons_rel_buil")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1691,9 +1768,12 @@ class Gov_res_cons_rel_buil(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_cons_rel_buil'
-        verbose_name_plural = 'Government Restrictions on Construction of Religious Buildingss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_cons_rel_buil"
+        verbose_name_plural = (
+            "Government Restrictions on Construction of Religious Buildingss"
+        )
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1770,7 +1850,7 @@ class Gov_res_cons_rel_buil(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1787,16 +1867,15 @@ class Gov_res_cons_rel_buil(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_cons_rel_buil-detail', args=[str(self.id)])
+        return reverse("gov_res_cons_rel_buil-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_rel_edu(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_rel_edu")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1804,9 +1883,10 @@ class Gov_res_rel_edu(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_rel_edu'
-        verbose_name_plural = 'Government Restrictions on Religious Educations'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_rel_edu"
+        verbose_name_plural = "Government Restrictions on Religious Educations"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1883,7 +1963,7 @@ class Gov_res_rel_edu(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -1900,16 +1980,15 @@ class Gov_res_rel_edu(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_rel_edu-detail', args=[str(self.id)])
+        return reverse("gov_res_rel_edu-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_res_cir_rel_lit(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_res_cir_rel_lit")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -1917,9 +1996,12 @@ class Gov_res_cir_rel_lit(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_res_cir_rel_lit'
-        verbose_name_plural = 'Government Restrictions on Circulation of Religious Literatures'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_res_cir_rel_lit"
+        verbose_name_plural = (
+            "Government Restrictions on Circulation of Religious Literatures"
+        )
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -1996,7 +2078,7 @@ class Gov_res_cir_rel_lit(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -2013,16 +2095,15 @@ class Gov_res_cir_rel_lit(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_res_cir_rel_lit-detail', args=[str(self.id)])
+        return reverse("gov_res_cir_rel_lit-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_dis_rel_grp_occ_fun(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_dis_rel_grp_occ_fun")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2030,9 +2111,10 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_dis_rel_grp_occ_fun'
-        verbose_name_plural = 'Government Discrimination Against Religious Groups Taking up Certain Occupations or Functionss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_dis_rel_grp_occ_fun"
+        verbose_name_plural = "Government Discrimination Against Religious Groups Taking up Certain Occupations or Functionss"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2109,7 +2191,7 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Government Restrictions"
@@ -2126,16 +2208,15 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_dis_rel_grp_occ_fun-detail', args=[str(self.id)])
+        return reverse("gov_dis_rel_grp_occ_fun-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Soc_vio_freq_rel_grp(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Soc_vio_freq_rel_grp")
     coded_value = models.CharField(max_length=500, choices=FREQUENCY_CHOICES)
 
@@ -2143,9 +2224,10 @@ class Soc_vio_freq_rel_grp(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Soc_vio_freq_rel_grp'
-        verbose_name_plural = 'Frequency of Societal Violence Against Religious Groupss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Soc_vio_freq_rel_grp"
+        verbose_name_plural = "Frequency of Societal Violence Against Religious Groupss"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2222,7 +2304,7 @@ class Soc_vio_freq_rel_grp(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Societal Restrictions"
@@ -2239,16 +2321,15 @@ class Soc_vio_freq_rel_grp(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('soc_vio_freq_rel_grp-detail', args=[str(self.id)])
+        return reverse("soc_vio_freq_rel_grp-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Soc_dis_rel_grp_occ_fun(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Soc_dis_rel_grp_occ_fun")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2256,9 +2337,10 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Soc_dis_rel_grp_occ_fun'
-        verbose_name_plural = 'Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functionss'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Soc_dis_rel_grp_occ_fun"
+        verbose_name_plural = "Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functionss"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2335,7 +2417,7 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Societal Restrictions"
@@ -2352,16 +2434,15 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('soc_dis_rel_grp_occ_fun-detail', args=[str(self.id)])
+        return reverse("soc_dis_rel_grp_occ_fun-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)
 
 
 class Gov_press_conv_for_aga(SeshatCommon):
-    """
-    
-    """
+    """ """
+
     name = models.CharField(max_length=100, default="Gov_press_conv_for_aga")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
 
@@ -2369,9 +2450,10 @@ class Gov_press_conv_for_aga(SeshatCommon):
         """
         :noindex:
         """
-        verbose_name = 'Gov_press_conv_for_aga'
-        verbose_name_plural = 'Societal Pressure to Convert or Against Conversions'
-        ordering = ['year_from', 'year_to']
+
+        verbose_name = "Gov_press_conv_for_aga"
+        verbose_name_plural = "Societal Pressure to Convert or Against Conversions"
+        ordering = ["year_from", "year_to"]
 
     @property
     def display_citations(self):
@@ -2448,7 +2530,7 @@ class Gov_press_conv_for_aga(SeshatCommon):
             return None
 
     def show_value_to(self):
-        return None  
+        return None
 
     def subsection(self):
         return "Societal Restrictions"
@@ -2465,7 +2547,7 @@ class Gov_press_conv_for_aga(SeshatCommon):
         Returns:
             str: A string of the url to access a particular instance of the model.
         """
-        return reverse('gov_press_conv_for_aga-detail', args=[str(self.id)])
+        return reverse("gov_press_conv_for_aga-detail", args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0004_alter_variablehierarchy_unique_together_and_more'),
+        ("core", "0004_alter_variablehierarchy_unique_together_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='variablehierarchy',
-            name='is_verified',
+            model_name="variablehierarchy",
+            name="is_verified",
             field=models.BooleanField(default=False),
         ),
     ]

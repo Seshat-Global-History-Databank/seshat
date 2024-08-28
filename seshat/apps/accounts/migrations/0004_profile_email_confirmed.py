@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0003_remove_profile_email_confirmed'),
+        ("accounts", "0003_remove_profile_email_confirmed"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='email_confirmed',
+            model_name="profile",
+            name="email_confirmed",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

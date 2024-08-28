@@ -7,13 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0046_alter_seshatcommentpart_options'),
+        ("core", "0046_alter_seshatcommentpart_options"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='home_nga',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='home_nga', to='core.nga'),
+            model_name="polity",
+            name="home_nga",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="home_nga",
+                to="core.nga",
+            ),
         ),
     ]

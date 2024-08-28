@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0005_variablehierarchy_is_verified'),
+        ("core", "0005_variablehierarchy_is_verified"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='variablehierarchy',
-            unique_together={('name', 'section', 'subsection')},
+            name="variablehierarchy",
+            unique_together={("name", "section", "subsection")},
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('general', '0015_polity_alternate_religion_private_comment_and_more'),
+        ("general", "0015_polity_alternate_religion_private_comment_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity_preceding_entity',
-            name='merged_old_data',
+            model_name="polity_preceding_entity",
+            name="merged_old_data",
             field=models.CharField(blank=True, max_length=1000, null=True),
         ),
     ]

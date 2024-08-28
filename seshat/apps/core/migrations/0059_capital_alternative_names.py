@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0058_polity_shapefile_name'),
+        ("core", "0058_polity_shapefile_name"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='capital',
-            name='alternative_names',
+            model_name="capital",
+            name="alternative_names",
             field=models.CharField(blank=True, max_length=300, null=True),
         ),
     ]

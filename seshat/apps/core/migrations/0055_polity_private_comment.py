@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0054_macro_region_alter_polity_polity_tag_seshat_region_and_more'),
+        ("core", "0054_macro_region_alter_polity_polity_tag_seshat_region_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity',
-            name='private_comment',
+            model_name="polity",
+            name="private_comment",
             field=models.TextField(blank=True, null=True),
         ),
     ]

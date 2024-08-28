@@ -8,30 +8,52 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Album',
+            name="Album",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('album_name', models.CharField(max_length=100)),
-                ('artist', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("album_name", models.CharField(max_length=100)),
+                ("artist", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Track',
+            name="Track",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('order', models.IntegerField()),
-                ('title', models.CharField(max_length=100)),
-                ('duration', models.IntegerField()),
-                ('album', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tracks', to='seshat_api.album')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("order", models.IntegerField()),
+                ("title", models.CharField(max_length=100)),
+                ("duration", models.IntegerField()),
+                (
+                    "album",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tracks",
+                        to="seshat_api.album",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['order'],
-                'unique_together': {('album', 'order')},
+                "ordering": ["order"],
+                "unique_together": {("album", "order")},
             },
         ),
     ]

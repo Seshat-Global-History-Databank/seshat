@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0027_seshatcomment_seshatcommentpart'),
+        ("core", "0027_seshatcomment_seshatcommentpart"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='seshatcommentpart',
-            name='citation_index',
+            model_name="seshatcommentpart",
+            name="citation_index",
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

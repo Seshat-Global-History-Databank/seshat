@@ -21,14 +21,24 @@ def update_subcomment_ordering(sender, instance, **kwargs):
     """
     if not instance.pk:
         last_subcomment = instance.comment.inner_comments_related.last()
-        instance.comment_order = last_subcomment.comment_order + 1 if last_subcomment else 0
-        #instance.save()
-        SeshatCommentPart.objects.filter(pk=instance.pk).update(comment_order=instance.comment_order)
+        instance.comment_order = (
+            last_subcomment.comment_order + 1 if last_subcomment else 0
+        )
+        # instance.save()
+        SeshatCommentPart.objects.filter(pk=instance.pk).update(
+            comment_order=instance.comment_order
+        )
     else:
         # Re-order all the subcomments if the order of the current subcomment has changed
         comment_order = instance.comment_order
-        subcomments = instance.comment.inner_comments_related.filter(comment_order__gte=comment_order).exclude(pk=instance.pk).order_by('comment_order')
-        subcomments.update(comment_order=F('comment_order') + 1)
+        subcomments = (
+            instance.comment.inner_comments_related.filter(
+                comment_order__gte=comment_order
+            )
+            .exclude(pk=instance.pk)
+            .order_by("comment_order")
+        )
+        subcomments.update(comment_order=F("comment_order") + 1)
         # for i, subcomment in enumerate(subcomments):
         #     print(f"Changed: {subcomment.comment_order}   -----> to {order + i + 1}")
         #     subcomment.comment_order = order + i + 1

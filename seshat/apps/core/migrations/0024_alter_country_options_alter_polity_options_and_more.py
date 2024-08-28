@@ -6,36 +6,36 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0023_rename_end_polity_end_year_and_more'),
+        ("core", "0023_rename_end_polity_end_year_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='country',
+            name="country",
             options={},
         ),
         migrations.AlterModelOptions(
-            name='polity',
+            name="polity",
             options={},
         ),
         migrations.AlterUniqueTogether(
-            name='country',
-            unique_together={('name',)},
+            name="country",
+            unique_together={("name",)},
         ),
         migrations.AlterUniqueTogether(
-            name='polity',
-            unique_together={('name',)},
+            name="polity",
+            unique_together={("name",)},
         ),
         migrations.AlterUniqueTogether(
-            name='reference',
-            unique_together={('title', 'zotero_link')},
+            name="reference",
+            unique_together={("title", "zotero_link")},
         ),
         migrations.AlterUniqueTogether(
-            name='section',
-            unique_together={('name',)},
+            name="section",
+            unique_together={("name",)},
         ),
         migrations.AlterUniqueTogether(
-            name='subsection',
-            unique_together={('name', 'section')},
+            name="subsection",
+            unique_together={("name", "section")},
         ),
     ]

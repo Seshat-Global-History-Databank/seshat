@@ -6,13 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('general', '0017_polity_preceding_entity_other_polity'),
+        ("general", "0017_polity_preceding_entity_other_polity"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity_preceding_entity',
-            name='relationship_to_preceding_entity',
-            field=models.CharField(blank=True, choices=[('continuity', 'continuity'), ('elite migration', 'elite migration'), ('cultural assimilation', 'cultural assimilation'), ('continuation', 'continuation'), ('indigenous revolt', 'indigenous revolt'), ('replacement', 'replacement'), ('population migration', 'population migration'), ('hostile', 'hostile'), ('disruption/continuity', 'disruption/continuity'), ('continuity/discontinuity', 'continuity/discontinuity'), ('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'), ('suspected unknown', 'suspected unknown'), ('vassalage', 'vassalage'), ('not applicable', 'not applicable'), ('unknown', 'unknown'), ('economic displacement', 'economic displacement'), ('secession', 'secession')], max_length=500, null=True),
+            model_name="polity_preceding_entity",
+            name="relationship_to_preceding_entity",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("continuity", "continuity"),
+                    ("elite migration", "elite migration"),
+                    ("cultural assimilation", "cultural assimilation"),
+                    ("continuation", "continuation"),
+                    ("indigenous revolt", "indigenous revolt"),
+                    ("replacement", "replacement"),
+                    ("population migration", "population migration"),
+                    ("hostile", "hostile"),
+                    ("disruption/continuity", "disruption/continuity"),
+                    ("continuity/discontinuity", "continuity/discontinuity"),
+                    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
+                    ("suspected unknown", "suspected unknown"),
+                    ("vassalage", "vassalage"),
+                    ("not applicable", "not applicable"),
+                    ("unknown", "unknown"),
+                    ("economic displacement", "economic displacement"),
+                    ("secession", "secession"),
+                ],
+                max_length=500,
+                null=True,
+            ),
         ),
     ]

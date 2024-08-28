@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crisisdb', '0055_power_transition_culture_group'),
+        ("crisisdb", "0055_power_transition_culture_group"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='power_transition',
-            name='name',
+            model_name="power_transition",
+            name="name",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='power_transition',
-            name='predecessor',
+            model_name="power_transition",
+            name="predecessor",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='power_transition',
-            name='successor',
+            model_name="power_transition",
+            name="successor",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

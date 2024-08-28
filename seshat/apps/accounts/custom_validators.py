@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 
+
 def validate_email_with_dots(value):
     """
     Custom validator to reject email addresses with more than four dots in
@@ -16,10 +17,10 @@ def validate_email_with_dots(value):
             the domain part.
     """
     # Split the email address into local and domain parts
-    local_part, _ = value.split('@')
+    local_part, _ = value.split("@")
 
     # Check if the domain part has more than four dots
-    if local_part.count('.') > 4:
+    if local_part.count(".") > 4:
         raise ValidationError(
             "Email address contains too many dots in the domain part."
         )

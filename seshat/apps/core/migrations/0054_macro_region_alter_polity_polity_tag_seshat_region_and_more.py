@@ -7,40 +7,88 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0053_alter_polity_polity_tag'),
+        ("core", "0053_alter_polity_polity_tag"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Macro_region',
+            name="Macro_region",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
             ],
             options={
-                'ordering': ['name'],
+                "ordering": ["name"],
             },
         ),
         migrations.AlterField(
-            model_name='polity',
-            name='polity_tag',
-            field=models.CharField(blank=True, choices=[('LEGACY', 'Equinox 2020 Polities'), ('POL_AFR_EAST', 'NEW East African Polities'), ('POL_AFR_WEST', 'NEW West African Polities'), ('POL_AFR_SA', 'NEW Southern African Polities'), ('POL_SA_SI', 'NEW South East Indian Polities'), ('CRISISDB_POLITIES', 'CrisisDB-specific Polities'), ('OTHER_TAG', 'Other Polities')], default='OTHER_TAG', max_length=100, null=True),
+            model_name="polity",
+            name="polity_tag",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("LEGACY", "Equinox 2020 Polities"),
+                    ("POL_AFR_EAST", "NEW East African Polities"),
+                    ("POL_AFR_WEST", "NEW West African Polities"),
+                    ("POL_AFR_SA", "NEW Southern African Polities"),
+                    ("POL_SA_SI", "NEW South East Indian Polities"),
+                    ("CRISISDB_POLITIES", "CrisisDB-specific Polities"),
+                    ("OTHER_TAG", "Other Polities"),
+                ],
+                default="OTHER_TAG",
+                max_length=100,
+                null=True,
+            ),
         ),
         migrations.CreateModel(
-            name='Seshat_region',
+            name="Seshat_region",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('subregions_list', models.CharField(blank=True, max_length=500, null=True)),
-                ('mac_region', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='mac_region', to='core.macro_region')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100)),
+                (
+                    "subregions_list",
+                    models.CharField(blank=True, max_length=500, null=True),
+                ),
+                (
+                    "mac_region",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="mac_region",
+                        to="core.macro_region",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['mac_region__name', 'name'],
+                "ordering": ["mac_region__name", "name"],
             },
         ),
         migrations.AddField(
-            model_name='polity',
-            name='home_seshat_region',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='home_seshat_region', to='core.seshat_region'),
+            model_name="polity",
+            name="home_seshat_region",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="home_seshat_region",
+                to="core.seshat_region",
+            ),
         ),
     ]

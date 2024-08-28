@@ -7,14 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0063_seshatprivatecommentpart_private_comment_reader'),
-        ('general', '0016_polity_preceding_entity_merged_old_data'),
+        ("core", "0063_seshatprivatecommentpart_private_comment_reader"),
+        ("general", "0016_polity_preceding_entity_merged_old_data"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='polity_preceding_entity',
-            name='other_polity',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.polity'),
+            model_name="polity_preceding_entity",
+            name="other_polity",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="core.polity",
+            ),
         ),
     ]
