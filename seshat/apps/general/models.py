@@ -1,9 +1,6 @@
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models.fields.related import ManyToManyField
 from django.urls import reverse
-from django.utils import translation
 from django.utils.safestring import mark_safe
 
 from datetime import date
