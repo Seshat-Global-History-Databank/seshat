@@ -142,6 +142,13 @@
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
 
+            // Trigger page refresh to avoid caching issues
+            (function () {
+                if (!window.location.search.includes('refresh')) {
+                    window.location.href = window.location.href.split('?')[0] + '?refresh=' + new Date().getTime();
+                }
+            })();
+
             // Allows scrolling on the componentLegend div
             const componentLegend = document.getElementById('componentLegend');
             componentLegend.addEventListener('wheel', function (event) {
