@@ -1,5 +1,5 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-import six
+import six  # TODO: Remove reliance on six library (Python 2 compatibility)
 
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):

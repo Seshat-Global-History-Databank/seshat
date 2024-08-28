@@ -1,7 +1,9 @@
 from django.db import connection
 from django.contrib.gis.gdal import DataSource
 from django.core.management.base import BaseCommand
-from seshat.apps.core.models import GADMShapefile, GADMCountries, GADMProvinces
+
+from ...models import GADMShapefile, GADMCountries, GADMProvinces
+
 
 class Command(BaseCommand):
     help = 'Populates the GADMShapefile table with features from a GeoPackage'

@@ -6,4 +6,4 @@ class CoreConfig(AppConfig):
     name = 'seshat.apps.core'
 
     def ready(self):
-        import seshat.apps.core.signals 
+        import seshat.apps.core.signals # TODO: Is this import needed here?

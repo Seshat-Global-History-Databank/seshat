@@ -1,24 +1,15 @@
-
-########## Beginning of Model Imports
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields.related import ManyToManyField
-from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
-#from model_utils.models import StatusModel
-from django.core.exceptions import ValidationError
 from django.urls import reverse
+from django.utils import translation
+from django.utils.safestring import mark_safe
 
 from datetime import date
 
-import uuid
-
-from django.utils import translation
-
-from ..core.models import SeshatCommon, Polity, Certainty, Tags, Section, Subsection, Capital
-from seshat.apps.accounts.models import Seshat_Expert
-
-
-########## End of Model Imports
+from ..accounts.models import Seshat_Expert
+from ..core.models import SeshatCommon, Polity, Capital
 
 
 ########## Beginning of tuple choices for general Models

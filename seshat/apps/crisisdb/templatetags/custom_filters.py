@@ -1,5 +1,8 @@
 from django import template
+
 import re
+import uuid
+
 
 register = template.Library()
 
@@ -161,8 +164,6 @@ def username_from_email(email):
 
 #     return new_string
 
-
-import uuid
 
 @register.filter
 def make_references_look_nicer(value):

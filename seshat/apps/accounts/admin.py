@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from .models import Profile, Seshat_Expert, Seshat_Task
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 
 
 class ProfileInline(admin.StackedInline):
@@ -40,6 +38,3 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile)
 admin.site.register(Seshat_Expert)
 admin.site.register(Seshat_Task)
-
-
-

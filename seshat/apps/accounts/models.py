@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import pre_save, post_save, pre_delete
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
-from django.core.exceptions import ValidationError
-from .custom_validators import validate_email_with_dots  # Import your custom validator
-from django.core.validators import EmailValidator
-from datetime import datetime
 
 
 # class CustomUser(AbstractUser):

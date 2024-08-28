@@ -1,8 +1,6 @@
-from .models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_violence, Us_location, Us_violence_subtype, Us_violence_data_source, Power_transition
 from django.urls import path
 
-from .views import confirm_delete_view, delete_object_view
-
+from .models import Us_violence, Us_location, Us_violence_subtype, Us_violence_data_source, Power_transition
 from . import views
 
 model_form_pairs = [
@@ -52,14 +50,14 @@ for model_class, x_name in model_form_pairs:
      - /model_name/<int:pk>/delete/
      """
      urlpatterns.append(
-          path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
+          path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
                'model_class': model_class,
                'var_name': x_name,
           }, name=f'{x_name}-confirm-delete')
           )
 
      urlpatterns.append(
-          path(f'{x_name}/<int:pk>/delete/', delete_object_view, {
+          path(f'{x_name}/<int:pk>/delete/', views.delete_object_view, {
                'model_class': model_class,
                'var_name': x_name,
           }, name=f'{x_name}-delete')

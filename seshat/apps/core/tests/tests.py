@@ -1,13 +1,16 @@
-import json
 from django.contrib.gis.geos import MultiPolygon, Polygon, GEOSGeometry
 from django.test import TestCase, Client
 from django.urls import reverse
-from ..models import VideoShapefile, GADMShapefile, GADMCountries, GADMProvinces, Polity, Capital
+
+import json
+
 from ...general.models import Polity_capital, Polity_peak_years, Polity_language
-from ...sc.models import Judge
 from ...rt.models import Gov_res_pub_pros
-from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes
+from ...sc.models import Judge
+
+from ..models import VideoShapefile, GADMShapefile, GADMCountries, GADMProvinces, Polity, Capital
 from ..templatetags.core_tags import get_polity_capitals, polity_map
+from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes
 
 
 class ShapesTest(TestCase):

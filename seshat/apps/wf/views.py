@@ -1,51 +1,20 @@
-
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
-from django.db.models.base import Model
-# from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.safestring import mark_safe
-from django.views.generic.list import ListView
-
-from django.contrib.contenttypes.models import ContentType
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from django.db.models import Case, When, Value, IntegerField, F, CharField, ExpressionWrapper
-
-from django.http import HttpResponseRedirect, response, JsonResponse
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
-
-# from .mycodes import *
-from django.conf import settings
-
-from django.urls import reverse, reverse_lazy
-
-from django.views import generic
-import csv
-import datetime
-
-from django.core.paginator import Paginator
-
-from django.http import HttpResponse
-
-import requests
-from requests.structures import CaseInsensitiveDict
-
 from django.apps import apps
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Case, When, IntegerField, F, CharField, ExpressionWrapper
+from django.shortcuts import render, HttpResponse
+from django.urls import reverse, reverse_lazy
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from ..general.mixins import PolityIdMixin
 
-
+from .forms import Long_wallForm, CopperForm, BronzeForm, IronForm, SteelForm, JavelinForm, AtlatlForm, SlingForm, Self_bowForm, Composite_bowForm, CrossbowForm, Tension_siege_engineForm, Sling_siege_engineForm, Gunpowder_siege_artilleryForm, Handheld_firearmForm, War_clubForm, Battle_axeForm, DaggerForm, SwordForm, SpearForm, PolearmForm, DogForm, DonkeyForm, HorseForm, CamelForm, ElephantForm, Wood_bark_etcForm, Leather_clothForm, ShieldForm, HelmetForm, BreastplateForm, Limb_protectionForm, Scaled_armorForm, Laminar_armorForm, Plate_armorForm, Small_vessels_canoes_etcForm, Merchant_ships_pressed_into_serviceForm, Specialized_military_vesselForm, Settlements_in_a_defensive_positionForm, Wooden_palisadeForm, Earth_rampartForm, DitchForm, MoatForm, Stone_walls_non_mortaredForm, Stone_walls_mortaredForm, Fortified_campForm, Complex_fortificationForm, Modern_fortificationForm, ChainmailForm
 from .models import Long_wall, Copper, Bronze, Iron, Steel, Javelin, Atlatl, Sling, Self_bow, Composite_bow, Crossbow, Tension_siege_engine, Sling_siege_engine, Gunpowder_siege_artillery, Handheld_firearm, War_club, Battle_axe, Dagger, Sword, Spear, Polearm, Dog, Donkey, Horse, Camel, Elephant, Wood_bark_etc, Leather_cloth, Shield, Helmet, Breastplate, Limb_protection, Scaled_armor, Laminar_armor, Plate_armor, Small_vessels_canoes_etc, Merchant_ships_pressed_into_service, Specialized_military_vessel, Settlements_in_a_defensive_position, Wooden_palisade, Earth_rampart, Ditch, Moat, Stone_walls_non_mortared, Stone_walls_mortared, Fortified_camp, Complex_fortification, Modern_fortification, Chainmail
 
+import csv
+import datetime
 
-from .forms import Long_wallForm, CopperForm, BronzeForm, IronForm, SteelForm, JavelinForm, AtlatlForm, SlingForm, Self_bowForm, Composite_bowForm, CrossbowForm, Tension_siege_engineForm, Sling_siege_engineForm, Gunpowder_siege_artilleryForm, Handheld_firearmForm, War_clubForm, Battle_axeForm, DaggerForm, SwordForm, SpearForm, PolearmForm, DogForm, DonkeyForm, HorseForm, CamelForm, ElephantForm, Wood_bark_etcForm, Leather_clothForm, ShieldForm, HelmetForm, BreastplateForm, Limb_protectionForm, Scaled_armorForm, Laminar_armorForm, Plate_armorForm, Small_vessels_canoes_etcForm, Merchant_ships_pressed_into_serviceForm, Specialized_military_vesselForm, Settlements_in_a_defensive_positionForm, Wooden_palisadeForm, Earth_rampartForm, DitchForm, MoatForm, Stone_walls_non_mortaredForm, Stone_walls_mortaredForm, Fortified_campForm, Complex_fortificationForm, Modern_fortificationForm, ChainmailForm
-
-
-
-##########################
 
 class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """

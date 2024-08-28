@@ -1,16 +1,8 @@
-from .models import Ra, Polity_territory, Polity_population, Population_of_the_largest_settlement, Settlement_hierarchy, Administrative_level, Religious_level, Military_level, Professional_military_officer, Professional_soldier, Professional_priesthood, Full_time_bureaucrat, Examination_system, Merit_promotion, Specialized_government_building, Formal_legal_code, Judge, Court, Professional_lawyer, Irrigation_system, Drinking_water_supply_system, Market, Food_storage_site, Road, Bridge, Canal, Port, Mines_or_quarry, Mnemonic_device, Nonwritten_record, Written_record, Script, Non_phonetic_writing, Phonetic_alphabetic_writing, Lists_tables_and_classification, Calendar, Sacred_text, Religious_literature, Practical_literature, History, Philosophy, Scientific_literature, Fiction, Article, Token, Precious_metal, Foreign_coin, Indigenous_coin, Paper_currency, Courier, Postal_station, General_postal_service, Communal_building, Utilitarian_public_building, Other_utilitarian_public_building, Symbolic_building, Entertainment_building, Knowledge_or_information_building, Special_purpose_site, Ceremonial_site, Burial_site, Trading_emporia, Enclosure, Length_measurement_system, Area_measurement_system, Volume_measurement_system, Weight_measurement_system, Time_measurement_system, Geometrical_measurement_system, Other_measurement_system, Debt_and_credit_structure, Store_of_wealth, Source_of_support, Occupational_complexity, Special_purpose_house, Other_special_purpose_site, Largest_communication_distance, Fastest_individual_communication
-import datetime
-
 from django import forms
-from django.db.models.base import Model
-from django.forms import ModelForm
 from django.forms.widgets import Textarea
 
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
-from django.contrib.admin.widgets import FilteredSelectMultiple
+from .models import Ra, Polity_territory, Polity_population, Population_of_the_largest_settlement, Settlement_hierarchy, Administrative_level, Religious_level, Military_level, Professional_military_officer, Professional_soldier, Professional_priesthood, Full_time_bureaucrat, Examination_system, Merit_promotion, Specialized_government_building, Formal_legal_code, Judge, Court, Professional_lawyer, Irrigation_system, Drinking_water_supply_system, Market, Food_storage_site, Road, Bridge, Canal, Port, Mines_or_quarry, Mnemonic_device, Nonwritten_record, Written_record, Script, Non_phonetic_writing, Phonetic_alphabetic_writing, Lists_tables_and_classification, Calendar, Sacred_text, Religious_literature, Practical_literature, History, Philosophy, Scientific_literature, Fiction, Article, Token, Precious_metal, Foreign_coin, Indigenous_coin, Paper_currency, Courier, Postal_station, General_postal_service, Communal_building, Utilitarian_public_building, Other_utilitarian_public_building, Symbolic_building, Entertainment_building, Knowledge_or_information_building, Special_purpose_site, Ceremonial_site, Burial_site, Trading_emporia, Enclosure, Length_measurement_system, Area_measurement_system, Volume_measurement_system, Weight_measurement_system, Time_measurement_system, Geometrical_measurement_system, Other_measurement_system, Debt_and_credit_structure, Store_of_wealth, Source_of_support, Occupational_complexity, Special_purpose_house, Other_special_purpose_site, Largest_communication_distance, Fastest_individual_communication
 
-from django.template.defaulttags import register
 
 commonlabels = {
     'polity': '&nbsp;<b>Polity:</b>',

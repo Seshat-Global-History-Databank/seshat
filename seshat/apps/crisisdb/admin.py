@@ -6,7 +6,6 @@ from .models import Power_transition, Crisis_consequence, Human_sacrifice, Exter
 admin.site.register(Human_sacrifice)
 admin.site.register(Crisis_consequence)
 admin.site.register(Power_transition)
-
 admin.site.register(External_conflict)
 admin.site.register(Internal_conflict)
 admin.site.register(External_conflict_side)

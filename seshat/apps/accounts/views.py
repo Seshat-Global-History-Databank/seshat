@@ -1,23 +1,17 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-
-from .models import Profile
-from django.contrib.contenttypes.models import ContentType
-
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import reverse, reverse_lazy
-
-from .models import Seshat_Expert, Seshat_Task, Profile
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from .forms import Seshat_TaskForm, ProfileForm
-from django.views import generic
-from django.http import HttpResponseRedirect
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView
 
-from ..core.models import SeshatPrivateComment, SeshatPrivateCommentPart
+from .models import Profile, Seshat_Expert, Seshat_Task
+from .forms import Seshat_TaskForm, ProfileForm
+
+from ..core.models import SeshatPrivateCommentPart
 
 
 def accounts(request):
@@ -34,6 +28,7 @@ def accounts(request):
         HttpResponse: The response object.
     """
     return HttpResponse('<h1>Hello Accounts.</h1>')
+
 
 def accounts_new(request):
     """

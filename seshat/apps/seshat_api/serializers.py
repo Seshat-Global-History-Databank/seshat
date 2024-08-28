@@ -1,14 +1,10 @@
-
-################ Beginning of Serializers Imports (TODO: Make them automatic too)
-
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from seshat.apps.crisisdb.models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
-from ..core.models import Polity, Reference, Section, Subsection, Variablehierarchy
 
-################ End of Serializers Imports
+from ..crisisdb.models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
+from ..core.models import Polity, Reference
 
-################ Beginning of Base Serializers
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
     The base serializer for the User model. It is used to serialize the User model and return the serialized data in the API response.

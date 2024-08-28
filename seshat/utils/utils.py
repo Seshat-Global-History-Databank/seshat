@@ -1,18 +1,13 @@
-from seshat.apps.core.models import Polity, Variablehierarchy, Section, Subsection
-# from seshat.apps.crisisdb.models import *
-import django.apps
-import pprint
-from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
-# from seshat.apps.crisisdb.models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
-
+import django
 from django.contrib.contenttypes.models import ContentType
-from django.apps import apps
-
 from django.db.models import Q
 
-from ..apps.core.models import Polity
 import requests
+
 from requests.structures import CaseInsensitiveDict
+
+from ..apps.core.models import Polity, Variablehierarchy, Section, Subsection
+from ..apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
 
 
 vars_dic_for_utils = {
@@ -171,7 +166,6 @@ def section_dic_extractor():
     Returns:
         dict: A dictionary of all sections.
     """
-    from seshat.apps.core.models import Section
     my_list = Section.objects.all()
     dic_to_be_returned = {}
     for item in list(my_list):
@@ -187,7 +181,6 @@ def subsection_dic_extractor():
     Returns:
         dict: A dictionary of all subsections.
     """
-    from seshat.apps.core.models import Subsection
     my_list = Subsection.objects.all()
     dic_to_be_returned = {}
     for item in list(my_list):
@@ -264,7 +257,6 @@ def test_for_varhier_dic():
             if list_of_all_varhiers_in_here:
                 my_dict[sect.name][subsect.name] = list_of_all_varhiers_in_here
     context["my_dict"] = my_dict
-    pprint.pprint(my_dict)
     return my_dict
     #return render(request, 'crisisdb/qing-vars.html', context=context)
 
@@ -383,7 +375,7 @@ def get_all_general_data_for_a_polity(polity_id):
         tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
     """
     app_name = 'general'  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
+    models_1 = django.apps.apps.get_app_config(app_name).get_models()
     has_any_data = False
 
 
@@ -729,125 +721,8 @@ def get_all_power_transitions_data_for_a_polity(polity_id):
     #print(a_data_dic)
     return a_data_dic
 
-# def has_power_transition_data_for_polity(polity_id):
-#     return Power_transition.objects.filter(polity=polity_id).exists()
-
-
-# def has_g_sc_wf_data_for_all_polities():
-#     import time
-#     start_time = time.time()
-
-#     print("ali")
-#     app_labels = ["general","sc", "wf"]
-#     polity_ids = Polity.objects.values_list('id', flat=True)  
-#     contain_dic = {}
-#     remiaining_general_pols = []
-#     for polity_id in polity_ids:
-#         data_exists_g = Polity_degree_of_centralization.objects.filter(polity=polity_id).exists() or Polity_utm_zone.objects.filter(polity=polity_id).exists()
-#         if data_exists_g:
-#             contain_dic[polity_id] = {
-#                 'g': True,
-#                 'sc': False,
-#                 'wf': False,
-#             }
-#             #print("hoooooooooooooooo")
-#         else:
-#             contain_dic[polity_id] = {
-#                 'g': False,
-#                 'sc': False,
-#                 'wf': False,
-#             }
-#             remiaining_general_pols.append(polity_id)
-            
-
-
-#     mid_time = time.time()
-#     elapsed_time = mid_time - start_time
-
-#     #print(f"Elapsed time (Mid): {elapsed_time} seconds---- {len(remiaining_general_pols)}")
-
-#     for polity_id in polity_ids:
-
-#         for ct in ContentType.objects.filter(app_label__in=app_labels):
-
-#             m = ct.model_class()
-
-#             midmid_time = time.time()
-#             elapsed_time = midmid_time - start_time
-#             #print(f"Elapsed time (MidMid): {elapsed_time} seconds")
-
-#             if m.__module__ == "seshat.apps.general.models":
-#                 if contain_dic[polity_id]['g']:
-#                     continue
-#                 contain_dic[polity_id]['g'] = m.objects.filter(polity=polity_id).exists()
-#             if m.__module__ == "seshat.apps.sc.models":
-#                 if contain_dic[polity_id]['sc']:
-#                     continue
-#                 contain_dic[polity_id]['sc']  = m.objects.filter(polity=polity_id).exists()
-#             if m.__module__ == "seshat.apps.wf.models":
-#                 if contain_dic[polity_id]['wf']:
-#                     continue
-#                 contain_dic[polity_id]['wf'] = m.objects.filter(polity=polity_id).exists()
-
-#     print("yaret")
-#     end_time = time.time()
-
-#     # Calculate the elapsed time
-#     elapsed_time = end_time - start_time
-
-#     print(f"Elapsed time: {elapsed_time} seconds")
-
-#     return contain_dic
-
-
-# def has_g_sc_wf_data_for_all_polities():
-#     import time
-#     from django.apps import apps
-
-
-#     start_time = time.time()
-
-#     #app_labels = ["general", "sc", "wf"]
-#     polity_ids = Polity.objects.values_list('id', flat=True)
-
-#     contain_dic = {}
-
-#     for polity_id in polity_ids:
-#         contain_dic[polity_id] = {'sc': False, }
-
-#     app_models = apps.get_app_config("sc").get_models()
-#     print(app_models)
-
-#     for model in app_models:
-#             all_sc_data = model.objects.all()
-
-#     for polity_id in polity_ids:   
-        
-#             print(model)
-#             if contain_dic[polity_id]['sc']:
-#                 break
-#             else:
-#                 data_exists = model.objects.filter(polity=polity_id).exists()
-#                 if data_exists:
-#                     contain_dic[polity_id]['sc'] = data_exists
-#                     print(model, polity_id)
-#                     break
-
-#             #contain_dic[polity_id]['sc'] = False
-        
-
-#     end_time = time.time()
-#     elapsed_time = end_time - start_time
-
-#     print(f"Elapsed time: {elapsed_time} seconds")
-
-#     return contain_dic
-
-
 
 def give_polity_app_data():
-    from django.apps import apps
-
     contain_dic = {}
     freq_dic = {
             'g': 0,

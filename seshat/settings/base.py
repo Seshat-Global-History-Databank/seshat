@@ -6,18 +6,19 @@ available in :doc:`/api/seshat/settings/local/index` and
 :doc:`/api/seshat/settings/production/index`.
 """
 
-from pathlib import Path
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
+from django.contrib.messages import constants as messages
 
 import os
-
 import django_heroku
-
-import dj_database_url
-from decouple import Csv, config
 import sys
 
-from django.contrib.messages import constants as messages
+from pathlib import Path
+
+from decouple import config
+
+# TODO: define __all__ for this module
+
+
 MESSAGE_TAGS = {
         messages.DEBUG: 'alert-secondary',
         messages.INFO: 'alert-info',
@@ -47,7 +48,6 @@ if DEBUG:
 else:
     MY_CURRENT_SERVER = "https://www.majidbenam.com"
 
-#ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv())
 ALLOWED_HOSTS = ['seshatdb.herokuapp.com', '127.0.0.1',
                  'majidbenam.com', 'www.majidbenam.com', 'https://majidbenam.com']
 

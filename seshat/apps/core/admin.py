@@ -3,7 +3,6 @@ from .models import Macro_region, Seshat_region, Polity, Country, Section, Subse
 
 admin.site.register(Macro_region)
 admin.site.register(Seshat_region)
-
 admin.site.register(Section)
 admin.site.register(Subsection)
 admin.site.register(Variablehierarchy)
@@ -19,33 +18,9 @@ admin.site.register(Capital)
 admin.site.register(Religion)
 
 
-
-
-
-
-# class CustomUserAdmin(UserAdmin):
-#     inlines = (ProfileInline, )
-
-#     list_display = ('username', 'email', 'first_name',
-#                     'last_name', 'is_staff', 'get_location')
-#     list_select_related = ('profile', )
-
-#     def get_location(self, instance):
-#         return instance.profile.location
-#     get_location.short_description = 'Location'
-
-#     def get_inline_instances(self, request, obj=None):
-#         if not obj:
-#             return list()
-#         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
-
-
-# admin.site.unregister(User)
-# admin.site.register(User, CustomUserAdmin)
-
-
 class CustomReferenceAdmin(admin.ModelAdmin):
     list_display = ('title', 'created_date', 'creator',)
+
 
 admin.site.unregister(Reference)
 admin.site.register(Reference, CustomReferenceAdmin)

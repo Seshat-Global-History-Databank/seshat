@@ -1,7 +1,6 @@
 import geopandas as gpd
 import json
 import folium
-import folium
 import ipywidgets as widgets
 from IPython.display import display, clear_output
 

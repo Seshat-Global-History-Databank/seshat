@@ -1,49 +1,21 @@
-
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
-from django.db.models.base import Model
-# from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.safestring import mark_safe
-from django.views.generic.list import ListView
-
-from django.contrib.contenttypes.models import ContentType
-
+from django.apps import apps
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import send_mail
+from django.db.models import Q
+from django.http import HttpResponse
+from django.shortcuts import render, HttpResponse
+from django.urls import reverse, reverse_lazy
+from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from django.http import HttpResponseRedirect, response, JsonResponse
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
-
-# from .mycodes import *
-from django.conf import settings
-
-from django.urls import reverse, reverse_lazy
-from django.db.models import Q
-
-from django.views import generic
 import csv
 import datetime
 
-from django.core.paginator import Paginator
-
-from django.http import HttpResponse
-
-import requests
-from requests.structures import CaseInsensitiveDict
-
-from django.apps import apps
-
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
-from django.core.mail import send_mail
-
+from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 from .mixins import PolityIdMixin
-
-
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
 
-
-from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
 class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
     """

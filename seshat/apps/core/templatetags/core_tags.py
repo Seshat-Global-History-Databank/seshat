@@ -1,11 +1,13 @@
 from django import template
-from django.db import connection
-from django.db.models import F
+
 from ..models import Polity, Capital
-from ...general.models import Polity_capital, Polity_peak_years
 from ..views import get_polity_shape_content
 
+from ...general.models import Polity_capital, Polity_peak_years
+
+
 register = template.Library()
+
 
 @register.inclusion_tag('core/polity_map.html')
 def polity_map(pk, test=False):

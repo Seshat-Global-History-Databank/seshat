@@ -1,17 +1,11 @@
 from django.urls import path
 
-from .models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
-
 from .forms import Widespread_religionForm, Official_religionForm, Elites_religionForm,Theo_sync_dif_relForm, Sync_rel_pra_ind_beliForm, Religious_fragmentationForm, Gov_vio_freq_rel_grpForm, Gov_res_pub_worForm, Gov_res_pub_prosForm, Gov_res_convForm, Gov_press_convForm, Gov_res_prop_own_for_rel_grpForm, Tax_rel_adh_act_insForm, Gov_obl_rel_grp_ofc_recoForm, Gov_res_cons_rel_builForm, Gov_res_rel_eduForm, Gov_res_cir_rel_litForm, Gov_dis_rel_grp_occ_funForm, Soc_vio_freq_rel_grpForm, Soc_dis_rel_grp_occ_funForm, Gov_press_conv_for_agaForm
-
-
-
-from .views import dynamic_create_view, dynamic_update_view, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
-
+from .models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
 from .var_defs import rt_var_defs
 
-
 from . import views
+
 
 model_form_pairs = [
     (Widespread_religion, Widespread_religionForm, 'widespread_religion', 'Widespread Religion', "Religious Landscape", None),    
@@ -58,7 +52,7 @@ urlpatterns = [
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
-        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view, {
+        path(f'{x_name}/update/<int:object_id>/', views.dynamic_update_view, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,
@@ -70,7 +64,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-update')
     )
     urlpatterns.append(
-        path(f'{x_name}/create/', dynamic_create_view, {
+        path(f'{x_name}/create/', views.dynamic_create_view, {
             'form_class': form_class,
             'x_name': x_name,
             'myvar': myvar,
@@ -80,7 +74,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-create')
      )
     urlpatterns.append(
-        path(f'{x_name}s_all/', generic_list_view, {
+        path(f'{x_name}s_all/', views.generic_list_view, {
             'model_class': model_class,
             'var_name': x_name,
             'var_name_display': myvar,
@@ -90,13 +84,13 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}s_all')
      )
     urlpatterns.append(
-        path(f'{x_name}download/', generic_download, {
+        path(f'{x_name}download/', views.generic_download, {
             'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(
-        path(f'{x_name}metadownload/', generic_metadata_download, {
+        path(f'{x_name}metadownload/', views.generic_metadata_download, {
             'var_name': x_name,
             'var_name_display': myvar,
             'var_section': sec,
@@ -105,28 +99,21 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-metadownload')
      )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/', dynamic_detail_view, {
+        path(f'{x_name}/<int:pk>/', views.dynamic_detail_view, {
           'model_class': model_class,
             'myvar': x_name,
           'var_name_display': myvar,
         }, name=f'{x_name}-detail')
      )
-     #urlpatterns.append(
-     #    path(f'{x_name}/<int:pk>/delete/', generic_delete_view, {
-     #      'model_class': model_class,
-     #        'var_name': x_name,
-     #    }, name=f'{x_name}-delete')
-     # )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
+        path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-confirm-delete')
      )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/delete/', delete_object_view, {
+        path(f'{x_name}/<int:pk>/delete/', views.delete_object_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-delete')
      )
-

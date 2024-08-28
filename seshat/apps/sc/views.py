@@ -1,49 +1,21 @@
-
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
-from django.db.models.base import Model
-# from django.http.response import HttpResponse
+from django.apps import apps
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
-from django.utils.safestring import mark_safe
-from django.views.generic.list import ListView
-
-from django.contrib.contenttypes.models import ContentType
-
+from django.urls import reverse, reverse_lazy
+from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
-
-# from .mycodes import *
-from django.conf import settings
-
-from django.urls import reverse, reverse_lazy
-
-from django.views import generic
 import csv
 import datetime
 
-from django.core.paginator import Paginator
-
-from django.http import HttpResponse
-
+from ..core.models import Reference
 from ..general.mixins import PolityIdMixin
-
-import requests
-from requests.structures import CaseInsensitiveDict
-from django.apps import apps
-
-from django.contrib import messages
-
-#from easyaudit.models import CRUDEvent
-
-from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
-
-
+from .forms import RaForm, Polity_territoryForm, Polity_populationForm, Population_of_the_largest_settlementForm, Settlement_hierarchyForm, Administrative_levelForm, Religious_levelForm, Military_levelForm, Professional_military_officerForm, Professional_soldierForm, Professional_priesthoodForm, Full_time_bureaucratForm, Examination_systemForm, Merit_promotionForm, Specialized_government_buildingForm, Formal_legal_codeForm, JudgeForm, CourtForm, Professional_lawyerForm, Irrigation_systemForm, Drinking_water_supply_systemForm, MarketForm, Food_storage_siteForm, RoadForm, BridgeForm, CanalForm, PortForm, Mines_or_quarryForm, Mnemonic_deviceForm, Nonwritten_recordForm, Written_recordForm, ScriptForm, Non_phonetic_writingForm, Phonetic_alphabetic_writingForm, Lists_tables_and_classificationForm, CalendarForm, Sacred_textForm, Religious_literatureForm, Practical_literatureForm, HistoryForm, PhilosophyForm, Scientific_literatureForm, FictionForm, ArticleForm, TokenForm, Precious_metalForm, Foreign_coinForm, Indigenous_coinForm, Paper_currencyForm, CourierForm, Postal_stationForm, General_postal_serviceForm
 from .models import Ra, Polity_territory, Polity_population, Population_of_the_largest_settlement, Settlement_hierarchy, Administrative_level, Religious_level, Military_level, Professional_military_officer, Professional_soldier, Professional_priesthood, Full_time_bureaucrat, Examination_system, Merit_promotion, Specialized_government_building, Formal_legal_code, Judge, Court, Professional_lawyer, Irrigation_system, Drinking_water_supply_system, Market, Food_storage_site, Road, Bridge, Canal, Port, Mines_or_quarry, Mnemonic_device, Nonwritten_record, Written_record, Script, Non_phonetic_writing, Phonetic_alphabetic_writing, Lists_tables_and_classification, Calendar, Sacred_text, Religious_literature, Practical_literature, History, Philosophy, Scientific_literature, Fiction, Article, Token, Precious_metal, Foreign_coin, Indigenous_coin, Paper_currency, Courier, Postal_station, General_postal_service
 
-
-from .forms import RaForm, Polity_territoryForm, Polity_populationForm, Population_of_the_largest_settlementForm, Settlement_hierarchyForm, Administrative_levelForm, Religious_levelForm, Military_levelForm, Professional_military_officerForm, Professional_soldierForm, Professional_priesthoodForm, Full_time_bureaucratForm, Examination_systemForm, Merit_promotionForm, Specialized_government_buildingForm, Formal_legal_codeForm, JudgeForm, CourtForm, Professional_lawyerForm, Irrigation_systemForm, Drinking_water_supply_systemForm, MarketForm, Food_storage_siteForm, RoadForm, BridgeForm, CanalForm, PortForm, Mines_or_quarryForm, Mnemonic_deviceForm, Nonwritten_recordForm, Written_recordForm, ScriptForm, Non_phonetic_writingForm, Phonetic_alphabetic_writingForm, Lists_tables_and_classificationForm, CalendarForm, Sacred_textForm, Religious_literatureForm, Practical_literatureForm, HistoryForm, PhilosophyForm, Scientific_literatureForm, FictionForm, ArticleForm, TokenForm, Precious_metalForm, Foreign_coinForm, Indigenous_coinForm, Paper_currencyForm, CourierForm, Postal_stationForm, General_postal_serviceForm
 
 class RaCreate(PermissionRequiredMixin, CreateView):
     """

@@ -1,59 +1,35 @@
-
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
-from django.db.models.base import Model
-# from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.utils.safestring import mark_safe
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import F, CharField, ExpressionWrapper
+from django.http import HttpResponse
+from django.http import JsonResponse, HttpResponseForbidden
+from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
+from django.urls import reverse, reverse_lazy
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 
-from django.contrib.contenttypes.models import ContentType
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from django.db.models import F, Count, CharField, ExpressionWrapper
-from ..general.mixins import PolityIdMixin
-
-
-from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatComment, SeshatCommentPart
-from seshat.apps.accounts.models import Seshat_Expert
-
-# from .mycodes import *
-from django.conf import settings
-
-from django.urls import reverse, reverse_lazy
-
-from django.views import generic
 import csv
 import datetime
-
-from django.core.paginator import Paginator
-
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-
+import re
 import requests
+
 from requests.structures import CaseInsensitiveDict
 
-from django.contrib import messages
+from ...utils.utils import list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 
+from ..accounts.models import Seshat_Expert
+from ..core.models import Citation, Variablehierarchy, SeshatComment, SeshatCommentPart
+from ..general.mixins import PolityIdMixin
 
-
-import re
+from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm
+from .models import Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence
 
 
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
-
-from .models import Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence
-
-
-from .forms import Power_transitionForm, Crisis_consequenceForm, Human_sacrificeForm, External_conflictForm, Internal_conflictForm, External_conflict_sideForm, Agricultural_populationForm, Arable_landForm, Arable_land_per_farmerForm, Gross_grain_shared_per_agricultural_populationForm, Net_grain_shared_per_agricultural_populationForm, SurplusForm, Military_expenseForm, Silver_inflowForm, Silver_stockForm, Total_populationForm, Gdp_per_capitaForm, Drought_eventForm, Locust_eventForm, Socioeconomic_turmoil_eventForm, Crop_failure_eventForm, Famine_eventForm, Disease_outbreakForm, Us_locationForm, Us_violence_subtypeForm, Us_violence_data_sourceForm, Us_violenceForm
-
-
 
 
 # Consequences of Crisis:
@@ -6166,8 +6142,6 @@ def download_csv_all_american_violence(request):
     Note:
         This view is only accessible to users with the 'view_capital' permission.
     """
-    #from bs4 import BeautifulSoup
-
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -6209,8 +6183,6 @@ def download_csv_all_american_violence2(request):
     Returns:
         HttpResponse: HTTP response with CSV file
     """
-    #from bs4 import BeautifulSoup
-
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 

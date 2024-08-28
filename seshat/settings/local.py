@@ -1,16 +1,12 @@
 """
 Settings for local development of the Seshat project.
 """
-
-# flake8: noqa
-
-from .base import *
 import environ
 import os
 import sys
 
-#MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
-#MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+from .base import *
+
 
 # Databases
 # We use the local database for development and the GitHub Actions database for testing

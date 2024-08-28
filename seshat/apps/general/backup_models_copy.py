@@ -1,24 +1,18 @@
-
-########## Beginning of Model Imports
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.fields.related import ManyToManyField
-from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
-#from model_utils.models import StatusModel
-from django.core.exceptions import ValidationError
 from django.urls import reverse
-
-from datetime import date
+from django.utils import translation
+from django.utils.safestring import mark_safe
 
 import uuid
 
-from django.utils import translation
+from datetime import date
 
-from ..core.models import SeshatCommon, Certainty, Tags, Section, Subsection
-from seshat.apps.accounts.models import Seshat_Expert
+from ..accounts.models import Seshat_Expert
+from ..core.models import SeshatCommon
 
-
-########## End of Model Imports
 
 ########## Beginning of tuple choices for general Models
 POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (

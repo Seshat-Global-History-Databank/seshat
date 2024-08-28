@@ -1,83 +1,59 @@
-import sys
-import importlib
-import random
+
+
+from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
+from pyzotero import zotero
+from decouple import config
+from requests.structures import CaseInsensitiveDict
+import re
+import csv
+import datetime
+import json
 import numpy as np
-
-from collections import defaultdict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
-
-from django.contrib.sites.shortcuts import get_current_site
-from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
-from django.shortcuts import render
-from django.http import HttpResponse, Http404
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from .tokens import account_activation_token
-from django.contrib.auth.models import User
-from django.views.decorators.cache import cache_page
-from django.core.cache import cache
-from django.utils.text import slugify
-from django.views.decorators.csrf import csrf_protect
-from django.contrib import messages
-from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
-from django.db import IntegrityError, connection
-from django.db.models import Prefetch, F, Value, Q, Min, Max, Count
-from django.db.models.functions import Replace
-
-from django.views.decorators.http import require_GET
-
-from django.contrib.auth.decorators import login_required, permission_required
-from seshat.apps.accounts.models import Seshat_Expert
-from seshat.apps.general.models import Polity_preceding_entity
-
-from django.core.paginator import Paginator
-
-from django.http import FileResponse
-from django.shortcuts import get_object_or_404, render, redirect
 import os
+import random
+import requests
+import sys
 
 from django.apps import apps
-
-from decouple import config
-
-
-from markupsafe import Markup, escape
-from django.http import JsonResponse
-
-from django.core.mail import EmailMessage, send_mail
-import html
-import datetime
-import csv
-
-import json
-from django.views import generic
-from django.urls import reverse, reverse_lazy
-
-from django.contrib.messages.views import SuccessMessageMixin
-
-from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES
-
-from ..crisisdb.models import Power_transition
-
-from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, VideoShapefile, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
-import pprint
-import requests
-from requests.structures import CaseInsensitiveDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
-
-
-from django.shortcuts import HttpResponse
-
-from math import floor, ceil
-from django.contrib.gis.geos import GEOSGeometry
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.models import User
 from django.contrib.gis.db.models.functions import AsGeoJSON
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.cache import cache
+from django.core.mail import send_mail
+from django.core.paginator import Paginator
+from django.db.models import F, Value, Q, Min, Max, Count
+from django.db.models.functions import Replace
+from django.http import FileResponse, HttpResponse, Http404, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
+from django.template.loader import render_to_string
+from django.urls import reverse, reverse_lazy
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.views import generic
+from django.views.decorators.http import require_GET
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
+
+from .forms import SeshatCommentPartForm, SeshatCommentForm2, SeshatCommentPartForm2_UPGRADE, ReferenceFormSet2_UPGRADE, SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, SeshatPrivateCommentForm, ReligionForm
+from .manual_input_refs import manual_input_refs
+from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, VideoShapefile, GADMCountries, GADMProvinces, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion, SeshatCommentPart, Citation, SeshatComment
+from .nlp_zotero_links import NLP_ZOTERO_LINKS_TO_FILTER
+from .templatetags.core_tags import get_polity_capitals
+from .tokens import account_activation_token
+
+from ..accounts.models import Seshat_Expert
+from ..crisisdb.models import Power_transition
+from ..general.models import Polity_preceding_entity, Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES
+from ..sc.models import ABSENT_PRESENT_CHOICES
+
+from ...utils.utils import dic_of_all_vars, get_all_data_for_a_polity, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
+
 
 @login_required
 @permission_required('core.add_seshatprivatecommentpart')
@@ -169,9 +145,6 @@ def ajax_test(request):
     else:
         message = "Not ajax"
     return HttpResponse(message)
-
-# importing formset_factory
-from django.forms import formset_factory, modelformset_factory, inlineformset_factory
 
 
 def index(request):
@@ -402,9 +375,6 @@ class NlpReferenceListView(generic.ListView):
         Returns:
             QuerySet: The queryset of NLP references.
         """
-        # Import the list of Zotero links inside the method
-        from .nlp_zotero_links import NLP_ZOTERO_LINKS_TO_FILTER
-
         # Use the imported list of Zotero links to filter references
         queryset = Reference.objects.filter(zotero_link__in=NLP_ZOTERO_LINKS_TO_FILTER)
 
@@ -1955,8 +1925,6 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
         all_ngas = Nga.objects.all()
         all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
-        #import time
-        #start_time = time.time()
 
         all_polities_g_sc_wf = give_polity_app_data()
 
@@ -2104,8 +2072,6 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        #import time
-        #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
         all_mrs_unsorted = Macro_region.objects.all()
 
@@ -2191,8 +2157,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        #import time
-        #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
         all_mrs_unsorted = Macro_region.objects.all()
 
@@ -2571,8 +2535,6 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         except:
             context["nga_pol_rel"] = None
             #print("*************")
-        #import django
-        #print(django.get_version())
 
         preceding_data = []
         succeeding_data = []
@@ -3021,7 +2983,6 @@ def do_zotero(results):
     Returns:
         list: A list of dictionaries containing the processed data.
     """
-    import re
     mother_ref_dic = []
     for i, item in enumerate(results):
         #print(i, ": ", item['data']['key'], item['data']['date'])
@@ -3210,7 +3171,6 @@ def update_citations_from_inside_zotero_update():
     Returns:
         None
     """
-    from datetime import datetime
     all_refs = Reference.objects.all()
     for ref in all_refs:
         a_citation = Citation.objects.get_or_create(ref=ref, page_from=None, page_to=None)
@@ -3234,7 +3194,6 @@ def synczoteromanually(request):
         HttpResponse: The HTTP response.
     """
     print("Hallo Zotero Manually")
-    from .manual_input_refs import manual_input_refs 
 
     new_refs = do_zotero_manually(manual_input_refs)
     context = {}
@@ -3253,8 +3212,6 @@ def synczotero(request):
         HttpResponse: The HTTP response.
     """
     print("Hallo Zotero")
-
-    from pyzotero import zotero
     zot = zotero.Zotero(1051264, 'group', config('ZOTERO_API_KEY'))
     results = zot.everything(zot.top())
     #results = zot.top(limit=100)
@@ -3284,8 +3241,6 @@ def synczotero100(request):
         HttpResponse: The HTTP response.
     """
     print("Hallo Zotero")
-
-    from pyzotero import zotero
     zot = zotero.Zotero(1051264, 'group', config('ZOTERO_API_KEY'))
     #results = zot.everything(zot.top())
     results = zot.top(limit=100)
@@ -3522,9 +3477,6 @@ def get_polity_data_single(polity_id):
     Returns:
         dict: The data for the polity.
     """
-    from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
-    from django.apps import apps
-
     app_models_general = apps.get_app_config('general').get_models()
     app_models_sc = apps.get_app_config('sc').get_models()
     app_models_wf = apps.get_app_config('wf').get_models()
@@ -3628,11 +3580,7 @@ def get_or_create_citation(reference, page_from, page_to):
         page_from=page_from,
         page_to=page_to
     )
-from django.shortcuts import render, redirect
-from .forms import SeshatCommentPartForm, SeshatCommentForm2
 
-
-from .models import SeshatCommentPart, Citation
 
 def seshatcommentpart_create_view_old(request):
     """
@@ -3686,8 +3634,6 @@ def seshatcommentpart_create_view_old(request):
 
 
 # views.py
-from django.shortcuts import render, redirect
-from .models import SeshatCommentPart, Citation, SeshatComment
 
 def seshatcommentpart_create_view(request):
     """
@@ -3770,7 +3716,6 @@ def seshatcommentpart_create_view(request):
 
 
 # Shapefile views
-import time # TODO: delete
 
 def get_provinces(selected_base_map_gadm='province'):
     """
@@ -3893,8 +3838,6 @@ def get_all_polity_capitals():
     Returns:
         dict: A dictionary containing the capital cities for polities.
     """
-    from seshat.apps.core.templatetags.core_tags import get_polity_capitals
-
     # Try to get the capitals from the cache
     all_capitals_info = cache.get('all_capitals_info')
 
@@ -3930,7 +3873,6 @@ def assign_variables_to_shapes(shapes, app_map):
     Returns:
         tuple: A tuple containing the shapes and the variables.
     """
-    from seshat.apps.sc.models import ABSENT_PRESENT_CHOICES  # These should be the same in the other apps
     # Try to get the variables from the cache
     variables = cache.get('variables')
     if variables is None:
@@ -4500,7 +4442,6 @@ def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instan
     #return redirect('model-detail', pk=model_instance.id)
     return redirect('seshatcomment-update', pk=comment_instance.id)
 
-from .forms import SeshatCommentPartForm2_UPGRADE, ReferenceFormSet2_UPGRADE
 
 @login_required
 def create_a_comment_with_a_subcomment_newer(request, app_name, model_name, instance_id):

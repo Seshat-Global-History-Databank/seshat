@@ -1,15 +1,11 @@
-from .models import Communal_building, Utilitarian_public_building, Other_utilitarian_public_building, Symbolic_building, Entertainment_building, Knowledge_or_information_building, Special_purpose_site, Ceremonial_site, Burial_site, Trading_emporia, Enclosure, Length_measurement_system, Area_measurement_system, Volume_measurement_system, Weight_measurement_system, Time_measurement_system, Geometrical_measurement_system, Other_measurement_system, Debt_and_credit_structure, Store_of_wealth, Bridge, Source_of_support, Occupational_complexity, Special_purpose_house, Other_special_purpose_site, Military_level, Largest_communication_distance, Fastest_individual_communication
-
 from django.urls import path
 
 from .forms import Communal_buildingForm, Utilitarian_public_buildingForm, Other_utilitarian_public_buildingForm, Symbolic_buildingForm, Entertainment_buildingForm, Knowledge_or_information_buildingForm, Special_purpose_siteForm, Ceremonial_siteForm, Burial_siteForm, Trading_emporiaForm, EnclosureForm, Length_measurement_systemForm, Area_measurement_systemForm, Volume_measurement_systemForm, Weight_measurement_systemForm, Time_measurement_systemForm, Geometrical_measurement_systemForm, Other_measurement_systemForm, Debt_and_credit_structureForm, Store_of_wealthForm, BridgeForm, Source_of_supportForm, Occupational_complexityForm, Special_purpose_houseForm, Other_special_purpose_siteForm, Military_levelForm, Largest_communication_distanceForm, Fastest_individual_communicationForm
-
-
-from .views import dynamic_create_view, dynamic_update_view, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
+from .models import Communal_building, Utilitarian_public_building, Other_utilitarian_public_building, Symbolic_building, Entertainment_building, Knowledge_or_information_building, Special_purpose_site, Ceremonial_site, Burial_site, Trading_emporia, Enclosure, Length_measurement_system, Area_measurement_system, Volume_measurement_system, Weight_measurement_system, Time_measurement_system, Geometrical_measurement_system, Other_measurement_system, Debt_and_credit_structure, Store_of_wealth, Bridge, Source_of_support, Occupational_complexity, Special_purpose_house, Other_special_purpose_site, Military_level, Largest_communication_distance, Fastest_individual_communication
 from .var_defs import sc_var_defs
 
-
 from . import views
+
 
 model_form_pairs = [
      (Communal_building, Communal_buildingForm, 'communal_building', 'Communal Building', "Specialized Buildings: polity owned", None),
@@ -62,7 +58,7 @@ urlpatterns = [
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
      urlpatterns.append(
-        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view, {
+        path(f'{x_name}/update/<int:object_id>/', views.dynamic_update_view, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,
@@ -74,7 +70,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-update')
     )
      urlpatterns.append(
-        path(f'{x_name}/create/', dynamic_create_view, {
+        path(f'{x_name}/create/', views.dynamic_create_view, {
             'form_class': form_class,
             'x_name': x_name,
             'myvar': myvar,
@@ -84,7 +80,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-create')
      )
      urlpatterns.append(
-        path(f'{x_name}s_all/', generic_list_view, {
+        path(f'{x_name}s_all/', views.generic_list_view, {
             'model_class': model_class,
             'var_name': x_name,
             'var_name_display': myvar,
@@ -94,13 +90,13 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}s_all')
      )
      urlpatterns.append(
-        path(f'{x_name}download/', generic_download, {
+        path(f'{x_name}download/', views.generic_download, {
             'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-download')
      )
      urlpatterns.append(
-        path(f'{x_name}metadownload/', generic_metadata_download, {
+        path(f'{x_name}metadownload/', views.generic_metadata_download, {
             'var_name': x_name,
             'var_name_display': myvar,
             'var_section': sec,
@@ -109,26 +105,20 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-metadownload')
      )
      urlpatterns.append(
-        path(f'{x_name}/<int:pk>/', dynamic_detail_view, {
+        path(f'{x_name}/<int:pk>/', views.dynamic_detail_view, {
           'model_class': model_class,
             'myvar': x_name,
           'var_name_display': myvar,
         }, name=f'{x_name}-detail')
      )
-     # urlpatterns.append(
-     #    path(f'{x_name}/<int:pk>/delete/', generic_delete_view, {
-     #      'model_class': model_class,
-     #        'var_name': x_name,
-     #    }, name=f'{x_name}-delete')
-     # )
      urlpatterns.append(
-        path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
+        path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-confirm-delete')
      )
      urlpatterns.append(
-        path(f'{x_name}/<int:pk>/delete/', delete_object_view, {
+        path(f'{x_name}/<int:pk>/delete/', views.delete_object_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-delete')

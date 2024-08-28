@@ -1,22 +1,17 @@
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 from django import forms
 from django.forms import formset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
-
-
-from seshat.apps.core.models import Section, Subsection, Variablehierarchy, Reference, Citation, SeshatComment, SeshatCommentPart, Polity, Capital, Nga, SeshatPrivateCommentPart, SeshatPrivateComment, Religion
-from django.core.exceptions import NON_FIELD_ERRORS
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 from django.core.exceptions import ValidationError
-
 from django_recaptcha.fields import ReCaptchaField
 
+from ...utils.utils import dic_of_all_vars
+from ..core.models import Reference, Citation, SeshatComment, SeshatCommentPart, Polity, Capital, Nga, SeshatPrivateCommentPart, SeshatPrivateComment, Religion
 
-#from .models import Religion
 
 class ReligionForm(forms.ModelForm):
     """

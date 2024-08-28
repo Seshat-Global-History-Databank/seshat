@@ -1,7 +1,8 @@
+from django.db.models import F
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import SeshatCommentPart, SeshatComment
-from django.db.models import F
+
+from .models import SeshatCommentPart
 
 
 @receiver(post_save, sender=SeshatCommentPart)

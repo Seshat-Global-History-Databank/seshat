@@ -1,29 +1,16 @@
-from django.contrib.gis.db import models
-from django.db.models.fields.related import ManyToManyField
-from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
-#from model_utils.models import StatusModel
-from django.core.exceptions import ValidationError
-from django.urls import reverse
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from datetime import date
-from django.db.models import Q
-from django.db import IntegrityError
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.http import Http404
-
 import uuid
 
-from seshat.apps.accounts.models import Seshat_Expert
-
-
-from django.utils import translation
-from django.contrib import messages
+from django.contrib.gis.db import models
+from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
+from django.db import IntegrityError
+from django.db.models import Q
+from django.db.models.fields.related import ManyToManyField
+from django.urls import reverse
+
+from ..accounts.models import Seshat_Expert
+
 
 def give_me_a_color_for_expert(value):
     """
@@ -98,7 +85,6 @@ def give_me_a_color_for_expert(value):
 # )
 
 
-
 Tags = (
     ('TRS', 'Confident'),
     ('SSP', 'Suspected'),
@@ -114,8 +100,8 @@ U = "U"
 PP = 'P'
 PS = 'P*'
 AS = 'A*'
-P_TO_A = "P~A" 
-A_TO_P = "A~P" 
+P_TO_A = "P~A"
+A_TO_P = "A~P"
 
 POLITY_TAG_CHOICES = (('LEGACY', 'Equinox 2020 Polities'),
         ('POL_AFR_EAST', 'NEW East African Polities'),   # Africa ----> East Africa*
