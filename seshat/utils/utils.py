@@ -637,20 +637,6 @@ def dic_of_all_vars_in_sections():
     return my_vars
 
 
-def adder(a, b):
-    """
-    Adds two numbers together.
-
-    Args:
-        a (int): The first number to be added.
-        b (int): The second number to be added.
-
-    Returns:
-        int: The sum of the two numbers.
-    """
-    print(a + b)
-
-
 def section_dic_extractor():
     """
     Extracts a dictionary of all sections in the database.
@@ -663,7 +649,6 @@ def section_dic_extractor():
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
 
-    print(dic_to_be_returned)
     return dic_to_be_returned
 
 
@@ -679,7 +664,6 @@ def subsection_dic_extractor():
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
 
-    print(dic_to_be_returned)
     return dic_to_be_returned
 
 
@@ -706,7 +690,6 @@ def test_for_varhier_dic():
                     item.section.name == sect.name
                     and item.subsection.name == subsect.name
                 ):
-                    print("We hit it")
                     list_of_all_varhiers_in_here.append(item.name.lower())
             if list_of_all_varhiers_in_here:
                 my_dict[sect.name][subsect.name] = list_of_all_varhiers_in_here
@@ -889,14 +872,14 @@ def get_all_general_data_for_a_polity(polity_id):
                 if my_s:
                     all_vars_grouped_g[my_s]["None"][m.__name__] = my_data
                 else:
-                    print(f"-------------{my_s},")
+                    pass  # print(f"-------------{my_s},")
             else:
                 my_s = m().subsection()
 
                 if my_s:
                     all_vars_grouped_g[my_s]["None"][m.__name__] = None
                 else:
-                    print(f"--------xxx-----{my_s},")
+                    pass  # print(f"--------xxx-----{my_s},")
 
     return all_vars_grouped_g, has_any_data
 
@@ -955,7 +938,7 @@ def get_all_sc_data_for_a_polity(polity_id):
                 elif my_s:
                     all_vars_grouped[my_s]["None"][m.__name__] = my_data
                 else:
-                    print(f"-------------{my_s}, {my_ss}")
+                    pass  # print(f"-------------{my_s}, {my_ss}")
 
             else:
                 my_s = m().subsection()
@@ -966,7 +949,7 @@ def get_all_sc_data_for_a_polity(polity_id):
                 elif my_s:
                     all_vars_grouped[my_s]["None"][m.__name__] = my_data
                 else:
-                    print(f"--------xxx-----{my_s},")
+                    pass  # print(f"--------xxx-----{my_s},")
 
     return all_vars_grouped, has_any_data
 
@@ -1017,14 +1000,14 @@ def get_all_wf_data_for_a_polity(polity_id):
                 if my_s:
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = my_data
                 else:
-                    print(f"-------------{my_s},")
+                    pass  # print(f"-------------{my_s},")
             else:
                 my_s = m().subsection()
 
                 if my_s:
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = None
                 else:
-                    print(f"--------xxx-----{my_s},")
+                    pass  # print(f"--------xxx-----{my_s},")
 
     return all_vars_grouped_wf, has_any_data
 
@@ -1067,7 +1050,7 @@ def get_all_rt_data_for_a_polity(polity_id):
             if mm.__name__ in [
                 "A_religion",
             ]:
-                print("Skipping Religion model")
+                # Skip Religion model
                 continue
 
             if my_data:
@@ -1077,14 +1060,14 @@ def get_all_rt_data_for_a_polity(polity_id):
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = my_data
                 else:
-                    print(f"Invalid subsection for model: {mm.__name__}")
+                    pass  # print(f"Invalid subsection for model: {mm.__name__}")
             else:
                 my_s = mm().subsection()
 
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = None
                 else:
-                    print(f"--------xxx-----{my_s},")
+                    pass  # print(f"--------xxx-----{my_s},")
 
     return all_vars_grouped_rt, has_any_data
 
@@ -1107,10 +1090,13 @@ def get_all_wf_data_for_a_polity_old(polity_id):
     a_huge_context_data_dic = {}
     for ct in ContentType.objects.all():
         m = ct.model_class()
+        
         if m and m.__module__ == "seshat.apps.wf.models":
-            my_data = m.objects.filter(polity=polity_id)
-            if my_data:
-                a_huge_context_data_dic[m.__name__] = my_data
+            available_data = m.objects.filter(polity=polity_id)
+            
+            if available_data:
+                a_huge_context_data_dic[m.__name__] = available_data
+
     return a_huge_context_data_dic
 
 
@@ -1124,13 +1110,13 @@ def get_all_crisis_cases_data_for_a_polity(polity_id):
     Returns:
         dict: A dictionary of all data for the polity.
     """
-    my_data = Crisis_consequence.objects.filter(
+    crisis_cases = Crisis_consequence.objects.filter(
         Q(polity=polity_id) | Q(other_polity=polity_id)
     )
 
     a_data_dic = {}
-    if my_data:
-        a_data_dic["crisis_consequence"] = my_data
+    if crisis_cases:
+        a_data_dic["crisis_consequence"] = crisis_cases
 
     return a_data_dic
 

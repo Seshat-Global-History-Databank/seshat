@@ -7941,12 +7941,12 @@ def playground(request):
     Returns:
         dict: Context data for the view
     """
-    if request.method == "POST":
-        print(request.POST.get("selected_pols", "Hallo"))
-    all_pols = list_of_all_Polities()
-    all_vars = dic_of_all_vars_with_varhier()
-    all_vars_plus = dic_of_all_vars_in_sections()
-    context = {"allpols": all_pols, "all_var_hiers": all_vars, "crisi": all_vars_plus}
+    context = {
+        "allpols": list_of_all_Polities(),
+        "all_var_hiers": dic_of_all_vars_with_varhier(),
+        "crisi": dic_of_all_vars_in_sections()
+    }
+
     return render(request, "crisisdb/playground.html", context=context)
 
 
@@ -7974,25 +7974,22 @@ def playgrounddownload(request):
     # Sort it out and spit it out
     # Small task: download what we have on seshat_api
     checked_pols = request.POST.getlist("selected_pols")
-    print("The checked politys are:", checked_pols)
 
     checked_vars = request.POST.getlist("selected_vars")
-    print("The checked vars are:", checked_vars)
 
     new_checked_vars = [
         "crisisdb_" + item.lower() + "_related" for item in checked_vars
     ]
-    print("The modified checked vars are:", new_checked_vars)
 
     checked_separator = request.POST.get("SeparatorRadioOptions")
-    print("The checked separator are:", checked_separator)
 
     if checked_separator == "comma":
         checked_sep = ","
     elif checked_separator == "bar":
         checked_sep = "|"
     else:
-        print("Bad selection of Separator.")
+        # Bad selection of Separator
+        pass
 
     url = "http://127.0.0.1:8000/api/politys-api/"
 
@@ -8004,10 +8001,9 @@ def playgrounddownload(request):
     all_my_data = resp.json()["results"]
 
     final_response = HttpResponse(content_type="text/csv")
-    now = datetime.datetime.now()
-    now_str = now.strftime("%H%M%S")
-    myfile_name = "CrisisDB_data_" + str(request.user) + "_" + now_str
-    final_response["Content-Disposition"] = f'attachment; filename="{myfile_name}.csv"'
+    now_str = datetime.datetime.now().strftime("%H%M%S")
+    filename = f"CrisisDB_data_{request.user}_{now_str}.csv"
+    final_response["Content-Disposition"] = f'attachment; filename="{filename}"'
 
     writer = csv.writer(final_response, delimiter=checked_sep)
 

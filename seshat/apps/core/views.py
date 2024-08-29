@@ -3195,7 +3195,6 @@ def signupfollowup(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    print(settings.EMAIL_HOST_USER)
     return render(request, "core/signup-followup.html")
 
 
@@ -3432,13 +3431,12 @@ def do_zotero(results):
     for _, item in enumerate(results):
         a_key = item["data"]["key"]
         if a_key == "3BQQ8WN8":
-            print(
-                "I skipped over  youuuuu: 3BQQ8WN8 because you are not in the database!"
-            )
+            # Skipped because it is not in database
             continue
         if a_key == "RR6R3383":
-            print("I skipped over  youuuuu: RR6R3383 because your title is too big")
+            # Skipped because title is too big
             continue
+
         try:
             # We need to make sure that all the changes in Zotero will be reflected here.
             continue
@@ -3472,9 +3470,8 @@ def do_zotero(results):
                     all_creators_list = []
                     for j in range(num_of_creators):
                         if a_key == "MM6AEU7H":
-                            print(
-                                "I saw youuuuuuuuuuuuuuu more probably because you have contributors instead of authors"
-                            )
+                            # Skipped because it has contributors and not authors
+                            continue
                         try:
                             try:
                                 good_name = item["data"]["creators"][j]["lastName"]
@@ -3483,8 +3480,10 @@ def do_zotero(results):
                         except:
                             good_name = ("NO_NAMES",)
                         all_creators_list.append(good_name)
+
                     good_name_with_space = "_".join(all_creators_list)
                     good_name_with_underscore = good_name_with_space.replace(" ", "_")
+
                     my_dic["mainCreator"] = good_name_with_underscore
                 elif num_of_creators > 3:
                     try:
@@ -3494,14 +3493,16 @@ def do_zotero(results):
                             good_name = item["data"]["creators"][0]["name"]
                     except:
                         good_name = ("NO_NAME",)
+
                     good_name_with_space = good_name + "_et_al"
                     good_name_with_underscore = good_name_with_space.replace(" ", "_")
+
                     my_dic["mainCreator"] = good_name_with_underscore
                 else:
                     my_dic["mainCreator"] = "NO_CREATOR"
             except:
+                # No mainCreator for item with index: {i}: {item['data']['itemType']}
                 my_dic["mainCreator"] = "NO_CREATORS"
-                pass  # No mainCreator for item with index: {i}: {item['data']['itemType']}
 
             try:
                 if item["data"]["date"]:
@@ -3520,7 +3521,7 @@ def do_zotero(results):
                 try:
                     if item["data"]["bookTitle"]:
                         if a_key == "MM6AEU7H":
-                            print("I saw youuuuuuuuuuuuuuu more")
+                            pass
                         if item["data"]["itemType"] == "bookSection":
                             good_title = (
                                 item["data"]["title"]
@@ -3530,20 +3531,19 @@ def do_zotero(results):
                             pass
                         else:
                             good_title = item["data"]["title"]
-                            pass
 
-                        counter_bookTitle = counter_bookTitle + 1
                         my_dic["title"] = good_title
                     else:
                         good_title = item["data"]["title"]
                         my_dic["title"] = good_title
 
                         if a_key == "MM6AEU7H":
-                            print("I saw youuuuuuuuuuuuuuu more")
+                            pass
                 except:
                     my_dic["title"] = item["data"]["title"]
             except:
-                pass  # No title for item with index: {i}
+                # No title for item with index: {i}
+                pass
 
             pot_title = my_dic.get("title")
             if not pot_title:
@@ -3560,7 +3560,6 @@ def do_zotero(results):
                 newref.save()
                 mother_ref_dic.append(my_dic)
 
-    print("Bye Zotero")
     return mother_ref_dic
 
 
@@ -3579,16 +3578,14 @@ def do_zotero_manually(results):
 
         a_key = item["key"]
         if a_key == "3BQQ8WN8":
-            print(
-                "I skipped over  youuuuu: 3BQQ8WN8 because you are not in the database!"
-            )
+            # Skipped because it is not in database
             continue
         if a_key == "RR6R3383":
-            print("I skipped over  youuuuu: RR6R3383 because your title is too big")
+            # Skipped because title is too big
             continue
 
         try:
-            potential_new_ref = Reference.objects.get(zotero_link=a_key)
+            Reference.objects.get(zotero_link=a_key)
             continue
         except:
             my_dic = {}
@@ -3608,7 +3605,6 @@ def do_zotero_manually(results):
                 newref.save()
                 mother_ref_dic.append(my_dic)
 
-    print("Bye Zotero Manually")
     return mother_ref_dic
 
 
@@ -3622,13 +3618,11 @@ def update_citations_from_inside_zotero_update():
     Returns:
         None
     """
-    all_refs = Reference.objects.all()
-    for ref in all_refs:
+    for ref in Reference.objects.all():
         a_citation = Citation.objects.get_or_create(
             ref=ref, page_from=None, page_to=None
         )
         a_citation[0].save()
-    print("Halllooooo")
 
 
 def synczoteromanually(request):
@@ -3642,8 +3636,6 @@ def synczoteromanually(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    print("Hallo Zotero Manually")
-
     new_refs = do_zotero_manually(manual_input_refs)
     context = {}
     context["newly_adds"] = new_refs
@@ -4241,6 +4233,7 @@ def seshatcommentpart_create_view(request):
                     except:
                         pass  # TODO: Handle the exception
                 else:
+                    # TODO: Handle error differently
                     print(f"Form errors: {reference_form.errors}")
 
             # Redirect to a success page
@@ -5490,8 +5483,9 @@ def seshatcomment_create_view(request):
                                 # Associate the Citation with the SeshatCommentPart
                                 comment_part.comment_citations.add(citation)
                             except:
-                                print("OOOPsi")
+                                pass  # TODO: Handle error differently
                         else:
+                            # TODO: Handle error differently
                             print(f"Form errors: {reference_form.errors}")
 
             return redirect("seshat-index")  # Redirect to a success page

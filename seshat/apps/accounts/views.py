@@ -129,28 +129,19 @@ def profile(request):
     Returns:
         HttpResponse: The response object.
     """
-    all_facts = 0
-    all_tasks_given = []
-    user_profile_id = None
-    if request.user.is_authenticated:
-        user_profile_id = request.user.profile.id
-    my_user = Profile.objects.get(pk=user_profile_id)
-    my_expert = Seshat_Expert.objects.get(user_id=request.user.id)
-    print(f"my_profile_id: {user_profile_id}")
-    print(f"my_user_id: {request.user.id}")
+    expert = Seshat_Expert.objects.get(user_id=request.user.id)
 
     all_my_private_comments = SeshatPrivateCommentPart.objects.filter(
-        private_comment_reader__id=my_expert.id
+        private_comment_reader__id=expert.id
     )
-    print(f"my_expert_id: {my_expert.id}")
 
+    all_facts, all_tasks_given = 0, []
     context = {
         "facts_verified_by_user": all_my_private_comments,
         "all_facts": all_facts,
         "all_tasks_given": all_tasks_given,
     }
 
-    print(my_user)
     return render(request, "registration/profile.html", context=context)
 
 

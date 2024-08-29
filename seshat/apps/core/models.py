@@ -851,10 +851,6 @@ class Citation(models.Model):
                     self.ref.creator, self.ref.year, shorter_title
                 )
         else:
-            print("BADREF::::")
-            print(self.id)
-            print(self.modified_date)
-
             return "BADBADREFERENCE"
 
     def full_citation_display(self) -> str:
@@ -922,10 +918,6 @@ class Citation(models.Model):
                     self.ref.creator, self.ref.year, shorter_title
                 )
         else:
-            print("BADREF::::")
-            print(self.id)
-            print(self.modified_date)
-
             return "BADBADREFERENCE"
 
     class Meta:
@@ -1021,7 +1013,7 @@ class Citation(models.Model):
         try:
             super(Citation, self).save(*args, **kwargs)
         except IntegrityError as e:
-            print(e)
+            print(e)  # TODO: We probably want to handle this differently
 
 
 class SeshatComment(models.Model):
