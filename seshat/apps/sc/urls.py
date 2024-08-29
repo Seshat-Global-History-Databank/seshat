@@ -292,7 +292,11 @@ urlpatterns = [
         views.show_problematic_sc_data_table,
         name="problematic_sc_data_table",
     ),
-    path("download-csv-sc-all/", views.download_csv_all_sc, name="download_csv_all_sc"),
+    path(
+        "download-csv-sc-all/",
+        views.download_csv_all_sc,
+        name="download_csv_all_sc",
+    ),
     path(
         "download_csv_social_scale/",
         views.download_csv_social_scale,
@@ -454,7 +458,6 @@ urlpatterns += [
     path("ra/<int:pk>", views.RaDetailView.as_view(), name="ra-detail"),
     path("ra/<int:pk>/update/", views.RaUpdate.as_view(), name="ra-update"),
     path("ra/<int:pk>/delete/", views.RaDelete.as_view(), name="ra-delete"),
-    # Download
     path("radownload/", views.ra_download, name="ra-download"),
     path("rametadownload/", views.ra_meta_download, name="ra-metadownload"),
 ]
@@ -491,7 +494,6 @@ urlpatterns += [
         views.Polity_territoryDelete.as_view(),
         name="polity_territory-delete",
     ),
-    # Download
     path(
         "polity_territorydownload/",
         views.polity_territory_download,
@@ -536,7 +538,6 @@ urlpatterns += [
         views.Polity_populationDelete.as_view(),
         name="polity_population-delete",
     ),
-    # Download
     path(
         "polity_populationdownload/",
         views.polity_population_download,
@@ -581,7 +582,6 @@ urlpatterns += [
         views.Population_of_the_largest_settlementDelete.as_view(),
         name="population_of_the_largest_settlement-delete",
     ),
-    # Download
     path(
         "population_of_the_largest_settlementdownload/",
         views.population_of_the_largest_settlement_download,
@@ -626,7 +626,6 @@ urlpatterns += [
         views.Settlement_hierarchyDelete.as_view(),
         name="settlement_hierarchy-delete",
     ),
-    # Download
     path(
         "settlement_hierarchydownload/",
         views.settlement_hierarchy_download,
@@ -671,7 +670,6 @@ urlpatterns += [
         views.Administrative_levelDelete.as_view(),
         name="administrative_level-delete",
     ),
-    # Download
     path(
         "administrative_leveldownload/",
         views.administrative_level_download,
@@ -716,7 +714,6 @@ urlpatterns += [
         views.Religious_levelDelete.as_view(),
         name="religious_level-delete",
     ),
-    # Download
     path(
         "religious_leveldownload/",
         views.religious_level_download,
@@ -741,7 +738,6 @@ urlpatterns += [
         views.Military_levelListView.as_view(),
         name="military_levels",
     ),
-    # path('military_levels_all/', views.Military_levelListViewAll.as_view(), name='military_levels_all'),
     path(
         "military_level/<int:pk>",
         views.Military_levelDetailView.as_view(),
@@ -757,7 +753,6 @@ urlpatterns += [
         views.Military_levelDelete.as_view(),
         name="military_level-delete",
     ),
-    # Download
     path(
         "military_leveldownload/",
         views.military_level_download,
@@ -802,7 +797,6 @@ urlpatterns += [
         views.Professional_military_officerDelete.as_view(),
         name="professional_military_officer-delete",
     ),
-    # Download
     path(
         "professional_military_officerdownload/",
         views.professional_military_officer_download,
@@ -847,7 +841,6 @@ urlpatterns += [
         views.Professional_soldierDelete.as_view(),
         name="professional_soldier-delete",
     ),
-    # Download
     path(
         "professional_soldierdownload/",
         views.professional_soldier_download,
@@ -892,7 +885,6 @@ urlpatterns += [
         views.Professional_priesthoodDelete.as_view(),
         name="professional_priesthood-delete",
     ),
-    # Download
     path(
         "professional_priesthooddownload/",
         views.professional_priesthood_download,
@@ -937,7 +929,6 @@ urlpatterns += [
         views.Full_time_bureaucratDelete.as_view(),
         name="full_time_bureaucrat-delete",
     ),
-    # Download
     path(
         "full_time_bureaucratdownload/",
         views.full_time_bureaucrat_download,
@@ -982,7 +973,6 @@ urlpatterns += [
         views.Examination_systemDelete.as_view(),
         name="examination_system-delete",
     ),
-    # Download
     path(
         "examination_systemdownload/",
         views.examination_system_download,
@@ -1027,7 +1017,6 @@ urlpatterns += [
         views.Merit_promotionDelete.as_view(),
         name="merit_promotion-delete",
     ),
-    # Download
     path(
         "merit_promotiondownload/",
         views.merit_promotion_download,
@@ -1072,7 +1061,6 @@ urlpatterns += [
         views.Specialized_government_buildingDelete.as_view(),
         name="specialized_government_building-delete",
     ),
-    # Download
     path(
         "specialized_government_buildingdownload/",
         views.specialized_government_building_download,
@@ -1117,7 +1105,6 @@ urlpatterns += [
         views.Formal_legal_codeDelete.as_view(),
         name="formal_legal_code-delete",
     ),
-    # Download
     path(
         "formal_legal_codedownload/",
         views.formal_legal_code_download,
@@ -1136,11 +1123,22 @@ urlpatterns += [
     path("judges/", views.JudgeListView.as_view(), name="judges"),
     path("judges_all/", views.JudgeListViewAll.as_view(), name="judges_all"),
     path("judge/<int:pk>", views.JudgeDetailView.as_view(), name="judge-detail"),
-    path("judge/<int:pk>/update/", views.JudgeUpdate.as_view(), name="judge-update"),
-    path("judge/<int:pk>/delete/", views.JudgeDelete.as_view(), name="judge-delete"),
-    # Download
+    path(
+        "judge/<int:pk>/update/",
+        views.JudgeUpdate.as_view(),
+        name="judge-update",
+    ),
+    path(
+        "judge/<int:pk>/delete/",
+        views.JudgeDelete.as_view(),
+        name="judge-delete",
+    ),
     path("judgedownload/", views.judge_download, name="judge-download"),
-    path("judgemetadownload/", views.judge_meta_download, name="judge-metadownload"),
+    path(
+        "judgemetadownload/",
+        views.judge_meta_download,
+        name="judge-metadownload",
+    ),
 ]
 
 
@@ -1149,11 +1147,22 @@ urlpatterns += [
     path("courts/", views.CourtListView.as_view(), name="courts"),
     path("courts_all/", views.CourtListViewAll.as_view(), name="courts_all"),
     path("court/<int:pk>", views.CourtDetailView.as_view(), name="court-detail"),
-    path("court/<int:pk>/update/", views.CourtUpdate.as_view(), name="court-update"),
-    path("court/<int:pk>/delete/", views.CourtDelete.as_view(), name="court-delete"),
-    # Download
+    path(
+        "court/<int:pk>/update/",
+        views.CourtUpdate.as_view(),
+        name="court-update",
+    ),
+    path(
+        "court/<int:pk>/delete/",
+        views.CourtDelete.as_view(),
+        name="court-delete",
+    ),
     path("courtdownload/", views.court_download, name="court-download"),
-    path("courtmetadownload/", views.court_meta_download, name="court-metadownload"),
+    path(
+        "courtmetadownload/",
+        views.court_meta_download,
+        name="court-metadownload",
+    ),
 ]
 
 
@@ -1188,7 +1197,6 @@ urlpatterns += [
         views.Professional_lawyerDelete.as_view(),
         name="professional_lawyer-delete",
     ),
-    # Download
     path(
         "professional_lawyerdownload/",
         views.professional_lawyer_download,
@@ -1233,7 +1241,6 @@ urlpatterns += [
         views.Irrigation_systemDelete.as_view(),
         name="irrigation_system-delete",
     ),
-    # Download
     path(
         "irrigation_systemdownload/",
         views.irrigation_system_download,
@@ -1278,7 +1285,6 @@ urlpatterns += [
         views.Drinking_water_supply_systemDelete.as_view(),
         name="drinking_water_supply_system-delete",
     ),
-    # Download
     path(
         "drinking_water_supply_systemdownload/",
         views.drinking_water_supply_system_download,
@@ -1296,12 +1302,27 @@ urlpatterns += [
     path("market/create/", views.MarketCreate.as_view(), name="market-create"),
     path("markets/", views.MarketListView.as_view(), name="markets"),
     path("markets_all/", views.MarketListViewAll.as_view(), name="markets_all"),
-    path("market/<int:pk>", views.MarketDetailView.as_view(), name="market-detail"),
-    path("market/<int:pk>/update/", views.MarketUpdate.as_view(), name="market-update"),
-    path("market/<int:pk>/delete/", views.MarketDelete.as_view(), name="market-delete"),
-    # Download
+    path(
+        "market/<int:pk>",
+        views.MarketDetailView.as_view(),
+        name="market-detail",
+    ),
+    path(
+        "market/<int:pk>/update/",
+        views.MarketUpdate.as_view(),
+        name="market-update",
+    ),
+    path(
+        "market/<int:pk>/delete/",
+        views.MarketDelete.as_view(),
+        name="market-delete",
+    ),
     path("marketdownload/", views.market_download, name="market-download"),
-    path("marketmetadownload/", views.market_meta_download, name="market-metadownload"),
+    path(
+        "marketmetadownload/",
+        views.market_meta_download,
+        name="market-metadownload",
+    ),
 ]
 
 
@@ -1336,7 +1357,6 @@ urlpatterns += [
         views.Food_storage_siteDelete.as_view(),
         name="food_storage_site-delete",
     ),
-    # Download
     path(
         "food_storage_sitedownload/",
         views.food_storage_site_download,
@@ -1357,7 +1377,6 @@ urlpatterns += [
     path("road/<int:pk>", views.RoadDetailView.as_view(), name="road-detail"),
     path("road/<int:pk>/update/", views.RoadUpdate.as_view(), name="road-update"),
     path("road/<int:pk>/delete/", views.RoadDelete.as_view(), name="road-delete"),
-    # Download
     path("roaddownload/", views.road_download, name="road-download"),
     path("roadmetadownload/", views.road_meta_download, name="road-metadownload"),
 ]
@@ -1367,12 +1386,27 @@ urlpatterns += [
     path("bridge/create/", views.BridgeCreate.as_view(), name="bridge-create"),
     path("bridges/", views.BridgeListView.as_view(), name="bridges"),
     path("bridges_all/", views.BridgeListViewAll.as_view(), name="bridges_all"),
-    path("bridge/<int:pk>", views.BridgeDetailView.as_view(), name="bridge-detail"),
-    path("bridge/<int:pk>/update/", views.BridgeUpdate.as_view(), name="bridge-update"),
-    path("bridge/<int:pk>/delete/", views.BridgeDelete.as_view(), name="bridge-delete"),
-    # Download
+    path(
+        "bridge/<int:pk>",
+        views.BridgeDetailView.as_view(),
+        name="bridge-detail",
+    ),
+    path(
+        "bridge/<int:pk>/update/",
+        views.BridgeUpdate.as_view(),
+        name="bridge-update",
+    ),
+    path(
+        "bridge/<int:pk>/delete/",
+        views.BridgeDelete.as_view(),
+        name="bridge-delete",
+    ),
     path("bridgedownload/", views.bridge_download, name="bridge-download"),
-    path("bridgemetadownload/", views.bridge_meta_download, name="bridge-metadownload"),
+    path(
+        "bridgemetadownload/",
+        views.bridge_meta_download,
+        name="bridge-metadownload",
+    ),
 ]
 
 
@@ -1381,11 +1415,22 @@ urlpatterns += [
     path("canals/", views.CanalListView.as_view(), name="canals"),
     path("canals_all/", views.CanalListViewAll.as_view(), name="canals_all"),
     path("canal/<int:pk>", views.CanalDetailView.as_view(), name="canal-detail"),
-    path("canal/<int:pk>/update/", views.CanalUpdate.as_view(), name="canal-update"),
-    path("canal/<int:pk>/delete/", views.CanalDelete.as_view(), name="canal-delete"),
-    # Download
+    path(
+        "canal/<int:pk>/update/",
+        views.CanalUpdate.as_view(),
+        name="canal-update",
+    ),
+    path(
+        "canal/<int:pk>/delete/",
+        views.CanalDelete.as_view(),
+        name="canal-delete",
+    ),
     path("canaldownload/", views.canal_download, name="canal-download"),
-    path("canalmetadownload/", views.canal_meta_download, name="canal-metadownload"),
+    path(
+        "canalmetadownload/",
+        views.canal_meta_download,
+        name="canal-metadownload",
+    ),
 ]
 
 
@@ -1396,7 +1441,6 @@ urlpatterns += [
     path("port/<int:pk>", views.PortDetailView.as_view(), name="port-detail"),
     path("port/<int:pk>/update/", views.PortUpdate.as_view(), name="port-update"),
     path("port/<int:pk>/delete/", views.PortDelete.as_view(), name="port-delete"),
-    # Download
     path("portdownload/", views.port_download, name="port-download"),
     path("portmetadownload/", views.port_meta_download, name="port-metadownload"),
 ]
@@ -1433,7 +1477,6 @@ urlpatterns += [
         views.Mines_or_quarryDelete.as_view(),
         name="mines_or_quarry-delete",
     ),
-    # Download
     path(
         "mines_or_quarrydownload/",
         views.mines_or_quarry_download,
@@ -1478,7 +1521,6 @@ urlpatterns += [
         views.Mnemonic_deviceDelete.as_view(),
         name="mnemonic_device-delete",
     ),
-    # Download
     path(
         "mnemonic_devicedownload/",
         views.mnemonic_device_download,
@@ -1523,7 +1565,6 @@ urlpatterns += [
         views.Nonwritten_recordDelete.as_view(),
         name="nonwritten_record-delete",
     ),
-    # Download
     path(
         "nonwritten_recorddownload/",
         views.nonwritten_record_download,
@@ -1568,7 +1609,6 @@ urlpatterns += [
         views.Written_recordDelete.as_view(),
         name="written_record-delete",
     ),
-    # Download
     path(
         "written_recorddownload/",
         views.written_record_download,
@@ -1586,12 +1626,27 @@ urlpatterns += [
     path("script/create/", views.ScriptCreate.as_view(), name="script-create"),
     path("scripts/", views.ScriptListView.as_view(), name="scripts"),
     path("scripts_all/", views.ScriptListViewAll.as_view(), name="scripts_all"),
-    path("script/<int:pk>", views.ScriptDetailView.as_view(), name="script-detail"),
-    path("script/<int:pk>/update/", views.ScriptUpdate.as_view(), name="script-update"),
-    path("script/<int:pk>/delete/", views.ScriptDelete.as_view(), name="script-delete"),
-    # Download
+    path(
+        "script/<int:pk>",
+        views.ScriptDetailView.as_view(),
+        name="script-detail",
+    ),
+    path(
+        "script/<int:pk>/update/",
+        views.ScriptUpdate.as_view(),
+        name="script-update",
+    ),
+    path(
+        "script/<int:pk>/delete/",
+        views.ScriptDelete.as_view(),
+        name="script-delete",
+    ),
     path("scriptdownload/", views.script_download, name="script-download"),
-    path("scriptmetadownload/", views.script_meta_download, name="script-metadownload"),
+    path(
+        "scriptmetadownload/",
+        views.script_meta_download,
+        name="script-metadownload",
+    ),
 ]
 
 
@@ -1626,7 +1681,6 @@ urlpatterns += [
         views.Non_phonetic_writingDelete.as_view(),
         name="non_phonetic_writing-delete",
     ),
-    # Download
     path(
         "non_phonetic_writingdownload/",
         views.non_phonetic_writing_download,
@@ -1671,7 +1725,6 @@ urlpatterns += [
         views.Phonetic_alphabetic_writingDelete.as_view(),
         name="phonetic_alphabetic_writing-delete",
     ),
-    # Download
     path(
         "phonetic_alphabetic_writingdownload/",
         views.phonetic_alphabetic_writing_download,
@@ -1716,7 +1769,6 @@ urlpatterns += [
         views.Lists_tables_and_classificationDelete.as_view(),
         name="lists_tables_and_classification-delete",
     ),
-    # Download
     path(
         "lists_tables_and_classificationdownload/",
         views.lists_tables_and_classification_download,
@@ -1731,11 +1783,21 @@ urlpatterns += [
 
 
 urlpatterns += [
-    path("calendar/create/", views.CalendarCreate.as_view(), name="calendar-create"),
-    path("calendars/", views.CalendarListView.as_view(), name="calendars"),
-    path("calendars_all/", views.CalendarListViewAll.as_view(), name="calendars_all"),
     path(
-        "calendar/<int:pk>", views.CalendarDetailView.as_view(), name="calendar-detail"
+        "calendar/create/",
+        views.CalendarCreate.as_view(),
+        name="calendar-create",
+    ),
+    path("calendars/", views.CalendarListView.as_view(), name="calendars"),
+    path(
+        "calendars_all/",
+        views.CalendarListViewAll.as_view(),
+        name="calendars_all",
+    ),
+    path(
+        "calendar/<int:pk>",
+        views.CalendarDetailView.as_view(),
+        name="calendar-detail",
     ),
     path(
         "calendar/<int:pk>/update/",
@@ -1747,7 +1809,6 @@ urlpatterns += [
         views.CalendarDelete.as_view(),
         name="calendar-delete",
     ),
-    # Download
     path("calendardownload/", views.calendar_download, name="calendar-download"),
     path(
         "calendarmetadownload/",
@@ -1763,7 +1824,11 @@ urlpatterns += [
         views.Sacred_textCreate.as_view(),
         name="sacred_text-create",
     ),
-    path("sacred_texts/", views.Sacred_textListView.as_view(), name="sacred_texts"),
+    path(
+        "sacred_texts/",
+        views.Sacred_textListView.as_view(),
+        name="sacred_texts",
+    ),
     path(
         "sacred_texts_all/",
         views.Sacred_textListViewAll.as_view(),
@@ -1784,9 +1849,10 @@ urlpatterns += [
         views.Sacred_textDelete.as_view(),
         name="sacred_text-delete",
     ),
-    # Download
     path(
-        "sacred_textdownload/", views.sacred_text_download, name="sacred_text-download"
+        "sacred_textdownload/",
+        views.sacred_text_download,
+        name="sacred_text-download",
     ),
     path(
         "sacred_textmetadownload/",
@@ -1827,7 +1893,6 @@ urlpatterns += [
         views.Religious_literatureDelete.as_view(),
         name="religious_literature-delete",
     ),
-    # Download
     path(
         "religious_literaturedownload/",
         views.religious_literature_download,
@@ -1872,7 +1937,6 @@ urlpatterns += [
         views.Practical_literatureDelete.as_view(),
         name="practical_literature-delete",
     ),
-    # Download
     path(
         "practical_literaturedownload/",
         views.practical_literature_download,
@@ -1889,25 +1953,40 @@ urlpatterns += [
 urlpatterns += [
     path("history/create/", views.HistoryCreate.as_view(), name="history-create"),
     path("historys/", views.HistoryListView.as_view(), name="historys"),
-    path("historys_all/", views.HistoryListViewAll.as_view(), name="historys_all"),
-    path("history/<int:pk>", views.HistoryDetailView.as_view(), name="history-detail"),
     path(
-        "history/<int:pk>/update/", views.HistoryUpdate.as_view(), name="history-update"
+        "historys_all/",
+        views.HistoryListViewAll.as_view(),
+        name="historys_all",
     ),
     path(
-        "history/<int:pk>/delete/", views.HistoryDelete.as_view(), name="history-delete"
+        "history/<int:pk>",
+        views.HistoryDetailView.as_view(),
+        name="history-detail",
     ),
-    # Download
+    path(
+        "history/<int:pk>/update/",
+        views.HistoryUpdate.as_view(),
+        name="history-update",
+    ),
+    path(
+        "history/<int:pk>/delete/",
+        views.HistoryDelete.as_view(),
+        name="history-delete",
+    ),
     path("historydownload/", views.history_download, name="history-download"),
     path(
-        "historymetadownload/", views.history_meta_download, name="history-metadownload"
+        "historymetadownload/",
+        views.history_meta_download,
+        name="history-metadownload",
     ),
 ]
 
 
 urlpatterns += [
     path(
-        "philosophy/create/", views.PhilosophyCreate.as_view(), name="philosophy-create"
+        "philosophy/create/",
+        views.PhilosophyCreate.as_view(),
+        name="philosophy-create",
     ),
     path("philosophys/", views.PhilosophyListView.as_view(), name="philosophys"),
     path(
@@ -1930,8 +2009,11 @@ urlpatterns += [
         views.PhilosophyDelete.as_view(),
         name="philosophy-delete",
     ),
-    # Download
-    path("philosophydownload/", views.philosophy_download, name="philosophy-download"),
+    path(
+        "philosophydownload/",
+        views.philosophy_download,
+        name="philosophy-download",
+    ),
     path(
         "philosophymetadownload/",
         views.philosophy_meta_download,
@@ -1971,7 +2053,6 @@ urlpatterns += [
         views.Scientific_literatureDelete.as_view(),
         name="scientific_literature-delete",
     ),
-    # Download
     path(
         "scientific_literaturedownload/",
         views.scientific_literature_download,
@@ -1988,18 +2069,31 @@ urlpatterns += [
 urlpatterns += [
     path("fiction/create/", views.FictionCreate.as_view(), name="fiction-create"),
     path("fictions/", views.FictionListView.as_view(), name="fictions"),
-    path("fictions_all/", views.FictionListViewAll.as_view(), name="fictions_all"),
-    path("fiction/<int:pk>", views.FictionDetailView.as_view(), name="fiction-detail"),
     path(
-        "fiction/<int:pk>/update/", views.FictionUpdate.as_view(), name="fiction-update"
+        "fictions_all/",
+        views.FictionListViewAll.as_view(),
+        name="fictions_all",
     ),
     path(
-        "fiction/<int:pk>/delete/", views.FictionDelete.as_view(), name="fiction-delete"
+        "fiction/<int:pk>",
+        views.FictionDetailView.as_view(),
+        name="fiction-detail",
     ),
-    # Download
+    path(
+        "fiction/<int:pk>/update/",
+        views.FictionUpdate.as_view(),
+        name="fiction-update",
+    ),
+    path(
+        "fiction/<int:pk>/delete/",
+        views.FictionDelete.as_view(),
+        name="fiction-delete",
+    ),
     path("fictiondownload/", views.fiction_download, name="fiction-download"),
     path(
-        "fictionmetadownload/", views.fiction_meta_download, name="fiction-metadownload"
+        "fictionmetadownload/",
+        views.fiction_meta_download,
+        name="fiction-metadownload",
     ),
 ]
 
@@ -2007,18 +2101,31 @@ urlpatterns += [
 urlpatterns += [
     path("article/create/", views.ArticleCreate.as_view(), name="article-create"),
     path("articles/", views.ArticleListView.as_view(), name="articles"),
-    path("articles_all/", views.ArticleListViewAll.as_view(), name="articles_all"),
-    path("article/<int:pk>", views.ArticleDetailView.as_view(), name="article-detail"),
     path(
-        "article/<int:pk>/update/", views.ArticleUpdate.as_view(), name="article-update"
+        "articles_all/",
+        views.ArticleListViewAll.as_view(),
+        name="articles_all",
     ),
     path(
-        "article/<int:pk>/delete/", views.ArticleDelete.as_view(), name="article-delete"
+        "article/<int:pk>",
+        views.ArticleDetailView.as_view(),
+        name="article-detail",
     ),
-    # Download
+    path(
+        "article/<int:pk>/update/",
+        views.ArticleUpdate.as_view(),
+        name="article-update",
+    ),
+    path(
+        "article/<int:pk>/delete/",
+        views.ArticleDelete.as_view(),
+        name="article-delete",
+    ),
     path("articledownload/", views.article_download, name="article-download"),
     path(
-        "articlemetadownload/", views.article_meta_download, name="article-metadownload"
+        "articlemetadownload/",
+        views.article_meta_download,
+        name="article-metadownload",
     ),
 ]
 
@@ -2028,11 +2135,22 @@ urlpatterns += [
     path("tokens/", views.TokenListView.as_view(), name="tokens"),
     path("tokens_all/", views.TokenListViewAll.as_view(), name="tokens_all"),
     path("token/<int:pk>", views.TokenDetailView.as_view(), name="token-detail"),
-    path("token/<int:pk>/update/", views.TokenUpdate.as_view(), name="token-update"),
-    path("token/<int:pk>/delete/", views.TokenDelete.as_view(), name="token-delete"),
-    # Download
+    path(
+        "token/<int:pk>/update/",
+        views.TokenUpdate.as_view(),
+        name="token-update",
+    ),
+    path(
+        "token/<int:pk>/delete/",
+        views.TokenDelete.as_view(),
+        name="token-delete",
+    ),
     path("tokendownload/", views.token_download, name="token-download"),
-    path("tokenmetadownload/", views.token_meta_download, name="token-metadownload"),
+    path(
+        "tokenmetadownload/",
+        views.token_meta_download,
+        name="token-metadownload",
+    ),
 ]
 
 
@@ -2067,7 +2185,6 @@ urlpatterns += [
         views.Precious_metalDelete.as_view(),
         name="precious_metal-delete",
     ),
-    # Download
     path(
         "precious_metaldownload/",
         views.precious_metal_download,
@@ -2087,7 +2204,11 @@ urlpatterns += [
         views.Foreign_coinCreate.as_view(),
         name="foreign_coin-create",
     ),
-    path("foreign_coins/", views.Foreign_coinListView.as_view(), name="foreign_coins"),
+    path(
+        "foreign_coins/",
+        views.Foreign_coinListView.as_view(),
+        name="foreign_coins",
+    ),
     path(
         "foreign_coins_all/",
         views.Foreign_coinListViewAll.as_view(),
@@ -2108,7 +2229,6 @@ urlpatterns += [
         views.Foreign_coinDelete.as_view(),
         name="foreign_coin-delete",
     ),
-    # Download
     path(
         "foreign_coindownload/",
         views.foreign_coin_download,
@@ -2153,7 +2273,6 @@ urlpatterns += [
         views.Indigenous_coinDelete.as_view(),
         name="indigenous_coin-delete",
     ),
-    # Download
     path(
         "indigenous_coindownload/",
         views.indigenous_coin_download,
@@ -2198,7 +2317,6 @@ urlpatterns += [
         views.Paper_currencyDelete.as_view(),
         name="paper_currency-delete",
     ),
-    # Download
     path(
         "paper_currencydownload/",
         views.paper_currency_download,
@@ -2215,18 +2333,31 @@ urlpatterns += [
 urlpatterns += [
     path("courier/create/", views.CourierCreate.as_view(), name="courier-create"),
     path("couriers/", views.CourierListView.as_view(), name="couriers"),
-    path("couriers_all/", views.CourierListViewAll.as_view(), name="couriers_all"),
-    path("courier/<int:pk>", views.CourierDetailView.as_view(), name="courier-detail"),
     path(
-        "courier/<int:pk>/update/", views.CourierUpdate.as_view(), name="courier-update"
+        "couriers_all/",
+        views.CourierListViewAll.as_view(),
+        name="couriers_all",
     ),
     path(
-        "courier/<int:pk>/delete/", views.CourierDelete.as_view(), name="courier-delete"
+        "courier/<int:pk>",
+        views.CourierDetailView.as_view(),
+        name="courier-detail",
     ),
-    # Download
+    path(
+        "courier/<int:pk>/update/",
+        views.CourierUpdate.as_view(),
+        name="courier-update",
+    ),
+    path(
+        "courier/<int:pk>/delete/",
+        views.CourierDelete.as_view(),
+        name="courier-delete",
+    ),
     path("courierdownload/", views.courier_download, name="courier-download"),
     path(
-        "couriermetadownload/", views.courier_meta_download, name="courier-metadownload"
+        "couriermetadownload/",
+        views.courier_meta_download,
+        name="courier-metadownload",
     ),
 ]
 
@@ -2262,7 +2393,6 @@ urlpatterns += [
         views.Postal_stationDelete.as_view(),
         name="postal_station-delete",
     ),
-    # Download
     path(
         "postal_stationdownload/",
         views.postal_station_download,
@@ -2307,7 +2437,6 @@ urlpatterns += [
         views.General_postal_serviceDelete.as_view(),
         name="general_postal_service-delete",
     ),
-    # Download
     path(
         "general_postal_servicedownload/",
         views.general_postal_service_download,

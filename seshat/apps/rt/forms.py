@@ -116,16 +116,6 @@ commonwidgets = {
     ),
 }
 
-# class RaForm(forms.ModelForm):
-#     class Meta:
-#         model = Ra
-#         fields = commonfields.copy()
-#         fields.append('sc_ra')
-#         labels = commonlabels
-
-#         widgets = dict(commonwidgets)
-#         widgets['sc_ra'] = forms.Select(attrs={'class': 'form-control  mb-3', })
-
 
 class Widespread_religionForm(forms.ModelForm):
     """
@@ -218,7 +208,6 @@ class Elites_religionForm(forms.ModelForm):
         )
 
 
-##########################################
 class Theo_sync_dif_relForm(forms.ModelForm):
     """
     Form for creating and updating the Theo_sync_dif_rel model.

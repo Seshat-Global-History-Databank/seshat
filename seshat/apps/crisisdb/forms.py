@@ -120,8 +120,6 @@ commonwidgets = {
     ),
 }
 
-############## American Violence
-
 
 class Us_locationForm(forms.ModelForm):
     """
@@ -245,7 +243,6 @@ class Us_violenceForm(forms.ModelForm):
         }
 
 
-###########################
 class Crisis_consequenceForm(forms.ModelForm):
     """
     Form for creating and updating a crisis consequence.
@@ -323,8 +320,6 @@ class Crisis_consequenceForm(forms.ModelForm):
         labels["public_goods"] = "<span class='h5 text-teal'> Public goods: </span>"
         labels["religion"] = "<span class='h5 text-teal'> Religion: </span>"
         labels["description"] = "<span class='h5 text-teal'> Note: </span>"
-        # labels["expert_reviewed"] = "&nbsp; Expert Checked?"
-        # labels["drb_reviewed"] = "&nbsp; Data Review Board Reviewed?"
 
         widgets = dict(commonwidgets)
         widgets["crisis_case_id"] = forms.TextInput(
@@ -455,10 +450,6 @@ class Crisis_consequenceForm(forms.ModelForm):
         )
 
 
-###########################
-####################################
-
-
 class Power_transitionForm(forms.ModelForm):
     """
     Form for creating and updating a power transition.
@@ -522,8 +513,6 @@ class Power_transitionForm(forms.ModelForm):
             "<span class='h6 text-teal'> External_Interference: </span>"
         )
         labels["description"] = "<span class='h6 text-teal'> Note: </span>"
-        # labels["expert_reviewed"] = "&nbsp; Expert Checked?"
-        # labels["drb_reviewed"] = "&nbsp; Data Review Board Reviewed?"
 
         widgets = dict(commonwidgets)
         widgets["predecessor"] = forms.TextInput(
@@ -610,17 +599,11 @@ class Human_sacrificeForm(forms.ModelForm):
         """
 
         model = Human_sacrifice
+
         fields = commonfields.copy()
         fields.append("human_sacrifice")
-        # fields.append('comment')
-        # fields.append('is_disputed')
-        # fields.append('expert_reviewed')
-        # fields.append('drb_reviewed')
 
         labels = commonlabels.copy()
-        # labels["comment"] = "&nbsp; <b> com id </b>"
-        # labels["expert_reviewed"] = "&nbsp; Expert Checked?"
-        # labels["drb_reviewed"] = "&nbsp; Data Review Board Reviewed?"
 
         widgets = dict(commonwidgets)
         widgets["sub_category"] = forms.Select(
@@ -633,11 +616,6 @@ class Human_sacrificeForm(forms.ModelForm):
                 "class": "form-control  mb-1",
             }
         )
-        # widgets['comment'] = forms.HiddenInput()
-
-        # widgets["is_disputed"] = forms.CheckboxInput(attrs={'class': 'mb-3', })
-        # widgets["expert_reviewed"] = forms.CheckboxInput(attrs={'class': 'mb-3', })
-        # widgets["drb_reviewed"] = forms.CheckboxInput(attrs={'class': 'mb-3', })
 
 
 class External_conflictForm(forms.ModelForm):

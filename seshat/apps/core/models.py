@@ -59,34 +59,6 @@ def give_me_a_color_for_expert(value):
     return light_colors[index]
 
 
-# APS = 'A;P*'
-# AP = 'A;P'
-# NFY = 'NFY'
-# UU = 'U*'
-# AA = 'A'
-# PP = 'P'
-# PS = 'P*'
-# AS = 'A*'
-# Certainty = (
-#     (APS, 'Absent Present Suspected'),
-#     (AP, 'Absent Present'),
-#     (UU, 'Unknown'),
-#     (AA, 'Absent'),
-#     (PP, 'Present'),
-#     (AS, 'Absent Suspected'),
-#     (PS, 'Present Suspected'),
-#     (NFY, 'Not Filled Yet'),
-# )
-
-# Tags = (
-#     ('TRS', 'Evidenced'),
-#     ('DSP', 'Disputed'),
-#     ('SSP', 'Suspected'),
-#     ('IFR', 'Inferred'),
-#     ('UNK', 'Unknown'),
-# )
-
-
 Tags = (
     ("TRS", "Confident"),
     ("SSP", "Suspected"),
@@ -529,7 +501,6 @@ class Capital(models.Model):
     longitude = models.DecimalField(
         max_digits=11, decimal_places=8, blank=True, null=True
     )
-    # polity_cap = models.ForeignKey(Polity, on_delete=models.SET_NULL, null=True, related_name="polity_caps")
     year_from = models.IntegerField(blank=True, null=True)
     year_to = models.IntegerField(
         blank=True,
@@ -564,7 +535,6 @@ class Capital(models.Model):
         :noindex:
         """
 
-        # ordering = ['-year']
         ordering = ["is_verified"]
 
 
@@ -656,38 +626,6 @@ class Subsection(models.Model):
         """
 
         unique_together = ("name", "section")
-
-
-# def get_all_vars_for_hierarchy():
-#     my_vars = []
-#     for ct in ContentType.objects.all():
-#         m = ct.model_class()
-#         if m.__module__ == "seshat.apps.crisisdb.models":
-#             app_name = m.__module__.split('.')[-2] + '_'
-#             better_key = app_name + m.__name__
-#             better_value = m.__name__.replace('_', ' ')
-#             inner_tuple = (better_key, better_value)
-#             my_vars.append(inner_tuple)
-#             #print(better_key, ': ', better_value)
-#             # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#     return (my_vars)
-
-
-# def ready(self):
-#     def get_all_vars_for_hierarchy():
-#         my_vars = []
-#         for ct in ContentType.objects.all():
-#             m = ct.model_class()
-#             if m.__module__ == "seshat.apps.crisisdb.models":
-#                 app_name = m.__module__.split('.')[-2] + '_'
-#                 better_key = app_name + m.__name__
-#                 better_value = m.__name__.replace('_', ' ')
-#                 inner_tuple = (better_key, better_value)
-#                 my_vars.append(inner_tuple)
-#                 #print(better_key, ': ', better_value)
-#                 # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#         return (my_vars)
-#     print(get_all_vars_for_hierarchy())
 
 
 class Variablehierarchy(models.Model):
@@ -812,7 +750,6 @@ class Reference(models.Model):
         :noindex:
         """
 
-        # ordering = ['-year']
         unique_together = ("zotero_link",)
         ordering = ["-created_date", "title"]
 
@@ -835,10 +772,6 @@ class Citation(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    # class Meta:
-    #     permissions = (("can_mark_returned", "Set book as returned"),
-    #                    ("can_renew", "Can Renew A Book"),)
-
     def zoteroer(self):
         """
         Returns the Zotero link for the citation.
@@ -854,11 +787,6 @@ class Citation(models.Model):
         else:
             my_zotero_link = reverse("citation-update", args=[str(self.id)])
         return my_zotero_link
-
-    # def page_from_maker(self):
-    #     return(str(self.page_from))
-    # def page_to_maker(self):
-    #     return(str(self.page_to))
 
     def __str__(self) -> str:
         if self.ref and self.ref.title:
@@ -1005,7 +933,6 @@ class Citation(models.Model):
         :noindex:
         """
 
-        # ordering = ['-year']
         ordering = ["-modified_date"]
         constraints = [
             models.UniqueConstraint(
@@ -1024,7 +951,6 @@ class Citation(models.Model):
                 condition=Q(page_from__isnull=True),
             ),
         ]
-        # unique_together = ["ref", "page_from", "page_to"]
 
     @property
     def citation_short_title(self):
@@ -1160,8 +1086,7 @@ class SeshatComment(models.Model):
                             comment_full_text = comment_part.comment_part_text
 
                 comment_parts.append(comment_full_text)
-            # comment_parts = ["<b>" + str(comment_part.comment_curator)+ "</b>: " + str(comment_part.comment_part_text) + str(comment_part.display_citations) for comment_part in all_comment_parts]
-            # ref_parts = ['<a href="#">' + str(comment_part.comment_order) + ' </a>' for comment_part in all_comment_parts]
+
             if not comment_parts or comment_parts == [None]:
                 to_be_shown = " Nothing "
             else:
@@ -1171,6 +1096,7 @@ class SeshatComment(models.Model):
             to_be_shown = "No descriptions."
         else:
             to_be_shown = "EMPTY_COMMENT"
+
         return f"{to_be_shown}"
 
     def get_absolute_url(self):
@@ -1308,7 +1234,6 @@ class SeshatCommentPart(models.Model):
         """
 
         ordering = ["comment_order", "modified_date"]
-        # ordering = ["modified_date"]
 
     def __str__(self) -> str:
         if self.comment_part_text and self.display_citations_plus:
@@ -1370,7 +1295,6 @@ class SeshatCommon(models.Model):
         blank=True,
         null=True,
     )
-    # exra vars will be added in between
     description = models.TextField(
         blank=True,
         null=True,
@@ -1423,14 +1347,6 @@ class SeshatCommon(models.Model):
 
         abstract = True
         ordering = ["polity"]
-
-
-# class Annual_wages(SeshatCommon):
-#     name = models.CharField(max_length=100, default="Annual_wages")
-#     annual_wages = models.IntegerField(blank=True, null=True)
-#     job_category = models.CharField(choices=job_category_annual_wages_choices)
-#     job_description = models.CharField(
-#         choices=job_description_annual_wages_choices)
 
 
 class Religion(models.Model):

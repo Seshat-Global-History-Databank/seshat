@@ -9,7 +9,6 @@ from ..core.models import SeshatCommon
 from ..accounts.models import Seshat_Expert
 
 
-########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
     ("present", "present"),
     ("absent", "absent"),
@@ -33,12 +32,6 @@ SOURCE_OF_SUPPORT_CHOICES = (
     ("none", "none"),
     ("cattle", "cattle"),
 )
-
-########## TUPLE CHOICES THAT ARE THE SAME
-
-########## END of tuple choices for general Models
-
-########## Beginning of Function Definitions for General (Vars) Models
 
 
 def call_my_name(self):
@@ -167,11 +160,6 @@ def clean_times(self):
                 ),
             }
         )
-
-
-########## End of Function Definitions for General (Vars) Models
-
-########## Beginning of class Definitions for general Models
 
 
 class Ra(SeshatCommon):
@@ -5280,10 +5268,6 @@ class General_postal_service(SeshatCommon):
         return call_my_name(self)
 
 
-########## END of class Definitions for general Models
-
-
-############################## NEW SC Variables
 class Communal_building(SeshatCommon):
     """ """
 

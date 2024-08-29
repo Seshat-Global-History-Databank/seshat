@@ -69,10 +69,6 @@ class ReferenceSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "year", "creator", "zotero_link", "long_name"]
 
 
-################ End of Base Serializers
-################ Beginning of Serializers Imports
-
-
 class Human_sacrificeSerializer(serializers.ModelSerializer):
     """
     The base serializer for the Human_sacrifice model. It is used to serialize the Human_sacrifice model and return the serialized data in the API response.
@@ -499,6 +495,3 @@ class PolitySerializer(serializers.ModelSerializer):
             "crisisdb_famine_event_related",
             "crisisdb_disease_outbreak_related",
         ]
-
-
-################ End of Serializers Imports

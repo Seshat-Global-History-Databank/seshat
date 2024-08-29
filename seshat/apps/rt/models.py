@@ -8,7 +8,6 @@ from datetime import date
 from ..core.models import SeshatCommon, Religion
 
 
-########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
     ("present", "present"),
     ("absent", "absent"),
@@ -45,7 +44,6 @@ ORDER_CHOICES = (
 )
 
 
-###################
 def call_my_name(self):
     """
     This function is used to return the name of the model instance (in lieu of
@@ -172,9 +170,6 @@ def clean_times(self):
                 ),
             }
         )
-
-
-#########################
 
 
 class Widespread_religion(SeshatCommon):
@@ -510,7 +505,6 @@ class Elites_religion(SeshatCommon):
         return call_my_name(self)
 
 
-############################
 class Theo_sync_dif_rel(SeshatCommon):
     """ """
 

@@ -19,7 +19,6 @@ def notifications(request):
               if any.
     """
     # Fetch the data you need
-    # print("Halooooooooooooooooo")
     if request.user.is_authenticated:
         try:
             my_expert = Seshat_Expert.objects.get(user_id=request.user.id)

@@ -29,7 +29,7 @@ MESSAGE_TAGS = {
 
 local_env_path = str(Path.cwd()) + "/seshat/settings/.env"
 
-# base_dir is calculated based on this file (base.py) and then goes to parents above.
+# BASE_DIR is calculated based on this file (base.py) and then goes to parents above.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -79,15 +79,12 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "mathfilters",
-    # all-auth
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    #'allauth.socialaccount.providers.github',
     "allauth.socialaccount.providers.google",
     "django.contrib.gis",
     "leaflet",
-    #'easyaudit',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -107,8 +104,6 @@ if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "tr
 LOGIN_REDIRECT_URL = "seshat-index"
 ACCOUNT_LOGOUT_REDIRECT = "seshat-index"
 SITE_ID = 2
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 
@@ -117,7 +112,6 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 # ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Django Seshat] '  # Customize email subjects
@@ -341,10 +335,11 @@ Note:
 
 # STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
-# this one is pretty pointless too
-# but let's keep things as it is for the moment
-# I believe this says: anything under the base directory that is inside a directory called 'static' will be collected as statidfile,
-# regardless of how deep down in the directory hierarchy it might be. It just needs to be a in a older called media in any of the apps, etc.
+# This one is pretty pointless too but let's keep things as it is for the moment
+# I believe this says: anything under the base directory that is inside a directory
+# called 'static' will be collected as staticfile, egardless of how deep down in
+# the directory hierarchy it might be. It just needs to be a in a older called media
+# in any of the apps, etc.
 STATICFILES_DIRS = [BASE_DIR / "static"]
 """
 Defines the directories in which Django will search for additional static files.
@@ -353,13 +348,16 @@ Defines the directories in which Django will search for additional static files.
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 """
-The static files storage is set to the whitenoise storage, which is a compressed manifest static files storage.
+The static files storage is set to the whitenoise storage, which is a compressed
+manifest static files storage.
 """
 
 # STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 if "test" in sys.argv:
     STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
-    """The static files storage is set to the Django static files storage for testing environments.
+    """
+    The static files storage is set to the Django static files storage for testing
+    environments.
 
     :noindex:
     """
@@ -436,19 +434,17 @@ CORS_ALLOWED_ORIGINS = [
 
 # I believe this says: Hey Heroku, do your local settings, don't care about my static_root, static_url etc.
 django_heroku.settings(locals())
-# print("###################")
-# print(STATICFILES_DIRS)
-# print(STATIC_ROOT)
-# print(STATIC_URL)
 
 # Geospatial stuff: modify the paths to the libraries for your system setup
 GEOGRAPHIC_DB = True
 """GEOGRAPHIC_DB is set to True to enable the geographic database."""
 
-if sys.platform.startswith("darwin"):  # macOS
+if sys.platform.startswith("darwin"):
+    # macOS settings
     GDAL_LIBRARY_PATH = "/opt/homebrew/opt/gdal/lib/libgdal.dylib"
     GEOS_LIBRARY_PATH = "/opt/homebrew/opt/geos/lib/libgeos_c.dylib"
-else:  # linux
+else:
+    # Linux settings
     if os.getenv("GITHUB_ACTIONS") == "true":
         GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so"
         GEOS_LIBRARY_PATH = "/usr/lib/x86_64-linux-gnu/libgeos_c.so"

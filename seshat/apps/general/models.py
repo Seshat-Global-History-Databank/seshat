@@ -9,7 +9,7 @@ from ..accounts.models import Seshat_Expert
 from ..core.models import SeshatCommon, Polity, Capital
 
 
-########## Beginning of tuple choices for general Models
+# Beginning of tuple choices for general Models
 POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (
     ("loose", "loose"),
     ("confederated state", "confederated state"),
@@ -463,14 +463,13 @@ POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
 )
 
 
-########## TUPLE CHOICES THAT ARE THE SAME
+# TUPLE CHOICES THAT ARE THE SAME
 POLITY_ALTERNATE_RELIGION_GENUS_CHOICES = POLITY_RELIGION_GENUS_CHOICES
 POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES = POLITY_RELIGION_FAMILY_CHOICES
 POLITY_ALTERNATE_RELIGION_CHOICES = POLITY_RELIGION_CHOICES
 
-########## END of tuple choices for general Models
 
-########## Beginning of Function Definitions for General (Vars) Models
+# Beginning of Function Definitions for General (Vars) Models
 
 
 def call_my_name(self):
@@ -559,11 +558,14 @@ def clean_times(self):
         ValidationError: If the year_to is later than the end year of the corresponding polity.
         ValidationError: If the year_to is out of range.
     """
+    warning = (
+        '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>'
+    )
     if (self.year_from and self.year_to) and self.year_from > self.year_to:
         raise ValidationError(
             {
                 "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
+                    f"{warning} The start year is bigger than the end year!</span>"
                 ),
             }
         )
@@ -571,7 +573,7 @@ def clean_times(self):
         raise ValidationError(
             {
                 "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
+                    f"{warning} The start year is out of range!</span>"
                 ),
             }
         )
@@ -579,7 +581,7 @@ def clean_times(self):
         raise ValidationError(
             {
                 "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'
+                    f"{warning} The start year is earlier than the start year of the corresponding polity!</span>"
                 ),
             }
         )
@@ -587,23 +589,19 @@ def clean_times(self):
         raise ValidationError(
             {
                 "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'
+                    f"{warning} The end year is later than the end year of the corresponding polity!</span>"
                 ),
             }
         )
     if self.year_to and (self.year_to > date.today().year):
         raise ValidationError(
             {
-                "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'
-                ),
+                "year_to": mark_safe(f"{warning} The end year is out of range!</span>"),
             }
         )
 
 
-########## End of Function Definitions for General (Vars) Models
-
-########## Beginning of class Definitions for general Models
+# Class Definitions for general Models
 
 
 class Polity_research_assistant(SeshatCommon):
@@ -1079,12 +1077,12 @@ class Polity_duration(SeshatCommon):
                 return f"{abs(self.polity_year_from):,}" + " BCE"
             else:
                 return f"{abs(self.polity_year_from):,}" + " CE"
-        elif self.polity_year_to == None:
+        elif self.polity_year_to is None:
             if self.polity_year_from < 0:
                 return f"{abs(self.polity_year_from):,}" + " BCE"
             else:
                 return f"{abs(self.polity_year_from):,}" + " CE"
-        elif self.polity_year_to == None and self.polity_year_from == None:
+        elif self.polity_year_to is None and self.polity_year_from is None:
             return " - "
         else:
             if self.polity_year_from < 0 and self.polity_year_to < 0:
@@ -1248,17 +1246,17 @@ class Polity_peak_years(SeshatCommon):
         Returns:
             str: The peak years of the polity (or " - " if it does not exist on the instance).
         """
-        if self.peak_year_from == self.peak_year_to:
+        if self.peak_year_from is self.peak_year_to:
             if self.peak_year_from < 0:
                 return f"{abs(self.peak_year_from):,}" + " BCE"
             else:
                 return f"{abs(self.peak_year_from):,}" + " CE"
-        elif self.peak_year_to == None:
+        elif self.peak_year_to is None:
             if self.peak_year_from < 0:
                 return f"{abs(self.peak_year_from):,}" + " BCE"
             else:
                 return f"{abs(self.peak_year_from):,}" + " CE"
-        elif self.peak_year_to == None and self.peak_year_from == None:
+        elif self.peak_year_to is None and self.peak_year_from is None:
             return " - "
         else:
             if self.peak_year_from < 0 and self.peak_year_to < 0:
@@ -1627,62 +1625,6 @@ class Polity_suprapolity_relations(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-# class Polity_consecutive_entity(SeshatCommon):
-#     name = models.CharField(max_length=100, default="Polity_consecutive_entity")
-#     consecutive_polity_relations = models.CharField(max_length=500, choices=POLITY_CONSECUTIVE_ENTITY_CHOICES)
-#     other_polity = models.ForeignKey(Polity, models.SET_NULL,blank=True,null=True)
-
-#     class Meta:
-#         verbose_name = 'Polity_consecutive_entity'
-#         verbose_name_plural = 'Polity_consecutive_entity'
-#         ordering = ['year_from', 'year_to']
-
-#     @property
-#     def display_citations(self):
-#         return return_citations(self)
-
-#     def clean(self):
-#         clean_times(self)
-
-#     def clean_name(self):
-#         return "polity_consecutive_entity"
-
-#     def clean_name_spaced(self):
-#         return "Polity Consecutive Entities"
-
-#     def display_value(self):
-#         if self.consecutive_polity_relations and self.other_polity and self.polity:
-#             polity_url = reverse('polity-detail-main', args=[self.polity.id])
-#             other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id])
-#             return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a> <span class='badge bg-warning text-dark'><i class='fa-solid fa-left-long'></i>  {self.get_consecutive_polity_relations_display()}  <i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>"
-#         elif self.consecutive_polity_relations == "none":
-#             return self.get_consecutive_polity_relations_display()
-#         elif self.consecutive_polity_relations:
-#             return f"{self.get_consecutive_polity_relations_display()} [---]"
-#         else:
-#             return " - "
-
-#     def show_value(self):
-#         if self.consecutive_polity_relations and self.other_polity:
-#             return self.get_consecutive_polity_relations_display() +f" to: [{self.other_polity.new_name}]"
-#         elif self.consecutive_polity_relations:
-#             return self.get_consecutive_polity_relations_display()
-#         else:
-#             return " - "
-
-#     def subsection(self):
-#         return "Political and Cultural Relations"
-
-#     def sub_subsection(self):
-#         return None
-
-#     def get_absolute_url(self):
-#         return reverse('polity_consecutive_entity-detail', args=[str(self.id)])
-
-#     def __str__(self) -> str:
-#         return call_my_name(self)
 
 
 class Polity_utm_zone(SeshatCommon):
@@ -3002,12 +2944,6 @@ class Polity_preceding_entity(SeshatCommon):
         """
         return "Polity Preceding Entity"
 
-    # def show_value(self):
-    #     if self.preceding_entity:
-    #         return self.preceding_entity
-    #     else:
-    #         return " - "
-
     def display_value(self):
         """
         Depending on the instance, return a HTML string with information about
@@ -4277,6 +4213,3 @@ class Polity_religious_tradition(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-########## END of class Definitions for general Models

@@ -5,13 +5,6 @@ from django.dispatch import receiver
 from django.urls import reverse
 
 
-# class CustomUser(AbstractUser):
-#     email = models.EmailField(
-#         unique=True,  # Make sure emails are unique
-#         validators=[validate_email_with_dots, EmailValidator(message="Enter a valid email address.")],
-#     )
-
-
 class Profile(models.Model):
     """
     Model representing a user profile.
@@ -29,7 +22,6 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False, null=True, blank=True)
-    # avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
     bio = models.TextField(null=True, blank=True)
     location = models.CharField(max_length=30, blank=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True, blank=True)
@@ -75,11 +67,11 @@ class Seshat_Expert(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=60, choices=ROLE_CHOICES, null=True, blank=True)
 
-    def __str__(self):  # __unicode__ for Python 2
+    def __str__(self):
         if self.user.first_name and self.user.last_name:
-            return self.user.first_name + " " + self.user.last_name
+            return f"{self.user.first_name} {self.user.last_name}"
         else:
-            return self.user.username + " (" + self.role + ")"
+            return f"{self.user.username} ({self.role})"
 
 
 class Seshat_Task(models.Model):
@@ -131,7 +123,5 @@ class Seshat_Task(models.Model):
         """
         return f'<a href="{self.task_url}">{self.task_url}</a>'
 
-    def __str__(self):  # __unicode__ for Python 2
-        return (
-            self.giver.user.username + " has a atsk for you: " + self.task_description
-        )
+    def __str__(self):
+        return f"{self.giver.user.username} has a task for you: {self.task_description}"

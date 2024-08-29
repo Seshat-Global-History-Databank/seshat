@@ -1,6 +1,4 @@
 from django import forms
-from django.forms.widgets import Textarea
-from django.utils.translation import gettext_lazy as _
 
 from .models import (
     Polity_research_assistant,
@@ -76,7 +74,7 @@ commonwidgets = {
             "class": "form-control  mb-3",
         }
     ),
-    "description": Textarea(
+    "description": forms.Textarea(
         attrs={
             "class": "form-control  mb-3",
             "style": "height: 200px",
@@ -542,7 +540,6 @@ class Polity_preceding_entityForm(forms.ModelForm):
 
         model = Polity_preceding_entity
         fields = commonfields.copy()
-        # fields.append('preceding_entity')
         fields.append("merged_old_data")
         fields.append("relationship_to_preceding_entity")
         fields.append("other_polity")
@@ -552,7 +549,6 @@ class Polity_preceding_entityForm(forms.ModelForm):
         labels["polity"] = "Entity (B): Subsequent"
 
         widgets = dict(commonwidgets)
-        # widgets['preceding_entity'] = forms.TextInput(attrs={'class': 'form-control  mb-3', 'readonly': "True" })
         widgets["merged_old_data"] = forms.TextInput(
             attrs={"class": "form-control  mb-3", "readonly": "True"}
         )

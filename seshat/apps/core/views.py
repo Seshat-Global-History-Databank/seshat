@@ -195,7 +195,6 @@ class ReligionListView(ListView):
     permission_required = "core.add_seshatprivatecommentpart"
 
 
-######
 def is_ajax(request):
     """
     Return True if the request is an AJAX request, False otherwise.
@@ -270,8 +269,6 @@ def seshatindex2(request):
         "insta": "Instabilities All Over the Place..",
         "trans": "Transitions All Over the Place",
     }
-    # print('static_root:', settings.STATIC_ROOT)
-    # print('STATICFILES_DIRS:', settings.STATICFILES_DIRS)
     return render(request, "core/seshat-index.html", context=context)
 
 
@@ -289,8 +286,6 @@ def seshatmethods(request):
         "insta": "Instabilities All Over the Place..",
         "trans": "Transitions All Over the Place",
     }
-    # print('static_root:', settings.STATIC_ROOT)
-    # print('STATICFILES_DIRS:', settings.STATICFILES_DIRS)
     return render(request, "core/seshat-methods.html", context=context)
 
 
@@ -304,28 +299,17 @@ def seshatwhoweare(request):
     Returns:
         HttpResponse: The response object.
     """
-    # json_url_inners = "https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_040_00_500k.json"
-    # json_url_outline = "https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_outline_500k.json"
     json_file_path = "/home/majid/dev/seshat/seshat/seshat/apps/core/static/geojson/us_states_geojson.json"
 
     try:
-        # response_inners = requests.get(json_url_inners)
-        # response_outline = requests.get(json_url_outline)
         with open(json_file_path, "r") as json_file:
             json_data = json.load(json_file)
-        # with open(json_file_path, "r") as json_file:
-        #    json_data = json.load(json_file)
-        # Check if the request was successful (status code 200)
-        # if response_inners.status_code == 200 and response_outline.status_code == 200:
-        #    # Parse the JSON data from the response_inners
-        #    json_inners = response_inners.json()
-        #    json_outline = response_outline.json()
 
         context = {
             "insta": "Instabilities All Over the Place..",
             "json_data": json_data,  # Add this line to your context
         }
-        print(len(json_data))
+
         return render(request, "core/seshat-whoweare.html", context=context)
     except FileNotFoundError:
         # Handle the case when the file is not found
@@ -333,6 +317,7 @@ def seshatwhoweare(request):
             "insta": "Instabilities All Over the Place..",
             "json_error": "JSON file not found",
         }
+
         return render(request, "core/seshat-whoweare.html", context=context)
     except json.JSONDecodeError as e:
         # Handle JSON decoding errors if the file is not valid JSON
@@ -340,6 +325,7 @@ def seshatwhoweare(request):
             "insta": "Instabilities All Over the Place..",
             "json_error": f"JSON decoding error: {str(e)}",
         }
+
         return render(request, "core/seshat-whoweare.html", context=context)
 
 
@@ -380,13 +366,6 @@ def seshatcodebooknew1(request):
         "insta": "Instabilities All Over the Place..",
     }
     return render(request, "core/code_book_1.html", context=context)
-
-
-# def seshatcodebooknew2(request):
-#     context = {
-#         'insta': "Instabilities All Over the Place..",
-#     }
-#     return render(request, 'core/new_codebook_2.html', context=context)
 
 
 def seshatacknowledgements(request):
@@ -433,13 +412,6 @@ class ReferenceListView(generic.ListView):
         queryset = Reference.objects.exclude(creator="MAJIDBENAM").all()
         return queryset
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     selected_only_zotero_refs = Reference.objects.exclude(creator='MAJIDBENAM')
-    #     context['object_list'] = selected_only_zotero_refs
-
-    #     return context
-
 
 class NlpReferenceListView(generic.ListView):
     """
@@ -485,18 +457,9 @@ class NlpReferenceListView(generic.ListView):
 
         queryset = queryset.order_by("-year", "title")
 
-        # Create a list of Zotero links from the queryset
-        # matched_zotero_links = list(queryset.values_list('zotero_link', flat=True))
-
-        # Find the missing Zotero links
-        # missing_zotero_links = [link for link in NLP_ZOTERO_LINKS_TO_FILTER if link not in matched_zotero_links]
-
-        # print(missing_zotero_links)
-
         return queryset
 
 
-# references without a Zotero link:
 def no_zotero_refs_list(request):
     """
     List all references without a Zotero link.
@@ -510,13 +473,9 @@ def no_zotero_refs_list(request):
     selected_no_zotero_refs = Reference.objects.filter(
         zotero_link__startswith="NOZOTERO_"
     )
-    # all_refs = Reference.objects.all()
-    # selected_no_zotero_refs = []
-    # for ref in all_refs:
-    #    if "NOZOTERO_" in ref.zotero_link:
-    #        selected_no_zotero_refs.append(ref)
 
-    paginator = Paginator(selected_no_zotero_refs, 10)  # Show 25 refs per page.
+    # Show 25 refs per page
+    paginator = Paginator(selected_no_zotero_refs, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -525,7 +484,6 @@ def no_zotero_refs_list(request):
     context["page_obj"] = page_obj
     context["is_paginated"] = False
 
-    # Citation.objects.bulk_create(all_citations)
     return render(request, "core/references/reference_list_nozotero.html", context)
 
 
@@ -553,10 +511,8 @@ def reference_update_modal(request, pk):
         if form.is_valid():
             form.save()
             if not is_ajax(request=request):
-                # reload the page
-                next = request.META["PATH_INFO"]
-                return HttpResponseRedirect(next)
-            # if is_ajax(), we just return the validated form, so the modal will close
+                # Reload the page
+                return HttpResponseRedirect(request.META["PATH_INFO"])
     else:
         form = ReferenceForm(instance=object)
 
@@ -568,9 +524,6 @@ def reference_update_modal(request, pk):
             "form": form,
         },
     )
-
-
-###########
 
 
 class ReferenceCreate(PermissionRequiredMixin, CreateView):
@@ -609,7 +562,6 @@ class ReferenceCreate(PermissionRequiredMixin, CreateView):
         context["mysubsection"] = "abc"
         context["myvar"] = "def reference"
         context["errors"] = "Halooooooooo"
-        # print(context)
 
         return context
 
@@ -787,7 +739,6 @@ class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         context["mysubsection"] = "abc"
         context["myvar"] = "def citation"
         context["errors"] = "Halooooooooo"
-        # print(context)
 
         return context
 
@@ -802,9 +753,6 @@ class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
             HttpResponse: The response object.
         """
         return super().form_valid(form)
-
-    # def form_invalid(self, form):
-    #     return HttpResponseRedirect(reverse('seshat-index'))
 
 
 class CitationUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -958,13 +906,12 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
+
         my_apps = ["rt", "general", "sc", "wf", "crisisdb"]
         my_app_models = {name: apps.all_models[name] for name in my_apps}
 
-        # context['my_app_models'] = my_app_models
         abc = []
-
-        for myapp, mymodels in my_app_models.items():
+        for _, mymodels in my_app_models.items():
             for mm, mymodel in mymodels.items():
                 if (
                     "_citations" not in mm
@@ -975,6 +922,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     my_instance = mymodel.objects.get(comment=self.object.id)
                     my_polity = my_instance.polity
                     my_polity_id = my_instance.polity.id
+
                     try:
                         my_var_name = my_instance.clean_name_spaced()
                     except:
@@ -997,33 +945,9 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         }
                     )
 
-        # for model_name in related_models:
-        #     print(model_name)
-        #     related_objects = getattr(self.object, model_name)
-        #     if related_objects:
-        #         context['related_objects'] = related_objects
-        #         break
-
         context["my_app_models"] = abc
 
         return context
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     #an_instance = SeshatComment.objects.first()
-    #     #related_fact =
-    #     #print("Haloooooo_________ooooooooooo", self.kwargs['com_id'])
-    #     #print("Halooooooooooooooooo", self.kwargs['subcom_order'])
-    #     #related_fact = self.        context["com_id"] = self.kwargs['com_id']
-    #     #context["subcom_order"] = self.kwargs['subcom_order']
-    #     #context["subcom_order"] = self.comment_order
-
-    #     print("HEre we gooooooooooo: ", dir(self.object))
-    #     #for potential_attr in dir(isinstance):
-
-    #     #if an_instance
-
-    #     return context
 
 
 class SeshatCommentDelete(PermissionRequiredMixin, DeleteView):
@@ -1186,18 +1110,15 @@ class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
+
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
-        # print("Haloooooo_________ooooooooooo", self.kwargs['com_id'])
-        # print("Halooooooooooooooooo", self.kwargs['subcom_order'])
+
         context["com_id"] = self.kwargs["com_id"]
         context["subcom_order"] = self.kwargs["subcom_order"]
         context["comment_curator"] = logged_in_expert
         context["comment_curator_id"] = logged_in_expert.id
         context["comment_curator_name"] = "Selected USER"
-
-        # context["subcom_order"] = self.comment_order
-        # print(context)
 
         return context
 
@@ -1260,21 +1181,13 @@ class SeshatPrivateCommentPartCreate2(PermissionRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
-        # readers_experts = SeshatPrivateCommentPart.get()
-        # print("Haloooooo_________ooooooooooo", self.kwargs['com_id'])
-        # print("Halooooooooooooooooo", self.kwargs['subcom_order'])
+
         context["private_com_id"] = self.kwargs["private_com_id"]
         context["private_comment_owner"] = logged_in_expert
-        # context["private_comment_reader"] = readers_experts
-
-        # context["subcom_order"] = self.comment_order
-        # print(context)
-        # print("2222222222222222222222222222222")
 
         return context
 
 
-# Function based:
 @permission_required("core.add_capital")
 def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order):
     """
@@ -1317,6 +1230,7 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
 
             # Process the formset
             reference_formset = ReferenceFormSet2(request.POST, prefix="refs")
+
             if reference_formset.is_valid():
                 to_be_added = []
                 to_be_deleted_later = []
@@ -1335,7 +1249,6 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
                                     page_from=int(page_from),
                                     page_to=int(page_to),
                                 )
-                                # print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
                             else:
                                 citation, created = Citation.objects.get_or_create(
                                     ref=reference, page_from=None, page_to=None
@@ -1343,15 +1256,15 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
 
                             # Associate the Citation with the SeshatCommentPart
                             if to_be_deleted:
-                                # comment_part.comment_citations.remove(citation)
                                 to_be_deleted_later.append(citation)
                             else:
-                                # comment_part.comment_citations.add(citation)
                                 to_be_added.append(citation)
                         except:
                             pass  # Handle the exception as per your requirement
+
                 seshat_comment_part.comment_citations.clear()
                 seshat_comment_part.comment_citations.add(*to_be_added)
+
             return redirect(reverse("seshatcomment-update", kwargs={"pk": com_id}))
 
     else:
@@ -1360,18 +1273,15 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
 
     context = {
         "form": form,
-        "com_id": com_id,  # Include com_id in the context
-        "subcom_order": subcom_order,  # Include subcom_order in the context
+        "com_id": com_id,  # Include com_id
+        "subcom_order": subcom_order,  # Include subcom_order
         "formset": init_data,
-        #'comm_num': com_id,
-        #'comm_part_display': comment_part,
     }
     return render(
         request, "core/seshatcomments/seshatcommentpart_create2.html", context
     )
 
 
-# Function based NEW:
 @permission_required("core.add_capital")
 def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
     """
@@ -1414,7 +1324,6 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
             # Process the formset
             reference_formset = ReferenceFormSet2(request.POST, prefix="refs")
             if reference_formset.is_valid():
-                # print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
                 to_be_added = []
                 to_be_deleted_later = []
                 for reference_form in reference_formset:
@@ -1435,7 +1344,6 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                                     page_from=int(page_from),
                                     page_to=int(page_to),
                                 )
-                                # print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
                             else:
                                 citation, created = Citation.objects.get_or_create(
                                     ref=reference, page_from=None, page_to=None
@@ -1443,19 +1351,15 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 
                             # Associate the Citation with the SeshatCommentPart
                             if to_be_deleted:
-                                # comment_part.comment_citations.remove(citation)
                                 to_be_deleted_later.append(
                                     (citation, parent_pars_inserted)
                                 )
                             else:
-                                # comment_part.comment_citations.add((citation, parent_pars_inserted))
                                 to_be_added.append((citation, parent_pars_inserted))
                         except:
                             pass  # Handle the exception as per your requirement
-                # seshat_comment_part.comment_citations.clear()
-                # seshat_comment_part.comment_citations.add(*to_be_added)
+
                 seshat_comment_part.comment_citations_plus.clear()
-                # seshat_comment_part.comment_citations_plus.add(*to_be_added)
 
                 for item in to_be_added:
                     # Query for an existing row based on citation and SeshatCommentPart
@@ -1471,6 +1375,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     if not created:
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
+
             return redirect(reverse("seshatcomment-update", kwargs={"pk": com_id}))
 
     else:
@@ -1480,19 +1385,16 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 
     context = {
         "form": form,
-        "com_id": com_id,  # Include com_id in the context
-        "subcom_order": subcom_order,  # Include subcom_order in the context
+        "com_id": com_id,  # Include com_id
+        "subcom_order": subcom_order,  # Include subcom_order
         "formset": init_data,
         "parent_par": big_father,
-        #'comm_num': com_id,
-        #'comm_part_display': comment_part,
     }
     return render(
         request, "core/seshatcomments/seshatcommentpart_create2.html", context
     )
 
 
-# Function based NEW:
 @permission_required("core.add_capital")
 def seshat_comment_part_create_from_null_view_inline(
     request, app_name, model_name, instance_id
@@ -1500,7 +1402,6 @@ def seshat_comment_part_create_from_null_view_inline(
     if request.method == "POST":
         form = SeshatCommentPartForm2(request.POST)
         big_father = SeshatComment.objects.create(text="a new_comment_text")
-        # big_father = SeshatComment.objects.get(id=com_id)
         com_id = big_father.pk
         model_class = apps.get_model(app_label=app_name, model_name=model_name)
 
@@ -1530,7 +1431,6 @@ def seshat_comment_part_create_from_null_view_inline(
             # Process the formset
             reference_formset = ReferenceFormSet2(request.POST, prefix="refs")
             if reference_formset.is_valid():
-                # print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
                 to_be_added = []
                 to_be_deleted_later = []
                 for reference_form in reference_formset:
@@ -1551,7 +1451,6 @@ def seshat_comment_part_create_from_null_view_inline(
                                     page_from=int(page_from),
                                     page_to=int(page_to),
                                 )
-                                # print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
                             else:
                                 citation, created = Citation.objects.get_or_create(
                                     ref=reference, page_from=None, page_to=None
@@ -1559,19 +1458,14 @@ def seshat_comment_part_create_from_null_view_inline(
 
                             # Associate the Citation with the SeshatCommentPart
                             if to_be_deleted:
-                                # comment_part.comment_citations.remove(citation)
                                 to_be_deleted_later.append(
                                     (citation, parent_pars_inserted)
                                 )
                             else:
-                                # comment_part.comment_citations.add((citation, parent_pars_inserted))
                                 to_be_added.append((citation, parent_pars_inserted))
                         except:
                             pass  # Handle the exception as per your requirement
-                # seshat_comment_part.comment_citations.clear()
-                # seshat_comment_part.comment_citations.add(*to_be_added)
                 seshat_comment_part.comment_citations_plus.clear()
-                # seshat_comment_part.comment_citations_plus.add(*to_be_added)
 
                 for item in to_be_added:
                     # Query for an existing row based on citation and SeshatCommentPart
@@ -1595,18 +1489,15 @@ def seshat_comment_part_create_from_null_view_inline(
 
     context = {
         "form": form,
-        "com_id": com_id,  # Include com_id in the context
-        "subcom_order": subcom_order,  # Include subcom_order in the context
+        "com_id": com_id,  # Include com_id
+        "subcom_order": subcom_order,  # Include subcom_order
         "formset": init_data,
-        #'comm_num': com_id,
-        #'comm_part_display': comment_part,
     }
     return render(
         request, "core/seshatcomments/seshatcommentpart_create2.html", context
     )
 
 
-# Function based NEW:
 @permission_required("core.add_seshatprivatecommentpart")
 def seshat_private_comment_part_create_from_null_view(request, private_com_id):
     """
@@ -1648,27 +1539,21 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
                 *my_private_comment_readers
             )
 
-            # print("4444444444444444444444444444444444444")
-
             return redirect(
                 reverse("seshatprivatecomment-update", kwargs={"pk": private_com_id})
             )
 
     else:
         form = SeshatPrivateCommentPartForm()
-        # print('5555555555555555555555555555555')
 
     context = {
         "form": form,
         "private_com_id": private_com_id,
     }
 
-    # print("333333333333333333333333333333")
     return render(
         request, "core/seshatcomments/seshatprivatecommentpart_create2.html", context
     )
-
-    # return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part})
 
 
 class SeshatCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1695,17 +1580,13 @@ class SeshatCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, Upda
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
+
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
-        # context["com_id"] = self.kwargs['com_id']
-        # context["subcom_order"] = self.kwargs['subcom_order']
+
         context["comment_curator"] = logged_in_expert
         context["comment_curator_id"] = logged_in_expert.id
         context["comment_curator_name"] = "Selected USER"
-
-        # context["subcom_order"] = self.comment_order
-
-        # print(context)
 
         return context
 
@@ -1736,14 +1617,12 @@ class SeshatPrivateCommentPartUpdate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        logged_in_user = self.request.user
-        logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+
         context["private_com_id"] = self.kwargs["private_com_id"]
         context["pk"] = self.kwargs["pk"]
-        # context["subcom_order"] = self.kwargs['subcom_order']
-        context["private_comment_owner"] = logged_in_expert
-
-        # 666666666666666666666666666")
+        context["private_comment_owner"] = Seshat_Expert.objects.get(
+            user=self.request.user
+        )
 
         return context
 
@@ -1754,15 +1633,10 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
     """
 
     model = SeshatCommentPart
-    # success_url = reverse_lazy('seshatcommentparts')
-    # success_url = reverse_lazy('seshatcommentparts')
 
-    # ('seshatcomment-update', self.pk)
     template_name = "core/delete_general.html"
     permission_required = "core.add_capital"
 
-    # def get_success_url(self):
-    #     return redirect(reverse('seshatcomment-update', kwargs={'pk': self.object.comment.pk}))
     def get_success_url(self):
         return reverse_lazy(
             "seshatcomment-update", kwargs={"pk": self.object.comment.pk}
@@ -1772,12 +1646,6 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
 class SeshatCommentPartDetailView(generic.DetailView):
     model = SeshatCommentPart
     template_name = "core/seshatcomments/seshatcommentpart_detail.html"
-
-
-##### Extra function for seshat comments
-
-
-# POLITY
 
 
 class PolityCreate(PermissionRequiredMixin, CreateView):
@@ -1813,9 +1681,8 @@ class PolityCreate(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        # return HttpResponseRedirect(reverse('seshat-index'))
+        # Redirect to the 'polities' page with an error message
         messages.error(self.request, "Form submission failed. Please check the form.")
-        # Redirect to the 'polities' page
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -1849,47 +1716,6 @@ class PolityUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy("polity-detail-main", kwargs={"pk": self.object.pk})
 
-    # success_url = reverse_lazy('polity-detail-main')
-
-
-# class PolityListView(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
-#     model = Polity
-#     template_name = "core/polity/polity_list.html"
-#     permission_required = 'core.add_capital'
-
-#     def get_absolute_url(self):
-#         return reverse('polities')
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         all_ngas = Nga.objects.all()
-#         all_pols = Polity.objects.select_related('ngapolityrel__polity_party', 'ngapolityrel__nga_party').order_by('start_year').all()
-#         all_nga_pol_rels = Ngapolityrel.objects.all()
-
-#         all_world_regions = {a_nga.world_region: [a_nga.subregion] for a_nga in all_ngas}
-
-#         ultimate_wregion_dic = {}
-
-#         for a_world_region, all_its_sub_regions in all_world_regions.items():
-#             ultimate_wregion_dic[a_world_region] = {}
-
-#             for a_subregion in all_its_sub_regions:
-#                 all_politys_on_the_polity_list_page = Polity.objects.filter(
-#                     ngapolityrel__polity_party__name=F('name'),
-#                     ngapolityrel__nga_party__world_region=a_world_region,
-#                     ngapolityrel__nga_party__subregion=a_subregion
-#                 ).distinct()
-
-#                 ultimate_wregion_dic[a_world_region][a_subregion] = list(all_politys_on_the_polity_list_page)
-
-#         context["all_ngas"] = all_ngas
-#         context["all_nga_pol_rels"] = all_nga_pol_rels
-#         context["all_world_regions"] = all_world_regions
-#         context["ultimate_wregion_dic"] = ultimate_wregion_dic
-
-#         return context
-
 
 class PolityListView_old(
     PermissionRequiredMixin, SuccessMessageMixin, generic.ListView
@@ -1904,8 +1730,6 @@ class PolityListView_old(
     model = Polity
     template_name = "core/polity/polity_list.html"
     permission_required = "core.add_capital"
-
-    # paginate_by = 10
 
     def get_absolute_url(self):
         """
@@ -1969,13 +1793,11 @@ class PolityListView_old(
                                 all_politys_on_the_polity_list_page.append(a_polity)
 
                 ultimate_wregion_dic[a_world_region][a_subregion] = list_for_a_subregion
+
         context["all_ngas"] = all_ngas
         context["all_nga_pol_rels"] = all_nga_pol_rels
         context["all_world_regions"] = all_world_regions
         context["ultimate_wregion_dic"] = ultimate_wregion_dic
-        # print(ultimate_wregion_dic)
-
-        # print(f"out of {len(all_pols)}: {len(all_politys_on_the_polity_list_page)} were taken care of.")
 
         return context
 
@@ -1990,8 +1812,6 @@ class PolityListView1(SuccessMessageMixin, generic.ListView):
 
     model = Polity
     template_name = "core/polity/polity_list.html"
-
-    # paginate_by = 10
 
     def get_absolute_url(self):
         """
@@ -2039,6 +1859,7 @@ class PolityListView1(SuccessMessageMixin, generic.ListView):
             "South America": {},
             "Nomad Polities": {"Nomad Land": []},
         }
+
         all_politys_on_the_polity_list_page = []
         nomad_polities = []
         for a_world_region, all_its_sub_regions in all_world_regions.items():
@@ -2057,21 +1878,21 @@ class PolityListView1(SuccessMessageMixin, generic.ListView):
                                 all_politys_on_the_polity_list_page.append(a_polity)
 
                 ultimate_wregion_dic[a_world_region][a_subregion] = list_for_a_subregion
-        # nomads
+
+        # Nomads
         for a_polity in all_pols:
             if (
                 a_polity not in nomad_polities
                 and a_polity not in all_politys_on_the_polity_list_page
             ):
                 nomad_polities.append(a_polity)
+
         ultimate_wregion_dic["Nomad Polities"]["Nomad Land"] = nomad_polities
+
         context["all_ngas"] = all_ngas
         context["all_nga_pol_rels"] = all_nga_pol_rels
         context["all_world_regions"] = all_world_regions
         context["ultimate_wregion_dic"] = ultimate_wregion_dic
-        # print(ultimate_wregion_dic)
-
-        # print(f"out of {len(all_pols)}: {len(all_politys_on_the_polity_list_page)} were taken care of.")
 
         return context
 
@@ -2086,8 +1907,6 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
 
     model = Polity
     template_name = "core/polity/polity_list.html"
-
-    # paginate_by = 10
 
     def get_absolute_url(self):
         """
@@ -2117,7 +1936,6 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
 
         all_polities_g_sc_wf = give_polity_app_data()
 
-        # all_nga_pol_rels  = Ngapolityrel.objects.all()
         all_world_regions = {}
         for a_nga in all_ngas:
             if a_nga.world_region not in all_world_regions.keys():
@@ -2190,30 +2008,16 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
         all_politys_on_the_polity_list_page = []
         nomad_polities = []
 
-        # modify the world regions:
+        # Modify the world regions:
         all_world_regions["Africa"].append("East Africa")
         all_world_regions["Africa"].append("Southern Africa")
         all_world_regions["South Asia"].append("Southern India")
 
         for a_polity in all_pols:
             try:
-                # a_polity.has_general = has_general_data_for_polity(a_polity.id)
-                # a_polity.has_sc = has_sc_data_for_polity(a_polity.id)
-                # a_polity.has_wf = has_wf_data_for_polity(a_polity.id)
-                # a_polity.has_cc = has_crisis_cases_data_for_polity(a_polity.id)
-                # a_polity.has_pt = has_power_transition_data_for_polity(a_polity.id)
                 a_polity.has_g_sc_wf = all_polities_g_sc_wf[a_polity.id]
-
             except:
-                # a_polity.has_general = None
-                # a_polity.has_sc = None
-                # a_polity.has_wf = None
-                # a_polity.has_cc = None
-                # a_polity.has_pt = None
                 a_polity.has_g_sc_wf = None
-
-        # end_time = time.time()
-        # print('elapsed_time ', end_time-start_time)
 
         for a_world_region, all_its_sub_regions in all_world_regions.items():
             for a_subregion in all_its_sub_regions:
@@ -2271,7 +2075,7 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
                         a_subregion
                     ] = list_for_a_subregion
 
-        # nomads
+        # Nomads
         for a_polity in all_pols:
             if (
                 a_polity not in nomad_polities
@@ -2280,15 +2084,12 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
                 nomad_polities.append(a_polity)
 
         ultimate_wregion_dic["Nomad Polities"]["Nomad Land"] = nomad_polities
+
         context["sub_regions_details"] = sub_regions_details
-        # context["all_nga_pol_rels"] = all_nga_pol_rels
         context["all_world_regions"] = all_world_regions
         context["ultimate_wregion_dic"] = ultimate_wregion_dic
-        # print(ultimate_wregion_dic)
         context["all_pols"] = all_pols
         context["pol_count"] = pol_count
-
-        # print(f"out of {len(all_pols)}: {len(all_politys_on_the_polity_list_page)} were taken care of.")
 
         return context
 
@@ -2524,8 +2325,6 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
                             0,
                         ]
 
-        # all_polities_g_sc_wf, freq_dic = give_polity_app_data()
-        # all_polities_g_sc_wf = give_polity_app_data()
         freq_dic = {}
         freq_dic["d"] = 0
 
@@ -2550,9 +2349,6 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
         context["pol_count"] = pol_count
         freq_dic["pol_count"] = pol_count
         context["freq_data"] = freq_dic
-
-        # end_time = time.time()
-        # print('elapsed_time ', end_time-start_time)
 
         return context
 
@@ -2801,8 +2597,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
                         ]
 
         all_polities_g_sc_wf, freq_dic = give_polity_app_data()
-        # all_polities_g_sc_wf = give_polity_app_data()
-        # freq_dic = {}
         freq_dic["d"] = 0
 
         for a_polity in all_pols:
@@ -2904,9 +2698,6 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         freq_dic["pol_count"] = pol_count
         context["freq_data"] = freq_dic
 
-        # end_time = time.time()
-        # print('elapsed_time ', end_time-start_time)
-
         return context
 
 
@@ -2944,8 +2735,6 @@ class PolityListViewCommented(
         """
         context = super().get_context_data(**kwargs)
 
-        # all_pols = Polity.objects.filter(private_comment__isnull=False).order_by('start_year')
-        # all_pols = Polity.objects.exclude(Q(private_comment__isnull=True) | Q(private_comment=''))
         all_pols = Polity.objects.exclude(
             Q(private_comment_n__isnull=True) | Q(private_comment_n=1)
         )
@@ -3051,7 +2840,6 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
 
             all_general_ras_string = ", ".join(all_general_ras)
 
-            # my_users_general = [User.objects.get(pk=aa.polity_ra_id) for aa in all_Ras]
             context["majid"] = {"utm_zone": "benam"}
             context["all_Ras"] = all_general_ras_string
 
@@ -3061,7 +2849,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_sc_data"] = None
             context["all_wf_data"] = None
             context["all_rt_data"] = None
-        ################# NEW
+
         Polity_object = Polity.objects.get(id=self.object.pk)
 
         # Get the related data
@@ -3143,11 +2931,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             all_durations["color"] = "gmm"
 
         context["all_durations"] = all_durations
-        #####################
 
-        # x = polity_detail_data_collector(self.object.pk)
-        # context["all_data"] = dict(x)
-        # print(self.object.pk)
         context["all_vars"] = {
             "arable_land": "arable_land",
             "agricultural_population": "agricultural_population",
@@ -3170,12 +2954,10 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
                     ):
                         nga_list.append(nga_pol_rel.nga_party)
 
-                concise_rels[time_delta] = nga_list  # "  ~~~   ".join(nga_list)
+                concise_rels[time_delta] = nga_list
             context["nga_pol_rel"] = concise_rels
-            # print("__________________________")
         except:
             context["nga_pol_rel"] = None
-            # print("*************")
 
         preceding_data = []
         succeeding_data = []
@@ -3255,7 +3037,6 @@ class NgaListView(generic.ListView):
 
     model = Nga
     template_name = "core/nga/nga_list.html"
-    # paginate_by = 10
 
 
 class NgaDetailView(generic.DetailView):
@@ -3282,12 +3063,6 @@ class CapitalCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "You successfully created a new Capital."
     success_url = reverse_lazy("capitals")
 
-    # def form_valid(self, form):
-    #     return super().form_valid(form)
-
-    # def form_invalid(self, form):
-    #     return HttpResponseRedirect(reverse('capital-create'))
-
 
 class CapitalUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     """
@@ -3309,7 +3084,6 @@ class CapitalListView(generic.ListView):
 
     model = Capital
     template_name = "core/capital/capital_list.html"
-    # paginate_by = 10
 
     def get_absolute_url(self):
         """
@@ -3389,8 +3163,6 @@ def signup_traditional(request):
             user.is_active = False
             user.save()
 
-            # current_site = get_current_site(request)
-            # subject = 'Activate Your Seshat Account'
             message = render_to_string(
                 "core/account_activation_email.html",
                 {
@@ -3408,12 +3180,6 @@ def signup_traditional(request):
                 [user.email],  # Replace with recipient email(s)
                 fail_silently=False,
             )
-            # user.email_user(subject, message)
-            # to_be_sent_email = EmailMessage(subject=subject, body=message,
-            #                                 from_email=settings.EMAIL_FROM_USER, to=[user.email])
-
-            # #print(settings.EMAIL_HOST_USER)
-            # to_be_sent_email.send()
             return redirect("account_activation_sent")
     else:
         form = SignUpForm()
@@ -3448,8 +3214,6 @@ def activate(request, uidb64, token):
     """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        # uid = str(urlsafe_base64_decode(uidb64))
-
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
@@ -3537,8 +3301,7 @@ def variablehierarchysetting(request):
             var_name = var_name.replace("gDP", "GDP")
 
             all_var_hiers_to_be_hidden_names.append(var_name)
-    print("I am here...\n\n")
-    # print(all_var_hiers_to_be_hidden_names)
+
     my_vars_tuple = [("", " -- Select a CrisisDB Variable -- ")]
     for var in my_vars_good_keys:
         if var not in all_var_hiers_to_be_hidden_names:
@@ -3556,17 +3319,17 @@ def variablehierarchysetting(request):
         my_section = section.name
         my_section_tuple = (my_section, my_section)
         all_sections_tuple.append(my_section_tuple)
-    # subsections
+
+    # Subsections
     all_subsections = Subsection.objects.all()
     all_subsections_tuple = [("", " -- Select Section First -- ")]
     for subsection in all_subsections:
         my_subsection = subsection.name
         my_subsection_tuple = (my_subsection, my_subsection)
         all_subsections_tuple.append(my_subsection_tuple)
+
     # Let's create an API serializer for section and subsection heierarchy
     url = "http://127.0.0.1:8000/api/sections/"
-    # url = "https://www.majidbenam.com/api/sections/"
-    # url = settings.MY_CURRENT_SERVER + "/api/sections/"
 
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -3580,33 +3343,36 @@ def variablehierarchysetting(request):
         subsect_dic = {}
         subsects_only_list = []
         for subsec in list_item["subsections"]:
-            list_to_be = []
             subsects_only_list.append(subsec)
+
             sel_sect = Section.objects.get(name=list_item["name"])
             sel_subsect = Subsection.objects.get(name=subsec)
+
             my_selected_vars_objects = Variablehierarchy.objects.filter(
                 section=sel_sect,
                 subsection=sel_subsect,
             )
+
+            list_to_be = []
             for var_obj in my_selected_vars_objects:
-                # print(var_obj)
                 list_to_be.append(var_obj.name)
+
             subsect_dic[subsec] = list_to_be
+
         sections_tree[list_item["name"]] = subsect_dic
         sections_options_for_JS[list_item["name"]] = subsects_only_list
+
     context = {
         "sectionOptions": sections_options_for_JS,
         "section_tree_data": sections_tree,
     }
-    # print(context['sectionOptions'])
-    # print(context['section_tree_data'])
 
     if request.method == "POST":
         form = VariablehierarchyFormNew(request.POST)
         if True:
             data = request.POST
             variable_name = data["variable_name"]
-            # is_verified_str = data["is_verified"]
+
             is_verified_str = data.get("is_verified", False)
             if is_verified_str == "on":
                 is_verified = True
@@ -3614,9 +3380,11 @@ def variablehierarchysetting(request):
                 is_verified = False
             else:
                 is_verified = False
+
             section_name = Section.objects.get(name=data["section_name"])
             subsection_name = Subsection.objects.get(name=data["subsection_name"])
-            # check to see if subsection and section match
+
+            # Check to see if subsection and section match
             if data["subsection_name"] in sections_tree[data["section_name"]]:
                 new_var_hierarchy = Variablehierarchy(
                     name=variable_name,
@@ -3625,9 +3393,8 @@ def variablehierarchysetting(request):
                     is_verified=is_verified,
                 )
                 new_var_hierarchy.save()
-                # print('Valid Foooooooooooorm: \n\n',)
-                # print(data)
-                my_message = f"""You have successfully submitted {variable_name} to: {section_name} >  {subsection_name}"""
+                my_message = f"You have successfully submitted {variable_name} to: {section_name} >  {subsection_name}"
+
                 messages.success(request, my_message)
                 return HttpResponseRedirect(reverse("variablehierarchysetting"))
             else:
@@ -3635,26 +3402,23 @@ def variablehierarchysetting(request):
                     request,
                     "Form submission unssuccessful, section and subsection do not match.",
                 )
-                # return render(request, 'core/Variablehierarchy.html', {'form': VariablehierarchyFormNew()})
 
         else:
             data = request.POST
-            # print('halllooooooooo:', data["variable_name"])
             messages.error(request, "Invalid form submission.")
             messages.error(request, form.errors)
 
     else:
         form = VariablehierarchyFormNew()
+
     context["form"] = form
     context["variable_list"] = list(my_vars_tuple)
     context["section_list"] = list(all_sections_tuple)
     context["subsection_list"] = list(all_subsections_tuple)
 
-    # context['SuccessMessage'] = "Done Perfectly."
     return render(request, "core/variablehierarchy.html", context)
 
 
-###############
 def do_zotero(results):
     """
     Process the results from the Zotero API.
@@ -3666,11 +3430,7 @@ def do_zotero(results):
         list: A list of dictionaries containing the processed data.
     """
     mother_ref_dic = []
-    for i, item in enumerate(results):
-        # print(i, ": ", item['data']['key'], item['data']['date'])
-        # if item['data']['key'] in ["MJT9UJE4", "NIKCMK5L", "QTI79LX9"]:
-        #    print("______________")
-        #    print(item)
+    for _, item in enumerate(results):
         a_key = item["data"]["key"]
         if a_key == "3BQQ8WN8":
             print(
@@ -3680,18 +3440,8 @@ def do_zotero(results):
         if a_key == "RR6R3383":
             print("I skipped over  youuuuu: RR6R3383 because your title is too big")
             continue
-
-            # print(pprint.pprint(item))
         try:
-            # we need to make sure that all the changes in Zotero will be reflected here.
-            potential_new_ref = Reference.objects.get(zotero_link=a_key)
-            # full_date = item['data'].get('date')
-            # if full_date:
-            #     year = re.search(r'[12]\d{3}', full_date)
-            #     if year:
-            #         year_int = int(year[0])
-            #         if potential_new_ref.year != year_int:
-            #             print(f"Item Changed On Zotero: {a_key}")
+            # We need to make sure that all the changes in Zotero will be reflected here.
             continue
         except:
             my_dic = {}
@@ -3700,17 +3450,23 @@ def do_zotero(results):
                     tuple_key = item["data"]["key"]
                     my_dic["key"] = tuple_key
                 else:
-                    pass  # print("key is empty for index: ", i, item['data']['itemType'])
+                    # Key is empty for index: {i}: {item['data']['itemType']}
+                    pass
             except:
-                pass  # print("No key for item with index: ", i)
+                # No key for item with index: {i}
+                pass
+
             try:
                 if item["data"]["itemType"]:
                     tuple_item = item["data"]["itemType"]
                     my_dic["itemType"] = tuple_item
                 else:
-                    pass  # print("itemType is empty for index: ", i, item['data']['itemType'])
+                    # itemType is empty for index: {i}: {item['data']['itemType']}
+                    pass
             except:
-                pass  # print("No itemType for item with index: ", i)
+                # No itemType for item with index: {i}
+                pass
+
             try:
                 num_of_creators = len(item["data"]["creators"])
                 if num_of_creators < 4 and num_of_creators > 0:
@@ -3744,10 +3500,10 @@ def do_zotero(results):
                     my_dic["mainCreator"] = good_name_with_underscore
                 else:
                     my_dic["mainCreator"] = "NO_CREATOR"
-                # pass #print(my_dic['mainCreator'])
             except:
                 my_dic["mainCreator"] = "NO_CREATORS"
-                pass  # print("No mainCreator for item with index: ", i, item['data']['itemType'])
+                pass  # No mainCreator for item with index: {i}: {item['data']['itemType']}
+
             try:
                 if item["data"]["date"]:
                     full_date = item["data"]["date"]
@@ -3755,12 +3511,12 @@ def do_zotero(results):
                     year_int = int(year[0])
                     my_dic["year"] = year_int
                 else:
+                    # Year is empty for index {i}: {item['data']['itemType']}
                     my_dic["year"] = 0
-                    # pass #print("year is empty for index: ", i, item['data']['itemType'])
-                # pass #print(my_dic['year'])
             except:
+                # No year for index {i}: {item['data']['itemType']}
                 my_dic["year"] = -1
-                # pass #print("No year for item with index: ", i, item['data']['itemType'])
+
             try:
                 try:
                     if item["data"]["bookTitle"]:
@@ -3772,43 +3528,39 @@ def do_zotero(results):
                                 + " (IN) "
                                 + item["data"]["bookTitle"]
                             )
-                            pass  # print (i, ": ", a_key, "    ", good_title)
+                            pass
                         else:
                             good_title = item["data"]["title"]
-                            pass  # print (i, ": ", a_key, "    ", good_title)
+                            pass
+
                         counter_bookTitle = counter_bookTitle + 1
                         my_dic["title"] = good_title
                     else:
                         good_title = item["data"]["title"]
                         my_dic["title"] = good_title
+
                         if a_key == "MM6AEU7H":
                             print("I saw youuuuuuuuuuuuuuu more")
-                        # pass #print (i, ": ", a_key, "    ", good_title)
                 except:
                     my_dic["title"] = item["data"]["title"]
-                    # pass #print (i, ": ", a_key, "    ", item['data']['title'])
             except:
-                pass  # print("No title for item with index: ", i)
+                pass  # No title for item with index: {i}
 
             pot_title = my_dic.get("title")
             if not pot_title:
                 pot_title = "NO_TITLE_PROVIDED_IN_ZOTERO"
-            # print("Years: ", my_dic.get('year'))
-            # print("****************")
+
             newref = Reference(
                 title=pot_title,
                 year=my_dic.get("year"),
                 creator=my_dic.get("mainCreator"),
                 zotero_link=my_dic.get("key"),
             )
-            # newref = Reference(title=my_dic['title'], year=my_dic['year'], creator=my_dic['mainCreator'], zotero_link=my_dic['key'])
 
             if my_dic.get("year") < 2040:
                 newref.save()
                 mother_ref_dic.append(my_dic)
 
-    # print(len(mother_ref_dic))
-    # print(counter_bookTitle)
     print("Bye Zotero")
     return mother_ref_dic
 
@@ -3861,9 +3613,6 @@ def do_zotero_manually(results):
     return mother_ref_dic
 
 
-##########
-
-
 def update_citations_from_inside_zotero_update():
     """
     This function takes all the references and build a citation for them.
@@ -3881,11 +3630,6 @@ def update_citations_from_inside_zotero_update():
         )
         a_citation[0].save()
     print("Halllooooo")
-    # Citation.objects.bulk_create(all_citations)
-    # return render (request, 'core/references/reference_list.html')
-
-
-###########
 
 
 def synczoteromanually(request):
@@ -3918,20 +3662,13 @@ def synczotero(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    print("Hallo Zotero")
     zot = zotero.Zotero(1051264, "group", config("ZOTERO_API_KEY"))
     results = zot.everything(zot.top())
-    # results = zot.top(limit=100)
 
-    print(len(results))
-    counter_bookTitle = 0
     new_refs = do_zotero(results[0:300])
     context = {}
     context["newly_adds"] = new_refs
     update_citations_from_inside_zotero_update()
-    # num_1_ref = Reference.objects.get(zotero_link ="FGFSZUNB")
-    # num_1_ref.year = 2014
-    # num_1_ref.save()
     return render(request, "core/references/synczotero.html", context)
 
 
@@ -3948,20 +3685,13 @@ def synczotero100(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    print("Hallo Zotero")
     zot = zotero.Zotero(1051264, "group", config("ZOTERO_API_KEY"))
-    # results = zot.everything(zot.top())
     results = zot.top(limit=100)
 
-    print(len(results))
-    counter_bookTitle = 0
     new_refs = do_zotero(results)
     context = {}
     context["newly_adds"] = new_refs
     update_citations_from_inside_zotero_update()
-    # num_1_ref = Reference.objects.get(zotero_link ="FGFSZUNB")
-    # num_1_ref.year = 2014
-    # num_1_ref.save()
     return render(request, "core/references/synczotero.html", context)
 
 
@@ -4122,7 +3852,6 @@ def seshatindex(request):
     eight_pols = Polity.objects.order_by("?")[:8]
     context["eight_pols"] = eight_pols
 
-    # eight_srs = Seshat_region.objects.exclude(name="Somewhere").order_by('?')[:8]
     eight_srs_0 = Seshat_region.objects.exclude(name="Somewhere").annotate(
         num_polities=Count("home_seshat_region")
     )
@@ -4298,7 +4027,6 @@ def download_csv_all_polities(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "macro_region",
@@ -4325,9 +4053,6 @@ def download_csv_all_polities(request):
     coded_value_data, freq_data = give_polity_app_data()
 
     for obj in items:
-        # coded_values_data = get_polity_data_single(obj.id)
-        # print(obj.id)
-        # print(type(obj))
         if obj.home_seshat_region:
             writer.writerow(
                 [
@@ -4374,10 +4099,6 @@ def download_csv_all_polities(request):
             )
 
     return response
-
-
-##### additions for the seshatcommentpart enhancement
-# views.py
 
 
 def get_or_create_citation(reference, page_from, page_to):
@@ -4457,9 +4178,6 @@ def seshatcommentpart_create_view_old(request):
     )
 
 
-# views.py
-
-
 def seshatcommentpart_create_view(request):
     """
     Create a new SeshatCommentPart instance.
@@ -4494,32 +4212,26 @@ def seshatcommentpart_create_view(request):
 
             # Process the formset
             reference_formset = ReferenceFormSet(request.POST, prefix="refs")
-            print("++++++ffffffff++++++++")
-            if reference_formset.is_valid():
-                print("Ahsaaaaant")
-            else:
+
+            if not reference_formset.is_valid():
                 print(
                     f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"
                 )
 
-            if reference_formset.has_changed():
-                print("Ahsaaaaaaaaaaaaaaaaaant")
-            else:
+            if not reference_formset.has_changed():
                 print(
                     f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"
                 )
-            print("++++++ffffffff++++++++")
+
             for i, reference_form in enumerate(reference_formset):
                 if reference_form.is_valid():
-                    print("+++++++xxaaaaaaaaaxx+++++++")
                     try:
                         reference = reference_form.cleaned_data["ref"]
                         page_from = reference_form.cleaned_data["page_from"]
                         page_to = reference_form.cleaned_data["page_to"]
 
                         # Get or create the Citation instance
-                        # citation = get_or_create_citation(reference, page_from, page_to)
-                        citation, created = Citation.objects.get_or_create(
+                        citation, _ = Citation.objects.get_or_create(
                             ref=reference,
                             page_from=int(page_from),
                             page_to=int(page_to),
@@ -4527,14 +4239,13 @@ def seshatcommentpart_create_view(request):
 
                         # Associate the Citation with the SeshatCommentPart
                         comment_part.comment_citations.add(citation)
-                        print("+++++++xxxx+++++++")
-                        print("I am here::::::", citation)
                     except:
-                        print("OOOPsi")
+                        pass  # TODO: Handle the exception
                 else:
                     print(f"Form errors: {reference_form.errors}")
 
-            return redirect("seshat-index")  # Redirect to a success page
+            # Redirect to a success page
+            return redirect("seshat-index")
 
     else:
         form = SeshatCommentPartForm2()
@@ -4846,13 +4557,11 @@ def assign_variables_to_shapes(shapes, app_map):
                         pass
                     if variable_obj:
                         try:
-                            shape[variable_formatted] = getattr(
-                                variable_obj, variable
-                            )  # absent/present choice
+                            # Absent/present choice
+                            shape[variable_formatted] = getattr(variable_obj, variable)
                             shape[variable_formatted + "_dict"] = variable_obj_dict
-                        except (
-                            AttributeError
-                        ):  # For rt models where coded_value is used
+                        except AttributeError:
+                            # For rt models where coded_value is used
                             shape[variable_formatted] = getattr(
                                 variable_obj, "coded_value"
                             )
@@ -5027,12 +4736,10 @@ def common_map_view_content(content):
     Returns:
         dict: The updated content for the polity shapes.
     """
-    # start_time = time.time()
     # Add in the present/absent variables to view for the shapes
     content["shapes"], content["variables"] = assign_variables_to_shapes(
         content["shapes"], app_map
     )
-    # print(f"Time taken to assign absent/present variables to shapes: {time.time() - start_time} seconds")
 
     # Add in the categorical variables to view for the shapes
     content["shapes"], content["variables"] = assign_categorical_variables_to_shapes(
@@ -5156,9 +4863,6 @@ def provinces_and_countries_view(request):
     return JsonResponse(content)
 
 
-######################
-
-
 def update_seshat_comment_part_view(request, pk):
     """
     View to update a SeshatCommentPart instance.
@@ -5199,9 +4903,8 @@ def update_seshat_comment_part_view(request, pk):
 
             comment_part.comment_curator = seshat_expert_instance
             comment_part.save()
+
             # Process the formset
-            # comment_part.comment_citations_plus
-            # print("YOOOOOOOOOOO", comment_part.comment_citations_plus.count())
             if comment_part.citations_count <= 2:
                 reference_formset = ReferenceFormSet2(request.POST, prefix="refs")
             elif comment_part.citations_count <= 4:
@@ -5210,14 +4913,12 @@ def update_seshat_comment_part_view(request, pk):
                 reference_formset = ReferenceFormSet10(request.POST, prefix="refs")
 
             if reference_formset.is_valid():
-                # print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
                 to_be_added = []
                 to_be_deleted_later = []
                 for reference_form in reference_formset:
                     if reference_form.is_valid():
                         try:
                             reference = reference_form.cleaned_data["ref"]
-                            # print(f"aaaaaaaaaaaaaaaaaa: {reference}")
                             page_from = reference_form.cleaned_data["page_from"]
                             page_to = reference_form.cleaned_data["page_to"]
                             to_be_deleted = reference_form.cleaned_data["DELETE"]
@@ -5239,22 +4940,15 @@ def update_seshat_comment_part_view(request, pk):
 
                             # Associate the Citation with the SeshatCommentPart
                             if to_be_deleted:
-                                # comment_part.comment_citations.remove(citation)
                                 to_be_deleted_later.append(
                                     (citation, parent_pars_inserted)
                                 )
                             else:
-                                # comment_part.comment_citations.add(citation)
                                 to_be_added.append((citation, parent_pars_inserted))
                         except:
-                            # print("OOOPSI", reference_form)
                             pass  # Handle the exception as per your requirement
-                        # print("OOzzzzzzzzzzzzzzOPSI", reference_form)
-                # comment_part.comment_citations.clear()
-                # comment_part.comment_citations.add(*to_be_added)
 
                 comment_part.comment_citations_plus.clear()
-                # comment_part.comment_citations_plus.add(*to_be_added)
 
                 for item in to_be_added:
                     # Query for an existing row based on citation and SeshatCommentPart
@@ -5262,35 +4956,22 @@ def update_seshat_comment_part_view(request, pk):
                         seshatcommentpart=comment_part,
                         citation=item[0],
                         defaults={
-                            "parent_paragraphs": item[1]
-                        },  # Set defaults including parent_paragraphs
+                            "parent_paragraphs": item[
+                                1
+                            ]  # Set defaults including parent_paragraphs
+                        },
                     )
 
                     # If the row already exists, update its parent_paragraphs
                     if not created:
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
-                    # ScpThroughCtn.objects.get_or_create(
-                    #     seshatcommentpart = comment_part,
-                    #     citation=item[0],
-                    #     parent_paragraphs=item[1],
-                    # )
-
-            # return redirect('seshat-index')  # Redirect to a success page
-            # return reverse('seshatcomment-update', args=209)
-            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             return redirect(
                 reverse("seshatcomment-update", kwargs={"pk": parent_comment_id})
             )
 
-            # return render(request('seshatcomment-update', kwargs={'pk': pk})# Redirect to a success page
-
     else:
-        # form = SeshatCommentPartForm2(instance=comment_part)
-        # ReferenceFormSet = inlineformset_factory(SeshatCommentPart, Reference, form=ReferenceWithPageForm, extra=1, can_delete=True)
-        # reference_formset = ReferenceFormSet(instance=comment_part, prefix='refs')
-
         all_present_citations = comment_part.comment_citations_plus.all()
         all_present_citations_plus = ScpThroughCtn.objects.filter(
             seshatcommentpart_id=comment_part.id
@@ -5311,6 +4992,7 @@ def update_seshat_comment_part_view(request, pk):
                         "parent_pars": my_pp,
                     },
                 )
+
         if all_present_citations:
             for a_cit in all_present_citations:
                 my_id = a_cit.ref.id
@@ -5326,11 +5008,6 @@ def update_seshat_comment_part_view(request, pk):
                     },
                 )
 
-        # my_reference = Reference.objects.get(id=32734)
-        # initial_data = [
-        #     {'ref': my_reference, 'page_from': 1, 'page_to': 10},
-        #     {'ref': my_reference, 'page_from': 11, 'page_to': 20},
-        # ]
         if len(initial_data) <= 2:
             init_data = ReferenceFormSet2(prefix="refs", initial=initial_data)
             form = SeshatCommentPartForm2(
@@ -5356,7 +5033,6 @@ def update_seshat_comment_part_view(request, pk):
                 }
             )
 
-    # print(formset)
     return render(
         request,
         "core/seshatcomments/seshatcommentpart_update2.html",
@@ -5369,9 +5045,6 @@ def update_seshat_comment_part_view(request, pk):
             "subcom_order": subcomment_order,
         },
     )
-
-
-#########################
 
 
 @login_required
@@ -5393,7 +5066,6 @@ def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instan
         HttpResponse: The HTTP response.
     """
     # Get the model class dynamically using the provided model_name
-    # model_class = globals()[model_name]
     if model_name == "general":
         model_class = apps.get_model(
             app_label=app_name, model_name="polity_" + model_name
@@ -5401,9 +5073,8 @@ def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instan
     else:
         model_class = apps.get_model(app_label=app_name, model_name=model_name)
 
-    # Check if the model class exists
+    # Handle the case where the model class does not exist
     if model_class is None:
-        # Handle the case where the model class does not exist
         return HttpResponse("Model not found", status=404)
 
     # Get the instance of the model using the provided instance_id
@@ -5439,7 +5110,6 @@ def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instan
     # Redirect to the appropriate page
     # You may need to define the URL pattern for the model detail view
     # and replace 'model-detail' with the actual name of your detail view
-    # return redirect('model-detail', pk=model_instance.id)
     return redirect("seshatcomment-update", pk=comment_instance.id)
 
 
@@ -5470,10 +5140,8 @@ def create_a_comment_with_a_subcomment_newer(
             comment_order = form.cleaned_data["comment_order"]
             references_formset = form.cleaned_data["references_formset"]
 
-            ######################## Process the formset
             references_formset = ReferenceFormSet2_UPGRADE(request.POST, prefix="refs")
             if references_formset.is_valid():
-                # print("ALOOOOOOOOOOOOOOOOOOO: ", len(references_formset))
                 to_be_added = []
                 to_be_deleted_later = []
                 for reference_form in references_formset:
@@ -5494,7 +5162,6 @@ def create_a_comment_with_a_subcomment_newer(
                                     page_from=int(page_from),
                                     page_to=int(page_to),
                                 )
-                                # print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
                             else:
                                 citation, created = Citation.objects.get_or_create(
                                     ref=reference, page_from=None, page_to=None
@@ -5502,19 +5169,15 @@ def create_a_comment_with_a_subcomment_newer(
 
                             # Associate the Citation with the SeshatCommentPart
                             if to_be_deleted:
-                                # comment_part.comment_citations.remove(citation)
                                 to_be_deleted_later.append(
                                     (citation, parent_pars_inserted)
                                 )
                             else:
-                                # comment_part.comment_citations.add((citation, parent_pars_inserted))
                                 to_be_added.append((citation, parent_pars_inserted))
                         except:
                             pass  # Handle the exception as per your requirement
-                # seshat_comment_part.comment_citations.clear()
-                # seshat_comment_part.comment_citations.add(*to_be_added)
+
                 seshat_comment_part.comment_citations_plus.clear()
-                # seshat_comment_part.comment_citations_plus.add(*to_be_added)
 
                 for item in to_be_added:
                     # Query for an existing row based on citation and SeshatCommentPart
@@ -5531,41 +5194,41 @@ def create_a_comment_with_a_subcomment_newer(
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
             return redirect(reverse("seshatcomment-update", kwargs={"pk": com_id}))
-            #########################################
 
-            if model_instance.comment and model_instance.comment.id > 1:
-                comment_instance = model_instance.comment
-            else:
-                comment_instance = SeshatComment.objects.create(text="New comment")
+            ## The below code is unreachable, due to the return statement above
+            #
+            # if model_instance.comment and model_instance.comment.id > 1:
+            #     comment_instance = model_instance.comment
+            # else:
+            #     comment_instance = SeshatComment.objects.create(text="New comment")
 
-            user_logged_in = request.user
-            try:
-                seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
-            except Seshat_Expert.DoesNotExist:
-                seshat_expert_instance = None
+            # user_logged_in = request.user
+            # try:
+            #     seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+            # except Seshat_Expert.DoesNotExist:
+            #     seshat_expert_instance = None
 
-            subcomment_instance = SeshatCommentPart.objects.create(
-                comment_part_text=comment_text,
-                comment=comment_instance,
-                comment_curator=seshat_expert_instance,
-                comment_order=comment_order,
-            )
+            # subcomment_instance = SeshatCommentPart.objects.create(
+            #     comment_part_text=comment_text,
+            #     comment=comment_instance,
+            #     comment_curator=seshat_expert_instance,
+            #     comment_order=comment_order,
+            # )
 
-            for reference_form in references_formset:
-                ref = reference_form.cleaned_data["ref"]
-                page_from = reference_form.cleaned_data["page_from"]
-                page_to = reference_form.cleaned_data["page_to"]
-                parent_pars = reference_form.cleaned_data["parent_pars"]
-                # Process and save each reference
+            # for reference_form in references_formset:
+            #     ref = reference_form.cleaned_data["ref"]
+            #     page_from = reference_form.cleaned_data["page_from"]
+            #     page_to = reference_form.cleaned_data["page_to"]
+            #     parent_pars = reference_form.cleaned_data["parent_pars"]
+            #     # Process and save each reference
 
-            model_instance.comment = comment_instance
-            model_instance.save()
+            # model_instance.comment = comment_instance
+            # model_instance.save()
 
-            return redirect("seshatcomment-update", pk=comment_instance.id)
+            # return redirect("seshatcomment-update", pk=comment_instance.id)
     else:
         form = SeshatCommentPartForm2_UPGRADE()
 
-    # return redirect('seshatcomment-update', pk=comment_instance.id)
     return render(request, "core/seshatcomments/your_template.html", {"form": form})
 
 
@@ -5590,15 +5253,10 @@ def create_a_private_comment_with_a_private_subcomment_new(
         HttpResponse: The HTTP response.
     """
     # Get the model class dynamically using the provided model_name
-    # model_class = globals()[model_name]
-    # if app_name == 'general':
-    #    model_class = apps.get_model(app_label=app_name, model_name='polity_' + #model_name)
-    # else:
     model_class = apps.get_model(app_label=app_name, model_name=model_name)
 
-    # Check if the model class exists
+    # Handle the case where the model class does not exist
     if model_class is None:
-        # Handle the case where the model class does not exist
         return HttpResponse("Model not found", status=404)
 
     # Get the instance of the model using the provided instance_id
@@ -5619,21 +5277,6 @@ def create_a_private_comment_with_a_private_subcomment_new(
             private_comment_instance = SeshatPrivateComment.objects.create(
                 text="a new_private_comment_text new approach"
             )
-    user_logged_in = request.user
-
-    # Get the Seshat_Expert instance associated with the user
-    # try:
-    #     seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
-    # except Seshat_Expert.DoesNotExist:
-    #     seshat_expert_instance = None
-
-    # Create the subcomment instance and save it to the database
-    # subprivatecomment_instance = SeshatPrivateCommentPart.objects.create(
-    #     private_comment_part_text='A subdescription text placeholder (to be edited) using the new approach',
-    #     private_comment=private_comment_instance,
-    #     private_comment_owner=seshat_expert_instance,
-    #     created_date=datetime.datetime.now()
-    # )
 
     # Assign the comment to the model instance
     if app_name == "core":
@@ -5644,9 +5287,6 @@ def create_a_private_comment_with_a_private_subcomment_new(
     model_instance.save()
 
     # Redirect to the appropriate page
-    # You may need to define the URL pattern for the model detail view
-    # and replace 'model-detail' with the actual name of your detail view
-    # return redirect('model-detail', pk=model_instance.id)
     return redirect("seshatprivatecomment-update", pk=private_comment_instance.id)
 
 
@@ -5674,20 +5314,18 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
             HttpResponse: The HTTP response.
         """
         form = self.form()
-        if form.is_valid():
-            # print('hereeeeeeeeeeeee')
-            self.object = (
-                self.get_object()
-            )  # Assuming you have this method to get the object
-            new_experts = form.cleaned_data["private_comment_reader"]
-            self.object.private_comment_reader.add(
-                *new_experts
-            )  # Add the new experts to the ManyToMany field
-            return self.form_valid(form)
-        else:
+        if not form.is_valid():
             return self.form_invalid(form)
 
-    # def get_queryset(self):
+        # Assuming you have this method to get the object
+        self.object = self.get_object()
+
+        new_experts = form.cleaned_data["private_comment_reader"]
+
+        # Add the new experts to the ManyToMany field
+        self.object.private_comment_reader.add(*new_experts)
+
+        return self.form_valid(form)
 
     def get_another_form(self, request, *args, **kwargs):
         """
@@ -5702,9 +5340,6 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
             SeshatPrivateCommentPartForm: The form instance.
         """
         # Implement this method to return the specific instance of another_form
-        # For example:
-        # return self.kwargs['another_form']
-        # print("7777777777777777777")
         return SeshatPrivateCommentPartForm(request.POST, request.another_form)
 
     def get_context_data(self, **kwargs):
@@ -5723,9 +5358,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         my_apps = ["core", "rt", "general", "sc", "wf", "crisisdb"]
         my_app_models = {name: apps.all_models[name] for name in my_apps}
 
-        # context['my_app_models'] = my_app_models
         abc = []
-
         for myapp, mymodels in my_app_models.items():
             if myapp != "core":
                 for mm, mymodel in mymodels.items():
@@ -5786,23 +5419,12 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                             }
                         )
 
-        # for model_name in related_models:
-        #     print(model_name)
-        #     related_objects = getattr(self.object, model_name)
-        #     if related_objects:
-        #         context['related_objects'] = related_objects
-        #         break
-
         context["my_app_models"] = abc
-
         context["another_form"] = SeshatPrivateCommentPartForm()
-
-        # print("111111111111111111111111111")
 
         return context
 
 
-#############################
 def seshatcomment_create_view(request):
     """
     View to create a SeshatComment instance.
@@ -5855,13 +5477,12 @@ def seshatcomment_create_view(request):
 
                     for i, reference_form in enumerate(reference_formset):
                         if reference_form.is_valid():
-                            # print("+++++++xxaaaaaaaaaxx+++++++")
                             try:
                                 reference = reference_form.cleaned_data["ref"]
                                 page_from = reference_form.cleaned_data["page_from"]
                                 page_to = reference_form.cleaned_data["page_to"]
 
-                                citation, created = Citation.objects.get_or_create(
+                                citation, _ = Citation.objects.get_or_create(
                                     ref=reference,
                                     page_from=int(page_from),
                                     page_to=int(page_to),
@@ -5869,8 +5490,6 @@ def seshatcomment_create_view(request):
 
                                 # Associate the Citation with the SeshatCommentPart
                                 comment_part.comment_citations.add(citation)
-                                # print("+++++++xxxx+++++++")
-                                # print("I am here::::::", citation)
                             except:
                                 print("OOOPsi")
                         else:

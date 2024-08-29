@@ -54,7 +54,6 @@ def reference_list(request, format=None):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == "POST":
-        # data = JSONParser().parse(request)
         serializer = ReferenceSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -77,7 +76,6 @@ def reference_detail(request, pk, format=None):
         return JsonResponse(serializer.data)
 
     elif request.method == "PUT":
-        # data = JSONParser().parse(request)
         serializer = ReferenceSerializer(ref, data=request.data)
         if serializer.is_valid():
             serializer.save()

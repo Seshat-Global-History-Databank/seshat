@@ -139,10 +139,6 @@ urlpatterns += [
     path("search_suggestions/", views.search_suggestions, name="search_suggestions"),
     path("signup/", views.signup_traditional, name="signup"),
     path("signup_followup/", views.signupfollowup, name="signup-followup"),
-    # re_path(r'^account_activation_sent/$', views.account_activation_sent,
-    #         name='account_activation_sent'),
-    # re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-    #         views.activate, name='activate'),
     path(
         "account_activation_sent/",
         views.account_activation_sent,
@@ -180,9 +176,6 @@ urlpatterns += [
         views.CitationDelete.as_view(),
         name="citation-delete",
     ),
-    # Download
-    # path('balancedownload/', views.balance_download,
-    #    name="balance-download"),
 ]
 
 urlpatterns += [
@@ -211,9 +204,6 @@ urlpatterns += [
         views.SeshatCommentDelete.as_view(),
         name="seshatcomment-delete",
     ),
-    # Download
-    # path('balancedownload/', views.balance_download,
-    #    name="balance-download"),
 ]
 
 urlpatterns += [
@@ -222,8 +212,6 @@ urlpatterns += [
         views.SeshatCommentPartCreate.as_view(),
         name="seshatcommentpart-create",
     ),
-    # path('core/seshatcommentparts/create2/<int:com_id>/<int:subcom_order>/', views.SeshatCommentPartCreate2.as_view(),
-    #     name="seshatcommentpart-create2"),
     path(
         "core/seshatcommentparts/create2/<int:com_id>/<int:subcom_order>/",
         views.seshat_comment_part_create_from_null_view,
@@ -305,9 +293,6 @@ urlpatterns += [
         views.SeshatPrivateCommentPartUpdate.as_view(),
         name="seshatprivatecommentpart-update",
     ),
-    # Download
-    # path('balancedownload/', views.balance_download,
-    #    name="balance-download"),
 ]
 
 urlpatterns += [

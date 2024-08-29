@@ -9,7 +9,6 @@ from datetime import date
 from ..core.models import SeshatCommon, Polity
 
 
-########## Beginning of tuple choices for CrisisDB Models
 HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
     ("U", "Unknown"),
     ("P", "Present"),
@@ -130,16 +129,11 @@ VIOLENCE_TYPE_CHOICES = (
     ("assassination", "assassination"),
     ("compilation", "compilation"),
     ("terrorism", "terrorism"),
-    # ('rampage', 'rampage'),
     ("insurrection", "insurrection"),
     ("mass suicide", "mass suicide"),
-    # ('UNKNOWN_INPUT', 'UNKNOWN_INPUT'),
     ("unknown", "unknown"),
     ("revenge", "revenge"),
 )
-
-
-########## END of  tuple choices for CrisisDB Models
 
 
 def return_beautiful_abs_pres(item):
@@ -149,9 +143,6 @@ def return_beautiful_abs_pres(item):
         return '<i class="fa-sharp fa-solid fa-xmark text-danger"></i>'
     else:
         return "-"
-
-
-########## Beginning of Function Definitions for CrisisDB Models
 
 
 def call_my_name(self):
@@ -317,10 +308,6 @@ def has_a_polity(self):
         )
 
 
-########## End of Function Definitions for CrisisDB Models
-
-
-################American Violence Models:
 class Us_location(models.Model):
     """
     Model representing a location in the US.
@@ -342,24 +329,6 @@ class Us_location(models.Model):
         """
 
         ordering = ["us_state", "-city", "-county", "-special_place"]
-
-    # def show_state(self):
-    #     if self.us_state and self.us_state != "UNK":
-    #         return f'{self.get_us_state_display()} ({self.us_state})'
-    #     elif self.us_state and self.us_state == "UNK":
-    #         components = []
-
-    #         if self.city and self.county:
-    #             components.extend([self.city, self.county])
-    #         elif self.city:
-    #             components.append(self.city)
-    #         elif self.county:
-    #             components.append(self.county)
-    #         elif self.special_place:
-    #             components.append(self.special_place)
-    #         return ", ".join(components)
-    #     else:
-    #         return "Unknown Location"
 
     def __str__(self):
         components = []
@@ -491,11 +460,6 @@ class Us_violence(models.Model):
         else:
             return "No_source_details"
 
-    # def show_states(self):
-    #     list_of_locations = list(self.location.all())
-    #     location_str = " / ".join(str(location.show_state()) for location in list_of_locations)
-    #     return location_str
-
     def show_violence_subtypes(self):
         list_of_subtypes = list(self.violence_subtype.all())
         subtype_str = ", ".join(str(subtype) for subtype in list_of_subtypes)
@@ -516,10 +480,6 @@ class Us_violence(models.Model):
         return f"Violence: {self.fatalities} deaths in{location_str}."
 
 
-###########################
-
-
-# Beginning of Crisis Consequences Model
 class Crisis_consequence(SeshatCommon):
     """
     Model representing a crisis consequence.
@@ -728,9 +688,6 @@ class Crisis_consequence(SeshatCommon):
         else:
             return None
 
-    # def show_value(self):
-    #     return self.get_human_sacrifice_display()
-
     def show_nga(self):
         nga_rel = self.polity.polity_sides.first()
         if not nga_rel:
@@ -760,9 +717,6 @@ class Crisis_consequence(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-########################################
 
 
 class Power_transition(SeshatCommon):
@@ -941,9 +895,6 @@ class Power_transition(SeshatCommon):
             return "Power Transition in x: Y was replaced by Z"
 
 
-########## Beginning of class Definitions for CrisisDB Models
-
-
 class Human_sacrifice(SeshatCommon):
     """
     Model representing a human sacrifice.
@@ -959,7 +910,6 @@ class Human_sacrifice(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'human_sacrifice')
         verbose_name = "Human_sacrifice"
         verbose_name_plural = "Human_sacrifices"
         ordering = ["year_from", "year_to"]
@@ -1054,7 +1004,6 @@ class External_conflict(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict_name')
         verbose_name = "External_conflict"
         verbose_name_plural = "External_conflicts"
 
@@ -1128,7 +1077,6 @@ class Internal_conflict(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure', 'leader', 'casualty')
         verbose_name = "Internal_conflict"
         verbose_name_plural = "Internal_conflicts"
 
@@ -1207,7 +1155,6 @@ class External_conflict_side(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict_id', 'expenditure', 'leader', 'casualty')
         verbose_name = "External_conflict_side"
         verbose_name_plural = "External_conflict_sides"
 
@@ -1276,7 +1223,6 @@ class Agricultural_population(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'agricultural_population')
         verbose_name = "Agricultural_population"
         verbose_name_plural = "Agricultural_populations"
 
@@ -1345,7 +1291,6 @@ class Arable_land(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'arable_land')
         verbose_name = "Arable_land"
         verbose_name_plural = "Arable_lands"
 
@@ -1414,7 +1359,6 @@ class Arable_land_per_farmer(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'arable_land_per_farmer')
         verbose_name = "Arable_land_per_farmer"
         verbose_name_plural = "Arable_land_per_farmers"
 
@@ -1487,7 +1431,6 @@ class Gross_grain_shared_per_agricultural_population(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'gross_grain_shared_per_agricultural_population')
         verbose_name = "Gross_grain_shared_per_agricultural_population"
         verbose_name_plural = "Gross_grain_shared_per_agricultural_populations"
 
@@ -1562,7 +1505,6 @@ class Net_grain_shared_per_agricultural_population(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'net_grain_shared_per_agricultural_population')
         verbose_name = "Net_grain_shared_per_agricultural_population"
         verbose_name_plural = "Net_grain_shared_per_agricultural_populations"
 
@@ -1633,7 +1575,6 @@ class Surplus(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'surplus')
         verbose_name = "Surplus"
         verbose_name_plural = "Surplus"
 
@@ -1705,7 +1646,6 @@ class Military_expense(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure')
         verbose_name = "Military_expense"
         verbose_name_plural = "Military_expenses"
 
@@ -1774,7 +1714,6 @@ class Silver_inflow(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'silver_inflow')
         verbose_name = "Silver_inflow"
         verbose_name_plural = "Silver_inflows"
 
@@ -1843,7 +1782,6 @@ class Silver_stock(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'silver_stock')
         verbose_name = "Silver_stock"
         verbose_name_plural = "Silver_stocks"
 
@@ -1912,7 +1850,6 @@ class Total_population(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'total_population')
         verbose_name = "Total_population"
         verbose_name_plural = "Total_populations"
 
@@ -1983,7 +1920,6 @@ class Gdp_per_capita(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'gdp_per_capita')
         verbose_name = "Gdp_per_capita"
         verbose_name_plural = "Gdp_per_capitas"
 
@@ -2052,7 +1988,6 @@ class Drought_event(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'drought_event')
         verbose_name = "Drought_event"
         verbose_name_plural = "Drought_events"
 
@@ -2121,7 +2056,6 @@ class Locust_event(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'locust_event')
         verbose_name = "Locust_event"
         verbose_name_plural = "Locust_events"
 
@@ -2190,7 +2124,6 @@ class Socioeconomic_turmoil_event(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'socioeconomic_turmoil_event')
         verbose_name = "Socioeconomic_turmoil_event"
         verbose_name_plural = "Socioeconomic_turmoil_events"
 
@@ -2259,7 +2192,6 @@ class Crop_failure_event(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'crop_failure_event')
         verbose_name = "Crop_failure_event"
         verbose_name_plural = "Crop_failure_events"
 
@@ -2328,7 +2260,6 @@ class Famine_event(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'famine_event')
         verbose_name = "Famine_event"
         verbose_name_plural = "Famine_events"
 
@@ -2414,7 +2345,6 @@ class Disease_outbreak(SeshatCommon):
         :noindex:
         """
 
-        # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'longitude', 'latitude', 'elevation', 'sub_category', 'magnitude', 'duration')
         verbose_name = "Disease_outbreak"
         verbose_name_plural = "Disease_outbreaks"
 
@@ -2468,6 +2398,3 @@ class Disease_outbreak(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-########## END of class Definitions for CrisisDB Models

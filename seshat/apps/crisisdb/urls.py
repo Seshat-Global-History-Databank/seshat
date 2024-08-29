@@ -36,7 +36,6 @@ urlpatterns = [
     path("vars/", views.QingVars, name="qing_vars"),
     path("playground/", views.playground, name="playground"),
     path("playgrounddownload/", views.playgrounddownload, name="playgrounddownload"),
-    # path('fpl_all/', views.fpl_all,name="fpl_all"),
 ]
 
 urlpatterns += [
@@ -173,7 +172,6 @@ urlpatterns += [
         views.Crisis_consequenceDelete.as_view(),
         name="crisis_consequence-delete",
     ),
-    # Download
     path(
         "crisis_consequencedownload/",
         views.crisis_consequence_download,
@@ -232,9 +230,6 @@ urlpatterns += [
         views.Power_transitionUpdateHeavy.as_view(),
         name="power_transition-update_heavy",
     ),
-    # path('power_transition/<int:pk>/delete/',
-    #     views.Power_transitionDelete.as_view(), name="power_transition-delete"),
-    # Download
     path(
         "power_transitiondownload/",
         views.power_transition_download,
@@ -245,7 +240,6 @@ urlpatterns += [
         views.power_transition_meta_download,
         name="power_transition-metadownload",
     ),
-    # path('get-citations-dropdown/', views.get_citations_dropdown, name='get_citations_dropdown'),
 ]
 
 urlpatterns += [
@@ -279,7 +273,6 @@ urlpatterns += [
         views.Human_sacrificeDelete.as_view(),
         name="human_sacrifice-delete",
     ),
-    # Download
     path(
         "human_sacrificedownload/",
         views.human_sacrifice_download,
@@ -324,7 +317,6 @@ urlpatterns += [
         views.External_conflictDelete.as_view(),
         name="external_conflict-delete",
     ),
-    # Download
     path(
         "external_conflictdownload/",
         views.external_conflict_download,
@@ -364,7 +356,6 @@ urlpatterns += [
         views.Internal_conflictDelete.as_view(),
         name="internal_conflict-delete",
     ),
-    # Download
     path(
         "internal_conflictdownload/",
         views.internal_conflict_download,
@@ -404,7 +395,6 @@ urlpatterns += [
         views.External_conflict_sideDelete.as_view(),
         name="external_conflict_side-delete",
     ),
-    # Download
     path(
         "external_conflict_sidedownload/",
         views.external_conflict_side_download,
@@ -444,7 +434,6 @@ urlpatterns += [
         views.Agricultural_populationDelete.as_view(),
         name="agricultural_population-delete",
     ),
-    # Download
     path(
         "agricultural_populationdownload/",
         views.agricultural_population_download,
@@ -480,7 +469,6 @@ urlpatterns += [
         views.Arable_landDelete.as_view(),
         name="arable_land-delete",
     ),
-    # Download
     path(
         "arable_landdownload/", views.arable_land_download, name="arable_land-download"
     ),
@@ -518,7 +506,6 @@ urlpatterns += [
         views.Arable_land_per_farmerDelete.as_view(),
         name="arable_land_per_farmer-delete",
     ),
-    # Download
     path(
         "arable_land_per_farmerdownload/",
         views.arable_land_per_farmer_download,
@@ -558,7 +545,6 @@ urlpatterns += [
         views.Gross_grain_shared_per_agricultural_populationDelete.as_view(),
         name="gross_grain_shared_per_agricultural_population-delete",
     ),
-    # Download
     path(
         "gross_grain_shared_per_agricultural_populationdownload/",
         views.gross_grain_shared_per_agricultural_population_download,
@@ -598,7 +584,6 @@ urlpatterns += [
         views.Net_grain_shared_per_agricultural_populationDelete.as_view(),
         name="net_grain_shared_per_agricultural_population-delete",
     ),
-    # Download
     path(
         "net_grain_shared_per_agricultural_populationdownload/",
         views.net_grain_shared_per_agricultural_population_download,
@@ -622,7 +607,6 @@ urlpatterns += [
     path(
         "surplus/<int:pk>/delete/", views.SurplusDelete.as_view(), name="surplus-delete"
     ),
-    # Download
     path("surplusdownload/", views.surplus_download, name="surplus-download"),
     path(
         "surplusmetadownload/", views.surplus_meta_download, name="surplus-metadownload"
@@ -656,7 +640,6 @@ urlpatterns += [
         views.Military_expenseDelete.as_view(),
         name="military_expense-delete",
     ),
-    # Download
     path(
         "military_expensedownload/",
         views.military_expense_download,
@@ -694,7 +677,6 @@ urlpatterns += [
         views.Silver_inflowDelete.as_view(),
         name="silver_inflow-delete",
     ),
-    # Download
     path(
         "silver_inflowdownload/",
         views.silver_inflow_download,
@@ -730,7 +712,6 @@ urlpatterns += [
         views.Silver_stockDelete.as_view(),
         name="silver_stock-delete",
     ),
-    # Download
     path(
         "silver_stockdownload/",
         views.silver_stock_download,
@@ -770,7 +751,6 @@ urlpatterns += [
         views.Total_populationDelete.as_view(),
         name="total_population-delete",
     ),
-    # Download
     path(
         "total_populationdownload/",
         views.total_population_download,
@@ -810,7 +790,6 @@ urlpatterns += [
         views.Gdp_per_capitaDelete.as_view(),
         name="gdp_per_capita-delete",
     ),
-    # Download
     path(
         "gdp_per_capitadownload/",
         views.gdp_per_capita_download,
@@ -848,7 +827,6 @@ urlpatterns += [
         views.Drought_eventDelete.as_view(),
         name="drought_event-delete",
     ),
-    # Download
     path(
         "drought_eventdownload/",
         views.drought_event_download,
@@ -884,7 +862,6 @@ urlpatterns += [
         views.Locust_eventDelete.as_view(),
         name="locust_event-delete",
     ),
-    # Download
     path(
         "locust_eventdownload/",
         views.locust_event_download,
@@ -924,7 +901,6 @@ urlpatterns += [
         views.Socioeconomic_turmoil_eventDelete.as_view(),
         name="socioeconomic_turmoil_event-delete",
     ),
-    # Download
     path(
         "socioeconomic_turmoil_eventdownload/",
         views.socioeconomic_turmoil_event_download,
@@ -964,7 +940,6 @@ urlpatterns += [
         views.Crop_failure_eventDelete.as_view(),
         name="crop_failure_event-delete",
     ),
-    # Download
     path(
         "crop_failure_eventdownload/",
         views.crop_failure_event_download,
@@ -1000,7 +975,6 @@ urlpatterns += [
         views.Famine_eventDelete.as_view(),
         name="famine_event-delete",
     ),
-    # Download
     path(
         "famine_eventdownload/",
         views.famine_event_download,
@@ -1040,7 +1014,6 @@ urlpatterns += [
         views.Disease_outbreakDelete.as_view(),
         name="disease_outbreak-delete",
     ),
-    # Download
     path(
         "disease_outbreakdownload/",
         views.disease_outbreak_download,

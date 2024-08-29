@@ -108,7 +108,7 @@ class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Research Assistant"
@@ -127,6 +127,7 @@ class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -260,9 +261,8 @@ class Polity_research_assistantListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_research_assistant.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_research_assistant.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -408,7 +408,7 @@ def polity_research_assistant_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -460,7 +460,7 @@ class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Utm Zone"
@@ -479,6 +479,7 @@ class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -606,9 +607,8 @@ class Polity_utm_zoneListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_utm_zone.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_utm_zone.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -748,7 +748,7 @@ def polity_utm_zone_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -800,7 +800,7 @@ class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Original Name"
@@ -819,6 +819,7 @@ class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -946,9 +947,8 @@ class Polity_original_nameListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_original_name.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_original_name.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -1088,7 +1088,7 @@ def polity_original_name_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1140,7 +1140,7 @@ class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, Crea
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Alternative Name"
@@ -1159,6 +1159,7 @@ class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, Crea
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -1290,9 +1291,8 @@ class Polity_alternative_nameListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_alternative_name.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_alternative_name.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -1438,7 +1438,7 @@ def polity_alternative_name_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1477,16 +1477,6 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         return reverse("polity_peak_years-create")
 
-    # def form_valid(self, form):
-    #     # Retrieve the pre-populated polity_id from the query parameters
-    #     polity_id = self.request.GET.get('polity_id_x')
-    #     print("xxxxxxxxxxxxxxxxxxxxxx:", polity_id)
-    #     # Use the polity_id to pre-populate the relevant field in your form
-    #     form.polity.id = polity_id
-
-    #     # Continue with the default form validation
-    #     return super().form_valid(form)
-
     def get_initial(self):
         """
         Get the initial value of the polity field from the query string.
@@ -1516,7 +1506,7 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Peak Years"
@@ -1548,6 +1538,7 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
             },
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -1691,9 +1682,8 @@ class Polity_peak_yearsListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_peak_years.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_peak_years.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -1857,7 +1847,7 @@ def polity_peak_years_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1909,7 +1899,7 @@ class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "Temporal Bounds"
         context["var_section"] = "General Variables"
@@ -1940,6 +1930,7 @@ class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             },
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -2081,9 +2072,8 @@ class Polity_durationListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_duration.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_duration.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -2245,7 +2235,7 @@ def polity_duration_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2315,7 +2305,7 @@ class Polity_degree_of_centralizationCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Degree of Centralization"
@@ -2334,6 +2324,7 @@ class Polity_degree_of_centralizationCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -2477,11 +2468,8 @@ class Polity_degree_of_centralizationListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_degree_of_centralization.objects.all().order_by(
-            order, order2
-        )
-        return new_context
+
+        return Polity_degree_of_centralization.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -2625,7 +2613,7 @@ def polity_degree_of_centralization_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2697,7 +2685,7 @@ class Polity_suprapolity_relationsCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["var_section"] = "General Variables"
@@ -2724,6 +2712,7 @@ class Polity_suprapolity_relationsCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -2880,9 +2869,8 @@ class Polity_suprapolity_relationsListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_suprapolity_relations.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_suprapolity_relations.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -3048,7 +3036,7 @@ def polity_suprapolity_relations_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3100,7 +3088,7 @@ class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Capital"
@@ -3121,6 +3109,7 @@ class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -3253,9 +3242,8 @@ class Polity_capitalListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_capital.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_capital.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -3414,7 +3402,7 @@ def polity_capital_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3482,7 +3470,7 @@ class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Language"
@@ -3501,6 +3489,7 @@ class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -3644,9 +3633,8 @@ class Polity_languageListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_language.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_language.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -3786,7 +3774,7 @@ def polity_language_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3858,7 +3846,7 @@ class Polity_linguistic_familyCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Linguistic Family"
@@ -3877,6 +3865,7 @@ class Polity_linguistic_familyCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -4026,9 +4015,8 @@ class Polity_linguistic_familyListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_linguistic_family.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_linguistic_family.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -4174,7 +4162,7 @@ def polity_linguistic_family_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4226,7 +4214,7 @@ class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Language Genus"
@@ -4245,6 +4233,7 @@ class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -4372,9 +4361,8 @@ class Polity_language_genusListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_language_genus.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_language_genus.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -4518,7 +4506,7 @@ def polity_language_genus_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4586,7 +4574,7 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Religion Genus"
@@ -4605,6 +4593,7 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -4748,9 +4737,8 @@ class Polity_religion_genusListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_religion_genus.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_religion_genus.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -4894,7 +4882,7 @@ def polity_religion_genus_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4978,7 +4966,7 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Religion Family"
@@ -4997,6 +4985,7 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -5142,9 +5131,8 @@ class Polity_religion_familyListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_religion_family.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_religion_family.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -5288,7 +5276,7 @@ def polity_religion_family_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5356,7 +5344,7 @@ class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Religion"
@@ -5375,6 +5363,7 @@ class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -5518,9 +5507,8 @@ class Polity_religionListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_religion.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_religion.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -5660,7 +5648,7 @@ def polity_religion_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5731,7 +5719,7 @@ class Polity_relationship_to_preceding_entityCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Relationship to Preceding Entity"
@@ -5750,6 +5738,7 @@ class Polity_relationship_to_preceding_entityCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -5898,11 +5887,10 @@ class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_relationship_to_preceding_entity.objects.all().order_by(
+
+        return Polity_relationship_to_preceding_entity.objects.all().order_by(
             order, order2
         )
-        return new_context
 
     def get_context_data(self, **kwargs):
         """
@@ -6046,7 +6034,7 @@ def polity_relationship_to_preceding_entity_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6301,9 +6289,8 @@ class Polity_preceding_entityListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_preceding_entity.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_preceding_entity.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -6449,7 +6436,7 @@ def polity_preceding_entity_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6505,7 +6492,7 @@ class Polity_succeeding_entityCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Succeeding Entity"
@@ -6524,6 +6511,7 @@ class Polity_succeeding_entityCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -6657,9 +6645,8 @@ class Polity_succeeding_entityListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_succeeding_entity.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_succeeding_entity.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -6805,7 +6792,7 @@ def polity_succeeding_entity_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6861,7 +6848,7 @@ class Polity_supracultural_entityCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Supracultural Entity"
@@ -6880,6 +6867,7 @@ class Polity_supracultural_entityCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -7013,9 +7001,8 @@ class Polity_supracultural_entityListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_supracultural_entity.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_supracultural_entity.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -7161,7 +7148,7 @@ def polity_supracultural_entity_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7215,7 +7202,7 @@ class Polity_scale_of_supracultural_interactionCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Scale of Supracultural Interaction"
@@ -7227,7 +7214,7 @@ class Polity_scale_of_supracultural_interactionCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The lower scale of supra cultural interactionfor a polity.",
+                "var_exp": "The lower scale of supra cultural interaction for a polity.",
                 "units": "km squared",
                 "choices": None,
                 "null_meaning": "No_Value_Provided_in_Old_Wiki",
@@ -7237,13 +7224,14 @@ class Polity_scale_of_supracultural_interactionCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The upper scale of supra cultural interactionfor a polity.",
+                "var_exp": "The upper scale of supra cultural interaction for a polity.",
                 "units": "km squared",
                 "choices": None,
                 "null_meaning": "No_Value_Provided_in_Old_Wiki",
             },
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -7387,11 +7375,10 @@ class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_scale_of_supracultural_interaction.objects.all().order_by(
+
+        return Polity_scale_of_supracultural_interaction.objects.all().order_by(
             order, order2
         )
-        return new_context
 
     def get_context_data(self, **kwargs):
         """
@@ -7559,7 +7546,7 @@ def polity_scale_of_supracultural_interaction_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7629,7 +7616,7 @@ class Polity_alternate_religion_genusCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Alternate Religion Genus"
@@ -7648,6 +7635,7 @@ class Polity_alternate_religion_genusCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -7791,11 +7779,8 @@ class Polity_alternate_religion_genusListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_alternate_religion_genus.objects.all().order_by(
-            order, order2
-        )
-        return new_context
+
+        return Polity_alternate_religion_genus.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -7939,7 +7924,7 @@ def polity_alternate_religion_genus_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8009,7 +7994,7 @@ class Polity_alternate_religion_familyCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Alternate Religion Family"
@@ -8028,6 +8013,7 @@ class Polity_alternate_religion_familyCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -8171,11 +8157,8 @@ class Polity_alternate_religion_familyListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_alternate_religion_family.objects.all().order_by(
-            order, order2
-        )
-        return new_context
+
+        return Polity_alternate_religion_family.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -8319,7 +8302,7 @@ def polity_alternate_religion_family_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8391,7 +8374,7 @@ class Polity_alternate_religionCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Alternate Religion"
@@ -8410,6 +8393,7 @@ class Polity_alternate_religionCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -8559,9 +8543,8 @@ class Polity_alternate_religionListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_alternate_religion.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_alternate_religion.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -8707,7 +8690,7 @@ def polity_alternate_religion_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8759,7 +8742,7 @@ class Polity_expertCreate(PermissionRequiredMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Expert"
@@ -8778,6 +8761,7 @@ class Polity_expertCreate(PermissionRequiredMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -8905,9 +8889,8 @@ class Polity_expertListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_expert.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_expert.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -9047,7 +9030,7 @@ def polity_expert_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9099,7 +9082,7 @@ class Polity_editorCreate(PermissionRequiredMixin, CreateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Editor"
@@ -9118,6 +9101,7 @@ class Polity_editorCreate(PermissionRequiredMixin, CreateView):
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -9245,9 +9229,8 @@ class Polity_editorListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_editor.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_editor.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -9387,7 +9370,7 @@ def polity_editor_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9443,7 +9426,7 @@ class Polity_religious_traditionCreate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
         context["myvar"] = "Polity Religious Tradition"
@@ -9462,6 +9445,7 @@ class Polity_religious_traditionCreate(
             }
         }
         context["potential_cols"] = []
+
         return context
 
 
@@ -9595,9 +9579,8 @@ class Polity_religious_traditionListViewAll(generic.ListView):
         """
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
-        # orders = [order, order2]
-        new_context = Polity_religious_tradition.objects.all().order_by(order, order2)
-        return new_context
+
+        return Polity_religious_tradition.objects.all().order_by(order, order2)
 
     def get_context_data(self, **kwargs):
         """
@@ -9743,7 +9726,7 @@ def polity_religious_tradition_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9758,77 +9741,6 @@ def polity_religious_tradition_meta_download(request):
                 writer.writerow([inner_key, inner_value])
 
     return response
-
-
-# def wfvars(request):
-#     app_name = 'wf'  # Replace with your app name
-#     models_1 = apps.get_app_config(app_name).get_models()
-
-#     unique_politys = set()
-#     number_of_all_rows = 0
-#     number_of_variables = 0
-
-#     all_vars_grouped = {}
-
-#     all_sect_download_links = {}
-
-#     for model in models_1:
-#         model_name = model.__name__
-#         if model_name == "Ra":
-#             continue
-#         s_value = str(model().subsection())
-#         ss_value = str(model().sub_subsection())
-
-#         better_name = "download_csv_" + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
-#         all_sect_download_links[s_value] = better_name
-#         if s_value not in all_vars_grouped:
-#             all_vars_grouped[s_value] = {}
-#             if ss_value:
-#                 all_vars_grouped[s_value][ss_value] = []
-#             else:
-#                 all_vars_grouped[s_value]["None"] = []
-#         else:
-#             if ss_value:
-#                 all_vars_grouped[s_value][ss_value] = []
-#             else:
-#                 all_vars_grouped[s_value]["None"] = []
-
-#     models = apps.get_app_config(app_name).get_models()
-
-#     for model in models:
-#         model_name = model.__name__
-#         subsection_value = str(model().subsection())
-#         sub_subsection_value = str(model().sub_subsection())
-#         count = model.objects.count()
-#         number_of_all_rows += count
-#         model_title = model_name.replace("_", " ").title()
-#         model_create = model_name.lower() + "-create"
-#         model_download = model_name.lower() + "-download"
-#         model_metadownload = model_name.lower() + "-metadownload"
-#         model_all = model_name.lower() + "s_all"
-#         model_s = model_name.lower() + "s"
-
-#         queryset = model.objects.all()
-#         politys = queryset.values_list('polity', flat=True).distinct()
-#         unique_politys.update(politys)
-#         number_of_variables += 1
-
-#         to_be_appended = [model_title, model_s, model_create, model_download, model_metadownload, model_all, count]
-
-#         if sub_subsection_value:
-#             all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
-#         else:
-#             all_vars_grouped[subsection_value]["None"].append(to_be_appended)
-
-
-#     context = {}
-#     context["all_vars_grouped"] = all_vars_grouped
-#     context["all_sect_download_links"] = all_sect_download_links
-#     context["all_polities"] = len(unique_politys)
-#     context["number_of_all_rows"] = number_of_all_rows
-
-#     context["number_of_variables"] = number_of_variables
-#     return render(request, 'wf/wfvars.html', context=context)
 
 
 def generalvars(request):
@@ -9955,7 +9867,6 @@ def download_csv_all_general(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "section",
@@ -10051,7 +9962,6 @@ def download_csv_all_general(request):
     return response
 
 
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 def send_test_email():
     """
     Send a test email.

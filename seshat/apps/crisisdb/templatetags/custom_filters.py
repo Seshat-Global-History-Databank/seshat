@@ -67,111 +67,6 @@ def username_from_email(email):
     return email.split("@")[0]
 
 
-# @register.filter
-# def make_references_look_nicer(value):
-#     value = value.replace("'", "&rsquo;")
-#     pattern = r'§REF§(.*?)§REF§'
-#     replacement = r"""<sup>
-#         <span type="button"  tabindex="0" data-bs-toggle="popover" data-bs-html="true" data-bs-trigger="focus" data-bs-content='<b>Citation: </b>\1'><i class="fa-solid fa-message fa-lg text-teal"></i>
-#         </span>
-#     </sup>
-#     """
-#     #replacement = r'XYZ_\1_XYZ'
-#     new_string = re.sub(pattern, replacement, value)
-#     return new_string
-
-
-# @register.filter
-# def make_references_look_nicer(value):
-#     value = value.replace("'", "&rsquo;")
-#     pattern = r'§REF§(.*?)§REF§'
-#     replacement = r"""<sup>
-#         <span type="button" tabindex="0" data-bs-toggle="popover" data-bs-html="true" data-bs-trigger="focus" data-bs-content='<b>Citation:</b> \1'><i class="fa-solid fa-message fa-lg text-teal"></i>
-#         </span>
-#     </sup>
-#     """
-#     # replacement = r'XYZ_\1_XYZ'
-#     new_string = re.sub(pattern, replacement, value)
-
-#     # Collect all the values that go into the <sup> tag
-#     references = re.findall(pattern, value)
-
-#     # Add the collected references at the end of the string in separate <p> tags with the color red
-#     if references:
-#         reference_tags = '\n'.join([f'<p style="color: red;">* {reference}</p>' for reference in references])
-#         new_string += reference_tags
-
-#     return new_string
-
-
-# @register.filter
-# def make_references_look_nicer(value):
-#     value = value.replace("'", "&rsquo;")
-#     pattern = r'§REF§(.*?)§REF§'
-#     replacement = r"""<sup class="fs-6 text-secondary">[{ref_num}]
-#     </sup>
-#     """
-#     new_string = value
-#     references = re.findall(pattern, value)
-
-#     # Dictionary to store unique reference numbers for each reference
-#     reference_numbers = {}
-
-#     # Assign a unique reference number to each reference in the order they appear
-#     for index, reference in enumerate(references):
-#         if reference not in reference_numbers:
-#             reference_numbers[reference] = len(reference_numbers) + 1
-
-#         ref_num = reference_numbers[reference]
-#         sup_tag = replacement.format(ref_num=ref_num)
-#         new_string = new_string.replace(f'§REF§{reference}§REF§', sup_tag, 1)
-
-#     # Add the collected references at the end of the string in separate <p> tags with the color red
-
-#     if reference_numbers:
-#         new_string += "<h6 class='pt-3 pb-0'># Reference(s): </h6>"
-#         reference_tags = '\n'.join([f'<p class="p-0 m-0 fs-6 text-secondary">[{ref_num}]: {reference}</p>' for reference, ref_num in reference_numbers.items()])
-#         new_string += reference_tags
-
-#     return new_string
-
-
-# @register.filter
-# def make_references_look_nicer(value):
-#     value = value.replace("'", "&rsquo;")
-#     pattern = r'§REF§(.*?)§REF§'
-#     replacement = r"""<sup>
-#         <a href="#{ref_id}">{ref_num}</a>
-#         <span type="button" tabindex="0" data-bs-toggle="popover" data-bs-html="true" data-bs-trigger="focus" data-bs-content='<b>Citation:</b> \1'><i class="fa-solid fa-message fa-lg text-teal"></i>
-#         </span>
-#     </sup>
-#     """
-#     new_string = value
-#     references = re.findall(pattern, value)
-
-#     # Dictionary to store unique reference numbers and their corresponding unique identifiers
-#     reference_data = {}
-
-#     # Assign a unique reference number and identifier to each reference in the order they appear
-#     for index, reference in enumerate(references):
-#         if reference not in reference_data:
-#             reference_data[reference] = {
-#                 'ref_num': len(reference_data) + 1,
-#                 'ref_id': f'ref_{len(reference_data) + 1}'
-#             }
-
-#         data = reference_data[reference]
-#         sup_tag = replacement.format(ref_num=data['ref_num'], ref_id=data['ref_id'])
-#         new_string = new_string.replace(f'§REF§{reference}§REF§', sup_tag, 1)
-
-#     # Add the collected references at the end of the string in separate <p> tags with the color red
-#     if reference_data:
-#         reference_tags = '\n'.join([f'<p id="{data["ref_id"]}" style="color: red;">[{data["ref_num"]}] {reference}</p>' for reference, data in reference_data.items()])
-#         new_string += reference_tags
-
-#     return new_string
-
-
 @register.filter
 def make_references_look_nicer(value):
     value = value.replace("'", "&rsquo;").replace("\n", "MJD_BNM_NEWLINE_TAG_XYZ")
@@ -187,7 +82,7 @@ def make_references_look_nicer(value):
     reference_data = {}
 
     # Assign a unique reference number and identifier to each reference in the order they appear
-    for index, reference in enumerate(references):
+    for _, reference in enumerate(references):
         if reference not in reference_data:
             ref_num = len(reference_data) + 1
             ref_id = f"ref_{ref_num}_{str(uuid.uuid4())[:8]}"
@@ -199,7 +94,6 @@ def make_references_look_nicer(value):
 
     # Add the collected references at the end of the string in separate <p> tags with the color red
     if reference_data:
-        # new_string += "<h6 class='pt-1 pb-0 text-secondary'><i class='fa-solid fa-bookmark fa-xs '></i> Reference(s): </h6>"
         reference_tags = "\n".join(
             [
                 f'<p id="{data["ref_id"]}" class="p-0 m-0 text-secondary"><span class="fw-bold">  <a href="#sup_{data["ref_id"]}">[{data["ref_num"]}]</a></span>: <span>{reference.replace("MJD_BNM_NEWLINE_TAG_XYZ", " ")}</span> </p>'

@@ -8,7 +8,6 @@ from datetime import date
 from ..core.models import SeshatCommon
 
 
-########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
     ("present", "present"),
     ("absent", "absent"),
@@ -16,13 +15,6 @@ ABSENT_PRESENT_CHOICES = (
     ("A~P", "Transitional (Absent -> Present)"),
     ("P~A", "Transitional (Present -> Absent)"),
 )
-
-
-########## TUPLE CHOICES THAT ARE THE SAME
-
-########## END of tuple choices for general Models
-
-########## Beginning of Function Definitions for Social Complexity (Vars) Models
 
 
 def call_my_name(self):
@@ -160,11 +152,6 @@ def clean_times(self):
 
     def show_value_to(self):
         return None
-
-
-########## End of Function Definitions for General (Vars) Models
-
-########## Beginning of class Definitions for general Models
 
 
 class Long_wall(SeshatCommon):
@@ -5221,6 +5208,3 @@ class Chainmail(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-########## END of class Definitions for general Models

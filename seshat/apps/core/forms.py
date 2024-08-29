@@ -151,7 +151,6 @@ class CitationForm(forms.ModelForm):
         cleaned_page_from = cleaned_data.get("page_from")
         cleaned_page_to = cleaned_data.get("page_to")
         referenced_ref = cleaned_data.get("ref")
-        # all_references = Reference.objects.all()
         all_citations = Citation.objects.all()
         for a_citation in all_citations:
             if (
@@ -167,8 +166,7 @@ class CitationForm(forms.ModelForm):
                 raise ValidationError(
                     "There is already a citation with the given information. We cannot create a duplicate."
                 )
-        # if not cleaned_page_from and not cleaned_page_to:
-        #    raise ValidationError('Page to and from are empty. Bad.')
+
         return cleaned_data
 
 
@@ -653,11 +651,6 @@ class ReferenceWithPageForm(forms.Form):
         empty_label="Please choose a Reference ...",
     )
 
-    # ref = forms.ModelChoiceField(
-    #     queryset=Reference.objects.all(),
-    #     widget=forms.Select(attrs={'class': 'form-control form-select mb-3  js-states js-example-basic-single'}),
-    #     label='ref'
-    # )
     page_from = forms.IntegerField(label="", required=False)
     page_to = forms.IntegerField(label="", required=False)
     parent_pars = forms.CharField(
@@ -670,7 +663,6 @@ class ReferenceWithPageForm(forms.Form):
         label="",
         required=False,
     )
-    # parent_pars = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 120px', 'placeholder':'Please copy and paste the paragraphs you consulted into this field for each reference.'})
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -810,12 +802,6 @@ class SeshatCommentForm2(forms.Form):
 class SignUpForm(UserCreationForm):
     captcha = ReCaptchaField()
 
-    # first_name = forms.CharField(
-    #     max_length=30, required=False, help_text='Optional.')
-    # last_name = forms.CharField(
-    #     max_length=30, required=False, help_text='Optional.')
-    # email = forms.EmailField(
-    #     max_length=254, help_text='Required. Inform a valid email address.')
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
@@ -842,12 +828,13 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if email:
-            username, domain = email.split("@")
+            username, _ = email.split("@")
             username_parts = username.split(".")
             if len(username_parts) > 5:
                 raise ValidationError(
                     "Email address contains too many dots in the username part."
                 )
+
         return email
 
     class Meta:
@@ -889,27 +876,9 @@ class SignUpForm(UserCreationForm):
         }
 
 
-# class VariablehierarchyForm(forms.ModelForm):
-#     my_vars = dic_of_all_vars()
-#     my_vars_tuple = [(key, key) for key in my_vars.keys()]
-#     print(my_vars_tuple)
-#     name = forms.ChoiceField(
-#         label="Variable Name",
-#         widget=forms.Select(attrs={'class': 'form-control  mb-3', }), choices=my_vars_tuple)
-
-#     class Meta:
-#         model = Variablehierarchy
-#         fields = ('name', 'section', 'subsection')
-#         widgets = {
-#             'section': forms.Select(attrs={'class': 'form-control  mb-3', }),
-#             'subsection': forms.Select(attrs={'class': 'form-control  mb-3', }),
-#         }
-
-
 class VariablehierarchyFormNew(forms.Form):
     my_vars = dic_of_all_vars()
     my_vars_tuple = [("", " -- Select Variable -- ")]
-    # print(my_vars_tuple)
     variable_name = forms.ChoiceField(
         widget=forms.Select(
             attrs={
@@ -919,6 +888,7 @@ class VariablehierarchyFormNew(forms.Form):
             }
         )
     )
+
     section_name = forms.ChoiceField(
         label="Section",
         widget=forms.Select(
@@ -930,6 +900,7 @@ class VariablehierarchyFormNew(forms.Form):
             }
         ),
     )
+
     subsection_name = forms.ChoiceField(
         label="Subsection",
         widget=forms.Select(
@@ -940,7 +911,7 @@ class VariablehierarchyFormNew(forms.Form):
             }
         ),
     )
-    # forms.CheckboxInput(attrs={'class': 'form-control mb-3', })
+
     is_verified = forms.BooleanField(
         label=" Verified?",
         required=False,
@@ -958,12 +929,6 @@ class VariablehierarchyFormNew(forms.Form):
         """
 
         unique_together = ("variable_name", "section_name", "subsection_name")
-
-
-# VarHierFormSet = formset_factory(VariablehierarchyForm, extra=10)
-
-
-############
 
 
 class ReferenceWithPageForm_UPGRADE(forms.Form):
@@ -1000,20 +965,7 @@ class SeshatCommentPartForm2_UPGRADE(forms.Form):
         ),
     )
     references_formset = ReferenceFormSet2_UPGRADE(prefix="refs")
-    # formset = ReferenceFormSet2_UPGRADE(prefix='refs')
     comment_order = forms.IntegerField(
         label="Do NOT Change This Number:", required=False
     )
     references_formset.management_form  # Include the management form
-
-    # formset.management_form  # Include the management form
-
-
-# class SeshatCommentPartWithReferencesForm_UPGRADE(forms.Form):
-#     comment_part_form = SeshatCommentPartForm2_UPGRADE()
-#     references_formset = ReferenceFormSet2_UPGRADE()
-#     references_formset.management_form  # Include the management form
-
-
-# formset = ReferenceFormSet2(prefix='refs')
-# comment_order = forms.IntegerField(label='Do NOT Change This Number: ', required=False,)

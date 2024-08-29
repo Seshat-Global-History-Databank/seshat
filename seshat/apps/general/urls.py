@@ -43,7 +43,6 @@ urlpatterns += [
         views.Polity_research_assistantDelete.as_view(),
         name="polity_research_assistant-delete",
     ),
-    # Download
     path(
         "polity_research_assistantdownload/",
         views.polity_research_assistant_download,
@@ -88,7 +87,6 @@ urlpatterns += [
         views.Polity_utm_zoneDelete.as_view(),
         name="polity_utm_zone-delete",
     ),
-    # Download
     path(
         "polity_utm_zonedownload/",
         views.polity_utm_zone_download,
@@ -133,7 +131,6 @@ urlpatterns += [
         views.Polity_original_nameDelete.as_view(),
         name="polity_original_name-delete",
     ),
-    # Download
     path(
         "polity_original_namedownload/",
         views.polity_original_name_download,
@@ -178,7 +175,6 @@ urlpatterns += [
         views.Polity_alternative_nameDelete.as_view(),
         name="polity_alternative_name-delete",
     ),
-    # Download
     path(
         "polity_alternative_namedownload/",
         views.polity_alternative_name_download,
@@ -223,7 +219,6 @@ urlpatterns += [
         views.Polity_peak_yearsDelete.as_view(),
         name="polity_peak_years-delete",
     ),
-    # Download
     path(
         "polity_peak_yearsdownload/",
         views.polity_peak_years_download,
@@ -268,7 +263,6 @@ urlpatterns += [
         views.Polity_durationDelete.as_view(),
         name="polity_duration-delete",
     ),
-    # Download
     path(
         "polity_durationdownload/",
         views.polity_duration_download,
@@ -313,7 +307,6 @@ urlpatterns += [
         views.Polity_degree_of_centralizationDelete.as_view(),
         name="polity_degree_of_centralization-delete",
     ),
-    # Download
     path(
         "polity_degree_of_centralizationdownload/",
         views.polity_degree_of_centralization_download,
@@ -358,7 +351,6 @@ urlpatterns += [
         views.Polity_suprapolity_relationsDelete.as_view(),
         name="polity_suprapolity_relations-delete",
     ),
-    # Download
     path(
         "polity_suprapolity_relationsdownload/",
         views.polity_suprapolity_relations_download,
@@ -403,7 +395,6 @@ urlpatterns += [
         views.Polity_capitalDelete.as_view(),
         name="polity_capital-delete",
     ),
-    # Download
     path(
         "polity_capitaldownload/",
         views.polity_capital_download,
@@ -448,7 +439,6 @@ urlpatterns += [
         views.Polity_languageDelete.as_view(),
         name="polity_language-delete",
     ),
-    # Download
     path(
         "polity_languagedownload/",
         views.polity_language_download,
@@ -493,7 +483,6 @@ urlpatterns += [
         views.Polity_linguistic_familyDelete.as_view(),
         name="polity_linguistic_family-delete",
     ),
-    # Download
     path(
         "polity_linguistic_familydownload/",
         views.polity_linguistic_family_download,
@@ -538,7 +527,6 @@ urlpatterns += [
         views.Polity_language_genusDelete.as_view(),
         name="polity_language_genus-delete",
     ),
-    # Download
     path(
         "polity_language_genusdownload/",
         views.polity_language_genus_download,
@@ -583,7 +571,6 @@ urlpatterns += [
         views.Polity_religion_genusDelete.as_view(),
         name="polity_religion_genus-delete",
     ),
-    # Download
     path(
         "polity_religion_genusdownload/",
         views.polity_religion_genus_download,
@@ -628,7 +615,6 @@ urlpatterns += [
         views.Polity_religion_familyDelete.as_view(),
         name="polity_religion_family-delete",
     ),
-    # Download
     path(
         "polity_religion_familydownload/",
         views.polity_religion_family_download,
@@ -673,7 +659,6 @@ urlpatterns += [
         views.Polity_religionDelete.as_view(),
         name="polity_religion-delete",
     ),
-    # Download
     path(
         "polity_religiondownload/",
         views.polity_religion_download,
@@ -718,7 +703,6 @@ urlpatterns += [
         views.Polity_relationship_to_preceding_entityDelete.as_view(),
         name="polity_relationship_to_preceding_entity-delete",
     ),
-    # Download
     path(
         "polity_relationship_to_preceding_entitydownload/",
         views.polity_relationship_to_preceding_entity_download,
@@ -763,7 +747,6 @@ urlpatterns += [
         views.Polity_preceding_entityDelete.as_view(),
         name="polity_preceding_entity-delete",
     ),
-    # Download
     path(
         "polity_preceding_entitydownload/",
         views.polity_preceding_entity_download,
@@ -808,7 +791,6 @@ urlpatterns += [
         views.Polity_succeeding_entityDelete.as_view(),
         name="polity_succeeding_entity-delete",
     ),
-    # Download
     path(
         "polity_succeeding_entitydownload/",
         views.polity_succeeding_entity_download,
@@ -853,7 +835,6 @@ urlpatterns += [
         views.Polity_supracultural_entityDelete.as_view(),
         name="polity_supracultural_entity-delete",
     ),
-    # Download
     path(
         "polity_supracultural_entitydownload/",
         views.polity_supracultural_entity_download,
@@ -898,7 +879,6 @@ urlpatterns += [
         views.Polity_scale_of_supracultural_interactionDelete.as_view(),
         name="polity_scale_of_supracultural_interaction-delete",
     ),
-    # Download
     path(
         "polity_scale_of_supracultural_interactiondownload/",
         views.polity_scale_of_supracultural_interaction_download,
@@ -943,7 +923,6 @@ urlpatterns += [
         views.Polity_alternate_religion_genusDelete.as_view(),
         name="polity_alternate_religion_genus-delete",
     ),
-    # Download
     path(
         "polity_alternate_religion_genusdownload/",
         views.polity_alternate_religion_genus_download,
@@ -988,7 +967,6 @@ urlpatterns += [
         views.Polity_alternate_religion_familyDelete.as_view(),
         name="polity_alternate_religion_family-delete",
     ),
-    # Download
     path(
         "polity_alternate_religion_familydownload/",
         views.polity_alternate_religion_family_download,
@@ -1033,7 +1011,6 @@ urlpatterns += [
         views.Polity_alternate_religionDelete.as_view(),
         name="polity_alternate_religion-delete",
     ),
-    # Download
     path(
         "polity_alternate_religiondownload/",
         views.polity_alternate_religion_download,
@@ -1076,7 +1053,6 @@ urlpatterns += [
         views.Polity_expertDelete.as_view(),
         name="polity_expert-delete",
     ),
-    # Download
     path(
         "polity_expertdownload/",
         views.polity_expert_download,
@@ -1119,7 +1095,6 @@ urlpatterns += [
         views.Polity_editorDelete.as_view(),
         name="polity_editor-delete",
     ),
-    # Download
     path(
         "polity_editordownload/",
         views.polity_editor_download,
@@ -1164,7 +1139,6 @@ urlpatterns += [
         views.Polity_religious_traditionDelete.as_view(),
         name="polity_religious_tradition-delete",
     ),
-    # Download
     path(
         "polity_religious_traditiondownload/",
         views.polity_religious_tradition_download,

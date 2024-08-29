@@ -105,12 +105,10 @@ def get_citations_dropdown(request):
     Returns:
         JsonResponse: JSON response with all citations for dropdown
     """
-    # get dropdown data here
-    all_data = Citation.objects.all()
-    data = all_data  # {'citations': all_data}
+    # Get dropdown data here
+    data = Citation.objects.all()
     citations_list = []
-    counter = 0
-    for item in data:
+    for counter, item in enumerate(data):
         if counter < 5000:
             citations_list.append(
                 {
@@ -118,12 +116,8 @@ def get_citations_dropdown(request):
                     "name": item.__str__(),
                 }
             )
-            counter = counter + 1
 
-    # render dropdown template as string
-    # html = render_to_string('crisisdb/crisis_consequence/crisis_citation_dropdown.html', data)
-
-    # return dropdown template as JSON response
+    # Return dropdown template as JSON response
     return JsonResponse({"data": citations_list})
 
 
@@ -174,8 +168,8 @@ class Crisis_consequenceCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         context = super().get_context_data(**kwargs)
+
         context["mysection"] = "X"
         context["mysubsection"] = "Y"
         context["myvar"] = "Z"
@@ -284,8 +278,8 @@ class Crisis_consequenceCreateHeavy(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         context = super().get_context_data(**kwargs)
+
         context["mysection"] = "X"
         context["mysubsection"] = "Y"
         context["myvar"] = "Z"
@@ -294,6 +288,7 @@ class Crisis_consequenceCreateHeavy(PermissionRequiredMixin, CreateView):
         context["mysubtitle"] = (
             "Please complete the form below to create a new Crisis Case:"
         )
+
         return context
 
 
@@ -371,8 +366,6 @@ class Crisis_consequenceListView(PermissionRequiredMixin, generic.ListView):
     model = Crisis_consequence
     template_name = "crisisdb/crisis_consequence/crisis_consequence_list.html"
     permission_required = "core.add_capital"
-
-    # paginate_by = 50
 
     def get_absolute_url(self):
         """
@@ -476,8 +469,6 @@ class Crisis_consequenceListViewAll(PermissionRequiredMixin, generic.ListView):
     template_name = "crisisdb/crisis_consequence/crisis_consequence_list_all.html"
     permission_required = "core.add_capital"
 
-    # paginate_by = 50
-
     def get_absolute_url(self):
         """
         Get the absolute URL of the view.
@@ -494,11 +485,9 @@ class Crisis_consequenceListViewAll(PermissionRequiredMixin, generic.ListView):
         Returns:
             QuerySet: QuerySet for the view
         """
-        # order = self.request.GET.get('orderby', 'year_from')
         order = self.request.GET.get("orderby", "home_nga")
         order2 = self.request.GET.get("orderby2", "year_from")
-        # polity.home_nga.id
-        # orders = [order, order2]
+
         new_context = (
             Crisis_consequence.objects.all()
             .annotate(
@@ -508,8 +497,7 @@ class Crisis_consequenceListViewAll(PermissionRequiredMixin, generic.ListView):
             )
             .order_by(order, order2)
         )
-        # .polity.home_nga.id
-        # new_context = Crisis_consequence.objects.all().order_by(order, order2)
+
         return new_context
 
     def get_context_data(self, **kwargs):
@@ -812,7 +800,7 @@ def crisis_consequence_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -827,9 +815,6 @@ def crisis_consequence_meta_download(request):
                 writer.writerow([inner_key, inner_value])
 
     return response
-
-
-################################################
 
 
 class Power_transitionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
@@ -880,8 +865,8 @@ class Power_transitionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         context = super().get_context_data(**kwargs)
+
         context["mysection"] = "X"
         context["mysubsection"] = "Y"
         context["myvar"] = "Z"
@@ -890,6 +875,7 @@ class Power_transitionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         context["mysubtitle"] = (
             "Please complete the form below to create a new power transition:"
         )
+
         return context
 
 
@@ -991,8 +977,8 @@ class Power_transitionCreateHeavy(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         context = super().get_context_data(**kwargs)
+
         context["mysection"] = "X"
         context["mysubsection"] = "Y"
         context["myvar"] = "Z"
@@ -1001,6 +987,7 @@ class Power_transitionCreateHeavy(PermissionRequiredMixin, CreateView):
         context["mysubtitle"] = (
             "Please complete the form below to create a new power transition:"
         )
+
         return context
 
 
@@ -1170,7 +1157,6 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
     model = Power_transition
     template_name = "crisisdb/power_transition/power_transition_list_all_new.html"
     permission_required = "core.add_capital"
-    # paginate_by = 50
 
     def get_absolute_url(self):
         """
@@ -1193,7 +1179,6 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
 
         new_context = Power_transition.objects.all().order_by(order2, order)
 
-        # grouped_dict = {}
         pols_dict = {}
         for transition in new_context:
             polity_id = transition.polity_id
@@ -1235,7 +1220,6 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
                     "external_interference": transition.external_interference,
                 }
             )
-        # print(grouped_dict)
 
         return pols_dict
 
@@ -1429,7 +1413,7 @@ def power_transition_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1444,9 +1428,6 @@ def power_transition_meta_download(request):
                 writer.writerow([inner_key, inner_value])
 
     return response
-
-
-##################################
 
 
 class Human_sacrificeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
@@ -1493,7 +1474,6 @@ class Human_sacrificeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -1508,7 +1488,9 @@ class Human_sacrificeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "Human Sacrifice"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -1517,6 +1499,7 @@ class Human_sacrificeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -1525,6 +1508,7 @@ class Human_sacrificeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Human Sacrifice"
             context["my_exp"] = my_exp
+
             return context
 
     def form_valid(self, form):
@@ -1674,8 +1658,6 @@ class Human_sacrificeListViewAll(PermissionRequiredMixin, generic.ListView):
     template_name = "crisisdb/human_sacrifice/human_sacrifice_list_all.html"
     permission_required = "core.view_capital"
 
-    # paginate_by = 50
-
     def get_absolute_url(self):
         """
         Get the absolute URL of the view.
@@ -1692,11 +1674,9 @@ class Human_sacrificeListViewAll(PermissionRequiredMixin, generic.ListView):
         Returns:
             QuerySet: QuerySet for the view
         """
-        # order = self.request.GET.get('orderby', 'year_from')
         order = self.request.GET.get("orderby", "home_nga")
         order2 = self.request.GET.get("orderby2", "year_from")
-        # polity.home_nga.id
-        # orders = [order, order2]
+
         new_context = (
             Human_sacrifice.objects.all()
             .annotate(
@@ -1706,8 +1686,7 @@ class Human_sacrificeListViewAll(PermissionRequiredMixin, generic.ListView):
             )
             .order_by(order, order2)
         )
-        # .polity.home_nga.id
-        # new_context = Human_sacrifice.objects.all().order_by(order, order2)
+
         return new_context
 
     def get_context_data(self, **kwargs):
@@ -1850,22 +1829,20 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
     """
     # Create a new comment instance and save it to the database
     comment_instance = SeshatComment.objects.create(text="a new_comment_text")
-    user_logged_in = request.user
 
     # Get the Seshat_Expert instance associated with the user
     try:
-        seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+        seshat_expert_instance = Seshat_Expert.objects.get(user=request.user)
     except Seshat_Expert.DoesNotExist:
         seshat_expert_instance = None
-    # user_at_work = User.
+
     # Create the subcomment instance and save it to the database
-    subcomment_instance = SeshatCommentPart.objects.create(
+    SeshatCommentPart.objects.create(
         comment_part_text="A subdescription text placeholder (to be edited)",
         comment=comment_instance,
         comment_curator=seshat_expert_instance,
         comment_order=1,
     )
-    # subcomment = comment_instance.seshatcommentpart.create(comment_part_text=request.POST.get('a subcomment text'))
 
     # Get the ModelName instance
     hs_instance = Human_sacrifice.objects.get(id=hs_instance_id)
@@ -1875,7 +1852,6 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
 
     hs_instance.save()
 
-    # return redirect('human_sacrifice-detail', pk=hs_instance_id)
     return redirect("seshatcomment-update", pk=comment_instance.id)
 
 
@@ -1916,7 +1892,7 @@ def human_sacrifice_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1967,7 +1943,6 @@ class External_conflictCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -1982,6 +1957,7 @@ class External_conflictCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -1991,6 +1967,7 @@ class External_conflictCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -1999,6 +1976,7 @@ class External_conflictCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "External Conflict"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -2190,7 +2168,7 @@ def external_conflict_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2241,7 +2219,6 @@ class Internal_conflictCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -2256,7 +2233,9 @@ class Internal_conflictCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -2265,6 +2244,7 @@ class Internal_conflictCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -2273,6 +2253,7 @@ class Internal_conflictCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Internal Conflict"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -2524,7 +2505,7 @@ def internal_conflict_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2575,7 +2556,6 @@ class External_conflict_sideCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -2590,6 +2570,7 @@ class External_conflict_sideCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -2599,6 +2580,7 @@ class External_conflict_sideCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -2607,6 +2589,7 @@ class External_conflict_sideCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "External Conflict Side"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -2862,7 +2845,7 @@ def external_conflict_side_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2913,7 +2896,6 @@ class Agricultural_populationCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -2928,7 +2910,9 @@ class Agricultural_populationCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -2937,6 +2921,7 @@ class Agricultural_populationCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -2945,6 +2930,7 @@ class Agricultural_populationCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Agricultural Population"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -3139,7 +3125,7 @@ def agricultural_population_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3190,7 +3176,6 @@ class Arable_landCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -3205,7 +3190,9 @@ class Arable_landCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -3214,6 +3201,7 @@ class Arable_landCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -3222,6 +3210,7 @@ class Arable_landCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Arable Land"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -3411,7 +3400,7 @@ def arable_land_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3462,7 +3451,6 @@ class Arable_land_per_farmerCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -3477,7 +3465,9 @@ class Arable_land_per_farmerCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -3486,6 +3476,7 @@ class Arable_land_per_farmerCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -3494,6 +3485,7 @@ class Arable_land_per_farmerCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Arable Land Per Farmer"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -3687,7 +3679,7 @@ def arable_land_per_farmer_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3740,7 +3732,6 @@ class Gross_grain_shared_per_agricultural_populationCreate(
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -3755,6 +3746,7 @@ class Gross_grain_shared_per_agricultural_populationCreate(
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -3764,6 +3756,7 @@ class Gross_grain_shared_per_agricultural_populationCreate(
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -3772,6 +3765,7 @@ class Gross_grain_shared_per_agricultural_populationCreate(
             context["mysubsection"] = my_subsec
             context["myvar"] = "Gross Grain Shared Per Agricultural Population"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -3969,7 +3963,7 @@ def gross_grain_shared_per_agricultural_population_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4022,7 +4016,6 @@ class Net_grain_shared_per_agricultural_populationCreate(
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -4037,7 +4030,9 @@ class Net_grain_shared_per_agricultural_populationCreate(
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -4046,6 +4041,7 @@ class Net_grain_shared_per_agricultural_populationCreate(
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -4054,6 +4050,7 @@ class Net_grain_shared_per_agricultural_populationCreate(
             context["mysubsection"] = my_subsec
             context["myvar"] = "Net Grain Shared Per Agricultural Population"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -4248,7 +4245,7 @@ def net_grain_shared_per_agricultural_population_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4299,7 +4296,6 @@ class SurplusCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -4314,6 +4310,7 @@ class SurplusCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -4520,7 +4517,7 @@ def surplus_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4571,7 +4568,6 @@ class Military_expenseCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -4586,6 +4582,7 @@ class Military_expenseCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -4595,6 +4592,7 @@ class Military_expenseCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -4603,6 +4601,7 @@ class Military_expenseCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Military Expense"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -4816,7 +4815,7 @@ def military_expense_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4867,7 +4866,6 @@ class Silver_inflowCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -4882,7 +4880,9 @@ class Silver_inflowCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -4891,6 +4891,7 @@ class Silver_inflowCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -4899,6 +4900,7 @@ class Silver_inflowCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Silver Inflow"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -5088,7 +5090,7 @@ def silver_inflow_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5139,7 +5141,6 @@ class Silver_stockCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -5154,7 +5155,9 @@ class Silver_stockCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -5163,6 +5166,7 @@ class Silver_stockCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -5171,6 +5175,7 @@ class Silver_stockCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Silver Stock"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -5360,7 +5365,7 @@ def silver_stock_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5411,7 +5416,6 @@ class Total_populationCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -5426,7 +5430,9 @@ class Total_populationCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -5435,6 +5441,7 @@ class Total_populationCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -5443,6 +5450,7 @@ class Total_populationCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Total Population"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -5637,7 +5645,7 @@ def total_population_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5688,7 +5696,6 @@ class Gdp_per_capitaCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -5703,7 +5710,9 @@ class Gdp_per_capitaCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -5712,6 +5721,7 @@ class Gdp_per_capitaCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -5720,6 +5730,7 @@ class Gdp_per_capitaCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Gdp Per Capita"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -5916,7 +5927,7 @@ def gdp_per_capita_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5967,7 +5978,6 @@ class Drought_eventCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -5982,7 +5992,9 @@ class Drought_eventCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -5991,6 +6003,7 @@ class Drought_eventCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -5999,6 +6012,7 @@ class Drought_eventCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Drought Event"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -6193,7 +6207,7 @@ def drought_event_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6244,7 +6258,6 @@ class Locust_eventCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -6259,7 +6272,9 @@ class Locust_eventCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -6268,6 +6283,7 @@ class Locust_eventCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -6276,6 +6292,7 @@ class Locust_eventCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Locust Event"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -6467,7 +6484,7 @@ def locust_event_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6520,7 +6537,6 @@ class Socioeconomic_turmoil_eventCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -6535,7 +6551,9 @@ class Socioeconomic_turmoil_eventCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
+
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
             context["myvar"] = my_name
@@ -6544,6 +6562,7 @@ class Socioeconomic_turmoil_eventCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -6552,6 +6571,7 @@ class Socioeconomic_turmoil_eventCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Socioeconomic Turmoil Event"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -6755,7 +6775,7 @@ def socioeconomic_turmoil_event_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6806,7 +6826,6 @@ class Crop_failure_eventCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -6821,6 +6840,7 @@ class Crop_failure_eventCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -6830,6 +6850,7 @@ class Crop_failure_eventCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -6838,6 +6859,7 @@ class Crop_failure_eventCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Crop Failure Event"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -7029,7 +7051,7 @@ def crop_failure_event_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7080,7 +7102,6 @@ class Famine_eventCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -7095,6 +7116,7 @@ class Famine_eventCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -7104,6 +7126,7 @@ class Famine_eventCreate(PermissionRequiredMixin, CreateView):
             return context
         else:
             context = super().get_context_data(**kwargs)
+
             my_exp = "No_Explanations"
             my_sec = "No_SECTION"
             my_subsec = "NO_SUBSECTION"
@@ -7112,6 +7135,7 @@ class Famine_eventCreate(PermissionRequiredMixin, CreateView):
             context["mysubsection"] = my_subsec
             context["myvar"] = "Famine Event"
             context["my_exp"] = my_exp
+
             return context
 
 
@@ -7303,7 +7327,7 @@ def famine_event_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7354,7 +7378,6 @@ class Disease_outbreakCreate(PermissionRequiredMixin, CreateView):
         Returns:
             dict: Context data for the view
         """
-        # get the explanattion:
         all_var_hiers = Variablehierarchy.objects.all()
         if all_var_hiers:
             for item in all_var_hiers:
@@ -7369,6 +7392,7 @@ class Disease_outbreakCreate(PermissionRequiredMixin, CreateView):
                     my_sec = "No_SECTION"
                     my_subsec = "NO_SUBSECTION"
                     my_name = "NO_NAME"
+
             context = super().get_context_data(**kwargs)
             context["mysection"] = my_sec
             context["mysubsection"] = my_subsec
@@ -7733,7 +7757,7 @@ def disease_outbreak_meta_download(request):
         },
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7750,7 +7774,7 @@ def disease_outbreak_meta_download(request):
     return response
 
 
-# THE temporary function for creating the my_sections_dic dic: test_for_varhier_dic inside utils
+# The temporary function for creating the my_sections_dic dic: test_for_varhier_dic inside utils
 # and the qing_vars_links_creator() inside utils.py
 def QingVars(request):
     """
@@ -7766,7 +7790,6 @@ def QingVars(request):
         dict: Context data for the view
     """
     my_sections_dic = {
-        #'Other_Sections': {'Other_Subsections': []}, 'Conflict Variables': {'External Conflicts Subsection': [['External conflict', 'external_conflicts', 'external_conflict-create', 'external_conflict-download', 'external_conflict-metadownload'], ['External conflict side', 'external_conflict_sides', 'external_conflict_side-create', 'external_conflict_side-download', 'external_conflict_side-metadownload'], ['Human_sacrifice', 'human_sacrifices', 'human_sacrifice-create', 'human_sacrifice-download', 'human_sacrifice-metadownload']], 'Internal Conflicts Subsection': [['Internal conflict', 'internal_conflicts', 'internal_conflict-create', 'internal_conflict-download', 'internal_conflict-metadownload']]},
         "Economy Variables": {
             "Productivity": [
                 [
@@ -7902,65 +7925,9 @@ def QingVars(request):
         },
     }
 
-    #     my_sections_dic = {'Other_Sections': {'Other_Subsections': []},
-    #  'Economy Variables': {'Productivity': [['Agricultural population',
-    #     'agricultural_populations',
-    #     'agricultural_population-create'],
-    #    ['Arable land', 'arable_lands', 'arable_land-create'],
-    #    ['Arable land per farmer',
-    #     'arable_land_per_farmers',
-    #     'arable_land_per_farmer-create'],
-    #    ['Gross grain shared per agricultural population',
-    #     'gross_grain_shared_per_agricultural_populations',
-    #     'gross_grain_shared_per_agricultural_population-create'],
-    #    ['Net grain shared per agricultural population',
-    #     'net_grain_shared_per_agricultural_populations',
-    #     'net_grain_shared_per_agricultural_population-create'],
-    #    ['Surplus', 'surplus', 'surplus-create'],
-    #    ['Gdp per capita', 'gdp_per_capitas', 'gdp_per_capita-create']],
-    #   'State Finances': [['Military expense',
-    #     'military_expenses',
-    #     'military_expense-create'],
-    #    ['Silver inflow', 'silver_inflows', 'silver_inflow-create'],
-    #    ['Silver stock', 'silver_stocks', 'silver_stock-create']]},
-    #  'Social Complexity Variables': {'Social Scale': [['Total population',
-    #     'total_populations',
-    #     'total_population-create']]},
-    #  'Well Being': {'Biological Well-Being': [['Drought event',
-    #     'drought_events',
-    #     'drought_event-create'],
-    #    ['Locust event', 'locust_events', 'locust_event-create'],
-    #    ['Socioeconomic turmoil event',
-    #     'socioeconomic_turmoil_events',
-    #     'socioeconomic_turmoil_event-create'],
-    #    ['Crop failure event', 'crop_failure_events', 'crop_failure_event-create'],
-    #    ['Famine event', 'famine_events', 'famine_event-create'],
-    #    ['Disease outbreak', 'disease_outbreaks', 'disease_outbreak-create']]}}
-    # all_sections = Section.objects.all()
-    # all_subsections = Subsection.objects.all()
-    # all_varhiers = Variablehierarchy.objects.all()
-    # meta_data_dict = {}
-    # for ct in my_sections_dic.items():
-    #     m = ct.model_class()
-    #     #full_name = m.__module__ + m.__name__
-    #     full_name = m.__name__
-    #     meta_data_dict[full_name.lower()] = [full_name.split('.')[-1].replace("_", ' '), m._default_manager.count(), full_name.lower()+"-create",full_name.lower()+"s"]
-    #     print (f".{m.__name__}	{m._default_manager.count()}")
-    # my_dict = {}
     context = {}
-
-    # for sect in all_sections:
-    #     my_dict[sect] = {}
-    #     for subsect in all_subsections:
-    #         list_of_all_varhiers_in_here = []
-    #         for item in all_varhiers:
-    #             #print(item, item.section, item.subsection, sect.name, subsect.name)
-    #             if item.section.name == sect.name and item.subsection.name == subsect.name:
-    #                 print("We hit it")
-    #                 list_of_all_varhiers_in_here.append(meta_data_dict[item.name.lower()])
-    #         if list_of_all_varhiers_in_here:
-    #             my_dict[sect][subsect] = list_of_all_varhiers_in_here
     context["my_dict"] = my_sections_dic
+
     return render(request, "crisisdb/qing-vars.html", context=context)
 
 
@@ -8002,10 +7969,10 @@ def playgrounddownload(request):
     Returns:
         HttpResponse: HTTP response with CSV file
     """
-    # read the data from the previous from
-    # make sure you collect all the data from seshat_api
-    # sort it out and spit it out
-    # small task: download what we have on seshat_api
+    # Read the data from the previous from
+    # Make sure you collect all the data from seshat_api
+    # Sort it out and spit it out
+    # Small task: download what we have on seshat_api
     checked_pols = request.POST.getlist("selected_pols")
     print("The checked politys are:", checked_pols)
 
@@ -8028,8 +7995,6 @@ def playgrounddownload(request):
         print("Bad selection of Separator.")
 
     url = "http://127.0.0.1:8000/api/politys-api/"
-    # url = "https://www.majidbenam.com/api/politys/"
-    print(url)
 
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -8044,9 +8009,10 @@ def playgrounddownload(request):
     myfile_name = "CrisisDB_data_" + str(request.user) + "_" + now_str
     final_response["Content-Disposition"] = f'attachment; filename="{myfile_name}.csv"'
 
-    # print(all_my_data)
     writer = csv.writer(final_response, delimiter=checked_sep)
-    # the top row is the same as Equinox, so no need to read data from user input for that
+
+    # The top row is the same as Equinox, so no need to read data from user
+    # input for that
     writer.writerow(
         [
             "polity",
@@ -8069,10 +8035,9 @@ def playgrounddownload(request):
                 if variable not in polity_with_everything.keys():
                     continue
                 else:
-                    # we can get into a list of dictionaries
+                    # We can get into a list of dictionaries
                     for var_instance in polity_with_everything[variable]:
                         all_inner_keys = var_instance.keys()
-                        # print(all_inner_keys)
                         all_used_keys = []
                         for active_key in all_inner_keys:
                             if (
@@ -8099,9 +8064,6 @@ def fpl_all(request):
     View for the Famine, Plague, and Locust page.
     """
     return render(request, "crisisdb/fpl_all.html")
-
-
-# ... Your existing imports ...
 
 
 class UsLocationListView(ListView):
@@ -8321,7 +8283,6 @@ def download_csv_all_american_violence(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "id",
@@ -8339,7 +8300,6 @@ def download_csv_all_american_violence(request):
     items = Us_violence.objects.all().order_by("id")
     if items:
         for obj in items:
-            # locations_text = BeautifulSoup(obj.show_locations(), 'html.parser').get_text()
             locations_text = remove_html_tags(obj.show_locations())
             short_data_sources_text = remove_html_tags(obj.show_short_data_sources())
 
@@ -8386,7 +8346,6 @@ def download_csv_all_american_violence2(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "date",
@@ -8401,7 +8360,6 @@ def download_csv_all_american_violence2(request):
     items = Us_violence.objects.all()
     if items:
         for obj in items:
-            # locations_text = BeautifulSoup(obj.show_locations(), 'html.parser').get_text()
             locations_text = remove_html_tags(obj.show_locations())
             short_data_sources_text = remove_html_tags(obj.show_short_data_sources())
 

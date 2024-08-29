@@ -47,22 +47,6 @@ class Seshat_TaskForm(forms.ModelForm):
         }
 
 
-# class EditProfileForm(ModelForm):
-#     class Meta:
-#         model = User
-#         fields = (
-#                  'email',
-#                  'first_name',
-#                  'last_name'
-#                 )
-
-#         widgets = {
-#         'email': forms.Textarea(attrs={'class': 'form-control  mb-3', }),
-#         'first_name': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
-#         'last_name': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
-# }
-
-
 class ProfileForm(forms.ModelForm):
     """
     Form for adding or updating a profile.
@@ -98,10 +82,6 @@ class ProfileForm(forms.ModelForm):
                     "class": "form-control  mb-3",
                 }
             ),
-            #            'role': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
-            #            'location': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
-            #            'last_name': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
-            #            'first_name': forms.TextInput(attrs={'class': 'form-control  mb-3', }),
         }
 
 
@@ -123,6 +103,7 @@ class CustomSignUpForm(UserCreationForm):
                 username part.
         """
         email = self.cleaned_data.get("email")
+
         if email:
             username, domain = email.split("@")
             username_parts = username.split(".")
@@ -130,4 +111,5 @@ class CustomSignUpForm(UserCreationForm):
                 raise ValidationError(
                     "Email address contains too many dots in the username part."
                 )
+
         return email

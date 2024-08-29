@@ -24,5 +24,3 @@ def validate_email_with_dots(value):
         raise ValidationError(
             "Email address contains too many dots in the domain part."
         )
-
-    # You can add more checks if needed

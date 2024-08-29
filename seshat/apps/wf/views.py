@@ -140,7 +140,7 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Long Wall"
@@ -167,6 +167,7 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -384,8 +385,9 @@ def long_wall_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -400,9 +402,6 @@ def long_wall_meta_download(request):
                 writer.writerow([inner_key, inner_value])
 
     return response
-
-
-#########################
 
 
 class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
@@ -429,7 +428,7 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Copper"
@@ -456,6 +455,7 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -696,8 +696,9 @@ def copper_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -738,7 +739,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Bronze"
@@ -765,6 +766,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -1005,8 +1007,9 @@ def bronze_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1047,7 +1050,7 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Iron"
@@ -1074,6 +1077,7 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -1314,8 +1318,9 @@ def iron_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1356,7 +1361,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Steel"
@@ -1383,6 +1388,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -1623,8 +1629,9 @@ def steel_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1665,7 +1672,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Javelin"
@@ -1692,6 +1699,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -1932,8 +1940,9 @@ def javelin_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -1974,7 +1983,7 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Atlatl"
@@ -2001,6 +2010,7 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -2241,8 +2251,9 @@ def atlatl_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2283,7 +2294,7 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling"
@@ -2310,6 +2321,7 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -2550,8 +2562,9 @@ def sling_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2592,7 +2605,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Self Bow"
@@ -2619,6 +2632,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -2859,8 +2873,9 @@ def self_bow_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -2901,7 +2916,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Composite Bow"
@@ -2928,6 +2943,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -3168,8 +3184,9 @@ def composite_bow_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3210,7 +3227,7 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Crossbow"
@@ -3237,6 +3254,7 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -3477,8 +3495,9 @@ def crossbow_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3519,7 +3538,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Tension Siege Engine"
@@ -3546,6 +3565,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -3786,8 +3806,9 @@ def tension_siege_engine_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -3828,7 +3849,7 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling Siege Engine"
@@ -3855,6 +3876,7 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -4095,8 +4117,9 @@ def sling_siege_engine_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4139,7 +4162,7 @@ class Gunpowder_siege_artilleryCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Gunpowder Siege Artillery"
@@ -4166,6 +4189,7 @@ class Gunpowder_siege_artilleryCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -4410,8 +4434,9 @@ def gunpowder_siege_artillery_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4452,7 +4477,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Handheld Firearm"
@@ -4479,6 +4504,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -4719,8 +4745,9 @@ def handheld_firearm_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -4761,7 +4788,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "War Club"
@@ -4788,6 +4815,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -5028,8 +5056,9 @@ def war_club_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5070,7 +5099,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Battle Axe"
@@ -5097,6 +5126,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -5337,8 +5367,9 @@ def battle_axe_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5379,7 +5410,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dagger"
@@ -5406,6 +5437,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -5646,8 +5678,9 @@ def dagger_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5688,7 +5721,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sword"
@@ -5715,6 +5748,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -5955,8 +5989,9 @@ def sword_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -5997,7 +6032,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Spear"
@@ -6024,6 +6059,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -6264,8 +6300,9 @@ def spear_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6306,7 +6343,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Polearm"
@@ -6333,6 +6370,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -6573,8 +6611,9 @@ def polearm_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6615,7 +6654,7 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dog"
@@ -6642,6 +6681,7 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -6882,8 +6922,9 @@ def dog_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -6924,7 +6965,7 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Donkey"
@@ -6951,6 +6992,7 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -7191,8 +7233,9 @@ def donkey_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7233,7 +7276,7 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Horse"
@@ -7260,6 +7303,7 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -7500,8 +7544,9 @@ def horse_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7542,7 +7587,7 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Camel"
@@ -7569,6 +7614,7 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -7809,8 +7855,9 @@ def camel_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -7851,7 +7898,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Elephant"
@@ -7878,6 +7925,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -8118,8 +8166,9 @@ def elephant_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8160,7 +8209,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wood Bark Etc"
@@ -8187,6 +8236,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -8427,8 +8477,9 @@ def wood_bark_etc_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8469,7 +8520,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Leather Cloth"
@@ -8496,6 +8547,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -8736,8 +8788,9 @@ def leather_cloth_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -8778,7 +8831,7 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Shield"
@@ -8805,6 +8858,7 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -9045,8 +9099,9 @@ def shield_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9087,7 +9142,7 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Helmet"
@@ -9114,6 +9169,7 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -9354,8 +9410,9 @@ def helmet_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9396,7 +9453,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Breastplate"
@@ -9423,6 +9480,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -9663,8 +9721,9 @@ def breastplate_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -9705,7 +9764,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Limb Protection"
@@ -9732,6 +9791,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -9973,7 +10033,7 @@ def limb_protection_meta_download(request):
         }
     }
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -10014,7 +10074,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Scaled Armor"
@@ -10041,6 +10101,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -10281,8 +10342,9 @@ def scaled_armor_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -10323,7 +10385,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Laminar Armor"
@@ -10350,6 +10412,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -10590,8 +10653,9 @@ def laminar_armor_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -10632,7 +10696,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Plate Armor"
@@ -10659,6 +10723,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -10899,8 +10964,9 @@ def plate_armor_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -10943,7 +11009,7 @@ class Small_vessels_canoes_etcCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Small Vessels Canoes Etc"
@@ -10970,6 +11036,7 @@ class Small_vessels_canoes_etcCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -11212,8 +11279,9 @@ def small_vessels_canoes_etc_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -11256,7 +11324,7 @@ class Merchant_ships_pressed_into_serviceCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Merchant Ships Pressed Into Service"
@@ -11283,6 +11351,7 @@ class Merchant_ships_pressed_into_serviceCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -11525,8 +11594,9 @@ def merchant_ships_pressed_into_service_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -11571,7 +11641,7 @@ class Specialized_military_vesselCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Specialized Military Vessel"
@@ -11598,6 +11668,7 @@ class Specialized_military_vesselCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -11848,8 +11919,9 @@ def specialized_military_vessel_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -11892,7 +11964,7 @@ class Settlements_in_a_defensive_positionCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Settlements in a Defensive Position"
@@ -11919,6 +11991,7 @@ class Settlements_in_a_defensive_positionCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -12161,8 +12234,9 @@ def settlements_in_a_defensive_position_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -12203,7 +12277,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wooden Palisade"
@@ -12230,6 +12304,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -12470,8 +12545,9 @@ def wooden_palisade_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -12512,7 +12588,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Earth Rampart"
@@ -12539,6 +12615,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -12779,8 +12856,9 @@ def earth_rampart_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -12821,7 +12899,7 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Ditch"
@@ -12848,6 +12926,7 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -13088,8 +13167,9 @@ def ditch_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -13130,7 +13210,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Moat"
@@ -13157,6 +13237,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -13397,8 +13478,9 @@ def moat_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -13441,7 +13523,7 @@ class Stone_walls_non_mortaredCreate(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Non Mortared"
@@ -13468,6 +13550,7 @@ class Stone_walls_non_mortaredCreate(
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -13710,8 +13793,9 @@ def stone_walls_non_mortared_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -13752,7 +13836,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Mortared"
@@ -13779,6 +13863,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -14019,8 +14104,9 @@ def stone_walls_mortared_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -14061,7 +14147,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Fortified Camp"
@@ -14088,6 +14174,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -14323,8 +14410,9 @@ def fortified_camp_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -14360,7 +14448,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Complex Fortification"
@@ -14387,6 +14475,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -14624,8 +14713,9 @@ def complex_fortification_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -14661,7 +14751,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Modern Fortification"
@@ -14688,6 +14778,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -14923,8 +15014,9 @@ def modern_fortification_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -14960,7 +15052,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # get the explanattion:
+
         context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Chainmail"
@@ -14987,6 +15079,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
             }
         }
         context["potential_cols"] = ["Choices"]
+
         return context
 
 
@@ -15222,8 +15315,9 @@ def chainmail_meta_download(request):
             "null_meaning": None,
         }
     }
+
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -15345,24 +15439,6 @@ def show_problematic_wf_data_table(request):
     return render(request, "wf/problematic_wf_data_table.html", {"data": data})
 
 
-# @permission_required('core.view_capital')
-# def show_problematic_wf_data_table(request):
-#     # Fetch all models in the "socomp" app
-#     app_name = 'wf'  # Replace with your app name
-#     app_models = apps.get_app_config(app_name).get_models()
-
-#     # Collect data from all models
-#     data = []
-#     for model in app_models:
-#         items = model.objects.all()
-#         for obj in items:
-#             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
-#                 data.append(obj)
-
-#     # Render the template with the data
-#     return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
-
-
 @permission_required("core.view_capital")
 def download_csv_all_wf(request):
     # Fetch all models in the "socomp" app
@@ -15381,7 +15457,6 @@ def download_csv_all_wf(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15462,7 +15537,6 @@ def download_csv_fortifications(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15530,7 +15604,6 @@ def download_csv_military_use_of_metals(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15598,7 +15671,6 @@ def download_csv_projectiles(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15666,7 +15738,6 @@ def download_csv_handheld_weapons(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15734,7 +15805,6 @@ def download_csv_animals_used_in_warfare(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15802,7 +15872,6 @@ def download_csv_armor(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -15870,7 +15939,6 @@ def download_csv_naval_technology(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",

@@ -571,24 +571,7 @@ def dic_of_all_vars():
         dict: A dictionary of all variables.
     """
     myvars = django.apps.apps.get_models()
-    # my_vars = {
-    #     'total_tax': 'Total Tax',
-    #     'salt_tax': 'Salt Tax',
-    #     'total_revenue': 'Total Revenue',
-    # }
     my_vars = {}
-    my_vars_2 = {}
-    # for ct in ContentType.objects.all():
-    #     m = ct.model_class()
-    #     if m.__module__ == "seshat.apps.crisisdb.models":
-    #         app_name = m.__module__.split('.')[-2] + '_'
-    #         better_key = app_name + m.__name__
-    #         better_value = m.__name__.replace('_', ' ')
-    #         my_vars[better_key] = better_value
-    #         my_vars[better_key] = [better_value, m._default_manager.count()]
-
-    # print(better_key, ': ', better_value)
-    # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
     return my_vars
 
 
@@ -700,40 +683,6 @@ def subsection_dic_extractor():
     return dic_to_be_returned
 
 
-# def test_multi_select():
-#     my_secs = {}
-#     all_var_hiers = Variablehierarchy.objects.all()
-#     for varhier in all_var_hiers:
-#         var_subsec = str(varhier.subsection.name).replace(' ', '_')
-#         var_sec = str(varhier.section.name).replace(' ', '_')
-#         if var_sec not in my_secs.keys():
-#             my_secs[var_sec] = {var_subsec:{}}
-#         else:
-#             if var_subsec not in my_secs[var_sec].keys():
-#                 my_secs[var_sec][var_subsec] = {}
-#             else:
-#                 pass
-#     print(all_var_hiers)
-#     print(my_secs)
-
-#     for ct in ContentType.objects.all():
-#         m = ct.model_class()
-#         if m.__module__ == "seshat.apps.crisisdb.models":
-#             app_name = m.__module__.split('.')[-2] + '_'
-#             better_key = app_name + m.__name__
-#             best_key = better_key.replace(' ', '_')[9:]
-#             better_value = m.__name__.replace('_', ' ')
-#             this_varhier = Variablehierarchy.objects.get(name=best_key)
-#             this_varhier_sec = str(this_varhier.section.name).replace(' ', '_')
-#             this_varhier_subsec = str(this_varhier.subsection.name).replace(' ', '_')
-#             my_secs[this_varhier_sec][this_varhier_subsec][best_key] = [better_value, m._default_manager.count()]
-#             print(app_name, better_key, best_key)
-#     print('\n\n')
-#     print(all_var_hiers)
-#     print(my_secs)
-
-
-# GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD Function
 def test_for_varhier_dic():
     """
     Extracts a dictionary of all variables in the database. This dictionary is
@@ -746,22 +695,13 @@ def test_for_varhier_dic():
     all_sections = Section.objects.all()
     all_subsections = Subsection.objects.all()
     all_varhiers = Variablehierarchy.objects.all()
-    meta_data_dict = {}
-    # for ct in my_sections_dic.items():
-    #     m = ct.model_class()
-    #     #full_name = m.__module__ + m.__name__
-    #     full_name = m.__name__
-    #     meta_data_dict[full_name.lower()] = [full_name.split('.')[-1].replace("_", ' '), m._default_manager.count(), full_name.lower()+"-create",full_name.lower()+"s"]
-    #     print (f".{m.__name__}	{m._default_manager.count()}")
-    my_dict = {}
-    context = {}
 
+    my_dict, context = {}, {}
     for sect in all_sections:
         my_dict[sect.name] = {}
         for subsect in all_subsections:
             list_of_all_varhiers_in_here = []
             for item in all_varhiers:
-                # print(item, item.section, item.subsection, sect.name, subsect.name)
                 if (
                     item.section.name == sect.name
                     and item.subsection.name == subsect.name
@@ -770,14 +710,16 @@ def test_for_varhier_dic():
                     list_of_all_varhiers_in_here.append(item.name.lower())
             if list_of_all_varhiers_in_here:
                 my_dict[sect.name][subsect.name] = list_of_all_varhiers_in_here
+
     context["my_dict"] = my_dict
+
     return my_dict
-    # return render(request, 'crisisdb/qing-vars.html', context=context)
 
 
-# For now, what I am doing to feed the Qing vars page with the needed links
-# is to call this function from the shell, and feed it with the vars_dic on top of this page (which has to be a copy of the original vars_dic that we are using in generating models and virews and all)
-# I then copy and paste the output to the QingVars function in Views. Sounds weird.
+# For now, what I am doing to feed the Qing vars page with the needed links is to call this
+# function from the shell, and feed it with the vars_dic on top of this page (which has to
+# be a copy of the original vars_dic that we are using in generating models and views and
+# all). I then copy and paste the output to the QingVars function in Views. Sounds weird.
 def qing_vars_links_creator(vars_dic_for_here):
     """
     Creates a dictionary of all variables in the database. This dictionary is
@@ -791,6 +733,7 @@ def qing_vars_links_creator(vars_dic_for_here):
         dict: A dictionary of all variables.
     """
     varhier_dic = {"Other_Sections": {"Other_Subsections": []}}
+
     for k, v in vars_dic_for_here.items():
         if v["section"] and v["section"] not in varhier_dic.keys():
             varhier_dic[v["section"]] = {}
@@ -809,6 +752,7 @@ def qing_vars_links_creator(vars_dic_for_here):
                 k + "-metadownload",
             ]
             varhier_dic[v["section"]][v["subsection"]].append(my_list)
+
     return varhier_dic
 
 
@@ -823,11 +767,11 @@ def get_all_data_for_a_polity(polity_id, db_name):
     Returns:
         dict: A dictionary of all data for the polity.
     """
-    #####
-    all_vars = []
-    a_huge_context_data_dic = {}
+    all_vars, a_huge_context_data_dic = [], {}
+
     for ct in ContentType.objects.all():
         m = ct.model_class()
+
         if (
             m
             and m.__module__ == f"seshat.apps.{db_name}.models"
@@ -838,17 +782,11 @@ def get_all_data_for_a_polity(polity_id, db_name):
             )
         ):
             all_vars.append(m.__name__)
-            # print(polity_id, ": ", m.__name__)
+
             my_data = m.objects.filter(polity=polity_id)
-            # a_huge_context_data_dic[m.__name__ + "_for_polity"] = my_data
+
             a_huge_context_data_dic[str(m.__name__)] = my_data
 
-            # coooooooooooool
-            # this gets all the potential keys
-            # print("___")
-            # print("Data: ", dir(my_data[0]))
-        # else:
-        #     print(polity_id, ": ", m)
     return a_huge_context_data_dic
 
 
@@ -868,25 +806,17 @@ def get_all_general_data_for_a_polity_old(polity_id):
         dict: A dictionary of all general data for the polity.
     """
     a_huge_context_data_dic = {}
+
     for ct in ContentType.objects.all():
         m = ct.model_class()
+
         if m and m.__module__ == "seshat.apps.general.models":
             my_data = m.objects.filter(polity=polity_id)
+
             if my_data:
                 a_huge_context_data_dic[m.__name__] = my_data
+
     return a_huge_context_data_dic
-
-
-# def has_general_data_for_polity(polity_id):
-#     if Polity_degree_of_centralization.objects.filter(polity=polity_id).exists() or Polity_utm_zone.objects.filter(polity=polity_id).exists():
-#         return
-#     for ct in ContentType.objects.filter(app_label='general'):
-#         m = ct.model_class()
-#         if m and m.__module__ == "seshat.apps.general.models":
-#             data_exists = m.objects.filter(polity=polity_id).exists()
-#             if data_exists:
-#                 return True
-#     return False
 
 
 def get_all_general_data_for_a_polity(polity_id):
@@ -906,7 +836,6 @@ def get_all_general_data_for_a_polity(polity_id):
     all_vars_grouped_g = {}
     for model in models_1:
         model_name = model.__name__
-        # print(f"--------xxxxxxxxxxxxx-----{model_name}, ")
 
         if model_name in [
             "Ra",
@@ -916,11 +845,13 @@ def get_all_general_data_for_a_polity(polity_id):
             "XYZ",
         ]:
             continue
+
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
 
         if s_value not in all_vars_grouped_g:
             all_vars_grouped_g[s_value] = {}
+
             if ss_value:
                 all_vars_grouped_g[s_value][ss_value] = {}
             else:
@@ -930,11 +861,10 @@ def get_all_general_data_for_a_polity(polity_id):
                 all_vars_grouped_g[s_value][ss_value] = {}
             else:
                 all_vars_grouped_g[s_value]["None"] = {}
-    # print(all_vars_grouped_g.keys())
-    #########
-    # ll_vars_grouped = {}
+
     for ct in ContentType.objects.all():
         m = ct.model_class()
+
         if m and m.__module__ == "seshat.apps.general.models":
             if hasattr(m, "other_polity"):
                 my_data = m.objects.filter(
@@ -943,7 +873,6 @@ def get_all_general_data_for_a_polity(polity_id):
             else:
                 my_data = m.objects.filter(polity=polity_id)
 
-            # my_data = m.objects.filter(polity = polity_id)
             if m.__name__ in [
                 "Ra",
                 "Polity_editor",
@@ -951,12 +880,11 @@ def get_all_general_data_for_a_polity(polity_id):
                 "Polity_expert",
             ]:
                 continue
-            # print(f"--------xxxxxxxxxxxxx-----{m.__name__}, ")
+
             if my_data:
                 has_any_data = True
 
                 my_s = m().subsection()
-                # print(f"-------------{my_s}, ")
 
                 if my_s:
                     all_vars_grouped_g[my_s]["None"][m.__name__] = my_data
@@ -969,9 +897,6 @@ def get_all_general_data_for_a_polity(polity_id):
                     all_vars_grouped_g[my_s]["None"][m.__name__] = None
                 else:
                     print(f"--------xxx-----{my_s},")
-                # if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
-                #    print(f"------{m.subsection()}-------")
-    # print(all_vars_grouped_g)
 
     return all_vars_grouped_g, has_any_data
 
@@ -992,14 +917,15 @@ def get_all_sc_data_for_a_polity(polity_id):
 
     all_vars_grouped = {}
     for model in models_1:
-        model_name = model.__name__
-        if model_name == "Ra":
+        if model.__name__ == "Ra":
             continue
+
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
 
         if s_value not in all_vars_grouped:
             all_vars_grouped[s_value] = {}
+
             if ss_value:
                 all_vars_grouped[s_value][ss_value] = {}
             else:
@@ -1009,15 +935,16 @@ def get_all_sc_data_for_a_polity(polity_id):
                 all_vars_grouped[s_value][ss_value] = {}
             else:
                 all_vars_grouped[s_value]["None"] = {}
-    # print(all_vars_grouped.keys())
-    #########
-    # ll_vars_grouped = {}
+
     for ct in ContentType.objects.all():
         m = ct.model_class()
+
         if m and m.__module__ == "seshat.apps.sc.models":
             my_data = m.objects.filter(polity=polity_id)
+
             if m.__name__ == "Ra":
                 continue
+
             if my_data:
                 has_any_data = True
                 my_s = m().subsection()
@@ -1040,22 +967,8 @@ def get_all_sc_data_for_a_polity(polity_id):
                     all_vars_grouped[my_s]["None"][m.__name__] = my_data
                 else:
                     print(f"--------xxx-----{my_s},")
-                # if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
-                #    print(f"------{m.subsection()}-------")
-    # print(all_vars_grouped)
 
     return all_vars_grouped, has_any_data
-
-
-# def has_sc_data_for_polity(polity_id):
-#     for ct in ContentType.objects.filter(app_label='sc'):
-#         m = ct.model_class()
-#         #print(m)
-#         if m and m.__module__ == "seshat.apps.sc.models":
-#             data_exists = m.objects.filter(polity=polity_id).exists()
-#             if data_exists:
-#                 return True
-#     return False
 
 
 def get_all_wf_data_for_a_polity(polity_id):
@@ -1091,19 +1004,15 @@ def get_all_wf_data_for_a_polity(polity_id):
                 all_vars_grouped_wf[s_value][ss_value] = {}
             else:
                 all_vars_grouped_wf[s_value]["None"] = {}
-    # print(all_vars_grouped_wf)
-    #########
-    # ll_vars_grouped = {}
+
     for ct in ContentType.objects.all():
         m = ct.model_class()
         if m and m.__module__ == "seshat.apps.wf.models":
             my_data = m.objects.filter(polity=polity_id)
 
-            # print(f"--------xxxxxxxxxxxxx-----{m.__name__}, ")
             if my_data:
                 has_any_data = True
                 my_s = m().subsection()
-                # print(f"-------------{my_s}, ")
 
                 if my_s:
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = my_data
@@ -1116,9 +1025,6 @@ def get_all_wf_data_for_a_polity(polity_id):
                     all_vars_grouped_wf[my_s]["None"][m.__name__] = None
                 else:
                     print(f"--------xxx-----{my_s},")
-                # if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
-                #    print(f"------{m.subsection()}-------")
-    # print(all_vars_grouped_wf)
 
     return all_vars_grouped_wf, has_any_data
 
@@ -1144,7 +1050,6 @@ def get_all_rt_data_for_a_polity(polity_id):
         if model_name in [
             "A_religion",
         ]:
-            # print(f"Skipping excluded model: {model_name}")
             continue
 
         s_value = str(model().subsection())
@@ -1165,11 +1070,10 @@ def get_all_rt_data_for_a_polity(polity_id):
                 print("Skipping Religion model")
                 continue
 
-            # print(f"Processing model: {mm.__name__}")
             if my_data:
                 has_any_data = True
                 my_s = mm().subsection()
-                # print(f"Adding data for subsection: {my_s}")
+
                 if my_s:
                     all_vars_grouped_rt[my_s]["None"][mm.__name__] = my_data
                 else:
@@ -1182,11 +1086,9 @@ def get_all_rt_data_for_a_polity(polity_id):
                 else:
                     print(f"--------xxx-----{my_s},")
 
-    # print("Final grouped data keys:", all_vars_grouped_rt.keys())
     return all_vars_grouped_rt, has_any_data
 
 
-#####################################################
 def get_all_wf_data_for_a_polity_old(polity_id):
     """
     Gets all data for a given polity ID from the "wf" app.
@@ -1212,17 +1114,6 @@ def get_all_wf_data_for_a_polity_old(polity_id):
     return a_huge_context_data_dic
 
 
-# def has_wf_data_for_polity(polity_id):
-#     for ct in ContentType.objects.filter(app_label='wf'):
-#         m = ct.model_class()
-#         if m and m.__module__ == "seshat.apps.wf.models":
-#             data_exists = m.objects.filter(polity=polity_id).exists()
-#             if data_exists:
-#                 return True
-#     return False
-
-
-# get crsisi cocases data
 def get_all_crisis_cases_data_for_a_polity(polity_id):
     """
     Gets all data for a given polity ID from the "crisisdb" app.
@@ -1233,20 +1124,15 @@ def get_all_crisis_cases_data_for_a_polity(polity_id):
     Returns:
         dict: A dictionary of all data for the polity.
     """
-    a_data_dic = {}
-    # my_data = Crisis_consequence.objects.filter(polity = polity_id)
     my_data = Crisis_consequence.objects.filter(
         Q(polity=polity_id) | Q(other_polity=polity_id)
     )
+
+    a_data_dic = {}
     if my_data:
-        # a_data_dic["crisis_cases"] = my_data
         a_data_dic["crisis_consequence"] = my_data
-    # print(a_data_dic)
+
     return a_data_dic
-
-
-# def has_crisis_cases_data_for_polity(polity_id):
-#     return Crisis_consequence.objects.filter(polity=polity_id).exists()
 
 
 def get_all_power_transitions_data_for_a_polity(polity_id):
@@ -1262,10 +1148,8 @@ def get_all_power_transitions_data_for_a_polity(polity_id):
     a_data_dic = {}
     my_data = Power_transition.objects.filter(polity=polity_id)
     if my_data:
-        # a_data_dic["power_transitions"] = my_data
         a_data_dic["power_transition"] = my_data
 
-    # print(a_data_dic)
     return a_data_dic
 
 
@@ -1315,15 +1199,18 @@ def give_polity_app_data():
     all_polity_ids = Polity.objects.values_list("id", flat=True)
     for polity_id in all_polity_ids:
         has_hs = Human_sacrifice.objects.filter(polity=polity_id).exists()
+
         if has_hs:
             freq_dic["hs"] += 1
-        # has_cc =  Crisis_consequence.objects.filter(polity=polity_id).exists()
+
         has_cc = Crisis_consequence.objects.filter(
             Q(polity=polity_id) | Q(other_polity=polity_id)
         ).exists()
+
         if has_cc:
             freq_dic["cc"] += 1
         has_pt = Power_transition.objects.filter(polity=polity_id).exists()
+
         if has_pt:
             freq_dic["pt"] += 1
 
@@ -1336,26 +1223,28 @@ def give_polity_app_data():
             "cc": has_cc,
             "pt": has_pt,
         }
+
         if polity_id in unique_polity_ids_general:
             contain_dic[polity_id]["g"] = True
             freq_dic["g"] += 1
+
         if polity_id in unique_polity_ids_sc:
             contain_dic[polity_id]["sc"] = True
             freq_dic["sc"] += 1
+
         if polity_id in unique_polity_ids_wf:
             contain_dic[polity_id]["wf"] = True
             freq_dic["wf"] += 1
+
         if polity_id in unique_polity_ids_rt:
             contain_dic[polity_id]["rt"] = True
             freq_dic["rt"] += 1
-    # freq_dic["pol_count"] = len(all_polity_ids)
 
     return contain_dic, freq_dic
 
 
 def polity_detail_data_collector(polity_id):
     url = "http://127.0.0.1:8000/api/politys-api/"
-    # url = "https://www.majidbenam.com/api/politys/"
 
     headers = CaseInsensitiveDict()
     headers["Accept"] = "application/json"
@@ -1363,14 +1252,13 @@ def polity_detail_data_collector(polity_id):
     resp = requests.get(url, headers=headers)
 
     all_my_data = resp.json()["results"]
-    # I want to go through the data and create the proper data to give the function
+
+    # Go through the data and create the proper data to give the function
     for polity_with_everything in all_my_data:
         if polity_with_everything["id"] == polity_id:
-            # print("Hffffffffffallo")
-            # print(type(polity_with_everything), polity_with_everything.keys())
             final_response = dict(polity_with_everything)
             break
         else:
             final_response = {}
-    # print(final_response)
+
     return final_response

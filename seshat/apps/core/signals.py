@@ -24,7 +24,7 @@ def update_subcomment_ordering(sender, instance, **kwargs):
         instance.comment_order = (
             last_subcomment.comment_order + 1 if last_subcomment else 0
         )
-        # instance.save()
+
         SeshatCommentPart.objects.filter(pk=instance.pk).update(
             comment_order=instance.comment_order
         )
@@ -39,21 +39,3 @@ def update_subcomment_ordering(sender, instance, **kwargs):
             .order_by("comment_order")
         )
         subcomments.update(comment_order=F("comment_order") + 1)
-        # for i, subcomment in enumerate(subcomments):
-        #     print(f"Changed: {subcomment.comment_order}   -----> to {order + i + 1}")
-        #     subcomment.comment_order = order + i + 1
-        #     # remember that any of these save() s triggers a new round of updating!
-        #     subcomment.save()
-
-
-# @receiver(post_save, sender=SeshatCommentPart)
-# def update_subcomment_ordering(sender, instance, **kwargs):
-#     if not instance.pk:
-#         last_subcomment = instance.comment.subcomments.last()
-#         instance.order = last_subcomment.order + 1 if last_subcomment else 0
-#         SeshatCommentPart.objects.filter(pk=instance.pk).update(order=instance.order)
-#     else:
-#         # Re-order all the subcomments if the order of the current subcomment has changed
-#         order = instance.order
-#         subcomments = instance.comment.subcomments.filter(order__gte=order).exclude(pk=instance.pk)
-#         subcomments.update(order=F('order') + 1)

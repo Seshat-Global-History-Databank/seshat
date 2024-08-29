@@ -46,7 +46,8 @@ def cliopatria_gdf(cliopatria_geojson_path, cliopatria_json_path):
         polity_name_raw = gdf.loc[i, 'Name']
         polity_name = convert_name(gdf, i)
 
-        if polity_name:  # convert_name returns None if we don't want to display the shape
+        # convert_name has returned None if we don't want to display the shape
+        if polity_name:
             if gdf.loc[i, 'Type'] != 'POLITY':  # Add the type to the name if it's not a polity
                 polity_name = gdf.loc[i, 'Type'] + ': ' + polity_name
 
@@ -69,18 +70,23 @@ def cliopatria_gdf(cliopatria_geojson_path, cliopatria_json_path):
             # Raise an error if the shape year is not the start year of the polity
             if this_polity_years[0] != polity_start_year:
                 raise ValueError(f'First shape year for {polity_name} is not the start year of the polity')
-            
+
             # Find the closest higher value from end_years to the shape year
             next_end_year = min(end_years, key=lambda x: x if x >= start_year else float('inf'))
 
-            if start_year in end_years:  # If the shape year is in the list of polity end years, the start year is the end year
+            if start_year in end_years:
+                # If the shape year is in the list of polity end years, the start year is the end year
                 end_year = start_year
             else:
                 this_year_index = this_polity_years.index(start_year)  
-                try:  # Try to use the next shape year minus one as the end year if possible, unless it's higher than the next_end_year
+                try:
+                    # Try to use the next shape year minus one as the end year if possible,
+                    # unless it's higher than the next_end_year
                     next_shape_year_minus_one = this_polity_years[this_year_index + 1] - 1
                     end_year = next_shape_year_minus_one if next_shape_year_minus_one < next_end_year else next_end_year
-                except IndexError:  # Otherwise assume the end year of the shape is the end year of the polity
+                except IndexError:
+                    # Otherwise assume the end year of the shape is the end year of the
+                    # polity
                     end_year = polity_end_year
 
             # Set the EndYear column to the end year

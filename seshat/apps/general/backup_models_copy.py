@@ -8,7 +8,6 @@ from ..accounts.models import Seshat_Expert
 from ..core.models import SeshatCommon
 
 
-########## Beginning of tuple choices for general Models
 POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (
     ("loose", "loose"),
     ("confederated state", "confederated state"),
@@ -349,14 +348,9 @@ POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
 )
 
 
-########## TUPLE CHOICES THAT ARE THE SAME
 POLITY_ALTERNATE_RELIGION_GENUS_CHOICES = POLITY_RELIGION_GENUS_CHOICES
 POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES = POLITY_RELIGION_FAMILY_CHOICES
 POLITY_ALTERNATE_RELIGION_CHOICES = POLITY_RELIGION_CHOICES
-
-########## END of tuple choices for general Models
-
-########## Beginning of Function Definitions for General (Vars) Models
 
 
 def call_my_name(self):
@@ -483,11 +477,6 @@ def clean_times(self):
                 "year_from": "You need to enter at least one year (From or To)",
             }
         )
-
-
-########## End of Function Definitions for General (Vars) Models
-
-########## Beginning of class Definitions for general Models
 
 
 class Polity_research_assistant(SeshatCommon):
@@ -3114,6 +3103,3 @@ class Polity_religious_tradition(SeshatCommon):
 
     def __str__(self) -> str:
         return call_my_name(self)
-
-
-########## END of class Definitions for general Models

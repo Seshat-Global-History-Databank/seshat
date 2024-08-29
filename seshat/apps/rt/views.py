@@ -17,9 +17,6 @@ from ..core.forms import SeshatCommentPartForm2
 from .var_defs import swapped_dict
 
 
-#############################################################
-
-
 def rtvars(request):
     """
     View function for the RT variables page.
@@ -119,10 +116,6 @@ def rtvars(request):
     return render(request, "rt/rtvars.html", context=context)
 
 
-#############################################################
-
-
-# Define a custom test function to check for the 'core.add_capital' permission
 def has_add_capital_permission(user):
     """
     Check if the user has the 'core.add_capital' permission.
@@ -215,17 +208,13 @@ def dynamic_create_view(
         x_name_1 = x_name
         x_name_2 = None
         x_name_3 = None
-    # x_name_with_from = x_name
-    # x_name_with_to = None
 
     if request.method == "POST":
         my_form = form_class(request.POST)
 
         if my_form.is_valid():
             new_object = my_form.save()
-            return redirect(
-                f"{x_name}-detail", pk=new_object.id
-            )  # Replace 'success_url_name' with your success URL
+            return redirect(f"{x_name}-detail", pk=new_object.id)
     else:
         polity_id_x = request.GET.get("polity_id_x")
         my_form = form_class(
@@ -258,16 +247,6 @@ def dynamic_create_view(
             "var_section": var_section,
             "var_subsection": var_subsection,
         }
-
-    # context = {
-    #         'form': my_form,
-    #         'object': object,
-    #         'extra_var': my_form['coded_value'],#my_form[x_name],
-    #         "myvar": myvar,
-    #         "my_exp": my_exp,
-    #         'var_section': var_section,
-    #         'var_subsection': var_subsection,
-    #     }
 
     return render(request, "rt/rt_create.html", context)
 
@@ -325,7 +304,6 @@ def dynamic_update_view(
         x_name_2 = None
         x_name_3 = None
 
-    # return_url = f"{x_name}s_all"
     if request.method == "POST":
         # Bind the form to the POST data
         my_form = form_class(request.POST, instance=my_object)
@@ -333,7 +311,6 @@ def dynamic_update_view(
         if my_form.is_valid():
             # Save the changes to the object
             my_form.save()
-            # return redirect(return_url)
             return redirect(f"{x_name}-detail", pk=my_object.id)
 
     else:
@@ -367,17 +344,6 @@ def dynamic_update_view(
                 "var_subsection": var_subsection,
                 "my_exp": my_exp,
             }
-
-        # context = {
-        #         'form': my_form,
-        #         'object': my_object,
-        #         'delete_url': delete_url_name,
-        #         'extra_var':  my_form['coded_value'],
-        #         "myvar": myvar,
-        #         'var_section': var_section,
-        #         'var_subsection': var_subsection,
-        #         "my_exp": my_exp,
-        #     }
 
     return render(request, "rt/rt_update.html", context)
 
@@ -419,7 +385,7 @@ def generic_list_view(
         object_list = model_class.objects.all().order_by("polity_id", "order")
     else:
         object_list = model_class.objects.all()
-    # extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+
     extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
     orderby = request.GET.get("orderby", None)
@@ -615,7 +581,7 @@ def generic_metadata_download(
     }
 
     writer = csv.writer(response, delimiter="|")
-    # bring in the meta data nedded
+
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
 
@@ -741,7 +707,6 @@ def download_csv_all_rt(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -872,7 +837,6 @@ def download_csv_religious_landscape(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -953,7 +917,6 @@ def download_csv_government_restrictions(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
@@ -1034,7 +997,6 @@ def download_csv_societal_restrictions(request):
     # Create a CSV writer
     writer = csv.writer(response, delimiter="|")
 
-    # type the headers
     writer.writerow(
         [
             "subsection",
