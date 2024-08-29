@@ -26,7 +26,7 @@ class Seshat_TaskForm(forms.ModelForm):
         widgets = {
             "giver": forms.Select(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
             "taker": forms.SelectMultiple(
@@ -36,12 +36,12 @@ class Seshat_TaskForm(forms.ModelForm):
             ),
             "task_description": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
             "task_url": forms.TextInput(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
         }
@@ -79,7 +79,7 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             "bio": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
         }

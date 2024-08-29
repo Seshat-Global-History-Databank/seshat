@@ -61,24 +61,24 @@ commonfields = [
 commonwidgets = {
     "polity": forms.Select(
         attrs={
-            "class": "form-control  mb-1 js-example-basic-single",
+            "class": "form-control mb-1 js-example-basic-single",
             "id": "id_polity",
             "name": "polity",
         }
     ),
     "year_from": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-1",
+            "class": "form-control mb-1",
         }
     ),
     "year_to": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-1",
+            "class": "form-control mb-1",
         }
     ),
     "description": Textarea(
         attrs={
-            "class": "form-control  mb-1",
+            "class": "form-control mb-1",
             "style": "height: 220px",
             "placeholder": "Add a Note (optional)",
         }
@@ -187,11 +187,11 @@ class Us_violenceForm(forms.ModelForm):
         ]
         widgets = {
             "violence_date": forms.DateInput(
-                attrs={"class": "form-control  mb-3", "placeholder": "Ex: 2022-12-14"}
+                attrs={"class": "form-control mb-3", "placeholder": "Ex: 2022-12-14"}
             ),
             "violence_type": forms.Select(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
             "violence_subtype": forms.SelectMultiple(
@@ -204,7 +204,7 @@ class Us_violenceForm(forms.ModelForm):
             ),
             "fatalities": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                 }
             ),
             "location": forms.SelectMultiple(
@@ -216,7 +216,7 @@ class Us_violenceForm(forms.ModelForm):
                 }
             ),
             "url_address": forms.TextInput(
-                attrs={"class": "form-control  mb-3", "placeholder": "Enter a URL"}
+                attrs={"class": "form-control mb-3", "placeholder": "Enter a URL"}
             ),
             "short_data_source": forms.SelectMultiple(
                 attrs={
@@ -228,14 +228,14 @@ class Us_violenceForm(forms.ModelForm):
             ),
             "source_details": Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 250px",
                     "placeholder": "Add a narrative (optional)",
                 }
             ),
             "narrative": Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 250px",
                     "placeholder": "Add a narrative (optional)",
                 }
@@ -324,17 +324,17 @@ class Crisis_consequenceForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["crisis_case_id"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["name"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["other_polity"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1 js-example-basic-single2",
+                "class": "form-control mb-1 js-example-basic-single2",
                 "id": "id_polity_other",
             }
         )
@@ -345,107 +345,107 @@ class Crisis_consequenceForm(forms.ModelForm):
         )
         widgets["decline"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["collapse"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["epidemic"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["downward_mobility"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["extermination"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["uprising"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["revolution"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["successful_revolution"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["civil_war"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["century_plus"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["fragmentation"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["capital"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["conquest"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["assassination"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["depose"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["constitution"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["labor"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["unfree_labor"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["suffrage"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["public_goods"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["religion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
 
@@ -517,73 +517,73 @@ class Power_transitionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["predecessor"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["successor"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["reign_number_predecessor"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["culture_group"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
 
         widgets["name"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["contested"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["overturn"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["predecessor_assassination"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["intra_elite"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["military_revolt"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["popular_uprising"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["separatist_rebellion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["external_invasion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
         widgets["external_interference"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
 
@@ -608,12 +608,12 @@ class Human_sacrificeForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["sub_category"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["human_sacrifice"] = forms.Select(
             attrs={
-                "class": "form-control  mb-1",
+                "class": "form-control mb-1",
             }
         )
 
@@ -636,7 +636,7 @@ class External_conflictForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["conflict_name"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -662,22 +662,22 @@ class Internal_conflictForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["conflict"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["expenditure"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["leader"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["casualty"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -703,22 +703,22 @@ class External_conflict_sideForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["conflict_id"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["expenditure"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["leader"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["casualty"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -741,7 +741,7 @@ class Agricultural_populationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["agricultural_population"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -764,7 +764,7 @@ class Arable_landForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["arable_land"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -787,7 +787,7 @@ class Arable_land_per_farmerForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["arable_land_per_farmer"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -810,7 +810,7 @@ class Gross_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["gross_grain_shared_per_agricultural_population"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -833,7 +833,7 @@ class Net_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["net_grain_shared_per_agricultural_population"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -856,7 +856,7 @@ class SurplusForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["surplus"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -880,12 +880,12 @@ class Military_expenseForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["conflict"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["expenditure"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -908,7 +908,7 @@ class Silver_inflowForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["silver_inflow"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -931,7 +931,7 @@ class Silver_stockForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["silver_stock"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -954,7 +954,7 @@ class Total_populationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["total_population"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -977,7 +977,7 @@ class Gdp_per_capitaForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["gdp_per_capita"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1000,7 +1000,7 @@ class Drought_eventForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["drought_event"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1023,7 +1023,7 @@ class Locust_eventForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["locust_event"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1046,7 +1046,7 @@ class Socioeconomic_turmoil_eventForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["socioeconomic_turmoil_event"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1069,7 +1069,7 @@ class Crop_failure_eventForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["crop_failure_event"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1092,7 +1092,7 @@ class Famine_eventForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["famine_event"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1120,31 +1120,31 @@ class Disease_outbreakForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["longitude"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["latitude"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["elevation"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["sub_category"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["magnitude"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["duration"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )

@@ -57,22 +57,22 @@ commonfields = [
 commonwidgets = {
     "polity": forms.Select(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "year_from": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "year_to": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "description": forms.Textarea(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
             "style": "height: 140px",
             "placeholder": "Add a meaningful description (optional)",
         }
@@ -126,7 +126,7 @@ class Polity_research_assistantForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["polity_ra"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -147,7 +147,7 @@ class Polity_utm_zoneForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["utm_zone"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -168,7 +168,7 @@ class Polity_original_nameForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["original_name"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -189,7 +189,7 @@ class Polity_alternative_nameForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["alternative_name"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -211,12 +211,12 @@ class Polity_peak_yearsForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["peak_year_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["peak_year_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -238,12 +238,12 @@ class Polity_durationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["polity_year_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["polity_year_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -264,7 +264,7 @@ class Polity_degree_of_centralizationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["degree_of_centralization"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -285,7 +285,7 @@ class Polity_suprapolity_relationsForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["supra_polity_relations"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -306,7 +306,7 @@ class Polity_capitalForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["capital"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -327,7 +327,7 @@ class Polity_languageForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["language"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -348,7 +348,7 @@ class Polity_linguistic_familyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["linguistic_family"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -369,7 +369,7 @@ class Polity_language_genusForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["language_genus"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -390,7 +390,7 @@ class Polity_religion_genusForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religion_genus"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -411,7 +411,7 @@ class Polity_religion_familyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religion_family"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -432,7 +432,7 @@ class Polity_religionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -453,7 +453,7 @@ class Polity_relationship_to_preceding_entityForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["relationship_to_preceding_entity"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -474,7 +474,7 @@ class Polity_preceding_entityForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["preceding_entity"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -495,7 +495,7 @@ class Polity_succeeding_entityForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["succeeding_entity"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -516,7 +516,7 @@ class Polity_supracultural_entityForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["supracultural_entity"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -538,12 +538,12 @@ class Polity_scale_of_supracultural_interactionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["scale_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["scale_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -564,7 +564,7 @@ class Polity_alternate_religion_genusForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["alternate_religion_genus"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -585,7 +585,7 @@ class Polity_alternate_religion_familyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["alternate_religion_family"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -606,7 +606,7 @@ class Polity_alternate_religionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["alternate_religion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -627,7 +627,7 @@ class Polity_expertForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["expert"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -648,7 +648,7 @@ class Polity_editorForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["editor"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -669,6 +669,6 @@ class Polity_religious_traditionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religious_tradition"] = forms.TextInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )

@@ -4,6 +4,7 @@ import os
 import sys
 from pathlib import Path
 
+
 def main():
     """Run administrative tasks."""
     local_env_path = str(Path.cwd()) + "/seshat/settings/.env"

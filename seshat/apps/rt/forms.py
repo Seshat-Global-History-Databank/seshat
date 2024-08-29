@@ -57,24 +57,24 @@ commonfields = [
 commonwidgets = {
     "polity": forms.Select(
         attrs={
-            "class": "form-control  mb-3 js-example-basic-single",
+            "class": "form-control mb-3 js-example-basic-single",
             "id": "id_polity",
             "name": "polity",
         }
     ),
     "year_from": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "year_to": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "description": Textarea(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
             "style": "height: 340px; line-height: 1.2;",
             "placeholder": "Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
         }
@@ -141,19 +141,19 @@ class Widespread_religionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["widespread_religion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3 js-example-basic-single",
+                "class": "form-control mb-3 js-example-basic-single",
                 "id": "id_widespread_religion",
                 "name": "widespread_religion",
             }
         )
         widgets["order"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["degree_of_prevalence"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -176,7 +176,7 @@ class Official_religionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3 js-example-basic-single",
+                "class": "form-control mb-3 js-example-basic-single",
                 "id": "id_official_religion",
                 "name": "official_religion",
             }
@@ -201,7 +201,7 @@ class Elites_religionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3 js-example-basic-single",
+                "class": "form-control mb-3 js-example-basic-single",
                 "id": "id_elites_religion",
                 "name": "elites_religion",
             }
@@ -228,7 +228,7 @@ class Theo_sync_dif_relForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -253,7 +253,7 @@ class Sync_rel_pra_ind_beliForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -276,7 +276,7 @@ class Religious_fragmentationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -301,7 +301,7 @@ class Gov_vio_freq_rel_grpForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -326,7 +326,7 @@ class Gov_res_pub_worForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -351,7 +351,7 @@ class Gov_res_pub_prosForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -374,7 +374,7 @@ class Gov_res_convForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -397,7 +397,7 @@ class Gov_press_convForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -422,7 +422,7 @@ class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -447,7 +447,7 @@ class Tax_rel_adh_act_insForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -472,7 +472,7 @@ class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -497,7 +497,7 @@ class Gov_res_cons_rel_builForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -522,7 +522,7 @@ class Gov_res_rel_eduForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -547,7 +547,7 @@ class Gov_res_cir_rel_litForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -572,7 +572,7 @@ class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -597,7 +597,7 @@ class Soc_vio_freq_rel_grpForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -622,7 +622,7 @@ class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -647,6 +647,6 @@ class Gov_press_conv_for_agaForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["coded_value"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )

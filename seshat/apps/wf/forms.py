@@ -82,24 +82,24 @@ commonfields = [
 commonwidgets = {
     "polity": forms.Select(
         attrs={
-            "class": "form-control  mb-1 js-example-basic-single",
+            "class": "form-control mb-1 js-example-basic-single",
             "id": "id_polity",
             "name": "polity",
         }
     ),
     "year_from": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "year_to": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "description": forms.Textarea(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
             "style": "height: 140px",
             "placeholder": "Add a meaningful description (optional)",
         }
@@ -159,12 +159,12 @@ class Long_wallForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["long_wall_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["long_wall_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 

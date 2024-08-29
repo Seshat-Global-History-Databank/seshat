@@ -114,24 +114,24 @@ commonfields = [
 commonwidgets = {
     "polity": forms.Select(
         attrs={
-            "class": "form-control  mb-3 js-example-basic-single",
+            "class": "form-control mb-3 js-example-basic-single",
             "id": "id_polity",
             "name": "polity",
         }
     ),
     "year_from": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "year_to": forms.NumberInput(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
         }
     ),
     "description": Textarea(
         attrs={
-            "class": "form-control  mb-3",
+            "class": "form-control mb-3",
             "style": "height: 240px; line-height: 1.2;",
             "placeholder": "Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
         }
@@ -190,7 +190,7 @@ class RaForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["sc_ra"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -212,12 +212,12 @@ class Polity_territoryForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["polity_territory_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["polity_territory_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -239,12 +239,12 @@ class Polity_populationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["polity_population_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["polity_population_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -266,12 +266,12 @@ class Population_of_the_largest_settlementForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["population_of_the_largest_settlement_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["population_of_the_largest_settlement_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -293,12 +293,12 @@ class Settlement_hierarchyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["settlement_hierarchy_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["settlement_hierarchy_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -320,12 +320,12 @@ class Administrative_levelForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["administrative_level_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["administrative_level_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -347,12 +347,12 @@ class Religious_levelForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religious_level_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["religious_level_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -374,12 +374,12 @@ class Military_levelForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["military_level_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["military_level_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -400,7 +400,7 @@ class Professional_military_officerForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["professional_military_officer"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -421,7 +421,7 @@ class Professional_soldierForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["professional_soldier"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -442,7 +442,7 @@ class Professional_priesthoodForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["professional_priesthood"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -463,7 +463,7 @@ class Full_time_bureaucratForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["full_time_bureaucrat"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -484,7 +484,7 @@ class Examination_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["examination_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -505,7 +505,7 @@ class Merit_promotionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["merit_promotion"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -526,7 +526,7 @@ class Specialized_government_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["specialized_government_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -547,7 +547,7 @@ class Formal_legal_codeForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["formal_legal_code"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -568,7 +568,7 @@ class JudgeForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["judge"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -589,7 +589,7 @@ class CourtForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["court"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -610,7 +610,7 @@ class Professional_lawyerForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["professional_lawyer"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -631,7 +631,7 @@ class Irrigation_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["irrigation_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -652,7 +652,7 @@ class Drinking_water_supply_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["drinking_water_supply_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -673,7 +673,7 @@ class MarketForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["market"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -694,7 +694,7 @@ class Food_storage_siteForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["food_storage_site"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -715,7 +715,7 @@ class RoadForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["road"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -736,7 +736,7 @@ class BridgeForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["bridge"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -757,7 +757,7 @@ class CanalForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["canal"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -778,7 +778,7 @@ class PortForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["port"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -799,7 +799,7 @@ class Mines_or_quarryForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["mines_or_quarry"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -820,7 +820,7 @@ class Mnemonic_deviceForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["mnemonic_device"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -841,7 +841,7 @@ class Nonwritten_recordForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["nonwritten_record"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -862,7 +862,7 @@ class Written_recordForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["written_record"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -883,7 +883,7 @@ class ScriptForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["script"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -904,7 +904,7 @@ class Non_phonetic_writingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["non_phonetic_writing"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -925,7 +925,7 @@ class Phonetic_alphabetic_writingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["phonetic_alphabetic_writing"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -946,7 +946,7 @@ class Lists_tables_and_classificationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["lists_tables_and_classification"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -967,7 +967,7 @@ class CalendarForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["calendar"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -988,7 +988,7 @@ class Sacred_textForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["sacred_text"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1009,7 +1009,7 @@ class Religious_literatureForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["religious_literature"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1030,7 +1030,7 @@ class Practical_literatureForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["practical_literature"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1051,7 +1051,7 @@ class HistoryForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["history"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1072,7 +1072,7 @@ class PhilosophyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["philosophy"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1093,7 +1093,7 @@ class Scientific_literatureForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["scientific_literature"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1114,7 +1114,7 @@ class FictionForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["fiction"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1135,7 +1135,7 @@ class ArticleForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["article"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1156,7 +1156,7 @@ class TokenForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["token"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1177,7 +1177,7 @@ class Precious_metalForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["precious_metal"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1198,7 +1198,7 @@ class Foreign_coinForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["foreign_coin"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1219,7 +1219,7 @@ class Indigenous_coinForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["indigenous_coin"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1240,7 +1240,7 @@ class Paper_currencyForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["paper_currency"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1261,7 +1261,7 @@ class CourierForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["courier"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1282,7 +1282,7 @@ class Postal_stationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["postal_station"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1303,7 +1303,7 @@ class General_postal_serviceForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["general_postal_service"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1327,7 +1327,7 @@ class Communal_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["communal_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1352,7 +1352,7 @@ class Utilitarian_public_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["utilitarian_public_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1377,7 +1377,7 @@ class Other_utilitarian_public_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["other_utilitarian_public_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1400,7 +1400,7 @@ class Symbolic_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["symbolic_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1423,7 +1423,7 @@ class Entertainment_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["entertainment_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1448,7 +1448,7 @@ class Knowledge_or_information_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["knowledge_or_information_building"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1471,7 +1471,7 @@ class Special_purpose_siteForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["special_purpose_site"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1494,7 +1494,7 @@ class Ceremonial_siteForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["ceremonial_site"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1517,7 +1517,7 @@ class Burial_siteForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["burial_site"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1540,7 +1540,7 @@ class Trading_emporiaForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["trading_emporia"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1563,7 +1563,7 @@ class EnclosureForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["enclosure"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1588,7 +1588,7 @@ class Length_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["length_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1611,7 +1611,7 @@ class Area_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["area_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1636,7 +1636,7 @@ class Volume_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["volume_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1661,7 +1661,7 @@ class Weight_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["weight_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1684,7 +1684,7 @@ class Time_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["time_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1709,7 +1709,7 @@ class Geometrical_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["geometrical_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1732,7 +1732,7 @@ class Other_measurement_systemForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["other_measurement_system"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1757,7 +1757,7 @@ class Debt_and_credit_structureForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["debt_and_credit_structure"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1780,7 +1780,7 @@ class Store_of_wealthForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["store_of_wealth"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1803,7 +1803,7 @@ class Source_of_supportForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["source_of_support"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1824,7 +1824,7 @@ class Occupational_complexityForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["occupational_complexity"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1845,7 +1845,7 @@ class Special_purpose_houseForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["special_purpose_house"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1868,7 +1868,7 @@ class Other_special_purpose_siteForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["other_special_purpose_site"] = forms.Select(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1895,12 +1895,12 @@ class Largest_communication_distanceForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["largest_communication_distance_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["largest_communication_distance_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
 
@@ -1927,11 +1927,11 @@ class Fastest_individual_communicationForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets["fastest_individual_communication_from"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )
         widgets["fastest_individual_communication_to"] = forms.NumberInput(
             attrs={
-                "class": "form-control  mb-3",
+                "class": "form-control mb-3",
             }
         )

@@ -75,7 +75,7 @@ class ReferenceForm(forms.ModelForm):
             ),
             "year": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "creator": forms.TextInput(
@@ -90,7 +90,7 @@ class ReferenceForm(forms.ModelForm):
             ),
             "long_name": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 100px",
                 }
             ),
@@ -121,18 +121,18 @@ class CitationForm(forms.ModelForm):
         widgets = {
             "ref": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3 js-states js-example-basic-single",
+                    "class": "form-control mb-3 form-select js-states js-example-basic-single",
                     "text": "ref",
                 }
             ),
             "page_from": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "page_to": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
         }
@@ -223,7 +223,7 @@ class PolityForm(forms.ModelForm):
             ),
             "start_year": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "end_year": forms.NumberInput(
@@ -233,12 +233,12 @@ class PolityForm(forms.ModelForm):
             ),
             "home_seshat_region": forms.Select(
                 attrs={
-                    "class": "form-control  js-example-basic-single form-select mb-3",
+                    "class": "form-control mb-3 form-select js-example-basic-single",
                 }
             ),
             "polity_tag": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3",
+                    "class": "form-control mb-3 form-select",
                 }
             ),
             "shapefile_name": forms.TextInput(
@@ -255,7 +255,7 @@ class PolityForm(forms.ModelForm):
             ),
             "general_description": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 265px",
                     "placeholder": "Add a general description (optional)",
                 }
@@ -312,7 +312,7 @@ class PolityUpdateForm(forms.ModelForm):
             ),
             "start_year": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "end_year": forms.NumberInput(
@@ -322,12 +322,12 @@ class PolityUpdateForm(forms.ModelForm):
             ),
             "home_seshat_region": forms.Select(
                 attrs={
-                    "class": "form-control  js-example-basic-single form-select mb-3",
+                    "class": "form-control mb-3 form-select js-example-basic-single",
                 }
             ),
             "polity_tag": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3",
+                    "class": "form-control mb-3 form-select",
                 }
             ),
             "shapefile_name": forms.TextInput(
@@ -344,7 +344,7 @@ class PolityUpdateForm(forms.ModelForm):
             ),
             "general_description": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 265px",
                     "placeholder": "Add a general description (optional)",
                 }
@@ -378,7 +378,7 @@ class NgaForm(forms.ModelForm):
             ),
             "world_region": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3",
+                    "class": "form-control mb-3 form-select",
                 }
             ),
             "subregion": forms.TextInput(
@@ -431,7 +431,6 @@ class CapitalForm(forms.ModelForm):
                     "class": "form-control mb-3",
                 }
             ),
-            #'polity_cap': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             "current_country": forms.TextInput(
                 attrs={
                     "class": "form-control mb-3",
@@ -444,26 +443,26 @@ class CapitalForm(forms.ModelForm):
             ),
             "url_on_the_map": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 120px",
                     "placeholder": "Add the full URL from Google Maps (optional)",
                 }
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 120px",
                     "placeholder": "Add a note (optional)",
                 }
             ),
             "latitude": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "longitude": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "is_verified": forms.CheckboxInput(
@@ -471,7 +470,6 @@ class CapitalForm(forms.ModelForm):
                     "class": "mb-3",
                 }
             ),
-            #'is_verified' : forms.Select(attrs={'class': 'form-control form-select mb-3',}),
         }
 
 
@@ -493,7 +491,7 @@ class SeshatCommentForm(forms.ModelForm):
         widgets = {
             "text": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 100px",
                 }
             ),
@@ -528,17 +526,17 @@ class SeshatCommentPartForm(forms.ModelForm):
         widgets = {
             "comment": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "comment_order": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "comment_part_text": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 300px",
                 }
             ),
@@ -552,7 +550,7 @@ class SeshatCommentPartForm(forms.ModelForm):
             ),
             "comment_curator": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3",
+                    "class": "form-control mb-3 form-select",
                 }
             ),
         }
@@ -584,18 +582,18 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
         widgets = {
             "private_comment": forms.NumberInput(
                 attrs={
-                    "class": "form-control  mb-3 fw-bold",
+                    "class": "form-control mb-3 fw-bold",
                 }
             ),
             "private_comment_part_text": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 150px",
                 }
             ),
             "private_comment_owner": forms.Select(
                 attrs={
-                    "class": "form-control form-select mb-3",
+                    "class": "form-control mb-3 form-select",
                 }
             ),
             "private_comment_reader": forms.SelectMultiple(
@@ -627,7 +625,7 @@ class SeshatPrivateCommentForm(forms.ModelForm):
         widgets = {
             "text": forms.Textarea(
                 attrs={
-                    "class": "form-control  mb-3",
+                    "class": "form-control mb-3",
                     "style": "height: 100px",
                 }
             ),
@@ -643,7 +641,7 @@ class ReferenceWithPageForm(forms.Form):
         queryset=Reference.objects.all(),
         widget=forms.Select(
             attrs={
-                "class": "form-control form-select mb-1 js-example-basic-single",
+                "class": "form-control mb-1 form-select js-example-basic-single",
                 "text": "ref",
             }
         ),
@@ -694,7 +692,7 @@ class BaseReferenceFormSet(BaseFormSet):
         super().add_fields(form, index)
         form.fields["ref"].widget.attrs[
             "class"
-        ] = "form-control form-select mb-1 p-1 js-example-basic-single"
+        ] = "form-control mb-1 form-select p-1 js-example-basic-single"
         form.fields["page_from"].widget.attrs["class"] = "form-control mb-1 p-1"
         form.fields["page_from"].widget.attrs["placeholder"] = "p_from"
         form.fields["page_to"].widget.attrs["placeholder"] = "p_to"
@@ -738,7 +736,7 @@ class SeshatCommentPartForm2(forms.Form):
         label="",
         widget=forms.Textarea(
             attrs={
-                "class": "form-control  mb-1 p-1",
+                "class": "form-control mb-1 p-1",
                 "style": "height: 300px",
                 "placeholder": "SubDescription Text (Public)",
             }
@@ -758,7 +756,7 @@ class SeshatCommentPartForm5(forms.Form):
         label="",
         widget=forms.Textarea(
             attrs={
-                "class": "form-control  mb-1 p-0",
+                "class": "form-control mb-1 p-0",
                 "style": "height: 200px",
             }
         ),
@@ -777,7 +775,7 @@ class SeshatCommentPartForm10(forms.Form):
         label="",
         widget=forms.Textarea(
             attrs={
-                "class": "form-control  mb-1 p-0",
+                "class": "form-control mb-1 p-0",
                 "style": "height: 200px",
             }
         ),
@@ -882,7 +880,7 @@ class VariablehierarchyFormNew(forms.Form):
     variable_name = forms.ChoiceField(
         widget=forms.Select(
             attrs={
-                "class": "form-control form-select mb-3",
+                "class": "form-control mb-3 form-select",
                 "name": "variable_name",
                 "id": "variable_name",
             }
@@ -893,7 +891,7 @@ class VariablehierarchyFormNew(forms.Form):
         label="Section",
         widget=forms.Select(
             attrs={
-                "class": "form-control form-select mb-3 required-entry",
+                "class": "form-control mb-3 form-select required-entry",
                 "name": "section",
                 "id": "section",
                 "onchange": "javascript: dynamicdropdown(this.options[this.selectedIndex].value);",
@@ -905,7 +903,7 @@ class VariablehierarchyFormNew(forms.Form):
         label="Subsection",
         widget=forms.Select(
             attrs={
-                "class": "form-control form-select mb-3",
+                "class": "form-control mb-3 form-select",
                 "name": "subsection",
                 "id": "subsection",
             }
@@ -935,7 +933,7 @@ class ReferenceWithPageForm_UPGRADE(forms.Form):
     ref = forms.ModelChoiceField(
         queryset=Reference.objects.all(),
         widget=forms.Select(
-            attrs={"class": "form-control form-select mb-1 js-example-basic-single"}
+            attrs={"class": "form-control mb-1 form-select js-example-basic-single"}
         ),
         label="",
     )
