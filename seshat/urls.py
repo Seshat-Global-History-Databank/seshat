@@ -10,8 +10,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("", include("seshat.apps.core.urls")),
+    path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("profiles/", include("seshat.apps.accounts.urls")),
     path("general/", include("seshat.apps.general.urls")),
