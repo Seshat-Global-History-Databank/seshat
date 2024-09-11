@@ -13,8 +13,9 @@ import csv
 import datetime
 
 from ..core.forms import SeshatCommentPartForm2
+from ..global_constants import ABSENT_PRESENT_CHOICES
 
-from .var_defs import swapped_dict
+from .constants import APP_NAME, SWAPPED_DICT
 
 
 def rtvars(request):
@@ -37,14 +38,7 @@ def rtvars(request):
 
     all_sect_download_links = {}
 
-    for model in models_1:
-        model_name = model.__name__
-        if model_name in [
-            "RA",
-        ]:
-            continue
-        s_value = str(model().subsection())
-        ss_value = str(model().sub_subsection())
+    for model in get_models(APP_NAME):
 
         better_name = (
             "download_csv_"
@@ -76,7 +70,7 @@ def rtvars(request):
         count = model.objects.count()
         number_of_all_rows += count
         model_title = model_name.replace("_", " ").title()
-        model_title = swapped_dict[model_name]
+        model_title = SWAPPED_DICT[model_name]
         model_create = model_name.lower() + "-create"
         model_download = model_name.lower() + "-download"
         model_metadownload = model_name.lower() + "-metadownload"

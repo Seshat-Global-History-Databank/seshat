@@ -1,5 +1,12 @@
 from django import forms
-from django.forms.widgets import Textarea
+
+
+from ..global_constants import (
+    COMMON_FIELDS,
+    COMMON_LABELS,
+    COMMON_WIDGETS,
+    ATTRS,
+)
 
 from .models import (
     Us_location,
@@ -30,95 +37,6 @@ from .models import (
     Famine_event,
     Disease_outbreak,
 )
-
-
-commonlabels = {
-    "year_from": "Start Year",
-    "year_to": "End Year",
-    "tag": "Confidence Level",
-    "is_disputed": "&nbsp; <b> There is a Dispute? </b>",
-    "is_uncertain": "&nbsp; <b> There is Uncertainty? </b>",
-    "expert_reviewed": "&nbsp; Expert Checked?",
-    "drb_reviewed": "&nbsp; Data Review Board Reviewed?",
-    "citations": "Add one or more Citations",
-    "finalized": "This piece of data is verified.",
-}
-
-commonfields = [
-    "polity",
-    "year_from",
-    "year_to",
-    "description",
-    "tag",
-    "is_disputed",
-    "is_uncertain",
-    "expert_reviewed",
-    "drb_reviewed",
-    "finalized",
-    "citations",
-]
-
-commonwidgets = {
-    "polity": forms.Select(
-        attrs={
-            "class": "form-control mb-1 js-example-basic-single",
-            "id": "id_polity",
-            "name": "polity",
-        }
-    ),
-    "year_from": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-1",
-        }
-    ),
-    "year_to": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-1",
-        }
-    ),
-    "description": Textarea(
-        attrs={
-            "class": "form-control mb-1",
-            "style": "height: 220px",
-            "placeholder": "Add a Note (optional)",
-        }
-    ),
-    "citations": forms.SelectMultiple(
-        attrs={
-            "class": "form-control mb-1 js-states js-example-basic-multiple",
-            "text": "citations[]",
-            "style": "height: 340px",
-            "multiple": "multiple",
-        }
-    ),
-    "tag": forms.RadioSelect(),
-    "is_disputed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-1",
-        }
-    ),
-    "is_uncertain": forms.CheckboxInput(
-        attrs={
-            "class": "mb-1",
-        }
-    ),
-    "expert_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-1",
-        }
-    ),
-    "drb_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-1",
-        }
-    ),
-    "finalized": forms.CheckboxInput(
-        attrs={
-            "class": "mb-1",
-            "checked": True,
-        }
-    ),
-}
 
 
 class Us_locationForm(forms.ModelForm):
@@ -187,13 +105,9 @@ class Us_violenceForm(forms.ModelForm):
         ]
         widgets = {
             "violence_date": forms.DateInput(
-                attrs={"class": "form-control mb-3", "placeholder": "Ex: 2022-12-14"}
+                attrs=dict(ATTRS.MB3_ATTRS, **{"placeholder": "Ex: 2022-12-14"})
             ),
-            "violence_type": forms.Select(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "violence_type": forms.Select(attrs=ATTRS.MB3_ATTRS),
             "violence_subtype": forms.SelectMultiple(
                 attrs={
                     "class": "form-control mb-3 js-states js-example-basic-multiple-violence-subtype",
@@ -202,11 +116,7 @@ class Us_violenceForm(forms.ModelForm):
                     "multiple": "multiple",
                 }
             ),
-            "fatalities": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "fatalities": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             "location": forms.SelectMultiple(
                 attrs={
                     "class": "form-control mb-3 js-states js-example-basic-multiple-location",
@@ -216,7 +126,7 @@ class Us_violenceForm(forms.ModelForm):
                 }
             ),
             "url_address": forms.TextInput(
-                attrs={"class": "form-control mb-3", "placeholder": "Enter a URL"}
+                attrs=dict(ATTRS.MB3_ATTRS, **{"placeholder": "Enter a URL"})
             ),
             "short_data_source": forms.SelectMultiple(
                 attrs={
@@ -226,19 +136,23 @@ class Us_violenceForm(forms.ModelForm):
                     "multiple": "multiple",
                 }
             ),
-            "source_details": Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 250px",
-                    "placeholder": "Add a narrative (optional)",
-                }
+            "source_details": forms.Textarea(
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "placeholder": "Add source details (optional)",
+                        "style": "height: 250px",
+                    },
+                )
             ),
-            "narrative": Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 250px",
-                    "placeholder": "Add a narrative (optional)",
-                }
+            "narrative": forms.Textarea(
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "placeholder": "Add a narrative (optional)",
+                        "style": "height: 250px",
+                    },
+                )
             ),
         }
 
@@ -254,199 +168,107 @@ class Crisis_consequenceForm(forms.ModelForm):
         """
 
         model = Crisis_consequence
-        fields = commonfields.copy()
-        fields.append("crisis_case_id")
-        fields.append("name")
-        fields.append("other_polity")
-        fields.append("is_first_100")
-        fields.append("decline")
-        fields.append("collapse")
-        fields.append("epidemic")
-        fields.append("downward_mobility")
-        fields.append("extermination")
-        fields.append("uprising")
-        fields.append("revolution")
-        fields.append("successful_revolution")
-        fields.append("civil_war")
-        fields.append("century_plus")
-        fields.append("fragmentation")
-        fields.append("fragmentation")
-        fields.append("capital")
-        fields.append("conquest")
-        fields.append("assassination")
-        fields.append("depose")
-        fields.append("constitution")
-        fields.append("labor")
-        fields.append("unfree_labor")
-        fields.append("suffrage")
-        fields.append("public_goods")
-        fields.append("religion")
 
-        labels = commonlabels.copy()
-        labels["is_first_100"] = (
-            "<span class='h5'> Is it a <span class='text-primary text-decoration-underline'> first 100 </span> case? </span>"
-        )
-        labels["polity"] = "<span class='h5 text-teal'> Polity: </span>"
-        labels["name"] = "<span class='h5 text-teal'> Crisis Period Name: </span>"
-        labels["other_polity"] = "<span class='h5 text-teal'> Other Polity: </span>"
-        labels["crisis_case_id"] = (
-            "<span class='h5 text-teal'> Crisis Case Name (ID): </span>"
-        )
-        labels["year_from"] = "<span class='h5 text-teal'> Crisis Start Year: </span>"
-        labels["year_to"] = "<span class='h5 text-teal'> Crisis End Year: </span>"
-        labels["decline"] = "<span class='h5 text-teal'> Decline: </span>"
-        labels["collapse"] = "<span class='h5 text-teal'> Collapse: </span>"
-        labels["epidemic"] = "<span class='h5 text-teal'> Epidemic: </span>"
-        labels["downward_mobility"] = (
-            "<span class='h5 text-teal'> Downward mobility: </span>"
-        )
-        labels["extermination"] = "<span class='h5 text-teal'> Extermination: </span>"
-        labels["uprising"] = "<span class='h5 text-teal'> Uprising: </span>"
-        labels["revolution"] = "<span class='h5 text-teal'> Revolution: </span>"
-        labels["successful_revolution"] = (
-            "<span class='h5 text-teal'> Successful revolution: </span>"
-        )
-        labels["civil_war"] = "<span class='h5 text-teal'> Civil war: </span>"
-        labels["century_plus"] = "<span class='h5 text-teal'> Century plus: </span>"
-        labels["fragmentation"] = "<span class='h5 text-teal'> Fragmentation: </span>"
-        labels["capital"] = "<span class='h5 text-teal'> Capital: </span>"
-        labels["conquest"] = "<span class='h5 text-teal'> Conquest: </span>"
-        labels["assassination"] = "<span class='h5 text-teal'> Assassination: </span>"
-        labels["depose"] = "<span class='h5 text-teal'> Depose: </span>"
-        labels["constitution"] = "<span class='h5 text-teal'> Constitution: </span>"
-        labels["labor"] = "<span class='h5 text-teal'> Labor: </span>"
-        labels["unfree_labor"] = "<span class='h5 text-teal'> Unfree labor: </span>"
-        labels["suffrage"] = "<span class='h5 text-teal'> Suffrage: </span>"
-        labels["public_goods"] = "<span class='h5 text-teal'> Public goods: </span>"
-        labels["religion"] = "<span class='h5 text-teal'> Religion: </span>"
-        labels["description"] = "<span class='h5 text-teal'> Note: </span>"
+        fields = COMMON_FIELDS + [
+            "crisis_case_id",
+            "name",
+            "other_polity",
+            "is_first_100",
+            "decline",
+            "collapse",
+            "epidemic",
+            "downward_mobility",
+            "extermination",
+            "uprising",
+            "revolution",
+            "successful_revolution",
+            "civil_war",
+            "century_plus",
+            "fragmentation",
+            "fragmentation",
+            "capital",
+            "conquest",
+            "assassination",
+            "depose",
+            "constitution",
+            "labor",
+            "unfree_labor",
+            "suffrage",
+            "public_goods",
+            "religion",
+        ]
 
-        widgets = dict(commonwidgets)
-        widgets["crisis_case_id"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
+        _class = "class='h5 text-teal'"
+        _text = "class='text-primary text-decoration-underline'"
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "is_first_100": f"<span class='h5'> Is it a <span {_text}> first 100 </span> case? </span>",
+                "polity": f"<span {_class}> Polity: </span>",
+                "name": f"<span {_class}> Crisis Period Name: </span>",
+                "other_polity": f"<span {_class}> Other Polity: </span>",
+                "crisis_case_id": f"<span {_class}> Crisis Case Name (ID): </span>",
+                "year_from": f"<span {_class}> Crisis Start Year: </span>",
+                "year_to": f"<span {_class}> Crisis End Year: </span>",
+                "decline": f"<span {_class}> Decline: </span>",
+                "collapse": f"<span {_class}> Collapse: </span>",
+                "epidemic": f"<span {_class}> Epidemic: </span>",
+                "downward_mobility": f"<span {_class}> Downward mobility: </span>",
+                "extermination": f"<span {_class}> Extermination: </span>",
+                "uprising": f"<span {_class}> Uprising: </span>",
+                "revolution": f"<span {_class}> Revolution: </span>",
+                "successful_revolution": f"<span {_class}> Successful revolution: </span>",
+                "civil_war": f"<span {_class}> Civil war: </span>",
+                "century_plus": f"<span {_class}> Century plus: </span>",
+                "fragmentation": f"<span {_class}> Fragmentation: </span>",
+                "capital": f"<span {_class}> Capital: </span>",
+                "conquest": f"<span {_class}> Conquest: </span>",
+                "assassination": f"<span {_class}> Assassination: </span>",
+                "depose": f"<span {_class}> Depose: </span>",
+                "constitution": f"<span {_class}> Constitution: </span>",
+                "labor": f"<span {_class}> Labor: </span>",
+                "unfree_labor": f"<span {_class}> Unfree labor: </span>",
+                "suffrage": f"<span {_class}> Suffrage: </span>",
+                "public_goods": f"<span {_class}> Public goods: </span>",
+                "religion": f"<span {_class}> Religion: </span>",
+                "description": f"<span {_class}> Note: </span>",
+            },
         )
-        widgets["name"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["other_polity"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1 js-example-basic-single2",
-                "id": "id_polity_other",
-            }
-        )
-        widgets["is_first_100"] = forms.CheckboxInput(
-            attrs={
-                "class": "mb-3",
-            }
-        )
-        widgets["decline"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["collapse"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["epidemic"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["downward_mobility"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["extermination"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["uprising"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["revolution"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["successful_revolution"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["civil_war"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["century_plus"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["fragmentation"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["capital"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["conquest"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["assassination"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["depose"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["constitution"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["labor"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["unfree_labor"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["suffrage"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["public_goods"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["religion"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "crisis_case_id": forms.TextInput(attrs=ATTRS.MB1_ATTRS),
+                "name": forms.TextInput(attrs=ATTRS.MB1_ATTRS),
+                "other_polity": forms.Select(
+                    attrs={
+                        "class": "form-control mb-1 js-example-basic-single2",
+                        "id": "id_polity_other",
+                    }
+                ),
+                "is_first_100": forms.CheckboxInput(attrs=ATTRS.MB3_SIMPLE_ATTRS),
+                "decline": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "collapse": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "epidemic": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "downward_mobility": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "extermination": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "uprising": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "revolution": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "successful_revolution": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "civil_war": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "century_plus": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "fragmentation": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "capital": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "conquest": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "assassination": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "depose": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "constitution": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "labor": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "unfree_labor": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "suffrage": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "public_goods": forms.Select(attrs=ATTRS.MB1_ATTRS),
+                "religion": forms.Select(attrs=ATTRS.MB1_ATTRS),
+            },
         )
 
 
@@ -461,130 +283,67 @@ class Power_transitionForm(forms.ModelForm):
         """
 
         model = Power_transition
-        fields = commonfields.copy()
-        fields.append("predecessor")
-        fields.append("successor")
-        fields.append("name")
-        fields.append("culture_group")
-        fields.append("reign_number_predecessor")
-        fields.append("contested")
-        fields.append("overturn")
-        fields.append("predecessor_assassination")
-        fields.append("intra_elite")
-        fields.append("military_revolt")
-        fields.append("popular_uprising")
-        fields.append("separatist_rebellion")
-        fields.append("external_invasion")
-        fields.append("external_interference")
 
-        labels = commonlabels.copy()
-        labels["polity"] = "<span class='h6 text-teal'> Polity: </span>"
-        labels["name"] = "<span class='h6 text-teal'> Conflict Name: </span>"
-        labels["predecessor"] = "<span class='h6 text-teal'> Predecessor: </span>"
-        labels["successor"] = "<span class='h6 text-teal'> Successor: </span>"
-        labels["reign_number_predecessor"] = (
-            "<span class='h6 text-teal'> Reign Number (predecessor): </span>"
-        )
-        labels["culture_group"] = "<span class='h6 text-teal'> Culture Group: </span>"
+        fields = COMMON_FIELDS + [
+            "predecessor",
+            "successor",
+            "name",
+            "culture_group",
+            "reign_number_predecessor",
+            "contested",
+            "overturn",
+            "predecessor_assassination",
+            "intra_elite",
+            "military_revolt",
+            "popular_uprising",
+            "separatist_rebellion",
+            "external_invasion",
+            "external_interference",
+        ]
 
-        labels["year_from"] = (
-            "<span class='h6 text-teal'> Start Year (of Predecessor): </span>"
-        )
-        labels["year_to"] = "<span class='h6 text-teal'> End Year (Transition): </span>"
-        labels["contested"] = "<span class='h6 text-teal'> Contested: </span>"
-        labels["overturn"] = "<span class='h6 text-teal'> Overturn: </span>"
-        labels["predecessor_assassination"] = (
-            "<span class='h6 text-teal'> Predecessor_Assassination: </span>"
-        )
-        labels["intra_elite"] = "<span class='h6 text-teal'> Intra_Elite: </span>"
-        labels["military_revolt"] = (
-            "<span class='h6 text-teal'> Military_Revolt: </span>"
-        )
-        labels["popular_uprising"] = (
-            "<span class='h6 text-teal'> Popular_Uprising: </span>"
-        )
-        labels["separatist_rebellion"] = (
-            "<span class='h6 text-teal'> Separatist_Rebellion: </span>"
-        )
-        labels["external_invasion"] = (
-            "<span class='h6 text-teal'> External_Invasion: </span>"
-        )
-        labels["external_interference"] = (
-            "<span class='h6 text-teal'> External_Interference: </span>"
-        )
-        labels["description"] = "<span class='h6 text-teal'> Note: </span>"
-
-        widgets = dict(commonwidgets)
-        widgets["predecessor"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["successor"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["reign_number_predecessor"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["culture_group"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
+        _class = "class='h6 text-teal'"
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "polity": f"<span {_class}> Polity: </span>",
+                "name": f"<span {_class}> Conflict Name: </span>",
+                "predecessor": f"<span {_class}> Predecessor: </span>",
+                "successor": f"<span {_class}> Successor: </span>",
+                "reign_number_predecessor": f"<span {_class}> Reign Number (predecessor): </span>",
+                "culture_group": f"<span {_class}> Culture Group: </span>",
+                "year_from": f"<span {_class}> Start Year (of Predecessor): </span>",
+                "year_to": f"<span {_class}> End Year (Transition): </span>",
+                "contested": f"<span {_class}> Contested: </span>",
+                "overturn": f"<span {_class}> Overturn: </span>",
+                "predecessor_assassination": f"<span {_class}> Predecessor_Assassination: </span>",
+                "intra_elite": f"<span {_class}> Intra_Elite: </span>",
+                "military_revolt": f"<span {_class}> Military_Revolt: </span>",
+                "popular_uprising": f"<span {_class}> Popular_Uprising: </span>",
+                "separatist_rebellion": f"<span {_class}> Separatist_Rebellion: </span>",
+                "external_invasion": f"<span {_class}> External_Invasion: </span>",
+                "external_interference": f"<span {_class}> External_Interference: </span>",
+                "description": f"<span {_class}> Note: </span>",
+            },
         )
 
-        widgets["name"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["contested"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["overturn"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["predecessor_assassination"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["intra_elite"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["military_revolt"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["popular_uprising"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["separatist_rebellion"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["external_invasion"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
-        )
-        widgets["external_interference"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "predecessor": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "successor": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "reign_number_predecessor": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "culture_group": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "contested": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "overturn": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "predecessor_assassination": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "intra_elite": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "military_revolt": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "popular_uprising": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "separatist_rebellion": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "external_invasion": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "external_interference": forms.Select(attrs=ATTRS.MB3_ATTRS),
+            },
         )
 
 
@@ -600,21 +359,16 @@ class Human_sacrificeForm(forms.ModelForm):
 
         model = Human_sacrifice
 
-        fields = commonfields.copy()
-        fields.append("human_sacrifice")
+        fields = COMMON_FIELDS + ["human_sacrifice"]
 
-        labels = commonlabels.copy()
+        labels = COMMON_LABELS.copy()
 
-        widgets = dict(commonwidgets)
-        widgets["sub_category"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["human_sacrifice"] = forms.Select(
-            attrs={
-                "class": "form-control mb-1",
-            }
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "sub_category": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "human_sacrifice": forms.Select(attrs=ATTRS.MB3_ATTRS),
+            },
         )
 
 
@@ -629,15 +383,14 @@ class External_conflictForm(forms.ModelForm):
         """
 
         model = External_conflict
-        fields = commonfields.copy()
-        fields.append("conflict_name")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["conflict_name"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["conflict_name"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"conflict_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -652,33 +405,24 @@ class Internal_conflictForm(forms.ModelForm):
         """
 
         model = Internal_conflict
-        fields = commonfields.copy()
-        fields.append("conflict")
-        fields.append("expenditure")
-        fields.append("leader")
-        fields.append("casualty")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["conflict"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["expenditure"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["leader"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["casualty"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + [
+            "conflict",
+            "expenditure",
+            "leader",
+            "casualty",
+        ]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "conflict": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "expenditure": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "leader": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "casualty": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+            },
         )
 
 
@@ -693,33 +437,24 @@ class External_conflict_sideForm(forms.ModelForm):
         """
 
         model = External_conflict_side
-        fields = commonfields.copy()
-        fields.append("conflict_id")
-        fields.append("expenditure")
-        fields.append("leader")
-        fields.append("casualty")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["conflict_id"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["expenditure"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["leader"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["casualty"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + [
+            "conflict_id",
+            "expenditure",
+            "leader",
+            "casualty",
+        ]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "conflict_id": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "expenditure": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "leader": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "casualty": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+            },
         )
 
 
@@ -734,15 +469,14 @@ class Agricultural_populationForm(forms.ModelForm):
         """
 
         model = Agricultural_population
-        fields = commonfields.copy()
-        fields.append("agricultural_population")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["agricultural_population"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["agricultural_population"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"agricultural_population": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -757,15 +491,14 @@ class Arable_landForm(forms.ModelForm):
         """
 
         model = Arable_land
-        fields = commonfields.copy()
-        fields.append("arable_land")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["arable_land"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["arable_land"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"arable_land": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -780,15 +513,14 @@ class Arable_land_per_farmerForm(forms.ModelForm):
         """
 
         model = Arable_land_per_farmer
-        fields = commonfields.copy()
-        fields.append("arable_land_per_farmer")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["arable_land_per_farmer"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["arable_land_per_farmer"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"arable_land_per_farmer": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -803,15 +535,18 @@ class Gross_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         """
 
         model = Gross_grain_shared_per_agricultural_population
-        fields = commonfields.copy()
-        fields.append("gross_grain_shared_per_agricultural_population")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["gross_grain_shared_per_agricultural_population"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["gross_grain_shared_per_agricultural_population"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "gross_grain_shared_per_agricultural_population": (
+                    forms.NumberInput(attrs=ATTRS.MB3_ATTRS)
+                )
+            },
         )
 
 
@@ -826,15 +561,18 @@ class Net_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         """
 
         model = Net_grain_shared_per_agricultural_population
-        fields = commonfields.copy()
-        fields.append("net_grain_shared_per_agricultural_population")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["net_grain_shared_per_agricultural_population"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["net_grain_shared_per_agricultural_population"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "net_grain_shared_per_agricultural_population": (
+                    forms.NumberInput(attrs=ATTRS.MB3_ATTRS)
+                )
+            },
         )
 
 
@@ -849,15 +587,14 @@ class SurplusForm(forms.ModelForm):
         """
 
         model = Surplus
-        fields = commonfields.copy()
-        fields.append("surplus")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["surplus"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["surplus"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"surplus": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -872,21 +609,17 @@ class Military_expenseForm(forms.ModelForm):
         """
 
         model = Military_expense
-        fields = commonfields.copy()
-        fields.append("conflict")
-        fields.append("expenditure")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["conflict"] = forms.TextInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["expenditure"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["conflict", "expenditure"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "conflict": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+                "expenditure": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+            },
         )
 
 
@@ -901,15 +634,14 @@ class Silver_inflowForm(forms.ModelForm):
         """
 
         model = Silver_inflow
-        fields = commonfields.copy()
-        fields.append("silver_inflow")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["silver_inflow"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["silver_inflow"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"silver_inflow": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -924,15 +656,14 @@ class Silver_stockForm(forms.ModelForm):
         """
 
         model = Silver_stock
-        fields = commonfields.copy()
-        fields.append("silver_stock")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["silver_stock"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["silver_stock"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"silver_stock": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -947,15 +678,14 @@ class Total_populationForm(forms.ModelForm):
         """
 
         model = Total_population
-        fields = commonfields.copy()
-        fields.append("total_population")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["total_population"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["total_population"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"total_population": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -970,15 +700,14 @@ class Gdp_per_capitaForm(forms.ModelForm):
         """
 
         model = Gdp_per_capita
-        fields = commonfields.copy()
-        fields.append("gdp_per_capita")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["gdp_per_capita"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["gdp_per_capita"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"gdp_per_capita": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -993,15 +722,14 @@ class Drought_eventForm(forms.ModelForm):
         """
 
         model = Drought_event
-        fields = commonfields.copy()
-        fields.append("drought_event")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["drought_event"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["drought_event"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"drought_event": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -1016,15 +744,14 @@ class Locust_eventForm(forms.ModelForm):
         """
 
         model = Locust_event
-        fields = commonfields.copy()
-        fields.append("locust_event")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["locust_event"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["locust_event"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"locust_event": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -1039,15 +766,14 @@ class Socioeconomic_turmoil_eventForm(forms.ModelForm):
         """
 
         model = Socioeconomic_turmoil_event
-        fields = commonfields.copy()
-        fields.append("socioeconomic_turmoil_event")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["socioeconomic_turmoil_event"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["socioeconomic_turmoil_event"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"socioeconomic_turmoil_event": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -1062,15 +788,14 @@ class Crop_failure_eventForm(forms.ModelForm):
         """
 
         model = Crop_failure_event
-        fields = commonfields.copy()
-        fields.append("crop_failure_event")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["crop_failure_event"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["crop_failure_event"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"crop_failure_event": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -1085,15 +810,14 @@ class Famine_eventForm(forms.ModelForm):
         """
 
         model = Famine_event
-        fields = commonfields.copy()
-        fields.append("famine_event")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["famine_event"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["famine_event"]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"famine_event": forms.NumberInput(attrs=ATTRS.MB3_ATTRS)},
         )
 
 
@@ -1108,43 +832,26 @@ class Disease_outbreakForm(forms.ModelForm):
         """
 
         model = Disease_outbreak
-        fields = commonfields.copy()
-        fields.append("longitude")
-        fields.append("latitude")
-        fields.append("elevation")
-        fields.append("sub_category")
-        fields.append("magnitude")
-        fields.append("duration")
-        labels = commonlabels
 
-        widgets = dict(commonwidgets)
-        widgets["longitude"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["latitude"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["elevation"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["sub_category"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["magnitude"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["duration"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + [
+            "longitude",
+            "latitude",
+            "elevation",
+            "sub_category",
+            "magnitude",
+            "duration",
+        ]
+
+        labels = COMMON_LABELS
+
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "longitude": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "latitude": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "elevation": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "sub_category": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "magnitude": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "duration": forms.Select(attrs=ATTRS.MB3_ATTRS),
+            },
         )

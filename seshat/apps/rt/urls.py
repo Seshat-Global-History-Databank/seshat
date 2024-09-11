@@ -46,7 +46,7 @@ from .models import (
     Soc_dis_rel_grp_occ_fun,
     Gov_press_conv_for_aga,
 )
-from .var_defs import rt_var_defs
+from .constants import VARIABLE_DEFINITIONS
 
 from . import views
 
@@ -268,7 +268,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 "model_class": model_class,
                 "x_name": x_name,
                 "myvar": myvar,
-                "my_exp": rt_var_defs[myvar.lower().capitalize()],
+                "my_exp": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
                 "var_section": sec,
                 "var_subsection": subsec,
                 "delete_url_name": x_name + "-confirm-delete",
@@ -284,7 +284,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 "form_class": form_class,
                 "x_name": x_name,
                 "myvar": myvar,
-                "my_exp": rt_var_defs[myvar.lower().capitalize()],
+                "my_exp": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
                 "var_section": sec,
                 "var_subsection": subsec,
             },
@@ -301,7 +301,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 "var_name_display": myvar,
                 "var_section": sec,
                 "var_subsection": subsec,
-                "var_main_desc": rt_var_defs[myvar.lower().capitalize()],
+                "var_main_desc": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
             },
             name=f"{x_name}s_all",
         )
@@ -326,7 +326,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 "var_name_display": myvar,
                 "var_section": sec,
                 "var_subsection": subsec,
-                "var_main_desc": rt_var_defs[myvar.lower().capitalize()],
+                "var_main_desc": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
             },
             name=f"{x_name}-metadownload",
         )

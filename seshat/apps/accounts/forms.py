@@ -1,6 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
+
+from ..global_constants import ATTRS
+
 from .models import Seshat_Task, Profile
 
 
@@ -24,26 +27,14 @@ class Seshat_TaskForm(forms.ModelForm):
         }
 
         widgets = {
-            "giver": forms.Select(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "giver": forms.Select(attrs=ATTRS.MB3_ATTRS),
             "taker": forms.SelectMultiple(
                 attrs={
                     "class": "form-group mt-3 px-2",
                 }
             ),
-            "task_description": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "task_url": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "task_description": forms.Textarea(attrs=ATTRS.MB3_ATTRS),
+            "task_url": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
         }
 
 
@@ -77,11 +68,7 @@ class ProfileForm(forms.ModelForm):
         }
 
         widgets = {
-            "bio": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "bio": forms.Textarea(attrs=ATTRS.MB3_ATTRS),
         }
 
 

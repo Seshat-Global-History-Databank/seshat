@@ -7,305 +7,45 @@ from django.utils.safestring import mark_safe
 from datetime import date
 
 from ..core.models import SeshatCommon, Polity
-
-
-HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
-    ("U", "Unknown"),
-    ("P", "Present"),
-    ("A~P", "Transitional (Absent -> Present)"),
-    ("A", "Absent"),
-    ("P~A", "Transitional (Present -> Absent)"),
+from ..global_constants import SECTIONS, SUBSECTIONS, ICONS, ATTRS_HTML
+from .constants import (
+    ATTENTION_TAGS_CHOICES,
+    CRISIS_DEFS_EXAMPLES,
+    CRISISDB_CHOICES,
+    DURATION_DISEASE_OUTBREAK_CHOICES,
+    HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES,
+    INNER_DURATION_DISEASE_OUTBREAK_CHOICES,
+    INNER_MAGNITUDE_DISEASE_OUTBREAK_CHOICES,
+    INNER_SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES,
+    MAGNITUDE_DISEASE_OUTBREAK_CHOICES,
+    POWER_TRANSITIONS_DEFS_EXAMPLES,
+    SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES,
+    US_STATE_CHOICES,
+    VIOLENCE_TYPE_CHOICES,
 )
-
-CRISIS_CONSEQUENCE_CHOICES = (
-    ("U", "Unknown"),
-    ("SU", "Suspected Unknown"),
-    ("P", "Present"),
-    ("A", "Absent"),
-    ("IP", "Inferred Present"),
-    ("IA", "Inferred Absent"),
-    ("DIS", "Disputed"),
-)
-
-SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES = (
-    ("Peculiar Epidemics", "Peculiar Epidemics"),
-    ("Pestilence", "Pestilence"),
-    ("Miasm", "Miasm"),
-    ("Pox", "Pox"),
-    ("Uncertain Pestilence", "Uncertain Pestilence"),
-    ("Dysentery", "Dysentery"),
-    ("Malaria", "Malaria"),
-    ("Influenza", "Influenza"),
-    ("Cholera", "Cholera"),
-    ("Diptheria", "Diptheria"),
-    ("Plague", "Plague"),
-)
-
-MAGNITUDE_DISEASE_OUTBREAK_CHOICES = (
-    ("Uncertain", "Uncertain"),
-    ("Light", "Light"),
-    ("Heavy", "Heavy"),
-    ("No description", "No description"),
-    ("Heavy- Multiple Times", "Heavy- Multiple Times"),
-    ("No Happening", "No Happening"),
-    ("Moderate", "Moderate"),
-)
-
-DURATION_DISEASE_OUTBREAK_CHOICES = (
-    ("No description", "No description"),
-    ("Over 90 Days", "Over 90 Days"),
-    ("Uncertain", "Uncertain"),
-    ("30-60 Days", "30-60 Days"),
-    ("1-10 Days", "1-10 Days"),
-    ("60-90 Days", "60-90 Days"),
-)
-
-US_STATE_CHOICES = (
-    ("AL", "Alabama"),
-    ("AK", "Alaska"),
-    ("AZ", "Arizona"),
-    ("AR", "Arkansas"),
-    ("CA", "California"),
-    ("CO", "Colorado"),
-    ("CT", "Connecticut"),
-    ("DE", "Delaware"),
-    ("FL", "Florida"),
-    ("GA", "Georgia"),
-    ("HI", "Hawaii"),
-    ("ID", "Idaho"),
-    ("IL", "Illinois"),
-    ("IN", "Indiana"),
-    ("IA", "Iowa"),
-    ("KS", "Kansas"),
-    ("KY", "Kentucky"),
-    ("LA", "Louisiana"),
-    ("ME", "Maine"),
-    ("MD", "Maryland"),
-    ("MA", "Massachusetts"),
-    ("MI", "Michigan"),
-    ("MN", "Minnesota"),
-    ("MS", "Mississippi"),
-    ("MO", "Missouri"),
-    ("MT", "Montana"),
-    ("NE", "Nebraska"),
-    ("NV", "Nevada"),
-    ("NH", "New Hampshire"),
-    ("NJ", "New Jersey"),
-    ("NM", "New Mexico"),
-    ("NY", "New York"),
-    ("NC", "North Carolina"),
-    ("ND", "North Dakota"),
-    ("OH", "Ohio"),
-    ("OK", "Oklahoma"),
-    ("OR", "Oregon"),
-    ("PA", "Pennsylvania"),
-    ("RI", "Rhode Island"),
-    ("SC", "South Carolina"),
-    ("SD", "South Dakota"),
-    ("TN", "Tennessee"),
-    ("TX", "Texas"),
-    ("UT", "Utah"),
-    ("VT", "Vermont"),
-    ("VA", "Virginia"),
-    ("WA", "Washington"),
-    ("WV", "West Virginia"),
-    ("WI", "Wisconsin"),
-    ("WY", "Wyoming"),
-    ("UNK", "UNKNOWN"),
-)
-
-ATTENTION_TAGS_CHOICES = (
-    ("NeedsExpertInput", "Needs Expert Input"),
-    ("IsInconsistent", "Is Inconsistent"),
-    ("IsWrong", "Is Wrong"),
-    ("IsOk", "IS OK"),
-)
-
-VIOLENCE_TYPE_CHOICES = (
-    ("lynching", "lynching"),
-    ("riot", "riot"),
-    ("executions", "executions"),
-    ("war", "war"),
-    ("assassination", "assassination"),
-    ("compilation", "compilation"),
-    ("terrorism", "terrorism"),
-    ("insurrection", "insurrection"),
-    ("mass suicide", "mass suicide"),
-    ("unknown", "unknown"),
-    ("revenge", "revenge"),
-)
-
-
-def return_beautiful_abs_pres(item):
-    if item == "P":
-        return '<i class="fa-solid fa-check text-success"></i>'
-    elif item == "A":
-        return '<i class="fa-sharp fa-solid fa-xmark text-danger"></i>'
-    else:
-        return "-"
-
-
-def call_my_name(self):
-    """
-    This function is used to return the name of the model instance (in lieu of
-    the __str__ representation of the model instance).
-
-    Note:
-        The model instance must have the following attributes:
-        - name
-        - polity (and polity.name)
-        - year_from
-        - year_to
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The name of the model instance.
-    """
-    if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
-        return (
-            self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
-        )
-    else:
-        return (
-            self.name
-            + " [for "
-            + self.polity.name
-            + " from "
-            + str(self.year_from)
-            + " to "
-            + str(self.year_to)
-            + "]"
-        )
-
-
-def return_citations(self):
-    """
-    This function is used to return the citations of the model instance
-    (returning the value used in the display_citations method of the model
-    instance).
-
-    Note:
-        The model instance must have the following attribute:
-        - citations
-
-        The model instance must have the following methods:
-        - zoteroer
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The citations of the model instance, separated by comma.
-    """
-    return "<br>".join(
-        [
-            '<a href="'
-            + citation.zoteroer()
-            + '">'
-            + '<i class="fa-solid fa-book"></i> '
-            + citation.full_citation_display()
-            + " </a>"
-            for citation in self.citations.all()
-        ]
-    )
-
-
-def clean_times(self):
-    """
-    This function is used to validate the year_from and year_to fields of the
-    model instance (called from each model's clean method).
-
-    Note:
-        The model instance must have the following attributes:
-        - year_from
-        - year_to
-        - polity (and polity.start_year and polity.end_year)
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        None
-
-    Raises:
-        ValidationError: If the year_from is greater than the year_to.
-        ValidationError: If the year_from is out of range.
-        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-        ValidationError: If the year_to is later than the end year of the corresponding polity.
-        ValidationError: If the year_to is out of range.
-    """
-    if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
-                ),
-            }
-        )
-    if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
-                ),
-            }
-        )
-    if self.year_from and (self.year_from < self.polity.start_year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > self.polity.end_year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > date.today().year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'
-                ),
-            }
-        )
-
-
-def clean_times_light(self):
-    if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
-                ),
-            }
-        )
-    if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
-                ),
-            }
-        )
-
-
-def has_a_polity(self):
-    if not self.polity:
-        raise ValidationError(
-            {
-                "polity": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> There is no selected Polity!</span>'
-                ),
-            }
-        )
+FIELDS = [
+    "decline",
+    "collapse",
+    "epidemic",
+    "downward_mobility",
+    "extermination",
+    "uprising",
+    "revolution",
+    "successful_revolution",
+    "civil_war",
+    "century_plus",
+    "fragmentation",
+    "capital",
+    "conquest",
+    "assassination",
+    "depose",
+    "constitution",
+    "labor",
+    "unfree_labor",
+    "suffrage",
+    "public_goods",
+    "religion",
+]
 
 
 class Us_location(models.Model):
@@ -497,67 +237,67 @@ class Crisis_consequence(SeshatCommon):
     is_first_100 = models.BooleanField(default=False, blank=True, null=True)
     name = models.CharField(max_length=300, null=True, blank=True)
     decline = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     collapse = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     epidemic = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     downward_mobility = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     extermination = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     uprising = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     revolution = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     successful_revolution = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     civil_war = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     century_plus = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     fragmentation = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     capital = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     conquest = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     assassination = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     depose = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     constitution = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     labor = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     unfree_labor = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     suffrage = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     public_goods = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
     religion = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, null=True, blank=True
+        max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
 
     class Meta:
@@ -618,70 +358,21 @@ class Crisis_consequence(SeshatCommon):
                 the given value, the method returns None.
         """
         columns = []
-        fields = [
-            "decline",
-            "collapse",
-            "epidemic",
-            "downward_mobility",
-            "extermination",
-            "uprising",
-            "revolution",
-            "successful_revolution",
-            "civil_war",
-            "century_plus",
-            "fragmentation",
-            "capital",
-            "conquest",
-            "assassination",
-            "depose",
-            "constitution",
-            "labor",
-            "unfree_labor",
-            "suffrage",
-            "public_goods",
-            "religion",
-        ]
-
-        for field_name in fields:
+        for field_name in FIELDS:
             field_value = getattr(self, field_name)
+
             if field_value and field_value == value:
                 columns.append(field_name)
-        if columns != []:
-            return columns
-        else:
+
             return None
 
     def get_columns_with_value_dic(self, value):
         columns = {}
-        fields = [
-            "decline",
-            "collapse",
-            "epidemic",
-            "downward_mobility",
-            "extermination",
-            "uprising",
-            "revolution",
-            "successful_revolution",
-            "civil_war",
-            "century_plus",
-            "fragmentation",
-            "capital",
-            "conquest",
-            "assassination",
-            "depose",
-            "constitution",
-            "labor",
-            "unfree_labor",
-            "suffrage",
-            "public_goods",
-            "religion",
-        ]
-        from .custom_vars import crisis_defs_examples
-
-        for field_name in fields:
+        for field_name in FIELDS:
             field_value = getattr(self, field_name)
+
             if field_value and field_value == value:
-                columns[field_name] = crisis_defs_examples[field_name]
+                columns[field_name] = CRISIS_DEFS_EXAMPLES[field_name]
 
         if columns:
             return columns
@@ -695,25 +386,29 @@ class Crisis_consequence(SeshatCommon):
         else:
             return nga_rel.nga_party.name
 
-    def clean_decline(self):
-        return return_beautiful_abs_pres(self.decline)
-
-    def clean_collapse(self):
-        return return_beautiful_abs_pres(self.collapse)
-
-    def get_absolute_url(self):
+    def render_absence_presence(self, item):
         """
-        Returns the url to access a particular instance of the model.
+        Render the absence or presence of a crisis consequence.
 
-        :noindex:
+        Args:
+            item (str): The item to render.
 
         Returns:
-            str: A string of the url to access a particular instance of the model.
+            str: The rendered HTML.
         """
-        return reverse("crisis_consequence-detail", args=[str(self.id)])
+        if item == "P":
+            return ICONS.check
 
-    def show_value(self):
-        return call_my_name(self)
+        if item == "A":
+            return ICONS.xmark
+
+        return "-"
+
+    def clean_decline(self):
+        return self.render_absence_presence(self.decline)
+
+    def clean_collapse(self):
+        return self.render_absence_presence(self.collapse)
 
     def __str__(self) -> str:
         return call_my_name(self)
@@ -729,33 +424,32 @@ class Power_transition(SeshatCommon):
     reign_number_predecessor = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=400, blank=True, null=True)
     culture_group = models.CharField(max_length=200, blank=True, null=True)
-
     contested = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     overturn = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     predecessor_assassination = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     intra_elite = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     military_revolt = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     popular_uprising = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     separatist_rebellion = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     external_invasion = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
     external_interference = models.CharField(
-        max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True, null=True
+        max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
 
     class Meta:
@@ -831,6 +525,7 @@ class Power_transition(SeshatCommon):
 
         for field_name in fields:
             field_value = getattr(self, field_name)
+
             if field_value and field_value == value:
                 columns.append(field_name)
         if columns != []:
@@ -856,8 +551,9 @@ class Power_transition(SeshatCommon):
 
         for field_name in fields:
             field_value = getattr(self, field_name)
+
             if field_value and field_value == value:
-                columns[field_name] = power_transitions_defs_examples[field_name]
+                columns[field_name] = POWER_TRANSITIONS_DEFS_EXAMPLES[field_name]
 
         if columns:
             return columns

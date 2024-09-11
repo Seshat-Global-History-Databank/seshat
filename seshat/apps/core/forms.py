@@ -9,7 +9,7 @@ from django.forms.formsets import BaseFormSet
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 
-from ...utils.utils import dic_of_all_vars
+from ..global_constants import ATTRS
 from ..core.models import (
     Reference,
     Citation,
@@ -38,14 +38,7 @@ class ReligionForm(forms.ModelForm):
         fields = [
             "religion_name",
         ]
-
-        widgets = {
-            "religion_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            )
-        }
+        widgets = {"religion_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS)}
 
 
 class ReferenceForm(forms.ModelForm):
@@ -68,31 +61,12 @@ class ReferenceForm(forms.ModelForm):
             "long_name": "<b>Long Name</b>",
         }
         widgets = {
-            "title": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "year": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "creator": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "zotero_link": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "title": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "year": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "creator": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "zotero_link": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
             "long_name": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 100px",
-                }
+                attrs=dict(ATTRS.MB3_ATTRS, **{"style": "height: 100px"})
             ),
         }
 
@@ -125,16 +99,8 @@ class CitationForm(forms.ModelForm):
                     "text": "ref",
                 }
             ),
-            "page_from": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "page_to": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
+            "page_from": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "page_to": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
         }
 
     def clean(self):
@@ -206,31 +172,11 @@ class PolityForm(forms.ModelForm):
             "general_description": "General Description of the Polity",
         }
         widgets = {
-            "name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "new_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "long_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "start_year": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "end_year": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
+            "name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "new_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "long_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "start_year": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "end_year": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
             "home_seshat_region": forms.Select(
                 attrs={
                     "class": "form-control mb-3 form-select js-example-basic-single",
@@ -241,24 +187,24 @@ class PolityForm(forms.ModelForm):
                     "class": "form-control mb-3 form-select",
                 }
             ),
-            "shapefile_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "shapefile_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
             "private_comment": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "style": "height: 100px",
-                    "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 100px",
+                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",
+                    }
+                )
             ),
             "general_description": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 265px",
-                    "placeholder": "Add a general description (optional)",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 265px",
+                        "placeholder": "Add a general description (optional)",
+                    }
+                )
             ),
         }
 
@@ -300,26 +246,14 @@ class PolityUpdateForm(forms.ModelForm):
         }
         widgets = {
             "name": forms.TextInput(
-                attrs={"class": "form-control mb-3", "readonly": "True"}
+                attrs=dict(ATTRS.MB3_ATTRS, **{"readonly": "True"})
             ),
             "new_name": forms.TextInput(
-                attrs={"class": "form-control mb-3", "readonly": "True"}
+                attrs=dict(ATTRS.MB3_ATTRS, **{"readonly": "True"})
             ),
-            "long_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "start_year": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "end_year": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
+            "long_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "start_year": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "end_year": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
             "home_seshat_region": forms.Select(
                 attrs={
                     "class": "form-control mb-3 form-select js-example-basic-single",
@@ -330,24 +264,24 @@ class PolityUpdateForm(forms.ModelForm):
                     "class": "form-control mb-3 form-select",
                 }
             ),
-            "shapefile_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "shapefile_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
             "private_comment": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "style": "height: 100px",
-                    "placeholder": "Add a private comment that will only be visible to seshat experts and RAs.\nUse this box to request edits to the polity map data.",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 100px",
+                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",
+                    }
+                )
             ),
             "general_description": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 265px",
-                    "placeholder": "Add a general description (optional)",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 265px",
+                        "placeholder": "Add a general description (optional)",
+                    }
+                )
             ),
         }
 
@@ -371,26 +305,14 @@ class NgaForm(forms.ModelForm):
             "fao_country": "<b>Current Country</b>",
         }
         widgets = {
-            "name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
             "world_region": forms.Select(
                 attrs={
                     "class": "form-control mb-3 form-select",
                 }
             ),
-            "subregion": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "fao_country": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "subregion": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "fao_country": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
         }
 
 
@@ -426,50 +348,30 @@ class CapitalForm(forms.ModelForm):
             "note": "Add an optional Note",
         }
         widgets = {
-            "name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "current_country": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "alternative_names": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "current_country": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "alternative_names": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
             "url_on_the_map": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 120px",
-                    "placeholder": "Add the full URL from Google Maps (optional)",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 120px",
+                        "placeholder": "Add the full URL from Google Maps (optional)",
+                    }
+                )
             ),
             "note": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 120px",
-                    "placeholder": "Add a note (optional)",
-                }
+                attrs=dict(
+                    ATTRS.MB3_ATTRS,
+                    **{
+                        "style": "height: 120px",
+                        "placeholder": "Add a note (optional)",
+                    }
+                )
             ),
-            "latitude": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "longitude": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "is_verified": forms.CheckboxInput(
-                attrs={
-                    "class": "mb-3",
-                }
-            ),
+            "latitude": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "longitude": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "is_verified": forms.CheckboxInput(attrs=ATTRS.MB3_SIMPLE_ATTRS),
         }
 
 
@@ -490,10 +392,7 @@ class SeshatCommentForm(forms.ModelForm):
         }
         widgets = {
             "text": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 100px",
-                }
+                attrs=dict(ATTRS.MB3_ATTRS, **{"style": "height: 100px"})
             ),
         }
 
@@ -524,21 +423,10 @@ class SeshatCommentPartForm(forms.ModelForm):
             "comment_curator": "<b>Curator:</b>",
         }
         widgets = {
-            "comment": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
-            "comment_order": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
+            "comment": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
+            "comment_order": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
             "comment_part_text": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 300px",
-                }
+                attrs=dict(ATTRS.MB3_ATTRS, **{"style": "height: 300px"})
             ),
             "comment_citations": forms.SelectMultiple(
                 attrs={
@@ -580,16 +468,9 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
             "private_comment_reader": "<b>Target:</b>",
         }
         widgets = {
-            "private_comment": forms.NumberInput(
-                attrs={
-                    "class": "form-control mb-3 fw-bold",
-                }
-            ),
+            "private_comment": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
             "private_comment_part_text": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 150px",
-                }
+                attrs=dict(ATTRS.MB3_ATTRS, **{"style": "height: 150px"})
             ),
             "private_comment_owner": forms.Select(
                 attrs={
@@ -624,10 +505,7 @@ class SeshatPrivateCommentForm(forms.ModelForm):
         }
         widgets = {
             "text": forms.Textarea(
-                attrs={
-                    "class": "form-control mb-3",
-                    "style": "height: 100px",
-                }
+                attrs=dict(ATTRS.MB3_ATTRS, **{"style": "height: 100px"})
             ),
         }
 
@@ -803,23 +681,23 @@ class SignUpForm(UserCreationForm):
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control mb-3",
-                "type": "password",
-                "align": "center",
-                "placeholder": "password",
-            }
+            attrs=dict(
+                ATTRS.MB3_ATTRS,
+                **{
+                    "placeholder": "password",
+                    "type": "password",
+                    "align": "center",
+                }
+            )
         ),
     )
     password2 = forms.CharField(
         label="Confirm password",
         widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control mb-3",
-                "type": "password",
-                "align": "center",
-                "placeholder": "password",
-            }
+            attrs=dict(
+                ATTRS.MB3_ATTRS,
+                **{"placeholder": "password", "type": "password", "align": "center"}
+            )
         ),
     )
 
@@ -851,26 +729,10 @@ class SignUpForm(UserCreationForm):
             "captcha",
         )
         widgets = {
-            "first_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "last_name": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "username": forms.TextInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
-            "email": forms.EmailInput(
-                attrs={
-                    "class": "form-control mb-3",
-                }
-            ),
+            "first_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "last_name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "username": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
+            "email": forms.EmailInput(attrs=ATTRS.MB3_ATTRS),
         }
 
 

@@ -1,5 +1,12 @@
 from django import forms
-from django.forms.widgets import Textarea
+
+from ..global_constants import (
+    CODED_VALUE_WIDGET,
+    COMMON_FIELDS,
+    COMMON_LABELS,
+    COMMON_WIDGETS,
+    ATTRS,
+)
 
 from .models import (
     Widespread_religion,
@@ -25,96 +32,16 @@ from .models import (
     Gov_press_conv_for_aga,
 )
 
+# Add polity + description to COMMON_LABELS
+# TODO: Should these be added directly to COMMON_LABELS in global_constants.py?
 
-commonlabels = {
-    "polity": "&nbsp;<b>Polity:</b>",
-    "year_from": "&nbsp;<b>Start Year:</b>",
-    "year_to": "&nbsp;<b>End Year:</b>",
-    "tag": "Confidence Level",
-    "description": "&nbsp; <b> Description: </b>",
-    "is_disputed": "&nbsp; <b> There is a Dispute? </b>",
-    "is_uncertain": "&nbsp; <b> There is Uncertainty? </b>",
-    "expert_reviewed": "&nbsp; <b> Expert Checked? </b>",
-    "drb_reviewed": "&nbsp; Data Review Board Reviewed?",
-    "citations": "Add one or more Citations",
-    "finalized": "This piece of data is verified.",
-}
-
-commonfields = [
-    "polity",
-    "year_from",
-    "year_to",
-    "description",
-    "tag",
-    "is_disputed",
-    "is_uncertain",
-    "expert_reviewed",
-    "drb_reviewed",
-    "finalized",
-    "citations",
-]
-
-commonwidgets = {
-    "polity": forms.Select(
-        attrs={
-            "class": "form-control mb-3 js-example-basic-single",
-            "id": "id_polity",
-            "name": "polity",
-        }
-    ),
-    "year_from": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "year_to": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "description": Textarea(
-        attrs={
-            "class": "form-control mb-3",
-            "style": "height: 340px; line-height: 1.2;",
-            "placeholder": "Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
-        }
-    ),
-    "citations": forms.SelectMultiple(
-        attrs={
-            "class": "form-control mb-3 js-states js-example-basic-multiple",
-            "text": "citations[]",
-            "style": "height: 340px",
-            "multiple": "multiple",
-        }
-    ),
-    "tag": forms.RadioSelect(),
-    "is_disputed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "is_uncertain": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "expert_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "drb_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "finalized": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-            "checked": True,
-        }
-    ),
-}
+COMMON_LABELS = dict(
+    COMMON_LABELS,
+    **{
+        "polity": "&nbsp;<b>Polity:</b>",
+        "description": "&nbsp; <b> Description: </b>",
+    }
+)
 
 
 class Widespread_religionForm(forms.ModelForm):
@@ -128,32 +55,31 @@ class Widespread_religionForm(forms.ModelForm):
         """
 
         model = Widespread_religion
-        fields = commonfields.copy()
-        fields.append("order")
-        fields.append("widespread_religion")
-        fields.append("degree_of_prevalence")
-
-        labels = commonlabels
-        labels["widespread_religion"] = "&nbsp;<b> Widespread Religion: </b>"
-        labels["order"] = "&nbsp;<b> Order: </b>"
-        labels["degree_of_prevalence"] = "&nbsp;<b> Degree of Prevalence: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["widespread_religion"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3 js-example-basic-single",
-                "id": "id_widespread_religion",
-                "name": "widespread_religion",
+        fields = COMMON_FIELDS + [
+            "order",
+            "widespread_religion",
+            "degree_of_prevalence",
+        ]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "widespread_religion": "&nbsp;<b> Widespread Religion: </b>",
+                "order": "&nbsp;<b> Order: </b>",
+                "degree_of_prevalence": "&nbsp;<b> Degree of Prevalence: </b>",
             }
         )
-        widgets["order"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["degree_of_prevalence"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "widespread_religion": forms.Select(
+                    attrs={
+                        "class": "form-control mb-3 js-example-basic-single",
+                        "id": "id_widespread_religion",
+                        "name": "widespread_religion",
+                    }
+                ),
+                "order": forms.Select(attrs=ATTRS.MB3_ATTRS),
+                "degree_of_prevalence": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
@@ -169,16 +95,20 @@ class Official_religionForm(forms.ModelForm):
         """
 
         model = Official_religion
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = "&nbsp;<b> Official Religion: </b>"
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3 js-example-basic-single",
-                "id": "id_official_religion",
-                "name": "official_religion",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Official Religion: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "coded_value": forms.Select(
+                    attrs={
+                        "class": "form-control mb-3 js-example-basic-single",
+                        "id": "id_official_religion",
+                        "name": "official_religion",
+                    }
+                )
             }
         )
 
@@ -194,16 +124,20 @@ class Elites_religionForm(forms.ModelForm):
         """
 
         model = Elites_religion
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = "&nbsp;<b> Elites' Religion: </b>"
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3 js-example-basic-single",
-                "id": "id_elites_religion",
-                "name": "elites_religion",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Elites' Religion: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "coded_value": forms.Select(
+                    attrs={
+                        "class": "form-control mb-3 js-example-basic-single",
+                        "id": "id_elites_religion",
+                        "name": "elites_religion",
+                    }
+                )
             }
         )
 
@@ -219,23 +153,19 @@ class Theo_sync_dif_relForm(forms.ModelForm):
         """
 
         model = Theo_sync_dif_rel
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Theological Syncretism Of Different Religions: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Theological Syncretism Of Different Religions: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Sync_rel_pra_ind_beliForm(forms.ModelForm):
     """
-    Form for creating and updating the Sync_rel_pra_ind_beli model.
+    Form for creating and updating the syncretism of religious practices at the level of individual believers model.
     """
 
     class Meta:
@@ -244,18 +174,14 @@ class Sync_rel_pra_ind_beliForm(forms.ModelForm):
         """
 
         model = Sync_rel_pra_ind_beli
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Syncretism Of Religious Practices At The Level Of Individual Believers: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Syncretism Of Religious Practices At The Level Of Individual Believers: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Religious_fragmentationForm(forms.ModelForm):
@@ -269,16 +195,11 @@ class Religious_fragmentationForm(forms.ModelForm):
         """
 
         model = Religious_fragmentation
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = "&nbsp;<b> Religious Fragmentation: </b>"
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Religious Fragmentation: </b>"}
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_vio_freq_rel_grpForm(forms.ModelForm):
@@ -292,18 +213,14 @@ class Gov_vio_freq_rel_grpForm(forms.ModelForm):
         """
 
         model = Gov_vio_freq_rel_grp
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Frequency Of Governmental Violence Against Religious Groups: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Frequency Of Governmental Violence Against Religious Groups: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_pub_worForm(forms.ModelForm):
@@ -317,18 +234,14 @@ class Gov_res_pub_worForm(forms.ModelForm):
         """
 
         model = Gov_res_pub_wor
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Public Worship: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Public Worship: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_pub_prosForm(forms.ModelForm):
@@ -342,18 +255,14 @@ class Gov_res_pub_prosForm(forms.ModelForm):
         """
 
         model = Gov_res_pub_pros
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Public Proselytizing: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Public Proselytizing: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_convForm(forms.ModelForm):
@@ -367,16 +276,12 @@ class Gov_res_convForm(forms.ModelForm):
         """
 
         model = Gov_res_conv
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = "&nbsp;<b> Government Restrictions On Conversion: </b>"
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"coded_value": "&nbsp;<b> Government Restrictions On Conversion: </b>"}
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_press_convForm(forms.ModelForm):
@@ -390,16 +295,12 @@ class Gov_press_convForm(forms.ModelForm):
         """
 
         model = Gov_press_conv
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = "&nbsp;<b> Government Pressure To Convert: </b>"
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"coded_value": "&nbsp;<b> Government Pressure To Convert: </b>"}
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
@@ -413,18 +314,14 @@ class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
         """
 
         model = Gov_res_prop_own_for_rel_grp
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Property Ownership For Adherents Of Any Religious Group: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Property Ownership For Religious Groups: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Tax_rel_adh_act_insForm(forms.ModelForm):
@@ -438,18 +335,14 @@ class Tax_rel_adh_act_insForm(forms.ModelForm):
         """
 
         model = Tax_rel_adh_act_ins
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Taxes Based On Religious Adherence Or On Religious Activities And Institutions: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Taxes Based On Religious Adherence Or On Religious Activities And Institutions: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
@@ -463,18 +356,14 @@ class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
         """
 
         model = Gov_obl_rel_grp_ofc_reco
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Governmental Obligations For Religious Groups To Apply For Official Recognition: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Governmental Obligations For Religious Groups To Apply For Official Recognition: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_cons_rel_builForm(forms.ModelForm):
@@ -488,18 +377,14 @@ class Gov_res_cons_rel_builForm(forms.ModelForm):
         """
 
         model = Gov_res_cons_rel_buil
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Construction Of Religious Buildings: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Construction Of Religious Buildings: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_rel_eduForm(forms.ModelForm):
@@ -513,18 +398,14 @@ class Gov_res_rel_eduForm(forms.ModelForm):
         """
 
         model = Gov_res_rel_edu
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Religious Education: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Religious Education: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_res_cir_rel_litForm(forms.ModelForm):
@@ -538,18 +419,14 @@ class Gov_res_cir_rel_litForm(forms.ModelForm):
         """
 
         model = Gov_res_cir_rel_lit
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Restrictions On Circulation Of Religious Literature: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Restrictions On Circulation Of Religious Literature: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
@@ -563,18 +440,14 @@ class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
         """
 
         model = Gov_dis_rel_grp_occ_fun
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Soc_vio_freq_rel_grpForm(forms.ModelForm):
@@ -588,18 +461,14 @@ class Soc_vio_freq_rel_grpForm(forms.ModelForm):
         """
 
         model = Soc_vio_freq_rel_grp
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Frequency Of Societal Violence Against Religious Groups: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Frequency Of Societal Violence Against Religious Groups: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
@@ -613,18 +482,14 @@ class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
         """
 
         model = Soc_dis_rel_grp_occ_fun
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
 
 class Gov_press_conv_for_agaForm(forms.ModelForm):
@@ -638,15 +503,11 @@ class Gov_press_conv_for_agaForm(forms.ModelForm):
         """
 
         model = Gov_press_conv_for_aga
-        fields = commonfields.copy()
-        fields.append("coded_value")
-        labels = commonlabels
-        labels["coded_value"] = (
-            "&nbsp;<b> Societal Pressure To Convert Or Against Conversion: </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["coded_value"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["coded_value"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "coded_value": "&nbsp;<b> Governmental Pressure To Convert Or Against Conversion: </b>"
             }
         )
+        widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)

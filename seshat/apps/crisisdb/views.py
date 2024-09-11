@@ -26,6 +26,7 @@ from ...utils.utils import (
 from ..accounts.models import Seshat_Expert
 from ..core.models import Citation, Variablehierarchy, SeshatComment, SeshatCommentPart
 from ..general.mixins import PolityIdMixin
+from ..global_constants import ABSENT_PRESENT_CHOICES
 
 from .forms import (
     Power_transitionForm,
@@ -527,13 +528,7 @@ class Crisis_consequenceListViewAll(PermissionRequiredMixin, generic.ListView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of Human Sacrifce.",
                 "units": None,
-                "choices": [
-                    "- Unknown",
-                    "- Present",
-                    "- Transitional (Present -> Absent)",
-                    "- Absent",
-                    "- Transitional (Absent -> Present)",
-                ],
+                "choices": [f"- {x[1]}" for x in ABSENT_PRESENT_CHOICES],
             }
         }
         context["potential_cols"] = ["choices"]
@@ -1250,13 +1245,7 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of Human Sacrifce.",
                 "units": None,
-                "choices": [
-                    "- Unknown",
-                    "- Present",
-                    "- Transitional (Present -> Absent)",
-                    "- Absent",
-                    "- Transitional (Absent -> Present)",
-                ],
+                "choices": [f"- {x[1]}" for x in ABSENT_PRESENT_CHOICES],
             }
         }
         context["potential_cols"] = ["choices"]
@@ -1632,13 +1621,7 @@ class Human_sacrificeListView(PermissionRequiredMixin, generic.ListView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of Human Sacrifce.",
                 "units": None,
-                "choices": [
-                    "- Unknown",
-                    "- Present",
-                    "- Transitional (Present -> Absent)",
-                    "- Absent",
-                    "- Transitional (Absent -> Present)",
-                ],
+                "choices": [f"- {x[1]}" for x in ABSENT_PRESENT_CHOICES],
             }
         }
         context["potential_cols"] = []
@@ -1718,13 +1701,7 @@ class Human_sacrificeListViewAll(PermissionRequiredMixin, generic.ListView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of Human Sacrifce.",
                 "units": None,
-                "choices": [
-                    "- Unknown",
-                    "- Present",
-                    "- Transitional (Present -> Absent)",
-                    "- Absent",
-                    "- Transitional (Absent -> Present)",
-                ],
+                "choices": [f"- {x[1]}" for x in ABSENT_PRESENT_CHOICES],
             }
         }
         context["potential_cols"] = ["choices"]

@@ -1,5 +1,12 @@
 from django import forms
 
+from ..global_constants import (
+    COMMON_FIELDS,
+    COMMON_LABELS,
+    COMMON_WIDGETS,
+    ATTRS,
+)
+
 from .models import (
     Long_wall,
     Copper,
@@ -53,95 +60,6 @@ from .models import (
 )
 
 
-commonlabels = {
-    "year_from": "Start Year",
-    "year_to": "End Year",
-    "tag": "Confidence Level",
-    "is_disputed": "&nbsp; <b> There is a Dispute? </b>",
-    "is_uncertain": "&nbsp; <b> There is Uncertainty? </b>",
-    "expert_reviewed": "&nbsp; Expert Checked?",
-    "drb_reviewed": "&nbsp; Data Review Board Reviewed?",
-    "citations": "Add one or more Citations",
-    "finalized": "This piece of data is verified.",
-}
-
-commonfields = [
-    "polity",
-    "year_from",
-    "year_to",
-    "description",
-    "tag",
-    "is_disputed",
-    "is_uncertain",
-    "expert_reviewed",
-    "drb_reviewed",
-    "finalized",
-    "citations",
-]
-
-commonwidgets = {
-    "polity": forms.Select(
-        attrs={
-            "class": "form-control mb-1 js-example-basic-single",
-            "id": "id_polity",
-            "name": "polity",
-        }
-    ),
-    "year_from": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "year_to": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "description": forms.Textarea(
-        attrs={
-            "class": "form-control mb-3",
-            "style": "height: 140px",
-            "placeholder": "Add a meaningful description (optional)",
-        }
-    ),
-    "citations": forms.SelectMultiple(
-        attrs={
-            "class": "form-control mb-3 js-states js-example-basic-multiple",
-            "text": "citations[]",
-            "style": "height: 340px",
-            "multiple": "multiple",
-        }
-    ),
-    "tag": forms.RadioSelect(),
-    "is_disputed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "is_uncertain": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "expert_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "drb_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "finalized": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-            "checked": True,
-        }
-    ),
-}
-
-
 class Long_wallForm(forms.ModelForm):
     """ """
 
@@ -151,20 +69,13 @@ class Long_wallForm(forms.ModelForm):
         """
 
         model = Long_wall
-        fields = commonfields.copy()
-        fields.append("long_wall_from")
-        fields.append("long_wall_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["long_wall_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["long_wall_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["long_wall_from", "long_wall_to"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "long_wall_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "long_wall_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
@@ -178,12 +89,9 @@ class CopperForm(forms.ModelForm):
         """
 
         model = Copper
-        fields = commonfields.copy()
-        fields.append("copper")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["copper"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["copper"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"copper": forms.RadioSelect()})
 
 
 class BronzeForm(forms.ModelForm):
@@ -195,12 +103,9 @@ class BronzeForm(forms.ModelForm):
         """
 
         model = Bronze
-        fields = commonfields.copy()
-        fields.append("bronze")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["bronze"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["bronze"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"bronze": forms.RadioSelect()})
 
 
 class IronForm(forms.ModelForm):
@@ -212,12 +117,9 @@ class IronForm(forms.ModelForm):
         """
 
         model = Iron
-        fields = commonfields.copy()
-        fields.append("iron")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["iron"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["iron"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"iron": forms.RadioSelect()})
 
 
 class SteelForm(forms.ModelForm):
@@ -229,12 +131,9 @@ class SteelForm(forms.ModelForm):
         """
 
         model = Steel
-        fields = commonfields.copy()
-        fields.append("steel")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["steel"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["steel"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"steel": forms.RadioSelect()})
 
 
 class JavelinForm(forms.ModelForm):
@@ -246,12 +145,9 @@ class JavelinForm(forms.ModelForm):
         """
 
         model = Javelin
-        fields = commonfields.copy()
-        fields.append("javelin")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["javelin"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["javelin"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"javelin": forms.RadioSelect()})
 
 
 class AtlatlForm(forms.ModelForm):
@@ -263,12 +159,9 @@ class AtlatlForm(forms.ModelForm):
         """
 
         model = Atlatl
-        fields = commonfields.copy()
-        fields.append("atlatl")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["atlatl"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["atlatl"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"atlatl": forms.RadioSelect()})
 
 
 class SlingForm(forms.ModelForm):
@@ -280,12 +173,9 @@ class SlingForm(forms.ModelForm):
         """
 
         model = Sling
-        fields = commonfields.copy()
-        fields.append("sling")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["sling"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["sling"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"sling": forms.RadioSelect()})
 
 
 class Self_bowForm(forms.ModelForm):
@@ -297,12 +187,9 @@ class Self_bowForm(forms.ModelForm):
         """
 
         model = Self_bow
-        fields = commonfields.copy()
-        fields.append("self_bow")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["self_bow"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["self_bow"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"self_bow": forms.RadioSelect()})
 
 
 class Composite_bowForm(forms.ModelForm):
@@ -314,12 +201,9 @@ class Composite_bowForm(forms.ModelForm):
         """
 
         model = Composite_bow
-        fields = commonfields.copy()
-        fields.append("composite_bow")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["composite_bow"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["composite_bow"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"composite_bow": forms.RadioSelect()})
 
 
 class CrossbowForm(forms.ModelForm):
@@ -331,12 +215,9 @@ class CrossbowForm(forms.ModelForm):
         """
 
         model = Crossbow
-        fields = commonfields.copy()
-        fields.append("crossbow")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["crossbow"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["crossbow"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"crossbow": forms.RadioSelect()})
 
 
 class Tension_siege_engineForm(forms.ModelForm):
@@ -348,12 +229,9 @@ class Tension_siege_engineForm(forms.ModelForm):
         """
 
         model = Tension_siege_engine
-        fields = commonfields.copy()
-        fields.append("tension_siege_engine")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["tension_siege_engine"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["tension_siege_engine"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"tension_siege_engine": forms.RadioSelect()})
 
 
 class Sling_siege_engineForm(forms.ModelForm):
@@ -365,12 +243,9 @@ class Sling_siege_engineForm(forms.ModelForm):
         """
 
         model = Sling_siege_engine
-        fields = commonfields.copy()
-        fields.append("sling_siege_engine")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["sling_siege_engine"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["sling_siege_engine"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"sling_siege_engine": forms.RadioSelect()})
 
 
 class Gunpowder_siege_artilleryForm(forms.ModelForm):
@@ -382,12 +257,11 @@ class Gunpowder_siege_artilleryForm(forms.ModelForm):
         """
 
         model = Gunpowder_siege_artillery
-        fields = commonfields.copy()
-        fields.append("gunpowder_siege_artillery")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["gunpowder_siege_artillery"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["gunpowder_siege_artillery"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS, **{"gunpowder_siege_artillery": forms.RadioSelect()}
+        )
 
 
 class Handheld_firearmForm(forms.ModelForm):
@@ -399,12 +273,9 @@ class Handheld_firearmForm(forms.ModelForm):
         """
 
         model = Handheld_firearm
-        fields = commonfields.copy()
-        fields.append("handheld_firearm")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["handheld_firearm"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["handheld_firearm"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"handheld_firearm": forms.RadioSelect()})
 
 
 class War_clubForm(forms.ModelForm):
@@ -416,12 +287,9 @@ class War_clubForm(forms.ModelForm):
         """
 
         model = War_club
-        fields = commonfields.copy()
-        fields.append("war_club")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["war_club"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["war_club"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"war_club": forms.RadioSelect()})
 
 
 class Battle_axeForm(forms.ModelForm):
@@ -433,12 +301,9 @@ class Battle_axeForm(forms.ModelForm):
         """
 
         model = Battle_axe
-        fields = commonfields.copy()
-        fields.append("battle_axe")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["battle_axe"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["battle_axe"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"battle_axe": forms.RadioSelect()})
 
 
 class DaggerForm(forms.ModelForm):
@@ -450,12 +315,9 @@ class DaggerForm(forms.ModelForm):
         """
 
         model = Dagger
-        fields = commonfields.copy()
-        fields.append("dagger")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["dagger"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["dagger"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"dagger": forms.RadioSelect()})
 
 
 class SwordForm(forms.ModelForm):
@@ -467,12 +329,9 @@ class SwordForm(forms.ModelForm):
         """
 
         model = Sword
-        fields = commonfields.copy()
-        fields.append("sword")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["sword"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["sword"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"sword": forms.RadioSelect()})
 
 
 class SpearForm(forms.ModelForm):
@@ -484,12 +343,9 @@ class SpearForm(forms.ModelForm):
         """
 
         model = Spear
-        fields = commonfields.copy()
-        fields.append("spear")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["spear"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["spear"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"spear": forms.RadioSelect()})
 
 
 class PolearmForm(forms.ModelForm):
@@ -501,12 +357,9 @@ class PolearmForm(forms.ModelForm):
         """
 
         model = Polearm
-        fields = commonfields.copy()
-        fields.append("polearm")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["polearm"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["polearm"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"polearm": forms.RadioSelect()})
 
 
 class DogForm(forms.ModelForm):
@@ -518,12 +371,9 @@ class DogForm(forms.ModelForm):
         """
 
         model = Dog
-        fields = commonfields.copy()
-        fields.append("dog")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["dog"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["dog"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"dog": forms.RadioSelect()})
 
 
 class DonkeyForm(forms.ModelForm):
@@ -535,12 +385,9 @@ class DonkeyForm(forms.ModelForm):
         """
 
         model = Donkey
-        fields = commonfields.copy()
-        fields.append("donkey")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["donkey"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["donkey"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"donkey": forms.RadioSelect()})
 
 
 class HorseForm(forms.ModelForm):
@@ -552,12 +399,9 @@ class HorseForm(forms.ModelForm):
         """
 
         model = Horse
-        fields = commonfields.copy()
-        fields.append("horse")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["horse"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["horse"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"horse": forms.RadioSelect()})
 
 
 class CamelForm(forms.ModelForm):
@@ -569,12 +413,9 @@ class CamelForm(forms.ModelForm):
         """
 
         model = Camel
-        fields = commonfields.copy()
-        fields.append("camel")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["camel"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["camel"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"camel": forms.RadioSelect()})
 
 
 class ElephantForm(forms.ModelForm):
@@ -586,12 +427,9 @@ class ElephantForm(forms.ModelForm):
         """
 
         model = Elephant
-        fields = commonfields.copy()
-        fields.append("elephant")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["elephant"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["elephant"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"elephant": forms.RadioSelect()})
 
 
 class Wood_bark_etcForm(forms.ModelForm):
@@ -603,12 +441,9 @@ class Wood_bark_etcForm(forms.ModelForm):
         """
 
         model = Wood_bark_etc
-        fields = commonfields.copy()
-        fields.append("wood_bark_etc")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["wood_bark_etc"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["wood_bark_etc"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"wood_bark_etc": forms.RadioSelect()})
 
 
 class Leather_clothForm(forms.ModelForm):
@@ -620,12 +455,9 @@ class Leather_clothForm(forms.ModelForm):
         """
 
         model = Leather_cloth
-        fields = commonfields.copy()
-        fields.append("leather_cloth")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["leather_cloth"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["leather_cloth"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"leather_cloth": forms.RadioSelect()})
 
 
 class ShieldForm(forms.ModelForm):
@@ -637,12 +469,9 @@ class ShieldForm(forms.ModelForm):
         """
 
         model = Shield
-        fields = commonfields.copy()
-        fields.append("shield")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["shield"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["shield"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"shield": forms.RadioSelect()})
 
 
 class HelmetForm(forms.ModelForm):
@@ -654,12 +483,9 @@ class HelmetForm(forms.ModelForm):
         """
 
         model = Helmet
-        fields = commonfields.copy()
-        fields.append("helmet")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["helmet"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["helmet"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"helmet": forms.RadioSelect()})
 
 
 class BreastplateForm(forms.ModelForm):
@@ -671,12 +497,9 @@ class BreastplateForm(forms.ModelForm):
         """
 
         model = Breastplate
-        fields = commonfields.copy()
-        fields.append("breastplate")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["breastplate"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["breastplate"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"breastplate": forms.RadioSelect()})
 
 
 class Limb_protectionForm(forms.ModelForm):
@@ -688,12 +511,9 @@ class Limb_protectionForm(forms.ModelForm):
         """
 
         model = Limb_protection
-        fields = commonfields.copy()
-        fields.append("limb_protection")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["limb_protection"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["limb_protection"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"limb_protection": forms.RadioSelect()})
 
 
 class Scaled_armorForm(forms.ModelForm):
@@ -705,12 +525,9 @@ class Scaled_armorForm(forms.ModelForm):
         """
 
         model = Scaled_armor
-        fields = commonfields.copy()
-        fields.append("scaled_armor")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["scaled_armor"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["scaled_armor"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"scaled_armor": forms.RadioSelect()})
 
 
 class Laminar_armorForm(forms.ModelForm):
@@ -722,12 +539,9 @@ class Laminar_armorForm(forms.ModelForm):
         """
 
         model = Laminar_armor
-        fields = commonfields.copy()
-        fields.append("laminar_armor")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["laminar_armor"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["laminar_armor"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"laminar_armor": forms.RadioSelect()})
 
 
 class Plate_armorForm(forms.ModelForm):
@@ -739,12 +553,9 @@ class Plate_armorForm(forms.ModelForm):
         """
 
         model = Plate_armor
-        fields = commonfields.copy()
-        fields.append("plate_armor")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["plate_armor"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["plate_armor"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"plate_armor": forms.RadioSelect()})
 
 
 class Small_vessels_canoes_etcForm(forms.ModelForm):
@@ -756,12 +567,11 @@ class Small_vessels_canoes_etcForm(forms.ModelForm):
         """
 
         model = Small_vessels_canoes_etc
-        fields = commonfields.copy()
-        fields.append("small_vessels_canoes_etc")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["small_vessels_canoes_etc"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["small_vessels_canoes_etc"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS, **{"small_vessels_canoes_etc": forms.RadioSelect()}
+        )
 
 
 class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
@@ -773,12 +583,12 @@ class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
         """
 
         model = Merchant_ships_pressed_into_service
-        fields = commonfields.copy()
-        fields.append("merchant_ships_pressed_into_service")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["merchant_ships_pressed_into_service"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["merchant_ships_pressed_into_service"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"merchant_ships_pressed_into_service": forms.RadioSelect()}
+        )
 
 
 class Specialized_military_vesselForm(forms.ModelForm):
@@ -790,12 +600,11 @@ class Specialized_military_vesselForm(forms.ModelForm):
         """
 
         model = Specialized_military_vessel
-        fields = commonfields.copy()
-        fields.append("specialized_military_vessel")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["specialized_military_vessel"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["specialized_military_vessel"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS, **{"specialized_military_vessel": forms.RadioSelect()}
+        )
 
 
 class Settlements_in_a_defensive_positionForm(forms.ModelForm):
@@ -807,12 +616,12 @@ class Settlements_in_a_defensive_positionForm(forms.ModelForm):
         """
 
         model = Settlements_in_a_defensive_position
-        fields = commonfields.copy()
-        fields.append("settlements_in_a_defensive_position")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["settlements_in_a_defensive_position"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["settlements_in_a_defensive_position"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{"settlements_in_a_defensive_position": forms.RadioSelect()}
+        )
 
 
 class Wooden_palisadeForm(forms.ModelForm):
@@ -824,12 +633,9 @@ class Wooden_palisadeForm(forms.ModelForm):
         """
 
         model = Wooden_palisade
-        fields = commonfields.copy()
-        fields.append("wooden_palisade")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["wooden_palisade"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["wooden_palisade"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"wooden_palisade": forms.RadioSelect()})
 
 
 class Earth_rampartForm(forms.ModelForm):
@@ -841,12 +647,9 @@ class Earth_rampartForm(forms.ModelForm):
         """
 
         model = Earth_rampart
-        fields = commonfields.copy()
-        fields.append("earth_rampart")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["earth_rampart"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["earth_rampart"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"earth_rampart": forms.RadioSelect()})
 
 
 class DitchForm(forms.ModelForm):
@@ -858,12 +661,9 @@ class DitchForm(forms.ModelForm):
         """
 
         model = Ditch
-        fields = commonfields.copy()
-        fields.append("ditch")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["ditch"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["ditch"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"ditch": forms.RadioSelect()})
 
 
 class MoatForm(forms.ModelForm):
@@ -875,12 +675,9 @@ class MoatForm(forms.ModelForm):
         """
 
         model = Moat
-        fields = commonfields.copy()
-        fields.append("moat")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["moat"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["moat"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"moat": forms.RadioSelect()})
 
 
 class Stone_walls_non_mortaredForm(forms.ModelForm):
@@ -892,12 +689,11 @@ class Stone_walls_non_mortaredForm(forms.ModelForm):
         """
 
         model = Stone_walls_non_mortared
-        fields = commonfields.copy()
-        fields.append("stone_walls_non_mortared")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["stone_walls_non_mortared"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["stone_walls_non_mortared"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS, **{"stone_walls_non_mortared": forms.RadioSelect()}
+        )
 
 
 class Stone_walls_mortaredForm(forms.ModelForm):
@@ -909,12 +705,9 @@ class Stone_walls_mortaredForm(forms.ModelForm):
         """
 
         model = Stone_walls_mortared
-        fields = commonfields.copy()
-        fields.append("stone_walls_mortared")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["stone_walls_mortared"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["stone_walls_mortared"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"stone_walls_mortared": forms.RadioSelect()})
 
 
 class Fortified_campForm(forms.ModelForm):
@@ -926,12 +719,9 @@ class Fortified_campForm(forms.ModelForm):
         """
 
         model = Fortified_camp
-        fields = commonfields.copy()
-        fields.append("fortified_camp")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["fortified_camp"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["fortified_camp"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"fortified_camp": forms.RadioSelect()})
 
 
 class Complex_fortificationForm(forms.ModelForm):
@@ -943,12 +733,9 @@ class Complex_fortificationForm(forms.ModelForm):
         """
 
         model = Complex_fortification
-        fields = commonfields.copy()
-        fields.append("complex_fortification")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["complex_fortification"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["complex_fortification"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"complex_fortification": forms.RadioSelect()})
 
 
 class Modern_fortificationForm(forms.ModelForm):
@@ -960,12 +747,9 @@ class Modern_fortificationForm(forms.ModelForm):
         """
 
         model = Modern_fortification
-        fields = commonfields.copy()
-        fields.append("modern_fortification")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["modern_fortification"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["modern_fortification"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"modern_fortification": forms.RadioSelect()})
 
 
 class ChainmailForm(forms.ModelForm):
@@ -977,9 +761,6 @@ class ChainmailForm(forms.ModelForm):
         """
 
         model = Chainmail
-        fields = commonfields.copy()
-        fields.append("chainmail")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["chainmail"] = forms.RadioSelect()
+        fields = COMMON_FIELDS + ["chainmail"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"chainmail": forms.RadioSelect()})

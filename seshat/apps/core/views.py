@@ -45,8 +45,16 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic
 from django.views.decorators.http import require_GET
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
+from ..global_constants import (
+    ABSENT_PRESENT_CHOICES,
+    BASIC_CONTEXT,
+    POLITY_LANGUAGE_CHOICES,
+    POLITY_LANGUAGE_GENUS_CHOICES,
+    POLITY_LINGUISTIC_FAMILY_CHOICES,
+    ZOTERO,
+    PATTERNS,
+)
+from ..global_utils import get_date, get_models, get_api_results, get_csv_path
 
 from .forms import (
     CapitalForm,
@@ -101,24 +109,13 @@ from .models import (
 from .nlp_zotero_links import NLP_ZOTERO_LINKS_TO_FILTER
 from .templatetags.core_tags import get_polity_capitals
 from .tokens import account_activation_token
-
-from ..accounts.models import Seshat_Expert
-from ..crisisdb.models import Power_transition
-from ..general.models import (
-    POLITY_LANGUAGE_CHOICES,
-    POLITY_LANGUAGE_GENUS_CHOICES,
-    POLITY_LINGUISTIC_FAMILY_CHOICES,
-    Polity_duration,
-    Polity_language_genus,
-    Polity_language,
-    Polity_linguistic_family,
-    Polity_preceding_entity,
-    Polity_research_assistant,
+from .constants import (
+    CONTEXT,
+    CUSTOM_ORDER,
+    CUSTOM_ORDER_SR,
+    MANUAL_IMPORT_REFS,
+    NLP_ZOTERO_LINKS_TO_FILTER
 )
-from ..sc.models import ABSENT_PRESENT_CHOICES
-
-from ...utils.utils import (
-    dic_of_all_vars,
     get_all_data_for_a_polity,
     get_all_general_data_for_a_polity,
     get_all_sc_data_for_a_polity,

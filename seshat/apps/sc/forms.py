@@ -1,5 +1,11 @@
 from django import forms
-from django.forms.widgets import Textarea
+
+from ..global_constants import (
+    COMMON_FIELDS,
+    COMMON_LABELS,
+    COMMON_WIDGETS,
+    ATTRS,
+)
 
 from .models import (
     Ra,
@@ -83,99 +89,19 @@ from .models import (
 )
 
 
-commonlabels = {
-    "polity": "&nbsp;<b>Polity:</b>",
-    "year_from": "&nbsp;<b>Start Year:</b>",
-    "year_to": "&nbsp;<b>End Year:</b>",
-    "tag": "Confidence Level",
-    "description": "&nbsp; <b> Description: </b>",
-    "is_disputed": "&nbsp; <b> There is a Dispute? </b>",
-    "is_uncertain": "&nbsp; <b> There is Uncertainty? </b>",
-    "expert_reviewed": "&nbsp; <b> Expert Checked? </b>",
-    "drb_reviewed": "&nbsp; Data Review Board Reviewed?",
-    "citations": "Add one or more Citations",
-    "finalized": "This piece of data is verified.",
-}
-
-commonfields = [
-    "polity",
-    "year_from",
-    "year_to",
-    "description",
-    "tag",
-    "is_disputed",
-    "is_uncertain",
-    "expert_reviewed",
-    "drb_reviewed",
-    "finalized",
-    "citations",
-]
-
-commonwidgets = {
-    "polity": forms.Select(
-        attrs={
-            "class": "form-control mb-3 js-example-basic-single",
-            "id": "id_polity",
-            "name": "polity",
-        }
-    ),
-    "year_from": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "year_to": forms.NumberInput(
-        attrs={
-            "class": "form-control mb-3",
-        }
-    ),
-    "description": Textarea(
-        attrs={
-            "class": "form-control mb-3",
-            "style": "height: 240px; line-height: 1.2;",
-            "placeholder": "Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
-        }
-    ),
-    "citations": forms.SelectMultiple(
-        attrs={
-            "class": "form-control mb-3 js-states js-example-basic-multiple",
-            "text": "citations[]",
-            "style": "height: 340px",
-            "multiple": "multiple",
-        }
-    ),
-    "tag": forms.RadioSelect(),
-    "is_disputed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "is_uncertain": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "expert_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "drb_reviewed": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-        }
-    ),
-    "finalized": forms.CheckboxInput(
-        attrs={
-            "class": "mb-3",
-            "checked": True,
-        }
-    ),
-}
+COMMON_LABELS = dict(
+    COMMON_LABELS,
+    **{
+        "polity": "&nbsp;<b>Polity:</b>",
+        "description": "&nbsp; <b> Description: </b>",
+    }
+)
 
 
 class RaForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -183,20 +109,15 @@ class RaForm(forms.ModelForm):
         """
 
         model = Ra
-        fields = commonfields.copy()
-        fields.append("sc_ra")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["sc_ra"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
+        fields = COMMON_FIELDS + ["sc_ra"]
+        labels = COMMON_LABELS
+        widgets = dict(COMMON_WIDGETS, **{"sc_ra": forms.Select(attrs=ATTRS.MB3_ATTRS)})
 
 
 class Polity_territoryForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -204,26 +125,24 @@ class Polity_territoryForm(forms.ModelForm):
         """
 
         model = Polity_territory
-        fields = commonfields.copy()
-        fields.append("polity_territory_from")
-        fields.append("polity_territory_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["polity_territory_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["polity_territory_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "polity_territory_from",
+            "polity_territory_to",
+        ]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "polity_territory_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "polity_territory_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Polity_populationForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -231,26 +150,24 @@ class Polity_populationForm(forms.ModelForm):
         """
 
         model = Polity_population
-        fields = commonfields.copy()
-        fields.append("polity_population_from")
-        fields.append("polity_population_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["polity_population_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["polity_population_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "polity_population_from",
+            "polity_population_to",
+        ]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "polity_population_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "polity_population_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Population_of_the_largest_settlementForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -258,26 +175,28 @@ class Population_of_the_largest_settlementForm(forms.ModelForm):
         """
 
         model = Population_of_the_largest_settlement
-        fields = commonfields.copy()
-        fields.append("population_of_the_largest_settlement_from")
-        fields.append("population_of_the_largest_settlement_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["population_of_the_largest_settlement_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["population_of_the_largest_settlement_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "population_of_the_largest_settlement_from",
+            "population_of_the_largest_settlement_to",
+        ]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "population_of_the_largest_settlement_from": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
+                "population_of_the_largest_settlement_to": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
             }
         )
 
 
 class Settlement_hierarchyForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -285,26 +204,24 @@ class Settlement_hierarchyForm(forms.ModelForm):
         """
 
         model = Settlement_hierarchy
-        fields = commonfields.copy()
-        fields.append("settlement_hierarchy_from")
-        fields.append("settlement_hierarchy_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["settlement_hierarchy_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["settlement_hierarchy_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "settlement_hierarchy_from",
+            "settlement_hierarchy_to",
+        ]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "settlement_hierarchy_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "settlement_hierarchy_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Administrative_levelForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -312,26 +229,24 @@ class Administrative_levelForm(forms.ModelForm):
         """
 
         model = Administrative_level
-        fields = commonfields.copy()
-        fields.append("administrative_level_from")
-        fields.append("administrative_level_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["administrative_level_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["administrative_level_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "administrative_level_from",
+            "administrative_level_to",
+        ]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "administrative_level_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "administrative_level_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Religious_levelForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -339,26 +254,21 @@ class Religious_levelForm(forms.ModelForm):
         """
 
         model = Religious_level
-        fields = commonfields.copy()
-        fields.append("religious_level_from")
-        fields.append("religious_level_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["religious_level_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["religious_level_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["religious_level_from", "religious_level_to"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "religious_level_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "religious_level_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Military_levelForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -366,26 +276,21 @@ class Military_levelForm(forms.ModelForm):
         """
 
         model = Military_level
-        fields = commonfields.copy()
-        fields.append("military_level_from")
-        fields.append("military_level_to")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["military_level_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
-            }
-        )
-        widgets["military_level_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["military_level_from", "military_level_to"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "military_level_from": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
+                "military_level_to": forms.NumberInput(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Professional_military_officerForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -393,20 +298,20 @@ class Professional_military_officerForm(forms.ModelForm):
         """
 
         model = Professional_military_officer
-        fields = commonfields.copy()
-        fields.append("professional_military_officer")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["professional_military_officer"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["professional_military_officer"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "professional_military_officer": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Professional_soldierForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -414,20 +319,20 @@ class Professional_soldierForm(forms.ModelForm):
         """
 
         model = Professional_soldier
-        fields = commonfields.copy()
-        fields.append("professional_soldier")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["professional_soldier"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["professional_soldier"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "professional_soldier": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Professional_priesthoodForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -435,20 +340,20 @@ class Professional_priesthoodForm(forms.ModelForm):
         """
 
         model = Professional_priesthood
-        fields = commonfields.copy()
-        fields.append("professional_priesthood")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["professional_priesthood"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["professional_priesthood"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "professional_priesthood": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Full_time_bureaucratForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -456,20 +361,20 @@ class Full_time_bureaucratForm(forms.ModelForm):
         """
 
         model = Full_time_bureaucrat
-        fields = commonfields.copy()
-        fields.append("full_time_bureaucrat")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["full_time_bureaucrat"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["full_time_bureaucrat"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "full_time_bureaucrat": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Examination_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -477,20 +382,20 @@ class Examination_systemForm(forms.ModelForm):
         """
 
         model = Examination_system
-        fields = commonfields.copy()
-        fields.append("examination_system")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["examination_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["examination_system"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "examination_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Merit_promotionForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -498,20 +403,20 @@ class Merit_promotionForm(forms.ModelForm):
         """
 
         model = Merit_promotion
-        fields = commonfields.copy()
-        fields.append("merit_promotion")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["merit_promotion"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["merit_promotion"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "merit_promotion": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Specialized_government_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -519,20 +424,20 @@ class Specialized_government_buildingForm(forms.ModelForm):
         """
 
         model = Specialized_government_building
-        fields = commonfields.copy()
-        fields.append("specialized_government_building")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["specialized_government_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["specialized_government_building"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "specialized_government_building": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Formal_legal_codeForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -540,20 +445,20 @@ class Formal_legal_codeForm(forms.ModelForm):
         """
 
         model = Formal_legal_code
-        fields = commonfields.copy()
-        fields.append("formal_legal_code")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["formal_legal_code"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["formal_legal_code"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "formal_legal_code": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class JudgeForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -561,20 +466,20 @@ class JudgeForm(forms.ModelForm):
         """
 
         model = Judge
-        fields = commonfields.copy()
-        fields.append("judge")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["judge"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["judge"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "judge": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class CourtForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -582,20 +487,20 @@ class CourtForm(forms.ModelForm):
         """
 
         model = Court
-        fields = commonfields.copy()
-        fields.append("court")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["court"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["court"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "court": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Professional_lawyerForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -603,20 +508,20 @@ class Professional_lawyerForm(forms.ModelForm):
         """
 
         model = Professional_lawyer
-        fields = commonfields.copy()
-        fields.append("professional_lawyer")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["professional_lawyer"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["professional_lawyer"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "professional_lawyer": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Irrigation_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -624,20 +529,20 @@ class Irrigation_systemForm(forms.ModelForm):
         """
 
         model = Irrigation_system
-        fields = commonfields.copy()
-        fields.append("irrigation_system")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["irrigation_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["irrigation_system"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "irrigation_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Drinking_water_supply_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -645,20 +550,20 @@ class Drinking_water_supply_systemForm(forms.ModelForm):
         """
 
         model = Drinking_water_supply_system
-        fields = commonfields.copy()
-        fields.append("drinking_water_supply_system")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["drinking_water_supply_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["drinking_water_supply_system"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "drinking_water_supply_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class MarketForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -666,20 +571,20 @@ class MarketForm(forms.ModelForm):
         """
 
         model = Market
-        fields = commonfields.copy()
-        fields.append("market")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["market"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["market"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "market": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Food_storage_siteForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -687,20 +592,20 @@ class Food_storage_siteForm(forms.ModelForm):
         """
 
         model = Food_storage_site
-        fields = commonfields.copy()
-        fields.append("food_storage_site")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["food_storage_site"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["food_storage_site"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "food_storage_site": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class RoadForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -708,20 +613,20 @@ class RoadForm(forms.ModelForm):
         """
 
         model = Road
-        fields = commonfields.copy()
-        fields.append("road")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["road"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["road"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "road": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class BridgeForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -729,20 +634,20 @@ class BridgeForm(forms.ModelForm):
         """
 
         model = Bridge
-        fields = commonfields.copy()
-        fields.append("bridge")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["bridge"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["bridge"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "bridge": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class CanalForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -750,20 +655,20 @@ class CanalForm(forms.ModelForm):
         """
 
         model = Canal
-        fields = commonfields.copy()
-        fields.append("canal")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["canal"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["canal"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "canal": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class PortForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -771,20 +676,20 @@ class PortForm(forms.ModelForm):
         """
 
         model = Port
-        fields = commonfields.copy()
-        fields.append("port")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["port"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["port"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "port": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Mines_or_quarryForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -792,20 +697,20 @@ class Mines_or_quarryForm(forms.ModelForm):
         """
 
         model = Mines_or_quarry
-        fields = commonfields.copy()
-        fields.append("mines_or_quarry")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["mines_or_quarry"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["mines_or_quarry"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "mines_or_quarry": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Mnemonic_deviceForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -813,20 +718,20 @@ class Mnemonic_deviceForm(forms.ModelForm):
         """
 
         model = Mnemonic_device
-        fields = commonfields.copy()
-        fields.append("mnemonic_device")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["mnemonic_device"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["mnemonic_device"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "mnemonic_device": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Nonwritten_recordForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -834,20 +739,20 @@ class Nonwritten_recordForm(forms.ModelForm):
         """
 
         model = Nonwritten_record
-        fields = commonfields.copy()
-        fields.append("nonwritten_record")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["nonwritten_record"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["nonwritten_record"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "nonwritten_record": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Written_recordForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -855,20 +760,20 @@ class Written_recordForm(forms.ModelForm):
         """
 
         model = Written_record
-        fields = commonfields.copy()
-        fields.append("written_record")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["written_record"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["written_record"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "written_record": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class ScriptForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -876,20 +781,20 @@ class ScriptForm(forms.ModelForm):
         """
 
         model = Script
-        fields = commonfields.copy()
-        fields.append("script")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["script"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["script"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "script": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Non_phonetic_writingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -897,20 +802,20 @@ class Non_phonetic_writingForm(forms.ModelForm):
         """
 
         model = Non_phonetic_writing
-        fields = commonfields.copy()
-        fields.append("non_phonetic_writing")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["non_phonetic_writing"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["non_phonetic_writing"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "non_phonetic_writing": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Phonetic_alphabetic_writingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -918,20 +823,20 @@ class Phonetic_alphabetic_writingForm(forms.ModelForm):
         """
 
         model = Phonetic_alphabetic_writing
-        fields = commonfields.copy()
-        fields.append("phonetic_alphabetic_writing")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["phonetic_alphabetic_writing"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["phonetic_alphabetic_writing"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "phonetic_alphabetic_writing": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Lists_tables_and_classificationForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -939,20 +844,20 @@ class Lists_tables_and_classificationForm(forms.ModelForm):
         """
 
         model = Lists_tables_and_classification
-        fields = commonfields.copy()
-        fields.append("lists_tables_and_classification")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["lists_tables_and_classification"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["lists_tables_and_classification"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "lists_tables_and_classification": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class CalendarForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -960,20 +865,20 @@ class CalendarForm(forms.ModelForm):
         """
 
         model = Calendar
-        fields = commonfields.copy()
-        fields.append("calendar")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["calendar"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["calendar"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "calendar": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Sacred_textForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -981,20 +886,20 @@ class Sacred_textForm(forms.ModelForm):
         """
 
         model = Sacred_text
-        fields = commonfields.copy()
-        fields.append("sacred_text")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["sacred_text"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["sacred_text"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "sacred_text": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Religious_literatureForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1002,20 +907,20 @@ class Religious_literatureForm(forms.ModelForm):
         """
 
         model = Religious_literature
-        fields = commonfields.copy()
-        fields.append("religious_literature")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["religious_literature"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["religious_literature"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "religious_literature": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Practical_literatureForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1023,20 +928,20 @@ class Practical_literatureForm(forms.ModelForm):
         """
 
         model = Practical_literature
-        fields = commonfields.copy()
-        fields.append("practical_literature")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["practical_literature"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["practical_literature"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "practical_literature": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class HistoryForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1044,20 +949,20 @@ class HistoryForm(forms.ModelForm):
         """
 
         model = History
-        fields = commonfields.copy()
-        fields.append("history")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["history"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["history"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "history": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class PhilosophyForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1065,20 +970,20 @@ class PhilosophyForm(forms.ModelForm):
         """
 
         model = Philosophy
-        fields = commonfields.copy()
-        fields.append("philosophy")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["philosophy"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["philosophy"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "philosophy": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Scientific_literatureForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1086,20 +991,20 @@ class Scientific_literatureForm(forms.ModelForm):
         """
 
         model = Scientific_literature
-        fields = commonfields.copy()
-        fields.append("scientific_literature")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["scientific_literature"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["scientific_literature"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "scientific_literature": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class FictionForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1107,20 +1012,20 @@ class FictionForm(forms.ModelForm):
         """
 
         model = Fiction
-        fields = commonfields.copy()
-        fields.append("fiction")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["fiction"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["fiction"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "fiction": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class ArticleForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1128,20 +1033,20 @@ class ArticleForm(forms.ModelForm):
         """
 
         model = Article
-        fields = commonfields.copy()
-        fields.append("article")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["article"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["article"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "article": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class TokenForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1149,20 +1054,20 @@ class TokenForm(forms.ModelForm):
         """
 
         model = Token
-        fields = commonfields.copy()
-        fields.append("token")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["token"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["token"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "token": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Precious_metalForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1170,20 +1075,20 @@ class Precious_metalForm(forms.ModelForm):
         """
 
         model = Precious_metal
-        fields = commonfields.copy()
-        fields.append("precious_metal")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["precious_metal"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["precious_metal"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "precious_metal": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Foreign_coinForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1191,20 +1096,20 @@ class Foreign_coinForm(forms.ModelForm):
         """
 
         model = Foreign_coin
-        fields = commonfields.copy()
-        fields.append("foreign_coin")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["foreign_coin"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["foreign_coin"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "foreign_coin": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Indigenous_coinForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1212,20 +1117,20 @@ class Indigenous_coinForm(forms.ModelForm):
         """
 
         model = Indigenous_coin
-        fields = commonfields.copy()
-        fields.append("indigenous_coin")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["indigenous_coin"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["indigenous_coin"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "indigenous_coin": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Paper_currencyForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1233,20 +1138,20 @@ class Paper_currencyForm(forms.ModelForm):
         """
 
         model = Paper_currency
-        fields = commonfields.copy()
-        fields.append("paper_currency")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["paper_currency"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["paper_currency"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "paper_currency": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class CourierForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1254,20 +1159,20 @@ class CourierForm(forms.ModelForm):
         """
 
         model = Courier
-        fields = commonfields.copy()
-        fields.append("courier")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["courier"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["courier"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "courier": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Postal_stationForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1275,20 +1180,20 @@ class Postal_stationForm(forms.ModelForm):
         """
 
         model = Postal_station
-        fields = commonfields.copy()
-        fields.append("postal_station")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["postal_station"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["postal_station"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "postal_station": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class General_postal_serviceForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1296,21 +1201,21 @@ class General_postal_serviceForm(forms.ModelForm):
         """
 
         model = General_postal_service
-        fields = commonfields.copy()
-        fields.append("general_postal_service")
-        labels = commonlabels
-
-        widgets = dict(commonwidgets)
-        widgets["general_postal_service"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["general_postal_service"]
+        labels = COMMON_LABELS
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "general_postal_service": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 # NEW SC vars
 class Communal_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1318,22 +1223,22 @@ class Communal_buildingForm(forms.ModelForm):
         """
 
         model = Communal_building
-        fields = commonfields.copy()
-        fields.append("communal_building")
-        labels = commonlabels
-
-        labels["communal_building"] = "&nbsp;<b> Communal Building: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["communal_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["communal_building"]
+        labels = dict(
+            COMMON_LABELS, **{"communal_building": "&nbsp;<b> Communal Building: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "communal_building": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Utilitarian_public_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1341,24 +1246,25 @@ class Utilitarian_public_buildingForm(forms.ModelForm):
         """
 
         model = Utilitarian_public_building
-        fields = commonfields.copy()
-        fields.append("utilitarian_public_building")
-        labels = commonlabels
-
-        labels["utilitarian_public_building"] = (
-            "&nbsp;<b> Utilitarian Public Building: </b>"
+        fields = COMMON_FIELDS + ["utilitarian_public_building"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "utilitarian_public_building": "&nbsp;<b> Utilitarian Public Building: </b>"
+            }
         )
-
-        widgets = dict(commonwidgets)
-        widgets["utilitarian_public_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "utilitarian_public_building": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Other_utilitarian_public_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1366,24 +1272,27 @@ class Other_utilitarian_public_buildingForm(forms.ModelForm):
         """
 
         model = Other_utilitarian_public_building
-        fields = commonfields.copy()
-        fields.append("other_utilitarian_public_building")
-        labels = commonlabels
-
-        labels["other_utilitarian_public_building"] = (
-            "&nbsp;<b> Other Utilitarian Public Building: </b>"
+        fields = COMMON_FIELDS + ["other_utilitarian_public_building"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "other_utilitarian_public_building": "&nbsp;<b> Other Utilitarian Public Building: </b>"
+            }
         )
-
-        widgets = dict(commonwidgets)
-        widgets["other_utilitarian_public_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "other_utilitarian_public_building": forms.Select(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
             }
         )
 
 
 class Symbolic_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1391,22 +1300,22 @@ class Symbolic_buildingForm(forms.ModelForm):
         """
 
         model = Symbolic_building
-        fields = commonfields.copy()
-        fields.append("symbolic_building")
-        labels = commonlabels
-
-        labels["symbolic_building"] = "&nbsp;<b> Symbolic Building: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["symbolic_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["symbolic_building"]
+        labels = dict(
+            COMMON_LABELS, **{"symbolic_building": "&nbsp;<b> Symbolic Building: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "symbolic_building": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Entertainment_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1414,22 +1323,23 @@ class Entertainment_buildingForm(forms.ModelForm):
         """
 
         model = Entertainment_building
-        fields = commonfields.copy()
-        fields.append("entertainment_building")
-        labels = commonlabels
-
-        labels["entertainment_building"] = "&nbsp;<b> Entertainment Building: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["entertainment_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["entertainment_building"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"entertainment_building": "&nbsp;<b> Entertainment Building: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "entertainment_building": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Knowledge_or_information_buildingForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1437,24 +1347,27 @@ class Knowledge_or_information_buildingForm(forms.ModelForm):
         """
 
         model = Knowledge_or_information_building
-        fields = commonfields.copy()
-        fields.append("knowledge_or_information_building")
-        labels = commonlabels
-
-        labels["knowledge_or_information_building"] = (
-            "&nbsp;<b> Knowledge Or Information Building: </b>"
+        fields = COMMON_FIELDS + ["knowledge_or_information_building"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "knowledge_or_information_building": "&nbsp;<b> Knowledge Or Information Building: </b>"
+            }
         )
-
-        widgets = dict(commonwidgets)
-        widgets["knowledge_or_information_building"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "knowledge_or_information_building": forms.Select(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
             }
         )
 
 
 class Special_purpose_siteForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1462,22 +1375,23 @@ class Special_purpose_siteForm(forms.ModelForm):
         """
 
         model = Special_purpose_site
-        fields = commonfields.copy()
-        fields.append("special_purpose_site")
-        labels = commonlabels
-
-        labels["special_purpose_site"] = "&nbsp;<b> Special Purpose Site: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["special_purpose_site"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["special_purpose_site"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"special_purpose_site": "&nbsp;<b> Special Purpose Site: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "special_purpose_site": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Ceremonial_siteForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1485,22 +1399,22 @@ class Ceremonial_siteForm(forms.ModelForm):
         """
 
         model = Ceremonial_site
-        fields = commonfields.copy()
-        fields.append("ceremonial_site")
-        labels = commonlabels
-
-        labels["ceremonial_site"] = "&nbsp;<b> Ceremonial Site: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["ceremonial_site"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["ceremonial_site"]
+        labels = dict(
+            COMMON_LABELS, **{"ceremonial_site": "&nbsp;<b> Ceremonial Site: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "ceremonial_site": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Burial_siteForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1508,22 +1422,20 @@ class Burial_siteForm(forms.ModelForm):
         """
 
         model = Burial_site
-        fields = commonfields.copy()
-        fields.append("burial_site")
-        labels = commonlabels
-
-        labels["burial_site"] = "&nbsp;<b> Burial Site: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["burial_site"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["burial_site"]
+        labels = dict(COMMON_LABELS, **{"burial_site": "&nbsp;<b> Burial Site: </b>"})
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "burial_site": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Trading_emporiaForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1531,22 +1443,22 @@ class Trading_emporiaForm(forms.ModelForm):
         """
 
         model = Trading_emporia
-        fields = commonfields.copy()
-        fields.append("trading_emporia")
-        labels = commonlabels
-
-        labels["trading_emporia"] = "&nbsp;<b> Trading Emporia: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["trading_emporia"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["trading_emporia"]
+        labels = dict(
+            COMMON_LABELS, **{"trading_emporia": "&nbsp;<b> Trading Emporia: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "trading_emporia": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class EnclosureForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1554,22 +1466,20 @@ class EnclosureForm(forms.ModelForm):
         """
 
         model = Enclosure
-        fields = commonfields.copy()
-        fields.append("enclosure")
-        labels = commonlabels
-
-        labels["enclosure"] = "&nbsp;<b> Enclosure: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["enclosure"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["enclosure"]
+        labels = dict(COMMON_LABELS, **{"enclosure": "&nbsp;<b> Enclosure: </b>"})
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "enclosure": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Length_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1577,24 +1487,23 @@ class Length_measurement_systemForm(forms.ModelForm):
         """
 
         model = Length_measurement_system
-        fields = commonfields.copy()
-        fields.append("length_measurement_system")
-        labels = commonlabels
-
-        labels["length_measurement_system"] = (
-            "&nbsp;<b> Length Measurement System: </b>"
+        fields = COMMON_FIELDS + ["length_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"length_measurement_system": "&nbsp;<b> Length Measurement System: </b>"}
         )
-
-        widgets = dict(commonwidgets)
-        widgets["length_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "length_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Area_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1602,22 +1511,23 @@ class Area_measurement_systemForm(forms.ModelForm):
         """
 
         model = Area_measurement_system
-        fields = commonfields.copy()
-        fields.append("area_measurement_system")
-        labels = commonlabels
-
-        labels["area_measurement_system"] = "&nbsp;<b> Area Measurement System: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["area_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["area_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"area_measurement_system": "&nbsp;<b> Area Measurement System: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "area_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Volume_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1625,24 +1535,23 @@ class Volume_measurement_systemForm(forms.ModelForm):
         """
 
         model = Volume_measurement_system
-        fields = commonfields.copy()
-        fields.append("volume_measurement_system")
-        labels = commonlabels
-
-        labels["volume_measurement_system"] = (
-            "&nbsp;<b> Volume Measurement System: </b>"
+        fields = COMMON_FIELDS + ["volume_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"volume_measurement_system": "&nbsp;<b> Volume Measurement System: </b>"}
         )
-
-        widgets = dict(commonwidgets)
-        widgets["volume_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "volume_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Weight_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1650,24 +1559,23 @@ class Weight_measurement_systemForm(forms.ModelForm):
         """
 
         model = Weight_measurement_system
-        fields = commonfields.copy()
-        fields.append("weight_measurement_system")
-        labels = commonlabels
-
-        labels["weight_measurement_system"] = (
-            "&nbsp;<b> Weight Measurement System: </b>"
+        fields = COMMON_FIELDS + ["weight_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"weight_measurement_system": "&nbsp;<b> Weight Measurement System: </b>"}
         )
-
-        widgets = dict(commonwidgets)
-        widgets["weight_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "weight_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Time_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1675,22 +1583,23 @@ class Time_measurement_systemForm(forms.ModelForm):
         """
 
         model = Time_measurement_system
-        fields = commonfields.copy()
-        fields.append("time_measurement_system")
-        labels = commonlabels
-
-        labels["time_measurement_system"] = "&nbsp;<b> Time Measurement System: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["time_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["time_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"time_measurement_system": "&nbsp;<b> Time Measurement System: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "time_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Geometrical_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1698,24 +1607,25 @@ class Geometrical_measurement_systemForm(forms.ModelForm):
         """
 
         model = Geometrical_measurement_system
-        fields = commonfields.copy()
-        fields.append("geometrical_measurement_system")
-        labels = commonlabels
-
-        labels["geometrical_measurement_system"] = (
-            "&nbsp;<b> Geometrical Measurement System: </b>"
+        fields = COMMON_FIELDS + ["geometrical_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "geometrical_measurement_system": "&nbsp;<b> Geometrical Measurement System: </b>"
+            }
         )
-
-        widgets = dict(commonwidgets)
-        widgets["geometrical_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "geometrical_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Other_measurement_systemForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1723,22 +1633,23 @@ class Other_measurement_systemForm(forms.ModelForm):
         """
 
         model = Other_measurement_system
-        fields = commonfields.copy()
-        fields.append("other_measurement_system")
-        labels = commonlabels
-
-        labels["other_measurement_system"] = "&nbsp;<b> Other Measurement System: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["other_measurement_system"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["other_measurement_system"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"other_measurement_system": "&nbsp;<b> Other Measurement System: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "other_measurement_system": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Debt_and_credit_structureForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1746,24 +1657,23 @@ class Debt_and_credit_structureForm(forms.ModelForm):
         """
 
         model = Debt_and_credit_structure
-        fields = commonfields.copy()
-        fields.append("debt_and_credit_structure")
-        labels = commonlabels
-
-        labels["debt_and_credit_structure"] = (
-            "&nbsp;<b> Debt And Credit Structure: </b>"
+        fields = COMMON_FIELDS + ["debt_and_credit_structure"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"debt_and_credit_structure": "&nbsp;<b> Debt And Credit Structure: </b>"}
         )
-
-        widgets = dict(commonwidgets)
-        widgets["debt_and_credit_structure"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "debt_and_credit_structure": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Store_of_wealthForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1771,22 +1681,22 @@ class Store_of_wealthForm(forms.ModelForm):
         """
 
         model = Store_of_wealth
-        fields = commonfields.copy()
-        fields.append("store_of_wealth")
-        labels = commonlabels
-
-        labels["store_of_wealth"] = "&nbsp;<b> Store Of Wealth: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["store_of_wealth"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["store_of_wealth"]
+        labels = dict(
+            COMMON_LABELS, **{"store_of_wealth": "&nbsp;<b> Store Of Wealth: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "store_of_wealth": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Source_of_supportForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1794,22 +1704,22 @@ class Source_of_supportForm(forms.ModelForm):
         """
 
         model = Source_of_support
-        fields = commonfields.copy()
-        fields.append("source_of_support")
-        labels = commonlabels
-
-        labels["source_of_support"] = "&nbsp;<b> Source Of Support: </b>"
-
-        widgets = dict(commonwidgets)
-        widgets["source_of_support"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["source_of_support"]
+        labels = dict(
+            COMMON_LABELS, **{"source_of_support": "&nbsp;<b> Source Of Support: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "source_of_support": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Occupational_complexityForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1817,20 +1727,23 @@ class Occupational_complexityForm(forms.ModelForm):
         """
 
         model = Occupational_complexity
-        fields = commonfields.copy()
-        fields.append("occupational_complexity")
-        labels = commonlabels
-        labels["occupational_complexity"] = "&nbsp;<b> Occupational Complexity: </b>"
-        widgets = dict(commonwidgets)
-        widgets["occupational_complexity"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["occupational_complexity"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"occupational_complexity": "&nbsp;<b> Occupational Complexity: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "occupational_complexity": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Special_purpose_houseForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1838,20 +1751,23 @@ class Special_purpose_houseForm(forms.ModelForm):
         """
 
         model = Special_purpose_house
-        fields = commonfields.copy()
-        fields.append("special_purpose_house")
-        labels = commonlabels
-        labels["special_purpose_house"] = "&nbsp;<b> Special Purpose House: </b>"
-        widgets = dict(commonwidgets)
-        widgets["special_purpose_house"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + ["special_purpose_house"]
+        labels = dict(
+            COMMON_LABELS,
+            **{"special_purpose_house": "&nbsp;<b> Special Purpose House: </b>"}
+        )
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "special_purpose_house": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Other_special_purpose_siteForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1859,22 +1775,25 @@ class Other_special_purpose_siteForm(forms.ModelForm):
         """
 
         model = Other_special_purpose_site
-        fields = commonfields.copy()
-        fields.append("other_special_purpose_site")
-        labels = commonlabels
-        labels["other_special_purpose_site"] = (
-            "&nbsp;<b> Other Special Purpose Site: </b>"
+        fields = COMMON_FIELDS + ["other_special_purpose_site"]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "other_special_purpose_site": "&nbsp;<b> Other Special Purpose Site: </b>"
+            }
         )
-        widgets = dict(commonwidgets)
-        widgets["other_special_purpose_site"] = forms.Select(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "other_special_purpose_site": forms.Select(attrs=ATTRS.MB3_ATTRS),
             }
         )
 
 
 class Largest_communication_distanceForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1882,31 +1801,34 @@ class Largest_communication_distanceForm(forms.ModelForm):
         """
 
         model = Largest_communication_distance
-        fields = commonfields.copy()
-        fields.append("largest_communication_distance_from")
-        fields.append("largest_communication_distance_to")
-        labels = commonlabels
-        labels["largest_communication_distance_from"] = (
-            "&nbsp;<b> Largest Communication Distance (From): </b>"
-        )
-        labels["largest_communication_distance_to"] = (
-            "&nbsp;<b> Largest Communication Distance (To): </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["largest_communication_distance_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "largest_communication_distance_from",
+            "largest_communication_distance_to",
+        ]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "largest_communication_distance_from": "&nbsp;<b> Largest Communication Distance (From): </b>",
+                "largest_communication_distance_to": "&nbsp;<b> Largest Communication Distance (To): </b>",
             }
         )
-        widgets["largest_communication_distance_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "largest_communication_distance_from": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
+                "largest_communication_distance_to": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
             }
         )
 
 
 class Fastest_individual_communicationForm(forms.ModelForm):
-    """ """
+    """
+    TODO: docstring
+    """
 
     class Meta:
         """
@@ -1914,24 +1836,25 @@ class Fastest_individual_communicationForm(forms.ModelForm):
         """
 
         model = Fastest_individual_communication
-        fields = commonfields.copy()
-        fields.append("fastest_individual_communication_from")
-        fields.append("fastest_individual_communication_to")
-        labels = commonlabels
-        labels["fastest_individual_communication_from"] = (
-            "&nbsp;<b> Fastest Individual Communication (From): </b>"
-        )
-        labels["fastest_individual_communication_to"] = (
-            "&nbsp;<b> Fastest Individual Communication (To): </b>"
-        )
-        widgets = dict(commonwidgets)
-        widgets["fastest_individual_communication_from"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        fields = COMMON_FIELDS + [
+            "fastest_individual_communication_from",
+            "fastest_individual_communication_to",
+        ]
+        labels = dict(
+            COMMON_LABELS,
+            **{
+                "fastest_individual_communication_from": "&nbsp;<b> Fastest Individual Communication (From): </b>",
+                "fastest_individual_communication_to": "&nbsp;<b> Fastest Individual Communication (To): </b>",
             }
         )
-        widgets["fastest_individual_communication_to"] = forms.NumberInput(
-            attrs={
-                "class": "form-control mb-3",
+        widgets = dict(
+            COMMON_WIDGETS,
+            **{
+                "fastest_individual_communication_from": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
+                "fastest_individual_communication_to": forms.NumberInput(
+                    attrs=ATTRS.MB3_ATTRS
+                ),
             }
         )
