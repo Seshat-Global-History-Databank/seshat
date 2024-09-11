@@ -3,3 +3,4 @@ Django==4.0.3
 psycopg2-binary==2.9.3
 python-decouple==3.6
 pytz==2021.3
+django-extensions-3.2.3

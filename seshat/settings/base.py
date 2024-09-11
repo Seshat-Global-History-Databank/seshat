@@ -87,6 +87,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "django.contrib.gis",
     "leaflet",
+    "django_extensions",
 ]
 
 AUTHENTICATION_BACKENDS = [
