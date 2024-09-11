@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     "django.contrib.sites",  # Add this
     "django.contrib.humanize",
     "crispy_forms",
+    "whitenoise.runserver_nostatic",
+    "seshat.apps.accounts",
     "seshat.apps.core",
     "seshat.apps.general",
     "seshat.apps.sc",
