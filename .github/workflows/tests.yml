@@ -3,25 +3,30 @@ name: test_code
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, test-github-actions]
   pull_request:
-    branches: [dev]
+    branches: [dev, test-github-actions]
 
 jobs:
   test_core:
     runs-on: ['ubuntu-latest']
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Login to GitHub Packages
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
-        password: ${{ secrets.GH_TOKEN }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: set lower case owner name
+      run: |
+        echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+      env:
+        OWNER: '${{ github.repository_owner }}'
     - name: Pull and run Docker image
       run: |
-        docker pull docker.pkg.github.com/seshat-global-history-databank/seshat/tests-image:latest
-        docker run -d -p 5432:5432 -v ${{ github.workspace }}:/seshat -e DJANGO_SETTINGS_MODULE=seshat.settings.local -e POSTGRES_PASSWORD=postgres -e PGDATA=/var/lib/postgresql/data/db-files/ -e GITHUB_ACTIONS='true' --name seshat_testing docker.pkg.github.com/seshat-global-history-databank/seshat/tests-image:latest
+        docker pull docker.pkg.github.com/${{ env.OWNER_LC }}/seshat/tests-image:latest
+        docker run -d -p 5432:5432 -v ${{ github.workspace }}:/seshat -e DJANGO_SETTINGS_MODULE=seshat.settings.local -e POSTGRES_PASSWORD=postgres -e PGDATA=/var/lib/postgresql/data/db-files/ -e GITHUB_ACTIONS='true' --name seshat_testing docker.pkg.github.com/${{ env.OWNER_LC }}/seshat/tests-image:latest
     - name: Sleep, then check PostgreSQL connectivity
       run: |
         sleep 10

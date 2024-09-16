@@ -3,13 +3,13 @@ name: build_docker_image
 
 on:
   push:
-    branches: [dev]
+    branches: [dev, test-github-actions]
     paths:
       - 'Dockerfile'
       - 'requirements.txt'
       - '.github/workflows/build.yml'
   pull_request:
-    branches: [dev]
+    branches: [dev, test-github-actions]
     paths:
       - 'Dockerfile'
       - 'requirements.txt'
@@ -18,18 +18,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Login to GitHub Packages
-      uses: docker/login-action@v1
+      uses: docker/login-action@v3
       with:
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
-        password: ${{ secrets.GH_TOKEN }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: set lower case owner name
+      run: |
+        echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+      env:
+        OWNER: '${{ github.repository_owner }}'
     - name: Build and push Docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v6
       with:
         context: .
         push: true
-        tags: docker.pkg.github.com/seshat-global-history-databank/seshat/tests-image:latest
+        tags: docker.pkg.github.com/${{ env.OWNER_LC }}/seshat/tests-image:latest
