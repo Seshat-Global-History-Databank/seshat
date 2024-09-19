@@ -4355,12 +4355,6 @@ def common_map_view_content(content):
     # Add categorical variable choices to content for dropdown selection
     content['categorical_variables'] = categorical_variables
 
-    # Set the initial polity to highlight
-    content['world_map_initial_polity'] = world_map_initial_polity
-
-    # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
-    content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
-
     return content
 
 def dummy_map_view_content(content):
@@ -4468,7 +4462,13 @@ def map_view_all_with_vars(request):
     # Start a timer to measure the time taken to load the page
     start_time = time.time()
 
-    content = get_polity_shape_content(geometries=False)
+    # content = get_polity_shape_content(geometries=False)
+    rows = Cliopatria.objects.all()
+    rows = rows.values('id', 'seshat_id')
+    shapes = list(rows)
+    content = {
+        'shapes': shapes
+    }
 
     content = common_map_view_content(content)
 
