@@ -4744,7 +4744,6 @@ def search_view(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    print("search_view hit!")
     search_term = request.GET.get("search", "")
 
     if search_term:

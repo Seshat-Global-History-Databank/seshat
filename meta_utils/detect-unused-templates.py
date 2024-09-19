@@ -53,7 +53,7 @@ for python_file in python_files:
             elif "render" in line and line.strip().endswith("("):
                 test_val = lines[ix + 1].strip().strip('request, "').split('"')[0]
                 if test_val:
-                    potential_lines += [test_val]  # print(test_val)
+                    potential_lines += [test_val]
                 else:
                     test_val = lines[ix + 2].split('"')[1]
                     potential_lines += [test_val]

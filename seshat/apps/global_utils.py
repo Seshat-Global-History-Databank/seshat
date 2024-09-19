@@ -876,7 +876,6 @@ def get_variable_context(
     unique_polities = []
 
     for model in get_models(app_name, exclude=exclude):
-        print(model)
         subsection = str(model().subsection())
         subsubsection = str(model().subsubsection())
 
@@ -923,8 +922,6 @@ def get_variable_context(
         ]
 
         all_vars_grouped[subsection][subsubsection] += [lst]
-
-    print(all_vars_grouped)
 
     return {
         "all_vars_grouped": all_vars_grouped,
