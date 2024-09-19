@@ -1,5 +1,4 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-import six  # TODO: Remove reliance on six library (Python 2 compatibility)
 
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
@@ -20,11 +19,7 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
         Returns:
             str: The hash value.
         """
-        return (
-            six.text_type(user.pk)
-            + six.text_type(timestamp)
-            + six.text_type(user.profile.email_confirmed)
-        )
+        return f"{user.pk}{timestamp}{user.profile.email_confirmed}"
 
 
 account_activation_token = AccountActivationTokenGenerator()
