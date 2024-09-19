@@ -51,7 +51,7 @@
             <td class="text-danger" style="text-align: center">[{{ obj.polity.start_year }}, {{ obj.polity.end_year }}]</td>
             <td style="text-align: center">
                 {% with obj.name as update_part_0 %}
-                <a href="{% url update_part_0|add:'-update' obj.id %}" class="btn btn-warning btn-sm tag-border2" role="button"><i class="fa-solid fa-pen-to-square fa-sm"></i> Variable</a>
+                <a href="{% url update_part_0|add:'-update'|lower obj.id %}" class="btn btn-warning btn-sm tag-border2" role="button"><i class="fa-solid fa-pen-to-square fa-sm"></i> Variable</a>
                 {% endwith %}
 
             </td>
