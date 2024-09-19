@@ -1,6 +1,7 @@
 from django import forms
 
 from ..global_constants import (
+    _wrap,
     COMMON_FIELDS,
     COMMON_LABELS,
     COMMON_WIDGETS,
@@ -92,8 +93,8 @@ from .models import (
 COMMON_LABELS = dict(
     COMMON_LABELS,
     **{
-        "polity": "&nbsp;<b>Polity:</b>",
-        "description": "&nbsp; <b> Description: </b>",
+        "polity": _wrap("Polity"),
+        "description": _wrap("Description"),
     }
 )
 
@@ -1225,7 +1226,7 @@ class Communal_buildingForm(forms.ModelForm):
         model = Communal_building
         fields = COMMON_FIELDS + ["communal_building"]
         labels = dict(
-            COMMON_LABELS, **{"communal_building": "&nbsp;<b> Communal Building: </b>"}
+            COMMON_LABELS, **{"communal_building": _wrap("Communal Building")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1250,7 +1251,7 @@ class Utilitarian_public_buildingForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "utilitarian_public_building": "&nbsp;<b> Utilitarian Public Building: </b>"
+                "utilitarian_public_building": _wrap("Utilitarian Public Building")
             }
         )
         widgets = dict(
@@ -1276,7 +1277,7 @@ class Other_utilitarian_public_buildingForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "other_utilitarian_public_building": "&nbsp;<b> Other Utilitarian Public Building: </b>"
+                "other_utilitarian_public_building": _wrap("Other Utilitarian Public Building")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(
@@ -1302,7 +1303,7 @@ class Symbolic_buildingForm(forms.ModelForm):
         model = Symbolic_building
         fields = COMMON_FIELDS + ["symbolic_building"]
         labels = dict(
-            COMMON_LABELS, **{"symbolic_building": "&nbsp;<b> Symbolic Building: </b>"}
+            COMMON_LABELS, **{"symbolic_building": _wrap("Symbolic Building")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1326,7 +1327,7 @@ class Entertainment_buildingForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["entertainment_building"]
         labels = dict(
             COMMON_LABELS,
-            **{"entertainment_building": "&nbsp;<b> Entertainment Building: </b>"}
+            **{"entertainment_building": _wrap("Entertainment Building")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1351,7 +1352,7 @@ class Knowledge_or_information_buildingForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "knowledge_or_information_building": "&nbsp;<b> Knowledge Or Information Building: </b>"
+                "knowledge_or_information_building": _wrap("Knowledge Or Information Building")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(
@@ -1378,7 +1379,7 @@ class Special_purpose_siteForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["special_purpose_site"]
         labels = dict(
             COMMON_LABELS,
-            **{"special_purpose_site": "&nbsp;<b> Special Purpose Site: </b>"}
+            **{"special_purpose_site": _wrap("Special Purpose Site")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1401,7 +1402,7 @@ class Ceremonial_siteForm(forms.ModelForm):
         model = Ceremonial_site
         fields = COMMON_FIELDS + ["ceremonial_site"]
         labels = dict(
-            COMMON_LABELS, **{"ceremonial_site": "&nbsp;<b> Ceremonial Site: </b>"}
+            COMMON_LABELS, **{"ceremonial_site": _wrap("Ceremonial Site")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1423,7 +1424,7 @@ class Burial_siteForm(forms.ModelForm):
 
         model = Burial_site
         fields = COMMON_FIELDS + ["burial_site"]
-        labels = dict(COMMON_LABELS, **{"burial_site": "&nbsp;<b> Burial Site: </b>"})
+        labels = dict(COMMON_LABELS, **{"burial_site": _wrap("Burial Site")})
         widgets = dict(
             COMMON_WIDGETS,
             **{
@@ -1445,7 +1446,7 @@ class Trading_emporiaForm(forms.ModelForm):
         model = Trading_emporia
         fields = COMMON_FIELDS + ["trading_emporia"]
         labels = dict(
-            COMMON_LABELS, **{"trading_emporia": "&nbsp;<b> Trading Emporia: </b>"}
+            COMMON_LABELS, **{"trading_emporia": _wrap("Trading Emporia")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1467,7 +1468,7 @@ class EnclosureForm(forms.ModelForm):
 
         model = Enclosure
         fields = COMMON_FIELDS + ["enclosure"]
-        labels = dict(COMMON_LABELS, **{"enclosure": "&nbsp;<b> Enclosure: </b>"})
+        labels = dict(COMMON_LABELS, **{"enclosure": _wrap("Enclosure")})
         widgets = dict(
             COMMON_WIDGETS,
             **{
@@ -1490,7 +1491,7 @@ class Length_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["length_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"length_measurement_system": "&nbsp;<b> Length Measurement System: </b>"}
+            **{"length_measurement_system": _wrap("Length Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1514,7 +1515,7 @@ class Area_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["area_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"area_measurement_system": "&nbsp;<b> Area Measurement System: </b>"}
+            **{"area_measurement_system": _wrap("Area Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1538,7 +1539,7 @@ class Volume_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["volume_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"volume_measurement_system": "&nbsp;<b> Volume Measurement System: </b>"}
+            **{"volume_measurement_system": _wrap("Area Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1562,7 +1563,7 @@ class Weight_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["weight_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"weight_measurement_system": "&nbsp;<b> Weight Measurement System: </b>"}
+            **{"weight_measurement_system": _wrap("Weight Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1586,7 +1587,7 @@ class Time_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["time_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"time_measurement_system": "&nbsp;<b> Time Measurement System: </b>"}
+            **{"time_measurement_system": _wrap("Time Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1611,7 +1612,7 @@ class Geometrical_measurement_systemForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "geometrical_measurement_system": "&nbsp;<b> Geometrical Measurement System: </b>"
+                "geometrical_measurement_system": _wrap("Geometrical Measurement System")
             }
         )
         widgets = dict(
@@ -1636,7 +1637,7 @@ class Other_measurement_systemForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["other_measurement_system"]
         labels = dict(
             COMMON_LABELS,
-            **{"other_measurement_system": "&nbsp;<b> Other Measurement System: </b>"}
+            **{"other_measurement_system": _wrap("Other Measurement System")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1660,7 +1661,7 @@ class Debt_and_credit_structureForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["debt_and_credit_structure"]
         labels = dict(
             COMMON_LABELS,
-            **{"debt_and_credit_structure": "&nbsp;<b> Debt And Credit Structure: </b>"}
+            **{"debt_and_credit_structure": _wrap("Debt And Credit Structure")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1683,7 +1684,7 @@ class Store_of_wealthForm(forms.ModelForm):
         model = Store_of_wealth
         fields = COMMON_FIELDS + ["store_of_wealth"]
         labels = dict(
-            COMMON_LABELS, **{"store_of_wealth": "&nbsp;<b> Store Of Wealth: </b>"}
+            COMMON_LABELS, **{"store_of_wealth": _wrap("Store Of Wealth")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1706,7 +1707,7 @@ class Source_of_supportForm(forms.ModelForm):
         model = Source_of_support
         fields = COMMON_FIELDS + ["source_of_support"]
         labels = dict(
-            COMMON_LABELS, **{"source_of_support": "&nbsp;<b> Source Of Support: </b>"}
+            COMMON_LABELS, **{"source_of_support": _wrap("Source Of Support")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1730,7 +1731,7 @@ class Occupational_complexityForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["occupational_complexity"]
         labels = dict(
             COMMON_LABELS,
-            **{"occupational_complexity": "&nbsp;<b> Occupational Complexity: </b>"}
+            **{"occupational_complexity": _wrap("Occupational Complexity")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1754,7 +1755,7 @@ class Special_purpose_houseForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["special_purpose_house"]
         labels = dict(
             COMMON_LABELS,
-            **{"special_purpose_house": "&nbsp;<b> Special Purpose House: </b>"}
+            **{"special_purpose_house": _wrap("Special Purpose House")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -1779,7 +1780,7 @@ class Other_special_purpose_siteForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "other_special_purpose_site": "&nbsp;<b> Other Special Purpose Site: </b>"
+                "other_special_purpose_site": _wrap("Other Special Purpose Site")
             }
         )
         widgets = dict(
@@ -1808,8 +1809,8 @@ class Largest_communication_distanceForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "largest_communication_distance_from": "&nbsp;<b> Largest Communication Distance (From): </b>",
-                "largest_communication_distance_to": "&nbsp;<b> Largest Communication Distance (To): </b>",
+                "largest_communication_distance_from": _wrap("Largest Communication Distance (From)"),  # noqa: E501 pylint: disable=C0301
+                "largest_communication_distance_to": _wrap("Largest Communication Distance (To)"),  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(
@@ -1843,8 +1844,8 @@ class Fastest_individual_communicationForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "fastest_individual_communication_from": "&nbsp;<b> Fastest Individual Communication (From): </b>",
-                "fastest_individual_communication_to": "&nbsp;<b> Fastest Individual Communication (To): </b>",
+                "fastest_individual_communication_from": _wrap("Fastest Individual Communication (From)"),  # noqa: E501 pylint: disable=C0301
+                "fastest_individual_communication_to": _wrap("Fastest Individual Communication (To)"),  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(

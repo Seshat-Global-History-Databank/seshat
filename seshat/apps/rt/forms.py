@@ -1,11 +1,12 @@
 from django import forms
 
 from ..global_constants import (
+    _wrap,
     CODED_VALUE_WIDGET,
     COMMON_FIELDS,
     COMMON_LABELS,
     COMMON_WIDGETS,
-    ATTRS,
+    ATTRS
 )
 
 from .models import (
@@ -32,14 +33,14 @@ from .models import (
     Gov_press_conv_for_aga,
 )
 
+
 # Add polity + description to COMMON_LABELS
 # TODO: Should these be added directly to COMMON_LABELS in global_constants.py?
-
 COMMON_LABELS = dict(
     COMMON_LABELS,
     **{
-        "polity": "&nbsp;<b>Polity:</b>",
-        "description": "&nbsp; <b> Description: </b>",
+        "polity": _wrap("Polity"),
+        "description": _wrap("Description"),
     }
 )
 
@@ -63,9 +64,9 @@ class Widespread_religionForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "widespread_religion": "&nbsp;<b> Widespread Religion: </b>",
-                "order": "&nbsp;<b> Order: </b>",
-                "degree_of_prevalence": "&nbsp;<b> Degree of Prevalence: </b>",
+                "widespread_religion": _wrap("Widespread Religion"),
+                "order": _wrap("Order"),
+                "degree_of_prevalence": _wrap("Degree of Prevalence"),
             }
         )
         widgets = dict(
@@ -97,7 +98,7 @@ class Official_religionForm(forms.ModelForm):
         model = Official_religion
         fields = COMMON_FIELDS + ["coded_value"]
         labels = dict(
-            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Official Religion: </b>"}
+            COMMON_LABELS, **{"coded_value": _wrap("Official Religion")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -126,7 +127,7 @@ class Elites_religionForm(forms.ModelForm):
         model = Elites_religion
         fields = COMMON_FIELDS + ["coded_value"]
         labels = dict(
-            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Elites' Religion: </b>"}
+            COMMON_LABELS, **{"coded_value": _wrap("Elites' Religion")}
         )
         widgets = dict(
             COMMON_WIDGETS,
@@ -157,7 +158,7 @@ class Theo_sync_dif_relForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Theological Syncretism Of Different Religions: </b>"
+                "coded_value": _wrap("Theological Syncretism Of Different Religions")
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -165,7 +166,7 @@ class Theo_sync_dif_relForm(forms.ModelForm):
 
 class Sync_rel_pra_ind_beliForm(forms.ModelForm):
     """
-    Form for creating and updating the syncretism of religious practices at the level of individual believers model.
+    Form for creating and updating the syncretism of religious practices at the level of individual believers model.  # noqa: E501 pylint: disable=C0301
     """
 
     class Meta:
@@ -178,7 +179,7 @@ class Sync_rel_pra_ind_beliForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Syncretism Of Religious Practices At The Level Of Individual Believers: </b>"
+                "coded_value": _wrap("Syncretism Of Religious Practices At The Level Of Individual Believers")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -197,7 +198,7 @@ class Religious_fragmentationForm(forms.ModelForm):
         model = Religious_fragmentation
         fields = COMMON_FIELDS + ["coded_value"]
         labels = dict(
-            COMMON_LABELS, **{"coded_value": "&nbsp;<b> Religious Fragmentation: </b>"}
+            COMMON_LABELS, **{"coded_value": _wrap("Religious Fragmentation")}
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
@@ -217,7 +218,7 @@ class Gov_vio_freq_rel_grpForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Frequency Of Governmental Violence Against Religious Groups: </b>"
+                "coded_value": _wrap("Frequency Of Governmental Violence Against Religious Groups")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -238,7 +239,7 @@ class Gov_res_pub_worForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Public Worship: </b>"
+                "coded_value": _wrap("Government Restrictions On Public Worship")
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -259,7 +260,7 @@ class Gov_res_pub_prosForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Public Proselytizing: </b>"
+                "coded_value": _wrap("Government Restrictions On Public Proselytizing")
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -279,7 +280,7 @@ class Gov_res_convForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["coded_value"]
         labels = dict(
             COMMON_LABELS,
-            **{"coded_value": "&nbsp;<b> Government Restrictions On Conversion: </b>"}
+            **{"coded_value": _wrap("Government Restrictions On Conversion")}
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
@@ -298,7 +299,7 @@ class Gov_press_convForm(forms.ModelForm):
         fields = COMMON_FIELDS + ["coded_value"]
         labels = dict(
             COMMON_LABELS,
-            **{"coded_value": "&nbsp;<b> Government Pressure To Convert: </b>"}
+            **{"coded_value": _wrap("Government Pressure To Convert")}
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
 
@@ -318,7 +319,7 @@ class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Property Ownership For Religious Groups: </b>"
+                "coded_value": _wrap("Government Restrictions On Property Ownership For Religious Groups")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -339,7 +340,7 @@ class Tax_rel_adh_act_insForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Taxes Based On Religious Adherence Or On Religious Activities And Institutions: </b>"
+                "coded_value": _wrap("Taxes Based On Religious Adherence Or On Religious Activities And Institutions")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -360,7 +361,7 @@ class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Governmental Obligations For Religious Groups To Apply For Official Recognition: </b>"
+                "coded_value": _wrap("Governmental Obligations For Religious Groups To Apply For Official Recognition")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -381,7 +382,7 @@ class Gov_res_cons_rel_builForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Construction Of Religious Buildings: </b>"
+                "coded_value": _wrap("Government Restrictions On Construction Of Religious Buildings")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -402,7 +403,7 @@ class Gov_res_rel_eduForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Religious Education: </b>"
+                "coded_value": _wrap("Government Restrictions On Religious Education")
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -423,7 +424,7 @@ class Gov_res_cir_rel_litForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Restrictions On Circulation Of Religious Literature: </b>"
+                "coded_value": _wrap("Government Restrictions On Circulation Of Religious Literature")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -444,7 +445,7 @@ class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
+                "coded_value": _wrap("Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -465,7 +466,7 @@ class Soc_vio_freq_rel_grpForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Frequency Of Societal Violence Against Religious Groups: </b>"
+                "coded_value": _wrap("Frequency Of Societal Violence Against Religious Groups")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -486,7 +487,7 @@ class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions: </b>"
+                "coded_value": _wrap("Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)
@@ -507,7 +508,7 @@ class Gov_press_conv_for_agaForm(forms.ModelForm):
         labels = dict(
             COMMON_LABELS,
             **{
-                "coded_value": "&nbsp;<b> Governmental Pressure To Convert Or Against Conversion: </b>"
+                "coded_value": _wrap("Governmental Pressure To Convert Or Against Conversion")  # noqa: E501 pylint: disable=C0301
             }
         )
         widgets = dict(COMMON_WIDGETS, **CODED_VALUE_WIDGET)

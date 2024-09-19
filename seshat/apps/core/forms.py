@@ -9,7 +9,8 @@ from django.forms.formsets import BaseFormSet
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 
-from ..global_constants import ATTRS
+from ..global_constants import _wrap, ATTRS
+from ..global_utils import clean_email
 from ..core.models import (
     Reference,
     Citation,
@@ -54,11 +55,11 @@ class ReferenceForm(forms.ModelForm):
         model = Reference
         fields = ("title", "year", "creator", "zotero_link", "long_name")
         labels = {
-            "title": "<b>title</b>",
-            "year": "<b>Year</b>",
-            "creator": "<b>Creator </b>",
-            "zotero_link": "<b>zotero_link</b>",
-            "long_name": "<b>Long Name</b>",
+            "title": _wrap("Title"),
+            "year": _wrap("Year"),
+            "creator": _wrap("Creator"),
+            "zotero_link": _wrap("Zotero Link"),
+            "long_name": _wrap("Long Name"),
         }
         widgets = {
             "title": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
@@ -88,14 +89,14 @@ class CitationForm(forms.ModelForm):
             "page_to",
         )
         labels = {
-            "page_from": "<b>Start Page</b>",
-            "page_to": "<b>End Page</b>",
-            "ref": "<b>Select Your Reference: </b>",
+            "page_from": _wrap("Start Page"),
+            "page_to": _wrap("End Page"),
+            "ref": _wrap("Select Your Reference"),
         }
         widgets = {
             "ref": forms.Select(
                 attrs={
-                    "class": "form-control mb-3 form-select js-states js-example-basic-single",
+                    "class": "form-control mb-3 form-select js-states js-example-basic-single",  # noqa: E501 pylint: disable=C0301
                     "text": "ref",
                 }
             ),
@@ -103,7 +104,7 @@ class CitationForm(forms.ModelForm):
             "page_to": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
         }
 
-    def clean(self):
+    def clean(self) -> dict:
         """
         Check if the citation is a duplicate.
 
@@ -114,24 +115,20 @@ class CitationForm(forms.ModelForm):
             ValidationError: If the citation is a duplicate.
         """
         cleaned_data = super(CitationForm, self).clean()
-        cleaned_page_from = cleaned_data.get("page_from")
-        cleaned_page_to = cleaned_data.get("page_to")
-        referenced_ref = cleaned_data.get("ref")
-        all_citations = Citation.objects.all()
-        for a_citation in all_citations:
-            if (
-                a_citation.ref.id == referenced_ref.id
-                and cleaned_page_from == a_citation.page_from
-                and a_citation.page_to == cleaned_page_to
-            ):
-                print(
-                    f"PPPPPPPPPPPP : There is a citation with this info and it has the id: {str(a_citation.id)}",
-                    referenced_ref.id,
-                    referenced_ref.long_name,
-                )
-                raise ValidationError(
-                    "There is already a citation with the given information. We cannot create a duplicate."
-                )
+
+        ref = cleaned_data.get("ref")
+        page_from = cleaned_data.get("page_from")
+        page_to = cleaned_data.get("page_to")
+
+        try:
+            ref_id = ref.id
+        except AttributeError:
+            ref_id = None  # TODO: Should we handle this differently
+
+        if Citation.objects.filter(ref__id=ref_id, page_from=page_from, page_to=page_to):
+            raise ValidationError(
+                "There is already a citation with the given information. We cannot create a duplicate."  # noqa: E501 pylint: disable=C0301
+            )
 
         return cleaned_data
 
@@ -193,7 +190,7 @@ class PolityForm(forms.ModelForm):
                     ATTRS.MB3_ATTRS,
                     **{
                         "style": "height: 100px",
-                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",
+                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",  # noqa: E501 pylint: disable=C0301
                     }
                 )
             ),
@@ -270,7 +267,7 @@ class PolityUpdateForm(forms.ModelForm):
                     ATTRS.MB3_ATTRS,
                     **{
                         "style": "height: 100px",
-                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",
+                        "placeholder": "Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity map data.",  # noqa: E501 pylint: disable=C0301
                     }
                 )
             ),
@@ -299,10 +296,10 @@ class NgaForm(forms.ModelForm):
         model = Nga
         fields = ("name", "world_region", "subregion", "fao_country")
         labels = {
-            "name": "<b>NGA</b>",
-            "world_region": "<b>World Region</b>",
-            "subregion": "<b>Subregion</b>",
-            "fao_country": "<b>Current Country</b>",
+            "name": _wrap("NGA"),
+            "world_region": _wrap("World Region"),
+            "subregion": _wrap("Subregion"),
+            "fao_country": _wrap("Current Country"),
         }
         widgets = {
             "name": forms.TextInput(attrs=ATTRS.MB3_ATTRS),
@@ -388,7 +385,7 @@ class SeshatCommentForm(forms.ModelForm):
         model = SeshatComment
         fields = ("text",)
         labels = {
-            "text": "<b>Description</b>",
+            "text": _wrap("Description"),
         }
         widgets = {
             "text": forms.Textarea(
@@ -416,11 +413,11 @@ class SeshatCommentPartForm(forms.ModelForm):
             "comment_curator",
         )
         labels = {
-            "comment": "<b>Description ID</b>",
-            "comment_part_text": "<b>SubDescription Text</b>",
-            "comment_citations": "<b>SubDescription Citations</b>",
-            "comment_order": "<b>SubDescription Order in the Description:</b>",
-            "comment_curator": "<b>Curator:</b>",
+            "comment": _wrap("Description ID"),
+            "comment_part_text": _wrap("Subdescription Text"),
+            "comment_citations": _wrap("Subdescription Citations"),
+            "comment_order": _wrap("Subdescription Order in the Description"),
+            "comment_curator": _wrap("Curator"),
         }
         widgets = {
             "comment": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
@@ -462,10 +459,10 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
             "private_comment_reader",
         )
         labels = {
-            "private_comment": "<b>PrivateDescription ID</b>",
-            "private_comment_part_text": "<b>Private Conmment Text</b>",
-            "private_comment_owner": "<b>Owner:</b>",
-            "private_comment_reader": "<b>Target:</b>",
+            "private_comment": _wrap("PrivateDescription ID"),
+            "private_comment_part_text": _wrap("Private Comment Text"),
+            "private_comment_owner": _wrap("Owner"),
+            "private_comment_reader": _wrap("Target"),
         }
         widgets = {
             "private_comment": forms.NumberInput(attrs=ATTRS.MB3_BOLD_ATTRS),
@@ -501,7 +498,7 @@ class SeshatPrivateCommentForm(forms.ModelForm):
         model = SeshatPrivateComment
         fields = ("text",)
         labels = {
-            "text": "<b>Private Comment</b>",
+            "text": _wrap("Private Comment"),
         }
         widgets = {
             "text": forms.Textarea(
@@ -606,7 +603,6 @@ ReferenceFormSet10 = forms.formset_factory(
     can_delete=True,
     can_order=True,
 )
-# ReferenceFormSet = forms.formset_factory(ReferenceWithPageForm, extra=2, can_delete=True,)
 
 
 class SeshatCommentPartForm2(forms.Form):
@@ -701,17 +697,9 @@ class SignUpForm(UserCreationForm):
         ),
     )
 
-    def clean_email(self):
+    def clean_email(self) -> str:
         email = self.cleaned_data.get("email")
-        if email:
-            username, _ = email.split("@")
-            username_parts = username.split(".")
-            if len(username_parts) > 5:
-                raise ValidationError(
-                    "Email address contains too many dots in the username part."
-                )
-
-        return email
+        return clean_email(email)
 
     class Meta:
         """
@@ -737,7 +725,7 @@ class SignUpForm(UserCreationForm):
 
 
 class VariablehierarchyFormNew(forms.Form):
-    my_vars = dic_of_all_vars()
+    my_vars = {}
     my_vars_tuple = [("", " -- Select Variable -- ")]
     variable_name = forms.ChoiceField(
         widget=forms.Select(
@@ -756,7 +744,7 @@ class VariablehierarchyFormNew(forms.Form):
                 "class": "form-control mb-3 form-select required-entry",
                 "name": "section",
                 "id": "section",
-                "onchange": "javascript: dynamicdropdown(this.options[this.selectedIndex].value);",
+                "onchange": "javascript:dynamicdropdown(this.options[this.selectedIndex].value);",  # noqa: E501 pylint: disable=C0301
             }
         ),
     )

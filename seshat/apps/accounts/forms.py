@@ -1,8 +1,8 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 
 from ..global_constants import ATTRS
+from ..global_utils import clean_email
 
 from .models import Seshat_Task, Profile
 
@@ -21,7 +21,7 @@ class Seshat_TaskForm(forms.ModelForm):
         fields = ["giver", "taker", "task_description", "task_url"]
         labels = {
             "giver": "Who are You? ",
-            "taker": '<h5>Who needs to take the task?</h5><h6 class="text-secondary mt-1">Hold <kbd class="bg-success">Ctrl</kbd> to select multiple task-takers.</h6>',
+            "taker": '<h5>Who needs to take the task?</h5><h6 class="text-secondary mt-1">Hold <kbd class="bg-success">Ctrl</kbd> to select multiple task-takers.</h6>',  # noqa: E501 pylint: disable=C0301
             "task_description": "<h6>What is the task?</h6>",
             "task_url": "Task URL",
         }
@@ -77,26 +77,6 @@ class CustomSignUpForm(UserCreationForm):
     Form for signing up a user.
     """
 
-    def clean_email(self):
-        """
-        A method to clean the email field and check if it contains too many
-        dots in the username part.
-
-        Returns:
-            str: The email address if it is valid.
-
-        Raises:
-            ValidationError: If the email address contains too many dots in the
-                username part.
-        """
+    def clean_email(self) -> str:
         email = self.cleaned_data.get("email")
-
-        if email:
-            username, domain = email.split("@")
-            username_parts = username.split(".")
-            if len(username_parts) > 5:
-                raise ValidationError(
-                    "Email address contains too many dots in the username part."
-                )
-
-        return email
+        return clean_email(email)
