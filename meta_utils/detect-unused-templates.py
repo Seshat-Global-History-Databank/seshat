@@ -114,8 +114,9 @@ print()
 # Output results to files                                      #
 ################################################################
 
-Path("missing_files.txt").write_text("\n".join(missing_files))
-Path("files_not_in_code.txt").write_text("\n".join(files_not_in_code))
+Path("output").mkdir(exist_ok=True)
+Path("output/missing_files.txt").write_text("\n".join(missing_files))
+Path("output/files_not_in_code.txt").write_text("\n".join(files_not_in_code))
 
 print("####################################################################")
 print()
