@@ -17,22 +17,6 @@ from .models import (
     Religion,
 )
 
-admin.site.register(Macro_region)
-admin.site.register(Seshat_region)
-admin.site.register(Section)
-admin.site.register(Subsection)
-admin.site.register(Variablehierarchy)
-admin.site.register(Polity)
-admin.site.register(Country)
-admin.site.register(Citation)
-admin.site.register(Reference)
-admin.site.register(SeshatComment)
-admin.site.register(SeshatCommentPart)
-admin.site.register(Nga)
-admin.site.register(Ngapolityrel)
-admin.site.register(Capital)
-admin.site.register(Religion)
-
 
 class CustomReferenceAdmin(admin.ModelAdmin):
     list_display = (
@@ -42,5 +26,23 @@ class CustomReferenceAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.unregister(Reference)
+# Register custom admin class for Reference model
+# admin.site.unregister(Reference)
 admin.site.register(Reference, CustomReferenceAdmin)
+
+# Register models with the admin site
+admin.site.register(Macro_region)
+admin.site.register(Seshat_region)
+admin.site.register(Section)
+admin.site.register(Subsection)
+admin.site.register(Variablehierarchy)
+admin.site.register(Polity)
+admin.site.register(Country)
+admin.site.register(Citation)
+# admin.site.register(Reference)
+admin.site.register(SeshatComment)
+admin.site.register(SeshatCommentPart)
+admin.site.register(Nga)
+admin.site.register(Ngapolityrel)
+admin.site.register(Capital)
+admin.site.register(Religion)
