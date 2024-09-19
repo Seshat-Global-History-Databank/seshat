@@ -1,12 +1,13 @@
 from django.urls import path
 
 from . import views
+from .specific_views import downloads
 
 urlpatterns = [
-    path("generalvars/", views.generalvars, name="generalvars"),
+    path("generalvars/", views.generalvars_view, name="generalvars"),
     path(
         "download-csv-general-all/",
-        views.download_csv_all_general,
+        downloads.download_csv_all_general,
         name="download_csv_all_general",
     ),
 ]
@@ -15,7 +16,7 @@ urlpatterns = [
 urlpatterns += [
     path(
         "polity_research_assistant/create/",
-        views.Polity_research_assistantCreate.as_view(),
+        views.Polity_research_assistantCreateView.as_view(),
         name="polity_research_assistant-create",
     ),
     path(
@@ -25,7 +26,7 @@ urlpatterns += [
     ),
     path(
         "polity_research_assistants_all/",
-        views.Polity_research_assistantListViewAll.as_view(),
+        views.Polity_research_assistantListAllView.as_view(),
         name="polity_research_assistants_all",
     ),
     path(
@@ -35,22 +36,22 @@ urlpatterns += [
     ),
     path(
         "polity_research_assistant/<int:pk>/update/",
-        views.Polity_research_assistantUpdate.as_view(),
+        views.Polity_research_assistantUpdateView.as_view(),
         name="polity_research_assistant-update",
     ),
     path(
         "polity_research_assistant/<int:pk>/delete/",
-        views.Polity_research_assistantDelete.as_view(),
+        views.Polity_research_assistantDeleteView.as_view(),
         name="polity_research_assistant-delete",
     ),
     path(
         "polity_research_assistantdownload/",
-        views.polity_research_assistant_download,
+        downloads.polity_research_assistant_download_view,
         name="polity_research_assistant-download",
     ),
     path(
         "polity_research_assistantmetadownload/",
-        views.polity_research_assistant_meta_download,
+        downloads.polity_research_assistant_meta_download_view,
         name="polity_research_assistant-metadownload",
     ),
 ]
@@ -59,7 +60,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_utm_zone/create/",
-        views.Polity_utm_zoneCreate.as_view(),
+        views.Polity_utm_zoneCreateView.as_view(),
         name="polity_utm_zone-create",
     ),
     path(
@@ -69,7 +70,7 @@ urlpatterns += [
     ),
     path(
         "polity_utm_zones_all/",
-        views.Polity_utm_zoneListViewAll.as_view(),
+        views.Polity_utm_zoneListAllView.as_view(),
         name="polity_utm_zones_all",
     ),
     path(
@@ -79,22 +80,22 @@ urlpatterns += [
     ),
     path(
         "polity_utm_zone/<int:pk>/update/",
-        views.Polity_utm_zoneUpdate.as_view(),
+        views.Polity_utm_zoneUpdateView.as_view(),
         name="polity_utm_zone-update",
     ),
     path(
         "polity_utm_zone/<int:pk>/delete/",
-        views.Polity_utm_zoneDelete.as_view(),
+        views.Polity_utm_zoneDeleteView.as_view(),
         name="polity_utm_zone-delete",
     ),
     path(
         "polity_utm_zonedownload/",
-        views.polity_utm_zone_download,
+        downloads.polity_utm_zone_download_view,
         name="polity_utm_zone-download",
     ),
     path(
         "polity_utm_zonemetadownload/",
-        views.polity_utm_zone_meta_download,
+        downloads.polity_utm_zone_meta_download_view,
         name="polity_utm_zone-metadownload",
     ),
 ]
@@ -103,7 +104,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_original_name/create/",
-        views.Polity_original_nameCreate.as_view(),
+        views.Polity_original_nameCreateView.as_view(),
         name="polity_original_name-create",
     ),
     path(
@@ -113,7 +114,7 @@ urlpatterns += [
     ),
     path(
         "polity_original_names_all/",
-        views.Polity_original_nameListViewAll.as_view(),
+        views.Polity_original_nameListAllView.as_view(),
         name="polity_original_names_all",
     ),
     path(
@@ -123,22 +124,22 @@ urlpatterns += [
     ),
     path(
         "polity_original_name/<int:pk>/update/",
-        views.Polity_original_nameUpdate.as_view(),
+        views.Polity_original_nameUpdateView.as_view(),
         name="polity_original_name-update",
     ),
     path(
         "polity_original_name/<int:pk>/delete/",
-        views.Polity_original_nameDelete.as_view(),
+        views.Polity_original_nameDeleteView.as_view(),
         name="polity_original_name-delete",
     ),
     path(
         "polity_original_namedownload/",
-        views.polity_original_name_download,
+        downloads.polity_original_name_download_view,
         name="polity_original_name-download",
     ),
     path(
         "polity_original_namemetadownload/",
-        views.polity_original_name_meta_download,
+        downloads.polity_original_name_meta_download_view,
         name="polity_original_name-metadownload",
     ),
 ]
@@ -147,7 +148,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_alternative_name/create/",
-        views.Polity_alternative_nameCreate.as_view(),
+        views.Polity_alternative_nameCreateView.as_view(),
         name="polity_alternative_name-create",
     ),
     path(
@@ -157,7 +158,7 @@ urlpatterns += [
     ),
     path(
         "polity_alternative_names_all/",
-        views.Polity_alternative_nameListViewAll.as_view(),
+        views.Polity_alternative_nameListAllView.as_view(),
         name="polity_alternative_names_all",
     ),
     path(
@@ -167,22 +168,22 @@ urlpatterns += [
     ),
     path(
         "polity_alternative_name/<int:pk>/update/",
-        views.Polity_alternative_nameUpdate.as_view(),
+        views.Polity_alternative_nameUpdateView.as_view(),
         name="polity_alternative_name-update",
     ),
     path(
         "polity_alternative_name/<int:pk>/delete/",
-        views.Polity_alternative_nameDelete.as_view(),
+        views.Polity_alternative_nameDeleteView.as_view(),
         name="polity_alternative_name-delete",
     ),
     path(
         "polity_alternative_namedownload/",
-        views.polity_alternative_name_download,
+        downloads.polity_alternative_name_download_view,
         name="polity_alternative_name-download",
     ),
     path(
         "polity_alternative_namemetadownload/",
-        views.polity_alternative_name_meta_download,
+        downloads.polity_alternative_name_meta_download_view,
         name="polity_alternative_name-metadownload",
     ),
 ]
@@ -191,7 +192,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_peak_years/create/",
-        views.Polity_peak_yearsCreate.as_view(),
+        views.Polity_peak_yearsCreateView.as_view(),
         name="polity_peak_years-create",
     ),
     path(
@@ -201,7 +202,7 @@ urlpatterns += [
     ),
     path(
         "polity_peak_yearss_all/",
-        views.Polity_peak_yearsListViewAll.as_view(),
+        views.Polity_peak_yearsListAllView.as_view(),
         name="polity_peak_yearss_all",
     ),
     path(
@@ -211,22 +212,22 @@ urlpatterns += [
     ),
     path(
         "polity_peak_years/<int:pk>/update/",
-        views.Polity_peak_yearsUpdate.as_view(),
+        views.Polity_peak_yearsUpdateView.as_view(),
         name="polity_peak_years-update",
     ),
     path(
         "polity_peak_years/<int:pk>/delete/",
-        views.Polity_peak_yearsDelete.as_view(),
+        views.Polity_peak_yearsDeleteView.as_view(),
         name="polity_peak_years-delete",
     ),
     path(
         "polity_peak_yearsdownload/",
-        views.polity_peak_years_download,
+        downloads.polity_peak_years_download_view,
         name="polity_peak_years-download",
     ),
     path(
         "polity_peak_yearsmetadownload/",
-        views.polity_peak_years_meta_download,
+        downloads.polity_peak_years_meta_download_view,
         name="polity_peak_years-metadownload",
     ),
 ]
@@ -235,7 +236,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_duration/create/",
-        views.Polity_durationCreate.as_view(),
+        views.Polity_durationCreateView.as_view(),
         name="polity_duration-create",
     ),
     path(
@@ -245,7 +246,7 @@ urlpatterns += [
     ),
     path(
         "polity_durations_all/",
-        views.Polity_durationListViewAll.as_view(),
+        views.Polity_durationListAllView.as_view(),
         name="polity_durations_all",
     ),
     path(
@@ -255,22 +256,22 @@ urlpatterns += [
     ),
     path(
         "polity_duration/<int:pk>/update/",
-        views.Polity_durationUpdate.as_view(),
+        views.Polity_durationUpdateView.as_view(),
         name="polity_duration-update",
     ),
     path(
         "polity_duration/<int:pk>/delete/",
-        views.Polity_durationDelete.as_view(),
+        views.Polity_durationDeleteView.as_view(),
         name="polity_duration-delete",
     ),
     path(
         "polity_durationdownload/",
-        views.polity_duration_download,
+        downloads.polity_duration_download_view,
         name="polity_duration-download",
     ),
     path(
         "polity_durationmetadownload/",
-        views.polity_duration_meta_download,
+        downloads.polity_duration_meta_download_view,
         name="polity_duration-metadownload",
     ),
 ]
@@ -279,7 +280,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_degree_of_centralization/create/",
-        views.Polity_degree_of_centralizationCreate.as_view(),
+        views.Polity_degree_of_centralizationCreateView.as_view(),
         name="polity_degree_of_centralization-create",
     ),
     path(
@@ -289,7 +290,7 @@ urlpatterns += [
     ),
     path(
         "polity_degree_of_centralizations_all/",
-        views.Polity_degree_of_centralizationListViewAll.as_view(),
+        views.Polity_degree_of_centralizationListAllView.as_view(),
         name="polity_degree_of_centralizations_all",
     ),
     path(
@@ -299,22 +300,22 @@ urlpatterns += [
     ),
     path(
         "polity_degree_of_centralization/<int:pk>/update/",
-        views.Polity_degree_of_centralizationUpdate.as_view(),
+        views.Polity_degree_of_centralizationUpdateView.as_view(),
         name="polity_degree_of_centralization-update",
     ),
     path(
         "polity_degree_of_centralization/<int:pk>/delete/",
-        views.Polity_degree_of_centralizationDelete.as_view(),
+        views.Polity_degree_of_centralizationDeleteView.as_view(),
         name="polity_degree_of_centralization-delete",
     ),
     path(
         "polity_degree_of_centralizationdownload/",
-        views.polity_degree_of_centralization_download,
+        downloads.polity_degree_of_centralization_download_view,
         name="polity_degree_of_centralization-download",
     ),
     path(
         "polity_degree_of_centralizationmetadownload/",
-        views.polity_degree_of_centralization_meta_download,
+        downloads.polity_degree_of_centralization_meta_download_view,
         name="polity_degree_of_centralization-metadownload",
     ),
 ]
@@ -323,7 +324,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_suprapolity_relations/create/",
-        views.Polity_suprapolity_relationsCreate.as_view(),
+        views.Polity_suprapolity_relationsCreateView.as_view(),
         name="polity_suprapolity_relations-create",
     ),
     path(
@@ -333,7 +334,7 @@ urlpatterns += [
     ),
     path(
         "polity_suprapolity_relationss_all/",
-        views.Polity_suprapolity_relationsListViewAll.as_view(),
+        views.Polity_suprapolity_relationsListAllView.as_view(),
         name="polity_suprapolity_relationss_all",
     ),
     path(
@@ -343,22 +344,22 @@ urlpatterns += [
     ),
     path(
         "polity_suprapolity_relations/<int:pk>/update/",
-        views.Polity_suprapolity_relationsUpdate.as_view(),
+        views.Polity_suprapolity_relationsUpdateView.as_view(),
         name="polity_suprapolity_relations-update",
     ),
     path(
         "polity_suprapolity_relations/<int:pk>/delete/",
-        views.Polity_suprapolity_relationsDelete.as_view(),
+        views.Polity_suprapolity_relationsDeleteView.as_view(),
         name="polity_suprapolity_relations-delete",
     ),
     path(
         "polity_suprapolity_relationsdownload/",
-        views.polity_suprapolity_relations_download,
+        downloads.polity_suprapolity_relations_download_view,
         name="polity_suprapolity_relations-download",
     ),
     path(
         "polity_suprapolity_relationsmetadownload/",
-        views.polity_suprapolity_relations_meta_download,
+        downloads.polity_suprapolity_relations_meta_download_view,
         name="polity_suprapolity_relations-metadownload",
     ),
 ]
@@ -367,7 +368,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_capital/create/",
-        views.Polity_capitalCreate.as_view(),
+        views.Polity_capitalCreateView.as_view(),
         name="polity_capital-create",
     ),
     path(
@@ -377,7 +378,7 @@ urlpatterns += [
     ),
     path(
         "polity_capitals_all/",
-        views.Polity_capitalListViewAll.as_view(),
+        views.Polity_capitalListAllView.as_view(),
         name="polity_capitals_all",
     ),
     path(
@@ -387,22 +388,22 @@ urlpatterns += [
     ),
     path(
         "polity_capital/<int:pk>/update/",
-        views.Polity_capitalUpdate.as_view(),
+        views.Polity_capitalUpdateView.as_view(),
         name="polity_capital-update",
     ),
     path(
         "polity_capital/<int:pk>/delete/",
-        views.Polity_capitalDelete.as_view(),
+        views.Polity_capitalDeleteView.as_view(),
         name="polity_capital-delete",
     ),
     path(
         "polity_capitaldownload/",
-        views.polity_capital_download,
+        downloads.polity_capital_download_view,
         name="polity_capital-download",
     ),
     path(
         "polity_capitalmetadownload/",
-        views.polity_capital_meta_download,
+        downloads.polity_capital_meta_download_view,
         name="polity_capital-metadownload",
     ),
 ]
@@ -411,7 +412,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_language/create/",
-        views.Polity_languageCreate.as_view(),
+        views.Polity_languageCreateView.as_view(),
         name="polity_language-create",
     ),
     path(
@@ -421,7 +422,7 @@ urlpatterns += [
     ),
     path(
         "polity_languages_all/",
-        views.Polity_languageListViewAll.as_view(),
+        views.Polity_languageListAllView.as_view(),
         name="polity_languages_all",
     ),
     path(
@@ -431,22 +432,22 @@ urlpatterns += [
     ),
     path(
         "polity_language/<int:pk>/update/",
-        views.Polity_languageUpdate.as_view(),
+        views.Polity_languageUpdateView.as_view(),
         name="polity_language-update",
     ),
     path(
         "polity_language/<int:pk>/delete/",
-        views.Polity_languageDelete.as_view(),
+        views.Polity_languageDeleteView.as_view(),
         name="polity_language-delete",
     ),
     path(
         "polity_languagedownload/",
-        views.polity_language_download,
+        downloads.polity_language_download_view,
         name="polity_language-download",
     ),
     path(
         "polity_languagemetadownload/",
-        views.polity_language_meta_download,
+        downloads.polity_language_meta_download_view,
         name="polity_language-metadownload",
     ),
 ]
@@ -455,7 +456,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_linguistic_family/create/",
-        views.Polity_linguistic_familyCreate.as_view(),
+        views.Polity_linguistic_familyCreateView.as_view(),
         name="polity_linguistic_family-create",
     ),
     path(
@@ -465,7 +466,7 @@ urlpatterns += [
     ),
     path(
         "polity_linguistic_familys_all/",
-        views.Polity_linguistic_familyListViewAll.as_view(),
+        views.Polity_linguistic_familyListAllView.as_view(),
         name="polity_linguistic_familys_all",
     ),
     path(
@@ -475,22 +476,22 @@ urlpatterns += [
     ),
     path(
         "polity_linguistic_family/<int:pk>/update/",
-        views.Polity_linguistic_familyUpdate.as_view(),
+        views.Polity_linguistic_familyUpdateView.as_view(),
         name="polity_linguistic_family-update",
     ),
     path(
         "polity_linguistic_family/<int:pk>/delete/",
-        views.Polity_linguistic_familyDelete.as_view(),
+        views.Polity_linguistic_familyDeleteView.as_view(),
         name="polity_linguistic_family-delete",
     ),
     path(
         "polity_linguistic_familydownload/",
-        views.polity_linguistic_family_download,
+        downloads.polity_linguistic_family_download_view,
         name="polity_linguistic_family-download",
     ),
     path(
         "polity_linguistic_familymetadownload/",
-        views.polity_linguistic_family_meta_download,
+        downloads.polity_linguistic_family_meta_download_view,
         name="polity_linguistic_family-metadownload",
     ),
 ]
@@ -499,7 +500,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_language_genus/create/",
-        views.Polity_language_genusCreate.as_view(),
+        views.Polity_language_genusCreateView.as_view(),
         name="polity_language_genus-create",
     ),
     path(
@@ -509,7 +510,7 @@ urlpatterns += [
     ),
     path(
         "polity_language_genuss_all/",
-        views.Polity_language_genusListViewAll.as_view(),
+        views.Polity_language_genusListAllView.as_view(),
         name="polity_language_genuss_all",
     ),
     path(
@@ -519,22 +520,22 @@ urlpatterns += [
     ),
     path(
         "polity_language_genus/<int:pk>/update/",
-        views.Polity_language_genusUpdate.as_view(),
+        views.Polity_language_genusUpdateView.as_view(),
         name="polity_language_genus-update",
     ),
     path(
         "polity_language_genus/<int:pk>/delete/",
-        views.Polity_language_genusDelete.as_view(),
+        views.Polity_language_genusDeleteView.as_view(),
         name="polity_language_genus-delete",
     ),
     path(
         "polity_language_genusdownload/",
-        views.polity_language_genus_download,
+        downloads.polity_language_genus_download_view,
         name="polity_language_genus-download",
     ),
     path(
         "polity_language_genusmetadownload/",
-        views.polity_language_genus_meta_download,
+        downloads.polity_language_genus_meta_download_view,
         name="polity_language_genus-metadownload",
     ),
 ]
@@ -543,7 +544,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_religion_genus/create/",
-        views.Polity_religion_genusCreate.as_view(),
+        views.Polity_religion_genusCreateView.as_view(),
         name="polity_religion_genus-create",
     ),
     path(
@@ -553,7 +554,7 @@ urlpatterns += [
     ),
     path(
         "polity_religion_genuss_all/",
-        views.Polity_religion_genusListViewAll.as_view(),
+        views.Polity_religion_genusListAllView.as_view(),
         name="polity_religion_genuss_all",
     ),
     path(
@@ -563,22 +564,22 @@ urlpatterns += [
     ),
     path(
         "polity_religion_genus/<int:pk>/update/",
-        views.Polity_religion_genusUpdate.as_view(),
+        views.Polity_religion_genusUpdateView.as_view(),
         name="polity_religion_genus-update",
     ),
     path(
         "polity_religion_genus/<int:pk>/delete/",
-        views.Polity_religion_genusDelete.as_view(),
+        views.Polity_religion_genusDeleteView.as_view(),
         name="polity_religion_genus-delete",
     ),
     path(
         "polity_religion_genusdownload/",
-        views.polity_religion_genus_download,
+        downloads.polity_religion_genus_download_view,
         name="polity_religion_genus-download",
     ),
     path(
         "polity_religion_genusmetadownload/",
-        views.polity_religion_genus_meta_download,
+        downloads.polity_religion_genus_meta_download_view,
         name="polity_religion_genus-metadownload",
     ),
 ]
@@ -587,7 +588,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_religion_family/create/",
-        views.Polity_religion_familyCreate.as_view(),
+        views.Polity_religion_familyCreateView.as_view(),
         name="polity_religion_family-create",
     ),
     path(
@@ -597,7 +598,7 @@ urlpatterns += [
     ),
     path(
         "polity_religion_familys_all/",
-        views.Polity_religion_familyListViewAll.as_view(),
+        views.Polity_religion_familyListAllView.as_view(),
         name="polity_religion_familys_all",
     ),
     path(
@@ -607,22 +608,22 @@ urlpatterns += [
     ),
     path(
         "polity_religion_family/<int:pk>/update/",
-        views.Polity_religion_familyUpdate.as_view(),
+        views.Polity_religion_familyUpdateView.as_view(),
         name="polity_religion_family-update",
     ),
     path(
         "polity_religion_family/<int:pk>/delete/",
-        views.Polity_religion_familyDelete.as_view(),
+        views.Polity_religion_familyDeleteView.as_view(),
         name="polity_religion_family-delete",
     ),
     path(
         "polity_religion_familydownload/",
-        views.polity_religion_family_download,
+        downloads.polity_religion_family_download_view,
         name="polity_religion_family-download",
     ),
     path(
         "polity_religion_familymetadownload/",
-        views.polity_religion_family_meta_download,
+        downloads.polity_religion_family_meta_download_view,
         name="polity_religion_family-metadownload",
     ),
 ]
@@ -631,7 +632,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_religion/create/",
-        views.Polity_religionCreate.as_view(),
+        views.Polity_religionCreateView.as_view(),
         name="polity_religion-create",
     ),
     path(
@@ -641,7 +642,7 @@ urlpatterns += [
     ),
     path(
         "polity_religions_all/",
-        views.Polity_religionListViewAll.as_view(),
+        views.Polity_religionListAllView.as_view(),
         name="polity_religions_all",
     ),
     path(
@@ -651,22 +652,22 @@ urlpatterns += [
     ),
     path(
         "polity_religion/<int:pk>/update/",
-        views.Polity_religionUpdate.as_view(),
+        views.Polity_religionUpdateView.as_view(),
         name="polity_religion-update",
     ),
     path(
         "polity_religion/<int:pk>/delete/",
-        views.Polity_religionDelete.as_view(),
+        views.Polity_religionDeleteView.as_view(),
         name="polity_religion-delete",
     ),
     path(
         "polity_religiondownload/",
-        views.polity_religion_download,
+        downloads.polity_religion_download_view,
         name="polity_religion-download",
     ),
     path(
         "polity_religionmetadownload/",
-        views.polity_religion_meta_download,
+        downloads.polity_religion_meta_download_view,
         name="polity_religion-metadownload",
     ),
 ]
@@ -675,7 +676,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_relationship_to_preceding_entity/create/",
-        views.Polity_relationship_to_preceding_entityCreate.as_view(),
+        views.Polity_relationship_to_preceding_entityCreateView.as_view(),
         name="polity_relationship_to_preceding_entity-create",
     ),
     path(
@@ -685,7 +686,7 @@ urlpatterns += [
     ),
     path(
         "polity_relationship_to_preceding_entitys_all/",
-        views.Polity_relationship_to_preceding_entityListViewAll.as_view(),
+        views.Polity_relationship_to_preceding_entityListAllView.as_view(),
         name="polity_relationship_to_preceding_entitys_all",
     ),
     path(
@@ -695,22 +696,22 @@ urlpatterns += [
     ),
     path(
         "polity_relationship_to_preceding_entity/<int:pk>/update/",
-        views.Polity_relationship_to_preceding_entityUpdate.as_view(),
+        views.Polity_relationship_to_preceding_entityUpdateView.as_view(),
         name="polity_relationship_to_preceding_entity-update",
     ),
     path(
         "polity_relationship_to_preceding_entity/<int:pk>/delete/",
-        views.Polity_relationship_to_preceding_entityDelete.as_view(),
+        views.Polity_relationship_to_preceding_entityDeleteView.as_view(),
         name="polity_relationship_to_preceding_entity-delete",
     ),
     path(
         "polity_relationship_to_preceding_entitydownload/",
-        views.polity_relationship_to_preceding_entity_download,
+        downloads.polity_relationship_to_preceding_entity_download_view,
         name="polity_relationship_to_preceding_entity-download",
     ),
     path(
         "polity_relationship_to_preceding_entitymetadownload/",
-        views.polity_relationship_to_preceding_entity_meta_download,
+        downloads.polity_relationship_to_preceding_entity_meta_download_view,
         name="polity_relationship_to_preceding_entity-metadownload",
     ),
 ]
@@ -719,7 +720,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_preceding_entity/create/",
-        views.Polity_preceding_entityCreate.as_view(),
+        views.Polity_preceding_entityCreateView.as_view(),
         name="polity_preceding_entity-create",
     ),
     path(
@@ -729,7 +730,7 @@ urlpatterns += [
     ),
     path(
         "polity_preceding_entitys_all/",
-        views.Polity_preceding_entityListViewAll.as_view(),
+        views.Polity_preceding_entityListAllView.as_view(),
         name="polity_preceding_entitys_all",
     ),
     path(
@@ -739,22 +740,22 @@ urlpatterns += [
     ),
     path(
         "polity_preceding_entity/<int:pk>/update/",
-        views.Polity_preceding_entityUpdate.as_view(),
+        views.Polity_preceding_entityUpdateView.as_view(),
         name="polity_preceding_entity-update",
     ),
     path(
         "polity_preceding_entity/<int:pk>/delete/",
-        views.Polity_preceding_entityDelete.as_view(),
+        views.Polity_preceding_entityDeleteView.as_view(),
         name="polity_preceding_entity-delete",
     ),
     path(
         "polity_preceding_entitydownload/",
-        views.polity_preceding_entity_download,
+        downloads.polity_preceding_entity_download_view,
         name="polity_preceding_entity-download",
     ),
     path(
         "polity_preceding_entitymetadownload/",
-        views.polity_preceding_entity_meta_download,
+        downloads.polity_preceding_entity_meta_download_view,
         name="polity_preceding_entity-metadownload",
     ),
 ]
@@ -763,7 +764,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_succeeding_entity/create/",
-        views.Polity_succeeding_entityCreate.as_view(),
+        views.Polity_succeeding_entityCreateView.as_view(),
         name="polity_succeeding_entity-create",
     ),
     path(
@@ -773,7 +774,7 @@ urlpatterns += [
     ),
     path(
         "polity_succeeding_entitys_all/",
-        views.Polity_succeeding_entityListViewAll.as_view(),
+        views.Polity_succeeding_entityListAllView.as_view(),
         name="polity_succeeding_entitys_all",
     ),
     path(
@@ -783,22 +784,22 @@ urlpatterns += [
     ),
     path(
         "polity_succeeding_entity/<int:pk>/update/",
-        views.Polity_succeeding_entityUpdate.as_view(),
+        views.Polity_succeeding_entityUpdateView.as_view(),
         name="polity_succeeding_entity-update",
     ),
     path(
         "polity_succeeding_entity/<int:pk>/delete/",
-        views.Polity_succeeding_entityDelete.as_view(),
+        views.Polity_succeeding_entityDeleteView.as_view(),
         name="polity_succeeding_entity-delete",
     ),
     path(
         "polity_succeeding_entitydownload/",
-        views.polity_succeeding_entity_download,
+        downloads.polity_succeeding_entity_download_view,
         name="polity_succeeding_entity-download",
     ),
     path(
         "polity_succeeding_entitymetadownload/",
-        views.polity_succeeding_entity_meta_download,
+        downloads.polity_succeeding_entity_meta_download_view,
         name="polity_succeeding_entity-metadownload",
     ),
 ]
@@ -807,7 +808,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_supracultural_entity/create/",
-        views.Polity_supracultural_entityCreate.as_view(),
+        views.Polity_supracultural_entityCreateView.as_view(),
         name="polity_supracultural_entity-create",
     ),
     path(
@@ -817,7 +818,7 @@ urlpatterns += [
     ),
     path(
         "polity_supracultural_entitys_all/",
-        views.Polity_supracultural_entityListViewAll.as_view(),
+        views.Polity_supracultural_entityListAllView.as_view(),
         name="polity_supracultural_entitys_all",
     ),
     path(
@@ -827,22 +828,22 @@ urlpatterns += [
     ),
     path(
         "polity_supracultural_entity/<int:pk>/update/",
-        views.Polity_supracultural_entityUpdate.as_view(),
+        views.Polity_supracultural_entityUpdateView.as_view(),
         name="polity_supracultural_entity-update",
     ),
     path(
         "polity_supracultural_entity/<int:pk>/delete/",
-        views.Polity_supracultural_entityDelete.as_view(),
+        views.Polity_supracultural_entityDeleteView.as_view(),
         name="polity_supracultural_entity-delete",
     ),
     path(
         "polity_supracultural_entitydownload/",
-        views.polity_supracultural_entity_download,
+        downloads.polity_supracultural_entity_download_view,
         name="polity_supracultural_entity-download",
     ),
     path(
         "polity_supracultural_entitymetadownload/",
-        views.polity_supracultural_entity_meta_download,
+        downloads.polity_supracultural_entity_meta_download_view,
         name="polity_supracultural_entity-metadownload",
     ),
 ]
@@ -851,7 +852,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_scale_of_supracultural_interaction/create/",
-        views.Polity_scale_of_supracultural_interactionCreate.as_view(),
+        views.Polity_scale_of_supracultural_interactionCreateView.as_view(),
         name="polity_scale_of_supracultural_interaction-create",
     ),
     path(
@@ -861,7 +862,7 @@ urlpatterns += [
     ),
     path(
         "polity_scale_of_supracultural_interactions_all/",
-        views.Polity_scale_of_supracultural_interactionListViewAll.as_view(),
+        views.Polity_scale_of_supracultural_interactionListAllView.as_view(),
         name="polity_scale_of_supracultural_interactions_all",
     ),
     path(
@@ -871,22 +872,22 @@ urlpatterns += [
     ),
     path(
         "polity_scale_of_supracultural_interaction/<int:pk>/update/",
-        views.Polity_scale_of_supracultural_interactionUpdate.as_view(),
+        views.Polity_scale_of_supracultural_interactionUpdateView.as_view(),
         name="polity_scale_of_supracultural_interaction-update",
     ),
     path(
         "polity_scale_of_supracultural_interaction/<int:pk>/delete/",
-        views.Polity_scale_of_supracultural_interactionDelete.as_view(),
+        views.Polity_scale_of_supracultural_interactionDeleteView.as_view(),
         name="polity_scale_of_supracultural_interaction-delete",
     ),
     path(
         "polity_scale_of_supracultural_interactiondownload/",
-        views.polity_scale_of_supracultural_interaction_download,
+        downloads.polity_scale_of_supracultural_interaction_download_view,
         name="polity_scale_of_supracultural_interaction-download",
     ),
     path(
         "polity_scale_of_supracultural_interactionmetadownload/",
-        views.polity_scale_of_supracultural_interaction_meta_download,
+        downloads.polity_scale_of_supracultural_interaction_meta_download_view,
         name="polity_scale_of_supracultural_interaction-metadownload",
     ),
 ]
@@ -895,7 +896,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_alternate_religion_genus/create/",
-        views.Polity_alternate_religion_genusCreate.as_view(),
+        views.Polity_alternate_religion_genusCreateView.as_view(),
         name="polity_alternate_religion_genus-create",
     ),
     path(
@@ -905,7 +906,7 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religion_genuss_all/",
-        views.Polity_alternate_religion_genusListViewAll.as_view(),
+        views.Polity_alternate_religion_genusListAllView.as_view(),
         name="polity_alternate_religion_genuss_all",
     ),
     path(
@@ -915,22 +916,22 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religion_genus/<int:pk>/update/",
-        views.Polity_alternate_religion_genusUpdate.as_view(),
+        views.Polity_alternate_religion_genusUpdateView.as_view(),
         name="polity_alternate_religion_genus-update",
     ),
     path(
         "polity_alternate_religion_genus/<int:pk>/delete/",
-        views.Polity_alternate_religion_genusDelete.as_view(),
+        views.Polity_alternate_religion_genusDeleteView.as_view(),
         name="polity_alternate_religion_genus-delete",
     ),
     path(
         "polity_alternate_religion_genusdownload/",
-        views.polity_alternate_religion_genus_download,
+        downloads.polity_alternate_religion_genus_download_view,
         name="polity_alternate_religion_genus-download",
     ),
     path(
         "polity_alternate_religion_genusmetadownload/",
-        views.polity_alternate_religion_genus_meta_download,
+        downloads.polity_alternate_religion_genus_meta_download_view,
         name="polity_alternate_religion_genus-metadownload",
     ),
 ]
@@ -939,7 +940,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_alternate_religion_family/create/",
-        views.Polity_alternate_religion_familyCreate.as_view(),
+        views.Polity_alternate_religion_familyCreateView.as_view(),
         name="polity_alternate_religion_family-create",
     ),
     path(
@@ -949,7 +950,7 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religion_familys_all/",
-        views.Polity_alternate_religion_familyListViewAll.as_view(),
+        views.Polity_alternate_religion_familyListAllView.as_view(),
         name="polity_alternate_religion_familys_all",
     ),
     path(
@@ -959,22 +960,22 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religion_family/<int:pk>/update/",
-        views.Polity_alternate_religion_familyUpdate.as_view(),
+        views.Polity_alternate_religion_familyUpdateView.as_view(),
         name="polity_alternate_religion_family-update",
     ),
     path(
         "polity_alternate_religion_family/<int:pk>/delete/",
-        views.Polity_alternate_religion_familyDelete.as_view(),
+        views.Polity_alternate_religion_familyDeleteView.as_view(),
         name="polity_alternate_religion_family-delete",
     ),
     path(
         "polity_alternate_religion_familydownload/",
-        views.polity_alternate_religion_family_download,
+        downloads.polity_alternate_religion_family_download_view,
         name="polity_alternate_religion_family-download",
     ),
     path(
         "polity_alternate_religion_familymetadownload/",
-        views.polity_alternate_religion_family_meta_download,
+        downloads.polity_alternate_religion_family_meta_download_view,
         name="polity_alternate_religion_family-metadownload",
     ),
 ]
@@ -983,7 +984,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_alternate_religion/create/",
-        views.Polity_alternate_religionCreate.as_view(),
+        views.Polity_alternate_religionCreateView.as_view(),
         name="polity_alternate_religion-create",
     ),
     path(
@@ -993,7 +994,7 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religions_all/",
-        views.Polity_alternate_religionListViewAll.as_view(),
+        views.Polity_alternate_religionListAllView.as_view(),
         name="polity_alternate_religions_all",
     ),
     path(
@@ -1003,22 +1004,22 @@ urlpatterns += [
     ),
     path(
         "polity_alternate_religion/<int:pk>/update/",
-        views.Polity_alternate_religionUpdate.as_view(),
+        views.Polity_alternate_religionUpdateView.as_view(),
         name="polity_alternate_religion-update",
     ),
     path(
         "polity_alternate_religion/<int:pk>/delete/",
-        views.Polity_alternate_religionDelete.as_view(),
+        views.Polity_alternate_religionDeleteView.as_view(),
         name="polity_alternate_religion-delete",
     ),
     path(
         "polity_alternate_religiondownload/",
-        views.polity_alternate_religion_download,
+        downloads.polity_alternate_religion_download_view,
         name="polity_alternate_religion-download",
     ),
     path(
         "polity_alternate_religionmetadownload/",
-        views.polity_alternate_religion_meta_download,
+        downloads.polity_alternate_religion_meta_download_view,
         name="polity_alternate_religion-metadownload",
     ),
 ]
@@ -1027,7 +1028,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_expert/create/",
-        views.Polity_expertCreate.as_view(),
+        views.Polity_expertCreateView.as_view(),
         name="polity_expert-create",
     ),
     path(
@@ -1035,7 +1036,7 @@ urlpatterns += [
     ),
     path(
         "polity_experts_all/",
-        views.Polity_expertListViewAll.as_view(),
+        views.Polity_expertListAllView.as_view(),
         name="polity_experts_all",
     ),
     path(
@@ -1045,22 +1046,22 @@ urlpatterns += [
     ),
     path(
         "polity_expert/<int:pk>/update/",
-        views.Polity_expertUpdate.as_view(),
+        views.Polity_expertUpdateView.as_view(),
         name="polity_expert-update",
     ),
     path(
         "polity_expert/<int:pk>/delete/",
-        views.Polity_expertDelete.as_view(),
+        views.Polity_expertDeleteView.as_view(),
         name="polity_expert-delete",
     ),
     path(
         "polity_expertdownload/",
-        views.polity_expert_download,
+        downloads.polity_expert_download_view,
         name="polity_expert-download",
     ),
     path(
         "polity_expertmetadownload/",
-        views.polity_expert_meta_download,
+        downloads.polity_expert_meta_download_view,
         name="polity_expert-metadownload",
     ),
 ]
@@ -1069,7 +1070,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_editor/create/",
-        views.Polity_editorCreate.as_view(),
+        views.Polity_editorCreateView.as_view(),
         name="polity_editor-create",
     ),
     path(
@@ -1077,7 +1078,7 @@ urlpatterns += [
     ),
     path(
         "polity_editors_all/",
-        views.Polity_editorListViewAll.as_view(),
+        views.Polity_editorListAllView.as_view(),
         name="polity_editors_all",
     ),
     path(
@@ -1087,22 +1088,22 @@ urlpatterns += [
     ),
     path(
         "polity_editor/<int:pk>/update/",
-        views.Polity_editorUpdate.as_view(),
+        views.Polity_editorUpdateView.as_view(),
         name="polity_editor-update",
     ),
     path(
         "polity_editor/<int:pk>/delete/",
-        views.Polity_editorDelete.as_view(),
+        views.Polity_editorDeleteView.as_view(),
         name="polity_editor-delete",
     ),
     path(
         "polity_editordownload/",
-        views.polity_editor_download,
+        downloads.polity_editor_download_view,
         name="polity_editor-download",
     ),
     path(
         "polity_editormetadownload/",
-        views.polity_editor_meta_download,
+        downloads.polity_editor_meta_download_view,
         name="polity_editor-metadownload",
     ),
 ]
@@ -1111,7 +1112,7 @@ urlpatterns += [
 urlpatterns += [
     path(
         "polity_religious_tradition/create/",
-        views.Polity_religious_traditionCreate.as_view(),
+        views.Polity_religious_traditionCreateView.as_view(),
         name="polity_religious_tradition-create",
     ),
     path(
@@ -1121,7 +1122,7 @@ urlpatterns += [
     ),
     path(
         "polity_religious_traditions_all/",
-        views.Polity_religious_traditionListViewAll.as_view(),
+        views.Polity_religious_traditionListAllView.as_view(),
         name="polity_religious_traditions_all",
     ),
     path(
@@ -1131,22 +1132,22 @@ urlpatterns += [
     ),
     path(
         "polity_religious_tradition/<int:pk>/update/",
-        views.Polity_religious_traditionUpdate.as_view(),
+        views.Polity_religious_traditionUpdateView.as_view(),
         name="polity_religious_tradition-update",
     ),
     path(
         "polity_religious_tradition/<int:pk>/delete/",
-        views.Polity_religious_traditionDelete.as_view(),
+        views.Polity_religious_traditionDeleteView.as_view(),
         name="polity_religious_tradition-delete",
     ),
     path(
         "polity_religious_traditiondownload/",
-        views.polity_religious_tradition_download,
+        downloads.polity_religious_tradition_download_view,
         name="polity_religious_tradition-download",
     ),
     path(
         "polity_religious_traditionmetadownload/",
-        views.polity_religious_tradition_meta_download,
+        downloads.polity_religious_tradition_meta_download_view,
         name="polity_religious_tradition-metadownload",
     ),
 ]

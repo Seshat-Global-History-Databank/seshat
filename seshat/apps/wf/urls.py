@@ -1,57 +1,68 @@
 from django.urls import path
 
 from . import views
+from .specific_views import downloads
 
 
 urlpatterns = [
-    path("wfvars/", views.wfvars, name="wfvars"),
-    path("download-csv-wf-all/", views.download_csv_all_wf, name="download_csv_all_wf"),
+    path("wfvars/", views.wfvars_view, name="wfvars"),  # TODO: This crashes
+    path(
+        "download-csv-wf-all/",
+        downloads.download_csv_all_wf,
+        name="download_csv_all_wf",
+    ),  # TODO: This crashes
     path(
         "problematic_wf_data_table/",
         views.show_problematic_wf_data_table,
         name="problematic_wf_data_table",
     ),
-]
-
-urlpatterns += [
+    # General/category downloads
     path(
         "download_csv_fortifications/",
-        views.download_csv_fortifications,
+        downloads.download_csv_fortifications,
         name="download_csv_fortifications",
     ),
     path(
         "download_csv_military_use_of_metals/",
-        views.download_csv_military_use_of_metals,
+        downloads.download_csv_military_use_of_metals,
         name="download_csv_military_use_of_metals",
     ),
     path(
         "download_csv_projectiles/",
-        views.download_csv_projectiles,
+        downloads.download_csv_projectiles,
         name="download_csv_projectiles",
     ),
     path(
         "download_csv_handheld_weapons/",
-        views.download_csv_handheld_weapons,
+        downloads.download_csv_handheld_weapons,
         name="download_csv_handheld_weapons",
     ),
     path(
         "download_csv_animals_used_in_warfare/",
-        views.download_csv_animals_used_in_warfare,
+        downloads.download_csv_animals_used_in_warfare,
         name="download_csv_animals_used_in_warfare",
     ),
-    path("download_csv_armor/", views.download_csv_armor, name="download_csv_armor"),
+    path(
+        "download_csv_armor/",
+        downloads.download_csv_armor,
+        name="download_csv_armor",
+    ),
     path(
         "download_csv_naval_technology/",
-        views.download_csv_naval_technology,
+        downloads.download_csv_naval_technology,
         name="download_csv_naval_technology",
     ),
-]
-
-urlpatterns += [
-    path("long_wall/create/", views.Long_wallCreate.as_view(), name="long_wall-create"),
+    # Long wall
+    path(
+        "long_wall/create/",
+        views.Long_wallCreateView.as_view(),
+        name="long_wall-create",
+    ),
     path("long_walls/", views.Long_wallListView.as_view(), name="long_walls"),
     path(
-        "long_walls_all/", views.Long_wallListViewAll.as_view(), name="long_walls_all"
+        "long_walls_all/",
+        views.Long_wallListAllView.as_view(),
+        name="long_walls_all",
     ),
     path(
         "long_wall/<int:pk>",
@@ -60,151 +71,282 @@ urlpatterns += [
     ),
     path(
         "long_wall/<int:pk>/update/",
-        views.Long_wallUpdate.as_view(),
+        views.Long_wallUpdateView.as_view(),
         name="long_wall-update",
     ),
     path(
         "long_wall/<int:pk>/delete/",
-        views.Long_wallDelete.as_view(),
+        views.Long_wallDeleteView.as_view(),
         name="long_wall-delete",
     ),
-    path("long_walldownload/", views.long_wall_download, name="long_wall-download"),
+    path(
+        "long_walldownload/",
+        views.long_wall_download_view,
+        name="long_wall-download",
+    ),
     path(
         "long_wallmetadownload/",
-        views.long_wall_meta_download,
+        views.long_wall_meta_download_view,
         name="long_wall-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("copper/create/", views.CopperCreate.as_view(), name="copper-create"),
+    # Copper
+    path(
+        "copper/create/",
+        views.CopperCreateView.as_view(),
+        name="copper-create",
+    ),
     path("coppers/", views.CopperListView.as_view(), name="coppers"),
-    path("coppers_all/", views.CopperListViewAll.as_view(), name="coppers_all"),
-    path("copper/<int:pk>", views.CopperDetailView.as_view(), name="copper-detail"),
-    path("copper/<int:pk>/update/", views.CopperUpdate.as_view(), name="copper-update"),
-    path("copper/<int:pk>/delete/", views.CopperDelete.as_view(), name="copper-delete"),
-    path("copperdownload/", views.copper_download, name="copper-download"),
-    path("coppermetadownload/", views.copper_meta_download, name="copper-metadownload"),
-]
-
-
-urlpatterns += [
-    path("bronze/create/", views.BronzeCreate.as_view(), name="bronze-create"),
+    path(
+        "coppers_all/", views.CopperListAllView.as_view(), name="coppers_all"
+    ),
+    path(
+        "copper/<int:pk>",
+        views.CopperDetailView.as_view(),
+        name="copper-detail",
+    ),
+    path(
+        "copper/<int:pk>/update/",
+        views.CopperUpdateView.as_view(),
+        name="copper-update",
+    ),
+    path(
+        "copper/<int:pk>/delete/",
+        views.CopperDeleteView.as_view(),
+        name="copper-delete",
+    ),
+    path(
+        "copperdownload/", downloads.copper_download_view, name="copper-download"
+    ),
+    path(
+        "coppermetadownload/",
+        views.copper_meta_download_view,
+        name="copper-metadownload",
+    ),
+    # Bronze
+    path(
+        "bronze/create/",
+        views.BronzeCreateView.as_view(),
+        name="bronze-create",
+    ),
     path("bronzes/", views.BronzeListView.as_view(), name="bronzes"),
-    path("bronzes_all/", views.BronzeListViewAll.as_view(), name="bronzes_all"),
-    path("bronze/<int:pk>", views.BronzeDetailView.as_view(), name="bronze-detail"),
-    path("bronze/<int:pk>/update/", views.BronzeUpdate.as_view(), name="bronze-update"),
-    path("bronze/<int:pk>/delete/", views.BronzeDelete.as_view(), name="bronze-delete"),
-    path("bronzedownload/", views.bronze_download, name="bronze-download"),
-    path("bronzemetadownload/", views.bronze_meta_download, name="bronze-metadownload"),
-]
-
-
-urlpatterns += [
-    path("iron/create/", views.IronCreate.as_view(), name="iron-create"),
+    path(
+        "bronzes_all/", views.BronzeListAllView.as_view(), name="bronzes_all"
+    ),
+    path(
+        "bronze/<int:pk>",
+        views.BronzeDetailView.as_view(),
+        name="bronze-detail",
+    ),
+    path(
+        "bronze/<int:pk>/update/",
+        views.BronzeUpdateView.as_view(),
+        name="bronze-update",
+    ),
+    path(
+        "bronze/<int:pk>/delete/",
+        views.BronzeDeleteView.as_view(),
+        name="bronze-delete",
+    ),
+    path(
+        "bronzedownload/", downloads.bronze_download_view, name="bronze-download"
+    ),
+    path(
+        "bronzemetadownload/",
+        views.bronze_meta_download_view,
+        name="bronze-metadownload",
+    ),
+    # Iron
+    path("iron/create/", views.IronCreateView.as_view(), name="iron-create"),
     path("irons/", views.IronListView.as_view(), name="irons"),
-    path("irons_all/", views.IronListViewAll.as_view(), name="irons_all"),
+    path("irons_all/", views.IronListAllView.as_view(), name="irons_all"),
     path("iron/<int:pk>", views.IronDetailView.as_view(), name="iron-detail"),
-    path("iron/<int:pk>/update/", views.IronUpdate.as_view(), name="iron-update"),
-    path("iron/<int:pk>/delete/", views.IronDelete.as_view(), name="iron-delete"),
-    path("irondownload/", views.iron_download, name="iron-download"),
-    path("ironmetadownload/", views.iron_meta_download, name="iron-metadownload"),
-]
-
-
-urlpatterns += [
-    path("steel/create/", views.SteelCreate.as_view(), name="steel-create"),
+    path(
+        "iron/<int:pk>/update/",
+        views.IronUpdateView.as_view(),
+        name="iron-update",
+    ),
+    path(
+        "iron/<int:pk>/delete/",
+        views.IronDeleteView.as_view(),
+        name="iron-delete",
+    ),
+    path("irondownload/", downloads.iron_download_view, name="iron-download"),
+    path(
+        "ironmetadownload/",
+        views.iron_meta_download_view,
+        name="iron-metadownload",
+    ),
+    # Steel
+    path(
+        "steel/create/", views.SteelCreateView.as_view(), name="steel-create"
+    ),
     path("steels/", views.SteelListView.as_view(), name="steels"),
-    path("steels_all/", views.SteelListViewAll.as_view(), name="steels_all"),
-    path("steel/<int:pk>", views.SteelDetailView.as_view(), name="steel-detail"),
-    path("steel/<int:pk>/update/", views.SteelUpdate.as_view(), name="steel-update"),
-    path("steel/<int:pk>/delete/", views.SteelDelete.as_view(), name="steel-delete"),
-    path("steeldownload/", views.steel_download, name="steel-download"),
-    path("steelmetadownload/", views.steel_meta_download, name="steel-metadownload"),
-]
-
-
-urlpatterns += [
-    path("javelin/create/", views.JavelinCreate.as_view(), name="javelin-create"),
+    path("steels_all/", views.SteelListAllView.as_view(), name="steels_all"),
+    path(
+        "steel/<int:pk>", views.SteelDetailView.as_view(), name="steel-detail"
+    ),
+    path(
+        "steel/<int:pk>/update/",
+        views.SteelUpdateView.as_view(),
+        name="steel-update",
+    ),
+    path(
+        "steel/<int:pk>/delete/",
+        views.SteelDeleteView.as_view(),
+        name="steel-delete",
+    ),
+    path("steeldownload/", downloads.steel_download_view, name="steel-download"),
+    path(
+        "steelmetadownload/",
+        views.steel_meta_download_view,
+        name="steel-metadownload",
+    ),
+    # Javelin
+    path(
+        "javelin/create/",
+        views.JavelinCreateView.as_view(),
+        name="javelin-create",
+    ),
     path("javelins/", views.JavelinListView.as_view(), name="javelins"),
-    path("javelins_all/", views.JavelinListViewAll.as_view(), name="javelins_all"),
-    path("javelin/<int:pk>", views.JavelinDetailView.as_view(), name="javelin-detail"),
     path(
-        "javelin/<int:pk>/update/", views.JavelinUpdate.as_view(), name="javelin-update"
+        "javelins_all/",
+        views.JavelinListAllView.as_view(),
+        name="javelins_all",
     ),
     path(
-        "javelin/<int:pk>/delete/", views.JavelinDelete.as_view(), name="javelin-delete"
+        "javelin/<int:pk>",
+        views.JavelinDetailView.as_view(),
+        name="javelin-detail",
     ),
-    path("javelindownload/", views.javelin_download, name="javelin-download"),
     path(
-        "javelinmetadownload/", views.javelin_meta_download, name="javelin-metadownload"
+        "javelin/<int:pk>/update/",
+        views.JavelinUpdateView.as_view(),
+        name="javelin-update",
     ),
-]
-
-
-urlpatterns += [
-    path("atlatl/create/", views.AtlatlCreate.as_view(), name="atlatl-create"),
+    path(
+        "javelin/<int:pk>/delete/",
+        views.JavelinDeleteView.as_view(),
+        name="javelin-delete",
+    ),
+    path(
+        "javelindownload/",
+        views.javelin_download_view,
+        name="javelin-download",
+    ),
+    path(
+        "javelinmetadownload/",
+        views.javelin_meta_download_view,
+        name="javelin-metadownload",
+    ),
+    # Atlatl
+    path(
+        "atlatl/create/",
+        views.AtlatlCreateView.as_view(),
+        name="atlatl-create",
+    ),
     path("atlatls/", views.AtlatlListView.as_view(), name="atlatls"),
-    path("atlatls_all/", views.AtlatlListViewAll.as_view(), name="atlatls_all"),
-    path("atlatl/<int:pk>", views.AtlatlDetailView.as_view(), name="atlatl-detail"),
-    path("atlatl/<int:pk>/update/", views.AtlatlUpdate.as_view(), name="atlatl-update"),
-    path("atlatl/<int:pk>/delete/", views.AtlatlDelete.as_view(), name="atlatl-delete"),
-    path("atlatldownload/", views.atlatl_download, name="atlatl-download"),
-    path("atlatlmetadownload/", views.atlatl_meta_download, name="atlatl-metadownload"),
-]
-
-
-urlpatterns += [
-    path("sling/create/", views.SlingCreate.as_view(), name="sling-create"),
-    path("slings/", views.SlingListView.as_view(), name="slings"),
-    path("slings_all/", views.SlingListViewAll.as_view(), name="slings_all"),
-    path("sling/<int:pk>", views.SlingDetailView.as_view(), name="sling-detail"),
-    path("sling/<int:pk>/update/", views.SlingUpdate.as_view(), name="sling-update"),
-    path("sling/<int:pk>/delete/", views.SlingDelete.as_view(), name="sling-delete"),
-    path("slingdownload/", views.sling_download, name="sling-download"),
-    path("slingmetadownload/", views.sling_meta_download, name="sling-metadownload"),
-]
-
-
-urlpatterns += [
-    path("self_bow/create/", views.Self_bowCreate.as_view(), name="self_bow-create"),
-    path("self_bows/", views.Self_bowListView.as_view(), name="self_bows"),
-    path("self_bows_all/", views.Self_bowListViewAll.as_view(), name="self_bows_all"),
     path(
-        "self_bow/<int:pk>", views.Self_bowDetailView.as_view(), name="self_bow-detail"
+        "atlatls_all/", views.AtlatlListAllView.as_view(), name="atlatls_all"
+    ),
+    path(
+        "atlatl/<int:pk>",
+        views.AtlatlDetailView.as_view(),
+        name="atlatl-detail",
+    ),
+    path(
+        "atlatl/<int:pk>/update/",
+        views.AtlatlUpdateView.as_view(),
+        name="atlatl-update",
+    ),
+    path(
+        "atlatl/<int:pk>/delete/",
+        views.AtlatlDeleteView.as_view(),
+        name="atlatl-delete",
+    ),
+    path(
+        "atlatldownload/", downloads.atlatl_download_view, name="atlatl-download"
+    ),
+    path(
+        "atlatlmetadownload/",
+        views.atlatl_meta_download_view,
+        name="atlatl-metadownload",
+    ),
+    # Sling
+    path(
+        "sling/create/", views.SlingCreateView.as_view(), name="sling-create"
+    ),
+    path("slings/", views.SlingListView.as_view(), name="slings"),
+    path("slings_all/", views.SlingListAllView.as_view(), name="slings_all"),
+    path(
+        "sling/<int:pk>", views.SlingDetailView.as_view(), name="sling-detail"
+    ),
+    path(
+        "sling/<int:pk>/update/",
+        views.SlingUpdateView.as_view(),
+        name="sling-update",
+    ),
+    path(
+        "sling/<int:pk>/delete/",
+        views.SlingDeleteView.as_view(),
+        name="sling-delete",
+    ),
+    path("slingdownload/", downloads.sling_download_view, name="sling-download"),
+    path(
+        "slingmetadownload/",
+        views.sling_meta_download_view,
+        name="sling-metadownload",
+    ),
+    # Self bow
+    path(
+        "self_bow/create/",
+        views.Self_bowCreateView.as_view(),
+        name="self_bow-create",
+    ),
+    path("self_bows/", views.Self_bowListView.as_view(), name="self_bows"),
+    path(
+        "self_bows_all/",
+        views.Self_bowListAllView.as_view(),
+        name="self_bows_all",
+    ),
+    path(
+        "self_bow/<int:pk>",
+        views.Self_bowDetailView.as_view(),
+        name="self_bow-detail",
     ),
     path(
         "self_bow/<int:pk>/update/",
-        views.Self_bowUpdate.as_view(),
+        views.Self_bowUpdateView.as_view(),
         name="self_bow-update",
     ),
     path(
         "self_bow/<int:pk>/delete/",
-        views.Self_bowDelete.as_view(),
+        views.Self_bowDeleteView.as_view(),
         name="self_bow-delete",
     ),
-    path("self_bowdownload/", views.self_bow_download, name="self_bow-download"),
+    path(
+        "self_bowdownload/",
+        views.self_bow_download_view,
+        name="self_bow-download",
+    ),
     path(
         "self_bowmetadownload/",
-        views.self_bow_meta_download,
+        views.self_bow_meta_download_view,
         name="self_bow-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Composite bow
     path(
         "composite_bow/create/",
-        views.Composite_bowCreate.as_view(),
+        views.Composite_bowCreateView.as_view(),
         name="composite_bow-create",
     ),
     path(
-        "composite_bows/", views.Composite_bowListView.as_view(), name="composite_bows"
+        "composite_bows/",
+        views.Composite_bowListView.as_view(),
+        name="composite_bows",
     ),
     path(
         "composite_bows_all/",
-        views.Composite_bowListViewAll.as_view(),
+        views.Composite_bowListAllView.as_view(),
         name="composite_bows_all",
     ),
     path(
@@ -214,57 +356,65 @@ urlpatterns += [
     ),
     path(
         "composite_bow/<int:pk>/update/",
-        views.Composite_bowUpdate.as_view(),
+        views.Composite_bowUpdateView.as_view(),
         name="composite_bow-update",
     ),
     path(
         "composite_bow/<int:pk>/delete/",
-        views.Composite_bowDelete.as_view(),
+        views.Composite_bowDeleteView.as_view(),
         name="composite_bow-delete",
     ),
     path(
         "composite_bowdownload/",
-        views.composite_bow_download,
+        views.composite_bow_download_view,
         name="composite_bow-download",
     ),
     path(
         "composite_bowmetadownload/",
-        views.composite_bow_meta_download,
+        views.composite_bow_meta_download_view,
         name="composite_bow-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("crossbow/create/", views.CrossbowCreate.as_view(), name="crossbow-create"),
-    path("crossbows/", views.CrossbowListView.as_view(), name="crossbows"),
-    path("crossbows_all/", views.CrossbowListViewAll.as_view(), name="crossbows_all"),
+    # Crossbow
     path(
-        "crossbow/<int:pk>", views.CrossbowDetailView.as_view(), name="crossbow-detail"
+        "crossbow/create/",
+        views.CrossbowCreateView.as_view(),
+        name="crossbow-create",
+    ),
+    path("crossbows/", views.CrossbowListView.as_view(), name="crossbows"),
+    path(
+        "crossbows_all/",
+        views.CrossbowListAllView.as_view(),
+        name="crossbows_all",
+    ),
+    path(
+        "crossbow/<int:pk>",
+        views.CrossbowDetailView.as_view(),
+        name="crossbow-detail",
     ),
     path(
         "crossbow/<int:pk>/update/",
-        views.CrossbowUpdate.as_view(),
+        views.CrossbowUpdateView.as_view(),
         name="crossbow-update",
     ),
     path(
         "crossbow/<int:pk>/delete/",
-        views.CrossbowDelete.as_view(),
+        views.CrossbowDeleteView.as_view(),
         name="crossbow-delete",
     ),
-    path("crossbowdownload/", views.crossbow_download, name="crossbow-download"),
+    path(
+        "crossbowdownload/",
+        views.crossbow_download_view,
+        name="crossbow-download",
+    ),
     path(
         "crossbowmetadownload/",
-        views.crossbow_meta_download,
+        views.crossbow_meta_download_view,
         name="crossbow-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Sieges
     path(
         "tension_siege_engine/create/",
-        views.Tension_siege_engineCreate.as_view(),
+        views.Tension_siege_engineCreateView.as_view(),
         name="tension_siege_engine-create",
     ),
     path(
@@ -274,7 +424,7 @@ urlpatterns += [
     ),
     path(
         "tension_siege_engines_all/",
-        views.Tension_siege_engineListViewAll.as_view(),
+        views.Tension_siege_engineListAllView.as_view(),
         name="tension_siege_engines_all",
     ),
     path(
@@ -284,31 +434,27 @@ urlpatterns += [
     ),
     path(
         "tension_siege_engine/<int:pk>/update/",
-        views.Tension_siege_engineUpdate.as_view(),
+        views.Tension_siege_engineUpdateView.as_view(),
         name="tension_siege_engine-update",
     ),
     path(
         "tension_siege_engine/<int:pk>/delete/",
-        views.Tension_siege_engineDelete.as_view(),
+        views.Tension_siege_engineDeleteView.as_view(),
         name="tension_siege_engine-delete",
     ),
     path(
         "tension_siege_enginedownload/",
-        views.tension_siege_engine_download,
+        views.tension_siege_engine_download_view,
         name="tension_siege_engine-download",
     ),
     path(
         "tension_siege_enginemetadownload/",
-        views.tension_siege_engine_meta_download,
+        views.tension_siege_engine_meta_download_view,
         name="tension_siege_engine-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "sling_siege_engine/create/",
-        views.Sling_siege_engineCreate.as_view(),
+        views.Sling_siege_engineCreateView.as_view(),
         name="sling_siege_engine-create",
     ),
     path(
@@ -318,7 +464,7 @@ urlpatterns += [
     ),
     path(
         "sling_siege_engines_all/",
-        views.Sling_siege_engineListViewAll.as_view(),
+        views.Sling_siege_engineListAllView.as_view(),
         name="sling_siege_engines_all",
     ),
     path(
@@ -328,31 +474,27 @@ urlpatterns += [
     ),
     path(
         "sling_siege_engine/<int:pk>/update/",
-        views.Sling_siege_engineUpdate.as_view(),
+        views.Sling_siege_engineUpdateView.as_view(),
         name="sling_siege_engine-update",
     ),
     path(
         "sling_siege_engine/<int:pk>/delete/",
-        views.Sling_siege_engineDelete.as_view(),
+        views.Sling_siege_engineDeleteView.as_view(),
         name="sling_siege_engine-delete",
     ),
     path(
         "sling_siege_enginedownload/",
-        views.sling_siege_engine_download,
+        views.sling_siege_engine_download_view,
         name="sling_siege_engine-download",
     ),
     path(
         "sling_siege_enginemetadownload/",
-        views.sling_siege_engine_meta_download,
+        views.sling_siege_engine_meta_download_view,
         name="sling_siege_engine-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "gunpowder_siege_artillery/create/",
-        views.Gunpowder_siege_artilleryCreate.as_view(),
+        views.Gunpowder_siege_artilleryCreateView.as_view(),
         name="gunpowder_siege_artillery-create",
     ),
     path(
@@ -362,7 +504,7 @@ urlpatterns += [
     ),
     path(
         "gunpowder_siege_artillerys_all/",
-        views.Gunpowder_siege_artilleryListViewAll.as_view(),
+        views.Gunpowder_siege_artilleryListAllView.as_view(),
         name="gunpowder_siege_artillerys_all",
     ),
     path(
@@ -372,31 +514,28 @@ urlpatterns += [
     ),
     path(
         "gunpowder_siege_artillery/<int:pk>/update/",
-        views.Gunpowder_siege_artilleryUpdate.as_view(),
+        views.Gunpowder_siege_artilleryUpdateView.as_view(),
         name="gunpowder_siege_artillery-update",
     ),
     path(
         "gunpowder_siege_artillery/<int:pk>/delete/",
-        views.Gunpowder_siege_artilleryDelete.as_view(),
+        views.Gunpowder_siege_artilleryDeleteView.as_view(),
         name="gunpowder_siege_artillery-delete",
     ),
     path(
         "gunpowder_siege_artillerydownload/",
-        views.gunpowder_siege_artillery_download,
+        views.gunpowder_siege_artillery_download_view,
         name="gunpowder_siege_artillery-download",
     ),
     path(
         "gunpowder_siege_artillerymetadownload/",
-        views.gunpowder_siege_artillery_meta_download,
+        views.gunpowder_siege_artillery_meta_download_view,
         name="gunpowder_siege_artillery-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Handheld firearm
     path(
         "handheld_firearm/create/",
-        views.Handheld_firearmCreate.as_view(),
+        views.Handheld_firearmCreateView.as_view(),
         name="handheld_firearm-create",
     ),
     path(
@@ -406,7 +545,7 @@ urlpatterns += [
     ),
     path(
         "handheld_firearms_all/",
-        views.Handheld_firearmListViewAll.as_view(),
+        views.Handheld_firearmListAllView.as_view(),
         name="handheld_firearms_all",
     ),
     path(
@@ -416,61 +555,73 @@ urlpatterns += [
     ),
     path(
         "handheld_firearm/<int:pk>/update/",
-        views.Handheld_firearmUpdate.as_view(),
+        views.Handheld_firearmUpdateView.as_view(),
         name="handheld_firearm-update",
     ),
     path(
         "handheld_firearm/<int:pk>/delete/",
-        views.Handheld_firearmDelete.as_view(),
+        views.Handheld_firearmDeleteView.as_view(),
         name="handheld_firearm-delete",
     ),
     path(
         "handheld_firearmdownload/",
-        views.handheld_firearm_download,
+        views.handheld_firearm_download_view,
         name="handheld_firearm-download",
     ),
     path(
         "handheld_firearmmetadownload/",
-        views.handheld_firearm_meta_download,
+        views.handheld_firearm_meta_download_view,
         name="handheld_firearm-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("war_club/create/", views.War_clubCreate.as_view(), name="war_club-create"),
-    path("war_clubs/", views.War_clubListView.as_view(), name="war_clubs"),
-    path("war_clubs_all/", views.War_clubListViewAll.as_view(), name="war_clubs_all"),
+    # Warclub
     path(
-        "war_club/<int:pk>", views.War_clubDetailView.as_view(), name="war_club-detail"
+        "war_club/create/",
+        views.War_clubCreateView.as_view(),
+        name="war_club-create",
+    ),
+    path("war_clubs/", views.War_clubListView.as_view(), name="war_clubs"),
+    path(
+        "war_clubs_all/",
+        views.War_clubListAllView.as_view(),
+        name="war_clubs_all",
+    ),
+    path(
+        "war_club/<int:pk>",
+        views.War_clubDetailView.as_view(),
+        name="war_club-detail",
     ),
     path(
         "war_club/<int:pk>/update/",
-        views.War_clubUpdate.as_view(),
+        views.War_clubUpdateView.as_view(),
         name="war_club-update",
     ),
     path(
         "war_club/<int:pk>/delete/",
-        views.War_clubDelete.as_view(),
+        views.War_clubDeleteView.as_view(),
         name="war_club-delete",
     ),
-    path("war_clubdownload/", views.war_club_download, name="war_club-download"),
+    path(
+        "war_clubdownload/",
+        views.war_club_download_view,
+        name="war_club-download",
+    ),
     path(
         "war_clubmetadownload/",
-        views.war_club_meta_download,
+        views.war_club_meta_download_view,
         name="war_club-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Battle axe
     path(
-        "battle_axe/create/", views.Battle_axeCreate.as_view(), name="battle_axe-create"
+        "battle_axe/create/",
+        views.Battle_axeCreateView.as_view(),
+        name="battle_axe-create",
     ),
-    path("battle_axes/", views.Battle_axeListView.as_view(), name="battle_axes"),
+    path(
+        "battle_axes/", views.Battle_axeListView.as_view(), name="battle_axes"
+    ),
     path(
         "battle_axes_all/",
-        views.Battle_axeListViewAll.as_view(),
+        views.Battle_axeListAllView.as_view(),
         name="battle_axes_all",
     ),
     path(
@@ -480,163 +631,299 @@ urlpatterns += [
     ),
     path(
         "battle_axe/<int:pk>/update/",
-        views.Battle_axeUpdate.as_view(),
+        views.Battle_axeUpdateView.as_view(),
         name="battle_axe-update",
     ),
     path(
         "battle_axe/<int:pk>/delete/",
-        views.Battle_axeDelete.as_view(),
+        views.Battle_axeDeleteView.as_view(),
         name="battle_axe-delete",
     ),
-    path("battle_axedownload/", views.battle_axe_download, name="battle_axe-download"),
+    path(
+        "battle_axedownload/",
+        views.battle_axe_download_view,
+        name="battle_axe-download",
+    ),
     path(
         "battle_axemetadownload/",
-        views.battle_axe_meta_download,
+        views.battle_axe_meta_download_view,
         name="battle_axe-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("dagger/create/", views.DaggerCreate.as_view(), name="dagger-create"),
+    # Dagger
+    path(
+        "dagger/create/",
+        views.DaggerCreateView.as_view(),
+        name="dagger-create",
+    ),
     path("daggers/", views.DaggerListView.as_view(), name="daggers"),
-    path("daggers_all/", views.DaggerListViewAll.as_view(), name="daggers_all"),
-    path("dagger/<int:pk>", views.DaggerDetailView.as_view(), name="dagger-detail"),
-    path("dagger/<int:pk>/update/", views.DaggerUpdate.as_view(), name="dagger-update"),
-    path("dagger/<int:pk>/delete/", views.DaggerDelete.as_view(), name="dagger-delete"),
-    path("daggerdownload/", views.dagger_download, name="dagger-download"),
-    path("daggermetadownload/", views.dagger_meta_download, name="dagger-metadownload"),
-]
-
-
-urlpatterns += [
-    path("sword/create/", views.SwordCreate.as_view(), name="sword-create"),
+    path(
+        "daggers_all/", views.DaggerListAllView.as_view(), name="daggers_all"
+    ),
+    path(
+        "dagger/<int:pk>",
+        views.DaggerDetailView.as_view(),
+        name="dagger-detail",
+    ),
+    path(
+        "dagger/<int:pk>/update/",
+        views.DaggerUpdateView.as_view(),
+        name="dagger-update",
+    ),
+    path(
+        "dagger/<int:pk>/delete/",
+        views.DaggerDeleteView.as_view(),
+        name="dagger-delete",
+    ),
+    path(
+        "daggerdownload/", downloads.dagger_download_view, name="dagger-download"
+    ),
+    path(
+        "daggermetadownload/",
+        views.dagger_meta_download_view,
+        name="dagger-metadownload",
+    ),
+    # Sword
+    path(
+        "sword/create/", views.SwordCreateView.as_view(), name="sword-create"
+    ),
     path("swords/", views.SwordListView.as_view(), name="swords"),
-    path("swords_all/", views.SwordListViewAll.as_view(), name="swords_all"),
-    path("sword/<int:pk>", views.SwordDetailView.as_view(), name="sword-detail"),
-    path("sword/<int:pk>/update/", views.SwordUpdate.as_view(), name="sword-update"),
-    path("sword/<int:pk>/delete/", views.SwordDelete.as_view(), name="sword-delete"),
-    path("sworddownload/", views.sword_download, name="sword-download"),
-    path("swordmetadownload/", views.sword_meta_download, name="sword-metadownload"),
-]
-
-
-urlpatterns += [
-    path("spear/create/", views.SpearCreate.as_view(), name="spear-create"),
+    path("swords_all/", views.SwordListAllView.as_view(), name="swords_all"),
+    path(
+        "sword/<int:pk>", views.SwordDetailView.as_view(), name="sword-detail"
+    ),
+    path(
+        "sword/<int:pk>/update/",
+        views.SwordUpdateView.as_view(),
+        name="sword-update",
+    ),
+    path(
+        "sword/<int:pk>/delete/",
+        views.SwordDeleteView.as_view(),
+        name="sword-delete",
+    ),
+    path("sworddownload/", downloads.sword_download_view, name="sword-download"),
+    path(
+        "swordmetadownload/",
+        views.sword_meta_download_view,
+        name="sword-metadownload",
+    ),
+    # Spear
+    path(
+        "spear/create/", views.SpearCreateView.as_view(), name="spear-create"
+    ),
     path("spears/", views.SpearListView.as_view(), name="spears"),
-    path("spears_all/", views.SpearListViewAll.as_view(), name="spears_all"),
-    path("spear/<int:pk>", views.SpearDetailView.as_view(), name="spear-detail"),
-    path("spear/<int:pk>/update/", views.SpearUpdate.as_view(), name="spear-update"),
-    path("spear/<int:pk>/delete/", views.SpearDelete.as_view(), name="spear-delete"),
-    path("speardownload/", views.spear_download, name="spear-download"),
-    path("spearmetadownload/", views.spear_meta_download, name="spear-metadownload"),
-]
-
-
-urlpatterns += [
-    path("polearm/create/", views.PolearmCreate.as_view(), name="polearm-create"),
+    path("spears_all/", views.SpearListAllView.as_view(), name="spears_all"),
+    path(
+        "spear/<int:pk>", views.SpearDetailView.as_view(), name="spear-detail"
+    ),
+    path(
+        "spear/<int:pk>/update/",
+        views.SpearUpdateView.as_view(),
+        name="spear-update",
+    ),
+    path(
+        "spear/<int:pk>/delete/",
+        views.SpearDeleteView.as_view(),
+        name="spear-delete",
+    ),
+    path("speardownload/", downloads.spear_download_view, name="spear-download"),
+    path(
+        "spearmetadownload/",
+        views.spear_meta_download_view,
+        name="spear-metadownload",
+    ),
+    # Polearm
+    path(
+        "polearm/create/",
+        views.PolearmCreateView.as_view(),
+        name="polearm-create",
+    ),
     path("polearms/", views.PolearmListView.as_view(), name="polearms"),
-    path("polearms_all/", views.PolearmListViewAll.as_view(), name="polearms_all"),
-    path("polearm/<int:pk>", views.PolearmDetailView.as_view(), name="polearm-detail"),
     path(
-        "polearm/<int:pk>/update/", views.PolearmUpdate.as_view(), name="polearm-update"
+        "polearms_all/",
+        views.PolearmListAllView.as_view(),
+        name="polearms_all",
     ),
     path(
-        "polearm/<int:pk>/delete/", views.PolearmDelete.as_view(), name="polearm-delete"
+        "polearm/<int:pk>",
+        views.PolearmDetailView.as_view(),
+        name="polearm-detail",
     ),
-    path("polearmdownload/", views.polearm_download, name="polearm-download"),
     path(
-        "polearmmetadownload/", views.polearm_meta_download, name="polearm-metadownload"
+        "polearm/<int:pk>/update/",
+        views.PolearmUpdateView.as_view(),
+        name="polearm-update",
     ),
-]
-
-
-urlpatterns += [
-    path("dog/create/", views.DogCreate.as_view(), name="dog-create"),
+    path(
+        "polearm/<int:pk>/delete/",
+        views.PolearmDeleteView.as_view(),
+        name="polearm-delete",
+    ),
+    path(
+        "polearmdownload/",
+        views.polearm_download_view,
+        name="polearm-download",
+    ),
+    path(
+        "polearmmetadownload/",
+        views.polearm_meta_download_view,
+        name="polearm-metadownload",
+    ),
+    # Dog
+    path("dog/create/", views.DogCreateView.as_view(), name="dog-create"),
     path("dogs/", views.DogListView.as_view(), name="dogs"),
-    path("dogs_all/", views.DogListViewAll.as_view(), name="dogs_all"),
+    path("dogs_all/", views.DogListAllView.as_view(), name="dogs_all"),
     path("dog/<int:pk>", views.DogDetailView.as_view(), name="dog-detail"),
-    path("dog/<int:pk>/update/", views.DogUpdate.as_view(), name="dog-update"),
-    path("dog/<int:pk>/delete/", views.DogDelete.as_view(), name="dog-delete"),
-    path("dogdownload/", views.dog_download, name="dog-download"),
-    path("dogmetadownload/", views.dog_meta_download, name="dog-metadownload"),
-]
-
-
-urlpatterns += [
-    path("donkey/create/", views.DonkeyCreate.as_view(), name="donkey-create"),
-    path("donkeys/", views.DonkeyListView.as_view(), name="donkeys"),
-    path("donkeys_all/", views.DonkeyListViewAll.as_view(), name="donkeys_all"),
-    path("donkey/<int:pk>", views.DonkeyDetailView.as_view(), name="donkey-detail"),
-    path("donkey/<int:pk>/update/", views.DonkeyUpdate.as_view(), name="donkey-update"),
-    path("donkey/<int:pk>/delete/", views.DonkeyDelete.as_view(), name="donkey-delete"),
-    path("donkeydownload/", views.donkey_download, name="donkey-download"),
-    path("donkeymetadownload/", views.donkey_meta_download, name="donkey-metadownload"),
-]
-
-
-urlpatterns += [
-    path("horse/create/", views.HorseCreate.as_view(), name="horse-create"),
-    path("horses/", views.HorseListView.as_view(), name="horses"),
-    path("horses_all/", views.HorseListViewAll.as_view(), name="horses_all"),
-    path("horse/<int:pk>", views.HorseDetailView.as_view(), name="horse-detail"),
-    path("horse/<int:pk>/update/", views.HorseUpdate.as_view(), name="horse-update"),
-    path("horse/<int:pk>/delete/", views.HorseDelete.as_view(), name="horse-delete"),
-    path("horsedownload/", views.horse_download, name="horse-download"),
-    path("horsemetadownload/", views.horse_meta_download, name="horse-metadownload"),
-]
-
-
-urlpatterns += [
-    path("camel/create/", views.CamelCreate.as_view(), name="camel-create"),
-    path("camels/", views.CamelListView.as_view(), name="camels"),
-    path("camels_all/", views.CamelListViewAll.as_view(), name="camels_all"),
-    path("camel/<int:pk>", views.CamelDetailView.as_view(), name="camel-detail"),
-    path("camel/<int:pk>/update/", views.CamelUpdate.as_view(), name="camel-update"),
-    path("camel/<int:pk>/delete/", views.CamelDelete.as_view(), name="camel-delete"),
-    path("cameldownload/", views.camel_download, name="camel-download"),
-    path("camelmetadownload/", views.camel_meta_download, name="camel-metadownload"),
-]
-
-
-urlpatterns += [
-    path("elephant/create/", views.ElephantCreate.as_view(), name="elephant-create"),
-    path("elephants/", views.ElephantListView.as_view(), name="elephants"),
-    path("elephants_all/", views.ElephantListViewAll.as_view(), name="elephants_all"),
     path(
-        "elephant/<int:pk>", views.ElephantDetailView.as_view(), name="elephant-detail"
+        "dog/<int:pk>/update/",
+        views.DogUpdateView.as_view(),
+        name="dog-update",
+    ),
+    path(
+        "dog/<int:pk>/delete/",
+        views.DogDeleteView.as_view(),
+        name="dog-delete",
+    ),
+    path("dogdownload/", downloads.dog_download_view, name="dog-download"),
+    path(
+        "dogmetadownload/",
+        views.dog_meta_download_view,
+        name="dog-metadownload",
+    ),
+    # Donkey
+    path(
+        "donkey/create/",
+        views.DonkeyCreateView.as_view(),
+        name="donkey-create",
+    ),
+    path("donkeys/", views.DonkeyListView.as_view(), name="donkeys"),
+    path(
+        "donkeys_all/", views.DonkeyListAllView.as_view(), name="donkeys_all"
+    ),
+    path(
+        "donkey/<int:pk>",
+        views.DonkeyDetailView.as_view(),
+        name="donkey-detail",
+    ),
+    path(
+        "donkey/<int:pk>/update/",
+        views.DonkeyUpdateView.as_view(),
+        name="donkey-update",
+    ),
+    path(
+        "donkey/<int:pk>/delete/",
+        views.DonkeyDeleteView.as_view(),
+        name="donkey-delete",
+    ),
+    path(
+        "donkeydownload/", downloads.donkey_download_view, name="donkey-download"
+    ),
+    path(
+        "donkeymetadownload/",
+        views.donkey_meta_download_view,
+        name="donkey-metadownload",
+    ),
+    # Horse
+    path(
+        "horse/create/", views.HorseCreateView.as_view(), name="horse-create"
+    ),
+    path("horses/", views.HorseListView.as_view(), name="horses"),
+    path("horses_all/", views.HorseListAllView.as_view(), name="horses_all"),
+    path(
+        "horse/<int:pk>", views.HorseDetailView.as_view(), name="horse-detail"
+    ),
+    path(
+        "horse/<int:pk>/update/",
+        views.HorseUpdateView.as_view(),
+        name="horse-update",
+    ),
+    path(
+        "horse/<int:pk>/delete/",
+        views.HorseDeleteView.as_view(),
+        name="horse-delete",
+    ),
+    path("horsedownload/", downloads.horse_download_view, name="horse-download"),
+    path(
+        "horsemetadownload/",
+        views.horse_meta_download_view,
+        name="horse-metadownload",
+    ),
+    # Camel
+    path(
+        "camel/create/", views.CamelCreateView.as_view(), name="camel-create"
+    ),
+    path("camels/", views.CamelListView.as_view(), name="camels"),
+    path("camels_all/", views.CamelListAllView.as_view(), name="camels_all"),
+    path(
+        "camel/<int:pk>", views.CamelDetailView.as_view(), name="camel-detail"
+    ),
+    path(
+        "camel/<int:pk>/update/",
+        views.CamelUpdateView.as_view(),
+        name="camel-update",
+    ),
+    path(
+        "camel/<int:pk>/delete/",
+        views.CamelDeleteView.as_view(),
+        name="camel-delete",
+    ),
+    path("cameldownload/", downloads.camel_download_view, name="camel-download"),
+    path(
+        "camelmetadownload/",
+        views.camel_meta_download_view,
+        name="camel-metadownload",
+    ),
+    # Elephant
+    path(
+        "elephant/create/",
+        views.ElephantCreateView.as_view(),
+        name="elephant-create",
+    ),
+    path("elephants/", views.ElephantListView.as_view(), name="elephants"),
+    path(
+        "elephants_all/",
+        views.ElephantListAllView.as_view(),
+        name="elephants_all",
+    ),
+    path(
+        "elephant/<int:pk>",
+        views.ElephantDetailView.as_view(),
+        name="elephant-detail",
     ),
     path(
         "elephant/<int:pk>/update/",
-        views.ElephantUpdate.as_view(),
+        views.ElephantUpdateView.as_view(),
         name="elephant-update",
     ),
     path(
         "elephant/<int:pk>/delete/",
-        views.ElephantDelete.as_view(),
+        views.ElephantDeleteView.as_view(),
         name="elephant-delete",
     ),
-    path("elephantdownload/", views.elephant_download, name="elephant-download"),
+    path(
+        "elephantdownload/",
+        views.elephant_download_view,
+        name="elephant-download",
+    ),
     path(
         "elephantmetadownload/",
-        views.elephant_meta_download,
+        views.elephant_meta_download_view,
         name="elephant-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Wood, bark
     path(
         "wood_bark_etc/create/",
-        views.Wood_bark_etcCreate.as_view(),
+        views.Wood_bark_etcCreateView.as_view(),
         name="wood_bark_etc-create",
     ),
     path(
-        "wood_bark_etcs/", views.Wood_bark_etcListView.as_view(), name="wood_bark_etcs"
+        "wood_bark_etcs/",
+        views.Wood_bark_etcListView.as_view(),
+        name="wood_bark_etcs",
     ),
     path(
         "wood_bark_etcs_all/",
-        views.Wood_bark_etcListViewAll.as_view(),
+        views.Wood_bark_etcListAllView.as_view(),
         name="wood_bark_etcs_all",
     ),
     path(
@@ -646,39 +933,38 @@ urlpatterns += [
     ),
     path(
         "wood_bark_etc/<int:pk>/update/",
-        views.Wood_bark_etcUpdate.as_view(),
+        views.Wood_bark_etcUpdateView.as_view(),
         name="wood_bark_etc-update",
     ),
     path(
         "wood_bark_etc/<int:pk>/delete/",
-        views.Wood_bark_etcDelete.as_view(),
+        views.Wood_bark_etcDeleteView.as_view(),
         name="wood_bark_etc-delete",
     ),
     path(
         "wood_bark_etcdownload/",
-        views.wood_bark_etc_download,
+        views.wood_bark_etc_download_view,
         name="wood_bark_etc-download",
     ),
     path(
         "wood_bark_etcmetadownload/",
-        views.wood_bark_etc_meta_download,
+        views.wood_bark_etc_meta_download_view,
         name="wood_bark_etc-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Leather
     path(
         "leather_cloth/create/",
-        views.Leather_clothCreate.as_view(),
+        views.Leather_clothCreateView.as_view(),
         name="leather_cloth-create",
     ),
     path(
-        "leather_cloths/", views.Leather_clothListView.as_view(), name="leather_cloths"
+        "leather_cloths/",
+        views.Leather_clothListView.as_view(),
+        name="leather_cloths",
     ),
     path(
         "leather_cloths_all/",
-        views.Leather_clothListViewAll.as_view(),
+        views.Leather_clothListAllView.as_view(),
         name="leather_cloths_all",
     ),
     path(
@@ -688,61 +974,104 @@ urlpatterns += [
     ),
     path(
         "leather_cloth/<int:pk>/update/",
-        views.Leather_clothUpdate.as_view(),
+        views.Leather_clothUpdateView.as_view(),
         name="leather_cloth-update",
     ),
     path(
         "leather_cloth/<int:pk>/delete/",
-        views.Leather_clothDelete.as_view(),
+        views.Leather_clothDeleteView.as_view(),
         name="leather_cloth-delete",
     ),
     path(
         "leather_clothdownload/",
-        views.leather_cloth_download,
+        views.leather_cloth_download_view,
         name="leather_cloth-download",
     ),
     path(
         "leather_clothmetadownload/",
-        views.leather_cloth_meta_download,
+        views.leather_cloth_meta_download_view,
         name="leather_cloth-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("shield/create/", views.ShieldCreate.as_view(), name="shield-create"),
+    # Shield
+    path(
+        "shield/create/",
+        views.ShieldCreateView.as_view(),
+        name="shield-create",
+    ),
     path("shields/", views.ShieldListView.as_view(), name="shields"),
-    path("shields_all/", views.ShieldListViewAll.as_view(), name="shields_all"),
-    path("shield/<int:pk>", views.ShieldDetailView.as_view(), name="shield-detail"),
-    path("shield/<int:pk>/update/", views.ShieldUpdate.as_view(), name="shield-update"),
-    path("shield/<int:pk>/delete/", views.ShieldDelete.as_view(), name="shield-delete"),
-    path("shielddownload/", views.shield_download, name="shield-download"),
-    path("shieldmetadownload/", views.shield_meta_download, name="shield-metadownload"),
-]
-
-
-urlpatterns += [
-    path("helmet/create/", views.HelmetCreate.as_view(), name="helmet-create"),
+    path(
+        "shields_all/", views.ShieldListAllView.as_view(), name="shields_all"
+    ),
+    path(
+        "shield/<int:pk>",
+        views.ShieldDetailView.as_view(),
+        name="shield-detail",
+    ),
+    path(
+        "shield/<int:pk>/update/",
+        views.ShieldUpdateView.as_view(),
+        name="shield-update",
+    ),
+    path(
+        "shield/<int:pk>/delete/",
+        views.ShieldDeleteView.as_view(),
+        name="shield-delete",
+    ),
+    path(
+        "shielddownload/", downloads.shield_download_view, name="shield-download"
+    ),
+    path(
+        "shieldmetadownload/",
+        views.shield_meta_download_view,
+        name="shield-metadownload",
+    ),
+    # Helmet
+    path(
+        "helmet/create/",
+        views.HelmetCreateView.as_view(),
+        name="helmet-create",
+    ),
     path("helmets/", views.HelmetListView.as_view(), name="helmets"),
-    path("helmets_all/", views.HelmetListViewAll.as_view(), name="helmets_all"),
-    path("helmet/<int:pk>", views.HelmetDetailView.as_view(), name="helmet-detail"),
-    path("helmet/<int:pk>/update/", views.HelmetUpdate.as_view(), name="helmet-update"),
-    path("helmet/<int:pk>/delete/", views.HelmetDelete.as_view(), name="helmet-delete"),
-    path("helmetdownload/", views.helmet_download, name="helmet-download"),
-    path("helmetmetadownload/", views.helmet_meta_download, name="helmet-metadownload"),
-]
-
-
-urlpatterns += [
+    path(
+        "helmets_all/", views.HelmetListAllView.as_view(), name="helmets_all"
+    ),
+    path(
+        "helmet/<int:pk>",
+        views.HelmetDetailView.as_view(),
+        name="helmet-detail",
+    ),
+    path(
+        "helmet/<int:pk>/update/",
+        views.HelmetUpdateView.as_view(),
+        name="helmet-update",
+    ),
+    path(
+        "helmet/<int:pk>/delete/",
+        views.HelmetDeleteView.as_view(),
+        name="helmet-delete",
+    ),
+    path(
+        "helmetdownload/", downloads.helmet_download_view, name="helmet-download"
+    ),
+    path(
+        "helmetmetadownload/",
+        views.helmet_meta_download_view,
+        name="helmet-metadownload",
+    ),
+    # Breastplate
     path(
         "breastplate/create/",
-        views.BreastplateCreate.as_view(),
+        views.BreastplateCreateView.as_view(),
         name="breastplate-create",
     ),
-    path("breastplates/", views.BreastplateListView.as_view(), name="breastplates"),
+    path(
+        "breastplates/",
+        views.BreastplateListView.as_view(),
+        name="breastplates",
+    ),
     path(
         "breastplates_all/",
-        views.BreastplateListViewAll.as_view(),
+        views.BreastplateListAllView.as_view(),
         name="breastplates_all",
     ),
     path(
@@ -752,29 +1081,28 @@ urlpatterns += [
     ),
     path(
         "breastplate/<int:pk>/update/",
-        views.BreastplateUpdate.as_view(),
+        views.BreastplateUpdateView.as_view(),
         name="breastplate-update",
     ),
     path(
         "breastplate/<int:pk>/delete/",
-        views.BreastplateDelete.as_view(),
+        views.BreastplateDeleteView.as_view(),
         name="breastplate-delete",
     ),
     path(
-        "breastplatedownload/", views.breastplate_download, name="breastplate-download"
+        "breastplatedownload/",
+        views.breastplate_download_view,
+        name="breastplate-download",
     ),
     path(
         "breastplatemetadownload/",
-        views.breastplate_meta_download,
+        views.breastplate_meta_download_view,
         name="breastplate-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Limb protection
     path(
         "limb_protection/create/",
-        views.Limb_protectionCreate.as_view(),
+        views.Limb_protectionCreateView.as_view(),
         name="limb_protection-create",
     ),
     path(
@@ -784,7 +1112,7 @@ urlpatterns += [
     ),
     path(
         "limb_protections_all/",
-        views.Limb_protectionListViewAll.as_view(),
+        views.Limb_protectionListAllView.as_view(),
         name="limb_protections_all",
     ),
     path(
@@ -794,37 +1122,38 @@ urlpatterns += [
     ),
     path(
         "limb_protection/<int:pk>/update/",
-        views.Limb_protectionUpdate.as_view(),
+        views.Limb_protectionUpdateView.as_view(),
         name="limb_protection-update",
     ),
     path(
         "limb_protection/<int:pk>/delete/",
-        views.Limb_protectionDelete.as_view(),
+        views.Limb_protectionDeleteView.as_view(),
         name="limb_protection-delete",
     ),
     path(
         "limb_protectiondownload/",
-        views.limb_protection_download,
+        views.limb_protection_download_view,
         name="limb_protection-download",
     ),
     path(
         "limb_protectionmetadownload/",
-        views.limb_protection_meta_download,
+        views.limb_protection_meta_download_view,
         name="limb_protection-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Armors
     path(
         "scaled_armor/create/",
-        views.Scaled_armorCreate.as_view(),
+        views.Scaled_armorCreateView.as_view(),
         name="scaled_armor-create",
     ),
-    path("scaled_armors/", views.Scaled_armorListView.as_view(), name="scaled_armors"),
+    path(
+        "scaled_armors/",
+        views.Scaled_armorListView.as_view(),
+        name="scaled_armors",
+    ),
     path(
         "scaled_armors_all/",
-        views.Scaled_armorListViewAll.as_view(),
+        views.Scaled_armorListAllView.as_view(),
         name="scaled_armors_all",
     ),
     path(
@@ -834,39 +1163,37 @@ urlpatterns += [
     ),
     path(
         "scaled_armor/<int:pk>/update/",
-        views.Scaled_armorUpdate.as_view(),
+        views.Scaled_armorUpdateView.as_view(),
         name="scaled_armor-update",
     ),
     path(
         "scaled_armor/<int:pk>/delete/",
-        views.Scaled_armorDelete.as_view(),
+        views.Scaled_armorDeleteView.as_view(),
         name="scaled_armor-delete",
     ),
     path(
         "scaled_armordownload/",
-        views.scaled_armor_download,
+        views.scaled_armor_download_view,
         name="scaled_armor-download",
     ),
     path(
         "scaled_armormetadownload/",
-        views.scaled_armor_meta_download,
+        views.scaled_armor_meta_download_view,
         name="scaled_armor-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "laminar_armor/create/",
-        views.Laminar_armorCreate.as_view(),
+        views.Laminar_armorCreateView.as_view(),
         name="laminar_armor-create",
     ),
     path(
-        "laminar_armors/", views.Laminar_armorListView.as_view(), name="laminar_armors"
+        "laminar_armors/",
+        views.Laminar_armorListView.as_view(),
+        name="laminar_armors",
     ),
     path(
         "laminar_armors_all/",
-        views.Laminar_armorListViewAll.as_view(),
+        views.Laminar_armorListAllView.as_view(),
         name="laminar_armors_all",
     ),
     path(
@@ -876,37 +1203,37 @@ urlpatterns += [
     ),
     path(
         "laminar_armor/<int:pk>/update/",
-        views.Laminar_armorUpdate.as_view(),
+        views.Laminar_armorUpdateView.as_view(),
         name="laminar_armor-update",
     ),
     path(
         "laminar_armor/<int:pk>/delete/",
-        views.Laminar_armorDelete.as_view(),
+        views.Laminar_armorDeleteView.as_view(),
         name="laminar_armor-delete",
     ),
     path(
         "laminar_armordownload/",
-        views.laminar_armor_download,
+        views.laminar_armor_download_view,
         name="laminar_armor-download",
     ),
     path(
         "laminar_armormetadownload/",
-        views.laminar_armor_meta_download,
+        views.laminar_armor_meta_download_view,
         name="laminar_armor-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "plate_armor/create/",
-        views.Plate_armorCreate.as_view(),
+        views.Plate_armorCreateView.as_view(),
         name="plate_armor-create",
     ),
-    path("plate_armors/", views.Plate_armorListView.as_view(), name="plate_armors"),
+    path(
+        "plate_armors/",
+        views.Plate_armorListView.as_view(),
+        name="plate_armors",
+    ),
     path(
         "plate_armors_all/",
-        views.Plate_armorListViewAll.as_view(),
+        views.Plate_armorListAllView.as_view(),
         name="plate_armors_all",
     ),
     path(
@@ -916,29 +1243,28 @@ urlpatterns += [
     ),
     path(
         "plate_armor/<int:pk>/update/",
-        views.Plate_armorUpdate.as_view(),
+        views.Plate_armorUpdateView.as_view(),
         name="plate_armor-update",
     ),
     path(
         "plate_armor/<int:pk>/delete/",
-        views.Plate_armorDelete.as_view(),
+        views.Plate_armorDeleteView.as_view(),
         name="plate_armor-delete",
     ),
     path(
-        "plate_armordownload/", views.plate_armor_download, name="plate_armor-download"
+        "plate_armordownload/",
+        views.plate_armor_download_view,
+        name="plate_armor-download",
     ),
     path(
         "plate_armormetadownload/",
-        views.plate_armor_meta_download,
+        views.plate_armor_meta_download_view,
         name="plate_armor-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Small vessels
     path(
         "small_vessels_canoes_etc/create/",
-        views.Small_vessels_canoes_etcCreate.as_view(),
+        views.Small_vessels_canoes_etcCreateView.as_view(),
         name="small_vessels_canoes_etc-create",
     ),
     path(
@@ -948,7 +1274,7 @@ urlpatterns += [
     ),
     path(
         "small_vessels_canoes_etcs_all/",
-        views.Small_vessels_canoes_etcListViewAll.as_view(),
+        views.Small_vessels_canoes_etcListAllView.as_view(),
         name="small_vessels_canoes_etcs_all",
     ),
     path(
@@ -958,31 +1284,28 @@ urlpatterns += [
     ),
     path(
         "small_vessels_canoes_etc/<int:pk>/update/",
-        views.Small_vessels_canoes_etcUpdate.as_view(),
+        views.Small_vessels_canoes_etcUpdateView.as_view(),
         name="small_vessels_canoes_etc-update",
     ),
     path(
         "small_vessels_canoes_etc/<int:pk>/delete/",
-        views.Small_vessels_canoes_etcDelete.as_view(),
+        views.Small_vessels_canoes_etcDeleteView.as_view(),
         name="small_vessels_canoes_etc-delete",
     ),
     path(
         "small_vessels_canoes_etcdownload/",
-        views.small_vessels_canoes_etc_download,
+        views.small_vessels_canoes_etc_download_view,
         name="small_vessels_canoes_etc-download",
     ),
     path(
         "small_vessels_canoes_etcmetadownload/",
-        views.small_vessels_canoes_etc_meta_download,
+        views.small_vessels_canoes_etc_meta_download_view,
         name="small_vessels_canoes_etc-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Merchant ships
     path(
         "merchant_ships_pressed_into_service/create/",
-        views.Merchant_ships_pressed_into_serviceCreate.as_view(),
+        views.Merchant_ships_pressed_into_serviceCreateView.as_view(),
         name="merchant_ships_pressed_into_service-create",
     ),
     path(
@@ -992,7 +1315,7 @@ urlpatterns += [
     ),
     path(
         "merchant_ships_pressed_into_services_all/",
-        views.Merchant_ships_pressed_into_serviceListViewAll.as_view(),
+        views.Merchant_ships_pressed_into_serviceListAllView.as_view(),
         name="merchant_ships_pressed_into_services_all",
     ),
     path(
@@ -1002,31 +1325,28 @@ urlpatterns += [
     ),
     path(
         "merchant_ships_pressed_into_service/<int:pk>/update/",
-        views.Merchant_ships_pressed_into_serviceUpdate.as_view(),
+        views.Merchant_ships_pressed_into_serviceUpdateView.as_view(),
         name="merchant_ships_pressed_into_service-update",
     ),
     path(
         "merchant_ships_pressed_into_service/<int:pk>/delete/",
-        views.Merchant_ships_pressed_into_serviceDelete.as_view(),
+        views.Merchant_ships_pressed_into_serviceDeleteView.as_view(),
         name="merchant_ships_pressed_into_service-delete",
     ),
     path(
         "merchant_ships_pressed_into_servicedownload/",
-        views.merchant_ships_pressed_into_service_download,
+        views.merchant_ships_pressed_into_service_download_view,
         name="merchant_ships_pressed_into_service-download",
     ),
     path(
         "merchant_ships_pressed_into_servicemetadownload/",
-        views.merchant_ships_pressed_into_service_meta_download,
+        views.merchant_ships_pressed_into_service_meta_download_view,
         name="merchant_ships_pressed_into_service-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Military vessel
     path(
         "specialized_military_vessel/create/",
-        views.Specialized_military_vesselCreate.as_view(),
+        views.Specialized_military_vesselCreateView.as_view(),
         name="specialized_military_vessel-create",
     ),
     path(
@@ -1036,7 +1356,7 @@ urlpatterns += [
     ),
     path(
         "specialized_military_vessels_all/",
-        views.Specialized_military_vesselListViewAll.as_view(),
+        views.Specialized_military_vesselListAllView.as_view(),
         name="specialized_military_vessels_all",
     ),
     path(
@@ -1046,31 +1366,28 @@ urlpatterns += [
     ),
     path(
         "specialized_military_vessel/<int:pk>/update/",
-        views.Specialized_military_vesselUpdate.as_view(),
+        views.Specialized_military_vesselUpdateView.as_view(),
         name="specialized_military_vessel-update",
     ),
     path(
         "specialized_military_vessel/<int:pk>/delete/",
-        views.Specialized_military_vesselDelete.as_view(),
+        views.Specialized_military_vesselDeleteView.as_view(),
         name="specialized_military_vessel-delete",
     ),
     path(
         "specialized_military_vesseldownload/",
-        views.specialized_military_vessel_download,
+        views.specialized_military_vessel_download_view,
         name="specialized_military_vessel-download",
     ),
     path(
         "specialized_military_vesselmetadownload/",
-        views.specialized_military_vessel_meta_download,
+        views.specialized_military_vessel_meta_download_view,
         name="specialized_military_vessel-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Defensive settlements
     path(
         "settlements_in_a_defensive_position/create/",
-        views.Settlements_in_a_defensive_positionCreate.as_view(),
+        views.Settlements_in_a_defensive_positionCreateView.as_view(),
         name="settlements_in_a_defensive_position-create",
     ),
     path(
@@ -1080,7 +1397,7 @@ urlpatterns += [
     ),
     path(
         "settlements_in_a_defensive_positions_all/",
-        views.Settlements_in_a_defensive_positionListViewAll.as_view(),
+        views.Settlements_in_a_defensive_positionListAllView.as_view(),
         name="settlements_in_a_defensive_positions_all",
     ),
     path(
@@ -1090,31 +1407,28 @@ urlpatterns += [
     ),
     path(
         "settlements_in_a_defensive_position/<int:pk>/update/",
-        views.Settlements_in_a_defensive_positionUpdate.as_view(),
+        views.Settlements_in_a_defensive_positionUpdateView.as_view(),
         name="settlements_in_a_defensive_position-update",
     ),
     path(
         "settlements_in_a_defensive_position/<int:pk>/delete/",
-        views.Settlements_in_a_defensive_positionDelete.as_view(),
+        views.Settlements_in_a_defensive_positionDeleteView.as_view(),
         name="settlements_in_a_defensive_position-delete",
     ),
     path(
         "settlements_in_a_defensive_positiondownload/",
-        views.settlements_in_a_defensive_position_download,
+        views.settlements_in_a_defensive_position_download_view,
         name="settlements_in_a_defensive_position-download",
     ),
     path(
         "settlements_in_a_defensive_positionmetadownload/",
-        views.settlements_in_a_defensive_position_meta_download,
+        views.settlements_in_a_defensive_position_meta_download_view,
         name="settlements_in_a_defensive_position-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Wooden palisades
     path(
         "wooden_palisade/create/",
-        views.Wooden_palisadeCreate.as_view(),
+        views.Wooden_palisadeCreateView.as_view(),
         name="wooden_palisade-create",
     ),
     path(
@@ -1124,7 +1438,7 @@ urlpatterns += [
     ),
     path(
         "wooden_palisades_all/",
-        views.Wooden_palisadeListViewAll.as_view(),
+        views.Wooden_palisadeListAllView.as_view(),
         name="wooden_palisades_all",
     ),
     path(
@@ -1134,39 +1448,38 @@ urlpatterns += [
     ),
     path(
         "wooden_palisade/<int:pk>/update/",
-        views.Wooden_palisadeUpdate.as_view(),
+        views.Wooden_palisadeUpdateView.as_view(),
         name="wooden_palisade-update",
     ),
     path(
         "wooden_palisade/<int:pk>/delete/",
-        views.Wooden_palisadeDelete.as_view(),
+        views.Wooden_palisadeDeleteView.as_view(),
         name="wooden_palisade-delete",
     ),
     path(
         "wooden_palisadedownload/",
-        views.wooden_palisade_download,
+        views.wooden_palisade_download_view,
         name="wooden_palisade-download",
     ),
     path(
         "wooden_palisademetadownload/",
-        views.wooden_palisade_meta_download,
+        views.wooden_palisade_meta_download_view,
         name="wooden_palisade-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Earth rampart
     path(
         "earth_rampart/create/",
-        views.Earth_rampartCreate.as_view(),
+        views.Earth_rampartCreateView.as_view(),
         name="earth_rampart-create",
     ),
     path(
-        "earth_ramparts/", views.Earth_rampartListView.as_view(), name="earth_ramparts"
+        "earth_ramparts/",
+        views.Earth_rampartListView.as_view(),
+        name="earth_ramparts",
     ),
     path(
         "earth_ramparts_all/",
-        views.Earth_rampartListViewAll.as_view(),
+        views.Earth_rampartListAllView.as_view(),
         name="earth_ramparts_all",
     ),
     path(
@@ -1176,55 +1489,74 @@ urlpatterns += [
     ),
     path(
         "earth_rampart/<int:pk>/update/",
-        views.Earth_rampartUpdate.as_view(),
+        views.Earth_rampartUpdateView.as_view(),
         name="earth_rampart-update",
     ),
     path(
         "earth_rampart/<int:pk>/delete/",
-        views.Earth_rampartDelete.as_view(),
+        views.Earth_rampartDeleteView.as_view(),
         name="earth_rampart-delete",
     ),
     path(
         "earth_rampartdownload/",
-        views.earth_rampart_download,
+        views.earth_rampart_download_view,
         name="earth_rampart-download",
     ),
     path(
         "earth_rampartmetadownload/",
-        views.earth_rampart_meta_download,
+        views.earth_rampart_meta_download_view,
         name="earth_rampart-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("ditch/create/", views.DitchCreate.as_view(), name="ditch-create"),
+    # Ditch
+    path(
+        "ditch/create/", views.DitchCreateView.as_view(), name="ditch-create"
+    ),
     path("ditchs/", views.DitchListView.as_view(), name="ditchs"),
-    path("ditchs_all/", views.DitchListViewAll.as_view(), name="ditchs_all"),
-    path("ditch/<int:pk>", views.DitchDetailView.as_view(), name="ditch-detail"),
-    path("ditch/<int:pk>/update/", views.DitchUpdate.as_view(), name="ditch-update"),
-    path("ditch/<int:pk>/delete/", views.DitchDelete.as_view(), name="ditch-delete"),
-    path("ditchdownload/", views.ditch_download, name="ditch-download"),
-    path("ditchmetadownload/", views.ditch_meta_download, name="ditch-metadownload"),
-]
-
-
-urlpatterns += [
-    path("moat/create/", views.MoatCreate.as_view(), name="moat-create"),
+    path("ditchs_all/", views.DitchListAllView.as_view(), name="ditchs_all"),
+    path(
+        "ditch/<int:pk>", views.DitchDetailView.as_view(), name="ditch-detail"
+    ),
+    path(
+        "ditch/<int:pk>/update/",
+        views.DitchUpdateView.as_view(),
+        name="ditch-update",
+    ),
+    path(
+        "ditch/<int:pk>/delete/",
+        views.DitchDeleteView.as_view(),
+        name="ditch-delete",
+    ),
+    path("ditchdownload/", downloads.ditch_download_view, name="ditch-download"),
+    path(
+        "ditchmetadownload/",
+        views.ditch_meta_download_view,
+        name="ditch-metadownload",
+    ),
+    # Moat
+    path("moat/create/", views.MoatCreateView.as_view(), name="moat-create"),
     path("moats/", views.MoatListView.as_view(), name="moats"),
-    path("moats_all/", views.MoatListViewAll.as_view(), name="moats_all"),
+    path("moats_all/", views.MoatListAllView.as_view(), name="moats_all"),
     path("moat/<int:pk>", views.MoatDetailView.as_view(), name="moat-detail"),
-    path("moat/<int:pk>/update/", views.MoatUpdate.as_view(), name="moat-update"),
-    path("moat/<int:pk>/delete/", views.MoatDelete.as_view(), name="moat-delete"),
-    path("moatdownload/", views.moat_download, name="moat-download"),
-    path("moatmetadownload/", views.moat_meta_download, name="moat-metadownload"),
-]
-
-
-urlpatterns += [
+    path(
+        "moat/<int:pk>/update/",
+        views.MoatUpdateView.as_view(),
+        name="moat-update",
+    ),
+    path(
+        "moat/<int:pk>/delete/",
+        views.MoatDeleteView.as_view(),
+        name="moat-delete",
+    ),
+    path("moatdownload/", downloads.moat_download_view, name="moat-download"),
+    path(
+        "moatmetadownload/",
+        views.moat_meta_download_view,
+        name="moat-metadownload",
+    ),
+    # Stone walls
     path(
         "stone_walls_non_mortared/create/",
-        views.Stone_walls_non_mortaredCreate.as_view(),
+        views.Stone_walls_non_mortaredCreateView.as_view(),
         name="stone_walls_non_mortared-create",
     ),
     path(
@@ -1234,7 +1566,7 @@ urlpatterns += [
     ),
     path(
         "stone_walls_non_mortareds_all/",
-        views.Stone_walls_non_mortaredListViewAll.as_view(),
+        views.Stone_walls_non_mortaredListAllView.as_view(),
         name="stone_walls_non_mortareds_all",
     ),
     path(
@@ -1244,31 +1576,27 @@ urlpatterns += [
     ),
     path(
         "stone_walls_non_mortared/<int:pk>/update/",
-        views.Stone_walls_non_mortaredUpdate.as_view(),
+        views.Stone_walls_non_mortaredUpdateView.as_view(),
         name="stone_walls_non_mortared-update",
     ),
     path(
         "stone_walls_non_mortared/<int:pk>/delete/",
-        views.Stone_walls_non_mortaredDelete.as_view(),
+        views.Stone_walls_non_mortaredDeleteView.as_view(),
         name="stone_walls_non_mortared-delete",
     ),
     path(
         "stone_walls_non_mortareddownload/",
-        views.stone_walls_non_mortared_download,
+        views.stone_walls_non_mortared_download_view,
         name="stone_walls_non_mortared-download",
     ),
     path(
         "stone_walls_non_mortaredmetadownload/",
-        views.stone_walls_non_mortared_meta_download,
+        views.stone_walls_non_mortared_meta_download_view,
         name="stone_walls_non_mortared-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "stone_walls_mortared/create/",
-        views.Stone_walls_mortaredCreate.as_view(),
+        views.Stone_walls_mortaredCreateView.as_view(),
         name="stone_walls_mortared-create",
     ),
     path(
@@ -1278,7 +1606,7 @@ urlpatterns += [
     ),
     path(
         "stone_walls_mortareds_all/",
-        views.Stone_walls_mortaredListViewAll.as_view(),
+        views.Stone_walls_mortaredListAllView.as_view(),
         name="stone_walls_mortareds_all",
     ),
     path(
@@ -1288,31 +1616,28 @@ urlpatterns += [
     ),
     path(
         "stone_walls_mortared/<int:pk>/update/",
-        views.Stone_walls_mortaredUpdate.as_view(),
+        views.Stone_walls_mortaredUpdateView.as_view(),
         name="stone_walls_mortared-update",
     ),
     path(
         "stone_walls_mortared/<int:pk>/delete/",
-        views.Stone_walls_mortaredDelete.as_view(),
+        views.Stone_walls_mortaredDeleteView.as_view(),
         name="stone_walls_mortared-delete",
     ),
     path(
         "stone_walls_mortareddownload/",
-        views.stone_walls_mortared_download,
+        views.stone_walls_mortared_download_view,
         name="stone_walls_mortared-download",
     ),
     path(
         "stone_walls_mortaredmetadownload/",
-        views.stone_walls_mortared_meta_download,
+        views.stone_walls_mortared_meta_download_view,
         name="stone_walls_mortared-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Fortified camps
     path(
         "fortified_camp/create/",
-        views.Fortified_campCreate.as_view(),
+        views.Fortified_campCreateView.as_view(),
         name="fortified_camp-create",
     ),
     path(
@@ -1322,7 +1647,7 @@ urlpatterns += [
     ),
     path(
         "fortified_camps_all/",
-        views.Fortified_campListViewAll.as_view(),
+        views.Fortified_campListAllView.as_view(),
         name="fortified_camps_all",
     ),
     path(
@@ -1332,31 +1657,28 @@ urlpatterns += [
     ),
     path(
         "fortified_camp/<int:pk>/update/",
-        views.Fortified_campUpdate.as_view(),
+        views.Fortified_campUpdateView.as_view(),
         name="fortified_camp-update",
     ),
     path(
         "fortified_camp/<int:pk>/delete/",
-        views.Fortified_campDelete.as_view(),
+        views.Fortified_campDeleteView.as_view(),
         name="fortified_camp-delete",
     ),
     path(
         "fortified_campdownload/",
-        views.fortified_camp_download,
+        views.fortified_camp_download_view,
         name="fortified_camp-download",
     ),
     path(
         "fortified_campmetadownload/",
-        views.fortified_camp_meta_download,
+        views.fortified_camp_meta_download_view,
         name="fortified_camp-metadownload",
     ),
-]
-
-
-urlpatterns += [
+    # Fortifications
     path(
         "complex_fortification/create/",
-        views.Complex_fortificationCreate.as_view(),
+        views.Complex_fortificationCreateView.as_view(),
         name="complex_fortification-create",
     ),
     path(
@@ -1366,7 +1688,7 @@ urlpatterns += [
     ),
     path(
         "complex_fortifications_all/",
-        views.Complex_fortificationListViewAll.as_view(),
+        views.Complex_fortificationListAllView.as_view(),
         name="complex_fortifications_all",
     ),
     path(
@@ -1376,31 +1698,27 @@ urlpatterns += [
     ),
     path(
         "complex_fortification/<int:pk>/update/",
-        views.Complex_fortificationUpdate.as_view(),
+        views.Complex_fortificationUpdateView.as_view(),
         name="complex_fortification-update",
     ),
     path(
         "complex_fortification/<int:pk>/delete/",
-        views.Complex_fortificationDelete.as_view(),
+        views.Complex_fortificationDeleteView.as_view(),
         name="complex_fortification-delete",
     ),
     path(
         "complex_fortificationdownload/",
-        views.complex_fortification_download,
+        views.complex_fortification_download_view,
         name="complex_fortification-download",
     ),
     path(
         "complex_fortificationmetadownload/",
-        views.complex_fortification_meta_download,
+        views.complex_fortification_meta_download_view,
         name="complex_fortification-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "modern_fortification/create/",
-        views.Modern_fortificationCreate.as_view(),
+        views.Modern_fortificationCreateView.as_view(),
         name="modern_fortification-create",
     ),
     path(
@@ -1410,7 +1728,7 @@ urlpatterns += [
     ),
     path(
         "modern_fortifications_all/",
-        views.Modern_fortificationListViewAll.as_view(),
+        views.Modern_fortificationListAllView.as_view(),
         name="modern_fortifications_all",
     ),
     path(
@@ -1420,32 +1738,35 @@ urlpatterns += [
     ),
     path(
         "modern_fortification/<int:pk>/update/",
-        views.Modern_fortificationUpdate.as_view(),
+        views.Modern_fortificationUpdateView.as_view(),
         name="modern_fortification-update",
     ),
     path(
         "modern_fortification/<int:pk>/delete/",
-        views.Modern_fortificationDelete.as_view(),
+        views.Modern_fortificationDeleteView.as_view(),
         name="modern_fortification-delete",
     ),
     path(
         "modern_fortificationdownload/",
-        views.modern_fortification_download,
+        views.modern_fortification_download_view,
         name="modern_fortification-download",
     ),
     path(
         "modern_fortificationmetadownload/",
-        views.modern_fortification_meta_download,
+        views.modern_fortification_meta_download_view,
         name="modern_fortification-metadownload",
     ),
-]
-
-
-urlpatterns += [
-    path("chainmail/create/", views.ChainmailCreate.as_view(), name="chainmail-create"),
+    # Chainmail
+    path(
+        "chainmail/create/",
+        views.ChainmailCreateView.as_view(),
+        name="chainmail-create",
+    ),
     path("chainmails/", views.ChainmailListView.as_view(), name="chainmails"),
     path(
-        "chainmails_all/", views.ChainmailListViewAll.as_view(), name="chainmails_all"
+        "chainmails_all/",
+        views.ChainmailListAllView.as_view(),
+        name="chainmails_all",
     ),
     path(
         "chainmail/<int:pk>",
@@ -1454,18 +1775,22 @@ urlpatterns += [
     ),
     path(
         "chainmail/<int:pk>/update/",
-        views.ChainmailUpdate.as_view(),
+        views.ChainmailUpdateView.as_view(),
         name="chainmail-update",
     ),
     path(
         "chainmail/<int:pk>/delete/",
-        views.ChainmailDelete.as_view(),
+        views.ChainmailDeleteView.as_view(),
         name="chainmail-delete",
     ),
-    path("chainmaildownload/", views.chainmail_download, name="chainmail-download"),
+    path(
+        "chainmaildownload/",
+        views.chainmail_download_view,
+        name="chainmail-download",
+    ),
     path(
         "chainmailmetadownload/",
-        views.chainmail_meta_download,
+        views.chainmail_meta_download_view,
         name="chainmail-metadownload",
     ),
 ]

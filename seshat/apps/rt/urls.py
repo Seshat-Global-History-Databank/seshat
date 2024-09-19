@@ -144,7 +144,7 @@ model_form_pairs = [
         Gov_res_prop_own_for_rel_grp,
         Gov_res_prop_own_for_rel_grpForm,
         "gov_res_prop_own_for_rel_grp",
-        "Government Restrictions On Property Ownership For Adherents Of Any Religious Group",
+        "Government Restrictions On Property Ownership For Adherents Of Any Religious Group",  # noqa: E501 pylint: disable=C0301
         "Government Restrictions",
         None,
     ),
@@ -192,7 +192,7 @@ model_form_pairs = [
         Gov_dis_rel_grp_occ_fun,
         Gov_dis_rel_grp_occ_funForm,
         "gov_dis_rel_grp_occ_fun",
-        "Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions",
+        "Government Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions",  # noqa: E501 pylint: disable=C0301
         "Government Restrictions",
         None,
     ),
@@ -208,7 +208,7 @@ model_form_pairs = [
         Soc_dis_rel_grp_occ_fun,
         Soc_dis_rel_grp_occ_funForm,
         "soc_dis_rel_grp_occ_fun",
-        "Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions",
+        "Societal Discrimination Against Religious Groups Taking Up Certain Occupations Or Functions",  # noqa: E501 pylint: disable=C0301
         "Societal Restrictions",
         None,
     ),
@@ -224,7 +224,7 @@ model_form_pairs = [
 
 
 urlpatterns = [
-    path("rtvars/", views.rtvars, name="rtvars"),
+    path("rtvars/", views.rtvars_view, name="rtvars"),
     path(
         "problematic_rt_data_table/",
         views.show_problematic_rt_data_table,
@@ -246,18 +246,10 @@ urlpatterns = [
         views.download_csv_societal_restrictions,
         name="download_csv_societal_restrictions",
     ),
-    #  path('download_csv_professions/', views.download_csv_professions,name='download_csv_professions'),
-    #  path('download_csv_bureaucracy_characteristics/', views.download_csv_bureaucracy_characteristics,name='download_csv_bureaucracy_characteristics'),
-    #  path('download_csv_hierarchical_complexity/', views.download_csv_hierarchical_complexity,name='download_csv_hierarchical_complexity'),
-    #  path('download_csv_law/', views.download_csv_law,name='download_csv_law'),
-    #  path('download_csv_specialized_buildings_polity_owned/', views.download_csv_specialized_buildings_polity_owned,name='download_csv_specialized_buildings_polity_owned'),
-    #  path('download_csv_transport_infrastructure/', views.download_csv_transport_infrastructure,name='download_csv_transport_infrastructure'),
-    #  path('download_csv_special_purpose_sites/', views.download_csv_special_purpose_sites,name='download_csv_special_purpose_sites'),
-    #  path('download_csv_information/', views.download_csv_information,name='download_csv_information'),
 ]
 
 
-# Create URL patterns dynamically for each model-class pair: UPDATE
+# Create URL patterns dynamically for each model-class pair
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
@@ -309,7 +301,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}download/",
-            views.generic_download,
+            views.generic_download_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,
@@ -320,7 +312,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}metadownload/",
-            views.generic_metadata_download,
+            views.generic_metadata_download_view,
             {
                 "var_name": x_name,
                 "var_name_display": myvar,
