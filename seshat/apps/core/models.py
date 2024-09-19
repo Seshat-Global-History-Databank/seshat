@@ -1,15 +1,16 @@
-from datetime import date
 import uuid
 
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import IntegrityError
-from django.db.models import Q
-from django.db.models.fields.related import ManyToManyField
+from django.db.models import Q, ManyToManyField
 from django.urls import reverse
 
 from ..accounts.models import Seshat_Expert
+from ..global_utils import get_color, get_date, ATTRS_HTML
+from ..global_constants import ZOTERO
+
 from .constants import (
     POLITY_TAG_CHOICES,
     WORLD_REGION_CHOICES,
@@ -28,34 +29,32 @@ class SeshatPrivateComment(models.Model):
     )
 
     def __str__(self) -> str:
-        all_private_comment_parts = self.inner_private_comments_related.all().order_by(
-            "created_date"
+        # Get private comment parts
+        private_comment_parts = (
+            self.inner_private_comments_related.all().order_by("created_date")
         )
-        if all_private_comment_parts:
-            private_comment_parts = []
-            for private_comment_part in all_private_comment_parts:
-                my_color = give_me_a_color_for_expert(
+
+        if private_comment_parts:
+            private_comment_parts_html = []
+            for private_comment_part in private_comment_parts:
+                color = get_color(
                     private_comment_part.private_comment_owner.id
                 )
-                private_comment_full_text = (
-                    f'<span class="badge text-dark fs-6 border border-dark" style="background:{my_color};">'
-                    + str(private_comment_part.private_comment_owner)
-                    + "</span> "
-                    + private_comment_part.private_comment_part_text
-                    + "<br>"
+                private_comment_parts_html.append(
+                    f'<span class="badge text-dark fs-6 border border-dark" style="background:{color};">{private_comment_part.private_comment_owner}</span> {private_comment_part.private_comment_part_text}<br />'  # noqa: E501 pylint: disable=C0301
                 )
-                private_comment_parts.append(private_comment_full_text)
-            if not private_comment_parts or private_comment_parts == [None]:
-                to_be_shown = " Nothing "
-            else:
-                to_be_shown = " ".join(private_comment_parts)
-        elif self.text and not all_private_comment_parts:
-            to_be_shown = "No Private Comments."
-        else:
-            to_be_shown = "EMPTY_PRIVATE_COMMENT"
-        return f"{to_be_shown}"
 
-    def get_absolute_url(self):
+            if not private_comment_parts_html:
+                return " Nothing "
+
+            return " ".join(private_comment_parts_html)
+
+        if self.text and not private_comment_parts:
+            return "No Private Comments."
+
+        return "EMPTY_PRIVATE_COMMENT"
+
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -84,7 +83,6 @@ class SeshatPrivateCommentPart(models.Model):
         blank=True,
         null=True,
     )
-
     private_comment_owner = models.ForeignKey(
         Seshat_Expert,
         on_delete=models.SET_NULL,
@@ -100,9 +98,11 @@ class SeshatPrivateCommentPart(models.Model):
         blank=True,
     )
     created_date = models.DateTimeField(auto_now=True, blank=True, null=True)
-    last_modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+    last_modified_date = models.DateTimeField(
+        auto_now=True, blank=True, null=True
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -112,7 +112,7 @@ class SeshatPrivateCommentPart(models.Model):
             str: A string of the url to access a particular instance of the model.
         """
         return reverse(
-            "seshatprivatecomment-update", args=[str(self.private_comment.id)]
+            "seshatprivatecomment-update", args=[self.private_comment.id]
         )
 
     class Meta:
@@ -125,8 +125,8 @@ class SeshatPrivateCommentPart(models.Model):
     def __str__(self) -> str:
         if self.private_comment_part_text:
             return self.private_comment_part_text
-        else:
-            return "NO_Private_COMMENTS_TO_SHOW"
+
+        return "NO_Private_COMMENTS_TO_SHOW"
 
 
 class Macro_region(models.Model):
@@ -145,7 +145,7 @@ class Macro_region(models.Model):
             "name",
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -171,9 +171,10 @@ class Seshat_region(models.Model):
 
         ordering = ["mac_region__name", "name"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.mac_region:
             return f"{self.name} ({self.mac_region.name})"
+
         return self.name
 
 
@@ -208,7 +209,7 @@ class Nga(models.Model):
 
         ordering = ["name"]
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -234,7 +235,11 @@ class Polity(models.Model):
     long_name = models.CharField(max_length=200, blank=True, null=True)
     new_name = models.CharField(max_length=100, blank=True, null=True)
     home_nga = models.ForeignKey(
-        Nga, on_delete=models.SET_NULL, null=True, blank=True, related_name="home_nga"
+        Nga,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="home_nga",
     )
     home_seshat_region = models.ForeignKey(
         Seshat_region,
@@ -267,8 +272,9 @@ class Polity(models.Model):
         null=True,
         blank=True,
     )
-
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_date = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True
+    )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
@@ -281,7 +287,7 @@ class Polity(models.Model):
         unique_together = ("name",)
         ordering = ["long_name"]
 
-    def clean(self):
+    def clean(self) -> None:
         """
         Verifies a number of conditions on the start and end years of the polity.
 
@@ -293,23 +299,34 @@ class Polity(models.Model):
         Returns:
             None
         """
-        current_year = date.today().year
+        current_year = get_date("%Y")
+
         if (
             self.start_year is not None
             and self.end_year is not None
             and self.start_year > self.end_year
         ):
-            raise ValidationError("Start year cannot be greater than end year.")
+            raise ValidationError(
+                "Start year cannot be greater than end year."
+            )
+
         if self.end_year is not None and self.end_year > current_year:
-            raise ValidationError("End year cannot be greater than the current year")
+            raise ValidationError(
+                "End year cannot be greater than the current year"
+            )
+
         if self.start_year is not None and self.start_year > current_year:
-            raise ValidationError("Start year cannot be greater than the current year")
+            raise ValidationError(
+                "Start year cannot be greater than the current year"
+            )
+
+        return None
 
     def __str__(self) -> str:
         if self.long_name and self.new_name:
             return f"{self.long_name} ({self.new_name})"
-        else:
-            return self.name
+
+        return self.name
 
 
 class Capital(models.Model):
@@ -333,13 +350,12 @@ class Capital(models.Model):
     )
     url_on_the_map = models.URLField(max_length=200, blank=True, null=True)
     is_verified = models.BooleanField(default=False, blank=True, null=True)
-
     note = models.TextField(
         blank=True,
         null=True,
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -352,7 +368,8 @@ class Capital(models.Model):
 
     def __str__(self) -> str:
         if self.name and self.alternative_names:
-            return str(self.name) + " [" + str(self.alternative_names) + "]"
+            f"{self.name} [{self.alternative_names}]"
+
         return self.name
 
     class Meta:
@@ -370,7 +387,10 @@ class Ngapolityrel(models.Model):
 
     name = models.CharField(max_length=200, blank=True, null=True)
     polity_party = models.ForeignKey(
-        Polity, on_delete=models.SET_NULL, null=True, related_name="polity_sides"
+        Polity,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="polity_sides",
     )
     nga_party = models.ForeignKey(
         Nga, on_delete=models.SET_NULL, null=True, related_name="nga_sides"
@@ -385,10 +405,11 @@ class Ngapolityrel(models.Model):
     def __str__(self) -> str:
         if self.name:
             return self.name
-        elif self.polity_party and self.nga_party:
+
+        if self.polity_party and self.nga_party:
             return f"{self.polity_party.name}'s settlement in {self.nga_party.name}"
-        else:
-            return str(self.id)
+
+        return str(self.id)
 
 
 class Country(models.Model):
@@ -439,7 +460,10 @@ class Subsection(models.Model):
 
     name = models.CharField(max_length=200)
     section = models.ForeignKey(
-        Section, on_delete=models.SET_NULL, null=True, related_name="subsections"
+        Section,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="subsections",
     )
 
     def __str__(self) -> str:
@@ -508,31 +532,27 @@ class Reference(models.Model):
     url_link = models.TextField(
         max_length=500, validators=[URLValidator()], blank=True, null=True
     )
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_date = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True
+    )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self) -> str:
         original_title = self.title
+
         if len(original_title) > 60:
-            shorter_title = (
-                original_title[0:60] + original_title[60:].split(" ")[0] + " ..."
-            )
+            last_word = original_title[60:].split(" ")[0]
+            shorter_title = f"{original_title[0:60]} {last_word} ..."
         else:
             shorter_title = original_title
+
         if self.year:
-            return "(%s_%s): %s" % (
-                self.creator,
-                self.year,
-                shorter_title,
-            )
-        else:
-            return "(%s_XXXX): %s" % (
-                self.creator,
-                shorter_title,
-            )
+            return f"({self.creator}_{self.year}): {shorter_title}"
+
+        return f"({self.creator}_XXXX): {shorter_title}"
 
     @property
-    def reference_short_title(self):
+    def reference_short_title(self) -> str:
         """
         Returns a short title for the reference. If the title is longer than
         60 characters, it is truncated. If the title is not provided, a default
@@ -541,25 +561,28 @@ class Reference(models.Model):
         Returns:
             str: A short title for the reference.
         """
+        shorter_name = ""
 
-        original_long_name = self.long_name
-        if original_long_name and len(original_long_name) > 60:
-            shorter_name = (
-                original_long_name[0:60] + original_long_name[60:].split(" ")[0] + "..."
-            )
-        elif original_long_name:
-            shorter_name = original_long_name
+        # Set shorter_name to the first 60 characters of the long_name
+        if self.long_name and len(self.long_name) > 60:
+            last_word = self.long_name[60:].split(" ")[0]
+            shorter_name = f"{self.long_name[0:60]} {last_word} ..."
+        elif self.long_name:
+            shorter_name = self.long_name
         else:
             shorter_name = "BlaBla"
 
+        # If the zotero link is not provided, return a default title
         if self.zotero_link and "NOZOTERO_LINK" in self.zotero_link:
             return f"(NOZOTERO_REF: {shorter_name})"
-        elif self.title:
-            return self.title
-        else:
-            return "NO_TITLES_PROVIDED"
 
-    def get_absolute_url(self):
+        # If there is a title, return the title
+        if self.title:
+            return self.title
+
+        return "NO_TITLES_PROVIDED"
+
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -590,51 +613,54 @@ class Citation(models.Model):
         help_text="Unique Id for this particular citation",
     )
     ref = models.ForeignKey(
-        Reference, on_delete=models.SET_NULL, null=True, related_name="citation"
+        Reference,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="citation",
     )
     page_from = models.IntegerField(null=True, blank=True)
     page_to = models.IntegerField(null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_date = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True
+    )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    def zoteroer(self):
+    def zoteroer(self) -> str:
         """
         Returns the Zotero link for the citation.
 
         Returns:
             str: The Zotero link for the citation.
         """
-        if self.ref.zotero_link and "NOZOTERO_LINK" not in self.ref.zotero_link:
-            my_zotero_link = (
-                "https://www.zotero.org/groups/1051264/seshat_databank/items/"
-                + str(self.ref.zotero_link)
-            )
-        else:
-            my_zotero_link = reverse("citation-update", args=[str(self.id)])
-        return my_zotero_link
+        if (
+            self.ref.zotero_link
+            and "NOZOTERO_LINK" not in self.ref.zotero_link
+        ):
+            return f"{ZOTERO.BASEURL}{self.ref.zotero_link}"
+
+        return reverse("citation-update", args=[self.id])
 
     def __str__(self) -> str:
         if self.ref and self.ref.title:
             original_title = self.ref.title
         else:
             original_title = "REFERENCE_WITH_NO_TITLE"
+
         if original_title and len(original_title) > 50:
-            shorter_title = (
-                original_title[0:50] + original_title[50:].split(" ")[0] + "..."
-            )
+            last_word = original_title[50:].split(" ")[0]
+            short_title = f"{original_title[0:50]} {last_word}..."
         elif original_title:
-            shorter_title = original_title
+            short_title = original_title
         else:
-            shorter_title = "BlaBlaBla"
+            short_title = "BlaBlaBla"
 
         if self.ref and self.ref.long_name:
             original_long_name = self.ref.long_name
         else:
             original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
         if original_long_name and len(original_long_name) > 50:
-            shorter_name = (
-                original_long_name[0:50] + original_long_name[50:].split(" ")[0] + "..."
-            )
+            last_word = original_long_name[50:].split(" ")[0]
+            shorter_name = f"{original_long_name[0:50]} {last_word}..."
         elif original_long_name:
             shorter_name = original_long_name
         else:
@@ -646,35 +672,22 @@ class Citation(models.Model):
             and "NOZOTERO_LINK" in self.ref.zotero_link
         ):
             return f"(NOZOTERO: {shorter_name})"
+
         if self.ref and self.ref.creator:
-            if self.page_from == None and self.page_to == None:
-                return "({0} {1}): {2}".format(
-                    self.ref.creator, self.ref.year, shorter_title
-                )
+            if self.page_from is None and self.page_to is None:
+                return f"({self.ref.creator} {self.ref.year}): {short_title}"
             elif self.page_from == self.page_to or (
                 (not self.page_to) and self.page_from
             ):
-                return "({0} {1}, p. {2}): {3}".format(
-                    self.ref.creator, self.ref.year, self.page_from, shorter_title
-                )
+                return f"({self.ref.creator} {self.ref.year}, p. {self.page_from}): {short_title}"  # noqa: E501 pylint: disable=C0301
             elif self.page_from == self.page_to or (
                 (not self.page_from) and self.page_to
             ):
-                return "({0} {1}, p. {2}): {3}".format(
-                    self.ref.creator, self.ref.year, self.page_to, shorter_title
-                )
+                return f"({self.ref.creator} {self.ref.year}, p. {self.page_to}): {short_title}"  # noqa: E501 pylint: disable=C0301
             elif self.page_from and self.page_to:
-                return "({0} {1}, pp. {2}-{3}): {4}".format(
-                    self.ref.creator,
-                    self.ref.year,
-                    self.page_from,
-                    self.page_to,
-                    shorter_title,
-                )
+                return f"({self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to}): {short_title}"  # noqa: E501 pylint: disable=C0301
             else:
-                return "({0} {1}): {2}".format(
-                    self.ref.creator, self.ref.year, shorter_title
-                )
+                return "({self.ref.creator} {self.ref.year}): {shorter_title}"
         else:
             return "BADBADREFERENCE"
 
@@ -693,6 +706,7 @@ class Citation(models.Model):
             original_title = self.ref.title
         else:
             original_title = "REFERENCE_WITH_NO_TITLE"
+
         if original_title:
             shorter_title = original_title
         else:
@@ -702,6 +716,7 @@ class Citation(models.Model):
             original_long_name = self.ref.long_name
         else:
             original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
+
         if original_long_name:
             shorter_name = original_long_name
         else:
@@ -713,37 +728,27 @@ class Citation(models.Model):
             and "NOZOTERO_LINK" in self.ref.zotero_link
         ):
             return f"(NOZOTERO: {shorter_name})"
+
         if self.ref and self.ref.creator:
-            if self.page_from == None and self.page_to == None:
-                return '<b class="fw-bold">({0} {1})</b>: {2}'.format(
-                    self.ref.creator, self.ref.year, shorter_title
-                )
-            elif self.page_from == self.page_to or (
+            if self.page_from is None and self.page_to is None:
+                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+
+            if self.page_from == self.page_to or (
                 (not self.page_to) and self.page_from
             ):
-                return '<b class="fw-bold">({0} {1}, p. {2})</b>: {3}'.format(
-                    self.ref.creator, self.ref.year, self.page_from, shorter_title
-                )
-            elif self.page_from == self.page_to or (
+                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, p. {self.page_from})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+
+            if self.page_from == self.page_to or (
                 (not self.page_from) and self.page_to
             ):
-                return '<b class="fw-bold">({0} {1}, p. {2})</b>: {3}'.format(
-                    self.ref.creator, self.ref.year, self.page_to, shorter_title
-                )
-            elif self.page_from and self.page_to:
-                return '<b class="fw-bold">({0} {1}, pp. {2}-{3})</b>: {4}'.format(
-                    self.ref.creator,
-                    self.ref.year,
-                    self.page_from,
-                    self.page_to,
-                    shorter_title,
-                )
-            else:
-                return '<b class="fw-bold">({0} {1})</b>: {2}'.format(
-                    self.ref.creator, self.ref.year, shorter_title
-                )
-        else:
-            return "BADBADREFERENCE"
+                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, p. {self.page_to})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+
+            if self.page_from and self.page_to:
+                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+
+            return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+
+        return "BADBADREFERENCE"
 
     class Meta:
         """
@@ -755,7 +760,9 @@ class Citation(models.Model):
             models.UniqueConstraint(
                 name="No_PAGE_TO_AND_FROM",
                 fields=("ref",),
-                condition=(Q(page_to__isnull=True) & Q(page_from__isnull=True)),
+                condition=(
+                    Q(page_to__isnull=True) & Q(page_from__isnull=True)
+                ),
             ),
             models.UniqueConstraint(
                 name="No_PAGE_TO",
@@ -770,7 +777,7 @@ class Citation(models.Model):
         ]
 
     @property
-    def citation_short_title(self):
+    def citation_short_title(self) -> str:
         """
         Returns a short title for the citation. If the title is longer than
         40 characters, it is truncated. If the title is not provided, a default
@@ -779,11 +786,12 @@ class Citation(models.Model):
         Returns:
             str: A short title for the citation.
         """
-
         original_long_name = self.ref.long_name
         if original_long_name and len(original_long_name) > 40:
             shorter_name = (
-                original_long_name[0:40] + original_long_name[40:].split(" ")[0] + "..."
+                original_long_name[0:40]
+                + original_long_name[40:].split(" ")[0]
+                + "..."
             )
         elif original_long_name:
             shorter_name = original_long_name
@@ -793,24 +801,25 @@ class Citation(models.Model):
         if "NOZOTERO_LINK" in self.ref.zotero_link:
             return f"(NOZOTERO: {shorter_name})"
 
-        if self.page_from == None and self.page_to == None:
-            return "[{0} {1}]".format(self.ref.creator, self.ref.year)
-        elif self.page_from == self.page_to or ((not self.page_to) and self.page_from):
-            return "[{0} {1}, p. {2}]".format(
-                self.ref.creator, self.ref.year, self.page_from
-            )
-        elif self.page_from == self.page_to or ((not self.page_from) and self.page_to):
-            return "[{0} {1}, p. {2}]".format(
-                self.ref.creator, self.ref.year, self.page_to
-            )
-        elif self.page_from and self.page_to:
-            return "[{0} {1}, pp. {2}-{3}]".format(
-                self.ref.creator, self.ref.year, self.page_from, self.page_to
-            )
-        else:
-            return "[{0} {1}]".format(self.ref.creator, self.ref.year)
+        if self.page_from is None and self.page_to is None:
+            return f"[{self.ref.creator} {self.ref.year}]"
 
-    def get_absolute_url(self):
+        if self.page_from == self.page_to or (
+            (not self.page_to) and self.page_from
+        ):
+            return f"[{self.ref.creator} {self.ref.year}, p. {self.page_from}]"
+
+        if self.page_from == self.page_to or (
+            (not self.page_from) and self.page_to
+        ):
+            return f"[{self.ref.creator} {self.ref.year}, p. {self.page_to}]"
+
+        if self.page_from and self.page_to:
+            return f"[{self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to}]"  # noqa: E501 pylint: disable=C0301
+
+        return f"[{self.ref.creator} {self.ref.year}]"
+
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -853,70 +862,56 @@ class SeshatComment(models.Model):
 
     def zoteroer(self):
         """
-        Returns the Zotero link for the comment.
+        Returns the Zotero link for the comment. If the comment has a Zotero
+        link, it is returned. Otherwise, a default link (#) is returned.
 
         Returns:
             str: The Zotero link for the comment.
         """
-        if self.ref.zotero_link and "NOZOTERO_LINK" not in self.ref.zotero_link:
-            my_zotero_link = (
-                "https://www.zotero.org/groups/1051264/seshat_databank/items/"
-                + str(self.ref.zotero_link)
-            )
-        else:
-            my_zotero_link = "#"
-        return my_zotero_link
+        if (
+            self.ref.zotero_link
+            and "NOZOTERO_LINK" not in self.ref.zotero_link
+        ):
+            return f"{ZOTERO.BASEURL}{self.ref.zotero_link}"
+
+        return "#"
 
     def __str__(self) -> str:
-        all_comment_parts = self.inner_comments_related.all().order_by("comment_order")
+        inner_comments = self.inner_comments_related.all()
 
-        if all_comment_parts:
-            comment_parts = []
-            for comment_part in all_comment_parts:
-                if comment_part.citation_index:
-                    separation_point = comment_part.citation_index
-                    comment_full_text = (
-                        comment_part.comment_part_text[0:separation_point]
-                        + str(comment_part.display_citations_plus)
-                        + " "
-                        + comment_part.comment_part_text[separation_point:]
-                    )
-                else:
-                    if (
-                        comment_part.comment_part_text
-                        and comment_part.comment_part_text.startswith("<br>")
-                    ):
-                        if comment_part.display_citations_plus:
-                            comment_full_text = comment_part.comment_part_text[
-                                4:
-                            ] + str(comment_part.display_citations_plus)
-                        else:
-                            comment_full_text = comment_part.comment_part_text[4:]
-                    else:
-                        if comment_part.display_citations_plus:
-                            comment_full_text = (
-                                comment_part.comment_part_text
-                                + " "
-                                + str(comment_part.display_citations_plus)
-                            )
-                        else:
-                            comment_full_text = comment_part.comment_part_text
+        if not inner_comments and self.text:
+            return "No descriptions."
 
-                comment_parts.append(comment_full_text)
+        if not inner_comments:
+            return "EMPTY_COMMENT"
 
-            if not comment_parts or comment_parts == [None]:
-                to_be_shown = " Nothing "
+        comment_parts = []
+        for comment in inner_comments.order_by("comment_order"):
+            if comment.citation_index:
+                separation_point = comment.citation_index
+                before, after = (
+                    comment.comment_part_text[0:separation_point],
+                    comment.comment_part_text[separation_point:],
+                )
+                text = f"{before}{comment.display_citations_plus} {after}"
             else:
-                to_be_shown = " ".join(comment_parts)
+                text = comment.comment_part_text if comment.comment_part_text else ""
+                text = text.strip("<br>")  # drop any leading <br> tags
 
-        elif self.text and not all_comment_parts:
-            to_be_shown = "No descriptions."
-        else:
-            to_be_shown = "EMPTY_COMMENT"
+                if comment.display_citations_plus:
+                    text = f"{text}{comment.display_citations_plus}"
 
-        return f"{to_be_shown}"
+            comment_parts.append(text)
 
-    def get_absolute_url(self):
+        # Drop empty strings
+        comment_parts = [x for x in comment_parts if x]
+
+        if not comment_parts:
+            return " Nothing "
+
+        return " ".join(comment_parts)
+
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -974,22 +969,6 @@ class SeshatCommentPart(models.Model):
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     @property
-    def display_citations(self):
-        """
-        Display the citations of the model instance.
-
-        :noindex:
-
-        Note:
-            The method is a property, and an alias for the
-            return_citations_for_comments function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
-        """
-        return return_citations_for_comments(self)
-
-    @property
     def citations_count(self):
         """
         Returns the number of citations for a comment.
@@ -997,7 +976,40 @@ class SeshatCommentPart(models.Model):
         Returns:
             int: The number of citations for a comment.
         """
-        return return_number_of_citations_for_comments(self)
+        return self.comment_citations.count()
+
+    def get_citations_plus_for_comments(self):
+        scp_tr = ScpThroughCtn.objects.filter(seshatcommentpart=self.id)
+
+        return ", ".join(
+            [
+                f' <a href="{x.citation.zoteroer()}">{x.citation.citation_short_title}</a>'  # noqa: E501 pylint: disable=C0301
+                for x in scp_tr
+            ]
+        )
+
+    @property
+    def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
+        if self.comment_citations.all():
+            return ", ".join(
+                [
+                    f' <a href="{citation.zoteroer()}">{citation.citation_short_title}</a>'
+                    for citation in self.comment_citations.all()
+                ]
+            )
+
+        return ""
 
     @property
     def display_citations_plus(self):
@@ -1007,22 +1019,21 @@ class SeshatCommentPart(models.Model):
         :noindex:
 
         Note:
-            The method is a property, and an alias for the
-            return_citations_for_comments function.
+            The method is a property.
 
         Returns:
             str: A string of all the citations for a comment.
         """
-        if return_citations_plus_for_comments(self) and return_citations_for_comments(
-            self
-        ):
-            return return_citations_plus_for_comments(
-                self
-            ) + return_citations_for_comments(self)
-        elif return_citations_plus_for_comments(self):
-            return return_citations_plus_for_comments(self)
-        else:
-            return return_citations_for_comments(self)
+        x = self.get_citations_plus_for_comments()
+        y = self.display_citations
+
+        if x and y:
+            return x + y
+
+        if x:
+            return x
+
+        return y
 
     @property
     def citations_count_plus(self):
@@ -1032,9 +1043,9 @@ class SeshatCommentPart(models.Model):
         Returns:
             int: The number of citations for a comment.
         """
-        return return_number_of_citations_plus_for_comments(self)
+        return ScpThroughCtn.objects.filter(seshatcommentpart=self.id).count()
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -1054,13 +1065,15 @@ class SeshatCommentPart(models.Model):
 
     def __str__(self) -> str:
         if self.comment_part_text and self.display_citations_plus:
-            return self.comment_part_text + " " + self.display_citations_plus
-        elif self.comment_part_text and self.display_citations:
-            return self.comment_part_text + " " + self.display_citations
-        elif self.comment_part_text:
+            return f"{self.comment_part_text} {self.display_citations_plus}"
+
+        if self.comment_part_text and self.display_citations:
+            return f"{self.comment_part_text} {self.display_citations}"
+
+        if self.comment_part_text:
             return self.comment_part_text
-        else:
-            return "NO_SUB_COMMENTS_TO_SHOW"
+
+        return "NO_SUB_COMMENTS_TO_SHOW"
 
 
 class ScpThroughCtn(models.Model):
@@ -1093,7 +1106,7 @@ class ScpThroughCtn(models.Model):
 
 class SeshatCommon(models.Model):
     """
-    Model representing a common Seshat model.
+    An abstract model representing a common model for most of the models in the Seshat app.
     """
 
     polity = models.ForeignKey(
@@ -1127,9 +1140,11 @@ class SeshatCommon(models.Model):
         blank=True,
     )
     finalized = models.BooleanField(default=False)
-    created_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_date = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True
+    )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
-    tag = models.CharField(max_length=5, choices=Tags, default="TRS")
+    tag = models.CharField(max_length=5, choices=TAGS, default="TRS")
     is_disputed = models.BooleanField(default=False, blank=True, null=True)
     is_uncertain = models.BooleanField(default=False, blank=True, null=True)
     expert_reviewed = models.BooleanField(null=True, blank=True, default=True)
@@ -1165,6 +1180,19 @@ class SeshatCommon(models.Model):
         abstract = True
         ordering = ["polity"]
 
+    class Code:
+        """
+        :noindex:
+        """
+
+        section = None
+        subsection = None
+        variable = ""
+        notes = ""
+        description = ""
+        description_source = ""
+        inner_variables = {}
+
 
 class Religion(models.Model):
     """
@@ -1186,6 +1214,7 @@ class Religion(models.Model):
     def __str__(self) -> str:
         if self.religion_name:
             return self.religion_name
+
         return self.name
 
 
@@ -1211,8 +1240,8 @@ class VideoShapefile(models.Model):
     polity_end_year = models.IntegerField()
     colour = models.CharField(max_length=7)
 
-    def __str__(self):
-        return "Name: %s" % self.name
+    def __str__(self) -> str:
+        return f"Name: {self.name}"
 
 
 class GADMShapefile(models.Model):
@@ -1272,7 +1301,7 @@ class GADMShapefile(models.Model):
     CONTINENT = models.CharField(max_length=100, null=True)
     SUBCONT = models.CharField(max_length=100, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Name: %s" % self.name
 
 
@@ -1284,7 +1313,7 @@ class GADMCountries(models.Model):
     geom = models.MultiPolygonField()
     COUNTRY = models.CharField(max_length=100, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Name: %s" % self.name
 
 
@@ -1298,5 +1327,5 @@ class GADMProvinces(models.Model):
     NAME_1 = models.CharField(max_length=100, null=True)
     ENGTYPE_1 = models.CharField(max_length=100, null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Name: %s" % self.name

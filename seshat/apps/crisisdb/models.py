@@ -1,13 +1,16 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from datetime import date
-
 from ..core.models import SeshatCommon, Polity
-from ..global_constants import SECTIONS, SUBSECTIONS, ICONS, ATTRS_HTML
+from ..global_constants import SECTIONS, SUBSECTIONS, ICONS, NO_DATA
+from ..global_utils import (
+    _wrap_in_warning,
+    get_model_instance_name,
+    validate_time_range,
+)
+
 from .constants import (
     ATTENTION_TAGS_CHOICES,
     CRISIS_DEFS_EXAMPLES,
@@ -23,6 +26,9 @@ from .constants import (
     US_STATE_CHOICES,
     VIOLENCE_TYPE_CHOICES,
 )
+from .mixins import CrisisDBMixin
+
+
 FIELDS = [
     "decline",
     "collapse",
@@ -70,7 +76,7 @@ class Us_location(models.Model):
 
         ordering = ["us_state", "-city", "-county", "-special_place"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         components = []
 
         if self.us_state:
@@ -85,7 +91,12 @@ class Us_location(models.Model):
         elif self.special_place:
             components.append(self.special_place)
 
-        return mark_safe(", ".join(components)) or "Location (No Data)"
+        components = mark_safe(", ".join(components))
+
+        if not components:
+            return "Location (No Data)"
+
+        return components
 
 
 class Us_violence_subtype(models.Model):
@@ -104,7 +115,10 @@ class Us_violence_subtype(models.Model):
         ordering = ["name"]
 
     def __str__(self) -> str:
-        return f"{self.name}{' (?)' if self.is_uncertain else ''}"
+        if self.is_uncertain:
+            return f"{self.name} (?)"
+
+        return self.name
 
 
 class Us_violence_data_source(models.Model):
@@ -129,11 +143,13 @@ class Us_violence_data_source(models.Model):
 
     def __str__(self) -> str:
         if self.abbreviation:
-            return mark_safe(
-                f"<b>{self.abbreviation}</b>: {self.name}{' (?)' if self.is_uncertain else ''}"
-            )
-        else:
-            return f"{self.name}{' (?)' if self.is_uncertain else ''}"
+            string = f"<b>{self.abbreviation}</b>: {self.name}{' (?)' if self.is_uncertain else ''}"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.is_uncertain:
+            return f"{self.name} (?)"
+
+        return self.name
 
 
 class Us_violence(models.Model):
@@ -184,43 +200,36 @@ class Us_violence(models.Model):
         ordering = ["-violence_date", "-fatalities"]
 
     def show_locations(self):
-        list_of_locations = list(self.location.all())
-        location_str = " / ".join(str(location) for location in list_of_locations)
-        return location_str
+        return " / ".join(str(location) for location in self.location.all())
 
     def show_narrative_without_quotes(self):
-        if self.narrative:
-            return self.narrative.replace('"', "'")
-        else:
+        if not self.narrative:
             return "No_Narrative"
 
+        return self.narrative.replace('"', "'")
+
     def show_source_details_without_quotes(self):
-        if self.source_details:
-            return self.source_details.replace('"', "'")
-        else:
+        if not self.source_details:
             return "No_source_details"
 
+        return self.source_details.replace('"', "'")
+
     def show_violence_subtypes(self):
-        list_of_subtypes = list(self.violence_subtype.all())
-        subtype_str = ", ".join(str(subtype) for subtype in list_of_subtypes)
-        return subtype_str
+        return ", ".join(str(subtype) for subtype in self.violence_subtype.all())
 
     def show_short_data_sources(self):
-        list_of_short_data_sources = list(self.short_data_source.all())
-        short_data_source_str = ", ".join(
-            str(short_data_source) for short_data_source in list_of_short_data_sources
+        return ", ".join(
+            str(data_source) for data_source in self.short_data_source.all()
         )
-        return short_data_source_str
 
     def __str__(self) -> str:
-        list_of_locations = list(self.location.all())
         location_str = ": " + " and ".join(
-            str(location) for location in list_of_locations
+            str(location) for location in self.location.all()
         )
         return f"Violence: {self.fatalities} deaths in{location_str}."
 
 
-class Crisis_consequence(SeshatCommon):
+class Crisis_consequence(SeshatCommon, CrisisDBMixin):
     """
     Model representing a crisis consequence.
     """
@@ -300,6 +309,9 @@ class Crisis_consequence(SeshatCommon):
         max_length=5, choices=CRISISDB_CHOICES, null=True, blank=True
     )
 
+    _reverse = "crisis_consequence-detail"
+    _clean_name = "crisis_consequence"
+
     class Meta:
         """
         :noindex:
@@ -309,40 +321,30 @@ class Crisis_consequence(SeshatCommon):
         verbose_name_plural = "Crisis consequences"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """ """
-        clean_times_light(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "crisis_consequence"
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable crisis_consequence are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "crisis_consequence": {
+                "min": None,
+                "max": None,
+                "scale": 1000,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "mu?",
+                "choices": None,
+            }
+        }
+        potential_cols = ["choices"]
 
     def get_columns_with_value(self, value):
         """
@@ -364,7 +366,10 @@ class Crisis_consequence(SeshatCommon):
             if field_value and field_value == value:
                 columns.append(field_name)
 
+        if not columns:
             return None
+
+        return columns
 
     def get_columns_with_value_dic(self, value):
         columns = {}
@@ -374,17 +379,18 @@ class Crisis_consequence(SeshatCommon):
             if field_value and field_value == value:
                 columns[field_name] = CRISIS_DEFS_EXAMPLES[field_name]
 
-        if columns:
-            return columns
-        else:
+        if not columns:
             return None
+
+        return columns
 
     def show_nga(self):
         nga_rel = self.polity.polity_sides.first()
+
         if not nga_rel:
-            return "NO_NGA_ASSOCIATED"
-        else:
-            return nga_rel.nga_party.name
+            return NO_DATA.nga
+
+        return nga_rel.nga_party.name
 
     def render_absence_presence(self, item):
         """
@@ -410,11 +416,11 @@ class Crisis_consequence(SeshatCommon):
     def clean_collapse(self):
         return self.render_absence_presence(self.collapse)
 
-    def __str__(self) -> str:
-        return call_my_name(self)
+    def show_value(self):
+        return get_model_instance_name(self)
 
 
-class Power_transition(SeshatCommon):
+class Power_transition(SeshatCommon, CrisisDBMixin):
     """
     Model representing a power transition.
     """
@@ -452,6 +458,9 @@ class Power_transition(SeshatCommon):
         max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
 
+    _reverse = "power_transition-detail"
+    _clean_name = "power_transition"
+
     class Meta:
         """
         :noindex:
@@ -461,41 +470,57 @@ class Power_transition(SeshatCommon):
         verbose_name_plural = "Power Transitions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
+        :noindex:
+        """
+
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable power_transition are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "power_transition": {
+                "min": None,
+                "max": None,
+                "scale": 1000,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "mu?",
+                "choices": None,
+            }
+        }
+        potential_cols = ["choices"]
+
+    def validate_polity(self) -> bool:
+        """
+        Validate the polity field of the model instance.
 
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
         Returns:
-            str: The citations of the model instance, separated by comma.
+            bool: True if the polity field is valid.
+
+        Raises:
+            ValidationError: If there is no selected Polity.
         """
-        return return_citations(self)
+        if not self.polity:
+            string = _wrap_in_warning("There is no selected Polity!")
+            raise ValidationError(
+                {
+                    "polity": mark_safe(string)
+                }
+            )
+
+        return True
 
     def clean(self):
         """ """
-        clean_times_light(self)
-        has_a_polity(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "power_transition"
+        validate_time_range(self, limited=True)
+        self.validate_polity()
 
     def get_columns_with_value(self, value):
         """
@@ -528,7 +553,8 @@ class Power_transition(SeshatCommon):
 
             if field_value and field_value == value:
                 columns.append(field_name)
-        if columns != []:
+
+        if columns:
             return columns
         else:
             return None
@@ -547,8 +573,6 @@ class Power_transition(SeshatCommon):
             "external_interference",
         ]
 
-        from .custom_vars import power_transitions_defs_examples
-
         for field_name in fields:
             field_value = getattr(self, field_name)
 
@@ -562,36 +586,23 @@ class Power_transition(SeshatCommon):
 
     def show_nga(self):
         nga_rel = self.polity.polity_sides.first()
+
         if not nga_rel:
-            return "NO_NGA_ASSOCIATED"
-        else:
-            return nga_rel.nga_party.name
+            return NO_DATA.nga
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("power_transition-detail", args=[str(self.id)])
+        return nga_rel.nga_party.name
 
     def show_value(self):
+        return self.__str__
+
+    def __str__(self) -> str:
         if self.polity and self.predecessor and self.successor:
-            return f"Power Transition in {self.polity}: {self.predecessor} was replaced by {self.successor}."
-        else:
-            return "Power Transition in x: Y was replaced by Z"
+            return f"Power Transition in {self.polity}: {self.predecessor} was replaced by {self.successor}."  # noqa: E501 pylint: disable=C0301
 
-    def __str__(self):
-        if self.polity and self.predecessor and self.successor:
-            return f"Power Transition in {self.polity}: {self.predecessor} was replaced by {self.successor}."
-        else:
-            return "Power Transition in x: Y was replaced by Z"
+        return "Power Transition in x: Y was replaced by Z"  # TODO: is this correct?
 
 
-class Human_sacrifice(SeshatCommon):
+class Human_sacrifice(SeshatCommon, CrisisDBMixin):
     """
     Model representing a human sacrifice.
     """
@@ -600,6 +611,9 @@ class Human_sacrifice(SeshatCommon):
     human_sacrifice = models.CharField(
         max_length=500, choices=HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES
     )
+
+    _reverse = "human_sacrifice-detail"
+    _clean_name = "human_sacrifice"
 
     class Meta:
         """
@@ -610,90 +624,54 @@ class Human_sacrifice(SeshatCommon):
         verbose_name_plural = "Human_sacrifices"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "human_sacrifice"
+        section = SECTIONS.conflict
+        subsection = SUBSECTIONS.crisisdb.ExternalConflicts
+        variable = "Human Sacrifice"
+        notes = "This is a new model definition for Human Sacrifice."
+        description = "The deliberate and ritualized killing of a person to please or placate supernatural entities (including gods, spirits, and ancestors) or gain other supernatural benefits."  # noqa: E501 pylint: disable=C0301
+        description_source = ""
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "human_sacrifice": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of Human Sacrifice",
+                "units": None,
+                "choices": ["U", "A;P", "P*", "P", "A~P", "A", "A*", "P~A"],
+            }
+        }
+        null_meaning = "The value is not available."
+        potential_cols = ["choices"]
 
     def show_value(self):
         return self.get_human_sacrifice_display()
 
     def show_nga(self):
         nga_rel = self.polity.polity_sides.first()
+
         if not nga_rel:
-            return "NO_NGA_ASSOCIATED"
-        else:
-            return nga_rel.nga_party.name
+            return NO_DATA.nga
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("human_sacrifice-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return nga_rel.nga_party.name
 
 
-class External_conflict(SeshatCommon):
+class External_conflict(SeshatCommon, CrisisDBMixin):
     """
     Model representing an external conflict.
     """
 
     name = models.CharField(max_length=100, default="External_conflict")
     conflict_name = models.CharField(max_length=500, blank=True, null=True)
+
+    _reverse = "external_conflict-detail"
+    _clean_name = "external_conflict"
 
     class Meta:
         """
@@ -703,59 +681,36 @@ class External_conflict(SeshatCommon):
         verbose_name = "External_conflict"
         verbose_name_plural = "External_conflicts"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("external_conflict-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.conflict
+        subsection = SUBSECTIONS.crisisdb.ExternalConflicts
+        variable = ""
+        notes = "This is a new model definition for External conflicts."
+        description = (
+            "Main Descriptions for the Variable external_conflict are missing!"
+        )
+        description_source = (
+            "Main Descriptions for the Variable external_conflict are missing!"
+        )
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "conflict_name": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The unique name of this external conflict",
+                "units": None,
+                "choices": None,
+            }
+        }
 
 
-class Internal_conflict(SeshatCommon):
+class Internal_conflict(SeshatCommon, CrisisDBMixin):
     """
     Model representing an internal conflict.
     """
@@ -768,6 +723,9 @@ class Internal_conflict(SeshatCommon):
     leader = models.CharField(max_length=500, blank=True, null=True)
     casualty = models.IntegerField(blank=True, null=True)
 
+    _reverse = "internal_conflict-detail"
+    _clean_name = "internal_conflict"
+
     class Meta:
         """
         :noindex:
@@ -776,59 +734,63 @@ class Internal_conflict(SeshatCommon):
         verbose_name = "Internal_conflict"
         verbose_name_plural = "Internal_conflicts"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.conflict
+        subsection = SUBSECTIONS.crisisdb.InternalConflicts
+        variable = ""
+        notes = "This is a new model definition for internal conflicts."
+        description = (
+            "Main Descriptions for the Variable internal_conflict are missing!"
+        )
+        description_source = (
+            "Main Descriptions for the Variable internal_conflict are missing!"
+        )
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "conflict": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The name of the conflict",
+                "units": None,
+                "choices": None,
+            },
+            "expenditure": {
+                "min": None,
+                "max": None,
+                "scale": 1000000,
+                "var_exp_source": None,
+                "var_exp": "The military expenses in millions silver taels.",
+                "units": "silver taels",
+                "choices": None,
+            },
+            "leader": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The leader of the conflict",
+                "units": None,
+                "choices": None,
+            },
+            "casualty": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "The number of people who died in this conflict.",
+                "units": "People",
+                "choices": None,
+            },
+        }
 
-        :noindex:
 
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("internal_conflict-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
-
-
-class External_conflict_side(SeshatCommon):
+class External_conflict_side(SeshatCommon, CrisisDBMixin):
     """
     Model representing an external conflict side.
     """
@@ -846,6 +808,9 @@ class External_conflict_side(SeshatCommon):
     leader = models.CharField(max_length=500, blank=True, null=True)
     casualty = models.IntegerField(blank=True, null=True)
 
+    _reverse = "external_conflict_side-detail"
+    _clean_name = "external_conflict_side"
+
     class Meta:
         """
         :noindex:
@@ -854,65 +819,72 @@ class External_conflict_side(SeshatCommon):
         verbose_name = "External_conflict_side"
         verbose_name_plural = "External_conflict_sides"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.conflict
+        subsection = SUBSECTIONS.crisisdb.ExternalConflicts
+        variable = ""
+        notes = "This is a new model definition for External conflict sides"
+        description = (
+            "Main Descriptions for the Variable external_conflict_side are missing!"
+        )
+        description_source = (
+            "Main Descriptions for the Variable external_conflict_side are missing!"
+        )
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "conflict_id": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The external_conflict which is the actual conflict we are talking about",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": None,
+            },
+            "expenditure": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "The military expenses (from this side) in silver taels.",
+                "units": "silver taels",
+                "choices": None,
+            },
+            "leader": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The leader of this side of conflict",
+                "units": None,
+                "choices": None,
+            },
+            "casualty": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "The number of people who died (from this side) in this conflict.",  # noqa: E501 pylint: disable=C0301
+                "units": "People",
+                "choices": None,
+            },
+        }
 
-        :noindex:
 
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("external_conflict_side-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
-
-
-class Agricultural_population(SeshatCommon):
+class Agricultural_population(SeshatCommon, CrisisDBMixin):
     """
     Model representing an agricultural population.
     """
 
     name = models.CharField(max_length=100, default="Agricultural_population")
     agricultural_population = models.IntegerField(blank=True, null=True)
+
+    _reverse = "agricultural_population-detail"
+    _clean_name = "agricultural_population"
 
     class Meta:
         """
@@ -922,65 +894,41 @@ class Agricultural_population(SeshatCommon):
         verbose_name = "Agricultural_population"
         verbose_name_plural = "Agricultural_populations"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("agricultural_population-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable agricultural_population are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "agricultural_population": {
+                "min": 0,
+                "max": None,
+                "scale": 1000,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "People",
+                "choices": None,
+            }
+        }
 
 
-class Arable_land(SeshatCommon):
+class Arable_land(SeshatCommon, CrisisDBMixin):
     """
     Model representing an arable land.
     """
 
     name = models.CharField(max_length=100, default="Arable_land")
     arable_land = models.IntegerField(blank=True, null=True)
+
+    _reverse = "arable_land-detail"
+    _clean_name = "arable_land"
 
     class Meta:
         """
@@ -990,65 +938,41 @@ class Arable_land(SeshatCommon):
         verbose_name = "Arable_land"
         verbose_name_plural = "Arable_lands"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("arable_land-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable arable_land are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "arable_land": {
+                "min": None,
+                "max": None,
+                "scale": 1000,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "mu?",
+                "choices": None,
+            }
+        }
 
 
-class Arable_land_per_farmer(SeshatCommon):
+class Arable_land_per_farmer(SeshatCommon, CrisisDBMixin):
     """
     Model representing an arable land per farmer.
     """
 
     name = models.CharField(max_length=100, default="Arable_land_per_farmer")
     arable_land_per_farmer = models.IntegerField(blank=True, null=True)
+
+    _reverse = "arable_land_per_farmer-detail"
+    _clean_name = "arable_land_per_farmer"
 
     class Meta:
         """
@@ -1058,69 +982,46 @@ class Arable_land_per_farmer(SeshatCommon):
         verbose_name = "Arable_land_per_farmer"
         verbose_name_plural = "Arable_land_per_farmers"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("arable_land_per_farmer-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable arable_land_per_farmer are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "arable_land_per_farmer": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "mu?",
+                "choices": None,
+            }
+        }
 
 
-class Gross_grain_shared_per_agricultural_population(SeshatCommon):
+class Gross_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin):
     """
     Model representing a gross grain shared per agricultural population.
     """
 
     name = models.CharField(
-        max_length=100, default="Gross_grain_shared_per_agricultural_population"
+        max_length=100,
+        default="Gross_grain_shared_per_agricultural_population",
     )
     gross_grain_shared_per_agricultural_population = models.IntegerField(
         blank=True, null=True
     )
+
+    _reverse = "gross_grain_shared_per_agricultural_population-detail"
+    _clean_name = "gross_grain_shared_per_agricultural_population"
 
     class Meta:
         """
@@ -1130,61 +1031,32 @@ class Gross_grain_shared_per_agricultural_population(SeshatCommon):
         verbose_name = "Gross_grain_shared_per_agricultural_population"
         verbose_name_plural = "Gross_grain_shared_per_agricultural_populations"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse(
-            "gross_grain_shared_per_agricultural_population-detail", args=[str(self.id)]
-        )
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable gross_grain_shared_per_agricultural_population are missing!"  # noqa: E501 pylint: disable=C0301
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "gross_grain_shared_per_agricultural_population": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "(catties per capita)",
+                "choices": None,
+            }
+        }
 
 
-class Net_grain_shared_per_agricultural_population(SeshatCommon):
+class Net_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin):
     """
     Model representing a net grain shared per agricultural population.
     """
@@ -1196,6 +1068,9 @@ class Net_grain_shared_per_agricultural_population(SeshatCommon):
         blank=True, null=True
     )
 
+    _reverse = "net_grain_shared_per_agricultural_population-detail"
+    _clean_name = "net_grain_shared_per_agricultural_population"
+
     class Meta:
         """
         :noindex:
@@ -1204,67 +1079,41 @@ class Net_grain_shared_per_agricultural_population(SeshatCommon):
         verbose_name = "Net_grain_shared_per_agricultural_population"
         verbose_name_plural = "Net_grain_shared_per_agricultural_populations"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse(
-            "net_grain_shared_per_agricultural_population-detail", args=[str(self.id)]
-        )
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable net_grain_shared_per_agricultural_population are missing!"  # noqa: E501 pylint: disable=C0301
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "net_grain_shared_per_agricultural_population": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "(catties per capita)",
+                "choices": None,
+            }
+        }
 
 
-class Surplus(SeshatCommon):
+class Surplus(SeshatCommon, CrisisDBMixin):
     """
     Model representing a surplus.
     """
 
     name = models.CharField(max_length=100, default="Surplus")
     surplus = models.IntegerField(blank=True, null=True)
+
+    _reverse = "surplus-detail"
+    _clean_name = "surplus"
 
     class Meta:
         """
@@ -1274,59 +1123,32 @@ class Surplus(SeshatCommon):
         verbose_name = "Surplus"
         verbose_name_plural = "Surplus"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("surplus-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "Notes for the Variable surplus are missing!"
+        description = "No Explanations."
+        description_source = "No Explanations."
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "surplus": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "No Explanations.",
+                "units": "(catties per capita)",
+                "choices": None,
+            }
+        }
 
 
-class Military_expense(SeshatCommon):
+class Military_expense(SeshatCommon, CrisisDBMixin):
     """
     Model representing a military expense.
     """
@@ -1337,6 +1159,9 @@ class Military_expense(SeshatCommon):
         max_digits=25, decimal_places=10, blank=True, null=True
     )
 
+    _reverse = "military_expense-detail"
+    _clean_name = "military_expense"
+
     class Meta:
         """
         :noindex:
@@ -1345,65 +1170,52 @@ class Military_expense(SeshatCommon):
         verbose_name = "Military_expense"
         verbose_name_plural = "Military_expenses"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("military_expense-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.StateFinances
+        variable = ""
+        notes = "Not sure about Section and Subsection."
+        description = "Main Descriptions for the Variable military_expense are missing!"
+        description_source = (
+            "Main Descriptions for the Variable military_expense are missing!"
+        )
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "conflict": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The name of the conflict",
+                "units": None,
+                "choices": None,
+            },
+            "expenditure": {
+                "min": None,
+                "max": None,
+                "scale": 1000000,
+                "var_exp_source": None,
+                "var_exp": "The military expenses in millions silver taels.",
+                "units": "silver taels",
+                "choices": None,
+            },
+        }
 
 
-class Silver_inflow(SeshatCommon):
+class Silver_inflow(SeshatCommon, CrisisDBMixin):
     """
     Model representing a silver inflow.
     """
 
     name = models.CharField(max_length=100, default="Silver_inflow")
     silver_inflow = models.IntegerField(blank=True, null=True)
+
+    _reverse = "silver_inflow-detail"
+    _clean_name = "silver_inflow"
 
     class Meta:
         """
@@ -1413,65 +1225,41 @@ class Silver_inflow(SeshatCommon):
         verbose_name = "Silver_inflow"
         verbose_name_plural = "Silver_inflows"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("silver_inflow-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.StateFinances
+        variable = ""
+        notes = "Needs supervision on the units and scale."
+        description = "Silver inflow in Millions of silver taels??"
+        description_source = "Silver inflow in Millions of silver taels??"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "silver_inflow": {
+                "min": None,
+                "max": None,
+                "scale": 1000000,
+                "var_exp_source": None,
+                "var_exp": "Silver inflow in Millions of silver taels??",
+                "units": "silver taels??",
+                "choices": None,
+            }
+        }
 
 
-class Silver_stock(SeshatCommon):
+class Silver_stock(SeshatCommon, CrisisDBMixin):
     """
     Model representing a silver stock.
     """
 
     name = models.CharField(max_length=100, default="Silver_stock")
     silver_stock = models.IntegerField(blank=True, null=True)
+
+    _reverse = "silver_stock-detail"
+    _clean_name = "silver_stock"
 
     class Meta:
         """
@@ -1481,65 +1269,41 @@ class Silver_stock(SeshatCommon):
         verbose_name = "Silver_stock"
         verbose_name_plural = "Silver_stocks"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("silver_stock-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.StateFinances
+        variable = ""
+        notes = "Needs supervision on the units and scale."
+        description = "Silver stock in Millions of silver taels??"
+        description_source = "Silver stock in Millions of silver taels??"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "silver_stock": {
+                "min": None,
+                "max": None,
+                "scale": 1000000,
+                "var_exp_source": None,
+                "var_exp": "Silver stock in Millions of silver taels??",
+                "units": "silver taels??",
+                "choices": None,
+            }
+        }
 
 
-class Total_population(SeshatCommon):
+class Total_population(SeshatCommon, CrisisDBMixin):
     """
     Model representing a total population.
     """
 
     name = models.CharField(max_length=100, default="Total_population")
     total_population = models.IntegerField(blank=True, null=True)
+
+    _reverse = "total_population-detail"
+    _clean_name = "total_population"
 
     class Meta:
         """
@@ -1549,59 +1313,32 @@ class Total_population(SeshatCommon):
         verbose_name = "Total_population"
         verbose_name_plural = "Total_populations"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("total_population-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.crisisdb.SocialScale
+        variable = ""
+        notes = "Note that the population values are scaled."
+        description = "Total population or simply population, of a given area is the total number of people in that area at a given time."  # noqa: E501 pylint: disable=C0301
+        description_source = "Total population or simply population, of a given area is the total number of people in that area at a given time."  # noqa: E501 pylint: disable=C0301
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "total_population": {
+                "min": 0,
+                "max": None,
+                "scale": 1000,
+                "var_exp_source": None,
+                "var_exp": "The total population of a country (or a polity).",
+                "units": "People",
+                "choices": None,
+            }
+        }
 
 
-class Gdp_per_capita(SeshatCommon):
+class Gdp_per_capita(SeshatCommon, CrisisDBMixin):
     """
     Model representing a GDP value per capita.
     """
@@ -1611,6 +1348,9 @@ class Gdp_per_capita(SeshatCommon):
         max_digits=25, decimal_places=10, blank=True, null=True
     )
 
+    _reverse = "gdp_per_capita-detail"
+    _clean_name = "gdp_per_capita"
+
     class Meta:
         """
         :noindex:
@@ -1619,65 +1359,40 @@ class Gdp_per_capita(SeshatCommon):
         verbose_name = "Gdp_per_capita"
         verbose_name_plural = "Gdp_per_capitas"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("gdp_per_capita-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.economy
+        subsection = SUBSECTIONS.crisisdb.Productivity
+        variable = ""
+        notes = "The exact year based on which the value of Dollar is taken into account is not clear."  # noqa: E501 pylint: disable=C0301
+        description = "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population."  # noqa: E501 pylint: disable=C0301
+        description_source = "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population."  # noqa: E501 pylint: disable=C0301
+        inner_variables = {
+            "gdp_per_capita": {
+                "min": None,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": "https://www.thebalance.com/gdp-per-capita-formula-u-s-compared-to-highest-and-lowest-3305848",  # noqa: E501 pylint: disable=C0301
+                "var_exp": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.",  # noqa: E501 pylint: disable=C0301
+                "units": "Dollars (in 2009?)",
+                "choices": None,
+            }
+        }
 
 
-class Drought_event(SeshatCommon):
+class Drought_event(SeshatCommon, CrisisDBMixin):
     """
     Model representing a drought event.
     """
 
     name = models.CharField(max_length=100, default="Drought_event")
     drought_event = models.IntegerField(blank=True, null=True)
+
+    _reverse = "drought_event-detail"
+    _clean_name = "drought_event"
 
     class Meta:
         """
@@ -1687,65 +1402,41 @@ class Drought_event(SeshatCommon):
         verbose_name = "Drought_event"
         verbose_name_plural = "Drought_events"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("drought_event-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable drought_event are missing!"
+        description = "number of geographic sites indicating drought"
+        description_source = "number of geographic sites indicating drought"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "drought_event": {
+                "min": 0,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "number of geographic sites indicating drought",
+                "units": "Numbers",
+                "choices": None,
+            }
+        }
 
 
-class Locust_event(SeshatCommon):
+class Locust_event(SeshatCommon, CrisisDBMixin):
     """
     Model representing a locust event.
     """
 
     name = models.CharField(max_length=100, default="Locust_event")
     locust_event = models.IntegerField(blank=True, null=True)
+
+    _reverse = "locust_event-detail"
+    _clean_name = "locust_event"
 
     class Meta:
         """
@@ -1755,65 +1446,41 @@ class Locust_event(SeshatCommon):
         verbose_name = "Locust_event"
         verbose_name_plural = "Locust_events"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("locust_event-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable locust_event are missing!"
+        description = "number of geographic sites indicating locusts"
+        description_source = "number of geographic sites indicating locusts"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "locust_event": {
+                "min": 0,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "number of geographic sites indicating locusts",
+                "units": "Numbers",
+                "choices": None,
+            }
+        }
 
 
-class Socioeconomic_turmoil_event(SeshatCommon):
+class Socioeconomic_turmoil_event(SeshatCommon, CrisisDBMixin):
     """
     Model representing a socioeconomic turmoil event.
     """
 
     name = models.CharField(max_length=100, default="Socioeconomic_turmoil_event")
     socioeconomic_turmoil_event = models.IntegerField(blank=True, null=True)
+
+    _reverse = "socioeconomic_turmoil_event-detail"
+    _clean_name = "socioeconomic_turmoil_event"
 
     class Meta:
         """
@@ -1823,65 +1490,43 @@ class Socioeconomic_turmoil_event(SeshatCommon):
         verbose_name = "Socioeconomic_turmoil_event"
         verbose_name_plural = "Socioeconomic_turmoil_events"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("socioeconomic_turmoil_event-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable socioeconomic_turmoil_event are missing!"
+        description = "number of geographic sites indicating socioeconomic turmoil"
+        description_source = (
+            "number of geographic sites indicating socioeconomic turmoil"
+        )
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "socioeconomic_turmoil_event": {
+                "min": 0,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "number of geographic sites indicating socioeconomic turmoil",
+                "units": "Numbers",
+                "choices": None,
+            }
+        }
 
 
-class Crop_failure_event(SeshatCommon):
+class Crop_failure_event(SeshatCommon, CrisisDBMixin):
     """
     Model representing a crop failure event.
     """
 
     name = models.CharField(max_length=100, default="Crop_failure_event")
     crop_failure_event = models.IntegerField(blank=True, null=True)
+
+    _reverse = "crop_failure_event-detail"
+    _clean_name = "crop_failure_event"
 
     class Meta:
         """
@@ -1891,65 +1536,41 @@ class Crop_failure_event(SeshatCommon):
         verbose_name = "Crop_failure_event"
         verbose_name_plural = "Crop_failure_events"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("crop_failure_event-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable crop_failure_event are missing!"
+        description = "number of geographic sites indicating crop failure"
+        description_source = "number of geographic sites indicating crop failure"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "crop_failure_event": {
+                "min": 0,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "number of geographic sites indicating crop failure",
+                "units": "Numbers",
+                "choices": None,
+            }
+        }
 
 
-class Famine_event(SeshatCommon):
+class Famine_event(SeshatCommon, CrisisDBMixin):
     """
     Model representing a famine event.
     """
 
     name = models.CharField(max_length=100, default="Famine_event")
     famine_event = models.IntegerField(blank=True, null=True)
+
+    _reverse = "famine_event-detail"
+    _clean_name = "famine_event"
 
     class Meta:
         """
@@ -1959,59 +1580,32 @@ class Famine_event(SeshatCommon):
         verbose_name = "Famine_event"
         verbose_name_plural = "Famine_events"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("famine_event-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable famine_event are missing!"
+        description = "number of geographic sites indicating famine"
+        description_source = "number of geographic sites indicating famine"
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "famine_event": {
+                "min": 0,
+                "max": None,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "number of geographic sites indicating famine",
+                "units": "Numbers",
+                "choices": None,
+            }
+        }
 
 
-class Disease_outbreak(SeshatCommon):
+class Disease_outbreak(SeshatCommon, CrisisDBMixin):
     """
     Model representing a disease outbreak.
     """
@@ -2036,6 +1630,9 @@ class Disease_outbreak(SeshatCommon):
         max_length=500, choices=DURATION_DISEASE_OUTBREAK_CHOICES
     )
 
+    _reverse = "disease_outbreak-detail"
+    _clean_name = "disease_outbreak"
+
     class Meta:
         """
         :noindex:
@@ -2044,53 +1641,71 @@ class Disease_outbreak(SeshatCommon):
         verbose_name = "Disease_outbreak"
         verbose_name_plural = "Disease_outbreaks"
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("disease_outbreak-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        section = SECTIONS.wb
+        subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
+        variable = ""
+        notes = "Notes for the Variable disease_outbreak are missing!"
+        description = "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season."  # noqa: E501 pylint: disable=C0301
+        description_source = "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season."  # noqa: E501 pylint: disable=C0301
+        null_meaning = "The value is not available."
+        inner_variables = {
+            "longitude": {
+                "min": -180,
+                "max": 180,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "The longitude (in degrees) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
+                "units": "Degrees",
+                "choices": None,
+            },
+            "latitude": {
+                "min": -180,
+                "max": 180,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "The latitude (in degrees) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
+                "units": "Degrees",
+                "choices": None,
+            },
+            "elevation": {
+                "min": 0,
+                "max": 5000,
+                "scale": 1,
+                "var_exp_source": None,
+                "var_exp": "Elevation from mean sea level (in meters) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
+                "units": "Meters",
+                "choices": None,
+            },
+            "sub_category": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The category of the disease.",
+                "units": None,
+                "choices": INNER_SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES,
+            },
+            "magnitude": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "How heavy the disease was.",
+                "units": None,
+                "choices": INNER_MAGNITUDE_DISEASE_OUTBREAK_CHOICES,
+            },
+            "duration": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "How long the disease lasted.",
+                "units": None,
+                "choices": INNER_DURATION_DISEASE_OUTBREAK_CHOICES,
+            },
+        }

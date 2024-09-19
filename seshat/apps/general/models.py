@@ -1,622 +1,74 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from datetime import date
-
 from ..accounts.models import Seshat_Expert
 from ..core.models import SeshatCommon, Polity, Capital
-
-
-# Beginning of tuple choices for general Models
-POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (
-    ("loose", "loose"),
-    ("confederated state", "confederated state"),
-    ("unitary state", "unitary state"),
-    ("nominal", "nominal"),
-    ("quasi-polity", "quasi-polity"),
-    ("none", "none"),
-    ("unknown", "unknown"),
-    ("uncoded", "uncoded"),
+from ..global_constants import (
+    POLITY_LANGUAGE_CHOICES,
+    POLITY_LANGUAGE_GENUS_CHOICES,
+    POLITY_LINGUISTIC_FAMILY_CHOICES,
+    SECTIONS,
+    SUBSECTIONS,
+    STANDARD_SETTINGS
+)
+from ..global_utils import (
+    convert_to_year_span,
+    get_model_instance_name,
 )
 
-POLITY_CONSECUTIVE_ENTITY_CHOICES = (
-    ("continuity", "continuity"),
-    ("elite migration", "elite migration"),
-    ("cultural assimilation", "cultural assimilation"),
-    ("continuation", "continuation"),
-    ("indigenous revolt", "indigenous revolt"),
-    ("replacement", "replacement"),
-    ("population migration", "population migration"),
-    ("hostile", "hostile"),
-    ("disruption/continuity", "disruption/continuity"),
-    ("continuity/discontinuity", "continuity/discontinuity"),
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("suspected unknown", "suspected unknown"),
-    ("vassalage", "vassalage"),
-    ("not applicable", "not applicable"),
-    ("unknown", "unknown"),
-    ("economic displacement", "economic displacement"),
-    ("secession", "secession"),
-)
-
-POLITY_SUPRAPOLITY_RELATIONS_CHOICES = (
-    ("vassalage", "vassalage to"),
-    ("alliance", "alliance with"),
-    ("nominal allegiance", "nominal allegiance to"),
-    ("personal union", "personal union with"),
-    ("unknown", "unknown"),
-    ("uncoded", "uncoded"),
-    ("none", "none"),
-)
-
-POLITY_LANGUAGE_CHOICES = (
-    ("Polish", "Polish"),
-    ("Pashto", "Pashto"),
-    ("Persian", "Persian"),
-    ("Greek", "Greek"),
-    ("Bactrian", "Bactrian"),
-    ("Sogdian", "Sogdian"),
-    ("Pahlavi", "Pahlavi"),
-    ("Brahmi", "Brahmi"),
-    ("Kharoshthi", "Kharoshthi"),
-    ("Tocharian", "Tocharian"),
-    ("Chinese", "Chinese"),
-    ("archaic Chinese", "archaic Chinese"),
-    ("Xiangxi", "Xiangxi"),
-    ("Qiandong", "Qiandong"),
-    ("Chuanqiandian", "Chuanqiandian"),
-    ("Hmong-Mien", "Hmong-Mien"),
-    ("Hmongic", "Hmongic"),
-    ("Middle Chinese", "Middle Chinese"),
-    ("Jurchen", "Jurchen"),
-    ("Khitan", "Khitan"),
-    ("Xianbei", "Xianbei"),
-    ("Manchu language", "Manchu language"),
-    ("Mongolian language", "Mongolian language"),
-    ("Atanque", "Atanque"),
-    ("Shuar", "Shuar"),
-    ("Arabic", "Arabic"),
-    ("suspected unknown", "suspected unknown"),
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("Demotic", "Demotic"),
-    ("Ancient Egyptian", "Ancient Egyptian"),
-    ("Late Egyptian", "Late Egyptian"),
-    ("demotic Egyptian", "demotic Egyptian"),
-    ("Castilian Spanish", "Castilian Spanish"),
-    ("Chuukese", "Chuukese"),
-    ("French", "French"),
-    ("Langues dOil", "Langues dOil"),
-    ("Occitan", "Occitan"),
-    ("Latin", "Latin"),
-    ("Old Frankish", "Old Frankish"),
-    ("Germanic", "Germanic"),
-    ("Gallic", "Gallic"),
-    ("Gaulish", "Gaulish"),
-    ("English", "English"),
-    ("Akan", "Akan"),
-    ("Twi", "Twi"),
-    ("Doric Greek", "Doric Greek"),
-    ("Minoan", "Minoan"),
-    ("Early Greek", "Early Greek"),
-    ("Eteocretan", "Eteocretan"),
-    ("Old Hawaiian", "Old Hawaiian"),
-    ("Hawaiian", "Hawaiian"),
-    ("Iban", "Iban"),
-    ("Sanskrit", "Sanskrit"),
-    ("Old Javanese", "Old Javanese"),
-    ("Middle Javanese", "Middle Javanese"),
-    ("Javanese", "Javanese"),
-    ("Canaanite", "Canaanite"),
-    ("Aramaic", "Aramaic"),
-    ("Hebrew", "Hebrew"),
-    ("Kannada", "Kannada"),
-    ("Urdu", "Urdu"),
-    ("A’chik", "A’chik"),
-    ("Prakrit", "Prakrit"),
-    ("Telugu", "Telugu"),
-    ("Tamil", "Tamil"),
-    ("Akkadian", "Akkadian"),
-    ("Sumerian", "Sumerian"),
-    ("Amorite", "Amorite"),
-    ("Old Babylonian", "Old Babylonian"),
-    ("Mesopotamian Religions", "Mesopotamian Religions"),
-    ("Old Persian", "Old Persian"),
-    ("Elamite", "Elamite"),
-    ("Egyptian", "Egyptian"),
-    ("Old Elamite", "Old Elamite"),
-    ("Mongolian", "Mongolian"),
-    ("native Iranian languages", "native Iranian languages"),
-    ("Turkic", "Turkic"),
-    ("Turkish", "Turkish"),
-    ("Babylonian", "Babylonian"),
-    ("Hurrian", "Hurrian"),
-    ("Proto-Elamite", "Proto-Elamite"),
-    ("Old Norse", "Old Norse"),
-    ("Italian", "Italian"),
-    ("Middle Japanese", "Middle Japanese"),
-    ("Old Japanese", "Old Japanese"),
-    ("Late Old Japanese", "Late Old Japanese"),
-    ("Japanese", "Japanese"),
-    ("Early Modern Japanese", "Early Modern Japanese"),
-    ("Old Turkic", "Old Turkic"),
-    ("Iranian", "Iranian"),
-    ("Old Khmer", "Old Khmer"),
-    ("Mon", "Mon"),
-    ("Tai", "Tai"),
-    ("Khmer", "Khmer"),
-    ("Pali", "Pali"),
-    ("Phoenician", "Phoenician"),
-    ("Berber", "Berber"),
-    ("Spanish", "Spanish"),
-    ("Portuguese", "Portuguese"),
-    ("Bambara", "Bambara"),
-    ("Mande", "Mande"),
-    ("Songhay", "Songhay"),
-    ("Russian", "Russian"),
-    ("Georgian", "Georgian"),
-    ("Armenian", "Armenian"),
-    ("Kereid", "Kereid"),
-    ("Tatar", "Tatar"),
-    ("Naimans", "Naimans"),
-    ("Khalkha", "Khalkha"),
-    ("Rouran", "Rouran"),
-    ("Xiongnu", "Xiongnu"),
-    ("Oirat", "Oirat"),
-    ("Zapotec", "Zapotec"),
-    ("Icelandic", "Icelandic"),
-    ("Aymara", "Aymara"),
-    ("Puquina", "Puquina"),
-    ("Quechua", "Quechua"),
-    ("Orokaiva", "Orokaiva"),
-    ("unknown", "unknown"),
-    ("Sindhi", "Sindhi"),
-    ("Punjabi", "Punjabi"),
-    ("Sakha (Yakut)", "Sakha (Yakut)"),
-    ("Merotic", "Merotic"),
-    ("Coptic", "Coptic"),
-    ("Thai", "Thai"),
-    ("Proto-Indo-European language", "Proto-Indo-European language"),
-    ("Nesite", "Nesite"),
-    ("Luwian", "Luwian"),
-    ("Hattic", "Hattic"),
-    ("Hittite", "Hittite"),
-    ("Old Assyrian dialect of Akkadian", "Old Assyrian dialect of Akkadian"),
-    ("Indo-European language", "Indo-European language"),
-    ("Lydian", "Lydian"),
-    ("Ottoman Turkish", "Ottoman Turkish"),
-    ("Phrygian", "Phrygian"),
-    ("Miami Illinois", "Miami Illinois"),
-    ("Cayuga", "Cayuga"),
-    ("Mohawk", "Mohawk"),
-    ("Oneida", "Oneida"),
-    ("Onondaga", "Onondaga"),
-    ("Seneca", "Seneca"),
-    ("Tuscarora", "Tuscarora"),
-    ("Middle Mongolian", "Middle Mongolian"),
-    ("Ancient Iranian", "Ancient Iranian"),
-    ("Chagatai Turkish", "Chagatai Turkish"),
-    ("Sabaic", "Sabaic"),
-    ("Mainic", "Mainic"),
-    ("Qatabanic", "Qatabanic"),
-    ("Hadramawtic", "Hadramawtic"),
-    ("Old Arabic", "Old Arabic"),
-    ("Susu", "Susu"),
-    ("Koranko", "Koranko"),
-    ("Limba", "Limba"),
-    ("Temne", "Temne"),
-    ("Bullom", "Bullom"),
-    ("Loko", "Loko"),
-    ("Manding", "Manding"),
-    ("Krio", "Krio"),
-    ("Pulaar", "Pulaar"),
-    ("Kissi", "Kissi"),
-    ("Krim", "Krim"),
-    ("Vai", "Vai"),
-    ("Mossi", "Mossi"),
-    ("Shona", "Shona"),
-    ("Sinhala", "Sinhala"),
-    ("Dutch", "Dutch"),
-    ("Sinhalese", "Sinhalese"),
-    ("Oromo", "Oromo"),
-    ("Harari", "Harari"),
-    ("Argobba", "Argobba"),
-    ("Maay", "Maay"),
-    ("Somali", "Somali"),
-    ("Harla", "Harla"),
-    ("Hadiyya", "Hadiyya"),
-    ("Tigrinya", "Tigrinya"),
-    ("Funj", "Funj"),
-    ("Kafa", "Kafa"),
-    ("Yemsa", "Yemsa"),
-    ("Qafar", "Qafar"),
-    ("Proto-Yoruba", "Proto-Yoruba"),
-    ("Yoruba", "Yoruba"),
-    ("Bini", "Bini"),
-    ("Jukun", "Jukun"),
-    ("Ajagbe", "Ajagbe"),
-    ("Proto-Yoruboid", "Proto-Yoruboid"),
-    ("Sokoto", "Sokoto"),
-    ("Hausa", "Hausa"),
-    ("Idoma", "Idoma"),
-    ("Igbo", "Igbo"),
-    ("Nri", "Nri"),
-    ("Kanuri", "Kanuri"),
-    ("Kanembu", "Kanembu"),
-    ("Fongbe", "Fongbe"),
-    ("Wolof", "Wolof"),
-    ("Sereer", "Sereer"),
-    ("Fula", "Fula"),
-    ("Luganda", "Luganda"),
-    ("Kinyambo", "Kinyambo"),
-    ("Kinyarwanda", "Kinyarwanda"),
-    ("Runyankore", "Runyankore"),
-    ("Kirundi", "Kirundi"),
-    ("Fipa", "Fipa"),
-    ("Haya", "Haya"),
-    ("Old Tamil", "Old Tamil"),
-    ("Efik-Ibibio", "Efik-Ibibio"),
-    ("Hungarian", "Hungarian"),
-    ("Native languages", "Native languages"),
-    ("German", "German"),
-    ("Czech", "Czech"),
-    ("Lombardic", "Lombardic"),
-    ("Pukina / Puquina", "Pukina / Puquina"),
-    ("Old English", "Old English"),
-    ("Middle-Modern Persian", "Middle-Modern Persian"),
-    ("Anglo-Norman", "Anglo-Norman"),
-    ("Pictish", "Pictish"),
-)
-
-POLITY_LINGUISTIC_FAMILY_CHOICES = (
-    ("Indo-European", "Indo-European"),
-    ("Sino-Tibetan", "Sino-Tibetan"),
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("Tungusic", "Tungusic"),
-    ("Altaic", "Altaic"),
-    ("Mongolic", "Mongolic"),
-    ("Chibcha", "Chibcha"),
-    ("Chicham", "Chicham"),
-    ("Afro-Asiatic", "Afro-Asiatic"),
-    ("Oceanic-Austronesian", "Oceanic-Austronesian"),
-    ("Celtic", "Celtic"),
-    ("Niger-Congo", "Niger-Congo"),
-    ("Kwa", "Kwa"),
-    ("Hamito-Semitic", "Hamito-Semitic"),
-    ("Austronesian", "Austronesian"),
-    ("Malayo-Polynesian", "Malayo-Polynesian"),
-    ("Semitic", "Semitic"),
-    ("Indo-Iranian", "Indo-Iranian"),
-    ("Dravidian", "Dravidian"),
-    ("isolate language", "isolate language"),
-    ("West Semetic", "West Semetic"),
-    ("isolate", "isolate"),
-    ("suspected unknown", "suspected unknown"),
-    ("language isolate", "language isolate"),
-    ("none", "none"),
-    ("Germanic", "Germanic"),
-    ("Japonic", "Japonic"),
-    ("Turkic", "Turkic"),
-    ("Austro-Asiatic, Mon-Khmer", "Austro-Asiatic, Mon-Khmer"),
-    ("Austro-Asiatic", "Austro-Asiatic"),
-    ("unknown", "unknown"),
-    ("Mande", "Mande"),
-    ("Songhay", "Songhay"),
-    ("Oghuz", "Oghuz"),
-    ("Kartvelian", "Kartvelian"),
-    ("Manchu-Tungusic", "Manchu-Tungusic"),
-    ("Proto-Mongolic", "Proto-Mongolic"),
-    ("Otomanguean", "Otomanguean"),
-    ("Proto-Otomanguean", "Proto-Otomanguean"),
-    ("Mixe-Zoquean", "Mixe-Zoquean"),
-    ("Aymaran", "Aymaran"),
-    ("Quechuan", "Quechuan"),
-    ("Papuan Languages", "Papuan Languages"),
-    ("Tai-Kadai", "Tai-Kadai"),
-    ("Algonquian", "Algonquian"),
-    ("Iroquois", "Iroquois"),
-    ("Iranian", "Iranian"),
-    ("Creoles and Pidgins", "Creoles and Pidgins"),
-    ("Indo-Aryan", "Indo-Aryan"),
-    ("Yoruboid", "Yoruboid"),
-    ("Edoid", "Edoid"),
-    ("Proto-Bene-Kwa", "Proto-Bene-Kwa"),
-    ("Chadic", "Chadic"),
-    ("Saharan", "Saharan"),
-    ("Southern Dravidian", "Southern Dravidian"),
-    ("Uralic", "Uralic"),
-    ("Romance", "Romance"),
-    ("West Germanic", "West Germanic"),
-)
-
-POLITY_LANGUAGE_GENUS_CHOICES = (
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("Afro-Asiatic", "Afro-Asiatic"),
-    ("Indo-European", "Indo-European"),
-    ("suspected unknown", "suspected unknown"),
-)
-
-POLITY_RELIGION_GENUS_CHOICES = (
-    ("Zoroastrianism", "Zoroastrianism"),
-    ("Graeco-Bactrian Religions", "Graeco-Bactrian Religions"),
-    ("Buddhism", "Buddhism"),
-    ("Christianity", "Christianity"),
-    ("Islam", "Islam"),
-    ("Mongolian Shamanism", "Mongolian Shamanism"),
-    ("Hittite Religions", "Hittite Religions"),
-    ("Ismaili", "Ismaili"),
-    ("Lydian Religions", "Lydian Religions"),
-    ("Chinese State Religion", "Chinese State Religion"),
-    ("Egyptian Religions", "Egyptian Religions"),
-    ("Ancient Iranian Religions", "Ancient Iranian Religions"),
-    ("Hellenistic Religions", "Hellenistic Religions"),
-    ("Hephthalite Religions", "Hephthalite Religions"),
-    ("Manichaeism", "Manichaeism"),
-    ("Ancient East Asian Religion", "Ancient East Asian Religion"),
-    ("Jain Traditions", "Jain Traditions"),
-    ("Xiongnu Religions", "Xiongnu Religions"),
-    ("Roman State Religions", "Roman State Religions"),
-    ("Shinto", "Shinto"),
-    ("Phrygian Religions", "Phrygian Religions"),
-    ("Mesopotamian Religions", "Mesopotamian Religions"),
-    ("Hinduism", "Hinduism"),
-    ("Ancient Javanese Religions", "Ancient Javanese Religions"),
-    ("Confucianism", "Confucianism"),
-)
-
-POLITY_RELIGION_FAMILY_CHOICES = (
-    ("Saivist Traditions", "Saivist Traditions"),
-    ("Assyrian Religions", "Assyrian Religions"),
-    ("Republican Religions", "Republican Religions"),
-    ("Imperial Confucian Traditions", "Imperial Confucian Traditions"),
-    ("Shii", "Shii"),
-    ("Bhagavatist Traditions", "Bhagavatist Traditions"),
-    ("Sunni", "Sunni"),
-    ("Vedist Traditions", "Vedist Traditions"),
-    ("Saivist", "Saivist"),
-    ("Islam", "Islam"),
-    ("Chinese Folk Religion", "Chinese Folk Religion"),
-    ("Semitic", "Semitic"),
-    ("Vaisnava Traditions", "Vaisnava Traditions"),
-    ("Ptolemaic Religion", "Ptolemaic Religion"),
-    ("Vedic Traditions", "Vedic Traditions"),
-    ("Japanese Buddhism", "Japanese Buddhism"),
-    ("Orthodox", "Orthodox"),
-    ("Vaishnava Traditions", "Vaishnava Traditions"),
-    ("Shang Religion", "Shang Religion"),
-    ("Atenism", "Atenism"),
-    ("Mahayana", "Mahayana"),
-    ("suspected unknown", "suspected unknown"),
-    ("Japanese State Shinto", "Japanese State Shinto"),
-    ("Saiva Traditions", "Saiva Traditions"),
-    ("Sufi", "Sufi"),
-    ("Chinese Buddhist Traditions", "Chinese Buddhist Traditions"),
-    ("Arian", "Arian"),
-    ("Shia", "Shia"),
-    ("Catholic", "Catholic"),
-    ("Western Zhou Religion", "Western Zhou Religion"),
-    ("Imperial Cult", "Imperial Cult"),
-    ("Theravada", "Theravada"),
-    ("Seleucid Religion", "Seleucid Religion"),
-    ("Saivite Hinduism", "Saivite Hinduism"),
-    ("Theravada Buddhism", "Theravada Buddhism"),
-    ("Theravāda Buddhism", "Theravāda Buddhism"),
-    ("Protestant Christianity", "Protestant Christianity"),
-    ("Saivist Hinduism", "Saivist Hinduism"),
-    ("Sunni Islam", "Sunni Islam"),
-    ("Shia Islam", "Shia Islam"),
-    ("Vodun", "Vodun"),
-    ("Dahomey royal ancestor cult", "Dahomey royal ancestor cult"),
-    ("Shaivist", "Shaivist"),
-    ("Shaivism", "Shaivism"),
-    ("Sufi Islam", "Sufi Islam"),
-    ("Shaivite Hinduism", "Shaivite Hinduism"),
-    ("Vaishnavist Hinduism", "Vaishnavist Hinduism"),
-    ("Catholicism", "Catholicism"),
-    ("Protestant", "Protestant"),
-    ("Christianity", "Christianity"),
-    ("Vedic", "Vedic"),
-    ("Church of England", "Church of England"),
-    ("Protestantism", "Protestantism"),
-    ("Zoroastrianism", "Zoroastrianism"),
-    ("Central Asian Shamanism", "Central Asian Shamanism"),
-    ("Hawaiian Religion", "Hawaiian Religion"),
-    ("Paganism", "Paganism"),
-)
-
-POLITY_RELIGION_CHOICES = (
-    ("Islam", "Islam"),
-    ("Shadhil", "Shadhil"),
-    ("Karrami", "Karrami"),
-    ("Hanafi", "Hanafi"),
-    ("Mevlevi", "Mevlevi"),
-    ("Ismaili", "Ismaili"),
-    ("Shafii", "Shafii"),
-    ("Shia", "Shia"),
-    ("Twelver", "Twelver"),
-    ("Byzantine Orthodox", "Byzantine Orthodox"),
-    ("Bektasi", "Bektasi"),
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("Sunni", "Sunni"),
-    ("Roman Catholic", "Roman Catholic"),
-)
-
-POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
-    ("continuity", "continuity"),
-    ("elite migration", "elite migration"),
-    ("cultural assimilation", "cultural assimilation"),
-    ("continuation", "continuation"),
-    ("indigenous revolt", "indigenous revolt"),
-    ("replacement", "replacement"),
-    ("population migration", "population migration"),
-    ("hostile", "hostile"),
-    ("disruption/continuity", "disruption/continuity"),
-    ("continuity/discontinuity", "continuity/discontinuity"),
-    ("NO_VALUE_ON_WIKI", "NO_VALUE_ON_WIKI"),
-    ("suspected unknown", "suspected unknown"),
-    ("vassalage", "vassalage"),
-    ("not applicable", "not applicable"),
-    ("unknown", "unknown"),
-    ("economic displacement", "economic displacement"),
-    ("secession", "secession"),
+from .mixins import GeneralMixIn
+from .constants import (
+    POLITY_ALTERNATE_RELIGION_CHOICES,
+    POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+    POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+    POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
+    POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+    POLITY_RELIGION_CHOICES,
+    POLITY_RELIGION_FAMILY_CHOICES,
+    POLITY_RELIGION_GENUS_CHOICES,
+    POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
+    INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
+    INNER_POLITY_LANGUAGE_GENUS_CHOICES,
+    INNER_POLITY_LANGUAGE_CHOICES,
+    INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
+    INNER_POLITY_RELIGION_CHOICES,
+    INNER_POLITY_RELIGION_FAMILY_CHOICES,
+    INNER_POLITY_RELIGION_GENUS_CHOICES,
+    INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+    INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
+    INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+    INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+    INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
 )
 
 
-# TUPLE CHOICES THAT ARE THE SAME
-POLITY_ALTERNATE_RELIGION_GENUS_CHOICES = POLITY_RELIGION_GENUS_CHOICES
-POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES = POLITY_RELIGION_FAMILY_CHOICES
-POLITY_ALTERNATE_RELIGION_CHOICES = POLITY_RELIGION_CHOICES
+BASECLASS = (
+    "fw-light text-secondary"  # TODO: Move to global_constants.py/ATTRS_HTML
+)
 
 
-# Beginning of Function Definitions for General (Vars) Models
-
-
-def call_my_name(self):
-    """
-    This function is used to return the name of the model instance (in lieu of
-    the __str__ representation of the model instance).
-
-    Note:
-        The model instance must have the following attributes:
-        - name
-        - polity (and polity.name)
-        - year_from
-        - year_to
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The name of the model instance.
-    """
-    if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
-        return (
-            self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
-        )
-    else:
-        return (
-            self.name
-            + " [for "
-            + self.polity.name
-            + " from "
-            + str(self.year_from)
-            + " to "
-            + str(self.year_to)
-            + "]"
-        )
-
-
-def return_citations(self):
-    """
-    This function is used to return the citations of the model instance
-    (returning the value used in the display_citations method of the model
-    instance).
-
-    Note:
-        The model instance must have the following attribute:
-        - citations
-
-        The model instance must have the following methods:
-        - zoteroer
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The citations of the model instance, separated by comma.
-    """
-    return ", ".join(
-        [
-            '<a href="' + citation.zoteroer() + '">' + citation.__str__() + " </a>"
-            for citation in self.citations.all()[:2]
-        ]
-    )
-
-
-def clean_times(self):
-    """
-    This function is used to validate the year_from and year_to fields of the
-    model instance (called from each model's clean method).
-
-    Note:
-        The model instance must have the following attributes:
-        - year_from
-        - year_to
-        - polity (and polity.start_year and polity.end_year)
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        None
-
-    Raises:
-        ValidationError: If the year_from is greater than the year_to.
-        ValidationError: If the year_from is out of range.
-        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-        ValidationError: If the year_to is later than the end year of the corresponding polity.
-        ValidationError: If the year_to is out of range.
-    """
-    warning = (
-        '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>'
-    )
-    if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    f"{warning} The start year is bigger than the end year!</span>"
-                ),
-            }
-        )
-    if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    f"{warning} The start year is out of range!</span>"
-                ),
-            }
-        )
-    if self.year_from and (self.year_from < self.polity.start_year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    f"{warning} The start year is earlier than the start year of the corresponding polity!</span>"
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > self.polity.end_year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(
-                    f"{warning} The end year is later than the end year of the corresponding polity!</span>"
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > date.today().year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(f"{warning} The end year is out of range!</span>"),
-            }
-        )
-
-
-# Class Definitions for general Models
-
-
-class Polity_research_assistant(SeshatCommon):
+class Polity_research_assistant(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the research assistants
     of the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_research_assistant")
+    name = models.CharField(
+        max_length=100, default="Polity_research_assistant"
+    )
     polity_ra = models.ForeignKey(
         Seshat_Expert,
         on_delete=models.SET_NULL,
         null=True,
         related_name="seshat_research_assistant",
     )
+
+    _clean_name = "polity_research_assistant"
+    _clean_name_spaced = "Polity Research Assistant"
+    _subsection = None  # TODO
+    _subsubsection = None  # TODO
+    _reverse = "polity_research_assistant-detail"
 
     class Meta:
         """
@@ -627,67 +79,31 @@ class Polity_research_assistant(SeshatCommon):
         verbose_name_plural = "Polity_research_assistants"
         ordering = ["polity_ra", "year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_research_assistant"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Research Assistant"
+        section = SECTIONS.general
+        subsection = "Staff"
+        variable = "Polity Research Assistant"
+        notes = None
+        description = "The RA(s) who worked on a polity."
+        description_source = None
+        inner_variables = {
+            "polity_ra": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The RA of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
         """
@@ -697,27 +113,13 @@ class Polity_research_assistant(SeshatCommon):
         Returns:
             str: The name of the research assistant (or " - " if it does not exist).
         """
-        if self.polity_ra:
-            return self.polity_ra
-        else:
+        if not self.polity_ra:
             return " - "
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_research_assistant-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.polity_ra
 
 
-class Polity_original_name(SeshatCommon):
+class Polity_original_name(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the original names of the
     polities.
@@ -735,67 +137,37 @@ class Polity_original_name(SeshatCommon):
         verbose_name_plural = "Polity_original_names"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Original Name"
+        notes = None
+        description = "The original name of a polity."
+        description_source = None
+        inner_variables = {
+            "original_name": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The details of original_name.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_original_name"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Original Name"
+    _clean_name = "polity_original_name"
+    _clean_name_spaced = "Polity Original Name"
+    _subsection = "Identity and Location"
+    _subsubsection = None
+    _reverse = "polity_original_name-detail"
 
     def show_value(self):
         """
@@ -804,53 +176,13 @@ class Polity_original_name(SeshatCommon):
         Returns:
             str: The original name (or " - " if it does not exist).
         """
-        if self.original_name:
-            return self.original_name
-        else:
+        if not self.original_name:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Identity and Location"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_original_name-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.original_name
 
 
-class Polity_alternative_name(SeshatCommon):
+class Polity_alternative_name(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the alternative names of
     the polities.
@@ -868,67 +200,37 @@ class Polity_alternative_name(SeshatCommon):
         verbose_name_plural = "Polity_alternative_names"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Alternative Name"
+        notes = None
+        description = "The alternative name of a polity."
+        description_source = None
+        inner_variables = {
+            "alternative_name": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The details of alternative_name.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_alternative_name"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Alternative Name"
+    _clean_name = "polity_alternative_name"
+    _clean_name_spaced = "Polity Alternative Name"
+    _subsection = "Identity and Location"
+    _subsubsection = None
+    _reverse = "polity_alternative_name-detail"
 
     def show_value(self):
         """
@@ -937,53 +239,13 @@ class Polity_alternative_name(SeshatCommon):
         Returns:
             str: The alternative name (or " - " if it does not exist).
         """
-        if self.alternative_name:
-            return self.alternative_name
-        else:
+        if not self.alternative_name:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Identity and Location"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_alternative_name-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.alternative_name
 
 
-class Polity_duration(SeshatCommon):
+class Polity_duration(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the duration of the
     polities.
@@ -1002,67 +264,47 @@ class Polity_duration(SeshatCommon):
         verbose_name_plural = "Polity_durations"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = "Temporal Bounds"
+        variable = "Polity Duration"
+        notes = None
+        description = "The lifetime of a polity."
+        description_source = None
+        inner_variables = {
+            "polity_year_from": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The beginning year for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+            "polity_year_to": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The end year for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_duration"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Duration"
+    _clean_name = "polity_duration"
+    _clean_name_spaced = "Polity Duration"
+    _subsection = "Temporal Bounds"
+    _subsubsection = None
+    _reverse = "polity_duration-detail"
 
     def show_value(self):
         """
@@ -1072,92 +314,15 @@ class Polity_duration(SeshatCommon):
         Returns:
             str: The duration of the polity (or " - " if it does not exist on the instance).
         """
-        if self.polity_year_from == self.polity_year_to:
-            if self.polity_year_from < 0:
-                return f"{abs(self.polity_year_from):,}" + " BCE"
-            else:
-                return f"{abs(self.polity_year_from):,}" + " CE"
-        elif self.polity_year_to is None:
-            if self.polity_year_from < 0:
-                return f"{abs(self.polity_year_from):,}" + " BCE"
-            else:
-                return f"{abs(self.polity_year_from):,}" + " CE"
-        elif self.polity_year_to is None and self.polity_year_from is None:
-            return " - "
-        else:
-            if self.polity_year_from < 0 and self.polity_year_to < 0:
-                return (
-                    "["
-                    + f"{abs(self.polity_year_from):,}"
-                    + " BCE"
-                    + " ➜ "
-                    + f"{abs(self.polity_year_to):,}"
-                    + " BCE"
-                    + "]"
-                )
-            elif self.polity_year_from < 0 and self.polity_year_to >= 0:
-                return (
-                    "["
-                    + f"{abs(self.polity_year_from):,}"
-                    + " BCE"
-                    + " ➜ "
-                    + f"{abs(self.polity_year_to):,}"
-                    + " CE"
-                    + "]"
-                )
-            else:
-                return (
-                    "["
-                    + f"{abs(self.polity_year_from):,}"
-                    + " CE"
-                    + " ➜ "
-                    + f"{abs(self.polity_year_to):,}"
-                    + " CE"
-                    + "]"
-                )
+        year_from = (
+            abs(self.polity_year_from) if self.polity_year_from else None
+        )
+        year_to = abs(self.polity_year_to) if self.polity_year_to else None
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Temporal Bounds"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_duration-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return convert_to_year_span(year_from, year_to)
 
 
-class Polity_peak_years(SeshatCommon):
+class Polity_peak_years(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the peak years of the
     polities.
@@ -1176,67 +341,47 @@ class Polity_peak_years(SeshatCommon):
         verbose_name_plural = "Polity_peak_years"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = "Temporal Bounds"  # noqa: E501   TODO: This one was set to "General" but I changed it to Temporal Bounds because of data found in seshat.apps.general.views.Polity_peak_yearsUpdateView.get_context_data  pylint: disable=C0301
+        variable = "Polity Peak Years"
+        notes = None
+        description = "The peak years of a polity."
+        description_source = None
+        inner_variables = {
+            "peak_year_from": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The beginning of the peak years for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+            "peak_year_to": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The end of the peak years for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_peak_years"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Peak Years"
+    _clean_name = "polity_peak_years"
+    _clean_name_spaced = "Polity Peak Years"
+    _subsection = "Temporal Bounds"
+    _subsubsection = None
+    _reverse = "polity_peak_years-detail"
 
     def show_value(self):
         """
@@ -1244,100 +389,24 @@ class Polity_peak_years(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The peak years of the polity (or " - " if it does not exist on the instance).
+            str: The peak years of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.peak_year_from is self.peak_year_to:
-            if self.peak_year_from < 0:
-                return f"{abs(self.peak_year_from):,}" + " BCE"
-            else:
-                return f"{abs(self.peak_year_from):,}" + " CE"
-        elif self.peak_year_to is None:
-            if self.peak_year_from < 0:
-                return f"{abs(self.peak_year_from):,}" + " BCE"
-            else:
-                return f"{abs(self.peak_year_from):,}" + " CE"
-        elif self.peak_year_to is None and self.peak_year_from is None:
-            return " - "
-        else:
-            if self.peak_year_from < 0 and self.peak_year_to < 0:
-                return (
-                    "["
-                    + f"{abs(self.peak_year_from):,}"
-                    + " BCE"
-                    + " ➜ "
-                    + f"{abs(self.peak_year_to):,}"
-                    + " BCE"
-                    + "]"
-                )
-            elif self.peak_year_from < 0 and self.peak_year_to >= 0:
-                return (
-                    "["
-                    + f"{abs(self.peak_year_from):,}"
-                    + " BCE"
-                    + " ➜ "
-                    + f"{abs(self.peak_year_to):,}"
-                    + " CE"
-                    + "]"
-                )
-            else:
-                return (
-                    "["
-                    + f"{abs(self.peak_year_from):,}"
-                    + " CE"
-                    + " ➜ "
-                    + f"{abs(self.peak_year_to):,}"
-                    + " CE"
-                    + "]"
-                )
+        year_from = abs(self.peak_year_from) if self.peak_year_from else None
+        year_to = abs(self.peak_year_to) if self.peak_year_to else None
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Temporal Bounds"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_peak_years-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return convert_to_year_span(year_from, year_to)
 
 
-class Polity_degree_of_centralization(SeshatCommon):
+class Polity_degree_of_centralization(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the degree of
     centralization of the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_degree_of_centralization")
+    name = models.CharField(
+        max_length=100, default="Polity_degree_of_centralization"
+    )
     degree_of_centralization = models.CharField(
         max_length=500, choices=POLITY_DEGREE_OF_CENTRALIZATION_CHOICES
     )
@@ -1351,67 +420,37 @@ class Polity_degree_of_centralization(SeshatCommon):
         verbose_name_plural = "Polity_degree_of_centralizations"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Degree of Centralization"
+        notes = None
+        description = "The degree of centralization of a polity."
+        description_source = None
+        inner_variables = {
+            "degree_of_centralization": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The details of degree_of_centralization.",
+                "units": None,
+                "choices": INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            }
+        }
+        null_value = "The value is not available."
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_degree_of_centralization"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Degree of Centralization"
+    _clean_name = "polity_degree_of_centralization"
+    _clean_name_spaced = "Polity Degree of Centralization"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_degree_of_centralization-detail"
 
     def show_value(self):
         """
@@ -1419,69 +458,34 @@ class Polity_degree_of_centralization(SeshatCommon):
         instance, otherwise return a dash).
 
         Returns:
-            str: The degree of centralisation of the polity (or " - " if it does not exist on the instance).
+            str: The degree of centralisation of the polity (or " - " if it does not exist
+                on the instance).
         """
-        if self.degree_of_centralization:
-            return self.get_degree_of_centralization_display()
-        else:
+        if not self.degree_of_centralization:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_degree_of_centralization-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_degree_of_centralization_display()
 
 
-# Be aware that this variable name deviates from the name. Notice supra_polity
-
-
-#    a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="References: {{ value.display_citations }}"
-class Polity_suprapolity_relations(SeshatCommon):
+class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the supra-polity
     relations of the polities.
+
+    Note:
+        Be aware that this variable name deviates from the name. Notice
+        supra_polity.
     """
 
-    name = models.CharField(max_length=100, default="Polity_suprapolity_relations")
+    name = models.CharField(
+        max_length=100, default="Polity_suprapolity_relations"
+    )
     supra_polity_relations = models.CharField(
         max_length=500, choices=POLITY_SUPRAPOLITY_RELATIONS_CHOICES
     )
-    other_polity = models.ForeignKey(Polity, models.SET_NULL, blank=True, null=True)
+    other_polity = models.ForeignKey(
+        Polity, models.SET_NULL, blank=True, null=True
+    )
 
     class Meta:
         """
@@ -1492,67 +496,42 @@ class Polity_suprapolity_relations(SeshatCommon):
         verbose_name_plural = "Polity_suprapolity_relations"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = "Political and Cultural Relations"  # noqa: E501   TODO: This was set to "General" but I changed it to "Political and Cultural Relations" because of data found in seshat.apps.general.views.Polity_suprapolity_relationsUpdateView.get_context_data  pylint: disable=C0301
+        variable = "Polity Suprapolity Relations"
+        notes = None
+        description = """The supra polity relations of a polity. <u>Possible Codes</u>: <br> alliance / nominal allegiance / personal union / vassalage / unknown / none <br>
+                <br>
+                <b>alliance</b> = belongs to a long-term military-political alliance of independent polities ('long-term' refers to more or less permanent relationship between polities extending over multiple years)<br>
+                <b>nominal allegiance</b> = same as 'nominal' under the variable "Degree of centralization" but now reflecting the position of the focal polity within the overarching political authority.<br>
+                <b>personal union</b> = the focal polity is united with another, or others, as a result of a dynastic marriage.<br>
+                <b>vassalage</b> = corresponding to 'loose' category in the Degree of centralization.""",  # noqa: E501 pylint: disable=C0301
+        description_source = None
+        inner_variables = {
+            "supra_polity_relations": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The details of supra polity relations.",
+                "units": None,
+                "choices": INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_suprapolity_relations"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Suprapolity Relations"
+    _clean_name = "polity_suprapolity_relations"
+    _clean_name_spaced = "Polity Suprapolity Relations"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_suprapolity_relations-detail"
 
     def display_value(self):
         if self.supra_polity_relations and self.other_polity and self.polity:
@@ -1560,13 +539,15 @@ class Polity_suprapolity_relations(SeshatCommon):
             other_polity_url = reverse(
                 "polity-detail-main", args=[self.other_polity.id]
             )
-            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a> <span class='badge bg-warning text-dark'><i class='fa-solid fa-left-long'></i>  {self.get_supra_polity_relations_display()}  <i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>"
-        elif self.supra_polity_relations == "none":
+            return f"<a data-bs-toggle='tooltip' data-bs-html='true' title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a> <span class='badge bg-warning text-dark'><i class='fa-solid fa-left-long'></i> {self.get_supra_polity_relations_display()} <i class='fa-solid fa-right-long'></i></span> <a data-bs-toggle='tooltip' data-bs-html='true' title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>"  # noqa: E501 pylint: disable=C0301
+
+        if self.supra_polity_relations == "none":
             return self.get_supra_polity_relations_display()
-        elif self.supra_polity_relations:
+
+        if self.supra_polity_relations:
             return f"{self.get_supra_polity_relations_display()} [---]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value(self):
         """
@@ -1574,60 +555,19 @@ class Polity_suprapolity_relations(SeshatCommon):
         instance, otherwise return a dash).
 
         Returns:
-            str: The supra polity relations of the polity (or " - " if it does not exist on the instance).
+            str: The supra polity relations of the polity (or " - " if it does not exist on
+                the instance).
         """
         if self.supra_polity_relations and self.other_polity:
-            return (
-                self.get_supra_polity_relations_display()
-                + f" [{self.other_polity.new_name}]"
-            )
-        elif self.supra_polity_relations:
+            return f"{self.get_supra_polity_relations_display()} [{self.other_polity.new_name}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.supra_polity_relations:
             return self.get_supra_polity_relations_display()
-        else:
-            return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_suprapolity_relations-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return " - "
 
 
-class Polity_utm_zone(SeshatCommon):
+class Polity_utm_zone(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the UTM zone of the
     polities.
@@ -1645,67 +585,37 @@ class Polity_utm_zone(SeshatCommon):
         verbose_name_plural = "Polity_utm_zones"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Utm Zone"
+        notes = None
+        description = "The UTM Zone of a polity."  # noqa: E501   TODO: This was set to "The capital of a polity." -- I updated it. OK?  pylint: disable=C0301
+        description_source = None
+        inner_variables = {
+            "capital": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The UTM Zone of a polity.",  # noqa: E501   TODO: This was set to "The capital of a polity." -- I updated it. OK?  pylint: disable=C0301
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",  # noqa: E501   TODO: This comes from value provided in seshat.apps.general.views.Polity_utm_zoneCreateView.get_context_data. OK?  pylint: disable=C0301
+            }
+        }
+        null_value = "The value is not available."
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_utm_zone"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Utm Zone"
+    _clean_name = "polity_utm_zone"
+    _clean_name_spaced = "Polity Utm Zone"
+    _subsection = "Identity and Location"
+    _subsubsection = None
+    _reverse = "polity_utm_zone-detail"
 
     def show_value(self):
         """
@@ -1715,53 +625,13 @@ class Polity_utm_zone(SeshatCommon):
         Returns:
             str: The UTM zone of the polity (or " - " if it does not exist on the instance).
         """
-        if self.utm_zone:
-            return self.utm_zone
-        else:
+        if not self.utm_zone:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Identity and Location"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_utm_zone-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.utm_zone
 
 
-class Polity_capital(SeshatCommon):
+class Polity_capital(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the capitals of the
     polities.
@@ -1770,7 +640,10 @@ class Polity_capital(SeshatCommon):
     name = models.CharField(max_length=100, default="Polity_capital")
     capital = models.CharField(max_length=500, blank=True, null=True)
     polity_cap = models.ForeignKey(
-        Capital, on_delete=models.SET_NULL, null=True, related_name="polity_caps"
+        Capital,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="polity_caps",
     )
 
     class Meta:
@@ -1782,67 +655,37 @@ class Polity_capital(SeshatCommon):
         verbose_name_plural = "Polity_capitals"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Capital"
+        notes = ""
+        description = "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."  # noqa: E501 pylint: disable=C0301
+        description_source = None
+        inner_variables = {
+            "capital": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The capital of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have a capital.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_capital"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Capital"
+    _clean_name = "polity_capital"
+    _clean_name_spaced = "Polity Capital"
+    _subsection = "Identity and Location"
+    _subsubsection = None
+    _reverse = "polity_capital-detail"
 
     def show_value(self):
         """
@@ -1853,66 +696,27 @@ class Polity_capital(SeshatCommon):
             str: The capital of the polity (or " - " if it does not exist on the instance).
         """
         if self.polity_cap:
-            return self.polity_cap
-        elif self.capital:
+            return self.polity_cap.name
+
+        if self.capital:
             return self.capital
-        else:
-            return call_my_name(self)
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Identity and Location"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_capital-detail", args=[str(self.id)])
+        return get_model_instance_name(self)
 
     def __str__(self) -> str:
-        if self.polity_cap:
-            return self.polity_cap.name
-        elif self.capital:
-            return self.capital
-        else:
-            return call_my_name(self)
+        return self.show_value()
 
 
-class Polity_language(SeshatCommon):
+class Polity_language(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the languages of the
     polities.
     """
 
     name = models.CharField(max_length=100, default="Polity_language")
-    language = models.CharField(max_length=500, choices=POLITY_LANGUAGE_CHOICES)
+    language = models.CharField(
+        max_length=500, choices=POLITY_LANGUAGE_CHOICES
+    )
 
     class Meta:
         """
@@ -1923,67 +727,37 @@ class Polity_language(SeshatCommon):
         verbose_name_plural = "Polity_languages"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Language"
+        notes = None
+        description = "The language of a polity."
+        description_source = None
+        inner_variables = {
+            "language": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The language of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_LANGUAGE_CHOICES,
+                "null_meaning": "This polity did not have a language.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_language"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Language"
+    _clean_name = "polity_language"
+    _clean_name_spaced = "Polity Language"
+    _subsection = "Language"
+    _subsubsection = None
+    _reverse = "polity_language-detail"
 
     def show_value(self):
         """
@@ -1993,53 +767,13 @@ class Polity_language(SeshatCommon):
         Returns:
             str: The language of the polity (or " - " if it does not exist on the instance).
         """
-        if self.language:
-            return self.get_language_display()
-        else:
+        if not self.language:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Language"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_language-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_language_display()
 
 
-class Polity_linguistic_family(SeshatCommon):
+class Polity_linguistic_family(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the linguistic family
     of the polities.
@@ -2059,67 +793,37 @@ class Polity_linguistic_family(SeshatCommon):
         verbose_name_plural = "Polity_linguistic_families"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Linguistic Family"
+        notes = None
+        description = "The linguistic family of a polity."
+        description_source = None
+        inner_variables = {
+            "linguistic_family": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The linguistic family of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
+                "null_meaning": "This polity did not have a linguistic family.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_linguistic_family"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Linguistic Family"
+    _clean_name = "polity_linguistic_family"
+    _clean_name_spaced = "Polity Linguistic Family"
+    _subsection = "Language"
+    _subsubsection = None
+    _reverse = "polity_linguistic_family-detail"
 
     def show_value(self):
         """
@@ -2127,55 +831,16 @@ class Polity_linguistic_family(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The linguistic family of the polity (or " - " if it does not exist on the instance).
+            str: The linguistic family of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.linguistic_family:
-            return self.get_linguistic_family_display()
-        else:
+        if not self.linguistic_family:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Language"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_linguistic_family-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_linguistic_family_display()
 
 
-class Polity_language_genus(SeshatCommon):
+class Polity_language_genus(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the language genus of the
     polities.
@@ -2195,67 +860,37 @@ class Polity_language_genus(SeshatCommon):
         verbose_name_plural = "Polity_language_genus"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Language Genus"
+        notes = None
+        description = "The language genus of a polity."
+        description_source = None
+        inner_variables = {
+            "language_genus": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The language genus of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_LANGUAGE_GENUS_CHOICES,
+                "null_meaning": "This polity did not have a language Genus.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_language_genus"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Language Genus"
+    _clean_name = "polity_language_genus"
+    _clean_name_spaced = "Polity Language Genus"
+    _subsection = "Language"
+    _subsubsection = None
+    _reverse = "polity_language_genus-detail"
 
     def show_value(self):
         """
@@ -2263,55 +898,16 @@ class Polity_language_genus(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The language genus of the polity (or " - " if it does not exist on the instance).
+            str: The language genus of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.language_genus:
-            return self.get_language_genus_display()
-        else:
+        if not self.language_genus:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Language"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_language_genus-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_language_genus_display()
 
 
-class Polity_religion_genus(SeshatCommon):
+class Polity_religion_genus(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the religion genus of the
     polities.
@@ -2331,67 +927,37 @@ class Polity_religion_genus(SeshatCommon):
         verbose_name_plural = "Polity_religion_genus"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Religion Genus"
+        notes = None
+        description = "The religion genus of a polity."
+        description_source = None
+        inner_variables = {
+            "religion_genus": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The religion genus of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_RELIGION_GENUS_CHOICES,
+                "null_meaning": "This polity did not have a religion genus.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_religion_genus"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Religion Genus"
+    _clean_name = "polity_religion_genus"
+    _clean_name_spaced = "Polity Religion Genus"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_religion_genus-detail"
 
     def show_value(self):
         """
@@ -2399,55 +965,16 @@ class Polity_religion_genus(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The religion genus of the polity (or " - " if it does not exist on the instance).
+            str: The religion genus of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.religion_genus:
-            return self.get_religion_genus_display()
-        else:
+        if not self.religion_genus:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_religion_genus-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_religion_genus_display()
 
 
-class Polity_religion_family(SeshatCommon):
+class Polity_religion_family(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the religion family of the
     """
@@ -2466,67 +993,37 @@ class Polity_religion_family(SeshatCommon):
         verbose_name_plural = "Polity_religion_families"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Religion Family"
+        notes = ""
+        description = "The religion family of a polity."
+        description_source = None
+        inner_variables = {
+            "religion_family": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The religion family of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_RELIGION_FAMILY_CHOICES,
+                "null_meaning": "This polity did not have a religion family.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_religion_family"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Religion Family"
+    _clean_name = "polity_religion_family"
+    _clean_name_spaced = "Polity Religion Family"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_religion_family-detail"
 
     def show_value(self):
         """
@@ -2534,62 +1031,25 @@ class Polity_religion_family(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The religion family of the polity (or " - " if it does not exist on the instance).
+            str: The religion family of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.religion_family:
-            return self.get_religion_family_display()
-        else:
+        if not self.religion_family:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_religion_family-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_religion_family_display()
 
 
-class Polity_religion(SeshatCommon):
+class Polity_religion(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the religion of the
     polities.
     """
 
     name = models.CharField(max_length=100, default="Polity_religion")
-    religion = models.CharField(max_length=500, choices=POLITY_RELIGION_CHOICES)
+    religion = models.CharField(
+        max_length=500, choices=POLITY_RELIGION_CHOICES
+    )
 
     class Meta:
         """
@@ -2600,67 +1060,37 @@ class Polity_religion(SeshatCommon):
         verbose_name_plural = "Polity_religions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Religion"
+        notes = None
+        description = "The religion of a polity."
+        description_source = None
+        inner_variables = {
+            "religion": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The religion of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_RELIGION_CHOICES,
+                "null_meaning": "This polity did not have a religion.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_religion"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Religion"
+    _clean_name = "polity_religion"
+    _clean_name_spaced = "Polity Religion"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_religion-detail"
 
     def show_value(self):
         """
@@ -2670,53 +1100,13 @@ class Polity_religion(SeshatCommon):
         Returns:
             str: The religion of the polity (or " - " if it does not exist on the instance).
         """
-        if self.religion:
-            return self.get_religion_display()
-        else:
+        if not self.religion:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_religion-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_religion_display()
 
 
-class Polity_relationship_to_preceding_entity(SeshatCommon):
+class Polity_relationship_to_preceding_entity(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the relationship of the
     polities to their preceding entities.
@@ -2738,67 +1128,37 @@ class Polity_relationship_to_preceding_entity(SeshatCommon):
         verbose_name_plural = "Polity_relationship_to_preceding_entities"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Relationship to Preceding Entity"
+        notes = None
+        description = "The polity relationship to preceding (quasi)polity."
+        description_source = None
+        inner_variables = {
+            "relationship_to_preceding_entity": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The polity relationship to preceding (quasi)polity",
+                "units": None,
+                "choices": INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+                "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",  # noqa: E501 pylint: disable=C0301
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_relationship_to_preceding_entity"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Relationship to Preceding Entity"
+    _clean_name = "polity_relationship_to_preceding_entity"
+    _clean_name_spaced = "Polity Relationship to Preceding Entity"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_relationship_to_preceding_entity-detail"
 
     def show_value(self):
         """
@@ -2806,57 +1166,16 @@ class Polity_relationship_to_preceding_entity(SeshatCommon):
         on the instance, otherwise return a dash).
 
         Returns:
-            str: The polity's relationship to the preceding entity (or " - " if it does not exist on the instance).
+            str: The polity's relationship to the preceding entity (or " - " if it does not
+                exist on the instance).
         """
-        if self.relationship_to_preceding_entity:
-            return self.get_relationship_to_preceding_entity_display()
-        else:
+        if not self.relationship_to_preceding_entity:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse(
-            "polity_relationship_to_preceding_entity-detail", args=[str(self.id)]
-        )
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_relationship_to_preceding_entity_display()
 
 
-class Polity_preceding_entity(SeshatCommon):
+class Polity_preceding_entity(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the preceding entities of
     the polities.
@@ -2871,7 +1190,9 @@ class Polity_preceding_entity(SeshatCommon):
         null=True,
     )
     preceding_entity = models.CharField(max_length=500, blank=True, null=True)
-    other_polity = models.ForeignKey(Polity, models.SET_NULL, blank=True, null=True)
+    other_polity = models.ForeignKey(
+        Polity, models.SET_NULL, blank=True, null=True
+    )
 
     class Meta:
         """
@@ -2882,67 +1203,35 @@ class Polity_preceding_entity(SeshatCommon):
         verbose_name_plural = "Polity_preceding_entities"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Preceding Entity"
+        notes = None
+        description = "The preceding entity of a polity."
+        description_source = None
+        inner_variables = {
+            "preceding_entity": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The preceding entity (or the largest settlement) of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have a preceding entity.",
+            }
+        }
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_preceding_entity"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Preceding Entity"
+    _clean_name = "polity_preceding_entity"
+    _clean_name_spaced = "Polity Preceding Entity"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_preceding_entity-detail"
 
     def display_value(self):
         """
@@ -2952,20 +1241,24 @@ class Polity_preceding_entity(SeshatCommon):
         preceding entity does not exist on the instance.
 
         Returns:
-            str: A string representation of the instance's other_polity/preceding entity relationship or a dash if the preceding entity does not exist on the instance.
+            str: A string representation of the instance's other_polity/preceding entity
+                relationship or a dash if the preceding entity does not exist on the
+                instance.
         """
         if self.preceding_entity and self.other_polity and self.polity:
             polity_url = reverse("polity-detail-main", args=[self.polity.id])
             other_polity_url = reverse(
                 "polity-detail-main", args=[self.other_polity.id]
             )
-            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='badge bg-secondary text-white'>  {self.relationship_to_preceding_entity} &nbsp;&nbsp;<i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"
-        elif self.preceding_entity == "none":
+            return f"<a data-bs-toggle='tooltip' data-bs-html='true' title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='badge bg-secondary text-white'> {self.relationship_to_preceding_entity} &nbsp;&nbsp;<i class='fa-solid fa-right-long'></i></span> <a data-bs-toggle='tooltip' data-bs-html='true' title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"  # noqa: E501 pylint: disable=C0301
+
+        if self.preceding_entity == "none":
             return self.preceding_entity
-        elif self.preceding_entity:
+
+        if self.preceding_entity:
             return f"{self.preceding_entity} [---]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value(self):
         """
@@ -2974,65 +1267,22 @@ class Polity_preceding_entity(SeshatCommon):
         return its name, otherwise return a dash).
 
         Returns:
-            str: A string representation of polity's preceding entity (or " - " if it does not exist on the instance).
+            str: A string representation of polity's preceding entity (or " - " if it does
+                not exist on the instance).
         """
         if self.preceding_entity and self.polity and self.other_polity:
-            return (
-                self.preceding_entity
-                + f" [{self.other_polity.new_name}]"
-                + " ---> "
-                + self.polity.long_name
-                + f" [{self.polity.new_name}]"
-            )
-        elif self.preceding_entity and self.polity:
+            return f"{self.preceding_entity} [{self.other_polity.new_name}] ---> {self.polity.long_name} [{self.polity.new_name}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.preceding_entity and self.polity:
             return self.preceding_entity
-        elif self.preceding_entity:
+
+        if self.preceding_entity:
             return self.preceding_entity
-        else:
-            return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_preceding_entity-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return " - "
 
 
-class Polity_succeeding_entity(SeshatCommon):
+class Polity_succeeding_entity(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the succeeding entities of
     the polities.
@@ -3050,67 +1300,38 @@ class Polity_succeeding_entity(SeshatCommon):
         verbose_name_plural = "Polity_succeeding_entities"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Succeeding Entity"
+        notes = None
+        description = "The succeeding entity of a polity."
+        description_source = None
+        inner_variables = {
+            "succeeding_entity": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The succeeding entity (or the largest settlement) of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have a succeeding entity.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_succeeding_entity"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Succeeding Entity"
+    _clean_name = "polity_succeeding_entity"
+    _clean_name_spaced = "Polity Succeeding Entity"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_succeeding_entity-detail"
 
     def show_value(self):
         """
@@ -3118,62 +1339,27 @@ class Polity_succeeding_entity(SeshatCommon):
         instance, otherwise return a dash).
 
         Returns:
-            str: The succeeding entity of the polity (or " - " if it does not exist on the instance).
+            str: The succeeding entity of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.succeeding_entity:
-            return self.succeeding_entity
-        else:
+        if not self.succeeding_entity:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_succeeding_entity-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.succeeding_entity
 
 
-class Polity_supracultural_entity(SeshatCommon):
+class Polity_supracultural_entity(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the supracultural entity of
     the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_supracultural_entity")
-    supracultural_entity = models.CharField(max_length=500, blank=True, null=True)
+    name = models.CharField(
+        max_length=100, default="Polity_supracultural_entity"
+    )
+    supracultural_entity = models.CharField(
+        max_length=500, blank=True, null=True
+    )
 
     class Meta:
         """
@@ -3184,67 +1370,37 @@ class Polity_supracultural_entity(SeshatCommon):
         verbose_name_plural = "Polity_supracultural_entities"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Supracultural Entity"
+        notes = None
+        description = "The supracultural entity of a polity."
+        description_source = None
+        inner_variables = {
+            "supracultural_entity": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The supracultural entity (or the largest settlement) of a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have a supracultural entity.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_supracultural_entity"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Supracultural Entity"
+    _clean_name = "polity_supracultural_entity"
+    _clean_name_spaced = "Polity Supracultural Entity"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_supracultural_entity-detail"
 
     def show_value(self):
         """
@@ -3252,55 +1408,16 @@ class Polity_supracultural_entity(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The supracultural entity of the polity (or " - " if it does not exist on the instance).
+            str: The supracultural entity of the polity (or " - " if it does not exist on
+                the instance).
         """
-        if self.supracultural_entity:
-            return self.supracultural_entity
-        else:
+        if not self.supracultural_entity:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_supracultural_entity-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.supracultural_entity
 
 
-class Polity_scale_of_supracultural_interaction(SeshatCommon):
+class Polity_scale_of_supracultural_interaction(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the scale of supracultural
     interaction of the polities.
@@ -3321,67 +1438,47 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon):
         verbose_name_plural = "Polity_scale_of_supracultural_interactions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Scale of Supracultural Interaction"
+        notes = None
+        description = "The scale_of_supra_cultural_interaction of a polity."
+        description_source = None
+        inner_variables = {
+            "scale_from": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower scale of supra cultural interactionfor a polity.",
+                "units": "km squared",
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+            "scale_to": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper scale of supra cultural interactionfor a polity.",
+                "units": "km squared",
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_scale_of_supracultural_interaction"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Scale of Supracultural Interaction"
+    _clean_name = "polity_scale_of_supracultural_interaction"
+    _clean_name_spaced = "Polity Scale of Supracultural Interaction"
+    _subsection = "Political and Cultural Relations"
+    _subsubsection = None
+    _reverse = "polity_scale_of_supracultural_interaction-detail"
 
     def show_value(self):
         """
@@ -3389,73 +1486,37 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon):
         on the instance, otherwise return a dash).
 
         Returns:
-            str: The supracultural interaction of the polity (or " - " if it does not exist on the instance).
+            str: The supracultural interaction of the polity (or " - " if it does not exist
+                on the instance).
         """
-        if self.scale_from and self.scale_to and self.scale_to == self.scale_from:
-            return mark_safe(
-                f"{self.scale_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
-            )
-        elif self.scale_from and self.scale_to:
-            return mark_safe(
-                f"<span class='fw-light text-secondary'> [</span>{self.scale_from:,} <span class='fw-light text-secondary'> to </span> {self.scale_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
-            )
-        elif self.scale_from:
+        if all(
+            [self.scale_from, self.scale_to, self.scale_to == self.scale_from]
+        ):
+            string = f"{self.scale_from:,} <span class='{BASECLASS} fs-6'> km<sup>2</sup></span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.scale_from and self.scale_to:
+            string = f"<span class='{BASECLASS}'> [</span>{self.scale_from:,} <span class='{BASECLASS}'> to </span> {self.scale_to:,}<span class='{BASECLASS}'>] </span> <span class='{BASECLASS} fs-6'> km<sup>2</sup></span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.scale_from:
             return f"[{self.scale_from:,}"
-        elif self.scale_to:
+
+        if self.scale_to:
             return f"[{self.scale_to:,}"
-        else:
-            return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Political and Cultural Relations"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse(
-            "polity_scale_of_supracultural_interaction-detail", args=[str(self.id)]
-        )
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return " - "
 
 
-class Polity_alternate_religion_genus(SeshatCommon):
+class Polity_alternate_religion_genus(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the alternate religion genus
     of the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_alternate_religion_genus")
+    name = models.CharField(
+        max_length=100, default="Polity_alternate_religion_genus"
+    )
     alternate_religion_genus = models.CharField(
         max_length=500, choices=POLITY_ALTERNATE_RELIGION_GENUS_CHOICES
     )
@@ -3469,67 +1530,37 @@ class Polity_alternate_religion_genus(SeshatCommon):
         verbose_name_plural = "Polity_alternate_religion_genus"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Alternate Religion Genus"
+        notes = None
+        description = "The alternate religion genus of a polity."
+        description_source = None
+        inner_variables = {
+            "alternate_religion_genus": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The alternate religion genus of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+                "null_meaning": "This polity did not have a alternatereligion genus.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_alternate_religion_genus"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Alternate Religion Genus"
+    _clean_name = "polity_alternate_religion_genus"
+    _clean_name_spaced = "Polity Alternate Religion Genus"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_alternate_religion_genus-detail"
 
     def show_value(self):
         """
@@ -3537,64 +1568,33 @@ class Polity_alternate_religion_genus(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The alternate religion genus of the polity (or " - " if it does not exist on the instance).
+            str: The alternate religion genus of the polity (or " - " if it does not exist
+                on the instance).
         """
-        if self.alternate_religion_genus:
-            return self.get_alternate_religion_genus_display()
-        else:
+        if not self.alternate_religion_genus:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_alternate_religion_genus-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_alternate_religion_genus_display()
 
 
-class Polity_alternate_religion_family(SeshatCommon):
+class Polity_alternate_religion_family(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the alternate religion family
     of the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_alternate_religion_family")
+    name = models.CharField(
+        max_length=100, default="Polity_alternate_religion_family"
+    )
     alternate_religion_family = models.CharField(
         max_length=500, choices=POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES
     )
+
+    _clean_name = "polity_alternate_religion_family"
+    _clean_name_spaced = "Polity Alternate Religion Family"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_alternate_religion_family-detail"
 
     class Meta:
         """
@@ -3605,67 +1605,31 @@ class Polity_alternate_religion_family(SeshatCommon):
         verbose_name_plural = "Polity_alternate_religion_families"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
-
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_alternate_religion_family"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Alternate Religion Family"
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Alternate Religion Family"
+        notes = None
+        description = "The alternate religion family of a polity."
+        description_source = None
+        inner_variables = {
+            "alternate_religion_family": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The alternate religion family of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+                "null_meaning": "This polity did not have a alternate religion family.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
         """
@@ -3673,61 +1637,24 @@ class Polity_alternate_religion_family(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The alternate religion family of the polity (or " - " if it does not exist on the instance).
+            str: The alternate religion family of the polity (or " - " if it does not exist
+                on the instance).
         """
-        if self.alternate_religion_family:
-            return self.get_alternate_religion_family_display()
-        else:
+        if not self.alternate_religion_family:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_alternate_religion_family-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_alternate_religion_family_display()
 
 
-class Polity_alternate_religion(SeshatCommon):
+class Polity_alternate_religion(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the alternate religion of
     the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_alternate_religion")
+    name = models.CharField(
+        max_length=100, default="Polity_alternate_religion"
+    )
     alternate_religion = models.CharField(
         max_length=500, choices=POLITY_ALTERNATE_RELIGION_CHOICES
     )
@@ -3741,67 +1668,37 @@ class Polity_alternate_religion(SeshatCommon):
         verbose_name_plural = "Polity_alternate_religions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Alternate Religion"
+        notes = None
+        description = "The alternate religion of a polity."
+        description_source = None
+        inner_variables = {
+            "alternate_religion": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The alternate religion of a polity.",
+                "units": None,
+                "choices": INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
+                "null_meaning": "This polity did not have a alternate religion .",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_alternate_religion"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Alternate Religion"
+    _clean_name = "polity_alternate_religion"
+    _clean_name_spaced = "Polity Alternate Religion"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_alternate_religion-detail"
 
     def show_value(self):
         """
@@ -3809,55 +1706,16 @@ class Polity_alternate_religion(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The alternate religion of the polity (or " - " if it does not exist on the instance).
+            str: The alternate religion of the polity (or " - " if it does not exist on the
+                instance).
         """
-        if self.alternate_religion:
-            return self.get_alternate_religion_display()
-        else:
+        if not self.alternate_religion:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_alternate_religion-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.get_alternate_religion_display()
 
 
-class Polity_expert(SeshatCommon):
+class Polity_expert(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the experts of the polities.
     """
@@ -3879,67 +1737,37 @@ class Polity_expert(SeshatCommon):
         verbose_name_plural = "Polity_experts"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Expert"
+        notes = None
+        description = "The expert of a polity."
+        description_source = None
+        inner_variables = {
+            "expert": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The expert of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have an expert.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_expert"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Expert"
+    _clean_name = "polity_expert"
+    _clean_name_spaced = "Polity Expert"
+    _subsection = None  # TODO
+    _subsubsection = None  # TODO
+    _reverse = "polity_expert-detail"
 
     def show_value(self):
         """
@@ -3949,27 +1777,13 @@ class Polity_expert(SeshatCommon):
         Returns:
             str: The expert of the polity (or " - " if it does not exist on the instance).
         """
-        if self.expert:
-            return self.expert
-        else:
+        if not self.expert:
             return " - "
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_expert-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.expert
 
 
-class Polity_editor(SeshatCommon):
+class Polity_editor(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the editors of the polities.
     """
@@ -3991,67 +1805,37 @@ class Polity_editor(SeshatCommon):
         verbose_name_plural = "Polity_editors"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Editor"
+        notes = None
+        description = "The editor of a polity."
+        description_source = None
+        inner_variables = {
+            "editor": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The editor of a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "This polity did not have an editor.",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_editor"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Editor"
+    _clean_name = "polity_editor"
+    _clean_name_spaced = "Polity Editor"
+    _subsection = None  # TODO
+    _subsubsection = None  # TODO
+    _reverse = "polity_editor-detail"
 
     def show_value(self):
         """
@@ -4061,34 +1845,24 @@ class Polity_editor(SeshatCommon):
         Returns:
             str: The editor of the polity (or " - " if it does not exist on the instance).
         """
-        if self.editor:
-            return self.editor
-        else:
+        if not self.editor:
             return " - "
 
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_editor-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.editor
 
 
-class Polity_religious_tradition(SeshatCommon):
+class Polity_religious_tradition(SeshatCommon, GeneralMixIn):
     """
     This model is used to store the information about the religious tradition of
     the polities.
     """
 
-    name = models.CharField(max_length=100, default="Polity_religious_tradition")
-    religious_tradition = models.CharField(max_length=500, blank=True, null=True)
+    name = models.CharField(
+        max_length=100, default="Polity_religious_tradition"
+    )
+    religious_tradition = models.CharField(
+        max_length=500, blank=True, null=True
+    )
 
     class Meta:
         """
@@ -4099,67 +1873,37 @@ class Polity_religious_tradition(SeshatCommon):
         verbose_name_plural = "Polity_religious_traditions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        """
-        Validate the year_from and year_to fields of the model instance.
+        section = SECTIONS.general
+        subsection = SUBSECTIONS.general.General
+        variable = "Polity Religious Tradition"
+        notes = None
+        description = "The details of religious traditions."
+        description_source = None
+        inner_variables = {
+            "religious_tradition": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The details of religious traditions.",
+                "units": None,
+                "choices": None,
+                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
-        :noindex:
-
-        Note:
-            The method an alias for the clean_times function.
-
-        Returns:
-            None
-
-        Raises:
-            ValidationError: If the year_from is greater than the year_to.
-            ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
-            ValidationError: If the year_to is out of range.
-        """
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_religious_tradition"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Religious Tradition"
+    _clean_name = "polity_religious_tradition"
+    _clean_name_spaced = "Polity Religious Tradition"
+    _subsection = "Religion"
+    _subsubsection = None
+    _reverse = "polity_religious_tradition-detail"
 
     def show_value(self):
         """
@@ -4167,49 +1911,10 @@ class Polity_religious_tradition(SeshatCommon):
         otherwise return a dash).
 
         Returns:
-            str: The religious tradition of the polity (or " - " if it does not exist on the instance).
+            str: The religious tradition of the polity (or " - " if it does not exist on
+                the instance).
         """
-        if self.religious_tradition:
-            return self.religious_tradition
-        else:
+        if not self.religious_tradition:
             return " - "
 
-    def subsection(self):
-        """
-        Return the subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The subsection of the model instance.
-        """
-        return "Religion"
-
-    def sub_subsection(self):
-        """
-        Return the subsection's subsection of the model instance.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            None
-        """
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_religious_tradition-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.religious_tradition

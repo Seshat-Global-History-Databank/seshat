@@ -1,3 +1,7 @@
+"""
+Models for the Seshat Django "accounts" app.
+"""
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -26,7 +30,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=30, blank=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True, blank=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -37,8 +41,8 @@ class Profile(models.Model):
         """
         return reverse("user-profile")
 
-    def __str__(self):  # __unicode__ for Python 2
-        return self.user.username
+    def __str__(self) -> str:
+        return str(self.user.username)
 
 
 @receiver(post_save, sender=User)
@@ -48,6 +52,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     """
     if created:
         Profile.objects.create(user=instance)
+
     instance.profile.save()
 
 
@@ -67,11 +72,14 @@ class Seshat_Expert(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=60, choices=ROLE_CHOICES, null=True, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.user.first_name and self.user.last_name:
             return f"{self.user.first_name} {self.user.last_name}"
-        else:
+
+        if self.role:
             return f"{self.user.username} ({self.role})"
+
+        return str(self.user.username)
 
 
 class Seshat_Task(models.Model):
@@ -89,7 +97,7 @@ class Seshat_Task(models.Model):
     task_description = models.TextField(null=True, blank=True)
     task_url = models.URLField(max_length=200, null=True, blank=True)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -101,20 +109,17 @@ class Seshat_Task(models.Model):
         return reverse("seshat_task-detail", args=[str(self.id)])
 
     @property
-    def display_takers(self):
+    def display_takers(self) -> str:
         """
         Returns a string of all takers of the task.
 
         Returns:
             str: A string of all takers of the task, joined with a HTML tag ("<br />").
         """
-        all_takers = []
-        for taker in self.taker.all():
-            all_takers.append(taker.__str__())
-        return "<br>".join(all_takers)
+        return "<br>".join([taker.__str__() for taker in self.taker.all()])
 
     @property
-    def clickable_url(self):
+    def clickable_url(self) -> str:
         """
         Returns a clickable URL.
 
@@ -123,5 +128,5 @@ class Seshat_Task(models.Model):
         """
         return f'<a href="{self.task_url}">{self.task_url}</a>'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.giver.user.username} has a task for you: {self.task_description}"

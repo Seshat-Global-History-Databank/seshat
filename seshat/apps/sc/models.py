@@ -1,169 +1,30 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from datetime import date
-
 from ..core.models import SeshatCommon
 from ..accounts.models import Seshat_Expert
-
-
-ABSENT_PRESENT_CHOICES = (
-    ("present", "present"),
-    ("absent", "absent"),
-    ("unknown", "unknown"),
-    ("A~P", "Transitional (Absent -> Present)"),
-    ("P~A", "Transitional (Present -> Absent)"),
+from ..global_constants import (
+    ABSENT_PRESENT_CHOICES,
+    ABSENT_PRESENT_STRING_LIST,
+    SECTIONS,
+    SUBSECTIONS,
+    STANDARD_SETTINGS
 )
 
-SOURCE_OF_SUPPORT_CHOICES = (
-    ("state salary", "state salary"),
-    ("pensions", "pensions"),
-    ("enoblement", "enoblement"),
-    ("suspected unknown", "suspected unknown"),
-    ("unknown", "unknown"),
-    ("land", "land"),
-    ("absent", "absent"),
-    ("cash", "cash"),
-    ("salary", "salary"),
-    ("state", "state"),
-    ("governed population", "governed population"),
-    ("none", "none"),
-    ("cattle", "cattle"),
+from .constants import SOURCE_OF_SUPPORT_CHOICES
+from .mixins import SCMixIn
+
+
+BASECLASS = (
+    "fw-light text-secondary"  # TODO: Move to global_constants.py/ATTRS_HTML
 )
 
 
-def call_my_name(self):
+class Ra(SeshatCommon, SCMixIn):
     """
-    This function is used to return the name of the model instance (in lieu of
-    the __str__ representation of the model instance).
-
-    Note:
-        The model instance must have the following attributes:
-        - name
-        - polity (and polity.name)
-        - year_from
-        - year_to
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The name of the model instance.
+    A model to record the research assistant or associate who coded the data.
     """
-    if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
-        return (
-            self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
-        )
-    else:
-        return (
-            self.name
-            + " [for "
-            + self.polity.name
-            + " from "
-            + str(self.year_from)
-            + " to "
-            + str(self.year_to)
-            + "]"
-        )
-
-
-def return_citations(self):
-    """
-    This function is used to return the citations of the model instance
-    (returning the value used in the display_citations method of the model
-    instance).
-
-    Note:
-        The model instance must have the following attribute:
-        - citations
-
-        The model instance must have the following methods:
-        - zoteroer
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        str: The citations of the model instance, separated by comma.
-    """
-    return ", ".join(
-        [
-            '<a href="' + citation.zoteroer() + '">' + citation.__str__() + " </a>"
-            for citation in self.citations.all()[:2]
-        ]
-    )
-
-
-def clean_times(self):
-    """
-    This function is used to validate the year_from and year_to fields of the
-    model instance (called from each model's clean method).
-
-    Note:
-        The model instance must have the following attributes:
-        - year_from
-        - year_to
-        - polity (and polity.start_year and polity.end_year)
-
-    Args:
-        self (model instance): The model instance.
-
-    Returns:
-        None
-
-    Raises:
-        ValidationError: If the year_from is greater than the year_to.
-        ValidationError: If the year_from is out of range.
-        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-        ValidationError: If the year_to is later than the end year of the corresponding polity.
-        ValidationError: If the year_to is out of range.
-    """
-    if (self.year_from and self.year_to) and self.year_from > self.year_to:
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'
-                ),
-            }
-        )
-    if self.year_from and (self.year_from > date.today().year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is out of range!</span>'
-                ),
-            }
-        )
-    if self.year_from and (self.year_from < self.polity.start_year):
-        raise ValidationError(
-            {
-                "year_from": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is earlier than the start year of the corresponding polity!</span>'
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > self.polity.end_year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is later than the end year of the corresponding polity!</span>'
-                ),
-            }
-        )
-    if self.year_to and (self.year_to > date.today().year):
-        raise ValidationError(
-            {
-                "year_to": mark_safe(
-                    '<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i>The end year is out of range!</span>'
-                ),
-            }
-        )
-
-
-class Ra(SeshatCommon):
-    """ """
 
     name = models.CharField(max_length=100, default="Ra")
     sc_ra = models.ForeignKey(
@@ -172,6 +33,9 @@ class Ra(SeshatCommon):
         null=True,
         related_name="sc_research_assistant",
     )
+
+    _clean_name = "ra"
+    _clean_name_spaced = "ra"
 
     class Meta:
         """
@@ -182,86 +46,56 @@ class Ra(SeshatCommon):
         verbose_name_plural = "Ras"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "ra"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "ra"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Staff
+        variable = "ra"
+        notes = "No_Actual_note"
+        description = "The name of the research assistant or associate who coded the data. If more than one RA made a substantial contribution, list all via separate entries."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "sc_ra": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The RA of Social Complexity Variables",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.sc_ra:
-            return self.sc_ra
-        else:
+        if not self.sc_ra:
             return " - "
 
+        return self.sc_ra
+
     def show_value_from(self):
-        if self.sc_ra:
-            return self.sc_ra
-        else:
+        if not self.sc_ra:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("ra-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.sc_ra
 
 
-class Polity_territory(SeshatCommon):
+class Polity_territory(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Polity_territory")
     polity_territory_from = models.IntegerField(blank=True, null=True)
     polity_territory_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "polity_territory"
+    _clean_name_spaced = "Polity Territory"
+    _subsection = "Social Scale"
+    _subsubsection = None
 
     class Meta:
         """
@@ -272,112 +106,94 @@ class Polity_territory(SeshatCommon):
         verbose_name_plural = "Polity_territories"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_territory"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Territory"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SocialScale
+        variable = "Polity Territory"
+        notes = "No_Actual_note"
+        description = "Talking about Social Scale, Polity territory is coded in squared kilometers."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "polity_territory_from": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of polity territory for a polity.",
+                "units": "km squared",
+                "choices": None,
+                "null_meaning": None,
+            },
+            "polity_territory_to": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of polity territory for a polity.",
+                "units": "km squared",
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = ["Units"]
 
     def show_value(self):
-        if (
-            self.polity_territory_from is not None
-            and self.polity_territory_to is not None
-            and self.polity_territory_to == self.polity_territory_from
+        if all(
+            [
+                self.polity_territory_from is not None,
+                self.polity_territory_to is not None,
+                self.polity_territory_to == self.polity_territory_from,
+            ]
         ):
-            return mark_safe(
-                f"{self.polity_territory_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
-            )
-        elif (
-            self.polity_territory_from is not None
-            and self.polity_territory_to is not None
+            string = f"{self.polity_territory_from:,} <span class='{BASECLASS} fs-6'> km<sup>2</sup> </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if all(
+            [
+                self.polity_territory_from is not None,
+                self.polity_territory_to is not None,
+            ]
         ):
-            return mark_safe(
-                f"<span class='fw-light text-secondary'> [</span>{self.polity_territory_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_territory_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>"
-            )
-        elif self.polity_territory_from is not None:
+            string = f"<span class='{BASECLASS}'> [</span>{self.polity_territory_from:,} <span class='{BASECLASS}'> to </span> {self.polity_territory_to:,}<span class='{BASECLASS}'>] </span> <span class='{BASECLASS} fs-6'> km<sup>2</sup> </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.polity_territory_from is not None:
             return f"[{self.polity_territory_from:,}, ...]"
-        elif self.polity_territory_to is not None:
+
+        if self.polity_territory_to is not None:
             return f"[..., {self.polity_territory_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.polity_territory_from is not None:
-            return self.polity_territory_from
-        else:
+        if not self.polity_territory_from:
             return "unknown"
 
+        return self.polity_territory_from
+
     def show_value_to(self):
-        if self.polity_territory_to is not None:
-            return self.polity_territory_to
-        else:
+        if not self.polity_territory_to:
             return None
 
-    def subsection(self):
-        return "Social Scale"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_territory-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.polity_territory_to
 
 
-class Polity_population(SeshatCommon):
+class Polity_population(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Polity_population")
     polity_population_from = models.IntegerField(blank=True, null=True)
     polity_population_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "polity_population"
+    _clean_name_spaced = "Polity Population"
+    _subsection = "Social Scale"
+    _subsubsection = None
 
     class Meta:
         """
@@ -388,107 +204,84 @@ class Polity_population(SeshatCommon):
         verbose_name_plural = "Polity_populations"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "polity_population"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Polity Population"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SocialScale
+        variable = "Polity Population"
+        notes = "No_Actual_note"
+        description = "Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "polity_population_from": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of polity population for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "polity_population_to": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of polity population for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if (
-            self.polity_population_from is not None
-            and self.polity_population_to is not None
-            and self.polity_population_to == self.polity_population_from
+        if all(
+            [
+                self.polity_population_from is not None,
+                self.polity_population_to is not None,
+                self.polity_population_to == self.polity_population_from,
+            ]
         ):
-            return mark_safe(
-                f"{self.polity_population_from:,}<span class='fw-light fs-6 text-secondary'> people </span>"
-            )
-        elif (
-            self.polity_population_from is not None
-            and self.polity_population_to is not None
+            string = f"{self.polity_population_from:,}<span class='{BASECLASS} fs-6'> people </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if all(
+            [
+                self.polity_population_from is not None,
+                self.polity_population_to is not None,
+            ]
         ):
-            return mark_safe(
-                f"<span class='fw-light text-secondary'> [</span>{self.polity_population_from:,} <span class='fw-light text-secondary'> to </span> {self.polity_population_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>"
-            )
-        elif self.polity_population_from is not None:
+            string = f"<span class='{BASECLASS}'> [</span>{self.polity_population_from:,} <span class='{BASECLASS}'> to </span> {self.polity_population_to:,}<span class='{BASECLASS}'>] </span> <span class='{BASECLASS} fs-6'> people </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.polity_population_from is not None:
             return f"[{self.polity_population_from:,}, ...]"
-        elif self.polity_population_to is not None:
+
+        if self.polity_population_to is not None:
             return f"[..., {self.polity_population_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.polity_population_from is not None:
-            return self.polity_population_from
-        else:
+        if not self.polity_population_from:
             return "unknown"
 
+        return self.polity_population_from
+
     def show_value_to(self):
-        if self.polity_population_to is not None:
-            return self.polity_population_to
-        else:
+        if not self.polity_population_to:
             return None
 
-    def subsection(self):
-        return "Social Scale"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("polity_population-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.polity_population_to
 
 
-class Population_of_the_largest_settlement(SeshatCommon):
+class Population_of_the_largest_settlement(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(
@@ -497,7 +290,14 @@ class Population_of_the_largest_settlement(SeshatCommon):
     population_of_the_largest_settlement_from = models.IntegerField(
         blank=True, null=True
     )
-    population_of_the_largest_settlement_to = models.IntegerField(blank=True, null=True)
+    population_of_the_largest_settlement_to = models.IntegerField(
+        blank=True, null=True
+    )
+
+    _clean_name = "population_of_the_largest_settlement"
+    _clean_name_spaced = "Population of the Largest Settlement"
+    _subsection = "Social Scale"
+    _subsubsection = None
 
     class Meta:
         """
@@ -508,93 +308,84 @@ class Population_of_the_largest_settlement(SeshatCommon):
         verbose_name_plural = "Population_of_the_largest_settlements"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "population_of_the_largest_settlement"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Population of the Largest Settlement"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SocialScale
+        variable = "Population of the Largest Settlement"
+        notes = "No_Actual_note"
+        description = "Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "population_of_the_largest_settlement_from": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of population of the largest settlement for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "population_of_the_largest_settlement_to": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of population of the largest settlement for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if (
-            self.population_of_the_largest_settlement_from is not None
-            and self.population_of_the_largest_settlement_to is not None
-            and self.population_of_the_largest_settlement_to
-            == self.population_of_the_largest_settlement_from
+        if all(
+            [
+                self.population_of_the_largest_settlement_from is not None,
+                self.population_of_the_largest_settlement_to is not None,
+                self.population_of_the_largest_settlement_to
+                == self.population_of_the_largest_settlement_from,
+            ]
         ):
-            return mark_safe(
-                f"{self.population_of_the_largest_settlement_from:,} <span class='fw-light fs-6 text-secondary'> people </span>"
-            )
-        elif (
-            self.population_of_the_largest_settlement_from is not None
-            and self.population_of_the_largest_settlement_to is not None
+            string = f"{self.population_of_the_largest_settlement_from:,} <span class='{BASECLASS} fs-6'> people </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if all(
+            [
+                self.population_of_the_largest_settlement_from is not None,
+                self.population_of_the_largest_settlement_to is not None,
+            ]
         ):
-            return mark_safe(
-                f"<span class='fw-light text-secondary'> [</span>{self.population_of_the_largest_settlement_from:,} <span class='fw-light text-secondary'> to </span> {self.population_of_the_largest_settlement_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> people </span>"
-            )
-        elif self.population_of_the_largest_settlement_from is not None:
+            string = f"<span class='{BASECLASS}'> [</span>{self.population_of_the_largest_settlement_from:,} <span class='{BASECLASS}'> to </span> {self.population_of_the_largest_settlement_to:,}<span class='{BASECLASS}'>] </span> <span class='{BASECLASS} fs-6'> people </span>"  # noqa: E501 pylint: disable=C0301
+            return mark_safe(string)
+
+        if self.population_of_the_largest_settlement_from is not None:
             return f"[{self.population_of_the_largest_settlement_from:,}, ...]"
-        elif self.population_of_the_largest_settlement_to is not None:
+
+        if self.population_of_the_largest_settlement_to is not None:
             return f"[..., {self.population_of_the_largest_settlement_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.population_of_the_largest_settlement_from is not None:
-            return self.population_of_the_largest_settlement_from
-        else:
+        if not self.population_of_the_largest_settlement_from:
             return "unknown"
 
+        return self.population_of_the_largest_settlement_from
+
     def show_value_to(self):
-        if self.population_of_the_largest_settlement_to is not None:
-            return self.population_of_the_largest_settlement_to
-        else:
+        if not self.population_of_the_largest_settlement_to:
             return None
 
-    def subsection(self):
-        return "Social Scale"
+        return self.population_of_the_largest_settlement_to
 
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the url to access a particular instance of the model.
 
@@ -607,16 +398,18 @@ class Population_of_the_largest_settlement(SeshatCommon):
             "population_of_the_largest_settlement-detail", args=[str(self.id)]
         )
 
-    def __str__(self) -> str:
-        return call_my_name(self)
 
-
-class Settlement_hierarchy(SeshatCommon):
+class Settlement_hierarchy(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Settlement_hierarchy")
     settlement_hierarchy_from = models.IntegerField(blank=True, null=True)
     settlement_hierarchy_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "settlement_hierarchy"
+    _clean_name_spaced = "Settlement Hierarchy"
+    _subsection = "Hierarchical Complexity"
+    _subsubsection = None
 
     class Meta:
         """
@@ -627,108 +420,92 @@ class Settlement_hierarchy(SeshatCommon):
         verbose_name_plural = "Settlement_hierarchies"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "settlement_hierarchy"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Settlement Hierarchy"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.HierarchicalComplexity
+        variable = "Settlement Hierarchy"
+        notes = "No_Actual_note"
+        description = "Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "settlement_hierarchy_from": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of settlement hierarchy for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "settlement_hierarchy_to": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of settlement hierarchy for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if (
-            self.settlement_hierarchy_from is not None
-            and self.settlement_hierarchy_to is not None
-            and self.settlement_hierarchy_to == self.settlement_hierarchy_from
+        if all(
+            [
+                self.settlement_hierarchy_from is not None,
+                self.settlement_hierarchy_to is not None,
+                self.settlement_hierarchy_to == self.settlement_hierarchy_from,
+            ]
         ):
             return self.settlement_hierarchy_from
-        elif (
-            self.settlement_hierarchy_from is not None
-            and self.settlement_hierarchy_to is not None
+
+        if all(
+            [
+                self.settlement_hierarchy_from is not None,
+                self.settlement_hierarchy_to is not None,
+            ]
         ):
-            return f"[{self.settlement_hierarchy_from:,} to {self.settlement_hierarchy_to:,}]"
-        elif self.settlement_hierarchy_from is not None:
+            return f"[{self.settlement_hierarchy_from:,} to {self.settlement_hierarchy_to:,}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.settlement_hierarchy_from is not None:
             return f"[{self.settlement_hierarchy_from:,}, ...]"
-        elif self.settlement_hierarchy_to is not None:
+
+        if self.settlement_hierarchy_to is not None:
             return f"[..., {self.settlement_hierarchy_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.settlement_hierarchy_from is not None:
-            return self.settlement_hierarchy_from
-        else:
+        if not self.settlement_hierarchy_from:
             return "unknown"
 
+        return self.settlement_hierarchy_from
+
     def show_value_to(self):
-        if self.settlement_hierarchy_to is not None:
-            return self.settlement_hierarchy_to
-        else:
+        if not self.settlement_hierarchy_to:
             return None
 
-    def subsection(self):
-        return "Hierarchical Complexity"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("settlement_hierarchy-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.settlement_hierarchy_to
 
 
-class Administrative_level(SeshatCommon):
+class Administrative_level(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Administrative_level")
     administrative_level_from = models.IntegerField(blank=True, null=True)
     administrative_level_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "administrative_level"
+    _clean_name_spaced = "Administrative Level"
+    _subsection = "Hierarchical Complexity"
+    _subsubsection = None
 
     class Meta:
         """
@@ -739,108 +516,92 @@ class Administrative_level(SeshatCommon):
         verbose_name_plural = "Administrative_levels"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "administrative_level"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Administrative Level"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.HierarchicalComplexity
+        variable = "Administrative Level"
+        notes = "No_Actual_note"
+        description = "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "administrative_level_from": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of administrative level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "administrative_level_to": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of administrative level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if (
-            self.administrative_level_from is not None
-            and self.administrative_level_to is not None
-            and self.administrative_level_to == self.administrative_level_from
+        if all(
+            [
+                self.administrative_level_from is not None,
+                self.administrative_level_to is not None,
+                self.administrative_level_to == self.administrative_level_from,
+            ]
         ):
             return self.administrative_level_from
-        elif (
-            self.administrative_level_from is not None
-            and self.administrative_level_to is not None
+
+        if all(
+            [
+                self.administrative_level_from is not None,
+                self.administrative_level_to is not None,
+            ]
         ):
-            return f"[{self.administrative_level_from:,} to {self.administrative_level_to:,}]"
-        elif self.administrative_level_from is not None:
+            return f"[{self.administrative_level_from:,} to {self.administrative_level_to:,}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.administrative_level_from is not None:
             return f"[{self.administrative_level_from:,}, ...]"
-        elif self.administrative_level_to is not None:
+
+        if self.administrative_level_to is not None:
             return f"[..., {self.administrative_level_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.administrative_level_from is not None:
-            return self.administrative_level_from
-        else:
+        if not self.administrative_level_from:
             return "unknown"
 
+        return self.administrative_level_from
+
     def show_value_to(self):
-        if self.administrative_level_to is not None:
-            return self.administrative_level_to
-        else:
+        if not self.administrative_level_to:
             return None
 
-    def subsection(self):
-        return "Hierarchical Complexity"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("administrative_level-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.administrative_level_to
 
 
-class Religious_level(SeshatCommon):
+class Religious_level(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Religious_level")
     religious_level_from = models.IntegerField(blank=True, null=True)
     religious_level_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "religious_level"
+    _clean_name_spaced = "Religious Level"
+    _subsection = "Hierarchical Complexity"
+    _subsubsection = None
 
     class Meta:
         """
@@ -851,108 +612,92 @@ class Religious_level(SeshatCommon):
         verbose_name_plural = "Religious_levels"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "religious_level"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Religious Level"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.HierarchicalComplexity
+        variable = "Religious Level"
+        notes = "No_Actual_note"
+        description = "Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "religious_level_from": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of religious level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "religious_level_to": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of religious level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if (
-            self.religious_level_from is not None
-            and self.religious_level_to is not None
-            and self.religious_level_to == self.religious_level_from
+        if all(
+            [
+                self.religious_level_from is not None,
+                self.religious_level_to is not None,
+                self.religious_level_to == self.religious_level_from,
+            ]
         ):
             return self.religious_level_from
-        elif (
-            self.religious_level_from is not None
-            and self.religious_level_to is not None
+
+        if all(
+            [
+                self.religious_level_from is not None,
+                self.religious_level_to is not None,
+            ]
         ):
             return f"[{self.religious_level_from:,} to {self.religious_level_to:,}]"
-        elif self.religious_level_from is not None:
+
+        if self.religious_level_from is not None:
             return f"[{self.religious_level_from:,}, ...]"
-        elif self.religious_level_to is not None:
+
+        if self.religious_level_to is not None:
             return f"[..., {self.religious_level_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.religious_level_from is not None:
-            return self.religious_level_from
-        else:
+        if not self.religious_level_from:
             return "unknown"
 
+        return self.religious_level_from
+
     def show_value_to(self):
-        if self.religious_level_to is not None:
-            return self.religious_level_to
-        else:
+        if not self.religious_level_to:
             return None
 
-    def subsection(self):
-        return "Hierarchical Complexity"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("religious_level-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.religious_level_to
 
 
-class Military_level(SeshatCommon):
+class Military_level(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Military_level")
     military_level_from = models.IntegerField(blank=True, null=True)
     military_level_to = models.IntegerField(blank=True, null=True)
+
+    _clean_name = "military_level"
+    _clean_name_spaced = "Military Level"
+    _subsection = "Hierarchical Complexity"
+    _subsubsection = None
 
     class Meta:
         """
@@ -963,108 +708,95 @@ class Military_level(SeshatCommon):
         verbose_name_plural = "Military_levels"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "military_level"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Military Level"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.HierarchicalComplexity
+        variable = "Military Level"
+        notes = "No_Actual_note"
+        description = "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "military_level_from": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The lower range of military level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+            "military_level_to": {
+                "min": 0,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The upper range of military level for a polity.",
+                "units": None,
+                "choices": None,
+                "null_meaning": None,
+            },
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
+        if all(
+            [
+                self.military_level_from is not None
+                and self.military_level_to is not None
+                and self.military_level_to == self.military_level_from
+            ]
+        ):
+            return self.military_level_from
+
         if (
             self.military_level_from is not None
             and self.military_level_to is not None
-            and self.military_level_to == self.military_level_from
         ):
-            return self.military_level_from
-        elif (
-            self.military_level_from is not None and self.military_level_to is not None
-        ):
-            return f"[{self.military_level_from:,} to {self.military_level_to:,}]"
-        elif self.military_level_from is not None:
+            return (
+                f"[{self.military_level_from:,} to {self.military_level_to:,}]"
+            )
+
+        if self.military_level_from is not None:
             return f"[{self.military_level_from:,}, ...]"
-        elif self.military_level_to is not None:
+
+        if self.military_level_to is not None:
             return f"[..., {self.military_level_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.military_level_from is not None:
-            return self.military_level_from
-        else:
+        if not self.military_level_from:
             return "unknown"
 
+        return self.military_level_from
+
     def show_value_to(self):
-        if self.military_level_to is not None:
-            return self.military_level_to
-        else:
+        if not self.military_level_to:
             return None
 
-    def subsection(self):
-        return "Hierarchical Complexity"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("military_level-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.military_level_to
 
 
-class Professional_military_officer(SeshatCommon):
+class Professional_military_officer(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Professional_military_officer")
+    name = models.CharField(
+        max_length=100, default="Professional_military_officer"
+    )
     professional_military_officer = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "professional_military_officer"
+    _clean_name_spaced = "Professional Military Officer"
+    _subsection = "Professions"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1075,93 +807,57 @@ class Professional_military_officer(SeshatCommon):
         verbose_name_plural = "Professional_military_officers"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "professional_military_officer"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Professional Military Officer"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Professions
+        variable = "Professional Military Officer"
+        notes = "No_Actual_note"
+        description = "Talking about Professions, Professional military officers refer to Full-time Professional military officers."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "professional_military_officer": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of professional military officer for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.professional_military_officer:
-            return self.get_professional_military_officer_display()
-        else:
+        if not self.professional_military_officer:
             return " - "
 
+        return self.get_professional_military_officer_display()
+
     def show_value_from(self):
-        if self.professional_military_officer:
-            return self.professional_military_officer
-        else:
+        if not self.professional_military_officer:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Professions"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("professional_military_officer-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.professional_military_officer
 
 
-class Professional_soldier(SeshatCommon):
+class Professional_soldier(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Professional_soldier")
     professional_soldier = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "professional_soldier"
+    _clean_name_spaced = "Professional Soldier"
+    _subsection = "Professions"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1172,93 +868,57 @@ class Professional_soldier(SeshatCommon):
         verbose_name_plural = "Professional_soldiers"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "professional_soldier"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Professional Soldier"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Professions
+        variable = "Professional Soldier"
+        notes = "No_Actual_note"
+        description = "Talking about Professions, Professional soldiers refer to Full-time Professional soldiers."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "professional_soldier": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of professional soldier for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.professional_soldier:
-            return self.get_professional_soldier_display()
-        else:
+        if not self.professional_soldier:
             return " - "
 
+        return self.get_professional_soldier_display()
+
     def show_value_from(self):
-        if self.professional_soldier:
-            return self.professional_soldier
-        else:
+        if not self.professional_soldier:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Professions"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("professional_soldier-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.professional_soldier
 
 
-class Professional_priesthood(SeshatCommon):
+class Professional_priesthood(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Professional_priesthood")
     professional_priesthood = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "professional_priesthood"
+    _clean_name_spaced = "Professional Priesthood"
+    _subsection = "Professions"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1269,93 +929,56 @@ class Professional_priesthood(SeshatCommon):
         verbose_name_plural = "Professional_priesthoods"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "professional_priesthood"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Professional Priesthood"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Professions
+        variable = "Professional Priesthood"
+        notes = "No_Actual_note"
+        description = "Talking about Professions, Professional priesthood refers to Full-time Professional priesthood."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "professional_priesthood": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of professional priesthood for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
 
     def show_value(self):
-        if self.professional_priesthood:
-            return self.get_professional_priesthood_display()
-        else:
+        if not self.professional_priesthood:
             return " - "
 
+        return self.get_professional_priesthood_display()
+
     def show_value_from(self):
-        if self.professional_priesthood:
-            return self.professional_priesthood
-        else:
+        if not self.professional_priesthood:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Professions"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("professional_priesthood-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.professional_priesthood
 
 
-class Full_time_bureaucrat(SeshatCommon):
+class Full_time_bureaucrat(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Full_time_bureaucrat")
     full_time_bureaucrat = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "full_time_bureaucrat"
+    _clean_name_spaced = "Full Time Bureaucrat"
+    _subsection = "Bureaucracy Characteristics"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1366,93 +989,57 @@ class Full_time_bureaucrat(SeshatCommon):
         verbose_name_plural = "Full_time_bureaucrats"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "full_time_bureaucrat"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Full Time Bureaucrat"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
+        variable = "Full Time Bureaucrat"
+        notes = "No_Actual_note"
+        description = "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "full_time_bureaucrat": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of full time bureaucrat for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.full_time_bureaucrat:
-            return self.get_full_time_bureaucrat_display()
-        else:
+        if not self.full_time_bureaucrat:
             return " - "
 
+        return self.get_full_time_bureaucrat_display()
+
     def show_value_from(self):
-        if self.full_time_bureaucrat:
-            return self.full_time_bureaucrat
-        else:
+        if not self.full_time_bureaucrat:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Bureaucracy Characteristics"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("full_time_bureaucrat-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.full_time_bureaucrat
 
 
-class Examination_system(SeshatCommon):
+class Examination_system(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Examination_system")
     examination_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "examination_system"
+    _clean_name_spaced = "Examination System"
+    _subsection = "Bureaucracy Characteristics"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1463,91 +1050,57 @@ class Examination_system(SeshatCommon):
         verbose_name_plural = "Examination_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "examination_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Examination System"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
+        variable = "Examination System"
+        notes = "No_Actual_note"
+        description = "Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "examination_system": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of examination system for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.examination_system:
-            return self.get_examination_system_display()
-        else:
+        if not self.examination_system:
             return " - "
 
+        return self.get_examination_system_display()
+
     def show_value_from(self):
-        if self.examination_system:
-            return self.examination_system
-        else:
+        if not self.examination_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Bureaucracy Characteristics"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("examination_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.examination_system
 
 
-class Merit_promotion(SeshatCommon):
+class Merit_promotion(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Merit_promotion")
-    merit_promotion = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    merit_promotion = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "merit_promotion"
+    _clean_name_spaced = "Merit Promotion"
+    _subsection = "Bureaucracy Characteristics"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1558,93 +1111,59 @@ class Merit_promotion(SeshatCommon):
         verbose_name_plural = "Merit_promotions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "merit_promotion"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Merit Promotion"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
+        variable = "Merit Promotion"
+        notes = "No_Actual_note"
+        description = "Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "merit_promotion": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of merit promotion for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.merit_promotion:
-            return self.get_merit_promotion_display()
-        else:
+        if not self.merit_promotion:
             return " - "
 
+        return self.get_merit_promotion_display()
+
     def show_value_from(self):
-        if self.merit_promotion:
-            return self.merit_promotion
-        else:
+        if not self.merit_promotion:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Bureaucracy Characteristics"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("merit_promotion-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.merit_promotion
 
 
-class Specialized_government_building(SeshatCommon):
+class Specialized_government_building(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Specialized_government_building")
+    name = models.CharField(
+        max_length=100, default="Specialized_government_building"
+    )
     specialized_government_building = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "specialized_government_building"
+    _clean_name_spaced = "Specialized Government Building"
+    _subsection = "Bureaucracy Characteristics"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1655,91 +1174,57 @@ class Specialized_government_building(SeshatCommon):
         verbose_name_plural = "Specialized_government_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "specialized_government_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Specialized Government Building"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
+        variable = "Specialized Government Building"
+        notes = "No_Actual_note"
+        description = "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "specialized_government_building": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of specialized government building for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.specialized_government_building:
-            return self.get_specialized_government_building_display()
-        else:
+        if not self.specialized_government_building:
             return " - "
 
+        return self.get_specialized_government_building_display()
+
     def show_value_from(self):
-        if self.specialized_government_building:
-            return self.specialized_government_building
-        else:
+        if not self.specialized_government_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Bureaucracy Characteristics"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("specialized_government_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.specialized_government_building
 
 
-class Formal_legal_code(SeshatCommon):
+class Formal_legal_code(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Formal_legal_code")
-    formal_legal_code = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    formal_legal_code = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "formal_legal_code"
+    _clean_name_spaced = "Formal Legal Code"
+    _subsection = "Law"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1750,91 +1235,55 @@ class Formal_legal_code(SeshatCommon):
         verbose_name_plural = "Formal_legal_codes"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "formal_legal_code"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Formal Legal Code"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Law
+        variable = "Formal Legal Code"
+        notes = "No_Actual_note"
+        description = "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "formal_legal_code": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of formal legal code for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.formal_legal_code:
-            return self.get_formal_legal_code_display()
-        else:
+        if not self.formal_legal_code:
             return " - "
 
+        return self.get_formal_legal_code_display()
+
     def show_value_from(self):
-        if self.formal_legal_code:
-            return self.formal_legal_code
-        else:
+        if not self.formal_legal_code:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Law"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("formal_legal_code-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.formal_legal_code
 
 
-class Judge(SeshatCommon):
+class Judge(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Judge")
     judge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "judge"
+    _clean_name_spaced = "Judge"
+    _subsection = "Law"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1845,91 +1294,55 @@ class Judge(SeshatCommon):
         verbose_name_plural = "Judges"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "judge"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Judge"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Law
+        variable = "Judge"
+        notes = "No_Actual_note"
+        description = "Talking about Law, judges refers only to full-time professional judges."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "judge": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of judge for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.judge:
-            return self.get_judge_display()
-        else:
+        if not self.judge:
             return " - "
 
+        return self.get_judge_display()
+
     def show_value_from(self):
-        if self.judge:
-            return self.judge
-        else:
+        if not self.judge:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Law"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("judge-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.judge
 
 
-class Court(SeshatCommon):
+class Court(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Court")
     court = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "court"
+    _clean_name_spaced = "Court"
+    _subsection = "Law"
+    _subsubsection = None
 
     class Meta:
         """
@@ -1940,93 +1353,60 @@ class Court(SeshatCommon):
         verbose_name_plural = "Courts"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "court"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Court"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Law
+        variable = "Court"
+        notes = "No_Actual_note"
+        description = "Talking about Law, courts are buildings specialized for legal proceedings only."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "court": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of court for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.court:
-            return self.get_court_display()
-        else:
+        if not self.court:
             return " - "
 
+        return self.get_court_display()
+
     def show_value_from(self):
-        if self.court:
-            return self.court
-        else:
+        if not self.court:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Law"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("court-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.court
 
 
-class Professional_lawyer(SeshatCommon):
+class Professional_lawyer(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Professional_lawyer")
     professional_lawyer = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "professional_lawyer"
+    _clean_name_spaced = "Professional Lawyer"
+    _subsection = "Law"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2037,91 +1417,57 @@ class Professional_lawyer(SeshatCommon):
         verbose_name_plural = "Professional_lawyers"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "professional_lawyer"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Professional Lawyer"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.Law
+        variable = "Professional Lawyer"
+        notes = "No_Actual_note"
+        description = "Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK."
+        description_source = "NOTHING"
+        inner_variables = {
+            "professional_lawyer": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of professional lawyer for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.professional_lawyer:
-            return self.get_professional_lawyer_display()
-        else:
+        if not self.professional_lawyer:
             return " - "
 
+        return self.get_professional_lawyer_display()
+
     def show_value_from(self):
-        if self.professional_lawyer:
-            return self.professional_lawyer
-        else:
+        if not self.professional_lawyer:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Law"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("professional_lawyer-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.professional_lawyer
 
 
-class Irrigation_system(SeshatCommon):
+class Irrigation_system(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Irrigation_system")
-    irrigation_system = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    irrigation_system = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "irrigation_system"
+    _clean_name_spaced = "Irrigation System"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2132,93 +1478,59 @@ class Irrigation_system(SeshatCommon):
         verbose_name_plural = "Irrigation_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "irrigation_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Irrigation System"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SpecializedBuildings
+        variable = "Irrigation System"
+        notes = "No_Actual_note"
+        description = "Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "irrigation_system": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of irrigation system for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.irrigation_system:
-            return self.get_irrigation_system_display()
-        else:
+        if not self.irrigation_system:
             return " - "
 
+        return self.get_irrigation_system_display()
+
     def show_value_from(self):
-        if self.irrigation_system:
-            return self.irrigation_system
-        else:
+        if not self.irrigation_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("irrigation_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.irrigation_system
 
 
-class Drinking_water_supply_system(SeshatCommon):
+class Drinking_water_supply_system(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Drinking_water_supply_system")
+    name = models.CharField(
+        max_length=100, default="Drinking_water_supply_system"
+    )
     drinking_water_supply_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "drinking_water_supply_system"
+    _clean_name_spaced = "Drinking Water Supply System"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2229,91 +1541,55 @@ class Drinking_water_supply_system(SeshatCommon):
         verbose_name_plural = "Drinking_water_supply_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "drinking_water_supply_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Drinking Water Supply System"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SpecializedBuildings
+        variable = "Drinking Water Supply System"
+        notes = "No_Actual_note"
+        description = "Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "drinking_water_supply_system": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of drinking water supply system for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.drinking_water_supply_system:
-            return self.get_drinking_water_supply_system_display()
-        else:
+        if not self.drinking_water_supply_system:
             return " - "
 
+        return self.get_drinking_water_supply_system_display()
+
     def show_value_from(self):
-        if self.drinking_water_supply_system:
-            return self.drinking_water_supply_system
-        else:
+        if not self.drinking_water_supply_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("drinking_water_supply_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.drinking_water_supply_system
 
 
-class Market(SeshatCommon):
+class Market(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Market")
     market = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "market"
+    _clean_name_spaced = "Market"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2324,91 +1600,57 @@ class Market(SeshatCommon):
         verbose_name_plural = "Markets"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "market"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Market"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SpecializedBuildings
+        variable = "Market"
+        notes = "No_Actual_note"
+        description = "Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "market": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of market for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.market:
-            return self.get_market_display()
-        else:
+        if not self.market:
             return " - "
 
+        return self.get_market_display()
+
     def show_value_from(self):
-        if self.market:
-            return self.market
-        else:
+        if not self.market:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("market-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.market
 
 
-class Food_storage_site(SeshatCommon):
+class Food_storage_site(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Food_storage_site")
-    food_storage_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    food_storage_site = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "food_storage_site"
+    _clean_name_spaced = "Food Storage Site"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2419,91 +1661,54 @@ class Food_storage_site(SeshatCommon):
         verbose_name_plural = "Food_storage_sites"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "food_storage_site"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Food Storage Site"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SpecializedBuildings
+        variable = "Food Storage Site"
+        notes = "No_Actual_note"
+        description = "Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "food_storage_site": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of food storage site for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.food_storage_site:
-            return self.get_food_storage_site_display()
-        else:
+        if not self.food_storage_site:
             return " - "
+        return self.get_food_storage_site_display()
 
     def show_value_from(self):
-        if self.food_storage_site:
-            return self.food_storage_site
-        else:
+        if not self.food_storage_site:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("food_storage_site-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.food_storage_site
 
 
-class Road(SeshatCommon):
+class Road(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Road")
     road = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "road"
+    _clean_name_spaced = "Road"
+    _subsection = "Transport Infrastructure"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2514,91 +1719,55 @@ class Road(SeshatCommon):
         verbose_name_plural = "Roads"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "road"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Road"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.TransportInfrastructure
+        variable = "Road"
+        notes = "No_Actual_note"
+        description = "Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "road": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of road for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.road:
-            return self.get_road_display()
-        else:
+        if not self.road:
             return " - "
 
+        return self.get_road_display()
+
     def show_value_from(self):
-        if self.road:
-            return self.road
-        else:
+        if not self.road:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Transport Infrastructure"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("road-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.road
 
 
-class Bridge(SeshatCommon):
+class Bridge(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Bridge")
     bridge = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "bridge"
+    _clean_name_spaced = "Bridge"
+    _subsection = "Transport Infrastructure"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2609,91 +1778,55 @@ class Bridge(SeshatCommon):
         verbose_name_plural = "Bridges"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "bridge"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Bridge"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.TransportInfrastructure
+        variable = "Bridge"
+        notes = "No_Actual_note"
+        description = "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "bridge": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of bridge for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.bridge:
-            return self.get_bridge_display()
-        else:
+        if not self.bridge:
             return " - "
 
+        return self.get_bridge_display()
+
     def show_value_from(self):
-        if self.bridge:
-            return self.bridge
-        else:
+        if not self.bridge:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Transport Infrastructure"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("bridge-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.bridge
 
 
-class Canal(SeshatCommon):
+class Canal(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Canal")
     canal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "canal"
+    _clean_name_spaced = "Canal"
+    _subsection = "Transport Infrastructure"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2704,91 +1837,55 @@ class Canal(SeshatCommon):
         verbose_name_plural = "Canals"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "canal"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Canal"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.TransportInfrastructure
+        variable = "Canal"
+        notes = "No_Actual_note"
+        description = "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "canal": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of canal for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.canal:
-            return self.get_canal_display()
-        else:
+        if not self.canal:
             return " - "
 
+        return self.get_canal_display()
+
     def show_value_from(self):
-        if self.canal:
-            return self.canal
-        else:
+        if not self.canal:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Transport Infrastructure"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("canal-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.canal
 
 
-class Port(SeshatCommon):
+class Port(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Port")
     port = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "port"
+    _clean_name_spaced = "Port"
+    _subsection = "Transport Infrastructure"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2799,91 +1896,57 @@ class Port(SeshatCommon):
         verbose_name_plural = "Ports"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "port"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Port"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.TransportInfrastructure
+        variable = "Port"
+        notes = "No_Actual_note"
+        description = "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "port": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of port for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.port:
-            return self.get_port_display()
-        else:
+        if not self.port:
             return " - "
 
+        return self.get_port_display()
+
     def show_value_from(self):
-        if self.port:
-            return self.port
-        else:
+        if not self.port:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Transport Infrastructure"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("port-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.port
 
 
-class Mines_or_quarry(SeshatCommon):
+class Mines_or_quarry(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Mines_or_quarry")
-    mines_or_quarry = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    mines_or_quarry = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "mines_or_quarry"
+    _clean_name_spaced = "Mines or Quarry"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -2894,91 +1957,59 @@ class Mines_or_quarry(SeshatCommon):
         verbose_name_plural = "Mines_or_quarries"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "mines_or_quarry"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Mines or Quarry"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.SpecialPurposeSites
+        variable = "Mines or Quarry"
+        notes = "No_Actual_note"
+        description = (
+            "Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK."
+        )
+        description_source = "NOTHING"
+        inner_variables = {
+            "mines_or_quarry": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of mines or quarry for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.mines_or_quarry:
-            return self.get_mines_or_quarry_display()
-        else:
+        if not self.mines_or_quarry:
             return " - "
 
+        return self.get_mines_or_quarry_display()
+
     def show_value_from(self):
-        if self.mines_or_quarry:
-            return self.mines_or_quarry
-        else:
+        if not self.mines_or_quarry:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("mines_or_quarry-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.mines_or_quarry
 
 
-class Mnemonic_device(SeshatCommon):
+class Mnemonic_device(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Mnemonic_device")
-    mnemonic_device = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    mnemonic_device = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "mnemonic_device"
+    _clean_name_spaced = "Mnemonic Device"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -2989,91 +2020,57 @@ class Mnemonic_device(SeshatCommon):
         verbose_name_plural = "Mnemonic_devices"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "mnemonic_device"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Mnemonic Device"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Mnemonic Device"
+        notes = "No_Actual_note"
+        description = "Talking about Writing Systems, Mnemonic devices are: For example, tallies."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "mnemonic_device": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of mnemonic device for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.mnemonic_device:
-            return self.get_mnemonic_device_display()
-        else:
+        if not self.mnemonic_device:
             return " - "
 
+        return self.get_mnemonic_device_display()
+
     def show_value_from(self):
-        if self.mnemonic_device:
-            return self.mnemonic_device
-        else:
+        if not self.mnemonic_device:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("mnemonic_device-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.mnemonic_device
 
 
-class Nonwritten_record(SeshatCommon):
+class Nonwritten_record(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Nonwritten_record")
-    nonwritten_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    nonwritten_record = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "nonwritten_record"
+    _clean_name_spaced = "Nonwritten Record"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -3084,91 +2081,57 @@ class Nonwritten_record(SeshatCommon):
         verbose_name_plural = "Nonwritten_records"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "nonwritten_record"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Nonwritten Record"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Nonwritten Record"
+        notes = "No_Actual_note"
+        description = "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "nonwritten_record": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of nonwritten record for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.nonwritten_record:
-            return self.get_nonwritten_record_display()
-        else:
+        if not self.nonwritten_record:
             return " - "
 
+        return self.get_nonwritten_record_display()
+
     def show_value_from(self):
-        if self.nonwritten_record:
-            return self.nonwritten_record
-        else:
+        if not self.nonwritten_record:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("nonwritten_record-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.nonwritten_record
 
 
-class Written_record(SeshatCommon):
+class Written_record(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Written_record")
-    written_record = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    written_record = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "written_record"
+    _clean_name_spaced = "Written Record"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -3179,91 +2142,55 @@ class Written_record(SeshatCommon):
         verbose_name_plural = "Written_records"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "written_record"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Written Record"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Written Record"
+        notes = "No_Actual_note"
+        description = "Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "written_record": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of written record for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.written_record:
-            return self.get_written_record_display()
-        else:
+        if not self.written_record:
             return " - "
 
+        return self.get_written_record_display()
+
     def show_value_from(self):
-        if self.written_record:
-            return self.written_record
-        else:
+        if not self.written_record:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("written_record-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.written_record
 
 
-class Script(SeshatCommon):
+class Script(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Script")
     script = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "script"
+    _clean_name_spaced = "Script"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -3274,93 +2201,57 @@ class Script(SeshatCommon):
         verbose_name_plural = "Scripts"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "script"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Script"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Script"
+        notes = "No_Actual_note"
+        description = "Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "script": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of script for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.script:
-            return self.get_script_display()
-        else:
+        if not self.script:
             return " - "
 
+        return self.get_script_display()
+
     def show_value_from(self):
-        if self.script:
-            return self.script
-        else:
+        if not self.script:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("script-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.script
 
 
-class Non_phonetic_writing(SeshatCommon):
+class Non_phonetic_writing(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Non_phonetic_writing")
     non_phonetic_writing = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "non_phonetic_writing"
+    _clean_name_spaced = "Non Phonetic Writing"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -3371,93 +2262,61 @@ class Non_phonetic_writing(SeshatCommon):
         verbose_name_plural = "Non_phonetic_writings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "non_phonetic_writing"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Non Phonetic Writing"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Non Phonetic Writing"
+        notes = "No_Actual_note"
+        description = (
+            "Talking about Writing Systems, this refers to the kind of script."
+        )
+        description_source = "NOTHING"
+        inner_variables = {
+            "non_phonetic_writing": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of non phonetic writing for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.non_phonetic_writing:
-            return self.get_non_phonetic_writing_display()
-        else:
+        if not self.non_phonetic_writing:
             return " - "
 
+        return self.get_non_phonetic_writing_display()
+
     def show_value_from(self):
-        if self.non_phonetic_writing:
-            return self.non_phonetic_writing
-        else:
+        if not self.non_phonetic_writing:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("non_phonetic_writing-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.non_phonetic_writing
 
 
-class Phonetic_alphabetic_writing(SeshatCommon):
+class Phonetic_alphabetic_writing(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Phonetic_alphabetic_writing")
+    name = models.CharField(
+        max_length=100, default="Phonetic_alphabetic_writing"
+    )
     phonetic_alphabetic_writing = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "phonetic_alphabetic_writing"
+    _clean_name_spaced = "Phonetic Alphabetic Writing"
+    _subsection = "Information"
+    _subsubsection = "Writing System"
 
     class Meta:
         """
@@ -3468,93 +2327,61 @@ class Phonetic_alphabetic_writing(SeshatCommon):
         verbose_name_plural = "Phonetic_alphabetic_writings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "phonetic_alphabetic_writing"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Phonetic Alphabetic Writing"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WritingSystems
+        variable = "Phonetic Alphabetic Writing"
+        notes = "No_Actual_note"
+        description = (
+            "Talking about Writing Systems, this refers to the kind of script."
+        )
+        description_source = "NOTHING"
+        inner_variables = {
+            "phonetic_alphabetic_writing": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of phonetic alphabetic writing for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.phonetic_alphabetic_writing:
-            return self.get_phonetic_alphabetic_writing_display()
-        else:
+        if not self.phonetic_alphabetic_writing:
             return " - "
 
+        return self.get_phonetic_alphabetic_writing_display()
+
     def show_value_from(self):
-        if self.phonetic_alphabetic_writing:
-            return self.phonetic_alphabetic_writing
-        else:
+        if not self.phonetic_alphabetic_writing:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Writing System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("phonetic_alphabetic_writing-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.phonetic_alphabetic_writing
 
 
-class Lists_tables_and_classification(SeshatCommon):
+class Lists_tables_and_classification(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Lists_tables_and_classification")
+    name = models.CharField(
+        max_length=100, default="Lists_tables_and_classification"
+    )
     lists_tables_and_classification = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "lists_tables_and_classification"
+    _clean_name_spaced = "Lists Tables and Classification"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -3565,91 +2392,55 @@ class Lists_tables_and_classification(SeshatCommon):
         verbose_name_plural = "Lists_tables_and_classifications"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "lists_tables_and_classification"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Lists Tables and Classification"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Lists Tables and Classification"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "lists_tables_and_classification": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of lists tables and classification for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.lists_tables_and_classification:
-            return self.get_lists_tables_and_classification_display()
-        else:
+        if not self.lists_tables_and_classification:
             return " - "
 
+        return self.get_lists_tables_and_classification_display()
+
     def show_value_from(self):
-        if self.lists_tables_and_classification:
-            return self.lists_tables_and_classification
-        else:
+        if not self.lists_tables_and_classification:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("lists_tables_and_classification-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.lists_tables_and_classification
 
 
-class Calendar(SeshatCommon):
+class Calendar(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Calendar")
     calendar = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "calendar"
+    _clean_name_spaced = "Calendar"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -3660,91 +2451,57 @@ class Calendar(SeshatCommon):
         verbose_name_plural = "Calendars"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "calendar"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Calendar"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Calendar"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "calendar": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of calendar for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.calendar:
-            return self.get_calendar_display()
-        else:
+        if not self.calendar:
             return " - "
 
+        return self.get_calendar_display()
+
     def show_value_from(self):
-        if self.calendar:
-            return self.calendar
-        else:
+        if not self.calendar:
             return None
 
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def show_value_to(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("calendar-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.calendar
 
 
-class Sacred_text(SeshatCommon):
+class Sacred_text(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Sacred_text")
-    sacred_text = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    sacred_text = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "sacred_text"
+    _clean_name_spaced = "Sacred Text"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -3755,93 +2512,57 @@ class Sacred_text(SeshatCommon):
         verbose_name_plural = "Sacred_texts"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "sacred_text"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Sacred Text"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Sacred Text"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "sacred_text": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of sacred text for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.sacred_text:
-            return self.get_sacred_text_display()
-        else:
+        if not self.sacred_text:
             return " - "
 
+        return self.get_sacred_text_display()
+
     def show_value_from(self):
-        if self.sacred_text:
-            return self.sacred_text
-        else:
+        if not self.sacred_text:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("sacred_text-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.sacred_text
 
 
-class Religious_literature(SeshatCommon):
+class Religious_literature(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Religious_literature")
     religious_literature = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "religious_literature"
+    _clean_name_spaced = "Religious Literature"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -3852,93 +2573,57 @@ class Religious_literature(SeshatCommon):
         verbose_name_plural = "Religious_literatures"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "religious_literature"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Religious Literature"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Religious Literature"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "religious_literature": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of religious literature for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.religious_literature:
-            return self.get_religious_literature_display()
-        else:
+        if not self.religious_literature:
             return " - "
 
+        return self.get_religious_literature_display()
+
     def show_value_from(self):
-        if self.religious_literature:
-            return self.religious_literature
-        else:
+        if not self.religious_literature:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("religious_literature-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.religious_literature
 
 
-class Practical_literature(SeshatCommon):
+class Practical_literature(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Practical_literature")
     practical_literature = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "practical_literature"
+    _clean_name_spaced = "Practical Literature"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -3949,91 +2634,55 @@ class Practical_literature(SeshatCommon):
         verbose_name_plural = "Practical_literatures"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "practical_literature"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Practical Literature"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Practical Literature"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "practical_literature": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of practical literature for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.practical_literature:
-            return self.get_practical_literature_display()
-        else:
+        if not self.practical_literature:
             return " - "
 
+        return self.get_practical_literature_display()
+
     def show_value_from(self):
-        if self.practical_literature:
-            return self.practical_literature
-        else:
+        if not self.practical_literature:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("practical_literature-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.practical_literature
 
 
-class History(SeshatCommon):
+class History(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="History")
     history = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "history"
+    _clean_name_spaced = "History"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -4044,91 +2693,57 @@ class History(SeshatCommon):
         verbose_name_plural = "Histories"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "history"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "History"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "History"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "history": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of history for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.history:
-            return self.get_history_display()
-        else:
+        if not self.history:
             return " - "
 
+        return self.get_history_display()
+
     def show_value_from(self):
-        if self.history:
-            return self.history
-        else:
+        if not self.history:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("history-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.history
 
 
-class Philosophy(SeshatCommon):
+class Philosophy(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Philosophy")
-    philosophy = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    philosophy = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "philosophy"
+    _clean_name_spaced = "Philosophy"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -4139,93 +2754,57 @@ class Philosophy(SeshatCommon):
         verbose_name_plural = "Philosophies"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "philosophy"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Philosophy"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Philosophy"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "philosophy": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of philosophy for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.philosophy:
-            return self.get_philosophy_display()
-        else:
+        if not self.philosophy:
             return " - "
 
+        return self.get_philosophy_display()
+
     def show_value_from(self):
-        if self.philosophy:
-            return self.philosophy
-        else:
+        if not self.philosophy:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("philosophy-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.philosophy
 
 
-class Scientific_literature(SeshatCommon):
+class Scientific_literature(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Scientific_literature")
     scientific_literature = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "scientific_literature"
+    _clean_name_spaced = "Scientific Literature"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -4236,91 +2815,55 @@ class Scientific_literature(SeshatCommon):
         verbose_name_plural = "Scientific_literatures"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "scientific_literature"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Scientific Literature"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Scientific Literature"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "scientific_literature": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of scientific literature for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.scientific_literature:
-            return self.get_scientific_literature_display()
-        else:
+        if not self.scientific_literature:
             return " - "
 
+        return self.get_scientific_literature_display()
+
     def show_value_from(self):
-        if self.scientific_literature:
-            return self.scientific_literature
-        else:
+        if not self.scientific_literature:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("scientific_literature-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.scientific_literature
 
 
-class Fiction(SeshatCommon):
+class Fiction(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Fiction")
     fiction = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "fiction"
+    _clean_name_spaced = "Fiction"
+    _subsection = "Information"
+    _subsubsection = "Kinds of Written Documents"
 
     class Meta:
         """
@@ -4331,91 +2874,55 @@ class Fiction(SeshatCommon):
         verbose_name_plural = "Fictions"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "fiction"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Fiction"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.WrittenDocuments
+        variable = "Fiction"
+        notes = "No_Actual_note"
+        description = "Talking about Kinds of Written Documents, fiction includes poetry."
+        description_source = "NOTHING"
+        inner_variables = {
+            "fiction": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of fiction for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.fiction:
-            return self.get_fiction_display()
-        else:
+        if not self.fiction:
             return " - "
 
+        return self.get_fiction_display()
+
     def show_value_from(self):
-        if self.fiction:
-            return self.fiction
-        else:
+        if not self.fiction:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Kinds of Written Documents"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("fiction-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.fiction
 
 
-class Article(SeshatCommon):
+class Article(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Article")
     article = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "article"
+    _clean_name_spaced = "Article"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4426,91 +2933,55 @@ class Article(SeshatCommon):
         verbose_name_plural = "Articles"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "article"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Article"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Article"
+        notes = "No_Actual_note"
+        description = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "article": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of article for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.article:
-            return self.get_article_display()
-        else:
+        if not self.article:
             return " - "
 
+        return self.get_article_display()
+
     def show_value_from(self):
-        if self.article:
-            return self.article
-        else:
+        if not self.article:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("article-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.article
 
 
-class Token(SeshatCommon):
+class Token(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Token")
     token = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "token"
+    _clean_name_spaced = "Token"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4521,91 +2992,60 @@ class Token(SeshatCommon):
         verbose_name_plural = "Tokens"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "token"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Token"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Token"
+        notes = "No_Actual_note"
+        description = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "token": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of token for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.token:
-            return self.get_token_display()
-        else:
+        if not self.token:
             return " - "
 
+        return self.get_token_display()
+
     def show_value_from(self):
-        if self.token:
-            return self.token
-        else:
+        if not self.token:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("token-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.token
 
 
-class Precious_metal(SeshatCommon):
+class Precious_metal(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Precious_metal")
-    precious_metal = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    precious_metal = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "precious_metal"
+    _clean_name_spaced = "Precious Metal"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4616,91 +3056,57 @@ class Precious_metal(SeshatCommon):
         verbose_name_plural = "Precious_metals"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "precious_metal"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Precious Metal"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Precious Metal"
+        notes = "No_Actual_note"
+        description = "Talking about forms of money, Precious metals are non-coined silver, gold, platinum."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "precious_metal": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of precious metal for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.precious_metal:
-            return self.get_precious_metal_display()
-        else:
+        if not self.precious_metal:
             return " - "
 
+        return self.get_precious_metal_display()
+
     def show_value_from(self):
-        if self.precious_metal:
-            return self.precious_metal
-        else:
+        if not self.precious_metal:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("precious_metal-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.precious_metal
 
 
-class Foreign_coin(SeshatCommon):
+class Foreign_coin(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Foreign_coin")
-    foreign_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    foreign_coin = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "foreign_coin"
+    _clean_name_spaced = "Foreign Coin"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4711,91 +3117,57 @@ class Foreign_coin(SeshatCommon):
         verbose_name_plural = "Foreign_coins"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "foreign_coin"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Foreign Coin"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Foreign Coin"
+        notes = "No_Actual_note"
+        description = "NO_DESCRIPTIONS_IN_CODEBOOK"
+        description_source = "NOTHING"
+        inner_variables = {
+            "foreign_coin": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of foreign coin for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.foreign_coin:
-            return self.get_foreign_coin_display()
-        else:
+        if not self.foreign_coin:
             return " - "
 
+        return self.get_foreign_coin_display()
+
     def show_value_from(self):
-        if self.foreign_coin:
-            return self.foreign_coin
-        else:
+        if not self.foreign_coin:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("foreign_coin-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.foreign_coin
 
 
-class Indigenous_coin(SeshatCommon):
+class Indigenous_coin(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Indigenous_coin")
-    indigenous_coin = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    indigenous_coin = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "indigenous_coin"
+    _clean_name_spaced = "Indigenous Coin"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4806,91 +3178,57 @@ class Indigenous_coin(SeshatCommon):
         verbose_name_plural = "Indigenous_coins"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "indigenous_coin"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Indigenous Coin"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Indigenous Coin"
+        notes = "No_Actual_note"
+        description = "NO_DESCRIPTIONS_IN_CODEBOOK"
+        description_source = "NOTHING"
+        inner_variables = {
+            "indigenous_coin": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of indigenous coin for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.indigenous_coin:
-            return self.get_indigenous_coin_display()
-        else:
+        if not self.indigenous_coin:
             return " - "
 
+        return self.get_indigenous_coin_display()
+
     def show_value_from(self):
-        if self.indigenous_coin:
-            return self.indigenous_coin
-        else:
+        if not self.indigenous_coin:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("indigenous_coin-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.indigenous_coin
 
 
-class Paper_currency(SeshatCommon):
+class Paper_currency(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Paper_currency")
-    paper_currency = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    paper_currency = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "paper_currency"
+    _clean_name_spaced = "Paper Currency"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -4901,91 +3239,55 @@ class Paper_currency(SeshatCommon):
         verbose_name_plural = "Paper_currencies"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "paper_currency"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Paper Currency"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.FormsOfMoney
+        variable = "Paper Currency"
+        notes = "No_Actual_note"
+        description = "Paper currency or another kind of fiat money. Note that this only refers to indigenously produced paper currency. Code absent if colonial money is used."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "paper_currency": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of paper currency for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.paper_currency:
-            return self.get_paper_currency_display()
-        else:
+        if not self.paper_currency:
             return " - "
 
+        return self.get_paper_currency_display()
+
     def show_value_from(self):
-        if self.paper_currency:
-            return self.paper_currency
-        else:
+        if not self.paper_currency:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("paper_currency-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.paper_currency
 
 
-class Courier(SeshatCommon):
+class Courier(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Courier")
     courier = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "courier"
+    _clean_name_spaced = "Courier"
+    _subsection = "Information"
+    _subsubsection = "Postal System"
 
     class Meta:
         """
@@ -4996,91 +3298,57 @@ class Courier(SeshatCommon):
         verbose_name_plural = "Couriers"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "courier"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Courier"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.PostalSystems
+        variable = "Courier"
+        notes = "No_Actual_note"
+        description = "Full-time professional couriers."
+        description_source = "NOTHING"
+        inner_variables = {
+            "courier": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of courier for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.courier:
-            return self.get_courier_display()
-        else:
+        if not self.courier:
             return " - "
 
+        return self.get_courier_display()
+
     def show_value_from(self):
-        if self.courier:
-            return self.courier
-        else:
+        if not self.courier:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Postal System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("courier-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.courier
 
 
-class Postal_station(SeshatCommon):
+class Postal_station(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Postal_station")
-    postal_station = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    postal_station = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "postal_station"
+    _clean_name_spaced = "Postal Station"
+    _subsection = "Information"
+    _subsubsection = "Postal System"
 
     class Meta:
         """
@@ -5091,93 +3359,57 @@ class Postal_station(SeshatCommon):
         verbose_name_plural = "Postal_stations"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "postal_station"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Postal Station"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.PostalSystems
+        variable = "Postal Station"
+        notes = "No_Actual_note"
+        description = "Talking about postal systems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "postal_station": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of postal station for a polity.",
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.postal_station:
-            return self.get_postal_station_display()
-        else:
+        if not self.postal_station:
             return " - "
 
+        return self.get_postal_station_display()
+
     def show_value_from(self):
-        if self.postal_station:
-            return self.postal_station
-        else:
+        if not self.postal_station:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Postal System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("postal_station-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.postal_station
 
 
-class General_postal_service(SeshatCommon):
+class General_postal_service(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="General_postal_service")
     general_postal_service = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "general_postal_service"
+    _clean_name_spaced = "General Postal Service"
+    _subsection = "Information"
+    _subsubsection = "Postal System"
 
     class Meta:
         """
@@ -5188,91 +3420,57 @@ class General_postal_service(SeshatCommon):
         verbose_name_plural = "General_postal_services"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
-
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "general_postal_service"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "General Postal Service"
+        section = SECTIONS.sc
+        subsection = SUBSECTIONS.sc.PostalSystems
+        variable = "General Postal Service"
+        notes = "No_Actual_note"
+        description = "Talking about postal systems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."  # noqa: E501 pylint: disable=C0301
+        description_source = "NOTHING"
+        inner_variables = {
+            "general_postal_service": {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": "The absence or presence of general postal service for a polity.",  # noqa: E501 pylint: disable=C0301
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
+        }
+        null_meaning = STANDARD_SETTINGS.null_meaning
+        potential_cols = []
 
     def show_value(self):
-        if self.general_postal_service:
-            return self.get_general_postal_service_display()
-        else:
+        if not self.general_postal_service:
             return " - "
 
+        return self.get_general_postal_service_display()
+
     def show_value_from(self):
-        if self.general_postal_service:
-            return self.general_postal_service
-        else:
+        if not self.general_postal_service:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Postal System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("general_postal_service-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.general_postal_service
 
 
-class Communal_building(SeshatCommon):
+class Communal_building(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Communal_building")
-    communal_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    communal_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "communal_building"
+    _clean_name_spaced = "Communal Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5283,93 +3481,49 @@ class Communal_building(SeshatCommon):
         verbose_name_plural = "Communal_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "communal_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Communal Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.communal_building:
-            return self.get_communal_building_display()
-        else:
+        if not self.communal_building:
             return " - "
 
+        return self.get_communal_building_display()
+
     def show_value_from(self):
-        if self.communal_building:
-            return self.communal_building
-        else:
+        if not self.communal_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("communal_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.communal_building
 
 
-class Utilitarian_public_building(SeshatCommon):
+class Utilitarian_public_building(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Utilitarian_public_building")
+    name = models.CharField(
+        max_length=100, default="Utilitarian_public_building"
+    )
     utilitarian_public_building = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "utilitarian_public_building"
+    _clean_name_spaced = "Utilitarian Public Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5380,91 +3534,47 @@ class Utilitarian_public_building(SeshatCommon):
         verbose_name_plural = "Utilitarian_public_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "utilitarian_public_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Utilitarian Public Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.utilitarian_public_building:
-            return self.get_utilitarian_public_building_display()
-        else:
+        if not self.utilitarian_public_building:
             return " - "
 
+        return self.get_utilitarian_public_building_display()
+
     def show_value_from(self):
-        if self.utilitarian_public_building:
-            return self.utilitarian_public_building
-        else:
+        if not self.utilitarian_public_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("utilitarian_public_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.utilitarian_public_building
 
 
-class Symbolic_building(SeshatCommon):
+class Symbolic_building(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Symbolic_building")
-    symbolic_building = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    symbolic_building = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "symbolic_building"
+    _clean_name_spaced = "Symbolic Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5475,93 +3585,47 @@ class Symbolic_building(SeshatCommon):
         verbose_name_plural = "Symbolic_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "symbolic_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Symbolic Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.symbolic_building:
-            return self.get_symbolic_building_display()
-        else:
+        if not self.symbolic_building:
             return " - "
 
+        return self.get_symbolic_building_display()
+
     def show_value_from(self):
-        if self.symbolic_building:
-            return self.symbolic_building
-        else:
+        if not self.symbolic_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("symbolic_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.symbolic_building
 
 
-class Entertainment_building(SeshatCommon):
+class Entertainment_building(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Entertainment_building")
     entertainment_building = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "entertainment_building"
+    _clean_name_spaced = "Entertainment Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5572,93 +3636,49 @@ class Entertainment_building(SeshatCommon):
         verbose_name_plural = "Entertainment_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "entertainment_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Entertainment Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.entertainment_building:
-            return self.get_entertainment_building_display()
-        else:
+        if not self.entertainment_building:
             return " - "
 
+        return self.get_entertainment_building_display()
+
     def show_value_from(self):
-        if self.entertainment_building:
-            return self.entertainment_building
-        else:
+        if not self.entertainment_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("entertainment_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.entertainment_building
 
 
-class Knowledge_or_information_building(SeshatCommon):
+class Knowledge_or_information_building(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Knowledge_or_information_building")
+    name = models.CharField(
+        max_length=100, default="Knowledge_or_information_building"
+    )
     knowledge_or_information_building = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "knowledge_or_information_building"
+    _clean_name_spaced = "Knowledge Or Information Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5669,93 +3689,49 @@ class Knowledge_or_information_building(SeshatCommon):
         verbose_name_plural = "Knowledge_or_information_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "knowledge_or_information_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Knowledge Or Information Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.knowledge_or_information_building:
-            return self.get_knowledge_or_information_building_display()
-        else:
+        if not self.knowledge_or_information_building:
             return " - "
 
+        return self.get_knowledge_or_information_building_display()
+
     def show_value_from(self):
-        if self.knowledge_or_information_building:
-            return self.knowledge_or_information_building
-        else:
+        if not self.knowledge_or_information_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("knowledge_or_information_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.knowledge_or_information_building
 
 
-class Other_utilitarian_public_building(SeshatCommon):
+class Other_utilitarian_public_building(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Other_utilitarian_public_building")
+    name = models.CharField(
+        max_length=100, default="Other_utilitarian_public_building"
+    )
     other_utilitarian_public_building = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "other_utilitarian_public_building"
+    _clean_name_spaced = "Other Utilitarian Public Building"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5766,93 +3742,47 @@ class Other_utilitarian_public_building(SeshatCommon):
         verbose_name_plural = "Other_utilitarian_public_buildings"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "other_utilitarian_public_building"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Other Utilitarian Public Building"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.other_utilitarian_public_building:
-            return self.get_other_utilitarian_public_building_display()
-        else:
+        if not self.other_utilitarian_public_building:
             return " - "
 
+        return self.get_other_utilitarian_public_building_display()
+
     def show_value_from(self):
-        if self.other_utilitarian_public_building:
-            return self.other_utilitarian_public_building
-        else:
+        if not self.other_utilitarian_public_building:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("other_utilitarian_public_building-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.other_utilitarian_public_building
 
 
-class Special_purpose_site(SeshatCommon):
+class Special_purpose_site(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Special_purpose_site")
     special_purpose_site = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "special_purpose_site"
+    _clean_name_spaced = "Special Purpose Site"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5863,91 +3793,47 @@ class Special_purpose_site(SeshatCommon):
         verbose_name_plural = "Special_purpose_sites"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "special_purpose_site"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Special Purpose Site"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.special_purpose_site:
-            return self.get_special_purpose_site_display()
-        else:
+        if not self.special_purpose_site:
             return " - "
 
+        return self.get_special_purpose_site_display()
+
     def show_value_from(self):
-        if self.special_purpose_site:
-            return self.special_purpose_site
-        else:
+        if not self.special_purpose_site:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("special_purpose_site-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.special_purpose_site
 
 
-class Ceremonial_site(SeshatCommon):
+class Ceremonial_site(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Ceremonial_site")
-    ceremonial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    ceremonial_site = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "ceremonial_site"
+    _clean_name_spaced = "Ceremonial Site"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -5958,91 +3844,47 @@ class Ceremonial_site(SeshatCommon):
         verbose_name_plural = "Ceremonial_sites"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "ceremonial_site"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Ceremonial Site"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.ceremonial_site:
-            return self.get_ceremonial_site_display()
-        else:
+        if not self.ceremonial_site:
             return " - "
 
+        return self.get_ceremonial_site_display()
+
     def show_value_from(self):
-        if self.ceremonial_site:
-            return self.ceremonial_site
-        else:
+        if not self.ceremonial_site:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("ceremonial_site-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.ceremonial_site
 
 
-class Burial_site(SeshatCommon):
+class Burial_site(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Burial_site")
-    burial_site = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    burial_site = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "burial_site"
+    _clean_name_spaced = "Burial Site"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -6053,91 +3895,47 @@ class Burial_site(SeshatCommon):
         verbose_name_plural = "Burial_sites"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "burial_site"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Burial Site"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.burial_site:
-            return self.get_burial_site_display()
-        else:
+        if not self.burial_site:
             return " - "
 
+        return self.get_burial_site_display()
+
     def show_value_from(self):
-        if self.burial_site:
-            return self.burial_site
-        else:
+        if not self.burial_site:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("burial_site-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.burial_site
 
 
-class Trading_emporia(SeshatCommon):
+class Trading_emporia(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Trading_emporia")
-    trading_emporia = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    trading_emporia = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "trading_emporia"
+    _clean_name_spaced = "Trading Emporia"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -6148,91 +3946,47 @@ class Trading_emporia(SeshatCommon):
         verbose_name_plural = "Trading_emporias"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "trading_emporia"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Trading Emporia"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.trading_emporia:
-            return self.get_trading_emporia_display()
-        else:
+        if not self.trading_emporia:
             return " - "
 
+        return self.get_trading_emporia_display()
+
     def show_value_from(self):
-        if self.trading_emporia:
-            return self.trading_emporia
-        else:
+        if not self.trading_emporia:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("trading_emporia-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.trading_emporia
 
 
-class Enclosure(SeshatCommon):
+class Enclosure(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Enclosure")
-    enclosure = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    enclosure = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "enclosure"
+    _clean_name_spaced = "Enclosure"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -6243,93 +3997,49 @@ class Enclosure(SeshatCommon):
         verbose_name_plural = "Enclosures"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "enclosure"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Enclosure"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.enclosure:
-            return self.get_enclosure_display()
-        else:
+        if not self.enclosure:
             return " - "
 
+        return self.get_enclosure_display()
+
     def show_value_from(self):
-        if self.enclosure:
-            return self.enclosure
-        else:
+        if not self.enclosure:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("enclosure-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.enclosure
 
 
-class Length_measurement_system(SeshatCommon):
+class Length_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Length_measurement_system")
+    name = models.CharField(
+        max_length=100, default="Length_measurement_system"
+    )
     length_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "length_measurement_system"
+    _clean_name_spaced = "Length Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6340,93 +4050,47 @@ class Length_measurement_system(SeshatCommon):
         verbose_name_plural = "Length_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "length_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Length Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.length_measurement_system:
-            return self.get_length_measurement_system_display()
-        else:
+        if not self.length_measurement_system:
             return " - "
 
+        return self.get_length_measurement_system_display()
+
     def show_value_from(self):
-        if self.length_measurement_system:
-            return self.length_measurement_system
-        else:
+        if not self.length_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("length_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.length_measurement_system
 
 
-class Area_measurement_system(SeshatCommon):
+class Area_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Area_measurement_system")
     area_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "area_measurement_system"
+    _clean_name_spaced = "Area Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6437,93 +4101,49 @@ class Area_measurement_system(SeshatCommon):
         verbose_name_plural = "Area_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "area_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Area Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.area_measurement_system:
-            return self.get_area_measurement_system_display()
-        else:
+        if not self.area_measurement_system:
             return " - "
 
+        return self.get_area_measurement_system_display()
+
     def show_value_from(self):
-        if self.area_measurement_system:
-            return self.area_measurement_system
-        else:
+        if not self.area_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("area_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.area_measurement_system
 
 
-class Volume_measurement_system(SeshatCommon):
+class Volume_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Volume_measurement_system")
+    name = models.CharField(
+        max_length=100, default="Volume_measurement_system"
+    )
     volume_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "volume_measurement_system"
+    _clean_name_spaced = "Volume Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6534,93 +4154,49 @@ class Volume_measurement_system(SeshatCommon):
         verbose_name_plural = "Volume_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "volume_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Volume Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.volume_measurement_system:
-            return self.get_volume_measurement_system_display()
-        else:
+        if not self.volume_measurement_system:
             return " - "
 
+        return self.get_volume_measurement_system_display()
+
     def show_value_from(self):
-        if self.volume_measurement_system:
-            return self.volume_measurement_system
-        else:
+        if not self.volume_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("volume_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.volume_measurement_system
 
 
-class Weight_measurement_system(SeshatCommon):
+class Weight_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Weight_measurement_system")
+    name = models.CharField(
+        max_length=100, default="Weight_measurement_system"
+    )
     weight_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "weight_measurement_system"
+    _clean_name_spaced = "Weight Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6631,93 +4207,47 @@ class Weight_measurement_system(SeshatCommon):
         verbose_name_plural = "Weight_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "weight_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Weight Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.weight_measurement_system:
-            return self.get_weight_measurement_system_display()
-        else:
+        if not self.weight_measurement_system:
             return " - "
 
+        return self.get_weight_measurement_system_display()
+
     def show_value_from(self):
-        if self.weight_measurement_system:
-            return self.weight_measurement_system
-        else:
+        if not self.weight_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("weight_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.weight_measurement_system
 
 
-class Time_measurement_system(SeshatCommon):
+class Time_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Time_measurement_system")
     time_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "time_measurement_system"
+    _clean_name_spaced = "Time Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6728,93 +4258,48 @@ class Time_measurement_system(SeshatCommon):
         verbose_name_plural = "Time_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "time_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Time Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.time_measurement_system:
-            return self.get_time_measurement_system_display()
-        else:
+        if not self.time_measurement_system:
             return " - "
 
+        return self.get_time_measurement_system_display()
+
     def show_value_from(self):
-        if self.time_measurement_system:
-            return self.time_measurement_system
-        else:
+        if not self.time_measurement_system:
             return None
-
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("time_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.time_measurement_system
 
 
-class Geometrical_measurement_system(SeshatCommon):
+class Geometrical_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Geometrical_measurement_system")
+    name = models.CharField(
+        max_length=100, default="Geometrical_measurement_system"
+    )
     geometrical_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "geometrical_measurement_system"
+    _clean_name_spaced = "Geometrical Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6825,93 +4310,47 @@ class Geometrical_measurement_system(SeshatCommon):
         verbose_name_plural = "Geometrical_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "geometrical_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Geometrical Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.geometrical_measurement_system:
-            return self.get_geometrical_measurement_system_display()
-        else:
+        if not self.geometrical_measurement_system:
             return " - "
 
+        return self.get_geometrical_measurement_system_display()
+
     def show_value_from(self):
-        if self.geometrical_measurement_system:
-            return self.geometrical_measurement_system
-        else:
+        if not self.geometrical_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("geometrical_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.geometrical_measurement_system
 
 
-class Other_measurement_system(SeshatCommon):
+class Other_measurement_system(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Other_measurement_system")
     other_measurement_system = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "other_measurement_system"
+    _clean_name_spaced = "Other Measurement System"
+    _subsection = "Information"
+    _subsubsection = "Measurement System"
 
     class Meta:
         """
@@ -6922,93 +4361,49 @@ class Other_measurement_system(SeshatCommon):
         verbose_name_plural = "Other_measurement_systems"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "other_measurement_system"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Other Measurement System"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.other_measurement_system:
-            return self.get_other_measurement_system_display()
-        else:
+        if not self.other_measurement_system:
             return " - "
 
+        return self.get_other_measurement_system_display()
+
     def show_value_from(self):
-        if self.other_measurement_system:
-            return self.other_measurement_system
-        else:
+        if not self.other_measurement_system:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Measurement System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("other_measurement_system-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.other_measurement_system
 
 
-class Debt_and_credit_structure(SeshatCommon):
+class Debt_and_credit_structure(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Debt_and_credit_structure")
+    name = models.CharField(
+        max_length=100, default="Debt_and_credit_structure"
+    )
     debt_and_credit_structure = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "debt_and_credit_structure"
+    _clean_name_spaced = "Debt And Credit Structure"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -7019,91 +4414,47 @@ class Debt_and_credit_structure(SeshatCommon):
         verbose_name_plural = "Debt_and_credit_structures"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "debt_and_credit_structure"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Debt And Credit Structure"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.debt_and_credit_structure:
-            return self.get_debt_and_credit_structure_display()
-        else:
+        if not self.debt_and_credit_structure:
             return " - "
 
+        return self.get_debt_and_credit_structure_display()
+
     def show_value_from(self):
-        if self.debt_and_credit_structure:
-            return self.debt_and_credit_structure
-        else:
+        if not self.debt_and_credit_structure:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("debt_and_credit_structure-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.debt_and_credit_structure
 
 
-class Store_of_wealth(SeshatCommon):
+class Store_of_wealth(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Store_of_wealth")
-    store_of_wealth = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+    store_of_wealth = models.CharField(
+        max_length=500, choices=ABSENT_PRESENT_CHOICES
+    )
+
+    _clean_name = "store_of_wealth"
+    _clean_name_spaced = "Store Of Wealth"
+    _subsection = "Information"
+    _subsubsection = "Money"
 
     class Meta:
         """
@@ -7114,93 +4465,47 @@ class Store_of_wealth(SeshatCommon):
         verbose_name_plural = "Store_of_wealths"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "store_of_wealth"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Store Of Wealth"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.store_of_wealth:
-            return self.get_store_of_wealth_display()
-        else:
+        if not self.store_of_wealth:
             return " - "
 
+        return self.get_store_of_wealth_display()
+
     def show_value_from(self):
-        if self.store_of_wealth:
-            return self.store_of_wealth
-        else:
+        if not self.store_of_wealth:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Money"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("store_of_wealth-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.store_of_wealth
 
 
-class Source_of_support(SeshatCommon):
+class Source_of_support(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Source_of_support")
     source_of_support = models.CharField(
         max_length=500, choices=SOURCE_OF_SUPPORT_CHOICES
     )
+
+    _clean_name = "source_of_support"
+    _clean_name_spaced = "Source Of Support"
+    _subsection = "Professions"
+    _subsubsection = None
 
     class Meta:
         """
@@ -7211,93 +4516,47 @@ class Source_of_support(SeshatCommon):
         verbose_name_plural = "Source_of_supports"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "source_of_support"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Source Of Support"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.source_of_support:
-            return self.get_source_of_support_display()
-        else:
+        if not self.source_of_support:
             return " - "
 
+        return self.get_source_of_support_display()
+
     def show_value_from(self):
-        if self.source_of_support:
-            return self.source_of_support
-        else:
+        if not self.source_of_support:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Professions"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("source_of_support-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.source_of_support
 
 
-class Occupational_complexity(SeshatCommon):
+class Occupational_complexity(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Occupational_complexity")
     occupational_complexity = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "occupational_complexity"
+    _clean_name_spaced = "Occupational Complexity"
+    _subsection = "Professions"
+    _subsubsection = None
 
     class Meta:
         """
@@ -7308,93 +4567,47 @@ class Occupational_complexity(SeshatCommon):
         verbose_name_plural = "Occupational_complexies"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "occupational_complexity"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Occupational Complexity"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.occupational_complexity:
-            return self.get_occupational_complexity_display()
-        else:
+        if not self.occupational_complexity:
             return " - "
 
+        return self.get_occupational_complexity_display()
+
     def show_value_from(self):
-        if self.occupational_complexity:
-            return self.occupational_complexity
-        else:
+        if not self.occupational_complexity:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Professions"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("occupational_complexity-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.occupational_complexity
 
 
-class Special_purpose_house(SeshatCommon):
+class Special_purpose_house(SeshatCommon, SCMixIn):
     """ """
 
     name = models.CharField(max_length=100, default="Special_purpose_house")
     special_purpose_house = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "special_purpose_house"
+    _clean_name_spaced = "Special Purpose House"
+    _subsection = "Specialized Buildings: polity owned"
+    _subsubsection = None
 
     class Meta:
         """
@@ -7405,93 +4618,49 @@ class Special_purpose_house(SeshatCommon):
         verbose_name_plural = "Special Purpose Houses"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "special_purpose_house"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Special Purpose House"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.special_purpose_house:
-            return self.get_special_purpose_house_display()
-        else:
+        if not self.special_purpose_house:
             return " - "
 
+        return self.get_special_purpose_house_display()
+
     def show_value_from(self):
-        if self.special_purpose_house:
+        if not self.special_purpose_house:
             return self.special_purpose_house
-        else:
-            return None
 
-    def show_value_to(self):
         return None
 
-    def subsection(self):
-        return "Specialized Buildings: polity owned"
 
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("special_purpose_house-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
-
-
-class Other_special_purpose_site(SeshatCommon):
+class Other_special_purpose_site(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Other_special_purpose_site")
+    name = models.CharField(
+        max_length=100, default="Other_special_purpose_site"
+    )
     other_special_purpose_site = models.CharField(
         max_length=500, choices=ABSENT_PRESENT_CHOICES
     )
+
+    _clean_name = "other_special_purpose_site"
+    _clean_name_spaced = "Other Special Purpose Site"
+    _subsection = "Special-purpose Sites"
+    _subsubsection = None
 
     class Meta:
         """
@@ -7502,92 +4671,52 @@ class Other_special_purpose_site(SeshatCommon):
         verbose_name_plural = "Other Special Purpose Sites"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "other_special_purpose_site"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Other Special Purpose Site"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if self.other_special_purpose_site:
-            return self.get_other_special_purpose_site_display()
-        else:
+        if not self.other_special_purpose_site:
             return " - "
 
+        return self.get_other_special_purpose_site_display()
+
     def show_value_from(self):
-        if self.other_special_purpose_site:
-            return self.other_special_purpose_site
-        else:
+        if not self.other_special_purpose_site:
             return None
 
-    def show_value_to(self):
-        return None
-
-    def subsection(self):
-        return "Special-purpose Sites"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("other_special_purpose_site-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.other_special_purpose_site
 
 
-class Largest_communication_distance(SeshatCommon):
+class Largest_communication_distance(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Largest_communication_distance")
-    largest_communication_distance_from = models.IntegerField(null=True, blank=True)
-    largest_communication_distance_to = models.IntegerField(null=True, blank=True)
+    name = models.CharField(
+        max_length=100, default="Largest_communication_distance"
+    )
+    largest_communication_distance_from = models.IntegerField(
+        null=True, blank=True
+    )
+    largest_communication_distance_to = models.IntegerField(
+        null=True, blank=True
+    )
+
+    _clean_name = "largest_communication_distance"
+    _clean_name_spaced = "Largest Communication Distance"
+    _subsection = "Social Scale"
+    _subsubsection = None
 
     class Meta:
         """
@@ -7598,109 +4727,79 @@ class Largest_communication_distance(SeshatCommon):
         verbose_name_plural = "Largest Communication Distances"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "largest_communication_distance"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Largest Communication Distance"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if (
-            self.largest_communication_distance_from is not None
-            and self.largest_communication_distance_to is not None
-            and self.largest_communication_distance_to
-            == self.largest_communication_distance_from
+        if all(
+            [
+                self.largest_communication_distance_from is not None,
+                self.largest_communication_distance_to is not None,
+                self.largest_communication_distance_to
+                == self.largest_communication_distance_from,
+            ]
         ):
             return self.largest_communication_distance_from
-        elif (
-            self.largest_communication_distance_from is not None
-            and self.largest_communication_distance_to is not None
+
+        if all(
+            [
+                self.largest_communication_distance_from is not None,
+                self.largest_communication_distance_to is not None,
+            ]
         ):
-            return f"[{self.largest_communication_distance_from:,} to {self.largest_communication_distance_to:,}]"
-        elif self.largest_communication_distance_from is not None:
+            return f"[{self.largest_communication_distance_from:,} to {self.largest_communication_distance_to:,}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.largest_communication_distance_from is not None:
             return f"[{self.largest_communication_distance_from:,}, ...]"
-        elif self.largest_communication_distance_to is not None:
+
+        if self.largest_communication_distance_to is not None:
             return f"[..., {self.largest_communication_distance_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.largest_communication_distance_from is not None:
-            return self.largest_communication_distance_from
-        else:
+        if not self.largest_communication_distance_from:
             return "unknown"
 
+        return self.largest_communication_distance_from
+
     def show_value_to(self):
-        if self.largest_communication_distance_to is not None:
-            return self.largest_communication_distance_to
-        else:
+        if not self.largest_communication_distance_to:
             return None
 
-    def subsection(self):
-        return "Social Scale"
-
-    def sub_subsection(self):
-        return None
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("largest_communication_distance-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.largest_communication_distance_to
 
 
-class Fastest_individual_communication(SeshatCommon):
+class Fastest_individual_communication(SeshatCommon, SCMixIn):
     """ """
 
-    name = models.CharField(max_length=100, default="Fastest_individual_communication")
-    fastest_individual_communication_from = models.IntegerField(null=True, blank=True)
-    fastest_individual_communication_to = models.IntegerField(null=True, blank=True)
+    name = models.CharField(
+        max_length=100, default="Fastest_individual_communication"
+    )
+    fastest_individual_communication_from = models.IntegerField(
+        null=True, blank=True
+    )
+    fastest_individual_communication_to = models.IntegerField(
+        null=True, blank=True
+    )
+
+    _clean_name = "fastest_individual_communication"
+    _clean_name_spaced = "Fastest Individual Communication"
+    _subsection = "Information"
+    _subsubsection = "Postal System"
 
     class Meta:
         """
@@ -7711,98 +4810,57 @@ class Fastest_individual_communication(SeshatCommon):
         verbose_name_plural = "Fastest Individual Communications"
         ordering = ["year_from", "year_to"]
 
-    @property
-    def display_citations(self):
+    class Code:
         """
-        Display the citations of the model instance.
-
         :noindex:
 
-        Note:
-            The method is a property, and an alias for the return_citations
-            function.
-
-        Returns:
-            str: The citations of the model instance, separated by comma.
+        ..
+            TODO: Create Code for this class
         """
-        return return_citations(self)
 
-    def clean(self):
-        clean_times(self)
-
-    def clean_name(self):
-        """
-        Return the name of the model instance.
-
-        :noindex:
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-
-        Returns:
-            str: The name of the model instance.
-        """
-        return "fastest_individual_communication"
-
-    def clean_name_spaced(self):
-        """
-        Return the name of the model instance with spaces.
-
-        Note:
-            TODO This method should probably just be an attribute set on the
-            model instead.
-        """
-        return "Fastest Individual Communication"
+        section = None
+        subsection = None
+        variable = ""
+        notes = "No_Actual_note"
+        description = ""
+        description_source = ""
+        inner_variables = {}
 
     def show_value(self):
-        if (
-            self.fastest_individual_communication_from is not None
-            and self.fastest_individual_communication_to is not None
-            and self.fastest_individual_communication_to
-            == self.fastest_individual_communication_from
+        if all(
+            [
+                self.fastest_individual_communication_from is not None,
+                self.fastest_individual_communication_to is not None,
+                self.fastest_individual_communication_to
+                == self.fastest_individual_communication_from,
+            ]
         ):
             return self.fastest_individual_communication_from
-        elif (
-            self.fastest_individual_communication_from is not None
-            and self.fastest_individual_communication_to is not None
+
+        if all(
+            [
+                self.fastest_individual_communication_from is not None,
+                self.fastest_individual_communication_to is not None,
+            ]
         ):
-            return f"[{self.fastest_individual_communication_from:,} to {self.fastest_individual_communication_to:,}]"
-        elif self.fastest_individual_communication_from is not None:
+            return f"[{self.fastest_individual_communication_from:,} to {self.fastest_individual_communication_to:,}]"  # noqa: E501 pylint: disable=C0301
+
+        if self.fastest_individual_communication_from is not None:
             return f"[{self.fastest_individual_communication_from:,}, ...]"
-        elif self.fastest_individual_communication_to is not None:
+
+        if self.fastest_individual_communication_to is not None:
             return f"[..., {self.fastest_individual_communication_to:,}]"
-        else:
-            return " - "
+
+        return " - "
 
     def show_value_from(self):
-        if self.fastest_individual_communication_from is not None:
-            return self.fastest_individual_communication_from
-        else:
+        if not self.fastest_individual_communication_from:
             return "unknown"
 
+        return self.fastest_individual_communication_from
+
     def show_value_to(self):
-        if self.fastest_individual_communication_to is not None:
-            return self.fastest_individual_communication_to
-        else:
+        if not self.fastest_individual_communication_to:
             return None
 
-    def subsection(self):
-        return "Information"
-
-    def sub_subsection(self):
-        return "Postal System"
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-
-        :noindex:
-
-        Returns:
-            str: A string of the url to access a particular instance of the model.
-        """
-        return reverse("fastest_individual_communication-detail", args=[str(self.id)])
-
-    def __str__(self) -> str:
-        return call_my_name(self)
+        return self.fastest_individual_communication_to
