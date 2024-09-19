@@ -1,9 +1,9 @@
 from django import template
 
-from ..models import Polity, Capital
-from ..views import get_polity_shape_content
+from ..models import Polity
+from ..views import get_polity_shape_content, get_polity_capitals
 
-from ...general.models import Polity_capital, Polity_peak_years
+from ...general.models import Polity_peak_years
 
 
 register = template.Library()
@@ -36,69 +36,26 @@ def polity_map(pk, test=False):
         capitals_info = get_polity_capitals(pk)
         # Set the start and end years to be the same as the polity where missing
         modified_caps = capitals_info
-        i = 0
-        for capital_info in capitals_info:
-            if capital_info["year_from"] == None:
+
+        for i, capital_info in enumerate(capitals_info):
+            if capital_info["year_from"] is None:
                 modified_caps[i]["year_from"] = polity.start_year
-            if capital_info["year_to"] == None:
+            if capital_info["year_to"] is None:
                 modified_caps[i]["year_to"] = polity.end_year
-            i += 1
+
         content["capitals_info"] = modified_caps
         content["include_polity_map"] = True
-    except:
-        content = {}
-        content["include_polity_map"] = False
+    except:  # noqa: E722  TODO: Don't use bare except
+        content = {
+            "include_polity_map": False,
+        }
 
     if content["include_polity_map"]:
         # Update the default display year to be the peak year (if it exists)
         try:
             peak_years = Polity_peak_years.objects.get(polity_id=page_id)
             content["display_year"] = peak_years.peak_year_from
-        except:
+        except:  # noqa: E722  TODO: Don't use bare except
             pass
 
     return {"content": content}
-
-
-def get_polity_capitals(pk):
-    """
-    Get all the capitals for a polity and coordinates.
-
-    Args:
-        pk (int): The primary key of the polity.
-
-    Returns:
-        list: A list of dictionaries containing the capital name, latitude,
-            longitude, start year (or 0 or None if they aren't present in the
-            database), and end year (or 0 or None if they aren't present in
-            the database).
-    """
-    capitals_info = []
-    polity_capitals = Polity_capital.objects.filter(polity_id=pk)
-
-    for polity_capital in polity_capitals:
-        capitals = Capital.objects.filter(name=polity_capital.capital)
-        for capital in capitals:
-            capital_info = {}
-            if capital.name and capital.latitude and capital.longitude:
-                capital_info["capital"] = capital.name
-                capital_info["latitude"] = float(capital.latitude)
-                capital_info["longitude"] = float(capital.longitude)
-
-                if polity_capital.year_from == 0:
-                    capital_info["year_from"] = 0
-                elif polity_capital.year_from is not None:
-                    capital_info["year_from"] = polity_capital.year_from
-                else:
-                    capital_info["year_from"] = None
-
-                if polity_capital.year_to == 0:
-                    capital_info["year_to"] = 0
-                elif polity_capital.year_to is not None:
-                    capital_info["year_to"] = polity_capital.year_to
-                else:
-                    capital_info["year_to"] = None
-
-                capitals_info.append(capital_info)
-
-    return capitals_info
