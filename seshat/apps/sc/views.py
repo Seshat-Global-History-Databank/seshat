@@ -1,22 +1,32 @@
-from django.apps import apps
+# TODO: move the metadata values to the Code attribute on models.
+
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+    DetailView,
+)
 from django.contrib.auth.decorators import (
     login_required,
     permission_required,
     user_passes_test,
 )
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.urls import reverse, reverse_lazy
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-import csv
-import datetime
 
 from ..core.models import Reference
 from ..general.mixins import PolityIdMixin
+from ..global_utils import (
+    check_permissions,
+    get_problematic_data_context,
+    has_add_capital_permission,
+    get_variable_context
+)
+from ..global_constants import ABSENT_PRESENT_STRING_LIST
+
 from .forms import (
     RaForm,
     Polity_territoryForm,
@@ -125,9 +135,115 @@ from .models import (
     Postal_station,
     General_postal_service,
 )
+from .constants import APP_NAME
+from .specific_views.downloads import (
+    ra_download_view,
+    ra_meta_download_view,
+    polity_territory_download_view,
+    polity_territory_meta_download_view,
+    polity_population_download_view,
+    polity_population_meta_download_view,
+    population_of_the_largest_settlement_download_view,
+    population_of_the_largest_settlement_meta_download_view,
+    settlement_hierarchy_download_view,
+    settlement_hierarchy_meta_download_view,
+    administrative_level_download_view,
+    administrative_level_meta_download_view,
+    religious_level_download_view,
+    religious_level_meta_download_view,
+    military_level_download_view,
+    military_level_meta_download_view,
+    professional_military_officer_download_view,
+    professional_military_officer_meta_download_view,
+    professional_soldier_download_view,
+    professional_soldier_meta_download_view,
+    professional_priesthood_download_view,
+    full_time_bureaucrat_download_view,
+    full_time_bureaucrat_meta_download_view,
+    examination_system_download_view,
+    examination_system_meta_download_view,
+    merit_promotion_download_view,
+    merit_promotion_meta_download_view,
+    specialized_government_building_download_view,
+    specialized_government_building_meta_download_view,
+    formal_legal_code_download_view,
+    formal_legal_code_meta_download_view,
+    judge_download_view,
+    judge_meta_download_view,
+    court_download_view,
+    court_meta_download_view,
+    professional_lawyer_download_view,
+    professional_lawyer_meta_download_view,
+    irrigation_system_download_view,
+    irrigation_system_meta_download_view,
+    drinking_water_supply_system_download_view,
+    drinking_water_supply_system_meta_download_view,
+    market_download_view,
+    market_meta_download_view,
+    food_storage_site_download_view,
+    food_storage_site_meta_download_view,
+    road_download_view,
+    road_meta_download_view,
+    bridge_download_view,
+    bridge_meta_download_view,
+    canal_download_view,
+    canal_meta_download_view,
+    port_download_view,
+    port_meta_download_view,
+    mines_or_quarry_download_view,
+    mines_or_quarry_meta_download_view,
+    mnemonic_device_download_view,
+    mnemonic_device_meta_download_view,
+    nonwritten_record_download_view,
+    nonwritten_record_meta_download_view,
+    written_record_download_view,
+    written_record_meta_download_view,
+    script_download_view,
+    script_meta_download_view,
+    non_phonetic_writing_download_view,
+    non_phonetic_writing_meta_download_view,
+    phonetic_alphabetic_writing_download_view,
+    phonetic_alphabetic_writing_meta_download_view,
+    lists_tables_and_classification_download_view,
+    lists_tables_and_classification_meta_download_view,
+    calendar_download_view,
+    calendar_meta_download_view,
+    sacred_text_download_view,
+    sacred_text_meta_download_view,
+    religious_literature_download_view,
+    religious_literature_meta_download_view,
+    practical_literature_download_view,
+    practical_literature_meta_download_view,
+    history_download_view,
+    history_meta_download_view,
+    philosophy_download_view,
+    philosophy_meta_download_view,
+    scientific_literature_download_view,
+    scientific_literature_meta_download_view,
+    fiction_download_view,
+    fiction_meta_download_view,
+    article_download_view,
+    article_meta_download_view,
+    token_download_view,
+    token_meta_download_view,
+    precious_metal_download_view,
+    precious_metal_meta_download_view,
+    foreign_coin_download_view,
+    foreign_coin_meta_download_view,
+    indigenous_coin_download_view,
+    indigenous_coin_meta_download_view,
+    paper_currency_download_view,
+    paper_currency_meta_download_view,
+    courier_download_view,
+    courier_meta_download_view,
+    postal_station_download_view,
+    postal_station_meta_download_view,
+    general_postal_service_download_view,
+    general_postal_service_meta_download_view,
+)
 
 
-class RaCreate(PermissionRequiredMixin, CreateView):
+class RaCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Ra object.
 
@@ -140,7 +256,7 @@ class RaCreate(PermissionRequiredMixin, CreateView):
     template_name = "sc/ra/ra_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -163,31 +279,25 @@ class RaCreate(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "ra"
-        context["my_exp"] = (
-            "The name of the research assistant or associate who coded the data. If more than one RA made a substantial contribution, list all via separate entries."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "sc_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of Social Complexity Variables",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class RaUpdate(PermissionRequiredMixin, UpdateView):
+class RaUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Ra object.
 
@@ -213,12 +323,18 @@ class RaUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "ra"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class RaDelete(PermissionRequiredMixin, DeleteView):
+class RaDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Ra object.
 
@@ -232,7 +348,7 @@ class RaDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class RaListView(generic.ListView):
+class RaListView(ListView):
     """
     Paginated view for listing all the Ra objects.
     """
@@ -241,7 +357,7 @@ class RaListView(generic.ListView):
     template_name = "sc/ra/ra_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -263,31 +379,24 @@ class RaListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "ra"
-        context["var_main_desc"] = (
-            "The name of the research assistant or associate who coded the data. if more than one ra made a substantial contribution, list all via separate entries."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "staff"
-        context["inner_vars"] = {
-            "sc_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of Social Complexity Variables",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class RaListViewAll(generic.ListView):
+class RaListAllView(ListView):
     """
     View for listing all the Ra objects.
     """
@@ -295,7 +404,7 @@ class RaListViewAll(generic.ListView):
     model = Ra
     template_name = "sc/ra/ra_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         return reverse("ras_all")
 
     def get_queryset(self):
@@ -317,32 +426,25 @@ class RaListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "ra"
-        context["var_main_desc"] = (
-            "The name of the research assistant or associate who coded the data. if more than one ra made a substantial contribution, list all via separate entries."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "staff"
-        context["inner_vars"] = {
-            "sc_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of Social Complexity Variables",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class RaDetailView(generic.DetailView):
+class RaDetailView(DetailView):
     """
     View for displaying the details of a Ra object.
     """
@@ -351,124 +453,9 @@ class RaDetailView(generic.DetailView):
     template_name = "sc/ra/ra_detail.html"
 
 
-@permission_required("core.view_capital")
-def ra_download(request):
-    """
-    Download all the data in the Ra model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Ra.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_ra_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "sc_ra",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.sc_ra,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def ra_meta_download(request):
-    """
-    Download the metadata of the Ra model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_ras.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The name of the research assistant or associate who coded the data. If more than one RA made a substantial contribution, list all via separate entries.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "staff",
-    }
-    my_meta_data_dic_inner_vars = {
-        "sc_ra": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The RA of Social Complexity Variables",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_territoryCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_territory object.
 
@@ -481,7 +468,7 @@ class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
     template_name = "sc/polity_territory/polity_territory_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -504,41 +491,25 @@ class Polity_territoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Territory"
-        context["my_exp"] = (
-            "Talking about Social Scale, Polity territory is coded in squared kilometers."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "polity_territory_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_territory_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Polity_territoryUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_territoryUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_territory object.
 
@@ -564,12 +535,18 @@ class Polity_territoryUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Territory"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_territoryDelete(PermissionRequiredMixin, DeleteView):
+class Polity_territoryDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_territory object.
 
@@ -583,7 +560,7 @@ class Polity_territoryDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_territoryListView(generic.ListView):
+class Polity_territoryListView(ListView):
     """
     Paginated view for listing all the Polity_territory objects.
     """
@@ -592,7 +569,7 @@ class Polity_territoryListView(generic.ListView):
     template_name = "sc/polity_territory/polity_territory_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -614,41 +591,24 @@ class Polity_territoryListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Territory"
-        context["var_main_desc"] = (
-            "Talking about social scale, polity territory is coded in squared kilometers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "polity_territory_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_territory_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = ["Units"]
 
         return context
 
 
-class Polity_territoryListViewAll(generic.ListView):
+class Polity_territoryListAllView(ListView):
     """
     View for listing all the Polity_territory objects.
     """
@@ -656,7 +616,7 @@ class Polity_territoryListViewAll(generic.ListView):
     model = Polity_territory
     template_name = "sc/polity_territory/polity_territory_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -684,42 +644,25 @@ class Polity_territoryListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Territory"
-        context["var_main_desc"] = (
-            "Talking about social scale, polity territory is coded in squared kilometers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "polity_territory_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_territory_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity territory for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = ["Units"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Polity_territoryDetailView(generic.DetailView):
+class Polity_territoryDetailView(DetailView):
     """
     View for displaying the details of a Polity_territory object.
     """
@@ -728,138 +671,9 @@ class Polity_territoryDetailView(generic.DetailView):
     template_name = "sc/polity_territory/polity_territory_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_territory_download(request):
-    """
-    Download all the data in the Polity_territory model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_territory.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_polity_territory_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_territory_from",
-            "polity_territory_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.polity_territory_from,
-                obj.polity_territory_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_territory_meta_download(request):
-    """
-    Download the metadata of the Polity_territory model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_polity_territorys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Social Scale, Polity territory is coded in squared kilometers.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Social Scale",
-    }
-    my_meta_data_dic_inner_vars = {
-        "polity_territory_from": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of polity territory for a polity.",
-            "units": "km squared",
-            "choices": None,
-            "null_meaning": None,
-        },
-        "polity_territory_to": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of polity territory for a polity.",
-            "units": "km squared",
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_populationCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_population object.
 
@@ -872,7 +686,7 @@ class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "sc/polity_population/polity_population_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -895,41 +709,25 @@ class Polity_populationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Population"
-        context["my_exp"] = (
-            "Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "polity_population_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_population_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Polity_populationUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_populationUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_population object.
 
@@ -955,12 +753,18 @@ class Polity_populationUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Population"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_populationDelete(PermissionRequiredMixin, DeleteView):
+class Polity_populationDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_population object.
 
@@ -974,7 +778,7 @@ class Polity_populationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_populationListView(generic.ListView):
+class Polity_populationListView(ListView):
     """
     Paginated view for listing all the Polity_population objects.
     """
@@ -983,7 +787,7 @@ class Polity_populationListView(generic.ListView):
     template_name = "sc/polity_population/polity_population_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1005,41 +809,24 @@ class Polity_populationListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Population"
-        context["var_main_desc"] = (
-            "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "polity_population_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_population_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Polity_populationListViewAll(generic.ListView):
+class Polity_populationListAllView(ListView):
     """
     View for listing all the Polity_population objects.
     """
@@ -1047,7 +834,7 @@ class Polity_populationListViewAll(generic.ListView):
     model = Polity_population
     template_name = "sc/polity_population/polity_population_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1075,42 +862,25 @@ class Polity_populationListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Population"
-        context["var_main_desc"] = (
-            "Talking about social scale, polity population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "polity_population_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "polity_population_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of polity population for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Polity_populationDetailView(generic.DetailView):
+class Polity_populationDetailView(DetailView):
     """
     View for displaying the details of a Polity_population object.
     """
@@ -1119,138 +889,7 @@ class Polity_populationDetailView(generic.DetailView):
     template_name = "sc/polity_population/polity_population_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_population_download(request):
-    """
-    Download all the data of the Polity_population model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_population.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_polity_population_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_population_from",
-            "polity_population_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.polity_population_from,
-                obj.polity_population_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_population_meta_download(request):
-    """
-    Download the metadata of the Polity_population model as a CSV file.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_polity_populations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Social Scale",
-    }
-    my_meta_data_dic_inner_vars = {
-        "polity_population_from": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of polity population for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "polity_population_to": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of polity population for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Population_of_the_largest_settlementCreate(
+class Population_of_the_largest_settlementCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -1262,10 +901,10 @@ class Population_of_the_largest_settlementCreate(
 
     model = Population_of_the_largest_settlement
     form_class = Population_of_the_largest_settlementForm
-    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_form.html"
+    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1288,41 +927,27 @@ class Population_of_the_largest_settlementCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Population of the Largest Settlement"
-        context["my_exp"] = (
-            "Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "population_of_the_largest_settlement_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "population_of_the_largest_settlement_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Population_of_the_largest_settlementUpdate(PermissionRequiredMixin, UpdateView):
+class Population_of_the_largest_settlementUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -1332,7 +957,7 @@ class Population_of_the_largest_settlementUpdate(PermissionRequiredMixin, Update
 
     model = Population_of_the_largest_settlement
     form_class = Population_of_the_largest_settlementForm
-    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_update.html"
+    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -1348,12 +973,20 @@ class Population_of_the_largest_settlementUpdate(PermissionRequiredMixin, Update
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Population of the Largest Settlement"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Population_of_the_largest_settlementDelete(PermissionRequiredMixin, DeleteView):
+class Population_of_the_largest_settlementDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Population_of_the_largest_settlement object.
 
@@ -1367,16 +1000,16 @@ class Population_of_the_largest_settlementDelete(PermissionRequiredMixin, Delete
     permission_required = "core.add_capital"
 
 
-class Population_of_the_largest_settlementListView(generic.ListView):
+class Population_of_the_largest_settlementListView(ListView):
     """
     Paginated view for listing all the Population_of_the_largest_settlement objects.
     """
 
     model = Population_of_the_largest_settlement
-    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list.html"
+    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1398,47 +1031,30 @@ class Population_of_the_largest_settlementListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Population of the Largest Settlement"
-        context["var_main_desc"] = (
-            "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "population_of_the_largest_settlement_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "population_of_the_largest_settlement_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Population_of_the_largest_settlementListViewAll(generic.ListView):
+class Population_of_the_largest_settlementListAllView(ListView):
     """ """
 
     model = Population_of_the_largest_settlement
-    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list_all.html"
+    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1468,158 +1084,34 @@ class Population_of_the_largest_settlementListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Population of the Largest Settlement"
-        context["var_main_desc"] = (
-            "Talking about social scale, population of the largest settlement is the estimated population of the largest settlement of the polity. note that the largest settlement could be different from the capital (coded under general variables). if possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). note that we are also building a city database - you should consult it as it may already have the needed data."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Social Scale"
-        context["inner_vars"] = {
-            "population_of_the_largest_settlement_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "population_of_the_largest_settlement_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of population of the largest settlement for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Population_of_the_largest_settlementDetailView(generic.DetailView):
+class Population_of_the_largest_settlementDetailView(DetailView):
     """ """
 
     model = Population_of_the_largest_settlement
-    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_detail.html"
+    template_name = "sc/population_of_the_largest_settlement/population_of_the_largest_settlement_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def population_of_the_largest_settlement_download(request):
-    items = Population_of_the_largest_settlement.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = (
-        f"social_complexity_population_of_the_largest_settlement_{current_datetime}.csv"
-    )
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "population_of_the_largest_settlement_from",
-            "population_of_the_largest_settlement_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.population_of_the_largest_settlement_from,
-                obj.population_of_the_largest_settlement_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def population_of_the_largest_settlement_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_population_of_the_largest_settlements.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Social Scale",
-    }
-    my_meta_data_dic_inner_vars = {
-        "population_of_the_largest_settlement_from": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of population of the largest settlement for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "population_of_the_largest_settlement_to": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of population of the largest settlement for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Settlement_hierarchyCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -1632,7 +1124,7 @@ class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1655,41 +1147,25 @@ class Settlement_hierarchyCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Settlement Hierarchy"
-        context["my_exp"] = (
-            "Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "settlement_hierarchy_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "settlement_hierarchy_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Settlement_hierarchyUpdate(PermissionRequiredMixin, UpdateView):
+class Settlement_hierarchyUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -1715,12 +1191,18 @@ class Settlement_hierarchyUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlement Hierarchy"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Settlement_hierarchyDelete(PermissionRequiredMixin, DeleteView):
+class Settlement_hierarchyDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Settlement_hierarchy object.
 
@@ -1734,7 +1216,7 @@ class Settlement_hierarchyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Settlement_hierarchyListView(generic.ListView):
+class Settlement_hierarchyListView(ListView):
     """
     Paginated view for listing all the Settlement_hierarchy objects.
     """
@@ -1743,7 +1225,7 @@ class Settlement_hierarchyListView(generic.ListView):
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1765,47 +1247,32 @@ class Settlement_hierarchyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlement Hierarchy"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "settlement_hierarchy_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "settlement_hierarchy_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Settlement_hierarchyListViewAll(generic.ListView):
+class Settlement_hierarchyListAllView(ListView):
     """ """
 
     model = Settlement_hierarchy
-    template_name = "sc/settlement_hierarchy/settlement_hierarchy_list_all.html"
+    template_name = (
+        "sc/settlement_hierarchy/settlement_hierarchy_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1833,156 +1300,34 @@ class Settlement_hierarchyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlement Hierarchy"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. as settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). example: (1) large city (monumental structures, theatre, market, hospital, central government buildings) (2) city (market, theatre, regional government buildings) (3) large town (market, administrative buildings) (4) town (administrative buildings, storehouse)) (5) village (shrine) (6) hamlet (residential only). in the narrative paragraph explain the different levels and list their functions. provide a (crude) estimate of population sizes. for example, large town (market, temple, administrative buildings): 2,000-5,000 inhabitants."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "settlement_hierarchy_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "settlement_hierarchy_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of settlement hierarchy for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Settlement_hierarchyDetailView(generic.DetailView):
+class Settlement_hierarchyDetailView(DetailView):
     """ """
 
     model = Settlement_hierarchy
     template_name = "sc/settlement_hierarchy/settlement_hierarchy_detail.html"
 
 
-@permission_required("core.view_capital")
-def settlement_hierarchy_download(request):
-    items = Settlement_hierarchy.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_settlement_hierarchy_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "settlement_hierarchy_from",
-            "settlement_hierarchy_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.settlement_hierarchy_from,
-                obj.settlement_hierarchy_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def settlement_hierarchy_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_settlement_hierarchys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Hierarchical Complexity",
-    }
-    my_meta_data_dic_inner_vars = {
-        "settlement_hierarchy_from": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of settlement hierarchy for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "settlement_hierarchy_to": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of settlement hierarchy for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Administrative_levelCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -1995,7 +1340,7 @@ class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/administrative_level/administrative_level_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2018,41 +1363,25 @@ class Administrative_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Administrative Level"
-        context["my_exp"] = (
-            "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command)."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "administrative_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "administrative_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Administrative_levelUpdate(PermissionRequiredMixin, UpdateView):
+class Administrative_levelUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2078,12 +1407,18 @@ class Administrative_levelUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Administrative Level"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Administrative_levelDelete(PermissionRequiredMixin, DeleteView):
+class Administrative_levelDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Administrative_level object.
 
@@ -2097,7 +1432,7 @@ class Administrative_levelDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Administrative_levelListView(generic.ListView):
+class Administrative_levelListView(ListView):
     """
     Paginated view for listing all the Administrative_level objects.
     """
@@ -2106,7 +1441,7 @@ class Administrative_levelListView(generic.ListView):
     template_name = "sc/administrative_level/administrative_level_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2128,47 +1463,32 @@ class Administrative_levelListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Administrative Level"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "administrative_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "administrative_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Administrative_levelListViewAll(generic.ListView):
+class Administrative_levelListAllView(ListView):
     """ """
 
     model = Administrative_level
-    template_name = "sc/administrative_level/administrative_level_list_all.html"
+    template_name = (
+        "sc/administrative_level/administrative_level_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2196,156 +1516,34 @@ class Administrative_levelListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Administrative Level"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, administrative levels records the administrative levels of a polity. an example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. note that unlike in settlement hierarchy, here you code people hierarchy. do not simply copy settlement hierarchy data here. for archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. note: often there are more than one concurrent administrative hierarchy. in the example above the hierarchy refers to the territorial government. in addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. for example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. in the narrative paragraph detail what is known about both hierarchies. the machine-readable code should reflect the largest number (the longer chain of command)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "administrative_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "administrative_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of administrative level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Administrative_levelDetailView(generic.DetailView):
+class Administrative_levelDetailView(DetailView):
     """ """
 
     model = Administrative_level
     template_name = "sc/administrative_level/administrative_level_detail.html"
 
 
-@permission_required("core.view_capital")
-def administrative_level_download(request):
-    items = Administrative_level.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_administrative_level_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "administrative_level_from",
-            "administrative_level_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.administrative_level_from,
-                obj.administrative_level_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def administrative_level_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_administrative_levels.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command).",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Hierarchical Complexity",
-    }
-    my_meta_data_dic_inner_vars = {
-        "administrative_level_from": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of administrative level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "administrative_level_to": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of administrative level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Religious_levelCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -2358,7 +1556,7 @@ class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/religious_level/religious_level_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2381,41 +1579,25 @@ class Religious_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Religious Level"
-        context["my_exp"] = (
-            "Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religious_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "religious_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Religious_levelUpdate(PermissionRequiredMixin, UpdateView):
+class Religious_levelUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2441,12 +1623,18 @@ class Religious_levelUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Level"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Religious_levelDelete(PermissionRequiredMixin, DeleteView):
+class Religious_levelDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Religious_level object.
 
@@ -2460,7 +1648,7 @@ class Religious_levelDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Religious_levelListView(generic.ListView):
+class Religious_levelListView(ListView):
     """
     Paginated view for listing all the Religious_level objects.
     """
@@ -2469,7 +1657,7 @@ class Religious_levelListView(generic.ListView):
     template_name = "sc/religious_level/religious_level_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2491,47 +1679,30 @@ class Religious_levelListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Level"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "religious_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "religious_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Religious_levelListViewAll(generic.ListView):
+class Religious_levelListAllView(ListView):
     """ """
 
     model = Religious_level
     template_name = "sc/religious_level/religious_level_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2559,156 +1730,34 @@ class Religious_levelListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Level"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, religious levels records the religious levels of a polity. same principle as with administrative levels. start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "religious_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "religious_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of religious level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Religious_levelDetailView(generic.DetailView):
+class Religious_levelDetailView(DetailView):
     """ """
 
     model = Religious_level
     template_name = "sc/religious_level/religious_level_detail.html"
 
 
-@permission_required("core.view_capital")
-def religious_level_download(request):
-    items = Religious_level.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_religious_level_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religious_level_from",
-            "religious_level_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religious_level_from,
-                obj.religious_level_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def religious_level_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_religious_levels.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Hierarchical Complexity",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religious_level_from": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of religious level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "religious_level_to": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of religious level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Military_levelCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -2721,7 +1770,7 @@ class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/military_level/military_level_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2744,41 +1793,25 @@ class Military_levelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Military Level"
-        context["my_exp"] = (
-            "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "military_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of military level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "military_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of military level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Military_levelUpdate(PermissionRequiredMixin, UpdateView):
+class Military_levelUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2804,12 +1837,18 @@ class Military_levelUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Military Level"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Military_levelDelete(PermissionRequiredMixin, DeleteView):
+class Military_levelDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Military_level object.
 
@@ -2823,7 +1862,7 @@ class Military_levelDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Military_levelListView(generic.ListView):
+class Military_levelListView(ListView):
     """
     Paginated view for listing all the Military_level objects.
     """
@@ -2832,7 +1871,7 @@ class Military_levelListView(generic.ListView):
     template_name = "sc/military_level/military_level_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2854,155 +1893,31 @@ class Military_levelListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Military Level"
-        context["var_main_desc"] = (
-            "Talking about hierarchical complexity, military levels records the military levels of a polity. same principle as with administrative levels. start with the commander-in-chief coded as: level 1, and work down to the private. even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. a complex chiefdom would be coded three levels. the presence of warrior burials might be the basis for inferring the existence of a military organization. (the lowest military level is always the individual soldier)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Hierarchical Complexity"
-        context["inner_vars"] = {
-            "military_level_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower range of military level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-            "military_level_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper range of military level for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            },
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Military_levelDetailView(generic.DetailView):
+class Military_levelDetailView(DetailView):
     """ """
 
     model = Military_level
     template_name = "sc/military_level/military_level_detail.html"
 
 
-@permission_required("core.view_capital")
-def military_level_download(request):
-    items = Military_level.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_military_level_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "military_level_from",
-            "military_level_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.military_level_from,
-                obj.military_level_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def military_level_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_military_levels.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier).",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Hierarchical Complexity",
-    }
-    my_meta_data_dic_inner_vars = {
-        "military_level_from": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower range of military level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-        "military_level_to": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper range of military level for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        },
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Professional_military_officerCreate(
+class Professional_military_officerCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -3014,12 +1929,10 @@ class Professional_military_officerCreate(
 
     model = Professional_military_officer
     form_class = Professional_military_officerForm
-    template_name = (
-        "sc/professional_military_officer/professional_military_officer_form.html"
-    )
+    template_name = "sc/professional_military_officer/professional_military_officer_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3042,31 +1955,27 @@ class Professional_military_officerCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Professional Military Officer"
-        context["my_exp"] = (
-            "Talking about Professions, Professional military officers refer to Full-time Professional military officers."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "professional_military_officer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional military officer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_military_officerUpdate(PermissionRequiredMixin, UpdateView):
+class Professional_military_officerUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -3076,9 +1985,7 @@ class Professional_military_officerUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Professional_military_officer
     form_class = Professional_military_officerForm
-    template_name = (
-        "sc/professional_military_officer/professional_military_officer_update.html"
-    )
+    template_name = "sc/professional_military_officer/professional_military_officer_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -3094,12 +2001,20 @@ class Professional_military_officerUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Military Officer"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Professional_military_officerDelete(PermissionRequiredMixin, DeleteView):
+class Professional_military_officerDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Professional_military_officer object.
 
@@ -3113,18 +2028,16 @@ class Professional_military_officerDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Professional_military_officerListView(generic.ListView):
+class Professional_military_officerListView(ListView):
     """
     Paginated view for listing all the Professional_military_officer objects.
     """
 
     model = Professional_military_officer
-    template_name = (
-        "sc/professional_military_officer/professional_military_officer_list.html"
-    )
+    template_name = "sc/professional_military_officer/professional_military_officer_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3146,39 +2059,30 @@ class Professional_military_officerListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Military Officer"
-        context["var_main_desc"] = (
-            "Talking about professions, professional military officers refer to full-time professional military officers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_military_officer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional military officer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_military_officerListViewAll(generic.ListView):
+class Professional_military_officerListAllView(ListView):
     """ """
 
     model = Professional_military_officer
-    template_name = (
-        "sc/professional_military_officer/professional_military_officer_list_all.html"
-    )
+    template_name = "sc/professional_military_officer/professional_military_officer_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3191,7 +2095,9 @@ class Professional_military_officerListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Professional_military_officer.objects.all().order_by(order, order2)
+        return Professional_military_officer.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -3206,138 +2112,34 @@ class Professional_military_officerListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Military Officer"
-        context["var_main_desc"] = (
-            "Talking about professions, professional military officers refer to full-time professional military officers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_military_officer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional military officer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Professional_military_officerDetailView(generic.DetailView):
+class Professional_military_officerDetailView(DetailView):
     """ """
 
     model = Professional_military_officer
-    template_name = (
-        "sc/professional_military_officer/professional_military_officer_detail.html"
-    )
+    template_name = "sc/professional_military_officer/professional_military_officer_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def professional_military_officer_download(request):
-    items = Professional_military_officer.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = (
-        f"social_complexity_professional_military_officer_{current_datetime}.csv"
-    )
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "professional_military_officer",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.professional_military_officer,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def professional_military_officer_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_professional_military_officers.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Professions, Professional military officers refer to Full-time Professional military officers.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Professions",
-    }
-    my_meta_data_dic_inner_vars = {
-        "professional_military_officer": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of professional military officer for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Professional_soldierCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -3350,7 +2152,7 @@ class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/professional_soldier/professional_soldier_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3373,31 +2175,25 @@ class Professional_soldierCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Professional Soldier"
-        context["my_exp"] = (
-            "Talking about Professions, Professional soldiers refer to Full-time Professional soldiers."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "professional_soldier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional soldier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_soldierUpdate(PermissionRequiredMixin, UpdateView):
+class Professional_soldierUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -3423,12 +2219,18 @@ class Professional_soldierUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Soldier"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Professional_soldierDelete(PermissionRequiredMixin, DeleteView):
+class Professional_soldierDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Professional_soldier object.
 
@@ -3442,7 +2244,7 @@ class Professional_soldierDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Professional_soldierListView(generic.ListView):
+class Professional_soldierListView(ListView):
     """
     Paginated view for listing all the Professional_soldier objects.
     """
@@ -3451,7 +2253,7 @@ class Professional_soldierListView(generic.ListView):
     template_name = "sc/professional_soldier/professional_soldier_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3473,37 +2275,32 @@ class Professional_soldierListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Soldier"
-        context["var_main_desc"] = (
-            "Talking about professions, professional soldiers refer to full-time professional soldiers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_soldier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional soldier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_soldierListViewAll(generic.ListView):
+class Professional_soldierListAllView(ListView):
     """ """
 
     model = Professional_soldier
-    template_name = "sc/professional_soldier/professional_soldier_list_all.html"
+    template_name = (
+        "sc/professional_soldier/professional_soldier_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3531,134 +2328,34 @@ class Professional_soldierListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Soldier"
-        context["var_main_desc"] = (
-            "Talking about professions, professional soldiers refer to full-time professional soldiers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_soldier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional soldier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Professional_soldierDetailView(generic.DetailView):
+class Professional_soldierDetailView(DetailView):
     """ """
 
     model = Professional_soldier
     template_name = "sc/professional_soldier/professional_soldier_detail.html"
 
 
-@permission_required("core.view_capital")
-def professional_soldier_download(request):
-    items = Professional_soldier.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_professional_soldier_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "professional_soldier",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.professional_soldier,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def professional_soldier_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_professional_soldiers.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Professions, Professional soldiers refer to Full-time Professional soldiers.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Professions",
-    }
-    my_meta_data_dic_inner_vars = {
-        "professional_soldier": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of professional soldier for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Professional_priesthoodCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -3668,10 +2365,12 @@ class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
     model = Professional_priesthood
     form_class = Professional_priesthoodForm
-    template_name = "sc/professional_priesthood/professional_priesthood_form.html"
+    template_name = (
+        "sc/professional_priesthood/professional_priesthood_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3694,31 +2393,25 @@ class Professional_priesthoodCreate(PermissionRequiredMixin, PolityIdMixin, Crea
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Professional Priesthood"
-        context["my_exp"] = (
-            "Talking about Professions, Professional priesthood refers to Full-time Professional priesthood."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "professional_priesthood": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional priesthood for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_priesthoodUpdate(PermissionRequiredMixin, UpdateView):
+class Professional_priesthoodUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -3728,7 +2421,9 @@ class Professional_priesthoodUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Professional_priesthood
     form_class = Professional_priesthoodForm
-    template_name = "sc/professional_priesthood/professional_priesthood_update.html"
+    template_name = (
+        "sc/professional_priesthood/professional_priesthood_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -3744,12 +2439,18 @@ class Professional_priesthoodUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Priesthood"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Professional_priesthoodDelete(PermissionRequiredMixin, DeleteView):
+class Professional_priesthoodDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Professional_priesthood object.
 
@@ -3763,16 +2464,18 @@ class Professional_priesthoodDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Professional_priesthoodListView(generic.ListView):
+class Professional_priesthoodListView(ListView):
     """
     Paginated view for listing all the Professional_priesthood objects.
     """
 
     model = Professional_priesthood
-    template_name = "sc/professional_priesthood/professional_priesthood_list.html"
+    template_name = (
+        "sc/professional_priesthood/professional_priesthood_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3794,37 +2497,32 @@ class Professional_priesthoodListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Priesthood"
-        context["var_main_desc"] = (
-            "Talking about professions, professional priesthood refers to full-time professional priesthood."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_priesthood": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional priesthood for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_priesthoodListViewAll(generic.ListView):
+class Professional_priesthoodListAllView(ListView):
     """ """
 
     model = Professional_priesthood
-    template_name = "sc/professional_priesthood/professional_priesthood_list_all.html"
+    template_name = (
+        "sc/professional_priesthood/professional_priesthood_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3852,134 +2550,36 @@ class Professional_priesthoodListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Priesthood"
-        context["var_main_desc"] = (
-            "Talking about professions, professional priesthood refers to full-time professional priesthood."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Professions"
-        context["inner_vars"] = {
-            "professional_priesthood": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional priesthood for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Professional_priesthoodDetailView(generic.DetailView):
+class Professional_priesthoodDetailView(DetailView):
     """ """
 
     model = Professional_priesthood
-    template_name = "sc/professional_priesthood/professional_priesthood_detail.html"
-
-
-@permission_required("core.view_capital")
-def professional_priesthood_download(request):
-    items = Professional_priesthood.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_professional_priesthood_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "professional_priesthood",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
+    template_name = (
+        "sc/professional_priesthood/professional_priesthood_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.professional_priesthood,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def professional_priesthood_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_professional_priesthoods.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Professions, Professional priesthood refers to Full-time Professional priesthood.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Professions",
-    }
-    my_meta_data_dic_inner_vars = {
-        "professional_priesthood": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of professional priesthood for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Full_time_bureaucratCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -3992,7 +2592,7 @@ class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4015,31 +2615,25 @@ class Full_time_bureaucratCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Full Time Bureaucrat"
-        context["my_exp"] = (
-            "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "full_time_bureaucrat": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of full time bureaucrat for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Full_time_bureaucratUpdate(PermissionRequiredMixin, UpdateView):
+class Full_time_bureaucratUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4065,12 +2659,18 @@ class Full_time_bureaucratUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Full Time Bureaucrat"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Full_time_bureaucratDelete(PermissionRequiredMixin, DeleteView):
+class Full_time_bureaucratDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Full_time_bureaucrat object.
 
@@ -4084,7 +2684,7 @@ class Full_time_bureaucratDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Full_time_bureaucratListView(generic.ListView):
+class Full_time_bureaucratListView(ListView):
     """
     Paginated view for listing all the Full_time_bureaucrat objects.
     """
@@ -4093,7 +2693,7 @@ class Full_time_bureaucratListView(generic.ListView):
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4115,37 +2715,32 @@ class Full_time_bureaucratListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Full Time Bureaucrat"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "full_time_bureaucrat": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of full time bureaucrat for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Full_time_bureaucratListViewAll(generic.ListView):
+class Full_time_bureaucratListAllView(ListView):
     """ """
 
     model = Full_time_bureaucrat
-    template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_list_all.html"
+    template_name = (
+        "sc/full_time_bureaucrat/full_time_bureaucrat_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4173,134 +2768,34 @@ class Full_time_bureaucratListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Full Time Bureaucrat"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, full-time bureaucrats refer to full-time administrative specialists. code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "full_time_bureaucrat": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of full time bureaucrat for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Full_time_bureaucratDetailView(generic.DetailView):
+class Full_time_bureaucratDetailView(DetailView):
     """ """
 
     model = Full_time_bureaucrat
     template_name = "sc/full_time_bureaucrat/full_time_bureaucrat_detail.html"
 
 
-@permission_required("core.view_capital")
-def full_time_bureaucrat_download(request):
-    items = Full_time_bureaucrat.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_full_time_bureaucrat_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "full_time_bureaucrat",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.full_time_bureaucrat,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def full_time_bureaucrat_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_full_time_bureaucrats.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Bureaucracy characteristics",
-    }
-    my_meta_data_dic_inner_vars = {
-        "full_time_bureaucrat": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of full time bureaucrat for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Examination_systemCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -4313,7 +2808,7 @@ class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
     template_name = "sc/examination_system/examination_system_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4336,31 +2831,25 @@ class Examination_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Examination System"
-        context["my_exp"] = (
-            "Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "examination_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of examination system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Examination_systemUpdate(PermissionRequiredMixin, UpdateView):
+class Examination_systemUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4386,12 +2875,18 @@ class Examination_systemUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Examination System"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Examination_systemDelete(PermissionRequiredMixin, DeleteView):
+class Examination_systemDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Examination_system object.
 
@@ -4405,7 +2900,7 @@ class Examination_systemDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Examination_systemListView(generic.ListView):
+class Examination_systemListView(ListView):
     """
     Paginated view for listing all the Examination_system objects.
     """
@@ -4414,7 +2909,7 @@ class Examination_systemListView(generic.ListView):
     template_name = "sc/examination_system/examination_system_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4436,37 +2931,30 @@ class Examination_systemListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Examination System"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "examination_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of examination system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Examination_systemListViewAll(generic.ListView):
+class Examination_systemListAllView(ListView):
     """ """
 
     model = Examination_system
     template_name = "sc/examination_system/examination_system_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4494,134 +2982,34 @@ class Examination_systemListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Examination System"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, the paradigmatic example of an examination system is the chinese imperial system."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "examination_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of examination system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Examination_systemDetailView(generic.DetailView):
+class Examination_systemDetailView(DetailView):
     """ """
 
     model = Examination_system
     template_name = "sc/examination_system/examination_system_detail.html"
 
 
-@permission_required("core.view_capital")
-def examination_system_download(request):
-    items = Examination_system.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_examination_system_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "examination_system",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.examination_system,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def examination_system_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_examination_systems.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Bureaucracy characteristics",
-    }
-    my_meta_data_dic_inner_vars = {
-        "examination_system": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of examination system for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Merit_promotionCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -4634,7 +3022,7 @@ class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/merit_promotion/merit_promotion_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4657,31 +3045,25 @@ class Merit_promotionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Merit Promotion"
-        context["my_exp"] = (
-            "Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "merit_promotion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of merit promotion for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Merit_promotionUpdate(PermissionRequiredMixin, UpdateView):
+class Merit_promotionUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4707,12 +3089,18 @@ class Merit_promotionUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merit Promotion"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Merit_promotionDelete(PermissionRequiredMixin, DeleteView):
+class Merit_promotionDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Merit_promotion object.
 
@@ -4726,7 +3114,7 @@ class Merit_promotionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Merit_promotionListView(generic.ListView):
+class Merit_promotionListView(ListView):
     """
     Paginated view for listing all the Merit_promotion objects.
     """
@@ -4735,7 +3123,7 @@ class Merit_promotionListView(generic.ListView):
     template_name = "sc/merit_promotion/merit_promotion_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4757,37 +3145,30 @@ class Merit_promotionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merit Promotion"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "merit_promotion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of merit promotion for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Merit_promotionListViewAll(generic.ListView):
+class Merit_promotionListAllView(ListView):
     """ """
 
     model = Merit_promotion
     template_name = "sc/merit_promotion/merit_promotion_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4815,134 +3196,32 @@ class Merit_promotionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merit Promotion"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. when exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "merit_promotion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of merit promotion for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Merit_promotionDetailView(generic.DetailView):
+class Merit_promotionDetailView(DetailView):
     """ """
 
     model = Merit_promotion
     template_name = "sc/merit_promotion/merit_promotion_detail.html"
 
 
-@permission_required("core.view_capital")
-def merit_promotion_download(request):
-    items = Merit_promotion.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_merit_promotion_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "merit_promotion",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.merit_promotion,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def merit_promotion_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_merit_promotions.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Bureaucracy characteristics",
-    }
-    my_meta_data_dic_inner_vars = {
-        "merit_promotion": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of merit promotion for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Specialized_government_buildingCreate(
+class Specialized_government_buildingCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -4954,12 +3233,10 @@ class Specialized_government_buildingCreate(
 
     model = Specialized_government_building
     form_class = Specialized_government_buildingForm
-    template_name = (
-        "sc/specialized_government_building/specialized_government_building_form.html"
-    )
+    template_name = "sc/specialized_government_building/specialized_government_building_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4982,31 +3259,27 @@ class Specialized_government_buildingCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Specialized Government Building"
-        context["my_exp"] = (
-            "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "specialized_government_building": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized government building for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Specialized_government_buildingUpdate(PermissionRequiredMixin, UpdateView):
+class Specialized_government_buildingUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -5016,9 +3289,7 @@ class Specialized_government_buildingUpdate(PermissionRequiredMixin, UpdateView)
 
     model = Specialized_government_building
     form_class = Specialized_government_buildingForm
-    template_name = (
-        "sc/specialized_government_building/specialized_government_building_update.html"
-    )
+    template_name = "sc/specialized_government_building/specialized_government_building_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -5034,12 +3305,20 @@ class Specialized_government_buildingUpdate(PermissionRequiredMixin, UpdateView)
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Government Building"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Specialized_government_buildingDelete(PermissionRequiredMixin, DeleteView):
+class Specialized_government_buildingDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Specialized_government_building object.
 
@@ -5053,18 +3332,16 @@ class Specialized_government_buildingDelete(PermissionRequiredMixin, DeleteView)
     permission_required = "core.add_capital"
 
 
-class Specialized_government_buildingListView(generic.ListView):
+class Specialized_government_buildingListView(ListView):
     """
     Paginated view for listing all the Specialized_government_building objects.
     """
 
     model = Specialized_government_building
-    template_name = (
-        "sc/specialized_government_building/specialized_government_building_list.html"
-    )
+    template_name = "sc/specialized_government_building/specialized_government_building_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5086,37 +3363,30 @@ class Specialized_government_buildingListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Government Building"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "specialized_government_building": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized government building for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Specialized_government_buildingListViewAll(generic.ListView):
+class Specialized_government_buildingListAllView(ListView):
     """ """
 
     model = Specialized_government_building
-    template_name = "sc/specialized_government_building/specialized_government_building_list_all.html"
+    template_name = "sc/specialized_government_building/specialized_government_building_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5129,7 +3399,9 @@ class Specialized_government_buildingListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Specialized_government_building.objects.all().order_by(order, order2)
+        return Specialized_government_building.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -5144,138 +3416,34 @@ class Specialized_government_buildingListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Government Building"
-        context["var_main_desc"] = (
-            "Talking about bureaucracy characteristics, these buildings are where administrative officials are located, and must be distinct from the ruler's palace. they may be used for document storage, registration offices, minting money, etc. defense structures also are not coded here (see military). state-owned/operated workshop should also not be coded here."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Bureaucracy characteristics"
-        context["inner_vars"] = {
-            "specialized_government_building": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized government building for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Specialized_government_buildingDetailView(generic.DetailView):
+class Specialized_government_buildingDetailView(DetailView):
     """ """
 
     model = Specialized_government_building
-    template_name = (
-        "sc/specialized_government_building/specialized_government_building_detail.html"
-    )
+    template_name = "sc/specialized_government_building/specialized_government_building_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def specialized_government_building_download(request):
-    items = Specialized_government_building.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = (
-        f"social_complexity_specialized_government_building_{current_datetime}.csv"
-    )
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "specialized_government_building",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.specialized_government_building,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def specialized_government_building_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_specialized_government_buildings.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Bureaucracy characteristics",
-    }
-    my_meta_data_dic_inner_vars = {
-        "specialized_government_building": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of specialized government building for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Formal_legal_codeCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -5288,7 +3456,7 @@ class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "sc/formal_legal_code/formal_legal_code_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5311,31 +3479,25 @@ class Formal_legal_codeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Formal Legal Code"
-        context["my_exp"] = (
-            "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "formal_legal_code": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of formal legal code for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Formal_legal_codeUpdate(PermissionRequiredMixin, UpdateView):
+class Formal_legal_codeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -5361,12 +3523,18 @@ class Formal_legal_codeUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Formal Legal Code"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Formal_legal_codeDelete(PermissionRequiredMixin, DeleteView):
+class Formal_legal_codeDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Formal_legal_code object.
 
@@ -5380,7 +3548,7 @@ class Formal_legal_codeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Formal_legal_codeListView(generic.ListView):
+class Formal_legal_codeListView(ListView):
     """
     Paginated view for listing all the Formal_legal_code objects.
     """
@@ -5389,7 +3557,7 @@ class Formal_legal_codeListView(generic.ListView):
     template_name = "sc/formal_legal_code/formal_legal_code_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5411,37 +3579,30 @@ class Formal_legal_codeListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Formal Legal Code"
-        context["var_main_desc"] = (
-            "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "formal_legal_code": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of formal legal code for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Formal_legal_codeListViewAll(generic.ListView):
+class Formal_legal_codeListAllView(ListView):
     """ """
 
     model = Formal_legal_code
     template_name = "sc/formal_legal_code/formal_legal_code_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5469,134 +3630,32 @@ class Formal_legal_codeListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Formal Legal Code"
-        context["var_main_desc"] = (
-            "Talking about law, formal legal code refers to legal code usually, but not always written down. if not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). provide a short description"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "formal_legal_code": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of formal legal code for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Formal_legal_codeDetailView(generic.DetailView):
+class Formal_legal_codeDetailView(DetailView):
     """ """
 
     model = Formal_legal_code
     template_name = "sc/formal_legal_code/formal_legal_code_detail.html"
 
 
-@permission_required("core.view_capital")
-def formal_legal_code_download(request):
-    items = Formal_legal_code.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_formal_legal_code_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "formal_legal_code",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.formal_legal_code,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def formal_legal_code_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_formal_legal_codes.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Law",
-    }
-    my_meta_data_dic_inner_vars = {
-        "formal_legal_code": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of formal legal code for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class JudgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -5609,7 +3668,7 @@ class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/judge/judge_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5632,31 +3691,25 @@ class JudgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Judge"
-        context["my_exp"] = (
-            "Talking about Law, judges refers only to full-time professional judges"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "judge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of judge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class JudgeUpdate(PermissionRequiredMixin, UpdateView):
+class JudgeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -5682,12 +3735,18 @@ class JudgeUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Judge"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class JudgeDelete(PermissionRequiredMixin, DeleteView):
+class JudgeDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Judge object.
 
@@ -5701,7 +3760,7 @@ class JudgeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class JudgeListView(generic.ListView):
+class JudgeListView(ListView):
     """
     Paginated view for listing all the Judge objects.
     """
@@ -5710,7 +3769,7 @@ class JudgeListView(generic.ListView):
     template_name = "sc/judge/judge_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5732,37 +3791,30 @@ class JudgeListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Judge"
-        context["var_main_desc"] = (
-            "Talking about law, judges refers only to full-time professional judges"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "judge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of judge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class JudgeListViewAll(generic.ListView):
+class JudgeListAllView(ListView):
     """ """
 
     model = Judge
     template_name = "sc/judge/judge_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5790,131 +3842,32 @@ class JudgeListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Judge"
-        context["var_main_desc"] = (
-            "Talking about law, judges refers only to full-time professional judges"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "judge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of judge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class JudgeDetailView(generic.DetailView):
+class JudgeDetailView(DetailView):
     """ """
 
     model = Judge
     template_name = "sc/judge/judge_detail.html"
 
 
-@permission_required("core.view_capital")
-def judge_download(request):
-    items = Judge.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_judge_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "judge",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.judge,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def judge_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_judges.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Law, judges refers only to full-time professional judges",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Law",
-    }
-    my_meta_data_dic_inner_vars = {
-        "judge": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of judge for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CourtCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -5927,7 +3880,7 @@ class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/court/court_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5950,31 +3903,25 @@ class CourtCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Court"
-        context["my_exp"] = (
-            "Talking about Law, courts are buildings specialized for legal proceedings only."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "court": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of court for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CourtUpdate(PermissionRequiredMixin, UpdateView):
+class CourtUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6000,12 +3947,18 @@ class CourtUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Court"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class CourtDelete(PermissionRequiredMixin, DeleteView):
+class CourtDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Court object.
 
@@ -6019,7 +3972,7 @@ class CourtDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CourtListView(generic.ListView):
+class CourtListView(ListView):
     """
     Paginated view for listing all the Court objects.
     """
@@ -6028,7 +3981,7 @@ class CourtListView(generic.ListView):
     template_name = "sc/court/court_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6050,37 +4003,30 @@ class CourtListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Court"
-        context["var_main_desc"] = (
-            "Talking about law, courts are buildings specialized for legal proceedings only."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "court": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of court for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CourtListViewAll(generic.ListView):
+class CourtListAllView(ListView):
     """ """
 
     model = Court
     template_name = "sc/court/court_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6108,131 +4054,34 @@ class CourtListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Court"
-        context["var_main_desc"] = (
-            "Talking about law, courts are buildings specialized for legal proceedings only."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "court": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of court for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CourtDetailView(generic.DetailView):
+class CourtDetailView(DetailView):
     """ """
 
     model = Court
     template_name = "sc/court/court_detail.html"
 
 
-@permission_required("core.view_capital")
-def court_download(request):
-    items = Court.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_court_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "court",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.court,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def court_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_courts.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Law, courts are buildings specialized for legal proceedings only.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Law",
-    }
-    my_meta_data_dic_inner_vars = {
-        "court": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of court for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Professional_lawyerCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -6245,7 +4094,7 @@ class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateVi
     template_name = "sc/professional_lawyer/professional_lawyer_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6268,29 +4117,25 @@ class Professional_lawyerCreate(PermissionRequiredMixin, PolityIdMixin, CreateVi
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Professional Lawyer"
-        context["my_exp"] = "Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "professional_lawyer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional lawyer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Professional_lawyerUpdate(PermissionRequiredMixin, UpdateView):
+class Professional_lawyerUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6316,12 +4161,18 @@ class Professional_lawyerUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Lawyer"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Professional_lawyerDelete(PermissionRequiredMixin, DeleteView):
+class Professional_lawyerDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Professional_lawyer object.
 
@@ -6335,7 +4186,7 @@ class Professional_lawyerDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Professional_lawyerListView(generic.ListView):
+class Professional_lawyerListView(ListView):
     """
     Paginated view for listing all the Professional_lawyer objects.
     """
@@ -6344,7 +4195,7 @@ class Professional_lawyerListView(generic.ListView):
     template_name = "sc/professional_lawyer/professional_lawyer_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6366,35 +4217,30 @@ class Professional_lawyerListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Lawyer"
-        context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "professional_lawyer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional lawyer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Professional_lawyerListViewAll(generic.ListView):
+class Professional_lawyerListAllView(ListView):
     """ """
 
     model = Professional_lawyer
     template_name = "sc/professional_lawyer/professional_lawyer_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6422,132 +4268,34 @@ class Professional_lawyerListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Professional Lawyer"
-        context["var_main_desc"] = "Talking about law, no Descriptions IN Codebook."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Law"
-        context["inner_vars"] = {
-            "professional_lawyer": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of professional lawyer for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Professional_lawyerDetailView(generic.DetailView):
+class Professional_lawyerDetailView(DetailView):
     """ """
 
     model = Professional_lawyer
     template_name = "sc/professional_lawyer/professional_lawyer_detail.html"
 
 
-@permission_required("core.view_capital")
-def professional_lawyer_download(request):
-    items = Professional_lawyer.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_professional_lawyer_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "professional_lawyer",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.professional_lawyer,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def professional_lawyer_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_professional_lawyers.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Law",
-    }
-    my_meta_data_dic_inner_vars = {
-        "professional_lawyer": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of professional lawyer for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Irrigation_systemCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -6560,7 +4308,7 @@ class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "sc/irrigation_system/irrigation_system_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6583,31 +4331,25 @@ class Irrigation_systemCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Irrigation System"
-        context["my_exp"] = (
-            "Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "irrigation_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of irrigation system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Irrigation_systemUpdate(PermissionRequiredMixin, UpdateView):
+class Irrigation_systemUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6633,12 +4375,18 @@ class Irrigation_systemUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Irrigation System"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Irrigation_systemDelete(PermissionRequiredMixin, DeleteView):
+class Irrigation_systemDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Irrigation_system object.
 
@@ -6652,7 +4400,7 @@ class Irrigation_systemDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Irrigation_systemListView(generic.ListView):
+class Irrigation_systemListView(ListView):
     """
     Paginated view for listing all the Irrigation_system objects.
     """
@@ -6661,7 +4409,7 @@ class Irrigation_systemListView(generic.ListView):
     template_name = "sc/irrigation_system/irrigation_system_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6683,37 +4431,30 @@ class Irrigation_systemListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Irrigation System"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "irrigation_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of irrigation system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Irrigation_systemListViewAll(generic.ListView):
+class Irrigation_systemListAllView(ListView):
     """ """
 
     model = Irrigation_system
     template_name = "sc/irrigation_system/irrigation_system_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6741,134 +4482,32 @@ class Irrigation_systemListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Irrigation System"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, irrigation systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "irrigation_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of irrigation system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Irrigation_systemDetailView(generic.DetailView):
+class Irrigation_systemDetailView(DetailView):
     """ """
 
     model = Irrigation_system
     template_name = "sc/irrigation_system/irrigation_system_detail.html"
 
 
-@permission_required("core.view_capital")
-def irrigation_system_download(request):
-    items = Irrigation_system.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_irrigation_system_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "irrigation_system",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.irrigation_system,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def irrigation_system_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_irrigation_systems.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Specialized Buildings",
-    }
-    my_meta_data_dic_inner_vars = {
-        "irrigation_system": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of irrigation system for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Drinking_water_supply_systemCreate(
+class Drinking_water_supply_systemCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -6880,12 +4519,10 @@ class Drinking_water_supply_systemCreate(
 
     model = Drinking_water_supply_system
     form_class = Drinking_water_supply_systemForm
-    template_name = (
-        "sc/drinking_water_supply_system/drinking_water_supply_system_form.html"
-    )
+    template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6908,31 +4545,27 @@ class Drinking_water_supply_systemCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Drinking Water Supply System"
-        context["my_exp"] = (
-            "Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "drinking_water_supply_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of drinking water supply system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Drinking_water_supply_systemUpdate(PermissionRequiredMixin, UpdateView):
+class Drinking_water_supply_systemUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -6942,9 +4575,7 @@ class Drinking_water_supply_systemUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Drinking_water_supply_system
     form_class = Drinking_water_supply_systemForm
-    template_name = (
-        "sc/drinking_water_supply_system/drinking_water_supply_system_update.html"
-    )
+    template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -6960,12 +4591,20 @@ class Drinking_water_supply_systemUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Drinking Water Supply System"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Drinking_water_supply_systemDelete(PermissionRequiredMixin, DeleteView):
+class Drinking_water_supply_systemDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Drinking_water_supply_system object.
 
@@ -6979,18 +4618,16 @@ class Drinking_water_supply_systemDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Drinking_water_supply_systemListView(generic.ListView):
+class Drinking_water_supply_systemListView(ListView):
     """
     Paginated view for listing all the Drinking_water_supply_system objects.
     """
 
     model = Drinking_water_supply_system
-    template_name = (
-        "sc/drinking_water_supply_system/drinking_water_supply_system_list.html"
-    )
+    template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7012,39 +4649,30 @@ class Drinking_water_supply_systemListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Drinking Water Supply System"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "drinking_water_supply_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of drinking water supply system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Drinking_water_supply_systemListViewAll(generic.ListView):
+class Drinking_water_supply_systemListAllView(ListView):
     """ """
 
     model = Drinking_water_supply_system
-    template_name = (
-        "sc/drinking_water_supply_system/drinking_water_supply_system_list_all.html"
-    )
+    template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7057,7 +4685,9 @@ class Drinking_water_supply_systemListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Drinking_water_supply_system.objects.all().order_by(order, order2)
+        return Drinking_water_supply_system.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -7072,136 +4702,32 @@ class Drinking_water_supply_systemListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Drinking Water Supply System"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "drinking_water_supply_system": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of drinking water supply system for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Drinking_water_supply_systemDetailView(generic.DetailView):
+class Drinking_water_supply_systemDetailView(DetailView):
     """ """
 
     model = Drinking_water_supply_system
-    template_name = (
-        "sc/drinking_water_supply_system/drinking_water_supply_system_detail.html"
-    )
+    template_name = "sc/drinking_water_supply_system/drinking_water_supply_system_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def drinking_water_supply_system_download(request):
-    items = Drinking_water_supply_system.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_drinking_water_supply_system_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "drinking_water_supply_system",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.drinking_water_supply_system,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def drinking_water_supply_system_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_drinking_water_supply_systems.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Specialized Buildings",
-    }
-    my_meta_data_dic_inner_vars = {
-        "drinking_water_supply_system": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of drinking water supply system for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class MarketCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -7214,7 +4740,7 @@ class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/market/market_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7237,31 +4763,25 @@ class MarketCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Market"
-        context["my_exp"] = (
-            "Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "market": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of market for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class MarketUpdate(PermissionRequiredMixin, UpdateView):
+class MarketUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7287,12 +4807,18 @@ class MarketUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Market"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class MarketDelete(PermissionRequiredMixin, DeleteView):
+class MarketDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Market object.
 
@@ -7306,7 +4832,7 @@ class MarketDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class MarketListView(generic.ListView):
+class MarketListView(ListView):
     """
     Paginated view for listing all the Market objects.
     """
@@ -7315,7 +4841,7 @@ class MarketListView(generic.ListView):
     template_name = "sc/market/market_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7337,37 +4863,30 @@ class MarketListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Market"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "market": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of market for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class MarketListViewAll(generic.ListView):
+class MarketListAllView(ListView):
     """ """
 
     model = Market
     template_name = "sc/market/market_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7395,132 +4914,34 @@ class MarketListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Market"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, markets are polity owned (which includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "market": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of market for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class MarketDetailView(generic.DetailView):
+class MarketDetailView(DetailView):
     """ """
 
     model = Market
     template_name = "sc/market/market_detail.html"
 
 
-@permission_required("core.view_capital")
-def market_download(request):
-    items = Market.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_market_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "market",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.market,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def market_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_markets.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Specialized Buildings",
-    }
-    my_meta_data_dic_inner_vars = {
-        "market": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of market for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Food_storage_siteCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -7533,7 +4954,7 @@ class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "sc/food_storage_site/food_storage_site_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7556,31 +4977,25 @@ class Food_storage_siteCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Food Storage Site"
-        context["my_exp"] = (
-            "Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "food_storage_site": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of food storage site for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Food_storage_siteUpdate(PermissionRequiredMixin, UpdateView):
+class Food_storage_siteUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7606,12 +5021,18 @@ class Food_storage_siteUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Food Storage Site"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Food_storage_siteDelete(PermissionRequiredMixin, DeleteView):
+class Food_storage_siteDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Food_storage_site object.
 
@@ -7625,7 +5046,7 @@ class Food_storage_siteDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Food_storage_siteListView(generic.ListView):
+class Food_storage_siteListView(ListView):
     """
     Paginated view for listing all the Food_storage_site objects.
     """
@@ -7634,7 +5055,7 @@ class Food_storage_siteListView(generic.ListView):
     template_name = "sc/food_storage_site/food_storage_site_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7656,37 +5077,30 @@ class Food_storage_siteListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Food Storage Site"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "food_storage_site": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of food storage site for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Food_storage_siteListViewAll(generic.ListView):
+class Food_storage_siteListAllView(ListView):
     """ """
 
     model = Food_storage_site
     template_name = "sc/food_storage_site/food_storage_site_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7714,134 +5128,32 @@ class Food_storage_siteListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Food Storage Site"
-        context["var_main_desc"] = (
-            "Talking about specialized buildings, food storage sites are polity owned (which  includes owned by the community, or the state), no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Specialized Buildings"
-        context["inner_vars"] = {
-            "food_storage_site": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of food storage site for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Food_storage_siteDetailView(generic.DetailView):
+class Food_storage_siteDetailView(DetailView):
     """ """
 
     model = Food_storage_site
     template_name = "sc/food_storage_site/food_storage_site_detail.html"
 
 
-@permission_required("core.view_capital")
-def food_storage_site_download(request):
-    items = Food_storage_site.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_food_storage_site_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "food_storage_site",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.food_storage_site,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def food_storage_site_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_food_storage_sites.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Specialized Buildings",
-    }
-    my_meta_data_dic_inner_vars = {
-        "food_storage_site": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of food storage site for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class RoadCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -7854,7 +5166,7 @@ class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/road/road_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7877,31 +5189,25 @@ class RoadCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Road"
-        context["my_exp"] = (
-            "Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "road": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of road for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class RoadUpdate(PermissionRequiredMixin, UpdateView):
+class RoadUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7927,12 +5233,18 @@ class RoadUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Road"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class RoadDelete(PermissionRequiredMixin, DeleteView):
+class RoadDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Road object.
 
@@ -7946,7 +5258,7 @@ class RoadDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class RoadListView(generic.ListView):
+class RoadListView(ListView):
     """
     Paginated view for listing all the Road objects.
     """
@@ -7955,7 +5267,7 @@ class RoadListView(generic.ListView):
     template_name = "sc/road/road_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7977,37 +5289,30 @@ class RoadListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Road"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "road": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of road for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class RoadListViewAll(generic.ListView):
+class RoadListAllView(ListView):
     """ """
 
     model = Road
     template_name = "sc/road/road_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8035,132 +5340,32 @@ class RoadListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Road"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. it excludes streets/accessways within settlements and paths between settlements that develop through repeated use."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "road": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of road for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class RoadDetailView(generic.DetailView):
+class RoadDetailView(DetailView):
     """ """
 
     model = Road
     template_name = "sc/road/road_detail.html"
 
 
-@permission_required("core.view_capital")
-def road_download(request):
-    items = Road.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_road_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "road",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.road,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def road_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_roads.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Transport infrastructure",
-    }
-    my_meta_data_dic_inner_vars = {
-        "road": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of road for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class BridgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -8173,7 +5378,7 @@ class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/bridge/bridge_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8196,31 +5401,25 @@ class BridgeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Bridge"
-        context["my_exp"] = (
-            "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "bridge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of bridge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class BridgeUpdate(PermissionRequiredMixin, UpdateView):
+class BridgeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8246,12 +5445,18 @@ class BridgeUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bridge"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class BridgeDelete(PermissionRequiredMixin, DeleteView):
+class BridgeDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Bridge object.
 
@@ -8265,7 +5470,7 @@ class BridgeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class BridgeListView(generic.ListView):
+class BridgeListView(ListView):
     """
     Paginated view for listing all the Bridge objects.
     """
@@ -8274,7 +5479,7 @@ class BridgeListView(generic.ListView):
     template_name = "sc/bridge/bridge_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8296,37 +5501,30 @@ class BridgeListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bridge"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "bridge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of bridge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class BridgeListViewAll(generic.ListView):
+class BridgeListAllView(ListView):
     """ """
 
     model = Bridge
     template_name = "sc/bridge/bridge_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8354,132 +5552,32 @@ class BridgeListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bridge"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "bridge": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of bridge for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class BridgeDetailView(generic.DetailView):
+class BridgeDetailView(DetailView):
     """ """
 
     model = Bridge
     template_name = "sc/bridge/bridge_detail.html"
 
 
-@permission_required("core.view_capital")
-def bridge_download(request):
-    items = Bridge.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_bridge_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "bridge",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.bridge,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def bridge_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_bridges.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it).",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Transport infrastructure",
-    }
-    my_meta_data_dic_inner_vars = {
-        "bridge": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of bridge for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CanalCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -8492,7 +5590,7 @@ class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/canal/canal_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8515,31 +5613,25 @@ class CanalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Canal"
-        context["my_exp"] = (
-            "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "canal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of canal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CanalUpdate(PermissionRequiredMixin, UpdateView):
+class CanalUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8565,12 +5657,18 @@ class CanalUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Canal"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class CanalDelete(PermissionRequiredMixin, DeleteView):
+class CanalDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Canal object.
 
@@ -8584,7 +5682,7 @@ class CanalDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CanalListView(generic.ListView):
+class CanalListView(ListView):
     """
     Paginated view for listing all the Canal objects.
     """
@@ -8593,7 +5691,7 @@ class CanalListView(generic.ListView):
     template_name = "sc/canal/canal_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8615,37 +5713,30 @@ class CanalListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Canal"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "canal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of canal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CanalListViewAll(generic.ListView):
+class CanalListAllView(ListView):
     """ """
 
     model = Canal
     template_name = "sc/canal/canal_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8673,132 +5764,32 @@ class CanalListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Canal"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "canal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of canal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CanalDetailView(generic.DetailView):
+class CanalDetailView(DetailView):
     """ """
 
     model = Canal
     template_name = "sc/canal/canal_detail.html"
 
 
-@permission_required("core.view_capital")
-def canal_download(request):
-    items = Canal.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_canal_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "canal",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.canal,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def canal_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_canals.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it).",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Transport infrastructure",
-    }
-    my_meta_data_dic_inner_vars = {
-        "canal": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of canal for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class PortCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -8811,7 +5802,7 @@ class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/port/port_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8834,31 +5825,25 @@ class PortCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Port"
-        context["my_exp"] = (
-            "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "port": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of port for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class PortUpdate(PermissionRequiredMixin, UpdateView):
+class PortUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8884,12 +5869,18 @@ class PortUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Port"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class PortDelete(PermissionRequiredMixin, DeleteView):
+class PortDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Port object.
 
@@ -8903,7 +5894,7 @@ class PortDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class PortListView(generic.ListView):
+class PortListView(ListView):
     """
     Paginated view for listing all the Port objects.
     """
@@ -8912,7 +5903,7 @@ class PortListView(generic.ListView):
     template_name = "sc/port/port_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8934,37 +5925,30 @@ class PortListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Port"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "port": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of port for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class PortListViewAll(generic.ListView):
+class PortListAllView(ListView):
     """ """
 
     model = Port
     template_name = "sc/port/port_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8992,132 +5976,34 @@ class PortListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Port"
-        context["var_main_desc"] = (
-            "Talking about transport infrastructure, ports include river ports. direct historical or archaeological evidence of ports is absent when no port has been excavated or all evidence of such has been obliterated. indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta egypt at a time we know there was a timber trade with the levant). when evidence for the variable itself is available the code is 'present.' when other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). when indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Transport infrastructure"
-        context["inner_vars"] = {
-            "port": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of port for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class PortDetailView(generic.DetailView):
+class PortDetailView(DetailView):
     """ """
 
     model = Port
     template_name = "sc/port/port_detail.html"
 
 
-@permission_required("core.view_capital")
-def port_download(request):
-    items = Port.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_port_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "port",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.port,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def port_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_ports.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Transport infrastructure",
-    }
-    my_meta_data_dic_inner_vars = {
-        "port": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of port for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Mines_or_quarryCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -9130,7 +6016,7 @@ class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/mines_or_quarry/mines_or_quarry_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9153,31 +6039,25 @@ class Mines_or_quarryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Mines or Quarry"
-        context["my_exp"] = (
-            "Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "mines_or_quarry": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mines or quarry for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Mines_or_quarryUpdate(PermissionRequiredMixin, UpdateView):
+class Mines_or_quarryUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9203,12 +6083,18 @@ class Mines_or_quarryUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mines or Quarry"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Mines_or_quarryDelete(PermissionRequiredMixin, DeleteView):
+class Mines_or_quarryDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Mines_or_quarry object.
 
@@ -9222,7 +6108,7 @@ class Mines_or_quarryDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Mines_or_quarryListView(generic.ListView):
+class Mines_or_quarryListView(ListView):
     """
     Paginated view for listing all the Mines_or_quarry objects.
     """
@@ -9231,7 +6117,7 @@ class Mines_or_quarryListView(generic.ListView):
     template_name = "sc/mines_or_quarry/mines_or_quarry_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9253,37 +6139,30 @@ class Mines_or_quarryListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mines or Quarry"
-        context["var_main_desc"] = (
-            "Talking about special purpose sites, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Special purpose sites"
-        context["inner_vars"] = {
-            "mines_or_quarry": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mines or quarry for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Mines_or_quarryListViewAll(generic.ListView):
+class Mines_or_quarryListAllView(ListView):
     """ """
 
     model = Mines_or_quarry
     template_name = "sc/mines_or_quarry/mines_or_quarry_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9311,134 +6190,34 @@ class Mines_or_quarryListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mines or Quarry"
-        context["var_main_desc"] = (
-            "Talking about special purpose sites, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Special purpose sites"
-        context["inner_vars"] = {
-            "mines_or_quarry": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mines or quarry for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Mines_or_quarryDetailView(generic.DetailView):
+class Mines_or_quarryDetailView(DetailView):
     """ """
 
     model = Mines_or_quarry
     template_name = "sc/mines_or_quarry/mines_or_quarry_detail.html"
 
 
-@permission_required("core.view_capital")
-def mines_or_quarry_download(request):
-    items = Mines_or_quarry.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_mine_or_quarry_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "mines_or_quarry",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.mines_or_quarry,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def mines_or_quarry_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_mines_or_quarrys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Special purpose sites",
-    }
-    my_meta_data_dic_inner_vars = {
-        "mines_or_quarry": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of mines or quarry for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Mnemonic_deviceCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -9451,7 +6230,7 @@ class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/mnemonic_device/mnemonic_device_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9474,31 +6253,25 @@ class Mnemonic_deviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Mnemonic Device"
-        context["my_exp"] = (
-            "Talking about Writing Systems, Mnemonic devices are: For example, tallies"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "mnemonic_device": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mnemonic device for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Mnemonic_deviceUpdate(PermissionRequiredMixin, UpdateView):
+class Mnemonic_deviceUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9524,12 +6297,18 @@ class Mnemonic_deviceUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mnemonic Device"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Mnemonic_deviceDelete(PermissionRequiredMixin, DeleteView):
+class Mnemonic_deviceDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Mnemonic_device object.
 
@@ -9543,7 +6322,7 @@ class Mnemonic_deviceDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Mnemonic_deviceListView(generic.ListView):
+class Mnemonic_deviceListView(ListView):
     """
     Paginated view for listing all the Mnemonic_device objects.
     """
@@ -9552,7 +6331,7 @@ class Mnemonic_deviceListView(generic.ListView):
     template_name = "sc/mnemonic_device/mnemonic_device_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9574,37 +6353,30 @@ class Mnemonic_deviceListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mnemonic Device"
-        context["var_main_desc"] = (
-            "Talking about writing systems, mnemonic devices are: for example, tallies"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "mnemonic_device": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mnemonic device for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Mnemonic_deviceListViewAll(generic.ListView):
+class Mnemonic_deviceListAllView(ListView):
     """ """
 
     model = Mnemonic_device
     template_name = "sc/mnemonic_device/mnemonic_device_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9632,134 +6404,34 @@ class Mnemonic_deviceListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Mnemonic Device"
-        context["var_main_desc"] = (
-            "Talking about writing systems, mnemonic devices are: for example, tallies"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "mnemonic_device": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of mnemonic device for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Mnemonic_deviceDetailView(generic.DetailView):
+class Mnemonic_deviceDetailView(DetailView):
     """ """
 
     model = Mnemonic_device
     template_name = "sc/mnemonic_device/mnemonic_device_detail.html"
 
 
-@permission_required("core.view_capital")
-def mnemonic_device_download(request):
-    items = Mnemonic_device.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_mnemonic_device_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "mnemonic_device",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.mnemonic_device,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def mnemonic_device_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_mnemonic_devices.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, Mnemonic devices are: For example, tallies",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "mnemonic_device": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of mnemonic device for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Nonwritten_recordCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -9772,7 +6444,7 @@ class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "sc/nonwritten_record/nonwritten_record_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9795,31 +6467,25 @@ class Nonwritten_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Nonwritten Record"
-        context["my_exp"] = (
-            "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "nonwritten_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of nonwritten record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Nonwritten_recordUpdate(PermissionRequiredMixin, UpdateView):
+class Nonwritten_recordUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9845,12 +6511,18 @@ class Nonwritten_recordUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Nonwritten Record"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Nonwritten_recordDelete(PermissionRequiredMixin, DeleteView):
+class Nonwritten_recordDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Nonwritten_record object.
 
@@ -9864,7 +6536,7 @@ class Nonwritten_recordDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Nonwritten_recordListView(generic.ListView):
+class Nonwritten_recordListView(ListView):
     """
     Paginated view for listing all the Nonwritten_record objects.
     """
@@ -9873,7 +6545,7 @@ class Nonwritten_recordListView(generic.ListView):
     template_name = "sc/nonwritten_record/nonwritten_record_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9895,37 +6567,30 @@ class Nonwritten_recordListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Nonwritten Record"
-        context["var_main_desc"] = (
-            "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "nonwritten_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of nonwritten record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Nonwritten_recordListViewAll(generic.ListView):
+class Nonwritten_recordListAllView(ListView):
     """ """
 
     model = Nonwritten_record
     template_name = "sc/nonwritten_record/nonwritten_record_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9953,134 +6618,34 @@ class Nonwritten_recordListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Nonwritten Record"
-        context["var_main_desc"] = (
-            "Talking about writing systems, nonwritten records are more extensive than mnemonics, but don't utilize script. example: quipu; seals and stamps"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "nonwritten_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of nonwritten record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Nonwritten_recordDetailView(generic.DetailView):
+class Nonwritten_recordDetailView(DetailView):
     """ """
 
     model = Nonwritten_record
     template_name = "sc/nonwritten_record/nonwritten_record_detail.html"
 
 
-@permission_required("core.view_capital")
-def nonwritten_record_download(request):
-    items = Nonwritten_record.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_nonwritten_record_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "nonwritten_record",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.nonwritten_record,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def nonwritten_record_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_nonwritten_records.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "nonwritten_record": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of nonwritten record for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Written_recordCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -10093,7 +6658,7 @@ class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/written_record/written_record_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10116,31 +6681,25 @@ class Written_recordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Written Record"
-        context["my_exp"] = (
-            "Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "written_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of written record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Written_recordUpdate(PermissionRequiredMixin, UpdateView):
+class Written_recordUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10166,12 +6725,18 @@ class Written_recordUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Written Record"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Written_recordDelete(PermissionRequiredMixin, DeleteView):
+class Written_recordDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Written_record object.
 
@@ -10185,7 +6750,7 @@ class Written_recordDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Written_recordListView(generic.ListView):
+class Written_recordListView(ListView):
     """
     Paginated view for listing all the Written_record objects.
     """
@@ -10194,7 +6759,7 @@ class Written_recordListView(generic.ListView):
     template_name = "sc/written_record/written_record_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10216,37 +6781,30 @@ class Written_recordListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Written Record"
-        context["var_main_desc"] = (
-            "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "written_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of written record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Written_recordListViewAll(generic.ListView):
+class Written_recordListAllView(ListView):
     """ """
 
     model = Written_record
     template_name = "sc/written_record/written_record_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10274,134 +6832,32 @@ class Written_recordListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Written Record"
-        context["var_main_desc"] = (
-            "Talking about writing systems, written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. there must be several sentences strung together, at the very minimum. for example, royal proclamations from mesopotamia and egypt qualify as written records"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "written_record": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of written record for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Written_recordDetailView(generic.DetailView):
+class Written_recordDetailView(DetailView):
     """ """
 
     model = Written_record
     template_name = "sc/written_record/written_record_detail.html"
 
 
-@permission_required("core.view_capital")
-def written_record_download(request):
-    items = Written_record.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_written_records_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "written_record",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.written_record,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def written_record_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_written_records.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "written_record": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of written record for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class ScriptCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -10414,7 +6870,7 @@ class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/script/script_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10437,31 +6893,25 @@ class ScriptCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Script"
-        context["my_exp"] = (
-            "Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "script": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of script for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class ScriptUpdate(PermissionRequiredMixin, UpdateView):
+class ScriptUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10487,12 +6937,18 @@ class ScriptUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Script"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class ScriptDelete(PermissionRequiredMixin, DeleteView):
+class ScriptDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Script object.
 
@@ -10506,7 +6962,7 @@ class ScriptDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class ScriptListView(generic.ListView):
+class ScriptListView(ListView):
     """
     Paginated view for listing all the Script objects.
     """
@@ -10515,7 +6971,7 @@ class ScriptListView(generic.ListView):
     template_name = "sc/script/script_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10537,37 +6993,30 @@ class ScriptListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Script"
-        context["var_main_desc"] = (
-            "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "script": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of script for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class ScriptListViewAll(generic.ListView):
+class ScriptListAllView(ListView):
     """ """
 
     model = Script
     template_name = "sc/script/script_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10595,132 +7044,34 @@ class ScriptListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Script"
-        context["var_main_desc"] = (
-            "Talking about writing systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "script": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of script for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class ScriptDetailView(generic.DetailView):
+class ScriptDetailView(DetailView):
     """ """
 
     model = Script
     template_name = "sc/script/script_detail.html"
 
 
-@permission_required("core.view_capital")
-def script_download(request):
-    items = Script.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_script_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "script",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.script,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def script_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_scripts.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "script": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of script for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Non_phonetic_writingCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -10733,7 +7084,7 @@ class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10756,31 +7107,25 @@ class Non_phonetic_writingCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Non Phonetic Writing"
-        context["my_exp"] = (
-            "Talking about Writing Systems, this refers to the kind of script"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "non_phonetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of non phonetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Non_phonetic_writingUpdate(PermissionRequiredMixin, UpdateView):
+class Non_phonetic_writingUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10806,12 +7151,18 @@ class Non_phonetic_writingUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Non Phonetic Writing"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Non_phonetic_writingDelete(PermissionRequiredMixin, DeleteView):
+class Non_phonetic_writingDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Non_phonetic_writing object.
 
@@ -10825,7 +7176,7 @@ class Non_phonetic_writingDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Non_phonetic_writingListView(generic.ListView):
+class Non_phonetic_writingListView(ListView):
     """
     Paginated view for listing all the Non_phonetic_writing objects.
     """
@@ -10834,7 +7185,7 @@ class Non_phonetic_writingListView(generic.ListView):
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10856,37 +7207,32 @@ class Non_phonetic_writingListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Non Phonetic Writing"
-        context["var_main_desc"] = (
-            "Talking about writing systems, this refers to the kind of script"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "non_phonetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of non phonetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Non_phonetic_writingListViewAll(generic.ListView):
+class Non_phonetic_writingListAllView(ListView):
     """ """
 
     model = Non_phonetic_writing
-    template_name = "sc/non_phonetic_writing/non_phonetic_writing_list_all.html"
+    template_name = (
+        "sc/non_phonetic_writing/non_phonetic_writing_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10914,134 +7260,32 @@ class Non_phonetic_writingListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Non Phonetic Writing"
-        context["var_main_desc"] = (
-            "Talking about writing systems, this refers to the kind of script"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "non_phonetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of non phonetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Non_phonetic_writingDetailView(generic.DetailView):
+class Non_phonetic_writingDetailView(DetailView):
     """ """
 
     model = Non_phonetic_writing
     template_name = "sc/non_phonetic_writing/non_phonetic_writing_detail.html"
 
 
-@permission_required("core.view_capital")
-def non_phonetic_writing_download(request):
-    items = Non_phonetic_writing.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_non_phonetic_writing_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "non_phonetic_writing",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.non_phonetic_writing,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def non_phonetic_writing_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_non_phonetic_writings.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, this refers to the kind of script",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "non_phonetic_writing": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of non phonetic writing for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Phonetic_alphabetic_writingCreate(
+class Phonetic_alphabetic_writingCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -11058,7 +7302,7 @@ class Phonetic_alphabetic_writingCreate(
     )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11081,31 +7325,27 @@ class Phonetic_alphabetic_writingCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Phonetic Alphabetic Writing"
-        context["my_exp"] = (
-            "Talking about Writing Systems, this refers to the kind of script"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "phonetic_alphabetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of phonetic alphabetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Phonetic_alphabetic_writingUpdate(PermissionRequiredMixin, UpdateView):
+class Phonetic_alphabetic_writingUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -11115,9 +7355,7 @@ class Phonetic_alphabetic_writingUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Phonetic_alphabetic_writing
     form_class = Phonetic_alphabetic_writingForm
-    template_name = (
-        "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_update.html"
-    )
+    template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_update.html"
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -11133,12 +7371,20 @@ class Phonetic_alphabetic_writingUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Phonetic Alphabetic Writing"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Phonetic_alphabetic_writingDelete(PermissionRequiredMixin, DeleteView):
+class Phonetic_alphabetic_writingDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Phonetic_alphabetic_writing object.
 
@@ -11152,7 +7398,7 @@ class Phonetic_alphabetic_writingDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Phonetic_alphabetic_writingListView(generic.ListView):
+class Phonetic_alphabetic_writingListView(ListView):
     """
     Paginated view for listing all the Phonetic_alphabetic_writing objects.
     """
@@ -11163,7 +7409,7 @@ class Phonetic_alphabetic_writingListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11185,39 +7431,30 @@ class Phonetic_alphabetic_writingListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Phonetic Alphabetic Writing"
-        context["var_main_desc"] = (
-            "Talking about writing systems, this refers to the kind of script"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "phonetic_alphabetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of phonetic alphabetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Phonetic_alphabetic_writingListViewAll(generic.ListView):
+class Phonetic_alphabetic_writingListAllView(ListView):
     """ """
 
     model = Phonetic_alphabetic_writing
-    template_name = (
-        "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_list_all.html"
-    )
+    template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11230,7 +7467,9 @@ class Phonetic_alphabetic_writingListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Phonetic_alphabetic_writing.objects.all().order_by(order, order2)
+        return Phonetic_alphabetic_writing.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -11245,136 +7484,32 @@ class Phonetic_alphabetic_writingListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Phonetic Alphabetic Writing"
-        context["var_main_desc"] = (
-            "Talking about writing systems, this refers to the kind of script"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Writing Systems"
-        context["inner_vars"] = {
-            "phonetic_alphabetic_writing": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of phonetic alphabetic writing for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Phonetic_alphabetic_writingDetailView(generic.DetailView):
+class Phonetic_alphabetic_writingDetailView(DetailView):
     """ """
 
     model = Phonetic_alphabetic_writing
-    template_name = (
-        "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_detail.html"
-    )
+    template_name = "sc/phonetic_alphabetic_writing/phonetic_alphabetic_writing_detail.html"
 
 
-@permission_required("core.view_capital")
-def phonetic_alphabetic_writing_download(request):
-    items = Phonetic_alphabetic_writing.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_phonetic_alphabetic_writing_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "phonetic_alphabetic_writing",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.phonetic_alphabetic_writing,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def phonetic_alphabetic_writing_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_phonetic_alphabetic_writings.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Writing Systems, this refers to the kind of script",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Writing Systems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "phonetic_alphabetic_writing": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of phonetic alphabetic writing for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Lists_tables_and_classificationCreate(
+class Lists_tables_and_classificationCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -11386,12 +7521,10 @@ class Lists_tables_and_classificationCreate(
 
     model = Lists_tables_and_classification
     form_class = Lists_tables_and_classificationForm
-    template_name = (
-        "sc/lists_tables_and_classification/lists_tables_and_classification_form.html"
-    )
+    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11414,31 +7547,27 @@ class Lists_tables_and_classificationCreate(
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Lists Tables and Classification"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "lists_tables_and_classification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of lists tables and classification for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Lists_tables_and_classificationUpdate(PermissionRequiredMixin, UpdateView):
+class Lists_tables_and_classificationUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -11448,9 +7577,7 @@ class Lists_tables_and_classificationUpdate(PermissionRequiredMixin, UpdateView)
 
     model = Lists_tables_and_classification
     form_class = Lists_tables_and_classificationForm
-    template_name = (
-        "sc/lists_tables_and_classification/lists_tables_and_classification_update.html"
-    )
+    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -11466,12 +7593,20 @@ class Lists_tables_and_classificationUpdate(PermissionRequiredMixin, UpdateView)
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Lists Tables and Classification"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Lists_tables_and_classificationDelete(PermissionRequiredMixin, DeleteView):
+class Lists_tables_and_classificationDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Lists_tables_and_classification object.
 
@@ -11485,18 +7620,16 @@ class Lists_tables_and_classificationDelete(PermissionRequiredMixin, DeleteView)
     permission_required = "core.add_capital"
 
 
-class Lists_tables_and_classificationListView(generic.ListView):
+class Lists_tables_and_classificationListView(ListView):
     """
     Paginated view for listing all the Lists_tables_and_classification objects.
     """
 
     model = Lists_tables_and_classification
-    template_name = (
-        "sc/lists_tables_and_classification/lists_tables_and_classification_list.html"
-    )
+    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11518,37 +7651,30 @@ class Lists_tables_and_classificationListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Lists Tables and Classification"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "lists_tables_and_classification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of lists tables and classification for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Lists_tables_and_classificationListViewAll(generic.ListView):
+class Lists_tables_and_classificationListAllView(ListView):
     """ """
 
     model = Lists_tables_and_classification
-    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_list_all.html"
+    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11561,7 +7687,9 @@ class Lists_tables_and_classificationListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Lists_tables_and_classification.objects.all().order_by(order, order2)
+        return Lists_tables_and_classification.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -11576,138 +7704,32 @@ class Lists_tables_and_classificationListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Lists Tables and Classification"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "lists_tables_and_classification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of lists tables and classification for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Lists_tables_and_classificationDetailView(generic.DetailView):
+class Lists_tables_and_classificationDetailView(DetailView):
     """ """
 
     model = Lists_tables_and_classification
-    template_name = (
-        "sc/lists_tables_and_classification/lists_tables_and_classification_detail.html"
-    )
+    template_name = "sc/lists_tables_and_classification/lists_tables_and_classification_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def lists_tables_and_classification_download(request):
-    items = Lists_tables_and_classification.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = (
-        f"social_complexity_list_table_and_classification_{current_datetime}.csv"
-    )
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "lists_tables_and_classification",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.lists_tables_and_classification,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def lists_tables_and_classification_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_lists_tables_and_classifications.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "lists_tables_and_classification": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of lists tables and classification for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CalendarCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -11720,7 +7742,7 @@ class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/calendar/calendar_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11743,31 +7765,25 @@ class CalendarCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Calendar"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "calendar": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of calendar for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CalendarUpdate(PermissionRequiredMixin, UpdateView):
+class CalendarUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -11793,12 +7809,18 @@ class CalendarUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Calendar"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class CalendarDelete(PermissionRequiredMixin, DeleteView):
+class CalendarDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Calendar object.
 
@@ -11812,7 +7834,7 @@ class CalendarDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CalendarListView(generic.ListView):
+class CalendarListView(ListView):
     """
     Paginated view for listing all the Calendar objects.
     """
@@ -11821,7 +7843,7 @@ class CalendarListView(generic.ListView):
     template_name = "sc/calendar/calendar_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11843,37 +7865,30 @@ class CalendarListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Calendar"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "calendar": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of calendar for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CalendarListViewAll(generic.ListView):
+class CalendarListAllView(ListView):
     """ """
 
     model = Calendar
     template_name = "sc/calendar/calendar_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11901,132 +7916,34 @@ class CalendarListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Calendar"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "calendar": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of calendar for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CalendarDetailView(generic.DetailView):
+class CalendarDetailView(DetailView):
     """ """
 
     model = Calendar
     template_name = "sc/calendar/calendar_detail.html"
 
 
-@permission_required("core.view_capital")
-def calendar_download(request):
-    items = Calendar.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_calendar_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "calendar",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.calendar,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def calendar_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_calendars.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "calendar": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of calendar for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Sacred_textCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -12039,7 +7956,7 @@ class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/sacred_text/sacred_text_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12062,31 +7979,25 @@ class Sacred_textCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Sacred Text"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "sacred_text": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sacred text for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Sacred_textUpdate(PermissionRequiredMixin, UpdateView):
+class Sacred_textUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12112,12 +8023,18 @@ class Sacred_textUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sacred Text"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Sacred_textDelete(PermissionRequiredMixin, DeleteView):
+class Sacred_textDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Sacred_text object.
 
@@ -12131,7 +8048,7 @@ class Sacred_textDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Sacred_textListView(generic.ListView):
+class Sacred_textListView(ListView):
     """
     Paginated view for listing all the Sacred_text objects.
     """
@@ -12140,7 +8057,7 @@ class Sacred_textListView(generic.ListView):
     template_name = "sc/sacred_text/sacred_text_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12162,37 +8079,30 @@ class Sacred_textListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sacred Text"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "sacred_text": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sacred text for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Sacred_textListViewAll(generic.ListView):
+class Sacred_textListAllView(ListView):
     """ """
 
     model = Sacred_text
     template_name = "sc/sacred_text/sacred_text_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12220,132 +8130,34 @@ class Sacred_textListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sacred Text"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, sacred texts originate from supernatural agents (deities), or are directly inspired by them."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "sacred_text": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sacred text for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Sacred_textDetailView(generic.DetailView):
+class Sacred_textDetailView(DetailView):
     """ """
 
     model = Sacred_text
     template_name = "sc/sacred_text/sacred_text_detail.html"
 
 
-@permission_required("core.view_capital")
-def sacred_text_download(request):
-    items = Sacred_text.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_sacred_text_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "sacred_text",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.sacred_text,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def sacred_text_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_sacred_texts.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "sacred_text": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of sacred text for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Religious_literatureCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -12358,7 +8170,7 @@ class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/religious_literature/religious_literature_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12381,31 +8193,25 @@ class Religious_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Religious Literature"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religious_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of religious literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Religious_literatureUpdate(PermissionRequiredMixin, UpdateView):
+class Religious_literatureUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12431,12 +8237,18 @@ class Religious_literatureUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Literature"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Religious_literatureDelete(PermissionRequiredMixin, DeleteView):
+class Religious_literatureDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Religious_literature object.
 
@@ -12450,7 +8262,7 @@ class Religious_literatureDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Religious_literatureListView(generic.ListView):
+class Religious_literatureListView(ListView):
     """
     Paginated view for listing all the Religious_literature objects.
     """
@@ -12459,7 +8271,7 @@ class Religious_literatureListView(generic.ListView):
     template_name = "sc/religious_literature/religious_literature_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12481,37 +8293,32 @@ class Religious_literatureListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "religious_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of religious literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Religious_literatureListViewAll(generic.ListView):
+class Religious_literatureListAllView(ListView):
     """ """
 
     model = Religious_literature
-    template_name = "sc/religious_literature/religious_literature_list_all.html"
+    template_name = (
+        "sc/religious_literature/religious_literature_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12539,134 +8346,34 @@ class Religious_literatureListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Religious Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, religious literature differs from the sacred texts. for example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "religious_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of religious literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Religious_literatureDetailView(generic.DetailView):
+class Religious_literatureDetailView(DetailView):
     """ """
 
     model = Religious_literature
     template_name = "sc/religious_literature/religious_literature_detail.html"
 
 
-@permission_required("core.view_capital")
-def religious_literature_download(request):
-    items = Religious_literature.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_religious_literature_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religious_literature",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religious_literature,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def religious_literature_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_religious_literatures.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religious_literature": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of religious literature for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Practical_literatureCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -12679,7 +8386,7 @@ class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "sc/practical_literature/practical_literature_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12702,31 +8409,25 @@ class Practical_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Practical Literature"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "practical_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of practical literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Practical_literatureUpdate(PermissionRequiredMixin, UpdateView):
+class Practical_literatureUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12752,12 +8453,18 @@ class Practical_literatureUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Practical Literature"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Practical_literatureDelete(PermissionRequiredMixin, DeleteView):
+class Practical_literatureDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Practical_literature object.
 
@@ -12771,7 +8478,7 @@ class Practical_literatureDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Practical_literatureListView(generic.ListView):
+class Practical_literatureListView(ListView):
     """
     Paginated view for listing all the Practical_literature objects.
     """
@@ -12780,7 +8487,7 @@ class Practical_literatureListView(generic.ListView):
     template_name = "sc/practical_literature/practical_literature_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12802,37 +8509,32 @@ class Practical_literatureListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Practical Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "practical_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of practical literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Practical_literatureListViewAll(generic.ListView):
+class Practical_literatureListAllView(ListView):
     """ """
 
     model = Practical_literature
-    template_name = "sc/practical_literature/practical_literature_list_all.html"
+    template_name = (
+        "sc/practical_literature/practical_literature_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12860,134 +8562,32 @@ class Practical_literatureListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Practical Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. letters do not count as practical literature."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "practical_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of practical literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Practical_literatureDetailView(generic.DetailView):
+class Practical_literatureDetailView(DetailView):
     """ """
 
     model = Practical_literature
     template_name = "sc/practical_literature/practical_literature_detail.html"
 
 
-@permission_required("core.view_capital")
-def practical_literature_download(request):
-    items = Practical_literature.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_practical_literature_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "practical_literature",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.practical_literature,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def practical_literature_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_practical_literatures.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "practical_literature": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of practical literature for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class HistoryCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -13000,7 +8600,7 @@ class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/history/history_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13023,31 +8623,25 @@ class HistoryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "History"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "history": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of history for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class HistoryUpdate(PermissionRequiredMixin, UpdateView):
+class HistoryUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13073,12 +8667,18 @@ class HistoryUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "History"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class HistoryDelete(PermissionRequiredMixin, DeleteView):
+class HistoryDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing History object.
 
@@ -13092,7 +8692,7 @@ class HistoryDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class HistoryListView(generic.ListView):
+class HistoryListView(ListView):
     """
     Paginated view for listing all the History objects.
     """
@@ -13101,7 +8701,7 @@ class HistoryListView(generic.ListView):
     template_name = "sc/history/history_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13123,37 +8723,30 @@ class HistoryListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "History"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "history": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of history for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class HistoryListViewAll(generic.ListView):
+class HistoryListAllView(ListView):
     """ """
 
     model = History
     template_name = "sc/history/history_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13181,132 +8774,32 @@ class HistoryListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "History"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "history": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of history for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class HistoryDetailView(generic.DetailView):
+class HistoryDetailView(DetailView):
     """ """
 
     model = History
     template_name = "sc/history/history_detail.html"
 
 
-@permission_required("core.view_capital")
-def history_download(request):
-    items = History.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_history_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "history",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.history,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def history_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_historys.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "history": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of history for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class PhilosophyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -13319,7 +8812,7 @@ class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/philosophy/philosophy_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13342,31 +8835,25 @@ class PhilosophyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Philosophy"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "philosophy": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of philosophy for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class PhilosophyUpdate(PermissionRequiredMixin, UpdateView):
+class PhilosophyUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13392,12 +8879,18 @@ class PhilosophyUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Philosophy"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class PhilosophyDelete(PermissionRequiredMixin, DeleteView):
+class PhilosophyDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Philosophy object.
 
@@ -13411,7 +8904,7 @@ class PhilosophyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class PhilosophyListView(generic.ListView):
+class PhilosophyListView(ListView):
     """
     Paginated view for listing all the Philosophy objects.
     """
@@ -13420,7 +8913,7 @@ class PhilosophyListView(generic.ListView):
     template_name = "sc/philosophy/philosophy_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13442,37 +8935,30 @@ class PhilosophyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Philosophy"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "philosophy": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of philosophy for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class PhilosophyListViewAll(generic.ListView):
+class PhilosophyListAllView(ListView):
     """ """
 
     model = Philosophy
     template_name = "sc/philosophy/philosophy_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13500,132 +8986,34 @@ class PhilosophyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Philosophy"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, no Descriptions IN Codebook"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "philosophy": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of philosophy for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class PhilosophyDetailView(generic.DetailView):
+class PhilosophyDetailView(DetailView):
     """ """
 
     model = Philosophy
     template_name = "sc/philosophy/philosophy_detail.html"
 
 
-@permission_required("core.view_capital")
-def philosophy_download(request):
-    items = Philosophy.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_philosophy_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "philosophy",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.philosophy,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def philosophy_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_philosophys.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "philosophy": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of philosophy for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Scientific_literatureCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -13638,7 +9026,7 @@ class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, Create
     template_name = "sc/scientific_literature/scientific_literature_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13661,31 +9049,25 @@ class Scientific_literatureCreate(PermissionRequiredMixin, PolityIdMixin, Create
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Scientific Literature"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "scientific_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of scientific literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Scientific_literatureUpdate(PermissionRequiredMixin, UpdateView):
+class Scientific_literatureUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13695,7 +9077,9 @@ class Scientific_literatureUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Scientific_literature
     form_class = Scientific_literatureForm
-    template_name = "sc/scientific_literature/scientific_literature_update.html"
+    template_name = (
+        "sc/scientific_literature/scientific_literature_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -13711,12 +9095,18 @@ class Scientific_literatureUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scientific Literature"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Scientific_literatureDelete(PermissionRequiredMixin, DeleteView):
+class Scientific_literatureDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Scientific_literature object.
 
@@ -13730,7 +9120,7 @@ class Scientific_literatureDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Scientific_literatureListView(generic.ListView):
+class Scientific_literatureListView(ListView):
     """
     Paginated view for listing all the Scientific_literature objects.
     """
@@ -13739,7 +9129,7 @@ class Scientific_literatureListView(generic.ListView):
     template_name = "sc/scientific_literature/scientific_literature_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13761,37 +9151,32 @@ class Scientific_literatureListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scientific Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "scientific_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of scientific literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Scientific_literatureListViewAll(generic.ListView):
+class Scientific_literatureListAllView(ListView):
     """ """
 
     model = Scientific_literature
-    template_name = "sc/scientific_literature/scientific_literature_list_all.html"
+    template_name = (
+        "sc/scientific_literature/scientific_literature_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13819,134 +9204,34 @@ class Scientific_literatureListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scientific Literature"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, scientific literature includes mathematics, natural sciences, social sciences"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "scientific_literature": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of scientific literature for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Scientific_literatureDetailView(generic.DetailView):
+class Scientific_literatureDetailView(DetailView):
     """ """
 
     model = Scientific_literature
-    template_name = "sc/scientific_literature/scientific_literature_detail.html"
-
-
-@permission_required("core.view_capital")
-def scientific_literature_download(request):
-    items = Scientific_literature.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_scientific_literature_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "scientific_literature",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
+    template_name = (
+        "sc/scientific_literature/scientific_literature_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.scientific_literature,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def scientific_literature_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_scientific_literatures.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "scientific_literature": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of scientific literature for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class FictionCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -13959,7 +9244,7 @@ class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/fiction/fiction_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13982,31 +9267,25 @@ class FictionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Fiction"
-        context["my_exp"] = (
-            "Talking about Kinds of Written Documents, fiction includes poetry."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "fiction": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of fiction for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class FictionUpdate(PermissionRequiredMixin, UpdateView):
+class FictionUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14032,12 +9311,18 @@ class FictionUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fiction"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class FictionDelete(PermissionRequiredMixin, DeleteView):
+class FictionDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Fiction object.
 
@@ -14051,7 +9336,7 @@ class FictionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class FictionListView(generic.ListView):
+class FictionListView(ListView):
     """
     Paginated view for listing all the Fiction objects.
     """
@@ -14060,7 +9345,7 @@ class FictionListView(generic.ListView):
     template_name = "sc/fiction/fiction_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14082,37 +9367,30 @@ class FictionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fiction"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, fiction includes poetry."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "fiction": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of fiction for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class FictionListViewAll(generic.ListView):
+class FictionListAllView(ListView):
     """ """
 
     model = Fiction
     template_name = "sc/fiction/fiction_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14140,132 +9418,32 @@ class FictionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fiction"
-        context["var_main_desc"] = (
-            "Talking about kinds of written documents, fiction includes poetry."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Kinds of Written Documents"
-        context["inner_vars"] = {
-            "fiction": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of fiction for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class FictionDetailView(generic.DetailView):
+class FictionDetailView(DetailView):
     """ """
 
     model = Fiction
     template_name = "sc/fiction/fiction_detail.html"
 
 
-@permission_required("core.view_capital")
-def fiction_download(request):
-    items = Fiction.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_fiction_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "fiction",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.fiction,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def fiction_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_fictions.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about Kinds of Written Documents, fiction includes poetry.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Kinds of Written Documents",
-    }
-    my_meta_data_dic_inner_vars = {
-        "fiction": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of fiction for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class ArticleCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -14278,7 +9456,7 @@ class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/article/article_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14301,31 +9479,25 @@ class ArticleCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Article"
-        context["my_exp"] = (
-            "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "article": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of article for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class ArticleUpdate(PermissionRequiredMixin, UpdateView):
+class ArticleUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14351,14 +9523,20 @@ class ArticleUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Article"
-        context["testvar"] = ["a", "bb", "ccc"]
-        context["citations_list"] = Reference.objects.all()
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "testvar": ["a", "bb", "ccc"],  # TODO: remove?
+                "citations_list": Reference.objects.all(),  # TODO: used?
+            },
+        )
 
         return context
 
 
-class ArticleDelete(PermissionRequiredMixin, DeleteView):
+class ArticleDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Article object.
 
@@ -14372,7 +9550,7 @@ class ArticleDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class ArticleListView(generic.ListView):
+class ArticleListView(ListView):
     """
     Paginated view for listing all the Article objects.
     """
@@ -14381,7 +9559,7 @@ class ArticleListView(generic.ListView):
     template_name = "sc/article/article_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14403,37 +9581,30 @@ class ArticleListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Article"
-        context["var_main_desc"] = (
-            "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "article": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of article for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class ArticleListViewAll(generic.ListView):
+class ArticleListAllView(ListView):
     """ """
 
     model = Article
     template_name = "sc/article/article_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14461,132 +9632,32 @@ class ArticleListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Article"
-        context["var_main_desc"] = (
-            "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "article": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of article for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class ArticleDetailView(generic.DetailView):
+class ArticleDetailView(DetailView):
     """ """
 
     model = Article
     template_name = "sc/article/article_detail.html"
 
 
-@permission_required("core.view_capital")
-def article_download(request):
-    items = Article.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_article_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "article",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.article,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def article_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_articles.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "article": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of article for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class TokenCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -14599,7 +9670,7 @@ class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/token/token_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14622,31 +9693,25 @@ class TokenCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Token"
-        context["my_exp"] = (
-            "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "token": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of token for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class TokenUpdate(PermissionRequiredMixin, UpdateView):
+class TokenUpdateView(PermissionRequiredMixin, UpdateView):
     """ """
 
     model = Token
@@ -14667,12 +9732,18 @@ class TokenUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Token"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class TokenDelete(PermissionRequiredMixin, DeleteView):
+class TokenDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Token object.
 
@@ -14686,7 +9757,7 @@ class TokenDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class TokenListView(generic.ListView):
+class TokenListView(ListView):
     """
     Paginated view for listing all the Token objects.
     """
@@ -14695,7 +9766,7 @@ class TokenListView(generic.ListView):
     template_name = "sc/token/token_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14717,37 +9788,30 @@ class TokenListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Token"
-        context["var_main_desc"] = (
-            "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "token": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of token for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class TokenListViewAll(generic.ListView):
+class TokenListAllView(ListView):
     """ """
 
     model = Token
     template_name = "sc/token/token_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14775,132 +9839,34 @@ class TokenListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Token"
-        context["var_main_desc"] = (
-            "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "token": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of token for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class TokenDetailView(generic.DetailView):
+class TokenDetailView(DetailView):
     """ """
 
     model = Token
     template_name = "sc/token/token_detail.html"
 
 
-@permission_required("core.view_capital")
-def token_download(request):
-    items = Token.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_token_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "token",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.token,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def token_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_tokens.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "token": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of token for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Precious_metalCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -14913,7 +9879,7 @@ class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/precious_metal/precious_metal_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14936,31 +9902,25 @@ class Precious_metalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Precious Metal"
-        context["my_exp"] = (
-            "Talking about forms of money, Precious metals are non-coined silver, gold, platinum"
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "precious_metal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of precious metal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Precious_metalUpdate(PermissionRequiredMixin, UpdateView):
+class Precious_metalUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14986,12 +9946,18 @@ class Precious_metalUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Precious Metal"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Precious_metalDelete(PermissionRequiredMixin, DeleteView):
+class Precious_metalDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Precious_metal object.
 
@@ -15005,7 +9971,7 @@ class Precious_metalDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Precious_metalListView(generic.ListView):
+class Precious_metalListView(ListView):
     """
     Paginated view for listing all the Precious_metal objects.
     """
@@ -15014,7 +9980,7 @@ class Precious_metalListView(generic.ListView):
     template_name = "sc/precious_metal/precious_metal_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15036,37 +10002,30 @@ class Precious_metalListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Precious Metal"
-        context["var_main_desc"] = (
-            "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "precious_metal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of precious metal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Precious_metalListViewAll(generic.ListView):
+class Precious_metalListAllView(ListView):
     """ """
 
     model = Precious_metal
     template_name = "sc/precious_metal/precious_metal_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15094,133 +10053,34 @@ class Precious_metalListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Precious Metal"
-        context["var_main_desc"] = (
-            "Talking about forms of money, precious metals are non-coined silver, gold, platinum"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "precious_metal": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of precious metal for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Precious_metalDetailView(generic.DetailView):
+class Precious_metalDetailView(DetailView):
     """ """
 
     model = Precious_metal
     template_name = "sc/precious_metal/precious_metal_detail.html"
 
 
-@permission_required("core.view_capital")
-def precious_metal_download(request):
-    items = Precious_metal.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_precious_metal_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "precious_metal",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.precious_metal,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def precious_metal_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_precious_metals.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about forms of money, Precious metals are non-coined silver, gold, platinum",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "precious_metal": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of precious metal for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Foreign_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Foreign_coinCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -15233,7 +10093,7 @@ class Foreign_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/foreign_coin/foreign_coin_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15256,29 +10116,25 @@ class Foreign_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Foreign Coin"
-        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "foreign_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of foreign coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Foreign_coinUpdate(PermissionRequiredMixin, UpdateView):
+class Foreign_coinUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -15304,12 +10160,18 @@ class Foreign_coinUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Foreign Coin"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Foreign_coinDelete(PermissionRequiredMixin, DeleteView):
+class Foreign_coinDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Foreign_coin object.
 
@@ -15323,7 +10185,7 @@ class Foreign_coinDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Foreign_coinListView(generic.ListView):
+class Foreign_coinListView(ListView):
     """
     Paginated view for listing all the Foreign_coin objects.
     """
@@ -15332,7 +10194,7 @@ class Foreign_coinListView(generic.ListView):
     template_name = "sc/foreign_coin/foreign_coin_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15354,35 +10216,30 @@ class Foreign_coinListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Foreign Coin"
-        context["var_main_desc"] = "NO Descriptions IN Codebook"
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "foreign_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of foreign coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Foreign_coinListViewAll(generic.ListView):
+class Foreign_coinListAllView(ListView):
     """ """
 
     model = Foreign_coin
     template_name = "sc/foreign_coin/foreign_coin_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15410,131 +10267,34 @@ class Foreign_coinListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Foreign Coin"
-        context["var_main_desc"] = "NO Descriptions IN Codebook"
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "foreign_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of foreign coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Foreign_coinDetailView(generic.DetailView):
+class Foreign_coinDetailView(DetailView):
     """ """
 
     model = Foreign_coin
     template_name = "sc/foreign_coin/foreign_coin_detail.html"
 
 
-@permission_required("core.view_capital")
-def foreign_coin_download(request):
-    items = Foreign_coin.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_foreign_coin_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "foreign_coin",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.foreign_coin,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def foreign_coin_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_foreign_coins.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "foreign_coin": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of foreign coin for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Indigenous_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Indigenous_coinCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -15547,7 +10307,7 @@ class Indigenous_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/indigenous_coin/indigenous_coin_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15570,29 +10330,25 @@ class Indigenous_coinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Indigenous Coin"
-        context["my_exp"] = "NO_DESCRIPTIONS_IN_CODEBOOK"
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "indigenous_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of indigenous coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Indigenous_coinUpdate(PermissionRequiredMixin, UpdateView):
+class Indigenous_coinUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -15618,12 +10374,18 @@ class Indigenous_coinUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Indigenous Coin"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Indigenous_coinDelete(PermissionRequiredMixin, DeleteView):
+class Indigenous_coinDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Indigenous_coin object.
 
@@ -15637,7 +10399,7 @@ class Indigenous_coinDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Indigenous_coinListView(generic.ListView):
+class Indigenous_coinListView(ListView):
     """
     Paginated view for listing all the Indigenous_coin objects.
     """
@@ -15646,7 +10408,7 @@ class Indigenous_coinListView(generic.ListView):
     template_name = "sc/indigenous_coin/indigenous_coin_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15668,35 +10430,30 @@ class Indigenous_coinListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Indigenous Coin"
-        context["var_main_desc"] = "NO Descriptions IN Codebook"
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "indigenous_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of indigenous coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Indigenous_coinListViewAll(generic.ListView):
+class Indigenous_coinListAllView(ListView):
     """ """
 
     model = Indigenous_coin
     template_name = "sc/indigenous_coin/indigenous_coin_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15724,131 +10481,34 @@ class Indigenous_coinListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Indigenous Coin"
-        context["var_main_desc"] = "NO Descriptions IN Codebook"
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "indigenous_coin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of indigenous coin for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Indigenous_coinDetailView(generic.DetailView):
+class Indigenous_coinDetailView(DetailView):
     """ """
 
     model = Indigenous_coin
     template_name = "sc/indigenous_coin/indigenous_coin_detail.html"
 
 
-@permission_required("core.view_capital")
-def indigenous_coin_download(request):
-    items = Indigenous_coin.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_indigenous_coin_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "indigenous_coin",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.indigenous_coin,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def indigenous_coin_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_indigenous_coins.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "NO_DESCRIPTIONS_IN_CODEBOOK",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "indigenous_coin": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of indigenous coin for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Paper_currencyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Paper_currencyCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -15861,7 +10521,7 @@ class Paper_currencyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/paper_currency/paper_currency_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15884,31 +10544,25 @@ class Paper_currencyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Paper Currency"
-        context["my_exp"] = (
-            "Paper currency or another kind of fiat money. Note that this only refers to indigenously produced paper currency. Code absent if colonial money is used."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "paper_currency": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of paper currency for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Paper_currencyUpdate(PermissionRequiredMixin, UpdateView):
+class Paper_currencyUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -15934,12 +10588,18 @@ class Paper_currencyUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Paper Currency"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Paper_currencyDelete(PermissionRequiredMixin, DeleteView):
+class Paper_currencyDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Paper_currency object.
 
@@ -15953,7 +10613,7 @@ class Paper_currencyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Paper_currencyListView(generic.ListView):
+class Paper_currencyListView(ListView):
     """
     Paginated view for listing all the Paper_currency objects.
     """
@@ -15962,7 +10622,7 @@ class Paper_currencyListView(generic.ListView):
     template_name = "sc/paper_currency/paper_currency_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15984,37 +10644,30 @@ class Paper_currencyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Paper Currency"
-        context["var_main_desc"] = (
-            "Paper currency or another kind of fiat money. note that this only refers to indigenously produced paper currency. code absent if colonial money is used."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "paper_currency": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of paper currency for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Paper_currencyListViewAll(generic.ListView):
+class Paper_currencyListAllView(ListView):
     """ """
 
     model = Paper_currency
     template_name = "sc/paper_currency/paper_currency_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16042,133 +10695,32 @@ class Paper_currencyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Paper Currency"
-        context["var_main_desc"] = (
-            "Paper currency or another kind of fiat money. note that this only refers to indigenously produced paper currency. code absent if colonial money is used."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Forms of money"
-        context["inner_vars"] = {
-            "paper_currency": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of paper currency for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Paper_currencyDetailView(generic.DetailView):
+class Paper_currencyDetailView(DetailView):
     """ """
 
     model = Paper_currency
     template_name = "sc/paper_currency/paper_currency_detail.html"
 
 
-@permission_required("core.view_capital")
-def paper_currency_download(request):
-    items = Paper_currency.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_paper_currency_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "paper_currency",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.paper_currency,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def paper_currency_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_paper_currencys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Paper currency or another kind of fiat money. Note that this only refers to indigenously produced paper currency. Code absent if colonial money is used.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Forms of money",
-    }
-    my_meta_data_dic_inner_vars = {
-        "paper_currency": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of paper currency for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CourierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CourierCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -16181,7 +10733,7 @@ class CourierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/courier/courier_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16204,29 +10756,25 @@ class CourierCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Courier"
-        context["my_exp"] = "Full-time professional couriers."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "courier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of courier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class CourierUpdate(PermissionRequiredMixin, UpdateView):
+class CourierUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -16241,12 +10789,18 @@ class CourierUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Courier"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class CourierDelete(PermissionRequiredMixin, DeleteView):
+class CourierDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Courier object.
 
@@ -16260,7 +10814,7 @@ class CourierDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CourierListView(generic.ListView):
+class CourierListView(ListView):
     """
     Paginated view for listing all the Courier objects.
     """
@@ -16269,7 +10823,7 @@ class CourierListView(generic.ListView):
     template_name = "sc/courier/courier_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16291,35 +10845,30 @@ class CourierListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Courier"
-        context["var_main_desc"] = "Full-time professional couriers."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "courier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of courier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class CourierListViewAll(generic.ListView):
+class CourierListAllView(ListView):
     """ """
 
     model = Courier
     template_name = "sc/courier/courier_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16347,129 +10896,34 @@ class CourierListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Courier"
-        context["var_main_desc"] = "Full-time professional couriers."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "courier": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of courier for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class CourierDetailView(generic.DetailView):
+class CourierDetailView(DetailView):
     """ """
 
     model = Courier
     template_name = "sc/courier/courier_detail.html"
 
 
-@permission_required("core.view_capital")
-def courier_download(request):
-    items = Courier.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_courier_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "courier",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.courier,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def courier_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="metadata_couriers.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Full-time professional couriers.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Postal sytems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "courier": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of courier for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Postal_stationCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -16482,7 +10936,7 @@ class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "sc/postal_station/postal_station_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16505,31 +10959,25 @@ class Postal_stationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Postal Station"
-        context["my_exp"] = (
-            "Talking about postal sytems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "postal_station": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of postal station for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Postal_stationUpdate(PermissionRequiredMixin, UpdateView):
+class Postal_stationUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -16555,12 +11003,18 @@ class Postal_stationUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Postal Station"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Postal_stationDelete(PermissionRequiredMixin, DeleteView):
+class Postal_stationDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Postal_station object.
 
@@ -16574,7 +11028,7 @@ class Postal_stationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Postal_stationListView(generic.ListView):
+class Postal_stationListView(ListView):
     """
     Paginated view for listing all the Postal_station objects.
     """
@@ -16583,7 +11037,7 @@ class Postal_stationListView(generic.ListView):
     template_name = "sc/postal_station/postal_station_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16605,37 +11059,30 @@ class Postal_stationListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Postal Station"
-        context["var_main_desc"] = (
-            "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "postal_station": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of postal station for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Postal_stationListViewAll(generic.ListView):
+class Postal_stationListAllView(ListView):
     """ """
 
     model = Postal_station
     template_name = "sc/postal_station/postal_station_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16663,133 +11110,34 @@ class Postal_stationListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Postal Station"
-        context["var_main_desc"] = (
-            "Talking about postal sytems, postal stations are specialized buildings exclusively devoted to the postal service. if there is a special building that has other functions than a postal station, we still code postal station as present. the intent is to capture additional infrastructure beyond having a corps of messengers."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "postal_station": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of postal station for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Postal_stationDetailView(generic.DetailView):
+class Postal_stationDetailView(DetailView):
     """ """
 
     model = Postal_station
     template_name = "sc/postal_station/postal_station_detail.html"
 
 
-@permission_required("core.view_capital")
-def postal_station_download(request):
-    items = Postal_station.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_postal_station_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "postal_station",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.postal_station,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def postal_station_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_postal_stations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about postal sytems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Postal sytems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "postal_station": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of postal station for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class General_postal_serviceCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -16799,10 +11147,12 @@ class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, Creat
 
     model = General_postal_service
     form_class = General_postal_serviceForm
-    template_name = "sc/general_postal_service/general_postal_service_form.html"
+    template_name = (
+        "sc/general_postal_service/general_postal_service_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16825,31 +11175,25 @@ class General_postal_serviceCreate(PermissionRequiredMixin, PolityIdMixin, Creat
         """
         context = super().get_context_data(**kwargs)
 
+        context = dict(context, **{
+            "mysection": self.model.Code.section,
+            "mysubsection": self.model.Code.subsection,
+            "myvar": self.model.Code.variable,
+            "my_exp": self.model.Code.description,
+            "var_null_meaning": self.model.Code.null_meaning,
+            "inner_vars": self.model.Code.inner_variables,
+            "potential_cols": self.model.Code.potential_cols,
+        })
+
+        # TODO: What are section/subsection and why are they different on the view contexts
+        # compared to the model Code attributes?
         context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "General Postal Service"
-        context["my_exp"] = (
-            "Talking about postal sytems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "general_postal_service": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of general postal service for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class General_postal_serviceUpdate(PermissionRequiredMixin, UpdateView):
+class General_postal_serviceUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -16859,7 +11203,9 @@ class General_postal_serviceUpdate(PermissionRequiredMixin, UpdateView):
 
     model = General_postal_service
     form_class = General_postal_serviceForm
-    template_name = "sc/general_postal_service/general_postal_service_update.html"
+    template_name = (
+        "sc/general_postal_service/general_postal_service_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -16875,12 +11221,18 @@ class General_postal_serviceUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "General Postal Service"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class General_postal_serviceDelete(PermissionRequiredMixin, DeleteView):
+class General_postal_serviceDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing General_postal_service object.
 
@@ -16894,16 +11246,18 @@ class General_postal_serviceDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class General_postal_serviceListView(generic.ListView):
+class General_postal_serviceListView(ListView):
     """
     Paginated view for listing all the General_postal_service objects.
     """
 
     model = General_postal_service
-    template_name = "sc/general_postal_service/general_postal_service_list.html"
+    template_name = (
+        "sc/general_postal_service/general_postal_service_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16925,37 +11279,32 @@ class General_postal_serviceListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "General Postal Service"
-        context["var_main_desc"] = (
-            "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "general_postal_service": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of general postal service for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class General_postal_serviceListViewAll(generic.ListView):
+class General_postal_serviceListAllView(ListView):
     """ """
 
     model = General_postal_service
-    template_name = "sc/general_postal_service/general_postal_service_list_all.html"
+    template_name = (
+        "sc/general_postal_service/general_postal_service_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -16983,999 +11332,58 @@ class General_postal_serviceListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "General Postal Service"
-        context["var_main_desc"] = (
-            "Talking about postal sytems, 'general postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Social Complexity"
-        context["var_subsection"] = "Postal sytems"
-        context["inner_vars"] = {
-            "general_postal_service": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of general postal service for a polity.",
-                "units": None,
-                "choices": "ABSENT_PRESENT_CHOICES",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class General_postal_serviceDetailView(generic.DetailView):
+class General_postal_serviceDetailView(DetailView):
     """ """
 
     model = General_postal_service
-    template_name = "sc/general_postal_service/general_postal_service_detail.html"
-
-
-@permission_required("core.view_capital")
-def general_postal_service_download(request):
-    items = General_postal_service.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_general_postal_service_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "general_postal_service",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
+    template_name = (
+        "sc/general_postal_service/general_postal_service_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.general_postal_service,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def general_postal_service_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="metadata_general_postal_services.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "Talking about postal sytems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens.",
-        "main_desc_source": "NOTHING",
-        "section": "Social Complexity",
-        "subsection": "Postal sytems",
-    }
-    my_meta_data_dic_inner_vars = {
-        "general_postal_service": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of general postal service for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-def scvars(request):
-
-    app_name = "sc"  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
-
-    unique_politys = set()
-    number_of_all_rows = 0
-    number_of_variables = 0
-    all_vars_grouped = {}
-
-    all_sect_download_links = {}
-
-    for model in models_1:
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        ss_value = str(model().sub_subsection())
-
-        better_name = (
-            "download_csv_"
-            + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
-        )
-        all_sect_download_links[s_value] = better_name
-        if s_value not in all_vars_grouped:
-            all_vars_grouped[s_value] = {}
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-        else:
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-
-    models = apps.get_app_config(app_name).get_models()
-
-    for model in models:
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        subsection_value = str(model().subsection())
-        sub_subsection_value = str(model().sub_subsection())
-        count = model.objects.count()
-        number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
-        model_create = model_name.lower() + "-create"
-        model_download = model_name.lower() + "-download"
-        model_metadownload = model_name.lower() + "-metadownload"
-        model_all = model_name.lower() + "s_all"
-        model_s = model_name.lower() + "s"
-
-        queryset = model.objects.all()
-        politys = queryset.values_list("polity", flat=True).distinct()
-        unique_politys.update(politys)
-        number_of_variables += 1
-
-        to_be_appended = [
-            model_title,
-            model_s,
-            model_create,
-            model_download,
-            model_metadownload,
-            model_all,
-            count,
-        ]
-
-        if sub_subsection_value:
-            all_vars_grouped[subsection_value][sub_subsection_value].append(
-                to_be_appended
-            )
-        else:
-            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
-
-    context = {}
-    context["all_vars_grouped"] = all_vars_grouped
-    context["all_sect_download_links"] = all_sect_download_links
-    context["all_polities"] = len(unique_politys)
-    context["number_of_all_rows"] = number_of_all_rows
-
-    context["number_of_variables"] = number_of_variables
-
+def scvars_view(request):
+    context = get_variable_context(app_name=APP_NAME)
     return render(request, "sc/scvars.html", context=context)
 
 
 @permission_required("core.view_capital")
 def show_problematic_sc_data_table(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    """
+    View that shows a table of problematic data in the SC app.
 
-    # Collect data from all models
-    data = []
-    for model in app_models:
-        items = model.objects.all()
-        for obj in items:
-            if (
-                obj.polity.start_year is not None
-                and obj.year_from is not None
-                and obj.polity.start_year > obj.year_from
-            ):
-                data.append(obj)
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered problematic data table.
+    """
+    # Get the context data for the problematic data (with standard conditions)
+    context = get_problematic_data_context(APP_NAME)
 
     # Render the template with the data
-    return render(request, "sc/problematic_sc_data_table.html", {"data": data})
-
-
-@permission_required("core.view_capital")
-def download_csv_all_sc(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_data_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        items = model.objects.all()
-
-        for obj in items:
-            writer.writerow(
-                [
-                    obj.subsection(),
-                    obj.clean_name(),
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.show_value_from(),
-                    obj.show_value_to(),
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.is_uncertain,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_social_scale(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_social_scale_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Social Scale":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_professions(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_professions_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Professions":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_bureaucracy_characteristics(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_bureaucracy_characteristics_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Bureaucracy Characteristics":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_hierarchical_complexity(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_hierarchical_complexity_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Hierarchical Complexity":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_law(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_law_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Law":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_specialized_buildings_polity_owned(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = (
-        f"social_complexity_specialized_buildings_polity_owned_{current_datetime}.csv"
-    )
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Specialized Buildings: polity owned":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_transport_infrastructure(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_transport_infrastructure_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Transport Infrastructure":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_special_purpose_sites(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_special_purpose_sites_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Special-purpose Sites":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_information(request):
-    # Fetch all models in the "socomp" app
-    app_name = "sc"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_information_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Information":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-# Define a custom test function to check for the 'core.add_capital' permission
-def has_add_capital_permission(user):
-    return user.has_perm("core.add_capital")
-
-
-# Use the login_required, permission_required, and user_passes_test decorators
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    context = {
-        "object": obj,
-        "myvar": myvar,
-        "var_name_display": var_name_display,
-        "create_new_url": myvar + "-create",
-        "see_all_url": myvar + "s_all",
-    }
-
-    return render(request, "sc/sc_detail.html", context)
-
-
-# Use the login_required, permission_required, and user_passes_test decorators
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def dynamic_create_view(
-    request, form_class, x_name, myvar, my_exp, var_section, var_subsection
-):
-    # Retrieve the object based on the object_id
-
-    if x_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        x_name_with_from = x_name + "_from"
-        x_name_with_to = x_name + "_to"
-    else:
-        x_name_with_from = x_name
-        x_name_with_to = None
-
-    if request.method == "POST":
-        # If the request method is POST, it means the form has been submitted
-        my_form = form_class(request.POST)
-
-        if my_form.is_valid():
-            # Save the new object to the database
-            new_object = my_form.save()
-            return redirect(
-                f"{x_name}-detail", pk=new_object.id
-            )  # Replace 'success_url_name' with your success URL
-    else:
-        polity_id_x = request.GET.get("polity_id_x")
-        my_form = form_class(
-            initial={
-                "polity": polity_id_x,
-            }
-        )
-
-    # Define the context with the variables you want to pass to the template
-    if x_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        context = {
-            "form": my_form,
-            "object": object,
-            "extra_var": my_form[x_name_with_from],
-            "extra_var2": my_form[x_name_with_to],
-            "myvar": myvar,
-            "my_exp": my_exp,
-            "var_section": var_section,
-            "var_subsection": var_subsection,
-        }
-    else:
-        context = {
-            "form": my_form,
-            "object": object,
-            "extra_var": my_form[x_name],
-            "myvar": myvar,
-            "my_exp": my_exp,
-            "var_section": var_section,
-            "var_subsection": var_subsection,
-        }
-
-    return render(request, "sc/sc_create.html", context)
+    return render(request, "sc/problematic_sc_data_table.html", context)
 
 
 # Use the login_required, permission_required, and user_passes_test decorators
@@ -18017,11 +11425,10 @@ def dynamic_update_view(
             my_form.save()
             return redirect(f"{x_name}-detail", pk=my_object.id)
 
-    else:
+    elif request.method == "GET":
         # Create an instance of the form and populate it with the object's data
         my_form = form_class(instance=my_object)
 
-        # Define the context with the variables you want to pass to the template
         if x_name in [
             "largest_communication_distance",
             "fastest_individual_communication",
@@ -18051,6 +11458,90 @@ def dynamic_update_view(
             }
 
     return render(request, "sc/sc_update.html", context)
+
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required("core.add_capital", raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url="permission_denied")
+def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
+    # Retrieve the object for the given model class
+    obj = get_object_or_404(model_class, pk=pk)
+
+    context = {
+        "object": obj,
+        "myvar": myvar,
+        "var_name_display": var_name_display,
+        "create_new_url": myvar + "-create",
+        "see_all_url": myvar + "s_all",
+    }
+
+    return render(request, "sc/sc_detail.html", context)
+
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required("core.add_capital", raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url="permission_denied")
+def dynamic_create_view(
+    request, form_class, x_name, myvar, my_exp, var_section, var_subsection
+):
+    # Retrieve the object based on the object_id
+    if x_name in [
+        "largest_communication_distance",
+        "fastest_individual_communication",
+        "military_level",
+    ]:
+        x_name_with_from = x_name + "_from"
+        x_name_with_to = x_name + "_to"
+    else:
+        x_name_with_from = x_name
+        x_name_with_to = None
+
+    if request.method == "POST":
+        # If the request method is POST, it means the form has been submitted
+        my_form = form_class(request.POST)
+
+        if my_form.is_valid():
+            # Save the new object to the database
+            new_object = my_form.save()
+            return redirect(
+                f"{x_name}-detail", pk=new_object.id
+            )  # Replace 'success_url_name' with your success URL
+    elif request.method == "GET":
+        my_form = form_class(
+            initial={
+                "polity": request.GET.get("polity_id_x"),
+            }
+        )
+
+    if x_name in [
+        "largest_communication_distance",
+        "fastest_individual_communication",
+        "military_level",
+    ]:
+        context = {
+            "form": my_form,
+            "object": object,
+            "extra_var": my_form[x_name_with_from],
+            "extra_var2": my_form[x_name_with_to],
+            "myvar": myvar,
+            "my_exp": my_exp,
+            "var_section": var_section,
+            "var_subsection": var_subsection,
+        }
+    else:
+        context = {
+            "form": my_form,
+            "object": object,
+            "extra_var": my_form[x_name],
+            "myvar": myvar,
+            "my_exp": my_exp,
+            "var_section": var_section,
+            "var_subsection": var_subsection,
+        }
+
+    return render(request, "sc/sc_create.html", context)
 
 
 def generic_list_view(
@@ -18084,9 +11575,10 @@ def generic_list_view(
         var_exp_new = f'The range of "{var_name_display}" for a polity.'
     else:
         var_name_with_from = var_name
-        var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
+        var_exp_new = (
+            f'The absence or presence of "{var_name_display}" for a polity.'
+        )
 
-    # Define any additional context variables you want to pass to the template
     context = {
         "object_list": object_list,
         "var_name": var_name,
@@ -18102,199 +11594,29 @@ def generic_list_view(
         "var_subsection": var_subsection,
         "var_main_desc": var_main_desc,
         "myvar": var_name_display,
-        "extra_var_dict": extra_var_dict,  # Add the dictionary to the context
-        #'extra_var': obj[var_name],
-        #'obj_var': my_form[x_name],
-        # "myvar": myvar,
-        # "my_exp": my_exp,
-    }
-
-    context["inner_vars"] = {
-        var_name_display: {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": var_exp_new,
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
+        "extra_var_dict": extra_var_dict,
+        "inner_vars": {
+            var_name_display: {
+                "min": None,
+                "max": None,
+                "scale": None,
+                "var_exp_source": None,
+                "var_exp": var_exp_new,
+                "units": None,
+                "choices": ABSENT_PRESENT_STRING_LIST,
+                "null_meaning": None,
+            }
         }
     }
 
     return render(request, "sc/sc_list_all.html", context)
 
 
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_download(request, model_class, var_name):
-    # Fetch all objects for the specified model
-    items = model_class.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_{var_name}_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    if var_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        var_name_with_from = var_name + "_from"
-        var_name_with_to = var_name + "_to"
-    else:
-        var_name_with_from = var_name
-        var_name_with_to = None
-
-    writer = csv.writer(response, delimiter="|")
-    if var_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        writer.writerow(
-            [
-                "variable_name",
-                "year_from",
-                "year_to",
-                "polity_name",
-                "polity_new_ID",
-                "polity_old_ID",
-                var_name_with_from,
-                var_name_with_to,
-                "confidence",
-                "is_disputed",
-                "is_uncertain",
-                "expert_checked",
-                "DRB_reviewed",
-            ]
-        )
-    else:
-        writer.writerow(
-            [
-                "variable_name",
-                "year_from",
-                "year_to",
-                "polity_name",
-                "polity_new_ID",
-                "polity_old_ID",
-                var_name,
-                "confidence",
-                "is_disputed",
-                "is_uncertain",
-                "expert_checked",
-                "DRB_reviewed",
-            ]
-        )
-    for obj in items:
-        if var_name in [
-            "largest_communication_distance",
-            "fastest_individual_communication",
-            "military_level",
-        ]:
-            dynamic_value_from = getattr(obj, var_name_with_from, "")
-            dynamic_value_to = getattr(obj, var_name_with_to, "")
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    dynamic_value_from,
-                    dynamic_value_to,
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.is_uncertain,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-        else:
-            dynamic_value = getattr(obj, var_name, "")
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    dynamic_value,
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.is_uncertain,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_metadata_download(
-    request, var_name, var_name_display, var_section, var_subsection, var_main_desc
-):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f'attachment; filename="metadata_{var_name}s.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": var_main_desc,
-        "main_desc_source": "NOTHING",
-        "section": var_section,
-        "subsection": var_subsection,
-    }
-    my_meta_data_dic_inner_vars = {
-        "general_postal_service": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": f"The {var_name_display} for a polity.",
-            "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 def confirm_delete_view(request, model_class, pk, var_name):
-    permission_required = "core.add_capital"
+    check_permissions(request)
 
     # Retrieve the object for the given model class
     obj = get_object_or_404(model_class, pk=pk)
-
-    # Check if the user has the required permission
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
-
-    template_name = "core/confirm_delete.html"
 
     context = {
         "var_name": var_name,
@@ -18302,22 +11624,20 @@ def confirm_delete_view(request, model_class, pk, var_name):
         "delete_object": f"{var_name}-delete",
     }
 
-    return render(request, template_name, context)
+    return render(request, "core/confirm_delete.html", context)
 
 
 def delete_object_view(request, model_class, pk, var_name):
-    permission_required = "core.add_capital"
+    check_permissions(request)
+
     # Retrieve the object for the given model class
     obj = get_object_or_404(model_class, pk=pk)
-
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
 
     # Delete the object
     obj.delete()
 
     # Redirect to the success URL
-    success_url_name = f"{var_name}s_all"  # Adjust the success URL as needed
+    success_url_name = f"{var_name}s_all"
     success_url = reverse(success_url_name)
 
     # Display a success message

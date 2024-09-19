@@ -1,13 +1,22 @@
-from django.apps import apps
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Case, When, IntegerField, F, CharField, ExpressionWrapper
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+    DetailView,
+)
 
 from ..general.mixins import PolityIdMixin
+from ..global_utils import get_problematic_data_context
+from ..global_constants import (
+    POLITY_NGA_NAME,
+    ABSENT_PRESENT_STRING_LIST,
+    CORRECT_YEAR,
+)
 
 from .forms import (
     Long_wallForm,
@@ -111,14 +120,123 @@ from .models import (
     Modern_fortification,
     Chainmail,
 )
+from .specific_views.downloads import (  # noqa: F401 E501  TODO: currently imported for passing onto urls but maybe can be solved otherwise
+    long_wall_download_view,
+    copper_download_view,
+    bronze_download_view,
+    iron_download_view,
+    steel_download_view,
+    javelin_download_view,
+    atlatl_download_view,
+    sling_download_view,
+    self_bow_download_view,
+    composite_bow_download_view,
+    crossbow_download_view,
+    tension_siege_engine_download_view,
+    sling_siege_engine_download_view,
+    gunpowder_siege_artillery_download_view,
+    handheld_firearm_download_view,
+    war_club_download_view,
+    battle_axe_download_view,
+    dagger_download_view,
+    sword_download_view,
+    spear_download_view,
+    polearm_download_view,
+    dog_download_view,
+    donkey_download_view,
+    horse_download_view,
+    camel_download_view,
+    elephant_download_view,
+    wood_bark_etc_download_view,
+    leather_cloth_download_view,
+    shield_download_view,
+    helmet_download_view,
+    breastplate_download_view,
+    limb_protection_download_view,
+    scaled_armor_download_view,
+    laminar_armor_download_view,
+    plate_armor_download_view,
+    small_vessels_canoes_etc_download_view,
+    merchant_ships_pressed_into_service_download_view,
+    specialized_military_vessel_download_view,
+    settlements_in_a_defensive_position_download_view,
+    wooden_palisade_download_view,
+    earth_rampart_download_view,
+    ditch_download_view,
+    moat_download_view,
+    stone_walls_mortared_download_view,
+    stone_walls_non_mortared_download_view,
+    fortified_camp_download_view,
+    complex_fortification_download_view,
+    modern_fortification_download_view,
+    chainmail_download_view,
+    long_wall_meta_download_view,
+    copper_meta_download_view,
+    bronze_meta_download_view,
+    iron_meta_download_view,
+    steel_meta_download_view,
+    javelin_meta_download_view,
+    atlatl_meta_download_view,
+    sling_meta_download_view,
+    self_bow_meta_download_view,
+    composite_bow_meta_download_view,
+    crossbow_meta_download_view,
+    tension_siege_engine_meta_download_view,
+    sling_siege_engine_meta_download_view,
+    gunpowder_siege_artillery_meta_download_view,
+    handheld_firearm_meta_download_view,
+    war_club_meta_download_view,
+    battle_axe_meta_download_view,
+    dagger_meta_download_view,
+    sword_meta_download_view,
+    spear_meta_download_view,
+    polearm_meta_download_view,
+    dog_meta_download_view,
+    donkey_meta_download_view,
+    horse_meta_download_view,
+    camel_meta_download_view,
+    elephant_meta_download_view,
+    wood_bark_etc_meta_download_view,
+    leather_cloth_meta_download_view,
+    shield_meta_download_view,
+    helmet_meta_download_view,
+    breastplate_meta_download_view,
+    limb_protection_meta_download_view,
+    scaled_armor_meta_download_view,
+    laminar_armor_meta_download_view,
+    plate_armor_meta_download_view,
+    small_vessels_canoes_etc_meta_download_view,
+    merchant_ships_pressed_into_service_meta_download_view,
+    specialized_military_vessel_meta_download_view,
+    settlements_in_a_defensive_position_meta_download_view,
+    wooden_palisade_meta_download_view,
+    earth_rampart_meta_download_view,
+    ditch_meta_download_view,
+    moat_meta_download_view,
+    stone_walls_mortared_meta_download_view,
+    stone_walls_non_mortared_meta_download_view,
+    fortified_camp_meta_download_view,
+    complex_fortification_meta_download_view,
+    modern_fortification_meta_download_view,
+    chainmail_meta_download_view,
+    download_csv_naval_technology,
+    download_csv_armor,
+    download_csv_animals_used_in_warfare,
+    download_csv_handheld_weapons,
+    download_csv_projectiles,
+    download_csv_military_use_of_metals,
+    download_csv_fortifications,
+    download_csv_all_wf,
+)
+from .specific_views.variables import (  # noqa: F401 E501  TODO: currently imported for passing onto urls but maybe can be solved otherwise
+    wfvars_view,
+)
+from .constants import APP_NAME
 
-import csv
-import datetime
 
-
-class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Long_wallCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
-
+    Create a new Long_wall instance.
 
     Note:
         This view is restricted to users with the 'add_capital' permission.
@@ -129,7 +247,7 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/long_wall/long_wall_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -145,7 +263,7 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Long Wall"
         context["my_exp"] = (
-            "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"
+            "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -156,13 +274,7 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence or height of long walls for a polity.",
                 "units": "km",
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -171,9 +283,9 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Long_wallUpdate(PermissionRequiredMixin, UpdateView):
+class Long_wallUpdateView(PermissionRequiredMixin, UpdateView):
     """
-
+    Update an existing Long_wall instance.
 
     Note:
         This view is restricted to users with the 'add_capital' permission.
@@ -186,17 +298,21 @@ class Long_wallUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Long Wall"
-        context["my_exp"] = (
-            "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Long Wall",
+                "my_exp": "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Long_wallDelete(PermissionRequiredMixin, DeleteView):
+class Long_wallDeleteView(PermissionRequiredMixin, DeleteView):
     """
-
+    Delete an existing Long_wall instance.
 
     Note:
         This view is restricted to users with the 'add_capital' permission.
@@ -208,14 +324,16 @@ class Long_wallDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Long_wallListView(generic.ListView):
-    """ """
+class Long_wallListView(ListView):
+    """
+    Display a list of Long_wall instances.
+    """
 
     model = Long_wall
     template_name = "wf/long_wall/long_wall_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -226,34 +344,40 @@ class Long_wallListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Long Wall"
-        context["my_exp"] = "The absence or presence or height of long walls."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military Technologies"
-        context["inner_vars"] = {
-            "long_wall": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence or height of long walls for a polity.",
-                "units": "km",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Long Wall",
+                "var_main_desc": "The absence or presence or height of long walls.",
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military Technologies",
+                "inner_vars": {
+                    "long_wall": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence or height of long walls for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": "km",
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
+        )
 
         return context
 
 
-class Long_wallListViewAll(generic.ListView):
+class Long_wallListAllView(ListView):
     """ """
 
     model = Long_wall
     template_name = "wf/long_wall/long_wall_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -269,14 +393,8 @@ class Long_wallListViewAll(generic.ListView):
         new_context = (
             Long_wall.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -285,126 +403,42 @@ class Long_wallListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Long Wall"
-        context["var_main_desc"] = "The absence or presence or height of long walls."
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military Technologies"
-        context["inner_vars"] = {
-            "long_wall": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence or height of long walls for a polity.",
-                "units": "km",
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Long Wall",
+                "var_main_desc": "The absence or presence or height of long walls.",
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military Technologies",
+                "inner_vars": {
+                    "long_wall": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence or height of long walls for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": "km",
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Long_wallDetailView(generic.DetailView):
+class Long_wallDetailView(DetailView):
     """ """
 
     model = Long_wall
     template_name = "wf/long_wall/long_wall_detail.html"
 
 
-@permission_required("core.view_capital")
-def long_wall_download(request):
-    items = Long_wall.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_long_walls_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "long_wall_from",
-            "long_wall_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.show_value_from(),
-                obj.show_value_to(),
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def long_wall_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="long_walls.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Military Technologies",
-    }
-    my_meta_data_dic_inner_vars = {
-        "long_wall": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence or height of long walls for a polity.",
-            "units": "km",
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CopperCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -417,7 +451,7 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/copper/copper_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -444,13 +478,7 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of copper for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -459,7 +487,7 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class CopperUpdate(PermissionRequiredMixin, UpdateView):
+class CopperUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -474,15 +502,19 @@ class CopperUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Copper"
-        context["my_exp"] = (
-            "The absence or presence of copper as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Copper",
+                "my_exp": "The absence or presence of copper as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class CopperDelete(PermissionRequiredMixin, DeleteView):
+class CopperDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -496,14 +528,14 @@ class CopperDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CopperListView(generic.ListView):
+class CopperListView(ListView):
     """ """
 
     model = Copper
     template_name = "wf/copper/copper_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -514,43 +546,41 @@ class CopperListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Copper"
-        context["var_main_desc"] = (
-            "The absence or presence of copper as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Copper",
+                "var_main_desc": "The absence or presence of copper as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "copper": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of copper for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "copper": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of copper for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class CopperListViewAll(generic.ListView):
+class CopperListAllView(ListView):
     """ """
 
     model = Copper
     template_name = "wf/copper/copper_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -566,14 +596,8 @@ class CopperListViewAll(generic.ListView):
         new_context = (
             Copper.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -582,140 +606,43 @@ class CopperListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Copper"
-        context["var_main_desc"] = (
-            "The absence or presence of copper as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Copper",
+                "var_main_desc": "The absence or presence of copper as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "copper": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of copper for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "copper": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of copper for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CopperDetailView(generic.DetailView):
+class CopperDetailView(DetailView):
     """ """
 
     model = Copper
     template_name = "wf/copper/copper_detail.html"
 
 
-@permission_required("core.view_capital")
-def copper_download(request):
-    items = Copper.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_coppers_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "copper",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.copper,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def copper_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="coppers.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of copper as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Military use of Metals",
-    }
-    my_meta_data_dic_inner_vars = {
-        "copper": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of copper for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class BronzeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -728,7 +655,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/bronze/bronze_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -744,7 +671,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Bronze"
         context["my_exp"] = (
-            "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."
+            "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -755,13 +682,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of bronze for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -770,7 +691,7 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class BronzeUpdate(PermissionRequiredMixin, UpdateView):
+class BronzeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -785,15 +706,19 @@ class BronzeUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bronze"
-        context["my_exp"] = (
-            "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Bronze",
+                "my_exp": "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class BronzeDelete(PermissionRequiredMixin, DeleteView):
+class BronzeDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -807,14 +732,14 @@ class BronzeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class BronzeListView(generic.ListView):
+class BronzeListView(ListView):
     """ """
 
     model = Bronze
     template_name = "wf/bronze/bronze_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -825,43 +750,41 @@ class BronzeListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bronze"
-        context["var_main_desc"] = (
-            "The absence or presence of bronze as a military technology used in warfare. bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Bronze",
+                "var_main_desc": "The absence or presence of bronze as a military technology used in warfare. bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "bronze": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of bronze for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "bronze": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of bronze for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class BronzeListViewAll(generic.ListView):
+class BronzeListAllView(ListView):
     """ """
 
     model = Bronze
     template_name = "wf/bronze/bronze_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -877,14 +800,8 @@ class BronzeListViewAll(generic.ListView):
         new_context = (
             Bronze.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -893,140 +810,43 @@ class BronzeListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Bronze"
-        context["var_main_desc"] = (
-            "The absence or presence of bronze as a military technology used in warfare. bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Bronze",
+                "var_main_desc": "The absence or presence of bronze as a military technology used in warfare. bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "bronze": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of bronze for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "bronze": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of bronze for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class BronzeDetailView(generic.DetailView):
+class BronzeDetailView(DetailView):
     """ """
 
     model = Bronze
     template_name = "wf/bronze/bronze_detail.html"
 
 
-@permission_required("core.view_capital")
-def bronze_download(request):
-    items = Bronze.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_bronzes_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "bronze",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.bronze,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def bronze_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="bronzes.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Military use of Metals",
-    }
-    my_meta_data_dic_inner_vars = {
-        "bronze": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of bronze for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class IronCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -1039,7 +859,7 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/iron/iron_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1066,13 +886,7 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of iron for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -1081,7 +895,7 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class IronUpdate(PermissionRequiredMixin, UpdateView):
+class IronUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -1096,15 +910,19 @@ class IronUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Iron"
-        context["my_exp"] = (
-            "The absence or presence of iron as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Iron",
+                "my_exp": "The absence or presence of iron as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class IronDelete(PermissionRequiredMixin, DeleteView):
+class IronDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -1118,14 +936,14 @@ class IronDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class IronListView(generic.ListView):
+class IronListView(ListView):
     """ """
 
     model = Iron
     template_name = "wf/iron/iron_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1136,43 +954,41 @@ class IronListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Iron"
-        context["var_main_desc"] = (
-            "The absence or presence of iron as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Iron",
+                "var_main_desc": "The absence or presence of iron as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "iron": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of iron for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "iron": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of iron for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class IronListViewAll(generic.ListView):
+class IronListAllView(ListView):
     """ """
 
     model = Iron
     template_name = "wf/iron/iron_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1188,14 +1004,8 @@ class IronListViewAll(generic.ListView):
         new_context = (
             Iron.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -1204,140 +1014,43 @@ class IronListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Iron"
-        context["var_main_desc"] = (
-            "The absence or presence of iron as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Iron",
+                "var_main_desc": "The absence or presence of iron as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "iron": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of iron for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "iron": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of iron for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class IronDetailView(generic.DetailView):
+class IronDetailView(DetailView):
     """ """
 
     model = Iron
     template_name = "wf/iron/iron_detail.html"
 
 
-@permission_required("core.view_capital")
-def iron_download(request):
-    items = Iron.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_irons_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "iron",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.iron,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def iron_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="irons.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of iron as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Military use of Metals",
-    }
-    my_meta_data_dic_inner_vars = {
-        "iron": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of iron for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class SteelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -1350,7 +1063,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/steel/steel_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1366,7 +1079,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Steel"
         context["my_exp"] = (
-            "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."
+            "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -1377,13 +1090,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of steel for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -1392,7 +1099,7 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class SteelUpdate(PermissionRequiredMixin, UpdateView):
+class SteelUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -1407,15 +1114,19 @@ class SteelUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Steel"
-        context["my_exp"] = (
-            "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Steel",
+                "my_exp": "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class SteelDelete(PermissionRequiredMixin, DeleteView):
+class SteelDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -1429,14 +1140,14 @@ class SteelDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class SteelListView(generic.ListView):
+class SteelListView(ListView):
     """ """
 
     model = Steel
     template_name = "wf/steel/steel_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1447,43 +1158,41 @@ class SteelListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Steel"
-        context["var_main_desc"] = (
-            "The absence or presence of steel as a military technology used in warfare. steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Steel",
+                "var_main_desc": "The absence or presence of steel as a military technology used in warfare. steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "steel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of steel for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "steel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of steel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class SteelListViewAll(generic.ListView):
+class SteelListAllView(ListView):
     """ """
 
     model = Steel
     template_name = "wf/steel/steel_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1499,14 +1208,8 @@ class SteelListViewAll(generic.ListView):
         new_context = (
             Steel.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -1515,140 +1218,43 @@ class SteelListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Steel"
-        context["var_main_desc"] = (
-            "The absence or presence of steel as a military technology used in warfare. steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Steel",
+                "var_main_desc": "The absence or presence of steel as a military technology used in warfare. steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Military use of Metals",
+                "inner_vars": {
+                    "steel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of steel for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Military use of Metals"
-        context["inner_vars"] = {
-            "steel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of steel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class SteelDetailView(generic.DetailView):
+class SteelDetailView(DetailView):
     """ """
 
     model = Steel
     template_name = "wf/steel/steel_detail.html"
 
 
-@permission_required("core.view_capital")
-def steel_download(request):
-    items = Steel.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_steels_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "steel",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.steel,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def steel_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="steels.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Military use of Metals",
-    }
-    my_meta_data_dic_inner_vars = {
-        "steel": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of steel for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class JavelinCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -1661,7 +1267,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/javelin/javelin_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1677,7 +1283,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Javelin"
         context["my_exp"] = (
-            "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears"
+            "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -1688,13 +1294,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of javelin for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -1703,7 +1303,7 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class JavelinUpdate(PermissionRequiredMixin, UpdateView):
+class JavelinUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -1718,15 +1318,19 @@ class JavelinUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Javelin"
-        context["my_exp"] = (
-            "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Javelin",
+                "my_exp": "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class JavelinDelete(PermissionRequiredMixin, DeleteView):
+class JavelinDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -1740,14 +1344,14 @@ class JavelinDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class JavelinListView(generic.ListView):
+class JavelinListView(ListView):
     """ """
 
     model = Javelin
     template_name = "wf/javelin/javelin_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1758,43 +1362,41 @@ class JavelinListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Javelin"
-        context["var_main_desc"] = (
-            "The absence or presence of javelins as a military technology used in warfare. includes thrown spears"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Javelin",
+                "var_main_desc": "The absence or presence of javelins as a military technology used in warfare. includes thrown spears",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "javelin": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of javelin for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "javelin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of javelin for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class JavelinListViewAll(generic.ListView):
+class JavelinListAllView(ListView):
     """ """
 
     model = Javelin
     template_name = "wf/javelin/javelin_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1810,14 +1412,8 @@ class JavelinListViewAll(generic.ListView):
         new_context = (
             Javelin.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -1826,140 +1422,43 @@ class JavelinListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Javelin"
-        context["var_main_desc"] = (
-            "The absence or presence of javelins as a military technology used in warfare. includes thrown spears"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Javelin",
+                "var_main_desc": "The absence or presence of javelins as a military technology used in warfare. includes thrown spears",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "javelin": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of javelin for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "javelin": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of javelin for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class JavelinDetailView(generic.DetailView):
+class JavelinDetailView(DetailView):
     """ """
 
     model = Javelin
     template_name = "wf/javelin/javelin_detail.html"
 
 
-@permission_required("core.view_capital")
-def javelin_download(request):
-    items = Javelin.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_javelins_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "javelin",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.javelin,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def javelin_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="javelins.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "javelin": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of javelin for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class AtlatlCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -1972,7 +1471,7 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/atlatl/atlatl_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1999,13 +1498,7 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of atlatl for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -2014,7 +1507,7 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class AtlatlUpdate(PermissionRequiredMixin, UpdateView):
+class AtlatlUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2029,15 +1522,19 @@ class AtlatlUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Atlatl"
-        context["my_exp"] = (
-            "The absence or presence of atlatl as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Atlatl",
+                "my_exp": "The absence or presence of atlatl as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class AtlatlDelete(PermissionRequiredMixin, DeleteView):
+class AtlatlDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -2051,14 +1548,14 @@ class AtlatlDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class AtlatlListView(generic.ListView):
+class AtlatlListView(ListView):
     """ """
 
     model = Atlatl
     template_name = "wf/atlatl/atlatl_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2069,43 +1566,41 @@ class AtlatlListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Atlatl"
-        context["var_main_desc"] = (
-            "The absence or presence of atlatl as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Atlatl",
+                "var_main_desc": "The absence or presence of atlatl as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "atlatl": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of atlatl for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "atlatl": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of atlatl for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class AtlatlListViewAll(generic.ListView):
+class AtlatlListAllView(ListView):
     """ """
 
     model = Atlatl
     template_name = "wf/atlatl/atlatl_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2121,14 +1616,8 @@ class AtlatlListViewAll(generic.ListView):
         new_context = (
             Atlatl.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -2137,140 +1626,43 @@ class AtlatlListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Atlatl"
-        context["var_main_desc"] = (
-            "The absence or presence of atlatl as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Atlatl",
+                "var_main_desc": "The absence or presence of atlatl as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "atlatl": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of atlatl for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "atlatl": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of atlatl for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class AtlatlDetailView(generic.DetailView):
+class AtlatlDetailView(DetailView):
     """ """
 
     model = Atlatl
     template_name = "wf/atlatl/atlatl_detail.html"
 
 
-@permission_required("core.view_capital")
-def atlatl_download(request):
-    items = Atlatl.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_atlatls_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "atlatl",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.atlatl,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def atlatl_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="atlatls.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of atlatl as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "atlatl": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of atlatl for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class SlingCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -2283,7 +1675,7 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/sling/sling_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2310,13 +1702,7 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of sling for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -2325,7 +1711,7 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class SlingUpdate(PermissionRequiredMixin, UpdateView):
+class SlingUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2340,15 +1726,19 @@ class SlingUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling"
-        context["my_exp"] = (
-            "The absence or presence of slings as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling",
+                "my_exp": "The absence or presence of slings as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class SlingDelete(PermissionRequiredMixin, DeleteView):
+class SlingDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -2362,14 +1752,14 @@ class SlingDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class SlingListView(generic.ListView):
+class SlingListView(ListView):
     """ """
 
     model = Sling
     template_name = "wf/sling/sling_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2380,43 +1770,41 @@ class SlingListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling"
-        context["var_main_desc"] = (
-            "The absence or presence of slings as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling",
+                "var_main_desc": "The absence or presence of slings as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "sling": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sling for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "sling": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sling for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class SlingListViewAll(generic.ListView):
+class SlingListAllView(ListView):
     """ """
 
     model = Sling
     template_name = "wf/sling/sling_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2432,14 +1820,8 @@ class SlingListViewAll(generic.ListView):
         new_context = (
             Sling.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -2448,140 +1830,43 @@ class SlingListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling"
-        context["var_main_desc"] = (
-            "The absence or presence of slings as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling",
+                "var_main_desc": "The absence or presence of slings as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "sling": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sling for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "sling": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sling for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class SlingDetailView(generic.DetailView):
+class SlingDetailView(DetailView):
     """ """
 
     model = Sling
     template_name = "wf/sling/sling_detail.html"
 
 
-@permission_required("core.view_capital")
-def sling_download(request):
-    items = Sling.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_slings_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "sling",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.sling,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def sling_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="slings.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of slings as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "sling": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of sling for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Self_bowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -2594,7 +1879,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/self_bow/self_bow_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2610,7 +1895,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Self Bow"
         context["my_exp"] = (
-            "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)"
+            "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -2621,13 +1906,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of self bow for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -2636,7 +1915,7 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Self_bowUpdate(PermissionRequiredMixin, UpdateView):
+class Self_bowUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2651,15 +1930,19 @@ class Self_bowUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Self Bow"
-        context["my_exp"] = (
-            "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Self Bow",
+                "my_exp": "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Self_bowDelete(PermissionRequiredMixin, DeleteView):
+class Self_bowDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -2673,14 +1956,14 @@ class Self_bowDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Self_bowListView(generic.ListView):
+class Self_bowListView(ListView):
     """ """
 
     model = Self_bow
     template_name = "wf/self_bow/self_bow_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2691,43 +1974,41 @@ class Self_bowListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Self Bow"
-        context["var_main_desc"] = (
-            "The absence or presence of self bow as a military technology used in warfare. this is a bow made from a single piece of wood (example: the english/welsh longbow)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Self Bow",
+                "var_main_desc": "The absence or presence of self bow as a military technology used in warfare. this is a bow made from a single piece of wood (example: the english/welsh longbow)",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "self_bow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of self bow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "self_bow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of self bow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Self_bowListViewAll(generic.ListView):
+class Self_bowListAllView(ListView):
     """ """
 
     model = Self_bow
     template_name = "wf/self_bow/self_bow_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2743,14 +2024,8 @@ class Self_bowListViewAll(generic.ListView):
         new_context = (
             Self_bow.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -2759,140 +2034,45 @@ class Self_bowListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Self Bow"
-        context["var_main_desc"] = (
-            "The absence or presence of self bow as a military technology used in warfare. this is a bow made from a single piece of wood (example: the english/welsh longbow)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Self Bow",
+                "var_main_desc": "The absence or presence of self bow as a military technology used in warfare. this is a bow made from a single piece of wood (example: the english/welsh longbow)",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "self_bow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of self bow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "self_bow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of self bow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Self_bowDetailView(generic.DetailView):
+class Self_bowDetailView(DetailView):
     """ """
 
     model = Self_bow
     template_name = "wf/self_bow/self_bow_detail.html"
 
 
-@permission_required("core.view_capital")
-def self_bow_download(request):
-    items = Self_bow.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_self_bows_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "self_bow",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.self_bow,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def self_bow_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="self_bows.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "self_bow": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of self bow for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Composite_bowCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -2905,7 +2085,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/composite_bow/composite_bow_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2921,7 +2101,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Composite Bow"
         context["my_exp"] = (
-            "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."
+            "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -2932,13 +2112,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of composite bow for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -2947,7 +2121,7 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Composite_bowUpdate(PermissionRequiredMixin, UpdateView):
+class Composite_bowUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -2962,15 +2136,19 @@ class Composite_bowUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Composite Bow"
-        context["my_exp"] = (
-            "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Composite Bow",
+                "my_exp": "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present).",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Composite_bowDelete(PermissionRequiredMixin, DeleteView):
+class Composite_bowDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -2984,14 +2162,14 @@ class Composite_bowDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Composite_bowListView(generic.ListView):
+class Composite_bowListView(ListView):
     """ """
 
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3002,43 +2180,41 @@ class Composite_bowListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Composite Bow"
-        context["var_main_desc"] = (
-            "The absence or presence of composite bow as a military technology used in warfare. this is a bow made from several different materials, usually wood, horn, and sinew. also known as laminated bow. recurved bows should be coded here as well, because usually they are composite bows. when there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Composite Bow",
+                "var_main_desc": "The absence or presence of composite bow as a military technology used in warfare. this is a bow made from several different materials, usually wood, horn, and sinew. also known as laminated bow. recurved bows should be coded here as well, because usually they are composite bows. when there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "composite_bow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of composite bow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "composite_bow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of composite bow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Composite_bowListViewAll(generic.ListView):
+class Composite_bowListAllView(ListView):
     """ """
 
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3054,14 +2230,8 @@ class Composite_bowListViewAll(generic.ListView):
         new_context = (
             Composite_bow.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -3070,140 +2240,43 @@ class Composite_bowListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Composite Bow"
-        context["var_main_desc"] = (
-            "The absence or presence of composite bow as a military technology used in warfare. this is a bow made from several different materials, usually wood, horn, and sinew. also known as laminated bow. recurved bows should be coded here as well, because usually they are composite bows. when there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Composite Bow",
+                "var_main_desc": "The absence or presence of composite bow as a military technology used in warfare. this is a bow made from several different materials, usually wood, horn, and sinew. also known as laminated bow. recurved bows should be coded here as well, because usually they are composite bows. when there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "composite_bow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of composite bow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "composite_bow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of composite bow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Composite_bowDetailView(generic.DetailView):
+class Composite_bowDetailView(DetailView):
     """ """
 
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_detail.html"
 
 
-@permission_required("core.view_capital")
-def composite_bow_download(request):
-    items = Composite_bow.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_composite_bows_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "composite_bow",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.composite_bow,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def composite_bow_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="composite_bows.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present).",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "composite_bow": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of composite bow for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CrossbowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -3216,7 +2289,7 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/crossbow/crossbow_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3243,13 +2316,7 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of crossbow for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -3258,7 +2325,7 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class CrossbowUpdate(PermissionRequiredMixin, UpdateView):
+class CrossbowUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -3273,15 +2340,19 @@ class CrossbowUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Crossbow"
-        context["my_exp"] = (
-            "The absence or presence of crossbow as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Crossbow",
+                "my_exp": "The absence or presence of crossbow as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class CrossbowDelete(PermissionRequiredMixin, DeleteView):
+class CrossbowDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -3295,14 +2366,14 @@ class CrossbowDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CrossbowListView(generic.ListView):
+class CrossbowListView(ListView):
     """ """
 
     model = Crossbow
     template_name = "wf/crossbow/crossbow_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3313,43 +2384,41 @@ class CrossbowListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Crossbow"
-        context["var_main_desc"] = (
-            "The absence or presence of crossbow as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Crossbow",
+                "var_main_desc": "The absence or presence of crossbow as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "crossbow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of crossbow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "crossbow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of crossbow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class CrossbowListViewAll(generic.ListView):
+class CrossbowListAllView(ListView):
     """ """
 
     model = Crossbow
     template_name = "wf/crossbow/crossbow_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3365,14 +2434,8 @@ class CrossbowListViewAll(generic.ListView):
         new_context = (
             Crossbow.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -3381,140 +2444,45 @@ class CrossbowListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Crossbow"
-        context["var_main_desc"] = (
-            "The absence or presence of crossbow as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Crossbow",
+                "var_main_desc": "The absence or presence of crossbow as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "crossbow": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of crossbow for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "crossbow": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of crossbow for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CrossbowDetailView(generic.DetailView):
+class CrossbowDetailView(DetailView):
     """ """
 
     model = Crossbow
     template_name = "wf/crossbow/crossbow_detail.html"
 
 
-@permission_required("core.view_capital")
-def crossbow_download(request):
-    items = Crossbow.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_crossbows_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "crossbow",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.crossbow,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def crossbow_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="crossbows.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of crossbow as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "crossbow": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of crossbow for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Tension_siege_engineCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -3527,7 +2495,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "wf/tension_siege_engine/tension_siege_engine_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3543,7 +2511,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Tension Siege Engine"
         context["my_exp"] = (
-            "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager"
+            "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -3554,13 +2522,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of tension siege engine for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -3569,7 +2531,7 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         return context
 
 
-class Tension_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
+class Tension_siege_engineUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -3584,15 +2546,19 @@ class Tension_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Tension Siege Engine"
-        context["my_exp"] = (
-            "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Tension Siege Engine",
+                "my_exp": "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Tension_siege_engineDelete(PermissionRequiredMixin, DeleteView):
+class Tension_siege_engineDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -3606,14 +2572,14 @@ class Tension_siege_engineDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Tension_siege_engineListView(generic.ListView):
+class Tension_siege_engineListView(ListView):
     """ """
 
     model = Tension_siege_engine
     template_name = "wf/tension_siege_engine/tension_siege_engine_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3624,43 +2590,43 @@ class Tension_siege_engineListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Tension Siege Engine"
-        context["var_main_desc"] = (
-            "The absence or presence of tension siege engines as a military technology used in warfare. for example, catapult, onager"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Tension Siege Engine",
+                "var_main_desc": "The absence or presence of tension siege engines as a military technology used in warfare. for example, catapult, onager",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "tension_siege_engine": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of tension siege engine for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "tension_siege_engine": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of tension siege engine for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Tension_siege_engineListViewAll(generic.ListView):
+class Tension_siege_engineListAllView(ListView):
     """ """
 
     model = Tension_siege_engine
-    template_name = "wf/tension_siege_engine/tension_siege_engine_list_all.html"
+    template_name = (
+        "wf/tension_siege_engine/tension_siege_engine_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3676,14 +2642,8 @@ class Tension_siege_engineListViewAll(generic.ListView):
         new_context = (
             Tension_siege_engine.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -3692,140 +2652,45 @@ class Tension_siege_engineListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Tension Siege Engine"
-        context["var_main_desc"] = (
-            "The absence or presence of tension siege engines as a military technology used in warfare. for example, catapult, onager"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Tension Siege Engine",
+                "var_main_desc": "The absence or presence of tension siege engines as a military technology used in warfare. for example, catapult, onager",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "tension_siege_engine": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of tension siege engine for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "tension_siege_engine": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of tension siege engine for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Tension_siege_engineDetailView(generic.DetailView):
+class Tension_siege_engineDetailView(DetailView):
     """ """
 
     model = Tension_siege_engine
     template_name = "wf/tension_siege_engine/tension_siege_engine_detail.html"
 
 
-@permission_required("core.view_capital")
-def tension_siege_engine_download(request):
-    items = Tension_siege_engine.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_tension_siege_engines_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "tension_siege_engine",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.tension_siege_engine,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def tension_siege_engine_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="tension_siege_engines.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "tension_siege_engine": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of tension siege engine for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Sling_siege_engineCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -3838,7 +2703,7 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
     template_name = "wf/sling_siege_engine/sling_siege_engine_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3854,7 +2719,7 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling Siege Engine"
         context["my_exp"] = (
-            "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here"
+            "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -3863,15 +2728,9 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of sling siege engine for a polity.",
+                "var_exp": "The absence or presence of sling siege engine for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -3880,7 +2739,7 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
         return context
 
 
-class Sling_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
+class Sling_siege_engineUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -3895,15 +2754,19 @@ class Sling_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling Siege Engine"
-        context["my_exp"] = (
-            "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling Siege Engine",
+                "my_exp": "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Sling_siege_engineDelete(PermissionRequiredMixin, DeleteView):
+class Sling_siege_engineDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -3917,14 +2780,14 @@ class Sling_siege_engineDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Sling_siege_engineListView(generic.ListView):
+class Sling_siege_engineListView(ListView):
     """ """
 
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3935,43 +2798,41 @@ class Sling_siege_engineListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling Siege Engine"
-        context["var_main_desc"] = (
-            "The absence or presence of sling siege engines as a military technology used in warfare. e.g., trebuchet, innclude mangonels here"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling Siege Engine",
+                "var_main_desc": "The absence or presence of sling siege engines as a military technology used in warfare. e.g., trebuchet, innclude mangonels here",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "sling_siege_engine": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sling siege engine for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "sling_siege_engine": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sling siege engine for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Sling_siege_engineListViewAll(generic.ListView):
+class Sling_siege_engineListAllView(ListView):
     """ """
 
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3987,14 +2848,8 @@ class Sling_siege_engineListViewAll(generic.ListView):
         new_context = (
             Sling_siege_engine.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -4003,140 +2858,43 @@ class Sling_siege_engineListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sling Siege Engine"
-        context["var_main_desc"] = (
-            "The absence or presence of sling siege engines as a military technology used in warfare. e.g., trebuchet, innclude mangonels here"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sling Siege Engine",
+                "var_main_desc": "The absence or presence of sling siege engines as a military technology used in warfare. e.g., trebuchet, innclude mangonels here",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "sling_siege_engine": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sling siege engine for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "sling_siege_engine": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sling siege engine for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Sling_siege_engineDetailView(generic.DetailView):
+class Sling_siege_engineDetailView(DetailView):
     """ """
 
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_detail.html"
 
 
-@permission_required("core.view_capital")
-def sling_siege_engine_download(request):
-    items = Sling_siege_engine.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_sling_siege_engines_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "sling_siege_engine",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.sling_siege_engine,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def sling_siege_engine_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="sling_siege_engines.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "sling_siege_engine": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of sling siege engine for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Gunpowder_siege_artilleryCreate(
+class Gunpowder_siege_artilleryCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -4148,10 +2906,12 @@ class Gunpowder_siege_artilleryCreate(
 
     model = Gunpowder_siege_artillery
     form_class = Gunpowder_siege_artilleryForm
-    template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_form.html"
+    template_name = (
+        "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4167,7 +2927,7 @@ class Gunpowder_siege_artilleryCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Gunpowder Siege Artillery"
         context["my_exp"] = (
-            "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."
+            "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -4176,15 +2936,9 @@ class Gunpowder_siege_artilleryCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",
+                "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -4193,7 +2947,7 @@ class Gunpowder_siege_artilleryCreate(
         return context
 
 
-class Gunpowder_siege_artilleryUpdate(PermissionRequiredMixin, UpdateView):
+class Gunpowder_siege_artilleryUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4203,20 +2957,26 @@ class Gunpowder_siege_artilleryUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Gunpowder_siege_artillery
     form_class = Gunpowder_siege_artilleryForm
-    template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_update.html"
+    template_name = (
+        "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Gunpowder Siege Artillery"
-        context["my_exp"] = (
-            "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Gunpowder Siege Artillery",
+                "my_exp": "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Gunpowder_siege_artilleryDelete(PermissionRequiredMixin, DeleteView):
+class Gunpowder_siege_artilleryDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -4230,14 +2990,16 @@ class Gunpowder_siege_artilleryDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Gunpowder_siege_artilleryListView(generic.ListView):
+class Gunpowder_siege_artilleryListView(ListView):
     """ """
 
     model = Gunpowder_siege_artillery
-    template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_list.html"
+    template_name = (
+        "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4248,37 +3010,35 @@ class Gunpowder_siege_artilleryListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Gunpowder Siege Artillery"
-        context["var_main_desc"] = (
-            "The absence or presence of gunpowder siege artillery as a military technology used in warfare. for example, cannon, mortars."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Gunpowder Siege Artillery",
+                "var_main_desc": "The absence or presence of gunpowder siege artillery as a military technology used in warfare. for example, cannon, mortars.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "gunpowder_siege_artillery": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "gunpowder_siege_artillery": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Gunpowder_siege_artilleryListViewAll(generic.ListView):
+class Gunpowder_siege_artilleryListAllView(ListView):
     """ """
 
     model = Gunpowder_siege_artillery
@@ -4286,7 +3046,7 @@ class Gunpowder_siege_artilleryListViewAll(generic.ListView):
         "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_list_all.html"
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4302,14 +3062,8 @@ class Gunpowder_siege_artilleryListViewAll(generic.ListView):
         new_context = (
             Gunpowder_siege_artillery.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -4318,142 +3072,47 @@ class Gunpowder_siege_artilleryListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Gunpowder Siege Artillery"
-        context["var_main_desc"] = (
-            "The absence or presence of gunpowder siege artillery as a military technology used in warfare. for example, cannon, mortars."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Gunpowder Siege Artillery",
+                "var_main_desc": "The absence or presence of gunpowder siege artillery as a military technology used in warfare. for example, cannon, mortars.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "gunpowder_siege_artillery": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "gunpowder_siege_artillery": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Gunpowder_siege_artilleryDetailView(generic.DetailView):
+class Gunpowder_siege_artilleryDetailView(DetailView):
     """ """
 
     model = Gunpowder_siege_artillery
-    template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_detail.html"
-
-
-@permission_required("core.view_capital")
-def gunpowder_siege_artillery_download(request):
-    items = Gunpowder_siege_artillery.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_gunpowder_siege_artillerys_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "gunpowder_siege_artillery",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
+    template_name = (
+        "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.gunpowder_siege_artillery,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def gunpowder_siege_artillery_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="gunpowder_siege_artillerys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "gunpowder_siege_artillery": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of gunpowder siege artillery for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Handheld_firearmCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -4466,7 +3125,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
     template_name = "wf/handheld_firearm/handheld_firearm_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4482,7 +3141,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Handheld Firearm"
         context["my_exp"] = (
-            "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles"
+            "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -4493,13 +3152,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of handheld firearm for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -4508,7 +3161,7 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
         return context
 
 
-class Handheld_firearmUpdate(PermissionRequiredMixin, UpdateView):
+class Handheld_firearmUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4523,15 +3176,19 @@ class Handheld_firearmUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Handheld Firearm"
-        context["my_exp"] = (
-            "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Handheld Firearm",
+                "my_exp": "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Handheld_firearmDelete(PermissionRequiredMixin, DeleteView):
+class Handheld_firearmDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -4545,14 +3202,14 @@ class Handheld_firearmDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Handheld_firearmListView(generic.ListView):
+class Handheld_firearmListView(ListView):
     """ """
 
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4563,43 +3220,41 @@ class Handheld_firearmListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Handheld Firearm"
-        context["var_main_desc"] = (
-            "The absence or presence of handheld firearms as a military technology used in warfare. e.g., muskets, pistols, and rifles"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Handheld Firearm",
+                "var_main_desc": "The absence or presence of handheld firearms as a military technology used in warfare. e.g., muskets, pistols, and rifles",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "handheld_firearm": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of handheld firearm for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "handheld_firearm": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of handheld firearm for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Handheld_firearmListViewAll(generic.ListView):
+class Handheld_firearmListAllView(ListView):
     """ """
 
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4615,14 +3270,8 @@ class Handheld_firearmListViewAll(generic.ListView):
         new_context = (
             Handheld_firearm.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -4631,140 +3280,43 @@ class Handheld_firearmListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Handheld Firearm"
-        context["var_main_desc"] = (
-            "The absence or presence of handheld firearms as a military technology used in warfare. e.g., muskets, pistols, and rifles"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Handheld Firearm",
+                "var_main_desc": "The absence or presence of handheld firearms as a military technology used in warfare. e.g., muskets, pistols, and rifles",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Projectiles",
+                "inner_vars": {
+                    "handheld_firearm": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of handheld firearm for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Projectiles"
-        context["inner_vars"] = {
-            "handheld_firearm": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of handheld firearm for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Handheld_firearmDetailView(generic.DetailView):
+class Handheld_firearmDetailView(DetailView):
     """ """
 
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_detail.html"
 
 
-@permission_required("core.view_capital")
-def handheld_firearm_download(request):
-    items = Handheld_firearm.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_handheld_firearms_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "handheld_firearm",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.handheld_firearm,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def handheld_firearm_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="handheld_firearms.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Projectiles",
-    }
-    my_meta_data_dic_inner_vars = {
-        "handheld_firearm": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of handheld firearm for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class War_clubCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -4777,7 +3329,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/war_club/war_club_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4793,7 +3345,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "War Club"
         context["my_exp"] = (
-            "The absence or presence of war clubs as a military technology used in warfare. Includes maces"
+            "The absence or presence of war clubs as a military technology used in warfare. Includes maces"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -4804,13 +3356,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of war club for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -4819,7 +3365,7 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class War_clubUpdate(PermissionRequiredMixin, UpdateView):
+class War_clubUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -4834,15 +3380,19 @@ class War_clubUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "War Club"
-        context["my_exp"] = (
-            "The absence or presence of war clubs as a military technology used in warfare. Includes maces"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "War Club",
+                "my_exp": "The absence or presence of war clubs as a military technology used in warfare. Includes maces",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class War_clubDelete(PermissionRequiredMixin, DeleteView):
+class War_clubDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -4856,14 +3406,14 @@ class War_clubDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class War_clubListView(generic.ListView):
+class War_clubListView(ListView):
     """ """
 
     model = War_club
     template_name = "wf/war_club/war_club_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4874,43 +3424,41 @@ class War_clubListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "War Club"
-        context["var_main_desc"] = (
-            "The absence or presence of war clubs as a military technology used in warfare. includes maces"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "War Club",
+                "var_main_desc": "The absence or presence of war clubs as a military technology used in warfare. includes maces",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "war_club": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of war club for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "war_club": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of war club for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class War_clubListViewAll(generic.ListView):
+class War_clubListAllView(ListView):
     """ """
 
     model = War_club
     template_name = "wf/war_club/war_club_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4926,14 +3474,8 @@ class War_clubListViewAll(generic.ListView):
         new_context = (
             War_club.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -4942,140 +3484,43 @@ class War_clubListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "War Club"
-        context["var_main_desc"] = (
-            "The absence or presence of war clubs as a military technology used in warfare. includes maces"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "War Club",
+                "var_main_desc": "The absence or presence of war clubs as a military technology used in warfare. includes maces",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "war_club": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of war club for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "war_club": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of war club for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class War_clubDetailView(generic.DetailView):
+class War_clubDetailView(DetailView):
     """ """
 
     model = War_club
     template_name = "wf/war_club/war_club_detail.html"
 
 
-@permission_required("core.view_capital")
-def war_club_download(request):
-    items = War_club.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_war_clubs_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "war_club",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.war_club,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def war_club_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="war_clubs.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of war clubs as a military technology used in warfare. Includes maces",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "war_club": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of war club for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Battle_axeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -5088,7 +3533,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/battle_axe/battle_axe_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5104,7 +3549,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Battle Axe"
         context["my_exp"] = (
-            "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."
+            "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -5115,13 +3560,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of battle axe for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -5130,7 +3569,7 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Battle_axeUpdate(PermissionRequiredMixin, UpdateView):
+class Battle_axeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -5145,15 +3584,19 @@ class Battle_axeUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Battle Axe"
-        context["my_exp"] = (
-            "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Battle Axe",
+                "my_exp": "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Battle_axeDelete(PermissionRequiredMixin, DeleteView):
+class Battle_axeDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -5167,14 +3610,14 @@ class Battle_axeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Battle_axeListView(generic.ListView):
+class Battle_axeListView(ListView):
     """ """
 
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5185,43 +3628,41 @@ class Battle_axeListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Battle Axe"
-        context["var_main_desc"] = (
-            "The absence or presence of battle axes as a military technology used in warfare. axes designed for military use."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Battle Axe",
+                "var_main_desc": "The absence or presence of battle axes as a military technology used in warfare. axes designed for military use.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "battle_axe": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of battle axe for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "battle_axe": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of battle axe for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Battle_axeListViewAll(generic.ListView):
+class Battle_axeListAllView(ListView):
     """ """
 
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5237,14 +3678,8 @@ class Battle_axeListViewAll(generic.ListView):
         new_context = (
             Battle_axe.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -5253,140 +3688,43 @@ class Battle_axeListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Battle Axe"
-        context["var_main_desc"] = (
-            "The absence or presence of battle axes as a military technology used in warfare. axes designed for military use."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Battle Axe",
+                "var_main_desc": "The absence or presence of battle axes as a military technology used in warfare. axes designed for military use.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "battle_axe": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of battle axe for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "battle_axe": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of battle axe for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Battle_axeDetailView(generic.DetailView):
+class Battle_axeDetailView(DetailView):
     """ """
 
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_detail.html"
 
 
-@permission_required("core.view_capital")
-def battle_axe_download(request):
-    items = Battle_axe.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_battle_axes_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "battle_axe",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.battle_axe,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def battle_axe_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="battle_axes.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "battle_axe": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of battle axe for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class DaggerCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -5399,7 +3737,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/dagger/dagger_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5415,7 +3753,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dagger"
         context["my_exp"] = (
-            "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."
+            "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -5426,13 +3764,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of dagger for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -5441,7 +3773,7 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class DaggerUpdate(PermissionRequiredMixin, UpdateView):
+class DaggerUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -5456,15 +3788,23 @@ class DaggerUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dagger",
+                "my_exp": "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present.",  # noqa: E501 pylint: disable=C0301
+            },
+        )
         context["myvar"] = "Dagger"
         context["my_exp"] = (
-            "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."
+            "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."  # noqa: E501 pylint: disable=C0301
         )
 
         return context
 
 
-class DaggerDelete(PermissionRequiredMixin, DeleteView):
+class DaggerDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -5478,14 +3818,14 @@ class DaggerDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class DaggerListView(generic.ListView):
+class DaggerListView(ListView):
     """ """
 
     model = Dagger
     template_name = "wf/dagger/dagger_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5496,43 +3836,41 @@ class DaggerListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Dagger"
-        context["var_main_desc"] = (
-            "The absence or presence of daggers as a military technology used in warfare. bladed weapons shorter than 50 cm. includes knives. material is not important (coded elsewhere), thus flint daggers should be coded as present."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dagger",
+                "var_main_desc": "The absence or presence of daggers as a military technology used in warfare. bladed weapons shorter than 50 cm. includes knives. material is not important (coded elsewhere), thus flint daggers should be coded as present.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "dagger": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of dagger for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "dagger": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of dagger for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class DaggerListViewAll(generic.ListView):
+class DaggerListAllView(ListView):
     """ """
 
     model = Dagger
     template_name = "wf/dagger/dagger_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5548,14 +3886,8 @@ class DaggerListViewAll(generic.ListView):
         new_context = (
             Dagger.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -5564,140 +3896,43 @@ class DaggerListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Dagger"
-        context["var_main_desc"] = (
-            "The absence or presence of daggers as a military technology used in warfare. bladed weapons shorter than 50 cm. includes knives. material is not important (coded elsewhere), thus flint daggers should be coded as present."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dagger",
+                "var_main_desc": "The absence or presence of daggers as a military technology used in warfare. bladed weapons shorter than 50 cm. includes knives. material is not important (coded elsewhere), thus flint daggers should be coded as present.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "dagger": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of dagger for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "dagger": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of dagger for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class DaggerDetailView(generic.DetailView):
+class DaggerDetailView(DetailView):
     """ """
 
     model = Dagger
     template_name = "wf/dagger/dagger_detail.html"
 
 
-@permission_required("core.view_capital")
-def dagger_download(request):
-    items = Dagger.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_daggers_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "dagger",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.dagger,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def dagger_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="daggers.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "dagger": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of dagger for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class SwordCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -5710,7 +3945,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/sword/sword_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5726,7 +3961,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sword"
         context["my_exp"] = (
-            "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."
+            "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -5737,13 +3972,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of sword for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -5752,7 +3981,7 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class SwordUpdate(PermissionRequiredMixin, UpdateView):
+class SwordUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -5767,15 +3996,19 @@ class SwordUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sword"
-        context["my_exp"] = (
-            "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sword",
+                "my_exp": "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class SwordDelete(PermissionRequiredMixin, DeleteView):
+class SwordDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -5789,14 +4022,14 @@ class SwordDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class SwordListView(generic.ListView):
+class SwordListView(ListView):
     """ """
 
     model = Sword
     template_name = "wf/sword/sword_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5807,43 +4040,41 @@ class SwordListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sword"
-        context["var_main_desc"] = (
-            "The absence or presence of swords as a military technology used in warfare. bladed weapons longer than 50 cm. a machete is a sword (assuming the blade is probably longer than 50 cm). material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sword",
+                "var_main_desc": "The absence or presence of swords as a military technology used in warfare. bladed weapons longer than 50 cm. a machete is a sword (assuming the blade is probably longer than 50 cm). material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "sword": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sword for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "sword": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sword for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class SwordListViewAll(generic.ListView):
+class SwordListAllView(ListView):
     """ """
 
     model = Sword
     template_name = "wf/sword/sword_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5859,14 +4090,8 @@ class SwordListViewAll(generic.ListView):
         new_context = (
             Sword.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -5875,140 +4100,43 @@ class SwordListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Sword"
-        context["var_main_desc"] = (
-            "The absence or presence of swords as a military technology used in warfare. bladed weapons longer than 50 cm. a machete is a sword (assuming the blade is probably longer than 50 cm). material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Sword",
+                "var_main_desc": "The absence or presence of swords as a military technology used in warfare. bladed weapons longer than 50 cm. a machete is a sword (assuming the blade is probably longer than 50 cm). material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "sword": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of sword for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "sword": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of sword for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class SwordDetailView(generic.DetailView):
+class SwordDetailView(DetailView):
     """ """
 
     model = Sword
     template_name = "wf/sword/sword_detail.html"
 
 
-@permission_required("core.view_capital")
-def sword_download(request):
-    items = Sword.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_swords_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "sword",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.sword,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def sword_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="swords.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "sword": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of sword for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class SpearCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -6021,7 +4149,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/spear/spear_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6037,7 +4165,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Spear"
         context["my_exp"] = (
-            "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."
+            "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -6048,13 +4176,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of spear for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -6063,7 +4185,7 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class SpearUpdate(PermissionRequiredMixin, UpdateView):
+class SpearUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6078,15 +4200,19 @@ class SpearUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Spear"
-        context["my_exp"] = (
-            "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Spear",
+                "my_exp": "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class SpearDelete(PermissionRequiredMixin, DeleteView):
+class SpearDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -6100,14 +4226,14 @@ class SpearDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class SpearListView(generic.ListView):
+class SpearListView(ListView):
     """ """
 
     model = Spear
     template_name = "wf/spear/spear_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6118,43 +4244,41 @@ class SpearListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Spear"
-        context["var_main_desc"] = (
-            "The absence or presence of spears as a military technology used in warfare. includes lances and pikes. a trident is a spear."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Spear",
+                "var_main_desc": "The absence or presence of spears as a military technology used in warfare. includes lances and pikes. a trident is a spear.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "spear": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of spear for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "spear": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of spear for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class SpearListViewAll(generic.ListView):
+class SpearListAllView(ListView):
     """ """
 
     model = Spear
     template_name = "wf/spear/spear_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6170,14 +4294,8 @@ class SpearListViewAll(generic.ListView):
         new_context = (
             Spear.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -6186,140 +4304,43 @@ class SpearListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Spear"
-        context["var_main_desc"] = (
-            "The absence or presence of spears as a military technology used in warfare. includes lances and pikes. a trident is a spear."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Spear",
+                "var_main_desc": "The absence or presence of spears as a military technology used in warfare. includes lances and pikes. a trident is a spear.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "spear": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of spear for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "spear": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of spear for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class SpearDetailView(generic.DetailView):
+class SpearDetailView(DetailView):
     """ """
 
     model = Spear
     template_name = "wf/spear/spear_detail.html"
 
 
-@permission_required("core.view_capital")
-def spear_download(request):
-    items = Spear.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_spears_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "spear",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.spear,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def spear_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="spears.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "spear": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of spear for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class PolearmCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -6332,7 +4353,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/polearm/polearm_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6348,7 +4369,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Polearm"
         context["my_exp"] = (
-            "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars"
+            "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -6359,13 +4380,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of polearm for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -6374,7 +4389,7 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class PolearmUpdate(PermissionRequiredMixin, UpdateView):
+class PolearmUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6389,15 +4404,19 @@ class PolearmUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polearm"
-        context["my_exp"] = (
-            "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Polearm",
+                "my_exp": "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class PolearmDelete(PermissionRequiredMixin, DeleteView):
+class PolearmDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -6411,14 +4430,14 @@ class PolearmDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class PolearmListView(generic.ListView):
+class PolearmListView(ListView):
     """ """
 
     model = Polearm
     template_name = "wf/polearm/polearm_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6429,43 +4448,41 @@ class PolearmListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polearm"
-        context["var_main_desc"] = (
-            "The absence or presence of polearms as a military technology used in warfare. this category includes halberds, naginatas, and morning stars"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Polearm",
+                "var_main_desc": "The absence or presence of polearms as a military technology used in warfare. this category includes halberds, naginatas, and morning stars",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "polearm": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of polearm for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "polearm": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of polearm for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class PolearmListViewAll(generic.ListView):
+class PolearmListAllView(ListView):
     """ """
 
     model = Polearm
     template_name = "wf/polearm/polearm_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6481,14 +4498,8 @@ class PolearmListViewAll(generic.ListView):
         new_context = (
             Polearm.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -6497,140 +4508,43 @@ class PolearmListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polearm"
-        context["var_main_desc"] = (
-            "The absence or presence of polearms as a military technology used in warfare. this category includes halberds, naginatas, and morning stars"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Polearm",
+                "var_main_desc": "The absence or presence of polearms as a military technology used in warfare. this category includes halberds, naginatas, and morning stars",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Handheld weapons",
+                "inner_vars": {
+                    "polearm": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of polearm for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Handheld weapons"
-        context["inner_vars"] = {
-            "polearm": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of polearm for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class PolearmDetailView(generic.DetailView):
+class PolearmDetailView(DetailView):
     """ """
 
     model = Polearm
     template_name = "wf/polearm/polearm_detail.html"
 
 
-@permission_required("core.view_capital")
-def polearm_download(request):
-    items = Polearm.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_polearms_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polearm",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.polearm,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polearm_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polearms.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Handheld weapons",
-    }
-    my_meta_data_dic_inner_vars = {
-        "polearm": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of polearm for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class DogCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -6643,7 +4557,7 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/dog/dog_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6670,13 +4584,7 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of dog for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -6685,7 +4593,7 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class DogUpdate(PermissionRequiredMixin, UpdateView):
+class DogUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -6700,15 +4608,19 @@ class DogUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Dog"
-        context["my_exp"] = (
-            "The absence or presence of dogs as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dog",
+                "my_exp": "The absence or presence of dogs as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class DogDelete(PermissionRequiredMixin, DeleteView):
+class DogDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -6722,14 +4634,14 @@ class DogDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class DogListView(generic.ListView):
+class DogListView(ListView):
     """ """
 
     model = Dog
     template_name = "wf/dog/dog_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6740,43 +4652,41 @@ class DogListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Dog"
-        context["var_main_desc"] = (
-            "The absence or presence of dogs as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dog",
+                "var_main_desc": "The absence or presence of dogs as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "dog": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of dog for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "dog": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of dog for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class DogListViewAll(generic.ListView):
+class DogListAllView(ListView):
     """ """
 
     model = Dog
     template_name = "wf/dog/dog_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6792,14 +4702,8 @@ class DogListViewAll(generic.ListView):
         new_context = (
             Dog.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -6808,140 +4712,43 @@ class DogListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Dog"
-        context["var_main_desc"] = (
-            "The absence or presence of dogs as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Dog",
+                "var_main_desc": "The absence or presence of dogs as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "dog": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of dog for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "dog": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of dog for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class DogDetailView(generic.DetailView):
+class DogDetailView(DetailView):
     """ """
 
     model = Dog
     template_name = "wf/dog/dog_detail.html"
 
 
-@permission_required("core.view_capital")
-def dog_download(request):
-    items = Dog.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_dogs_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "dog",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.dog,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def dog_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="dogs.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of dogs as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Animals used in warfare",
-    }
-    my_meta_data_dic_inner_vars = {
-        "dog": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of dog for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class DonkeyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -6954,7 +4761,7 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/donkey/donkey_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6981,13 +4788,7 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of donkey for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -6996,7 +4797,7 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class DonkeyUpdate(PermissionRequiredMixin, UpdateView):
+class DonkeyUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7011,15 +4812,19 @@ class DonkeyUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Donkey"
-        context["my_exp"] = (
-            "The absence or presence of donkeys as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Donkey",
+                "my_exp": "The absence or presence of donkeys as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class DonkeyDelete(PermissionRequiredMixin, DeleteView):
+class DonkeyDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -7033,14 +4838,14 @@ class DonkeyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class DonkeyListView(generic.ListView):
+class DonkeyListView(ListView):
     """ """
 
     model = Donkey
     template_name = "wf/donkey/donkey_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7051,43 +4856,41 @@ class DonkeyListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Donkey"
-        context["var_main_desc"] = (
-            "The absence or presence of donkeys as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Donkey",
+                "var_main_desc": "The absence or presence of donkeys as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "donkey": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of donkey for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "donkey": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of donkey for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class DonkeyListViewAll(generic.ListView):
+class DonkeyListAllView(ListView):
     """ """
 
     model = Donkey
     template_name = "wf/donkey/donkey_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7103,14 +4906,8 @@ class DonkeyListViewAll(generic.ListView):
         new_context = (
             Donkey.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -7119,140 +4916,43 @@ class DonkeyListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Donkey"
-        context["var_main_desc"] = (
-            "The absence or presence of donkeys as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Donkey",
+                "var_main_desc": "The absence or presence of donkeys as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "donkey": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of donkey for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "donkey": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of donkey for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class DonkeyDetailView(generic.DetailView):
+class DonkeyDetailView(DetailView):
     """ """
 
     model = Donkey
     template_name = "wf/donkey/donkey_detail.html"
 
 
-@permission_required("core.view_capital")
-def donkey_download(request):
-    items = Donkey.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_donkeys_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "donkey",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.donkey,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def donkey_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="donkeys.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of donkeys as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Animals used in warfare",
-    }
-    my_meta_data_dic_inner_vars = {
-        "donkey": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of donkey for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class HorseCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -7265,7 +4965,7 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/horse/horse_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7292,13 +4992,7 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of horse for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -7307,7 +5001,7 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class HorseUpdate(PermissionRequiredMixin, UpdateView):
+class HorseUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7322,15 +5016,19 @@ class HorseUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Horse"
-        context["my_exp"] = (
-            "The absence or presence of horses as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Horse",
+                "my_exp": "The absence or presence of horses as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class HorseDelete(PermissionRequiredMixin, DeleteView):
+class HorseDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -7344,14 +5042,14 @@ class HorseDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class HorseListView(generic.ListView):
+class HorseListView(ListView):
     """ """
 
     model = Horse
     template_name = "wf/horse/horse_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7362,43 +5060,41 @@ class HorseListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Horse"
-        context["var_main_desc"] = (
-            "The absence or presence of horses as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Horse",
+                "var_main_desc": "The absence or presence of horses as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "horse": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of horse for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "horse": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of horse for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class HorseListViewAll(generic.ListView):
+class HorseListAllView(ListView):
     """ """
 
     model = Horse
     template_name = "wf/horse/horse_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7414,14 +5110,8 @@ class HorseListViewAll(generic.ListView):
         new_context = (
             Horse.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -7430,140 +5120,43 @@ class HorseListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Horse"
-        context["var_main_desc"] = (
-            "The absence or presence of horses as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Horse",
+                "var_main_desc": "The absence or presence of horses as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "horse": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of horse for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "horse": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of horse for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class HorseDetailView(generic.DetailView):
+class HorseDetailView(DetailView):
     """ """
 
     model = Horse
     template_name = "wf/horse/horse_detail.html"
 
 
-@permission_required("core.view_capital")
-def horse_download(request):
-    items = Horse.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_horses_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "horse",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.horse,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def horse_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="horses.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of horses as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Animals used in warfare",
-    }
-    my_meta_data_dic_inner_vars = {
-        "horse": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of horse for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class CamelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -7576,7 +5169,7 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/camel/camel_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7603,13 +5196,7 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of camel for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -7618,7 +5205,7 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class CamelUpdate(PermissionRequiredMixin, UpdateView):
+class CamelUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7633,15 +5220,19 @@ class CamelUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Camel"
-        context["my_exp"] = (
-            "The absence or presence of camels as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Camel",
+                "my_exp": "The absence or presence of camels as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class CamelDelete(PermissionRequiredMixin, DeleteView):
+class CamelDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -7655,14 +5246,14 @@ class CamelDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class CamelListView(generic.ListView):
+class CamelListView(ListView):
     """ """
 
     model = Camel
     template_name = "wf/camel/camel_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7673,43 +5264,41 @@ class CamelListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Camel"
-        context["var_main_desc"] = (
-            "The absence or presence of camels as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Camel",
+                "var_main_desc": "The absence or presence of camels as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "camel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of camel for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "camel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of camel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class CamelListViewAll(generic.ListView):
+class CamelListAllView(ListView):
     """ """
 
     model = Camel
     template_name = "wf/camel/camel_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7725,14 +5314,8 @@ class CamelListViewAll(generic.ListView):
         new_context = (
             Camel.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -7741,140 +5324,43 @@ class CamelListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Camel"
-        context["var_main_desc"] = (
-            "The absence or presence of camels as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Camel",
+                "var_main_desc": "The absence or presence of camels as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "camel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of camel for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "camel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of camel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class CamelDetailView(generic.DetailView):
+class CamelDetailView(DetailView):
     """ """
 
     model = Camel
     template_name = "wf/camel/camel_detail.html"
 
 
-@permission_required("core.view_capital")
-def camel_download(request):
-    items = Camel.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_camels_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "camel",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.camel,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def camel_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="camels.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of camels as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Animals used in warfare",
-    }
-    my_meta_data_dic_inner_vars = {
-        "camel": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of camel for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class ElephantCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -7887,7 +5373,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/elephant/elephant_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7903,7 +5389,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Elephant"
         context["my_exp"] = (
-            "The absence or presence of elephants as a military technology used in warfare. "
+            "The absence or presence of elephants as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -7914,13 +5400,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of elephant for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -7929,7 +5409,7 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class ElephantUpdate(PermissionRequiredMixin, UpdateView):
+class ElephantUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -7944,15 +5424,19 @@ class ElephantUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Elephant"
-        context["my_exp"] = (
-            "The absence or presence of elephants as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Elephant",
+                "my_exp": "The absence or presence of elephants as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class ElephantDelete(PermissionRequiredMixin, DeleteView):
+class ElephantDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -7966,14 +5450,14 @@ class ElephantDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class ElephantListView(generic.ListView):
+class ElephantListView(ListView):
     """ """
 
     model = Elephant
     template_name = "wf/elephant/elephant_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7984,43 +5468,41 @@ class ElephantListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Elephant"
-        context["var_main_desc"] = (
-            "The absence or presence of elephants as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Elephant",
+                "var_main_desc": "The absence or presence of elephants as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "elephant": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of elephant for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "elephant": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of elephant for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class ElephantListViewAll(generic.ListView):
+class ElephantListAllView(ListView):
     """ """
 
     model = Elephant
     template_name = "wf/elephant/elephant_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8036,14 +5518,8 @@ class ElephantListViewAll(generic.ListView):
         new_context = (
             Elephant.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -8052,140 +5528,45 @@ class ElephantListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Elephant"
-        context["var_main_desc"] = (
-            "The absence or presence of elephants as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Elephant",
+                "var_main_desc": "The absence or presence of elephants as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Animals used in warfare",
+                "inner_vars": {
+                    "elephant": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of elephant for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Animals used in warfare"
-        context["inner_vars"] = {
-            "elephant": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of elephant for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class ElephantDetailView(generic.DetailView):
+class ElephantDetailView(DetailView):
     """ """
 
     model = Elephant
     template_name = "wf/elephant/elephant_detail.html"
 
 
-@permission_required("core.view_capital")
-def elephant_download(request):
-    items = Elephant.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_elephants_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "elephant",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.elephant,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def elephant_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="elephants.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of elephants as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Animals used in warfare",
-    }
-    my_meta_data_dic_inner_vars = {
-        "elephant": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of elephant for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Wood_bark_etcCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -8198,7 +5579,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/wood_bark_etc/wood_bark_etc_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8214,7 +5595,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wood Bark Etc"
         context["my_exp"] = (
-            "The absence or presence of wood, bark, etc. as a military technology used in warfare. "
+            "The absence or presence of wood, bark, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -8225,13 +5606,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of wood bark etc for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -8240,7 +5615,7 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Wood_bark_etcUpdate(PermissionRequiredMixin, UpdateView):
+class Wood_bark_etcUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8255,15 +5630,19 @@ class Wood_bark_etcUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wood Bark Etc"
-        context["my_exp"] = (
-            "The absence or presence of wood, bark, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wood Bark Etc",
+                "my_exp": "The absence or presence of wood, bark, etc. as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Wood_bark_etcDelete(PermissionRequiredMixin, DeleteView):
+class Wood_bark_etcDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -8277,14 +5656,14 @@ class Wood_bark_etcDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Wood_bark_etcListView(generic.ListView):
+class Wood_bark_etcListView(ListView):
     """ """
 
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8295,43 +5674,41 @@ class Wood_bark_etcListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wood Bark Etc"
-        context["var_main_desc"] = (
-            "The absence or presence of wood, bark, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wood Bark Etc",
+                "var_main_desc": "The absence or presence of wood, bark, etc. as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "wood_bark_etc": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of wood bark etc for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "wood_bark_etc": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of wood bark etc for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Wood_bark_etcListViewAll(generic.ListView):
+class Wood_bark_etcListAllView(ListView):
     """ """
 
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8347,14 +5724,8 @@ class Wood_bark_etcListViewAll(generic.ListView):
         new_context = (
             Wood_bark_etc.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -8363,140 +5734,45 @@ class Wood_bark_etcListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wood Bark Etc"
-        context["var_main_desc"] = (
-            "The absence or presence of wood, bark, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wood Bark Etc",
+                "var_main_desc": "The absence or presence of wood, bark, etc. as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "wood_bark_etc": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of wood bark etc for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "wood_bark_etc": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of wood bark etc for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Wood_bark_etcDetailView(generic.DetailView):
+class Wood_bark_etcDetailView(DetailView):
     """ """
 
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_detail.html"
 
 
-@permission_required("core.view_capital")
-def wood_bark_etc_download(request):
-    items = Wood_bark_etc.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_wood_bark_etcs_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "wood_bark_etc",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.wood_bark_etc,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def wood_bark_etc_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="wood_bark_etcs.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of wood, bark, etc. as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "wood_bark_etc": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of wood bark etc for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Leather_clothCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -8509,7 +5785,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/leather_cloth/leather_cloth_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8525,7 +5801,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Leather Cloth"
         context["my_exp"] = (
-            "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor"
+            "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -8536,13 +5812,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of leather cloth for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -8551,7 +5821,7 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Leather_clothUpdate(PermissionRequiredMixin, UpdateView):
+class Leather_clothUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8566,15 +5836,19 @@ class Leather_clothUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Leather Cloth"
-        context["my_exp"] = (
-            "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Leather Cloth",
+                "my_exp": "The absence or presence of leather, cloth as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Leather_clothDelete(PermissionRequiredMixin, DeleteView):
+class Leather_clothDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -8588,14 +5862,14 @@ class Leather_clothDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Leather_clothListView(generic.ListView):
+class Leather_clothListView(ListView):
     """ """
 
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8606,43 +5880,41 @@ class Leather_clothListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Leather Cloth"
-        context["var_main_desc"] = (
-            "The absence or presence of leather, cloth as a military technology used in warfare. for example, leather cuirass, quilted cotton armor"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Leather Cloth",
+                "var_main_desc": "The absence or presence of leather, cloth as a military technology used in warfare. for example, leather cuirass, quilted cotton armor",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "leather_cloth": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of leather cloth for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "leather_cloth": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of leather cloth for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Leather_clothListViewAll(generic.ListView):
+class Leather_clothListAllView(ListView):
     """ """
 
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8658,14 +5930,8 @@ class Leather_clothListViewAll(generic.ListView):
         new_context = (
             Leather_cloth.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -8674,140 +5940,43 @@ class Leather_clothListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Leather Cloth"
-        context["var_main_desc"] = (
-            "The absence or presence of leather, cloth as a military technology used in warfare. for example, leather cuirass, quilted cotton armor"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Leather Cloth",
+                "var_main_desc": "The absence or presence of leather, cloth as a military technology used in warfare. for example, leather cuirass, quilted cotton armor",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "leather_cloth": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of leather cloth for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "leather_cloth": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of leather cloth for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Leather_clothDetailView(generic.DetailView):
+class Leather_clothDetailView(DetailView):
     """ """
 
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_detail.html"
 
 
-@permission_required("core.view_capital")
-def leather_cloth_download(request):
-    items = Leather_cloth.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_leather_cloths_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "leather_cloth",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.leather_cloth,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def leather_cloth_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="leather_cloths.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "leather_cloth": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of leather cloth for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class ShieldCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -8820,7 +5989,7 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/shield/shield_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8847,13 +6016,7 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of shield for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -8862,7 +6025,7 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class ShieldUpdate(PermissionRequiredMixin, UpdateView):
+class ShieldUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -8877,15 +6040,19 @@ class ShieldUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Shield"
-        context["my_exp"] = (
-            "The absence or presence of shields as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Shield",
+                "my_exp": "The absence or presence of shields as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class ShieldDelete(PermissionRequiredMixin, DeleteView):
+class ShieldDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -8899,14 +6066,14 @@ class ShieldDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class ShieldListView(generic.ListView):
+class ShieldListView(ListView):
     """ """
 
     model = Shield
     template_name = "wf/shield/shield_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8917,43 +6084,41 @@ class ShieldListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Shield"
-        context["var_main_desc"] = (
-            "The absence or presence of shields as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Shield",
+                "var_main_desc": "The absence or presence of shields as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "shield": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of shield for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "shield": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of shield for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class ShieldListViewAll(generic.ListView):
+class ShieldListAllView(ListView):
     """ """
 
     model = Shield
     template_name = "wf/shield/shield_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8969,14 +6134,8 @@ class ShieldListViewAll(generic.ListView):
         new_context = (
             Shield.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -8985,140 +6144,43 @@ class ShieldListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Shield"
-        context["var_main_desc"] = (
-            "The absence or presence of shields as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Shield",
+                "var_main_desc": "The absence or presence of shields as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "shield": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of shield for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "shield": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of shield for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class ShieldDetailView(generic.DetailView):
+class ShieldDetailView(DetailView):
     """ """
 
     model = Shield
     template_name = "wf/shield/shield_detail.html"
 
 
-@permission_required("core.view_capital")
-def shield_download(request):
-    items = Shield.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_shields_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "shield",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.shield,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def shield_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="shields.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of shields as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "shield": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of shield for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class HelmetCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -9131,7 +6193,7 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/helmet/helmet_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9158,13 +6220,7 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of helmet for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -9173,7 +6229,7 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class HelmetUpdate(PermissionRequiredMixin, UpdateView):
+class HelmetUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9188,15 +6244,19 @@ class HelmetUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Helmet"
-        context["my_exp"] = (
-            "The absence or presence of helmets as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Helmet",
+                "my_exp": "The absence or presence of helmets as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class HelmetDelete(PermissionRequiredMixin, DeleteView):
+class HelmetDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -9210,14 +6270,14 @@ class HelmetDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class HelmetListView(generic.ListView):
+class HelmetListView(ListView):
     """ """
 
     model = Helmet
     template_name = "wf/helmet/helmet_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9228,43 +6288,41 @@ class HelmetListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Helmet"
-        context["var_main_desc"] = (
-            "The absence or presence of helmets as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Helmet",
+                "var_main_desc": "The absence or presence of helmets as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "helmet": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of helmet for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "helmet": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of helmet for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class HelmetListViewAll(generic.ListView):
+class HelmetListAllView(ListView):
     """ """
 
     model = Helmet
     template_name = "wf/helmet/helmet_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9280,14 +6338,8 @@ class HelmetListViewAll(generic.ListView):
         new_context = (
             Helmet.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -9296,140 +6348,45 @@ class HelmetListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Helmet"
-        context["var_main_desc"] = (
-            "The absence or presence of helmets as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Helmet",
+                "var_main_desc": "The absence or presence of helmets as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "helmet": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of helmet for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "helmet": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of helmet for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class HelmetDetailView(generic.DetailView):
+class HelmetDetailView(DetailView):
     """ """
 
     model = Helmet
     template_name = "wf/helmet/helmet_detail.html"
 
 
-@permission_required("core.view_capital")
-def helmet_download(request):
-    items = Helmet.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_helmets_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "helmet",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.helmet,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def helmet_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="helmets.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of helmets as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "helmet": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of helmet for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class BreastplateCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -9442,7 +6399,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/breastplate/breastplate_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9458,7 +6415,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Breastplate"
         context["my_exp"] = (
-            "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."
+            "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -9469,13 +6426,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of breastplate for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -9484,7 +6435,7 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class BreastplateUpdate(PermissionRequiredMixin, UpdateView):
+class BreastplateUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9499,15 +6450,19 @@ class BreastplateUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Breastplate"
-        context["my_exp"] = (
-            "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Breastplate",
+                "my_exp": "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only).",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class BreastplateDelete(PermissionRequiredMixin, DeleteView):
+class BreastplateDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -9521,14 +6476,14 @@ class BreastplateDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class BreastplateListView(generic.ListView):
+class BreastplateListView(ListView):
     """ """
 
     model = Breastplate
     template_name = "wf/breastplate/breastplate_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9539,43 +6494,41 @@ class BreastplateListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Breastplate"
-        context["var_main_desc"] = (
-            "The absence or presence of breastplates as a military technology used in warfare. armor made from wood, horn, or bone can be very important (as in the spread of the asian war complex into north america). leather and cotton (in the americas) armor was also effective against arrows and warclubs. breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). in the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. however, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Breastplate",
+                "var_main_desc": "The absence or presence of breastplates as a military technology used in warfare. armor made from wood, horn, or bone can be very important (as in the spread of the asian war complex into north america). leather and cotton (in the americas) armor was also effective against arrows and warclubs. breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). in the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. however, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "breastplate": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of breastplate for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "breastplate": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of breastplate for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class BreastplateListViewAll(generic.ListView):
+class BreastplateListAllView(ListView):
     """ """
 
     model = Breastplate
     template_name = "wf/breastplate/breastplate_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9591,14 +6544,8 @@ class BreastplateListViewAll(generic.ListView):
         new_context = (
             Breastplate.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -9607,140 +6554,45 @@ class BreastplateListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Breastplate"
-        context["var_main_desc"] = (
-            "The absence or presence of breastplates as a military technology used in warfare. armor made from wood, horn, or bone can be very important (as in the spread of the asian war complex into north america). leather and cotton (in the americas) armor was also effective against arrows and warclubs. breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). in the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. however, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Breastplate",
+                "var_main_desc": "The absence or presence of breastplates as a military technology used in warfare. armor made from wood, horn, or bone can be very important (as in the spread of the asian war complex into north america). leather and cotton (in the americas) armor was also effective against arrows and warclubs. breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). in the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. however, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "breastplate": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of breastplate for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "breastplate": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of breastplate for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class BreastplateDetailView(generic.DetailView):
+class BreastplateDetailView(DetailView):
     """ """
 
     model = Breastplate
     template_name = "wf/breastplate/breastplate_detail.html"
 
 
-@permission_required("core.view_capital")
-def breastplate_download(request):
-    items = Breastplate.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_breastplates_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "breastplate",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.breastplate,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def breastplate_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="breastplates.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only).",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "breastplate": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of breastplate for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Limb_protectionCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -9753,7 +6605,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/limb_protection/limb_protection_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9769,7 +6621,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Limb Protection"
         context["my_exp"] = (
-            "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both."
+            "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -9780,13 +6632,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of limb protection for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -9795,7 +6641,7 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Limb_protectionUpdate(PermissionRequiredMixin, UpdateView):
+class Limb_protectionUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -9810,15 +6656,19 @@ class Limb_protectionUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Limb Protection"
-        context["my_exp"] = (
-            "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Limb Protection",
+                "my_exp": "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Limb_protectionDelete(PermissionRequiredMixin, DeleteView):
+class Limb_protectionDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -9832,14 +6682,14 @@ class Limb_protectionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Limb_protectionListView(generic.ListView):
+class Limb_protectionListView(ListView):
     """ """
 
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9850,43 +6700,41 @@ class Limb_protectionListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Limb Protection"
-        context["var_main_desc"] = (
-            "The absence or presence of limb protection as a military technology used in warfare. e.g., greaves. covering arms, or legs, or both."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Limb Protection",
+                "var_main_desc": "The absence or presence of limb protection as a military technology used in warfare. e.g., greaves. covering arms, or legs, or both.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "limb_protection": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of limb protection for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "limb_protection": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of limb protection for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Limb_protectionListViewAll(generic.ListView):
+class Limb_protectionListAllView(ListView):
     """ """
 
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9902,14 +6750,8 @@ class Limb_protectionListViewAll(generic.ListView):
         new_context = (
             Limb_protection.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -9918,139 +6760,45 @@ class Limb_protectionListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Limb Protection"
-        context["var_main_desc"] = (
-            "The absence or presence of limb protection as a military technology used in warfare. e.g., greaves. covering arms, or legs, or both."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Limb Protection",
+                "var_main_desc": "The absence or presence of limb protection as a military technology used in warfare. e.g., greaves. covering arms, or legs, or both.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "limb_protection": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of limb protection for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "limb_protection": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of limb protection for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Limb_protectionDetailView(generic.DetailView):
+class Limb_protectionDetailView(DetailView):
     """ """
 
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_detail.html"
 
 
-@permission_required("core.view_capital")
-def limb_protection_download(request):
-    items = Limb_protection.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_limb_protections_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "limb_protection",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.limb_protection,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def limb_protection_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="limb_protections.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "limb_protection": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of limb protection for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Scaled_armorCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -10063,7 +6811,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/scaled_armor/scaled_armor_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10079,7 +6827,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Scaled Armor"
         context["my_exp"] = (
-            "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."
+            "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -10090,13 +6838,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of scaled armor for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -10105,7 +6847,7 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Scaled_armorUpdate(PermissionRequiredMixin, UpdateView):
+class Scaled_armorUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10120,15 +6862,19 @@ class Scaled_armorUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scaled Armor"
-        context["my_exp"] = (
-            "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Scaled Armor",
+                "my_exp": "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc).",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Scaled_armorDelete(PermissionRequiredMixin, DeleteView):
+class Scaled_armorDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -10142,14 +6888,14 @@ class Scaled_armorDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Scaled_armorListView(generic.ListView):
+class Scaled_armorListView(ListView):
     """ """
 
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10160,43 +6906,41 @@ class Scaled_armorListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scaled Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of scaled armor as a military technology used in warfare. armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. the scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Scaled Armor",
+                "var_main_desc": "The absence or presence of scaled armor as a military technology used in warfare. armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. the scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "scaled_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of scaled armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "scaled_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of scaled armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Scaled_armorListViewAll(generic.ListView):
+class Scaled_armorListAllView(ListView):
     """ """
 
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10212,14 +6956,8 @@ class Scaled_armorListViewAll(generic.ListView):
         new_context = (
             Scaled_armor.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -10228,140 +6966,45 @@ class Scaled_armorListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Scaled Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of scaled armor as a military technology used in warfare. armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. the scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Scaled Armor",
+                "var_main_desc": "The absence or presence of scaled armor as a military technology used in warfare. armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. the scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc).",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "scaled_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of scaled armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "scaled_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of scaled armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Scaled_armorDetailView(generic.DetailView):
+class Scaled_armorDetailView(DetailView):
     """ """
 
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_detail.html"
 
 
-@permission_required("core.view_capital")
-def scaled_armor_download(request):
-    items = Scaled_armor.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_scaled_armors_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "scaled_armor",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.scaled_armor,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def scaled_armor_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="scaled_armors.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc).",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "scaled_armor": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of scaled armor for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Laminar_armorCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -10374,7 +7017,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/laminar_armor/laminar_armor_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10390,7 +7033,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Laminar Armor"
         context["my_exp"] = (
-            "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates."
+            "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -10401,13 +7044,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of laminar armor for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -10416,7 +7053,7 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Laminar_armorUpdate(PermissionRequiredMixin, UpdateView):
+class Laminar_armorUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10431,15 +7068,19 @@ class Laminar_armorUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Laminar Armor"
-        context["my_exp"] = (
-            "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Laminar Armor",
+                "my_exp": "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Laminar_armorDelete(PermissionRequiredMixin, DeleteView):
+class Laminar_armorDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -10453,14 +7094,14 @@ class Laminar_armorDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Laminar_armorListView(generic.ListView):
+class Laminar_armorListView(ListView):
     """ """
 
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10471,43 +7112,41 @@ class Laminar_armorListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Laminar Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). armor that is made from horizontal overlapping rows or bands of sold armor plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Laminar Armor",
+                "var_main_desc": "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). armor that is made from horizontal overlapping rows or bands of sold armor plates.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "laminar_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of laminar armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "laminar_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of laminar armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Laminar_armorListViewAll(generic.ListView):
+class Laminar_armorListAllView(ListView):
     """ """
 
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10523,14 +7162,8 @@ class Laminar_armorListViewAll(generic.ListView):
         new_context = (
             Laminar_armor.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -10539,140 +7172,45 @@ class Laminar_armorListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Laminar Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). armor that is made from horizontal overlapping rows or bands of sold armor plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Laminar Armor",
+                "var_main_desc": "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). armor that is made from horizontal overlapping rows or bands of sold armor plates.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "laminar_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of laminar armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "laminar_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of laminar armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Laminar_armorDetailView(generic.DetailView):
+class Laminar_armorDetailView(DetailView):
     """ """
 
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_detail.html"
 
 
-@permission_required("core.view_capital")
-def laminar_armor_download(request):
-    items = Laminar_armor.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_laminar_armors_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "laminar_armor",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.laminar_armor,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def laminar_armor_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="laminar_armors.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "laminar_armor": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of laminar armor for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Plate_armorCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -10685,7 +7223,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/plate_armor/plate_armor_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10701,7 +7239,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Plate Armor"
         context["my_exp"] = (
-            "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates."
+            "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -10712,13 +7250,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of plate armor for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -10727,7 +7259,7 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Plate_armorUpdate(PermissionRequiredMixin, UpdateView):
+class Plate_armorUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -10742,15 +7274,19 @@ class Plate_armorUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Plate Armor"
-        context["my_exp"] = (
-            "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Plate Armor",
+                "my_exp": "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Plate_armorDelete(PermissionRequiredMixin, DeleteView):
+class Plate_armorDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -10764,14 +7300,14 @@ class Plate_armorDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Plate_armorListView(generic.ListView):
+class Plate_armorListView(ListView):
     """ """
 
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10782,43 +7318,41 @@ class Plate_armorListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Plate Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of plate armor as a military technology used in warfare. armor made of iron or steel plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Plate Armor",
+                "var_main_desc": "The absence or presence of plate armor as a military technology used in warfare. armor made of iron or steel plates.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "plate_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of plate armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "plate_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of plate armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Plate_armorListViewAll(generic.ListView):
+class Plate_armorListAllView(ListView):
     """ """
 
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -10834,14 +7368,8 @@ class Plate_armorListViewAll(generic.ListView):
         new_context = (
             Plate_armor.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -10850,140 +7378,43 @@ class Plate_armorListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Plate Armor"
-        context["var_main_desc"] = (
-            "The absence or presence of plate armor as a military technology used in warfare. armor made of iron or steel plates."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Plate Armor",
+                "var_main_desc": "The absence or presence of plate armor as a military technology used in warfare. armor made of iron or steel plates.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "plate_armor": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of plate armor for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "plate_armor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of plate armor for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Plate_armorDetailView(generic.DetailView):
+class Plate_armorDetailView(DetailView):
     """ """
 
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_detail.html"
 
 
-@permission_required("core.view_capital")
-def plate_armor_download(request):
-    items = Plate_armor.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_plate_armors_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "plate_armor",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.plate_armor,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def plate_armor_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="plate_armors.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "plate_armor": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of plate armor for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Small_vessels_canoes_etcCreate(
+class Small_vessels_canoes_etcCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -10995,10 +7426,12 @@ class Small_vessels_canoes_etcCreate(
 
     model = Small_vessels_canoes_etc
     form_class = Small_vessels_canoes_etcForm
-    template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_form.html"
+    template_name = (
+        "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11014,7 +7447,7 @@ class Small_vessels_canoes_etcCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Small Vessels Canoes Etc"
         context["my_exp"] = (
-            "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "
+            "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -11023,15 +7456,9 @@ class Small_vessels_canoes_etcCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of small vessels canoes etc for a polity.",
+                "var_exp": "The absence or presence of small vessels canoes etc for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -11040,7 +7467,7 @@ class Small_vessels_canoes_etcCreate(
         return context
 
 
-class Small_vessels_canoes_etcUpdate(PermissionRequiredMixin, UpdateView):
+class Small_vessels_canoes_etcUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -11050,20 +7477,26 @@ class Small_vessels_canoes_etcUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Small_vessels_canoes_etc
     form_class = Small_vessels_canoes_etcForm
-    template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_update.html"
+    template_name = (
+        "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Small Vessels Canoes Etc"
-        context["my_exp"] = (
-            "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Small Vessels Canoes Etc",
+                "my_exp": "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Small_vessels_canoes_etcDelete(PermissionRequiredMixin, DeleteView):
+class Small_vessels_canoes_etcDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -11077,14 +7510,16 @@ class Small_vessels_canoes_etcDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Small_vessels_canoes_etcListView(generic.ListView):
+class Small_vessels_canoes_etcListView(ListView):
     """ """
 
     model = Small_vessels_canoes_etc
-    template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list.html"
+    template_name = (
+        "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11095,43 +7530,43 @@ class Small_vessels_canoes_etcListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Small Vessels Canoes Etc"
-        context["var_main_desc"] = (
-            "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Small Vessels Canoes Etc",
+                "var_main_desc": "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "small_vessels_canoes_etc": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of small vessels canoes etc for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "small_vessels_canoes_etc": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of small vessels canoes etc for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Small_vessels_canoes_etcListViewAll(generic.ListView):
+class Small_vessels_canoes_etcListAllView(ListView):
     """ """
 
     model = Small_vessels_canoes_etc
-    template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list_all.html"
+    template_name = (
+        "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11147,14 +7582,8 @@ class Small_vessels_canoes_etcListViewAll(generic.ListView):
         new_context = (
             Small_vessels_canoes_etc.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -11163,142 +7592,45 @@ class Small_vessels_canoes_etcListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Small Vessels Canoes Etc"
-        context["var_main_desc"] = (
-            "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Small Vessels Canoes Etc",
+                "var_main_desc": "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "small_vessels_canoes_etc": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of small vessels canoes etc for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "small_vessels_canoes_etc": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of small vessels canoes etc for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Small_vessels_canoes_etcDetailView(generic.DetailView):
+class Small_vessels_canoes_etcDetailView(DetailView):
     """ """
 
     model = Small_vessels_canoes_etc
-    template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_detail.html"
-
-
-@permission_required("core.view_capital")
-def small_vessels_canoes_etc_download(request):
-    items = Small_vessels_canoes_etc.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_small_vessels_canoes_etcs_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "small_vessels_canoes_etc",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
+    template_name = (
+        "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.small_vessels_canoes_etc,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def small_vessels_canoes_etc_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="small_vessels_canoes_etcs.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Naval technology",
-    }
-    my_meta_data_dic_inner_vars = {
-        "small_vessels_canoes_etc": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of small vessels canoes etc for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Merchant_ships_pressed_into_serviceCreate(
+class Merchant_ships_pressed_into_serviceCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -11310,10 +7642,10 @@ class Merchant_ships_pressed_into_serviceCreate(
 
     model = Merchant_ships_pressed_into_service
     form_class = Merchant_ships_pressed_into_serviceForm
-    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_form.html"
+    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11329,7 +7661,7 @@ class Merchant_ships_pressed_into_serviceCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Merchant Ships Pressed Into Service"
         context["my_exp"] = (
-            "The absence or presence of merchant ships pressed into service as a military technology used in warfare. "
+            "The absence or presence of merchant ships pressed into service as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -11338,15 +7670,9 @@ class Merchant_ships_pressed_into_serviceCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",
+                "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -11355,7 +7681,9 @@ class Merchant_ships_pressed_into_serviceCreate(
         return context
 
 
-class Merchant_ships_pressed_into_serviceUpdate(PermissionRequiredMixin, UpdateView):
+class Merchant_ships_pressed_into_serviceUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -11365,20 +7693,26 @@ class Merchant_ships_pressed_into_serviceUpdate(PermissionRequiredMixin, UpdateV
 
     model = Merchant_ships_pressed_into_service
     form_class = Merchant_ships_pressed_into_serviceForm
-    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_update.html"
+    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merchant Ships Pressed Into Service"
-        context["my_exp"] = (
-            "The absence or presence of merchant ships pressed into service as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Merchant Ships Pressed Into Service",
+                "my_exp": "The absence or presence of merchant ships pressed into service as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Merchant_ships_pressed_into_serviceDelete(PermissionRequiredMixin, DeleteView):
+class Merchant_ships_pressed_into_serviceDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
 
 
@@ -11392,14 +7726,14 @@ class Merchant_ships_pressed_into_serviceDelete(PermissionRequiredMixin, DeleteV
     permission_required = "core.add_capital"
 
 
-class Merchant_ships_pressed_into_serviceListView(generic.ListView):
+class Merchant_ships_pressed_into_serviceListView(ListView):
     """ """
 
     model = Merchant_ships_pressed_into_service
-    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list.html"
+    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11410,43 +7744,41 @@ class Merchant_ships_pressed_into_serviceListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merchant Ships Pressed Into Service"
-        context["var_main_desc"] = (
-            "The absence or presence of merchant ships pressed into service as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Merchant Ships Pressed Into Service",
+                "var_main_desc": "The absence or presence of merchant ships pressed into service as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "merchant_ships_pressed_into_service": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "merchant_ships_pressed_into_service": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Merchant_ships_pressed_into_serviceListViewAll(generic.ListView):
+class Merchant_ships_pressed_into_serviceListAllView(ListView):
     """ """
 
     model = Merchant_ships_pressed_into_service
-    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list_all.html"
+    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11462,14 +7794,8 @@ class Merchant_ships_pressed_into_serviceListViewAll(generic.ListView):
         new_context = (
             Merchant_ships_pressed_into_service.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -11478,142 +7804,43 @@ class Merchant_ships_pressed_into_serviceListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Merchant Ships Pressed Into Service"
-        context["var_main_desc"] = (
-            "The absence or presence of merchant ships pressed into service as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Merchant Ships Pressed Into Service",
+                "var_main_desc": "The absence or presence of merchant ships pressed into service as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "merchant_ships_pressed_into_service": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "merchant_ships_pressed_into_service": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Merchant_ships_pressed_into_serviceDetailView(generic.DetailView):
+class Merchant_ships_pressed_into_serviceDetailView(DetailView):
     """ """
 
     model = Merchant_ships_pressed_into_service
-    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_detail.html"
+    template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def merchant_ships_pressed_into_service_download(request):
-    items = Merchant_ships_pressed_into_service.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_merchant_ships_pressed_into_services_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "merchant_ships_pressed_into_service",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.merchant_ships_pressed_into_service,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def merchant_ships_pressed_into_service_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="merchant_ships_pressed_into_services.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of merchant ships pressed into service as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Naval technology",
-    }
-    my_meta_data_dic_inner_vars = {
-        "merchant_ships_pressed_into_service": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of merchant ships pressed into service for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Specialized_military_vesselCreate(
+class Specialized_military_vesselCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -11630,7 +7857,7 @@ class Specialized_military_vesselCreate(
     )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11646,7 +7873,7 @@ class Specialized_military_vesselCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Specialized Military Vessel"
         context["my_exp"] = (
-            "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"
+            "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -11655,15 +7882,9 @@ class Specialized_military_vesselCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized military vessel for a polity.",
+                "var_exp": "The absence or presence of specialized military vessel for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -11672,7 +7893,9 @@ class Specialized_military_vesselCreate(
         return context
 
 
-class Specialized_military_vesselUpdate(PermissionRequiredMixin, UpdateView):
+class Specialized_military_vesselUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -11682,22 +7905,26 @@ class Specialized_military_vesselUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Specialized_military_vessel
     form_class = Specialized_military_vesselForm
-    template_name = (
-        "wf/specialized_military_vessel/specialized_military_vessel_update.html"
-    )
+    template_name = "wf/specialized_military_vessel/specialized_military_vessel_update.html"
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Military Vessel"
-        context["my_exp"] = (
-            "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Specialized Military Vessel",
+                "my_exp": "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Specialized_military_vesselDelete(PermissionRequiredMixin, DeleteView):
+class Specialized_military_vesselDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
 
 
@@ -11711,7 +7938,7 @@ class Specialized_military_vesselDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Specialized_military_vesselListView(generic.ListView):
+class Specialized_military_vesselListView(ListView):
     """ """
 
     model = Specialized_military_vessel
@@ -11720,7 +7947,7 @@ class Specialized_military_vesselListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11731,45 +7958,41 @@ class Specialized_military_vesselListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Military Vessel"
-        context["var_main_desc"] = (
-            "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Specialized Military Vessel",
+                "var_main_desc": "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "specialized_military_vessel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of specialized military vessel for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "specialized_military_vessel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized military vessel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Specialized_military_vesselListViewAll(generic.ListView):
+class Specialized_military_vesselListAllView(ListView):
     """ """
 
     model = Specialized_military_vessel
-    template_name = (
-        "wf/specialized_military_vessel/specialized_military_vessel_list_all.html"
-    )
+    template_name = "wf/specialized_military_vessel/specialized_military_vessel_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11785,14 +8008,8 @@ class Specialized_military_vesselListViewAll(generic.ListView):
         new_context = (
             Specialized_military_vessel.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -11801,144 +8018,43 @@ class Specialized_military_vesselListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Specialized Military Vessel"
-        context["var_main_desc"] = (
-            "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Specialized Military Vessel",
+                "var_main_desc": "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Naval technology",
+                "inner_vars": {
+                    "specialized_military_vessel": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of specialized military vessel for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Naval technology"
-        context["inner_vars"] = {
-            "specialized_military_vessel": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of specialized military vessel for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Specialized_military_vesselDetailView(generic.DetailView):
+class Specialized_military_vesselDetailView(DetailView):
     """ """
 
     model = Specialized_military_vessel
-    template_name = (
-        "wf/specialized_military_vessel/specialized_military_vessel_detail.html"
-    )
+    template_name = "wf/specialized_military_vessel/specialized_military_vessel_detail.html"
 
 
-@permission_required("core.view_capital")
-def specialized_military_vessel_download(request):
-    items = Specialized_military_vessel.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_specialized_military_vessels_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "specialized_military_vessel",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.specialized_military_vessel,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def specialized_military_vessel_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="specialized_military_vessels.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Naval technology",
-    }
-    my_meta_data_dic_inner_vars = {
-        "specialized_military_vessel": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of specialized military vessel for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Settlements_in_a_defensive_positionCreate(
+class Settlements_in_a_defensive_positionCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -11950,10 +8066,10 @@ class Settlements_in_a_defensive_positionCreate(
 
     model = Settlements_in_a_defensive_position
     form_class = Settlements_in_a_defensive_positionForm
-    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_form.html"
+    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -11969,7 +8085,7 @@ class Settlements_in_a_defensive_positionCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Settlements in a Defensive Position"
         context["my_exp"] = (
-            "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula."
+            "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -11978,15 +8094,9 @@ class Settlements_in_a_defensive_positionCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of settlements in a defensive position for a polity.",
+                "var_exp": "The absence or presence of settlements in a defensive position for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -11995,7 +8105,9 @@ class Settlements_in_a_defensive_positionCreate(
         return context
 
 
-class Settlements_in_a_defensive_positionUpdate(PermissionRequiredMixin, UpdateView):
+class Settlements_in_a_defensive_positionUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
 
 
@@ -12005,20 +8117,26 @@ class Settlements_in_a_defensive_positionUpdate(PermissionRequiredMixin, UpdateV
 
     model = Settlements_in_a_defensive_position
     form_class = Settlements_in_a_defensive_positionForm
-    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_update.html"
+    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlements in a Defensive Position"
-        context["my_exp"] = (
-            "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Settlements in a Defensive Position",
+                "my_exp": "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Settlements_in_a_defensive_positionDelete(PermissionRequiredMixin, DeleteView):
+class Settlements_in_a_defensive_positionDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
 
 
@@ -12032,14 +8150,14 @@ class Settlements_in_a_defensive_positionDelete(PermissionRequiredMixin, DeleteV
     permission_required = "core.add_capital"
 
 
-class Settlements_in_a_defensive_positionListView(generic.ListView):
+class Settlements_in_a_defensive_positionListView(ListView):
     """ """
 
     model = Settlements_in_a_defensive_position
-    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list.html"
+    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12050,43 +8168,41 @@ class Settlements_in_a_defensive_positionListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlements in a Defensive Position"
-        context["var_main_desc"] = (
-            "The absence or presence of settlements in a defensive position as a military technology used in warfare. settlements in a location that was clearly chosen for defensive reasons. e.g. on a hill top, peninsula."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Settlements in a Defensive Position",
+                "var_main_desc": "The absence or presence of settlements in a defensive position as a military technology used in warfare. settlements in a location that was clearly chosen for defensive reasons. e.g. on a hill top, peninsula.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "settlements_in_a_defensive_position": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of settlements in a defensive position for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "settlements_in_a_defensive_position": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of settlements in a defensive position for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Settlements_in_a_defensive_positionListViewAll(generic.ListView):
+class Settlements_in_a_defensive_positionListAllView(ListView):
     """ """
 
     model = Settlements_in_a_defensive_position
-    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list_all.html"
+    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12102,14 +8218,8 @@ class Settlements_in_a_defensive_positionListViewAll(generic.ListView):
         new_context = (
             Settlements_in_a_defensive_position.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -12118,142 +8228,45 @@ class Settlements_in_a_defensive_positionListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Settlements in a Defensive Position"
-        context["var_main_desc"] = (
-            "The absence or presence of settlements in a defensive position as a military technology used in warfare. settlements in a location that was clearly chosen for defensive reasons. e.g. on a hill top, peninsula."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Settlements in a Defensive Position",
+                "var_main_desc": "The absence or presence of settlements in a defensive position as a military technology used in warfare. settlements in a location that was clearly chosen for defensive reasons. e.g. on a hill top, peninsula.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "settlements_in_a_defensive_position": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of settlements in a defensive position for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "settlements_in_a_defensive_position": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of settlements in a defensive position for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Settlements_in_a_defensive_positionDetailView(generic.DetailView):
+class Settlements_in_a_defensive_positionDetailView(DetailView):
     """ """
 
     model = Settlements_in_a_defensive_position
-    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_detail.html"
+    template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def settlements_in_a_defensive_position_download(request):
-    items = Settlements_in_a_defensive_position.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_settlements_in_a_defensive_positions_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "settlements_in_a_defensive_position",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.settlements_in_a_defensive_position,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def settlements_in_a_defensive_position_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="settlements_in_a_defensive_positions.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "settlements_in_a_defensive_position": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of settlements in a defensive position for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Wooden_palisadeCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -12266,7 +8279,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/wooden_palisade/wooden_palisade_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12282,7 +8295,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wooden Palisade"
         context["my_exp"] = (
-            "The absence or presence of wooden palisades as a military technology used in warfare. "
+            "The absence or presence of wooden palisades as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -12293,13 +8306,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of wooden palisade for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -12308,7 +8315,7 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Wooden_palisadeUpdate(PermissionRequiredMixin, UpdateView):
+class Wooden_palisadeUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12323,15 +8330,19 @@ class Wooden_palisadeUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wooden Palisade"
-        context["my_exp"] = (
-            "The absence or presence of wooden palisades as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wooden Palisade",
+                "my_exp": "The absence or presence of wooden palisades as a military technology used in warfare. ",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Wooden_palisadeDelete(PermissionRequiredMixin, DeleteView):
+class Wooden_palisadeDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -12345,14 +8356,14 @@ class Wooden_palisadeDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Wooden_palisadeListView(generic.ListView):
+class Wooden_palisadeListView(ListView):
     """ """
 
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12363,43 +8374,41 @@ class Wooden_palisadeListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wooden Palisade"
-        context["var_main_desc"] = (
-            "The absence or presence of wooden palisades as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wooden Palisade",
+                "var_main_desc": "The absence or presence of wooden palisades as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "wooden_palisade": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of wooden palisade for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "wooden_palisade": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of wooden palisade for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Wooden_palisadeListViewAll(generic.ListView):
+class Wooden_palisadeListAllView(ListView):
     """ """
 
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12415,14 +8424,8 @@ class Wooden_palisadeListViewAll(generic.ListView):
         new_context = (
             Wooden_palisade.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -12431,140 +8434,45 @@ class Wooden_palisadeListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Wooden Palisade"
-        context["var_main_desc"] = (
-            "The absence or presence of wooden palisades as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Wooden Palisade",
+                "var_main_desc": "The absence or presence of wooden palisades as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "wooden_palisade": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of wooden palisade for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "wooden_palisade": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of wooden palisade for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Wooden_palisadeDetailView(generic.DetailView):
+class Wooden_palisadeDetailView(DetailView):
     """ """
 
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_detail.html"
 
 
-@permission_required("core.view_capital")
-def wooden_palisade_download(request):
-    items = Wooden_palisade.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_wooden_palisades_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "wooden_palisade",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.wooden_palisade,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def wooden_palisade_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="wooden_palisades.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of wooden palisades as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "wooden_palisade": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of wooden palisade for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Earth_rampartCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -12577,7 +8485,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/earth_rampart/earth_rampart_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12593,7 +8501,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Earth Rampart"
         context["my_exp"] = (
-            "The absence or presence of earth ramparts as a military technology used in warfare. "
+            "The absence or presence of earth ramparts as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -12604,13 +8512,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of earth rampart for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -12619,7 +8521,7 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Earth_rampartUpdate(PermissionRequiredMixin, UpdateView):
+class Earth_rampartUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12634,15 +8536,19 @@ class Earth_rampartUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Earth Rampart"
-        context["my_exp"] = (
-            "The absence or presence of earth ramparts as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Earth Rampart",
+                "my_exp": "The absence or presence of earth ramparts as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Earth_rampartDelete(PermissionRequiredMixin, DeleteView):
+class Earth_rampartDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -12656,14 +8562,14 @@ class Earth_rampartDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Earth_rampartListView(generic.ListView):
+class Earth_rampartListView(ListView):
     """ """
 
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12674,43 +8580,41 @@ class Earth_rampartListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Earth Rampart"
-        context["var_main_desc"] = (
-            "The absence or presence of earth ramparts as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Earth Rampart",
+                "var_main_desc": "The absence or presence of earth ramparts as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "earth_rampart": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of earth rampart for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "earth_rampart": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of earth rampart for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Earth_rampartListViewAll(generic.ListView):
+class Earth_rampartListAllView(ListView):
     """ """
 
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12726,14 +8630,8 @@ class Earth_rampartListViewAll(generic.ListView):
         new_context = (
             Earth_rampart.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -12742,140 +8640,43 @@ class Earth_rampartListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Earth Rampart"
-        context["var_main_desc"] = (
-            "The absence or presence of earth ramparts as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Earth Rampart",
+                "var_main_desc": "The absence or presence of earth ramparts as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "earth_rampart": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of earth rampart for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "earth_rampart": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of earth rampart for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Earth_rampartDetailView(generic.DetailView):
+class Earth_rampartDetailView(DetailView):
     """ """
 
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_detail.html"
 
 
-@permission_required("core.view_capital")
-def earth_rampart_download(request):
-    items = Earth_rampart.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_earth_ramparts_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "earth_rampart",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.earth_rampart,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def earth_rampart_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="earth_ramparts.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of earth ramparts as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "earth_rampart": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of earth rampart for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class DitchCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -12888,7 +8689,7 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/ditch/ditch_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12915,13 +8716,7 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of ditch for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -12930,7 +8725,7 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class DitchUpdate(PermissionRequiredMixin, UpdateView):
+class DitchUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -12945,15 +8740,19 @@ class DitchUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Ditch"
-        context["my_exp"] = (
-            "The absence or presence of ditch as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Ditch",
+                "my_exp": "The absence or presence of ditch as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class DitchDelete(PermissionRequiredMixin, DeleteView):
+class DitchDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -12967,14 +8766,14 @@ class DitchDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class DitchListView(generic.ListView):
+class DitchListView(ListView):
     """ """
 
     model = Ditch
     template_name = "wf/ditch/ditch_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -12985,43 +8784,41 @@ class DitchListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Ditch"
-        context["var_main_desc"] = (
-            "The absence or presence of ditch as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Ditch",
+                "var_main_desc": "The absence or presence of ditch as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "ditch": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of ditch for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "ditch": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of ditch for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class DitchListViewAll(generic.ListView):
+class DitchListAllView(ListView):
     """ """
 
     model = Ditch
     template_name = "wf/ditch/ditch_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13037,14 +8834,8 @@ class DitchListViewAll(generic.ListView):
         new_context = (
             Ditch.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -13053,140 +8844,43 @@ class DitchListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Ditch"
-        context["var_main_desc"] = (
-            "The absence or presence of ditch as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Ditch",
+                "var_main_desc": "The absence or presence of ditch as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "ditch": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of ditch for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "ditch": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of ditch for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class DitchDetailView(generic.DetailView):
+class DitchDetailView(DetailView):
     """ """
 
     model = Ditch
     template_name = "wf/ditch/ditch_detail.html"
 
 
-@permission_required("core.view_capital")
-def ditch_download(request):
-    items = Ditch.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_ditchs_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "ditch",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.ditch,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def ditch_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="ditchs.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of ditch as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "ditch": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of ditch for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class MoatCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """
 
 
@@ -13199,7 +8893,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/moat/moat_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13215,7 +8909,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Moat"
         context["my_exp"] = (
-            "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water"
+            "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water"  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -13226,13 +8920,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of moat for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -13241,7 +8929,7 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class MoatUpdate(PermissionRequiredMixin, UpdateView):
+class MoatUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13256,15 +8944,19 @@ class MoatUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Moat"
-        context["my_exp"] = (
-            "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Moat",
+                "my_exp": "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class MoatDelete(PermissionRequiredMixin, DeleteView):
+class MoatDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -13278,14 +8970,14 @@ class MoatDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class MoatListView(generic.ListView):
+class MoatListView(ListView):
     """ """
 
     model = Moat
     template_name = "wf/moat/moat_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13296,43 +8988,41 @@ class MoatListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Moat"
-        context["var_main_desc"] = (
-            "The absence or presence of moat as a military technology used in warfare. differs from a ditch in that it has water"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Moat",
+                "var_main_desc": "The absence or presence of moat as a military technology used in warfare. differs from a ditch in that it has water",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "moat": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of moat for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "moat": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of moat for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class MoatListViewAll(generic.ListView):
+class MoatListAllView(ListView):
     """ """
 
     model = Moat
     template_name = "wf/moat/moat_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13348,14 +9038,8 @@ class MoatListViewAll(generic.ListView):
         new_context = (
             Moat.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -13364,140 +9048,43 @@ class MoatListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Moat"
-        context["var_main_desc"] = (
-            "The absence or presence of moat as a military technology used in warfare. differs from a ditch in that it has water"
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Moat",
+                "var_main_desc": "The absence or presence of moat as a military technology used in warfare. differs from a ditch in that it has water",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "moat": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of moat for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "moat": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of moat for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class MoatDetailView(generic.DetailView):
+class MoatDetailView(DetailView):
     """ """
 
     model = Moat
     template_name = "wf/moat/moat_detail.html"
 
 
-@permission_required("core.view_capital")
-def moat_download(request):
-    items = Moat.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_moats_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "moat",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.moat,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def moat_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="moats.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "moat": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of moat for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Stone_walls_non_mortaredCreate(
+class Stone_walls_non_mortaredCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -13509,10 +9096,12 @@ class Stone_walls_non_mortaredCreate(
 
     model = Stone_walls_non_mortared
     form_class = Stone_walls_non_mortaredForm
-    template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_form.html"
+    template_name = (
+        "wf/stone_walls_non_mortared/stone_walls_non_mortared_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13528,7 +9117,7 @@ class Stone_walls_non_mortaredCreate(
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Non Mortared"
         context["my_exp"] = (
-            "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "
+            "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -13537,15 +9126,9 @@ class Stone_walls_non_mortaredCreate(
                 "max": None,
                 "scale": None,
                 "var_exp_source": None,
-                "var_exp": "The absence or presence of stone walls non mortared for a polity.",
+                "var_exp": "The absence or presence of stone walls non mortared for a polity.",  # noqa: E501 pylint: disable=C0301
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -13554,7 +9137,7 @@ class Stone_walls_non_mortaredCreate(
         return context
 
 
-class Stone_walls_non_mortaredUpdate(PermissionRequiredMixin, UpdateView):
+class Stone_walls_non_mortaredUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13564,20 +9147,26 @@ class Stone_walls_non_mortaredUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Stone_walls_non_mortared
     form_class = Stone_walls_non_mortaredForm
-    template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_update.html"
+    template_name = (
+        "wf/stone_walls_non_mortared/stone_walls_non_mortared_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Non Mortared"
-        context["my_exp"] = (
-            "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Non Mortared",
+                "my_exp": "The absence or presence of stone walls (non-mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Stone_walls_non_mortaredDelete(PermissionRequiredMixin, DeleteView):
+class Stone_walls_non_mortaredDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -13591,14 +9180,16 @@ class Stone_walls_non_mortaredDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Stone_walls_non_mortaredListView(generic.ListView):
+class Stone_walls_non_mortaredListView(ListView):
     """ """
 
     model = Stone_walls_non_mortared
-    template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_list.html"
+    template_name = (
+        "wf/stone_walls_non_mortared/stone_walls_non_mortared_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13609,43 +9200,43 @@ class Stone_walls_non_mortaredListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Non Mortared"
-        context["var_main_desc"] = (
-            "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Non Mortared",
+                "var_main_desc": "The absence or presence of stone walls (non-mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "stone_walls_non_mortared": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of stone walls non mortared for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "stone_walls_non_mortared": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of stone walls non mortared for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Stone_walls_non_mortaredListViewAll(generic.ListView):
+class Stone_walls_non_mortaredListAllView(ListView):
     """ """
 
     model = Stone_walls_non_mortared
-    template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_list_all.html"
+    template_name = (
+        "wf/stone_walls_non_mortared/stone_walls_non_mortared_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13661,14 +9252,8 @@ class Stone_walls_non_mortaredListViewAll(generic.ListView):
         new_context = (
             Stone_walls_non_mortared.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -13677,142 +9262,47 @@ class Stone_walls_non_mortaredListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Non Mortared"
-        context["var_main_desc"] = (
-            "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Non Mortared",
+                "var_main_desc": "The absence or presence of stone walls (non-mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "stone_walls_non_mortared": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of stone walls non mortared for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "stone_walls_non_mortared": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of stone walls non mortared for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Stone_walls_non_mortaredDetailView(generic.DetailView):
+class Stone_walls_non_mortaredDetailView(DetailView):
     """ """
 
     model = Stone_walls_non_mortared
-    template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_detail.html"
-
-
-@permission_required("core.view_capital")
-def stone_walls_non_mortared_download(request):
-    items = Stone_walls_non_mortared.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_stone_walls_non_mortareds_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "stone_walls_non_mortared",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
+    template_name = (
+        "wf/stone_walls_non_mortared/stone_walls_non_mortared_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.stone_walls_non_mortared,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def stone_walls_non_mortared_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="stone_walls_non_mortareds.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "stone_walls_non_mortared": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of stone walls non mortared for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Stone_walls_mortaredCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -13825,7 +9315,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13841,7 +9331,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Mortared"
         context["my_exp"] = (
-            "The absence or presence of stone walls (mortared) as a military technology used in warfare. "
+            "The absence or presence of stone walls (mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -13852,13 +9342,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of stone walls mortared for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -13867,7 +9351,7 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         return context
 
 
-class Stone_walls_mortaredUpdate(PermissionRequiredMixin, UpdateView):
+class Stone_walls_mortaredUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -13882,15 +9366,19 @@ class Stone_walls_mortaredUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Mortared"
-        context["my_exp"] = (
-            "The absence or presence of stone walls (mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Mortared",
+                "my_exp": "The absence or presence of stone walls (mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Stone_walls_mortaredDelete(PermissionRequiredMixin, DeleteView):
+class Stone_walls_mortaredDeleteView(PermissionRequiredMixin, DeleteView):
     """
 
 
@@ -13904,14 +9392,14 @@ class Stone_walls_mortaredDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Stone_walls_mortaredListView(generic.ListView):
+class Stone_walls_mortaredListView(ListView):
     """ """
 
     model = Stone_walls_mortared
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13922,43 +9410,43 @@ class Stone_walls_mortaredListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Mortared"
-        context["var_main_desc"] = (
-            "The absence or presence of stone walls (mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Mortared",
+                "var_main_desc": "The absence or presence of stone walls (mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "stone_walls_mortared": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of stone walls mortared for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "stone_walls_mortared": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of stone walls mortared for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Stone_walls_mortaredListViewAll(generic.ListView):
+class Stone_walls_mortaredListAllView(ListView):
     """ """
 
     model = Stone_walls_mortared
-    template_name = "wf/stone_walls_mortared/stone_walls_mortared_list_all.html"
+    template_name = (
+        "wf/stone_walls_mortared/stone_walls_mortared_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -13974,14 +9462,8 @@ class Stone_walls_mortaredListViewAll(generic.ListView):
         new_context = (
             Stone_walls_mortared.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -13990,140 +9472,45 @@ class Stone_walls_mortaredListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Stone Walls Mortared"
-        context["var_main_desc"] = (
-            "The absence or presence of stone walls (mortared) as a military technology used in warfare. "
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Stone Walls Mortared",
+                "var_main_desc": "The absence or presence of stone walls (mortared) as a military technology used in warfare.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "stone_walls_mortared": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of stone walls mortared for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "stone_walls_mortared": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of stone walls mortared for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Stone_walls_mortaredDetailView(generic.DetailView):
+class Stone_walls_mortaredDetailView(DetailView):
     """ """
 
     model = Stone_walls_mortared
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_detail.html"
 
 
-@permission_required("core.view_capital")
-def stone_walls_mortared_download(request):
-    items = Stone_walls_mortared.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_stone_walls_mortareds_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "stone_walls_mortared",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.stone_walls_mortared,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def stone_walls_mortared_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="stone_walls_mortareds.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of stone walls (mortared) as a military technology used in warfare. ",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "stone_walls_mortared": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of stone walls mortared for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Fortified_campCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
 
 
@@ -14136,7 +9523,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/fortified_camp/fortified_camp_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14152,7 +9539,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Fortified Camp"
         context["my_exp"] = (
-            "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."
+            "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -14163,13 +9550,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of fortified camp for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -14178,7 +9559,7 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class Fortified_campUpdate(PermissionRequiredMixin, UpdateView):
+class Fortified_campUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14193,15 +9574,19 @@ class Fortified_campUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fortified Camp"
-        context["my_exp"] = (
-            "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Fortified Camp",
+                "my_exp": "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Fortified_campDelete(PermissionRequiredMixin, DeleteView):
+class Fortified_campDeleteView(PermissionRequiredMixin, DeleteView):
     """ """
 
     model = Fortified_camp
@@ -14210,14 +9595,14 @@ class Fortified_campDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Fortified_campListView(generic.ListView):
+class Fortified_campListView(ListView):
     """ """
 
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14228,43 +9613,41 @@ class Fortified_campListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fortified Camp"
-        context["var_main_desc"] = (
-            "The absence or presence of fortified camps as a military technology used in warfare. camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Fortified Camp",
+                "var_main_desc": "The absence or presence of fortified camps as a military technology used in warfare. camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "fortified_camp": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of fortified camp for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "fortified_camp": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of fortified camp for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Fortified_campListViewAll(generic.ListView):
+class Fortified_campListAllView(ListView):
     """ """
 
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14280,14 +9663,8 @@ class Fortified_campListViewAll(generic.ListView):
         new_context = (
             Fortified_camp.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -14296,140 +9673,45 @@ class Fortified_campListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Fortified Camp"
-        context["var_main_desc"] = (
-            "The absence or presence of fortified camps as a military technology used in warfare. camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Fortified Camp",
+                "var_main_desc": "The absence or presence of fortified camps as a military technology used in warfare. camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "fortified_camp": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of fortified camp for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "fortified_camp": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of fortified camp for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Fortified_campDetailView(generic.DetailView):
+class Fortified_campDetailView(DetailView):
     """ """
 
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_detail.html"
 
 
-@permission_required("core.view_capital")
-def fortified_camp_download(request):
-    items = Fortified_camp.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_fortified_camps_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "fortified_camp",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.fortified_camp,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def fortified_camp_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="fortified_camps.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "fortified_camp": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of fortified camp for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Complex_fortificationCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """ """
 
     model = Complex_fortification
@@ -14437,7 +9719,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
     template_name = "wf/complex_fortification/complex_fortification_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14453,7 +9735,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Complex Fortification"
         context["my_exp"] = (
-            "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough."
+            "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -14464,13 +9746,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of complex fortification for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -14479,7 +9755,7 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
         return context
 
 
-class Complex_fortificationUpdate(PermissionRequiredMixin, UpdateView):
+class Complex_fortificationUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14489,20 +9765,26 @@ class Complex_fortificationUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Complex_fortification
     form_class = Complex_fortificationForm
-    template_name = "wf/complex_fortification/complex_fortification_update.html"
+    template_name = (
+        "wf/complex_fortification/complex_fortification_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Complex Fortification"
-        context["my_exp"] = (
-            "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Complex Fortification",
+                "my_exp": "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Complex_fortificationDelete(PermissionRequiredMixin, DeleteView):
+class Complex_fortificationDeleteView(PermissionRequiredMixin, DeleteView):
     """ """
 
     model = Complex_fortification
@@ -14511,14 +9793,14 @@ class Complex_fortificationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Complex_fortificationListView(generic.ListView):
+class Complex_fortificationListView(ListView):
     """ """
 
     model = Complex_fortification
     template_name = "wf/complex_fortification/complex_fortification_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14529,43 +9811,43 @@ class Complex_fortificationListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Complex Fortification"
-        context["var_main_desc"] = (
-            "The absence or presence of complex fortifications as a military technology used in warfare. when there are two or more concentric walls. so simply a wall and a donjon, for example, is not enough."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Complex Fortification",
+                "var_main_desc": "The absence or presence of complex fortifications as a military technology used in warfare. when there are two or more concentric walls. so simply a wall and a donjon, for example, is not enough.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "complex_fortification": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of complex fortification for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "complex_fortification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of complex fortification for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Complex_fortificationListViewAll(generic.ListView):
+class Complex_fortificationListAllView(ListView):
     """ """
 
     model = Complex_fortification
-    template_name = "wf/complex_fortification/complex_fortification_list_all.html"
+    template_name = (
+        "wf/complex_fortification/complex_fortification_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14581,14 +9863,8 @@ class Complex_fortificationListViewAll(generic.ListView):
         new_context = (
             Complex_fortification.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -14597,142 +9873,47 @@ class Complex_fortificationListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Complex Fortification"
-        context["var_main_desc"] = (
-            "The absence or presence of complex fortifications as a military technology used in warfare. when there are two or more concentric walls. so simply a wall and a donjon, for example, is not enough."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Complex Fortification",
+                "var_main_desc": "The absence or presence of complex fortifications as a military technology used in warfare. when there are two or more concentric walls. so simply a wall and a donjon, for example, is not enough.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "complex_fortification": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of complex fortification for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "complex_fortification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of complex fortification for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Complex_fortificationDetailView(generic.DetailView):
+class Complex_fortificationDetailView(DetailView):
     """ """
 
     model = Complex_fortification
-    template_name = "wf/complex_fortification/complex_fortification_detail.html"
-
-
-@permission_required("core.view_capital")
-def complex_fortification_download(request):
-    items = Complex_fortification.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_complex_fortifications_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "complex_fortification",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
+    template_name = (
+        "wf/complex_fortification/complex_fortification_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.complex_fortification,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def complex_fortification_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="complex_fortifications.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "complex_fortification": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of complex fortification for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Modern_fortificationCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """ """
 
     model = Modern_fortification
@@ -14740,7 +9921,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
     template_name = "wf/modern_fortification/modern_fortification_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14756,7 +9937,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Modern Fortification"
         context["my_exp"] = (
-            "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."
+            "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -14767,13 +9948,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of modern fortification for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -14782,7 +9957,7 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         return context
 
 
-class Modern_fortificationUpdate(PermissionRequiredMixin, UpdateView):
+class Modern_fortificationUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -14797,15 +9972,19 @@ class Modern_fortificationUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Modern Fortification"
-        context["my_exp"] = (
-            "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Modern Fortification",
+                "my_exp": "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class Modern_fortificationDelete(PermissionRequiredMixin, DeleteView):
+class Modern_fortificationDeleteView(PermissionRequiredMixin, DeleteView):
     """ """
 
     model = Modern_fortification
@@ -14814,14 +9993,14 @@ class Modern_fortificationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Modern_fortificationListView(generic.ListView):
+class Modern_fortificationListView(ListView):
     """ """
 
     model = Modern_fortification
     template_name = "wf/modern_fortification/modern_fortification_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14832,43 +10011,43 @@ class Modern_fortificationListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Modern Fortification"
-        context["var_main_desc"] = (
-            "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Modern Fortification",
+                "var_main_desc": "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "modern_fortification": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of modern fortification for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "modern_fortification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of modern fortification for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class Modern_fortificationListViewAll(generic.ListView):
+class Modern_fortificationListAllView(ListView):
     """ """
 
     model = Modern_fortification
-    template_name = "wf/modern_fortification/modern_fortification_list_all.html"
+    template_name = (
+        "wf/modern_fortification/modern_fortification_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -14884,14 +10063,8 @@ class Modern_fortificationListViewAll(generic.ListView):
         new_context = (
             Modern_fortification.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -14900,140 +10073,43 @@ class Modern_fortificationListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Modern Fortification"
-        context["var_main_desc"] = (
-            "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Modern Fortification",
+                "var_main_desc": "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Fortifications",
+                "inner_vars": {
+                    "modern_fortification": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of modern fortification for a polity.",  # noqa: E501 pylint: disable=C0301
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Fortifications"
-        context["inner_vars"] = {
-            "modern_fortification": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of modern fortification for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Modern_fortificationDetailView(generic.DetailView):
+class Modern_fortificationDetailView(DetailView):
     """ """
 
     model = Modern_fortification
     template_name = "wf/modern_fortification/modern_fortification_detail.html"
 
 
-@permission_required("core.view_capital")
-def modern_fortification_download(request):
-    items = Modern_fortification.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_modern_fortifications_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "modern_fortification",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.modern_fortification,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def modern_fortification_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="modern_fortifications.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Fortifications",
-    }
-    my_meta_data_dic_inner_vars = {
-        "modern_fortification": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of modern fortification for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class ChainmailCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """ """
 
     model = Chainmail
@@ -15041,7 +10117,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "wf/chainmail/chainmail_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15057,7 +10133,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Chainmail"
         context["my_exp"] = (
-            "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh."
+            "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh."  # noqa: E501 pylint: disable=C0301
         )
         context["var_null_meaning"] = "The value is not available."
         context["inner_vars"] = {
@@ -15068,13 +10144,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
                 "var_exp_source": None,
                 "var_exp": "The absence or presence of chainmail for a polity.",
                 "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
+                "choices": ABSENT_PRESENT_STRING_LIST,
                 "null_meaning": None,
             }
         }
@@ -15083,7 +10153,7 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         return context
 
 
-class ChainmailUpdate(PermissionRequiredMixin, UpdateView):
+class ChainmailUpdateView(PermissionRequiredMixin, UpdateView):
     """
 
 
@@ -15098,15 +10168,19 @@ class ChainmailUpdate(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Chainmail"
-        context["my_exp"] = (
-            "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Chainmail",
+                "my_exp": "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh.",  # noqa: E501 pylint: disable=C0301
+            },
         )
 
         return context
 
 
-class ChainmailDelete(PermissionRequiredMixin, DeleteView):
+class ChainmailDeleteView(PermissionRequiredMixin, DeleteView):
     """ """
 
     model = Chainmail
@@ -15115,14 +10189,14 @@ class ChainmailDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class ChainmailListView(generic.ListView):
+class ChainmailListView(ListView):
     """ """
 
     model = Chainmail
     template_name = "wf/chainmail/chainmail_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15133,43 +10207,41 @@ class ChainmailListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Chainmail"
-        context["var_main_desc"] = (
-            "The absence or presence of chainmail as a military technology used in warfare. we’re using a broad definition of chainmail. habergeon was the word used to describe the chinese version and that would qualify as chainmail. armor that is made of small metal rings linked together in a pattern to form a mesh."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Chainmail",
+                "var_main_desc": "The absence or presence of chainmail as a military technology used in warfare. we’re using a broad definition of chainmail. habergeon was the word used to describe the chinese version and that would qualify as chainmail. armor that is made of small metal rings linked together in a pattern to form a mesh.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "chainmail": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of chainmail for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "chainmail": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of chainmail for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
 
         return context
 
 
-class ChainmailListViewAll(generic.ListView):
+class ChainmailListAllView(ListView):
     """ """
 
     model = Chainmail
     template_name = "wf/chainmail/chainmail_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -15185,14 +10257,8 @@ class ChainmailListViewAll(generic.ListView):
         new_context = (
             Chainmail.objects.all()
             .annotate(
-                home_nga=ExpressionWrapper(
-                    F("polity__home_nga__name"), output_field=CharField()
-                ),
-                year=Case(
-                    When(year_from__isnull=False, then=F("year_from")),
-                    default=F("polity__start_year"),
-                    output_field=IntegerField(),
-                ),
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
             )
             .order_by(order, order2)
         )
@@ -15201,38 +10267,36 @@ class ChainmailListViewAll(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Chainmail"
-        context["var_main_desc"] = (
-            "The absence or presence of chainmail as a military technology used in warfare. we’re using a broad definition of chainmail. habergeon was the word used to describe the chinese version and that would qualify as chainmail. armor that is made of small metal rings linked together in a pattern to form a mesh."
+
+        context = dict(
+            context,
+            **{
+                "myvar": "Chainmail",
+                "var_main_desc": "The absence or presence of chainmail as a military technology used in warfare. we’re using a broad definition of chainmail. habergeon was the word used to describe the chinese version and that would qualify as chainmail. armor that is made of small metal rings linked together in a pattern to form a mesh.",  # noqa: E501 pylint: disable=C0301
+                "var_main_desc_source": "NOTHING",
+                "var_section": "Warfare Variables",
+                "var_subsection": "Armor",
+                "inner_vars": {
+                    "chainmail": {
+                        "min": None,
+                        "max": None,
+                        "scale": None,
+                        "var_exp_source": None,
+                        "var_exp": "The absence or presence of chainmail for a polity.",
+                        "units": None,
+                        "choices": ABSENT_PRESENT_STRING_LIST,
+                        "null_meaning": None,
+                    }
+                },
+                "potential_cols": ["Choices"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "NOTHING"
-        context["var_section"] = "Warfare Variables"
-        context["var_subsection"] = "Armor"
-        context["inner_vars"] = {
-            "chainmail": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The absence or presence of chainmail for a polity.",
-                "units": None,
-                "choices": [
-                    "- present",
-                    "- absent",
-                    "- unknown",
-                    "- Transitional (Absent -> Present)",
-                    "- Transitional (Present -> Absent)",
-                ],
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = ["Choices"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class ChainmailDetailView(generic.DetailView):
+class ChainmailDetailView(DetailView):
     """ """
 
     model = Chainmail
@@ -15240,750 +10304,21 @@ class ChainmailDetailView(generic.DetailView):
 
 
 @permission_required("core.view_capital")
-def chainmail_download(request):
-    items = Chainmail.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_name = f"warfare_chainmails_{current_datetime}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "chainmail",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.chainmail,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.is_uncertain,
-                obj.expert_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def chainmail_meta_download(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="chainmails.csv"'
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh.",
-        "main_desc_source": "NOTHING",
-        "section": "Warfare Variables",
-        "subsection": "Armor",
-    }
-    my_meta_data_dic_inner_vars = {
-        "chainmail": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The absence or presence of chainmail for a polity.",
-            "units": None,
-            "choices": [
-                "- present",
-                "- absent",
-                "- unknown",
-                "- Transitional (Absent -> Present)",
-                "- Transitional (Present -> Absent)",
-            ],
-            "null_meaning": None,
-        }
-    }
-
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-def wfvars(request):
-    app_name = "wf"  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
-
-    unique_politys = set()
-    number_of_all_rows = 0
-    number_of_variables = 0
-
-    all_vars_grouped = {}
-
-    all_sect_download_links = {}
-
-    for model in models_1:
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        ss_value = str(model().sub_subsection())
-
-        better_name = (
-            "download_csv_"
-            + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
-        )
-        all_sect_download_links[s_value] = better_name
-        if s_value not in all_vars_grouped:
-            all_vars_grouped[s_value] = {}
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-        else:
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-
-    models = apps.get_app_config(app_name).get_models()
-
-    for model in models:
-        model_name = model.__name__
-        subsection_value = str(model().subsection())
-        sub_subsection_value = str(model().sub_subsection())
-        count = model.objects.count()
-        number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
-        model_create = model_name.lower() + "-create"
-        model_download = model_name.lower() + "-download"
-        model_metadownload = model_name.lower() + "-metadownload"
-        model_all = model_name.lower() + "s_all"
-        model_s = model_name.lower() + "s"
-
-        queryset = model.objects.all()
-        politys = queryset.values_list("polity", flat=True).distinct()
-        unique_politys.update(politys)
-        number_of_variables += 1
-
-        to_be_appended = [
-            model_title,
-            model_s,
-            model_create,
-            model_download,
-            model_metadownload,
-            model_all,
-            count,
-        ]
-
-        if sub_subsection_value:
-            all_vars_grouped[subsection_value][sub_subsection_value].append(
-                to_be_appended
-            )
-        else:
-            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
-
-    context = {}
-    context["all_vars_grouped"] = all_vars_grouped
-    context["all_sect_download_links"] = all_sect_download_links
-    context["all_polities"] = len(unique_politys)
-    context["number_of_all_rows"] = number_of_all_rows
-
-    context["number_of_variables"] = number_of_variables
-    return render(request, "wf/wfvars.html", context=context)
-
-
-@permission_required("core.view_capital")
 def show_problematic_wf_data_table(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    """
+    View that shows a table of problematic data in the WF app.
 
-    # Collect data from all models
-    data = []
-    for model in app_models:
-        items = model.objects.all()
-        for obj in items:
-            if (
-                obj.polity.start_year is not None
-                and obj.year_from is not None
-                and obj.polity.start_year > obj.year_from
-            ):
-                data.append(obj)
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.  # noqa: E501 pylint: disable=C0301
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the rendered problematic data table.
+    """
+    # Get the context data for the problematic data (with standard conditions)
+    context = get_problematic_data_context(APP_NAME)
 
     # Render the template with the data
-    return render(request, "wf/problematic_wf_data_table.html", {"data": data})
-
-
-@permission_required("core.view_capital")
-def download_csv_all_wf(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_data_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        items = model.objects.all()
-
-        for obj in items:
-            if obj.clean_name() == "long_wall":
-                writer.writerow(
-                    [
-                        "Military Technologies",
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                    ]
-                )
-            else:
-                writer.writerow(
-                    [
-                        "Military Technologies",
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value(),
-                        None,
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_fortifications(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_fortifications_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Fortifications":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_military_use_of_metals(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_military_use_of_metals_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Military use of Metals":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_projectiles(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_projectiles_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Projectiles":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_handheld_weapons(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_handheld_weapons_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Handheld weapons":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_animals_used_in_warfare(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_animals_used_in_warfare_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Animals used in warfare":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_armor(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_armor_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Armor":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_naval_technology(request):
-    # Fetch all models in the "socomp" app
-    app_name = "wf"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"warfare_naval_technology_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Naval technology":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
-
-    return response
+    return render(request, "wf/problematic_wf_data_table.html", context)

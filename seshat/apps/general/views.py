@@ -1,16 +1,16 @@
-from django.apps import apps
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import send_mail
 from django.db.models import Q
-from django.http import HttpResponse
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    CreateView,
+    UpdateView,
+    DeleteView,
+    ListView,
+    DetailView,
+)
 
-import csv
-import datetime
+from ..global_utils import get_variable_context, _get_context
 
 from .forms import (
     Polity_research_assistantForm,
@@ -69,9 +69,21 @@ from .models import (
     Polity_editor,
     Polity_religious_tradition,
 )
+from .constants import (
+    APP_NAME,
+    INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
+    INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+    INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+    INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
+    INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+    INNER_POLITY_RELIGION_CHOICES,
+    INNER_POLITY_RELIGION_FAMILY_CHOICES,
+    INNER_POLITY_RELIGION_GENUS_CHOICES,
+    INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
+)
 
 
-class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
+class Polity_research_assistantCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Polity_research_assistant.
 
@@ -86,7 +98,7 @@ class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
     )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -109,29 +121,12 @@ class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Research Assistant"
-        context["my_exp"] = "The RA(s) who worked on a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "polity_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, False, context)
 
         return context
 
 
-class Polity_research_assistantUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_research_assistantUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_research_assistant.
 
@@ -141,9 +136,7 @@ class Polity_research_assistantUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_research_assistant
     form_class = Polity_research_assistantForm
-    template_name = (
-        "general/polity_research_assistant/polity_research_assistant_update.html"
-    )
+    template_name = "general/polity_research_assistant/polity_research_assistant_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -159,12 +152,13 @@ class Polity_research_assistantUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Research Assistant"
+
+        context = _get_context(self, True, context)
 
         return context
 
 
-class Polity_research_assistantDelete(PermissionRequiredMixin, DeleteView):
+class Polity_research_assistantDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_research_assistant.
 
@@ -178,7 +172,7 @@ class Polity_research_assistantDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_research_assistantListView(generic.ListView):
+class Polity_research_assistantListView(ListView):
     """
     Paginated view for listing all Polity_research_assistant instances.
     """
@@ -189,7 +183,7 @@ class Polity_research_assistantListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -211,39 +205,32 @@ class Polity_research_assistantListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Research Assistant"
-        context["var_main_desc"] = "The ra(s) who worked on a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Staff"
-        context["inner_vars"] = {
-            "polity_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "Staff",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_research_assistantListViewAll(generic.ListView):
+class Polity_research_assistantListAllView(ListView):
     """
     View for listing all Polity_research_assistant instances.
     """
 
     model = Polity_research_assistant
-    template_name = (
-        "general/polity_research_assistant/polity_research_assistant_list_all.html"
-    )
+    template_name = "general/polity_research_assistant/polity_research_assistant_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -277,155 +264,36 @@ class Polity_research_assistantListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Research Assistant"
-        context["var_main_desc"] = "The ra(s) who worked on a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Staff"
-        context["inner_vars"] = {
-            "polity_ra": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The RA of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": None,
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "Staff",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_research_assistantDetailView(generic.DetailView):
+class Polity_research_assistantDetailView(DetailView):
     """
     View for displaying a single Polity_research_assistant instance.
     """
 
     model = Polity_research_assistant
-    template_name = (
-        "general/polity_research_assistant/polity_research_assistant_detail.html"
-    )
+    template_name = "general/polity_research_assistant/polity_research_assistant_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_research_assistant_download(request):
-    """
-    Download a CSV file of all Polity_research_assistant instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_research_assistant.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_research_assistants.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_ra",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.polity_ra,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_research_assistant_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_research_assistant instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_research_assistants.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The RA(s) who worked on a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "Staff",
-    }
-    my_meta_data_dic_inner_vars = {
-        "polity_ra": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The RA of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": None,
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_utm_zoneCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_utm_zone.
 
@@ -438,7 +306,7 @@ class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "general/polity_utm_zone/polity_utm_zone_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -461,29 +329,12 @@ class Polity_utm_zoneCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Utm Zone"
-        context["my_exp"] = "The UTM Zone of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "utm_zone": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of UTM_ZONE.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, context)
 
         return context
 
 
-class Polity_utm_zoneUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_utm_zoneUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_utm_zone.
 
@@ -509,12 +360,18 @@ class Polity_utm_zoneUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Utm Zone"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_utm_zoneDelete(PermissionRequiredMixin, DeleteView):
+class Polity_utm_zoneDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_utm_zone.
 
@@ -528,7 +385,7 @@ class Polity_utm_zoneDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_utm_zoneListView(generic.ListView):
+class Polity_utm_zoneListView(ListView):
     """
     Paginated view for listing all Polity_utm_zone instances.
     """
@@ -537,7 +394,7 @@ class Polity_utm_zoneListView(generic.ListView):
     template_name = "general/polity_utm_zone/polity_utm_zone_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -559,29 +416,24 @@ class Polity_utm_zoneListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Utm Zone"
-        context["var_main_desc"] = "The utm zone of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "utm_zone": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of UTM_ZONE.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_utm_zoneListViewAll(generic.ListView):
+class Polity_utm_zoneListAllView(ListView):
     """
     View for listing all Polity_utm_zone instances.
     """
@@ -589,7 +441,7 @@ class Polity_utm_zoneListViewAll(generic.ListView):
     model = Polity_utm_zone
     template_name = "general/polity_utm_zone/polity_utm_zone_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -623,30 +475,25 @@ class Polity_utm_zoneListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Utm Zone"
-        context["var_main_desc"] = "The utm zone of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "utm_zone": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of UTM_ZONE.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_utm_zoneDetailView(generic.DetailView):
+class Polity_utm_zoneDetailView(DetailView):
     """
     View for displaying a single Polity_utm_zone instance.
     """
@@ -655,117 +502,9 @@ class Polity_utm_zoneDetailView(generic.DetailView):
     template_name = "general/polity_utm_zone/polity_utm_zone_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_utm_zone_download(request):
-    """
-    Download a CSV file of all Polity_utm_zone instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_utm_zone.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_utm_zones.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "utm_zone",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.utm_zone,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_utm_zone_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_utm_zone instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_utm_zones.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The UTM Zone of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "utm_zone": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of UTM_ZONE.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_original_nameCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_original_name.
 
@@ -775,10 +514,12 @@ class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
     model = Polity_original_name
     form_class = Polity_original_nameForm
-    template_name = "general/polity_original_name/polity_original_name_form.html"
+    template_name = (
+        "general/polity_original_name/polity_original_name_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -801,29 +542,12 @@ class Polity_original_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Original Name"
-        context["my_exp"] = "The original name of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "original_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of original_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, context)
 
         return context
 
 
-class Polity_original_nameUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_original_nameUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_original_name.
 
@@ -833,7 +557,9 @@ class Polity_original_nameUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_original_name
     form_class = Polity_original_nameForm
-    template_name = "general/polity_original_name/polity_original_name_update.html"
+    template_name = (
+        "general/polity_original_name/polity_original_name_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -849,12 +575,18 @@ class Polity_original_nameUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Original Name"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_original_nameDelete(PermissionRequiredMixin, DeleteView):
+class Polity_original_nameDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_original_name.
 
@@ -868,16 +600,18 @@ class Polity_original_nameDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_original_nameListView(generic.ListView):
+class Polity_original_nameListView(ListView):
     """
     Paginated view for listing all Polity_original_name instances.
     """
 
     model = Polity_original_name
-    template_name = "general/polity_original_name/polity_original_name_list.html"
+    template_name = (
+        "general/polity_original_name/polity_original_name_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -899,37 +633,34 @@ class Polity_original_nameListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Original Name"
-        context["var_main_desc"] = "The original name of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "original_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of original_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_original_nameListViewAll(generic.ListView):
+class Polity_original_nameListAllView(ListView):
     """
     View for listing all Polity_original_name instances.
     """
 
     model = Polity_original_name
-    template_name = "general/polity_original_name/polity_original_name_list_all.html"
+    template_name = (
+        "general/polity_original_name/polity_original_name_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -963,149 +694,38 @@ class Polity_original_nameListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Original Name"
-        context["var_main_desc"] = "The original name of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "original_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of original_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_original_nameDetailView(generic.DetailView):
+class Polity_original_nameDetailView(DetailView):
     """
     View for displaying a single Polity_original_name instance.
     """
 
     model = Polity_original_name
-    template_name = "general/polity_original_name/polity_original_name_detail.html"
-
-
-@permission_required("core.view_capital")
-def polity_original_name_download(request):
-    """
-    Download a CSV file of all Polity_original_name instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_original_name.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_original_names.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "original_name",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
+    template_name = (
+        "general/polity_original_name/polity_original_name_detail.html"
     )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.original_name,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
 
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_original_name_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_original_name instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_original_names.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The original name of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "original_name": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of original_name.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_alternative_nameCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_alternative_name.
 
@@ -1115,10 +735,12 @@ class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
     model = Polity_alternative_name
     form_class = Polity_alternative_nameForm
-    template_name = "general/polity_alternative_name/polity_alternative_name_form.html"
+    template_name = (
+        "general/polity_alternative_name/polity_alternative_name_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1141,29 +763,12 @@ class Polity_alternative_nameCreate(PermissionRequiredMixin, PolityIdMixin, Crea
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Alternative Name"
-        context["my_exp"] = "The alternative name of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "alternative_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of alternative_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, context)
 
         return context
 
 
-class Polity_alternative_nameUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_alternative_nameUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_alternative_name.
 
@@ -1191,12 +796,18 @@ class Polity_alternative_nameUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternative Name"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_alternative_nameDelete(PermissionRequiredMixin, DeleteView):
+class Polity_alternative_nameDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_alternative_name.
 
@@ -1210,16 +821,18 @@ class Polity_alternative_nameDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_alternative_nameListView(generic.ListView):
+class Polity_alternative_nameListView(ListView):
     """
     Paginated view for listing all Polity_alternative_name instances.
     """
 
     model = Polity_alternative_name
-    template_name = "general/polity_alternative_name/polity_alternative_name_list.html"
+    template_name = (
+        "general/polity_alternative_name/polity_alternative_name_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1241,29 +854,24 @@ class Polity_alternative_nameListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternative Name"
-        context["var_main_desc"] = "The alternative name of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternative_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of alternative_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternative_nameListViewAll(generic.ListView):
+class Polity_alternative_nameListAllView(ListView):
     """
     View for listing all Polity_alternative_name instances.
     """
@@ -1273,7 +881,7 @@ class Polity_alternative_nameListViewAll(generic.ListView):
         "general/polity_alternative_name/polity_alternative_name_list_all.html"
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1307,30 +915,25 @@ class Polity_alternative_nameListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternative Name"
-        context["var_main_desc"] = "The alternative name of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternative_name": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of alternative_name.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_alternative_nameDetailView(generic.DetailView):
+class Polity_alternative_nameDetailView(DetailView):
     """
     View for displaying a single Polity_alternative_name instance.
     """
@@ -1341,121 +944,9 @@ class Polity_alternative_nameDetailView(generic.DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def polity_alternative_name_download(request):
-    """
-    Download a CSV file of all Polity_alternative_name instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_alternative_name.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternative_names.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "alternative_name",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.alternative_name,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_alternative_name_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_alternative_name instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternative_names.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The alternative name of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "alternative_name": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of alternative_name.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_peak_yearsCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_peak_years.
 
@@ -1468,7 +959,7 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
     template_name = "general/polity_peak_years/polity_peak_years_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1487,7 +978,7 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         Returns:
             dict: The initial value of the polity field.
         """
-        initial = super(Polity_peak_yearsCreate, self).get_initial()
+        initial = super(Polity_peak_yearsCreateView, self).get_initial()
         polity_id_x = self.request.GET.get("polity_id_x")
         initial["polity"] = polity_id_x
 
@@ -1507,42 +998,25 @@ class Polity_peak_yearsCreate(PermissionRequiredMixin, PolityIdMixin, CreateView
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Peak Years"
-        context["my_exp"] = "The peak years of a polity."
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
-
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "peak_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
             },
-            "peak_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
+        )
 
         return context
 
 
-class Polity_peak_yearsUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_peak_yearsUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_peak_years.
 
@@ -1568,16 +1042,22 @@ class Polity_peak_yearsUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Peak Years"
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "Temporal Bounds"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.subsection,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+            },
+        )
 
         return context
 
 
-class Polity_peak_yearsDelete(PermissionRequiredMixin, DeleteView):
+class Polity_peak_yearsDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_peak_years.
 
@@ -1591,7 +1071,7 @@ class Polity_peak_yearsDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_peak_yearsListView(generic.ListView):
+class Polity_peak_yearsListView(ListView):
     """
     Paginated view for listing all Polity_peak_years instances.
     """
@@ -1600,7 +1080,7 @@ class Polity_peak_yearsListView(generic.ListView):
     template_name = "general/polity_peak_years/polity_peak_years_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1622,41 +1102,26 @@ class Polity_peak_yearsListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Peak Years"
-        context["var_main_desc"] = "The peak years of a polity."
-        context["var_main_desc_source"] = "None"
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "Temporal Bounds"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
-        context["inner_vars"] = {
-            "peak_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.subsection,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
             },
-            "peak_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
+        )
 
         return context
 
 
-class Polity_peak_yearsListViewAll(generic.ListView):
+class Polity_peak_yearsListAllView(ListView):
     """
     View for listing all Polity_peak_years instances.
     """
@@ -1664,7 +1129,7 @@ class Polity_peak_yearsListViewAll(generic.ListView):
     model = Polity_peak_years
     template_name = "general/polity_peak_years/polity_peak_years_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1698,42 +1163,25 @@ class Polity_peak_yearsListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Peak Years"
-        context["var_main_desc"] = "The peak years of a polity."
-        context["var_main_desc_source"] = "None"
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "Temporal Bounds"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
-        context["inner_vars"] = {
-            "peak_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
             },
-            "peak_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end of the peak years for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+        )
 
         return context
 
 
-class Polity_peak_yearsDetailView(generic.DetailView):
+class Polity_peak_yearsDetailView(DetailView):
     """
     View for displaying a single Polity_peak_years instance.
     """
@@ -1742,129 +1190,9 @@ class Polity_peak_yearsDetailView(generic.DetailView):
     template_name = "general/polity_peak_years/polity_peak_years_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_peak_years_download(request):
-    """
-    Download a CSV file of all Polity_peak_years instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_peak_years.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_peak_yearss.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "peak_year_from",
-            "peak_year_to",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.peak_year_from,
-                obj.peak_year_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_peak_years_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_peak_years instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_peak_yearss.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The peak years of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "peak_year_from": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The beginning of the peak years for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-        "peak_year_to": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The end of the peak years for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_durationCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_duration.
 
@@ -1877,7 +1205,7 @@ class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "general/polity_duration/polity_duration_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -1900,41 +1228,20 @@ class Polity_durationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
+        context["mysection"] = self.model.Code.section
         context["mysubsection"] = "Temporal Bounds"
         context["var_section"] = "General Variables"
         context["var_subsection"] = "Temporal Bounds"
-        context["myvar"] = "Polity Duration"
-        context["my_exp"] = "The lifetime of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "polity_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-            "polity_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
+        context["myvar"] = self.model.Code.variable
+        context["my_exp"] = self.model.Code.description
+        context["var_null_meaning"] = self.model.Code.null_meaning
+        context["inner_vars"] = self.model.Code.inner_variables
+        context["potential_cols"] = self.model.Code.potential_cols
 
         return context
 
 
-class Polity_durationUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_durationUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_duration.
 
@@ -1960,16 +1267,21 @@ class Polity_durationUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Duration"
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "Temporal Bounds"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "mysubsection": "Temporal Bounds",
+                "var_section": "General Variables",
+                "var_subsection": "Temporal Bounds",
+            },
+        )
 
         return context
 
 
-class Polity_durationDelete(PermissionRequiredMixin, DeleteView):
+class Polity_durationDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_duration.
 
@@ -1983,7 +1295,7 @@ class Polity_durationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_durationListView(generic.ListView):
+class Polity_durationListView(ListView):
     """
     Paginated view for listing all Polity_duration instances.
     """
@@ -1992,7 +1304,7 @@ class Polity_durationListView(generic.ListView):
     template_name = "general/polity_duration/polity_duration_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2014,39 +1326,24 @@ class Polity_durationListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Duration"
-        context["var_main_desc"] = "The lifetime of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
-        context["inner_vars"] = {
-            "polity_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "Temporal Bounds",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
             },
-            "polity_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
+        )
 
         return context
 
 
-class Polity_durationListViewAll(generic.ListView):
+class Polity_durationListAllView(ListView):
     """
     View for listing all Polity_duration instances.
     """
@@ -2054,7 +1351,7 @@ class Polity_durationListViewAll(generic.ListView):
     model = Polity_duration
     template_name = "general/polity_duration/polity_duration_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2088,40 +1385,25 @@ class Polity_durationListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Duration"
-        context["var_main_desc"] = "The lifetime of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Temporal Bounds"
-        context["inner_vars"] = {
-            "polity_year_from": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The beginning year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "Temporal Bounds",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
             },
-            "polity_year_to": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The end year for a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+        )
 
         return context
 
 
-class Polity_durationDetailView(generic.DetailView):
+class Polity_durationDetailView(DetailView):
     """
     View for displaying a single Polity_duration instance.
     """
@@ -2130,129 +1412,7 @@ class Polity_durationDetailView(generic.DetailView):
     template_name = "general/polity_duration/polity_duration_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_duration_download(request):
-    """
-    Download a CSV file of all Polity_duration instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_duration.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_durations.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_year_from",
-            "polity_year_to",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.polity_year_from,
-                obj.polity_year_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_duration_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_duration instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_durations.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The lifetime of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "Temporal Bounds",
-    }
-    my_meta_data_dic_inner_vars = {
-        "polity_year_from": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The beginning year for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-        "polity_year_to": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The end year for a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_degree_of_centralizationCreate(
+class Polity_degree_of_centralizationCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -2264,7 +1424,7 @@ class Polity_degree_of_centralizationCreate(
 
     model = Polity_degree_of_centralization
     form_class = Polity_degree_of_centralizationForm
-    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_form.html"
+    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -2279,11 +1439,12 @@ class Polity_degree_of_centralizationCreate(
         """
         form = super().get_form(form_class)
         form.fields["degree_of_centralization"].choices = sorted(
-            form.fields["degree_of_centralization"].choices, key=lambda x: x[1].lower()
+            form.fields["degree_of_centralization"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2306,29 +1467,25 @@ class Polity_degree_of_centralizationCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Degree of Centralization"
-        context["my_exp"] = "The degree of centralization of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "degree_of_centralization": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of degree_of_centralization.",
-                "units": None,
-                "choices": "DEGREE_OF_CENTRALIZATION_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_value,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_degree_of_centralizationUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_degree_of_centralizationUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_degree_of_centralization.
 
@@ -2338,7 +1495,7 @@ class Polity_degree_of_centralizationUpdate(PermissionRequiredMixin, UpdateView)
 
     model = Polity_degree_of_centralization
     form_class = Polity_degree_of_centralizationForm
-    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_update.html"
+    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -2353,7 +1510,8 @@ class Polity_degree_of_centralizationUpdate(PermissionRequiredMixin, UpdateView)
         """
         form = super().get_form(form_class)
         form.fields["degree_of_centralization"].choices = sorted(
-            form.fields["degree_of_centralization"].choices, key=lambda x: x[1].lower()
+            form.fields["degree_of_centralization"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -2370,12 +1528,20 @@ class Polity_degree_of_centralizationUpdate(PermissionRequiredMixin, UpdateView)
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Degree of Centralization"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_degree_of_centralizationDelete(PermissionRequiredMixin, DeleteView):
+class Polity_degree_of_centralizationDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_degree_of_centralization.
 
@@ -2389,16 +1555,16 @@ class Polity_degree_of_centralizationDelete(PermissionRequiredMixin, DeleteView)
     permission_required = "core.add_capital"
 
 
-class Polity_degree_of_centralizationListView(generic.ListView):
+class Polity_degree_of_centralizationListView(ListView):
     """
     Paginated view for listing all Polity_degree_of_centralization instances.
     """
 
     model = Polity_degree_of_centralization
-    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list.html"
+    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2420,37 +1586,32 @@ class Polity_degree_of_centralizationListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Degree of Centralization"
-        context["var_main_desc"] = "The degree of centralization of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "degree_of_centralization": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of degree_of_centralization.",
-                "units": None,
-                "choices": "DEGREE_OF_CENTRALIZATION_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_degree_of_centralizationListViewAll(generic.ListView):
+class Polity_degree_of_centralizationListAllView(ListView):
     """
     View for listing all Polity_degree_of_centralization instances.
     """
 
     model = Polity_degree_of_centralization
-    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list_all.html"
+    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2469,7 +1630,9 @@ class Polity_degree_of_centralizationListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_degree_of_centralization.objects.all().order_by(order, order2)
+        return Polity_degree_of_centralization.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -2484,153 +1647,34 @@ class Polity_degree_of_centralizationListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Degree of Centralization"
-        context["var_main_desc"] = "The degree of centralization of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "degree_of_centralization": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of degree_of_centralization.",
-                "units": None,
-                "choices": "DEGREE_OF_CENTRALIZATION_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_degree_of_centralizationDetailView(generic.DetailView):
+class Polity_degree_of_centralizationDetailView(DetailView):
     """
     View for displaying a single Polity_degree_of_centralization instance.
     """
 
     model = Polity_degree_of_centralization
-    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_detail.html"
+    template_name = "general/polity_degree_of_centralization/polity_degree_of_centralization_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_degree_of_centralization_download(request):
-    """
-    Download a CSV file of all Polity_degree_of_centralization instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_degree_of_centralization.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_degree_of_centralizations.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "degree_of_centralization",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.degree_of_centralization,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_degree_of_centralization_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_degree_of_centralization instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_degree_of_centralizations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The degree of centralization of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "degree_of_centralization": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of degree_of_centralization.",
-            "units": None,
-            "choices": "DEGREE_OF_CENTRALIZATION_CHOICES",
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_suprapolity_relationsCreate(
+class Polity_suprapolity_relationsCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -2642,9 +1686,7 @@ class Polity_suprapolity_relationsCreate(
 
     model = Polity_suprapolity_relations
     form_class = Polity_suprapolity_relationsForm
-    template_name = (
-        "general/polity_suprapolity_relations/polity_suprapolity_relations_form.html"
-    )
+    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -2659,11 +1701,12 @@ class Polity_suprapolity_relationsCreate(
         """
         form = super().get_form(form_class)
         form.fields["supra_polity_relations"].choices = sorted(
-            form.fields["supra_polity_relations"].choices, key=lambda x: x[1].lower()
+            form.fields["supra_polity_relations"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2686,37 +1729,28 @@ class Polity_suprapolity_relationsCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
+        context["mysection"] = self.model.Code.section
         context["mysubsection"] = "General Variables"
         context["var_section"] = "General Variables"
         context["var_subsection"] = "Political and Cultural Relations"
-        context["myvar"] = "Polity Suprapolity Relations"
+        context["myvar"] = self.model.Code.variable
         context[
             "my_exp"
         ] = """ <u>Possible Codes</u>: <br> alliance / nominal allegiance / personal union / vassalage / unknown / none <br><br>
 <b>alliance</b> = belongs to a long-term military-political alliance of independent polities ('long-term' refers to more or less permanent relationship between polities extending over multiple years)<br>
 <b>nominal allegiance</b> = same as 'nominal' under the variable "Degree of centralization" but now reflecting the position of the focal polity within the overarching political authority.<br>
 <b>personal union</b> = the focal polity is united with another, or others, as a result of a dynastic marriage.<br>
-<b>vassalage</b> = corresponding to 'loose' category in the Degree of centralization."""
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "supra_polity_relations": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of supra polity relations.",
-                "units": None,
-                "choices": "SUPRA_POLITY_RELATIONS_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+<b>vassalage</b> = corresponding to 'loose' category in the Degree of centralization."""  # noqa: E501 pylint: disable=C0301
+        context["var_null_meaning"] = self.model.Code.null_meaning
+        context["inner_vars"] = self.model.Code.inner_variables
+        context["potential_cols"] = self.model.Code.potential_cols
 
         return context
 
 
-class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_suprapolity_relationsUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_suprapolity_relations.
 
@@ -2726,9 +1760,7 @@ class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_suprapolity_relations
     form_class = Polity_suprapolity_relationsForm
-    template_name = (
-        "general/polity_suprapolity_relations/polity_suprapolity_relations_update.html"
-    )
+    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -2743,7 +1775,8 @@ class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
         """
         form = super().get_form(form_class)
         form.fields["supra_polity_relations"].choices = sorted(
-            form.fields["supra_polity_relations"].choices, key=lambda x: x[1].lower()
+            form.fields["supra_polity_relations"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -2760,21 +1793,24 @@ class Polity_suprapolity_relationsUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["mysubsection"] = "General Variables"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "Political and Cultural Relations"
-        context["myvar"] = "Polity Suprapolity Relations"
-        context[
-            "my_exp"
-        ] = """ <u>Possible Codes</u>: <br> alliance / nominal allegiance / personal union / vassalage / unknown / none <br><br>
-<b>alliance</b> = belongs to a long-term military-political alliance of independent polities ('long-term' refers to more or less permanent relationship between polities extending over multiple years)<br>
-<b>nominal allegiance</b> = same as 'nominal' under the variable "Degree of centralization" but now reflecting the position of the focal polity within the overarching political authority.<br>
-<b>personal union</b> = the focal polity is united with another, or others, as a result of a dynastic marriage.<br>
-<b>vassalage</b> = corresponding to 'loose' category in the Degree of centralization."""
+
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+            },
+        )
+
         return context
 
 
-class Polity_suprapolity_relationsDelete(PermissionRequiredMixin, DeleteView):
+class Polity_suprapolity_relationsDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_suprapolity_relations.
 
@@ -2788,18 +1824,16 @@ class Polity_suprapolity_relationsDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_suprapolity_relationsListView(generic.ListView):
+class Polity_suprapolity_relationsListView(ListView):
     """
     Paginated view for listing all Polity_suprapolity_relations instances.
     """
 
     model = Polity_suprapolity_relations
-    template_name = (
-        "general/polity_suprapolity_relations/polity_suprapolity_relations_list.html"
-    )
+    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2821,37 +1855,32 @@ class Polity_suprapolity_relationsListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Suprapolity Relations"
-        context["var_main_desc"] = "The supra polity relations of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "supra_polity_relations": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of supra polity relations.",
-                "units": None,
-                "choices": "SUPRA_POLITY_RELATIONS_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_suprapolity_relationsListViewAll(generic.ListView):
+class Polity_suprapolity_relationsListAllView(ListView):
     """
     View for listing all Polity_suprapolity_relations instances.
     """
 
     model = Polity_suprapolity_relations
-    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_list_all.html"
+    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -2870,7 +1899,9 @@ class Polity_suprapolity_relationsListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_suprapolity_relations.objects.all().order_by(order, order2)
+        return Polity_suprapolity_relations.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -2885,175 +1916,36 @@ class Polity_suprapolity_relationsListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Suprapolity Relations"
-        context["var_main_desc"] = "The supra polity relations of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "supra_polity_relations": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of supra polity relations.",
-                "units": None,
-                "choices": "SUPRA_POLITY_RELATIONS_CHOICES",
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_suprapolity_relationsDetailView(generic.DetailView):
+class Polity_suprapolity_relationsDetailView(DetailView):
     """
     View for displaying a single Polity_suprapolity_relations instance.
     """
 
     model = Polity_suprapolity_relations
-    template_name = (
-        "general/polity_suprapolity_relations/polity_suprapolity_relations_detail.html"
-    )
+    template_name = "general/polity_suprapolity_relations/polity_suprapolity_relations_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_suprapolity_relations_download(request):
-    """
-    Download a CSV file of all Polity_suprapolity_relations instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_suprapolity_relations.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_suprapolity_relationss.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "supra_polity_relations",
-            "other_polity_id",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        if obj.other_polity:
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.supra_polity_relations,
-                    obj.other_polity.new_name,
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-        else:
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.supra_polity_relations,
-                    "-",
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_suprapolity_relations_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_suprapolity_relations instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_suprapolity_relationss.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The supra polity relations of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "supra_polity_relations": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of supra polity relations.",
-            "units": None,
-            "choices": "SUPRA_POLITY_RELATIONS_CHOICES",
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_capitalCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_capital.
 
@@ -3066,7 +1958,7 @@ class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     template_name = "general/polity_capital/polity_capital_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3089,31 +1981,12 @@ class Polity_capitalCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Capital"
-        context["my_exp"] = (
-            "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
-        )
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "capital": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The capital of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a capital.",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, True, context)
 
         return context
 
 
-class Polity_capitalUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_capitalUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_capital.
 
@@ -3139,15 +2012,22 @@ class Polity_capitalUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Capital"
-        context["my_exp"] = (
-            "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": "The capital of a polity is connection point between an existing \
+Polity instance and an existing Capital instance. Optionally, year range associations can \
+be specified. If not provided, it implies that the capital remains constant throughout the \
+entire duration of the polity's existence.",
+            },
         )
 
         return context
 
 
-class Polity_capitalDelete(PermissionRequiredMixin, DeleteView):
+class Polity_capitalDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_capital.
 
@@ -3161,7 +2041,7 @@ class Polity_capitalDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_capitalListView(generic.ListView):
+class Polity_capitalListView(ListView):
     """
     Paginated view for listing all Polity_capital instances.
     """
@@ -3170,7 +2050,7 @@ class Polity_capitalListView(generic.ListView):
     template_name = "general/polity_capital/polity_capital_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3192,31 +2072,24 @@ class Polity_capitalListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Capital"
-        context["var_main_desc"] = (
-            "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
         )
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "capital": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The capital of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a capital.",
-            }
-        }
-        context["potential_cols"] = []
 
         return context
 
 
-class Polity_capitalListViewAll(generic.ListView):
+class Polity_capitalListAllView(ListView):
     """
     View for listing all Polity_capital instances.
     """
@@ -3224,7 +2097,7 @@ class Polity_capitalListViewAll(generic.ListView):
     model = Polity_capital
     template_name = "general/polity_capital/polity_capital_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3258,32 +2131,25 @@ class Polity_capitalListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Capital"
-        context["var_main_desc"] = (
-            "The capital of a polity is connection point between an existing Polity instance and an existing Capital instance. Optionally, year range associations can be specified. If not provided, it implies that the capital remains constant throughout the entire duration of the polity's existence."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "capital": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The capital of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a capital.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Polity_capitalDetailView(generic.DetailView):
+class Polity_capitalDetailView(DetailView):
     """
     View for displaying a single Polity_capital instance.
     """
@@ -3292,134 +2158,9 @@ class Polity_capitalDetailView(generic.DetailView):
     template_name = "general/polity_capital/polity_capital_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_capital_download(request):
-    """
-    Download a CSV file of all Polity_capital instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_capital.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_capitals.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "capital",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        if obj.polity_cap:
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    str(obj.polity_cap),
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-        else:
-            writer.writerow(
-                [
-                    obj.name,
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.capital,
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_capital_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_capital instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_capitals.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The capital of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "capital": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The capital of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have a capital.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_languageCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_language.
 
@@ -3448,7 +2189,7 @@ class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3471,29 +2212,12 @@ class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Language"
-        context["my_exp"] = "The language of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "language": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language of a polity.",
-                "units": None,
-                "choices": "LANGUAGE_CHOICES",
-                "null_meaning": "This polity did not have a language.",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, context)
 
         return context
 
 
-class Polity_languageUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_languageUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_language.
 
@@ -3535,12 +2259,18 @@ class Polity_languageUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_languageDelete(PermissionRequiredMixin, DeleteView):
+class Polity_languageDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_language.
 
@@ -3554,7 +2284,7 @@ class Polity_languageDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_languageListView(generic.ListView):
+class Polity_languageListView(ListView):
     """
     Paginated view for listing all Polity_language instances.
     """
@@ -3563,7 +2293,7 @@ class Polity_languageListView(generic.ListView):
     template_name = "general/polity_language/polity_language_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3585,29 +2315,24 @@ class Polity_languageListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language"
-        context["var_main_desc"] = "The language of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "language": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language of a polity.",
-                "units": None,
-                "choices": "LANGUAGE_CHOICES",
-                "null_meaning": "This polity did not have a language.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_languageListViewAll(generic.ListView):
+class Polity_languageListAllView(ListView):
     """
     View for listing all Polity_language instances.
     """
@@ -3615,7 +2340,7 @@ class Polity_languageListViewAll(generic.ListView):
     model = Polity_language
     template_name = "general/polity_language/polity_language_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3649,30 +2374,25 @@ class Polity_languageListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language"
-        context["var_main_desc"] = "The language of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "language": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language of a polity.",
-                "units": None,
-                "choices": "LANGUAGE_CHOICES",
-                "null_meaning": "This polity did not have a language.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_languageDetailView(generic.DetailView):
+class Polity_languageDetailView(DetailView):
     """
     View for displaying a single Polity_language instance.
     """
@@ -3681,117 +2401,7 @@ class Polity_languageDetailView(generic.DetailView):
     template_name = "general/polity_language/polity_language_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_language_download(request):
-    """
-    Download a CSV file of all Polity_language instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_language.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_languages.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "language",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.language,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_language_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_language instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_languages.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The language of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "language": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The language of a polity.",
-            "units": None,
-            "choices": "LANGUAGE_CHOICES",
-            "null_meaning": "This polity did not have a language.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_linguistic_familyCreate(
+class Polity_linguistic_familyCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -3820,11 +2430,12 @@ class Polity_linguistic_familyCreate(
         """
         form = super().get_form(form_class)
         form.fields["linguistic_family"].choices = sorted(
-            form.fields["linguistic_family"].choices, key=lambda x: x[1].lower()
+            form.fields["linguistic_family"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3847,29 +2458,12 @@ class Polity_linguistic_familyCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Linguistic Family"
-        context["my_exp"] = "The linguistic family of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "linguistic_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The linguistic family of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a linguistic family.",
-            }
-        }
-        context["potential_cols"] = []
+        context = _get_context(self, context)
 
         return context
 
 
-class Polity_linguistic_familyUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_linguistic_familyUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_linguistic_family.
 
@@ -3896,7 +2490,8 @@ class Polity_linguistic_familyUpdate(PermissionRequiredMixin, UpdateView):
         """
         form = super().get_form(form_class)
         form.fields["linguistic_family"].choices = sorted(
-            form.fields["linguistic_family"].choices, key=lambda x: x[1].lower()
+            form.fields["linguistic_family"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -3913,12 +2508,18 @@ class Polity_linguistic_familyUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Linguistic Family"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_linguistic_familyDelete(PermissionRequiredMixin, DeleteView):
+class Polity_linguistic_familyDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_linguistic_family.
 
@@ -3932,7 +2533,7 @@ class Polity_linguistic_familyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_linguistic_familyListView(generic.ListView):
+class Polity_linguistic_familyListView(ListView):
     """
     Paginated view for listing all Polity_linguistic_family instances.
     """
@@ -3943,7 +2544,7 @@ class Polity_linguistic_familyListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -3965,39 +2566,32 @@ class Polity_linguistic_familyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Linguistic Family"
-        context["var_main_desc"] = "The linguistic family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "linguistic_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The linguistic family of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a linguistic family.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_linguistic_familyListViewAll(generic.ListView):
+class Polity_linguistic_familyListAllView(ListView):
     """
     View for listing all Polity_linguistic_family instances.
     """
 
     model = Polity_linguistic_family
-    template_name = (
-        "general/polity_linguistic_family/polity_linguistic_family_list_all.html"
-    )
+    template_name = "general/polity_linguistic_family/polity_linguistic_family_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4031,30 +2625,25 @@ class Polity_linguistic_familyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Linguistic Family"
-        context["var_main_desc"] = "The linguistic family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "linguistic_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The linguistic family of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a linguistic family.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_linguistic_familyDetailView(generic.DetailView):
+class Polity_linguistic_familyDetailView(DetailView):
     """
     View for displaying a single Polity_linguistic_family instance.
     """
@@ -4065,121 +2654,9 @@ class Polity_linguistic_familyDetailView(generic.DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def polity_linguistic_family_download(request):
-    """
-    Download a CSV file of all Polity_linguistic_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_linguistic_family.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_linguistic_familys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "linguistic_family",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.linguistic_family,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_linguistic_family_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_linguistic_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_linguistic_familys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The linguistic family of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "linguistic_family": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The linguistic family of a polity.",
-            "units": None,
-            "choices": "LINGUISTIC_FAMILY_CHOICES",
-            "null_meaning": "This polity did not have a linguistic family.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_language_genusCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_language_genus.
 
@@ -4189,10 +2666,12 @@ class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
     model = Polity_language_genus
     form_class = Polity_language_genusForm
-    template_name = "general/polity_language_genus/polity_language_genus_form.html"
+    template_name = (
+        "general/polity_language_genus/polity_language_genus_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4215,29 +2694,23 @@ class Polity_language_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Language Genus"
-        context["my_exp"] = "The language genus of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "language_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language genus of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a language Genus.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_language_genusUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_language_genusUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_language_genus.
 
@@ -4247,7 +2720,9 @@ class Polity_language_genusUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_language_genus
     form_class = Polity_language_genusForm
-    template_name = "general/polity_language_genus/polity_language_genus_update.html"
+    template_name = (
+        "general/polity_language_genus/polity_language_genus_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -4263,12 +2738,18 @@ class Polity_language_genusUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language Genus"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_language_genusDelete(PermissionRequiredMixin, DeleteView):
+class Polity_language_genusDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_language_genus.
 
@@ -4282,16 +2763,18 @@ class Polity_language_genusDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_language_genusListView(generic.ListView):
+class Polity_language_genusListView(ListView):
     """
     Paginated view for listing all Polity_language_genus instances.
     """
 
     model = Polity_language_genus
-    template_name = "general/polity_language_genus/polity_language_genus_list.html"
+    template_name = (
+        "general/polity_language_genus/polity_language_genus_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4313,37 +2796,34 @@ class Polity_language_genusListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language Genus"
-        context["var_main_desc"] = "The language genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "language_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language genus of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a language Genus.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_language_genusListViewAll(generic.ListView):
+class Polity_language_genusListAllView(ListView):
     """
     View for listing all Polity_language_genus instances.
     """
 
     model = Polity_language_genus
-    template_name = "general/polity_language_genus/polity_language_genus_list_all.html"
+    template_name = (
+        "general/polity_language_genus/polity_language_genus_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4377,153 +2857,38 @@ class Polity_language_genusListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Language Genus"
-        context["var_main_desc"] = "The language genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "language_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The language genus of a polity.",
-                "units": None,
-                "choices": "LINGUISTIC_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a language Genus.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_language_genusDetailView(generic.DetailView):
+class Polity_language_genusDetailView(DetailView):
     """
     View for displaying a single Polity_language_genus instance.
     """
 
     model = Polity_language_genus
-    template_name = "general/polity_language_genus/polity_language_genus_detail.html"
-
-
-@permission_required("core.view_capital")
-def polity_language_genus_download(request):
-    """
-    Download a CSV file of all Polity_language_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_language_genus.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_language_genuss.csv"'
+    template_name = (
+        "general/polity_language_genus/polity_language_genus_detail.html"
     )
 
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "language_genus",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.language_genus,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_language_genus_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_language_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_language_genuss.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The language genus of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "language_genus": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The language genus of a polity.",
-            "units": None,
-            "choices": "LINGUISTIC_FAMILY_CHOICES",
-            "null_meaning": "This polity did not have a language Genus.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_religion_genusCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_religion_genus.
 
@@ -4533,7 +2898,9 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
     model = Polity_religion_genus
     form_class = Polity_religion_genusForm
-    template_name = "general/polity_religion_genus/polity_religion_genus_form.html"
+    template_name = (
+        "general/polity_religion_genus/polity_religion_genus_form.html"
+    )
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -4552,7 +2919,7 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4575,29 +2942,23 @@ class Polity_religion_genusCreate(PermissionRequiredMixin, PolityIdMixin, Create
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Religion Genus"
-        context["my_exp"] = "The religion genus of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a religion genus.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_religion_genusUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_religion_genus.
 
@@ -4607,7 +2968,9 @@ class Polity_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_religion_genus
     form_class = Polity_religion_genusForm
-    template_name = "general/polity_religion_genus/polity_religion_genus_update.html"
+    template_name = (
+        "general/polity_religion_genus/polity_religion_genus_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -4639,12 +3002,18 @@ class Polity_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Genus"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_religion_genusDelete(PermissionRequiredMixin, DeleteView):
+class Polity_religion_genusDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_religion_genus.
 
@@ -4658,16 +3027,18 @@ class Polity_religion_genusDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_religion_genusListView(generic.ListView):
+class Polity_religion_genusListView(ListView):
     """
     Paginated view for listing all Polity_religion_genus instances.
     """
 
     model = Polity_religion_genus
-    template_name = "general/polity_religion_genus/polity_religion_genus_list.html"
+    template_name = (
+        "general/polity_religion_genus/polity_religion_genus_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4689,37 +3060,34 @@ class Polity_religion_genusListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Genus"
-        context["var_main_desc"] = "The religion genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a religion genus.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religion_genusListViewAll(generic.ListView):
+class Polity_religion_genusListAllView(ListView):
     """
     View for listing all Polity_religion_genus instances.
     """
 
     model = Polity_religion_genus
-    template_name = "general/polity_religion_genus/polity_religion_genus_list_all.html"
+    template_name = (
+        "general/polity_religion_genus/polity_religion_genus_list_all.html"
+    )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4753,153 +3121,38 @@ class Polity_religion_genusListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Genus"
-        context["var_main_desc"] = "The religion genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a religion genus.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_religion_genusDetailView(generic.DetailView):
+class Polity_religion_genusDetailView(DetailView):
     """
     View for displaying a single Polity_religion_genus instance.
     """
 
     model = Polity_religion_genus
-    template_name = "general/polity_religion_genus/polity_religion_genus_detail.html"
-
-
-@permission_required("core.view_capital")
-def polity_religion_genus_download(request):
-    """
-    Download a CSV file of all Polity_religion_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_religion_genus.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religion_genuss.csv"'
+    template_name = (
+        "general/polity_religion_genus/polity_religion_genus_detail.html"
     )
 
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religion_genus",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religion_genus,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_religion_genus_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_religion_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religion_genuss.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The religion genus of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religion_genus": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The religion genus of a polity.",
-            "units": None,
-            "choices": "RELIGION_GENUS_CHOICES",
-            "null_meaning": "This polity did not have a religion genus.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_religion_familyCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_religion_family.
 
@@ -4909,7 +3162,9 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
 
     model = Polity_religion_family
     form_class = Polity_religion_familyForm
-    template_name = "general/polity_religion_family/polity_religion_family_form.html"
+    template_name = (
+        "general/polity_religion_family/polity_religion_family_form.html"
+    )
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -4938,13 +3193,15 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
         Returns:
             dict: The initial value of the polity field.
         """
-        initial = super(Polity_religion_familyCreate, self).get_initial()
+        initial = super(
+            Polity_religion_familyCreateView, self
+        ).get_initial()  # TODO: fix
         polity_id_x = self.request.GET.get("polity_id_x")
         initial["polity"] = polity_id_x
 
         return initial
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -4967,29 +3224,23 @@ class Polity_religion_familyCreate(PermissionRequiredMixin, PolityIdMixin, Creat
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Religion Family"
-        context["my_exp"] = "The religion family of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a religion family.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_religion_familyUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_religion_family.
 
@@ -4999,7 +3250,9 @@ class Polity_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_religion_family
     form_class = Polity_religion_familyForm
-    template_name = "general/polity_religion_family/polity_religion_family_update.html"
+    template_name = (
+        "general/polity_religion_family/polity_religion_family_update.html"
+    )
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -5031,12 +3284,18 @@ class Polity_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Family"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_religion_familyDelete(PermissionRequiredMixin, DeleteView):
+class Polity_religion_familyDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_religion_family.
 
@@ -5050,16 +3309,18 @@ class Polity_religion_familyDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_religion_familyListView(generic.ListView):
+class Polity_religion_familyListView(ListView):
     """
     Paginated view for listing all Polity_religion_family instances.
     """
 
     model = Polity_religion_family
-    template_name = "general/polity_religion_family/polity_religion_family_list.html"
+    template_name = (
+        "general/polity_religion_family/polity_religion_family_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5081,29 +3342,24 @@ class Polity_religion_familyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Family"
-        context["var_main_desc"] = "The religion family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a religion family.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religion_familyListViewAll(generic.ListView):
+class Polity_religion_familyListAllView(ListView):
     """
     View for listing all Polity_religion_family instances.
     """
@@ -5113,7 +3369,7 @@ class Polity_religion_familyListViewAll(generic.ListView):
         "general/polity_religion_family/polity_religion_family_list_all.html"
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5147,153 +3403,38 @@ class Polity_religion_familyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion Family"
-        context["var_main_desc"] = "The religion family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a religion family.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_religion_familyDetailView(generic.DetailView):
+class Polity_religion_familyDetailView(DetailView):
     """
     View for displaying a single Polity_religion_family instance.
     """
 
     model = Polity_religion_family
-    template_name = "general/polity_religion_family/polity_religion_family_detail.html"
-
-
-@permission_required("core.view_capital")
-def polity_religion_family_download(request):
-    """
-    Download a CSV file of all Polity_religion_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_religion_family.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religion_familys.csv"'
+    template_name = (
+        "general/polity_religion_family/polity_religion_family_detail.html"
     )
 
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religion_family",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
 
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religion_family,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_religion_family_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_religion_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religion_familys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The religion family of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religion_family": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The religion family of a polity.",
-            "units": None,
-            "choices": "RELIGION_FAMILY_CHOICES",
-            "null_meaning": "This polity did not have a religion family.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_religionCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_religion.
 
@@ -5322,7 +3463,7 @@ class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5345,29 +3486,23 @@ class Polity_religionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Religion"
-        context["my_exp"] = "The religion of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a religion.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religionUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_religionUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_religion.
 
@@ -5409,12 +3544,18 @@ class Polity_religionUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_religionDelete(PermissionRequiredMixin, DeleteView):
+class Polity_religionDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_religion.
 
@@ -5428,7 +3569,7 @@ class Polity_religionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_religionListView(generic.ListView):
+class Polity_religionListView(ListView):
     """
     Paginated view for listing all Polity_religion instances.
     """
@@ -5437,7 +3578,7 @@ class Polity_religionListView(generic.ListView):
     template_name = "general/polity_religion/polity_religion_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5459,29 +3600,24 @@ class Polity_religionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion"
-        context["var_main_desc"] = "The religion of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a religion.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religionListViewAll(generic.ListView):
+class Polity_religionListAllView(ListView):
     """
     View for listing all Polity_religion instances.
     """
@@ -5489,7 +3625,7 @@ class Polity_religionListViewAll(generic.ListView):
     model = Polity_religion
     template_name = "general/polity_religion/polity_religion_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5523,30 +3659,25 @@ class Polity_religionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religion"
-        context["var_main_desc"] = "The religion of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a religion.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_religionDetailView(generic.DetailView):
+class Polity_religionDetailView(DetailView):
     """
     View for displaying a single Polity_religion instance.
     """
@@ -5555,117 +3686,7 @@ class Polity_religionDetailView(generic.DetailView):
     template_name = "general/polity_religion/polity_religion_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_religion_download(request):
-    """
-    Download a CSV file of all Polity_religion instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_religion.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_religions.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religion",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religion,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_religion_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_religion instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_religions.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The religion of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religion": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The religion of a polity.",
-            "units": None,
-            "choices": "RELIGION_CHOICES",
-            "null_meaning": "This polity did not have a religion.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_relationship_to_preceding_entityCreate(
+class Polity_relationship_to_preceding_entityCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -5677,12 +3698,13 @@ class Polity_relationship_to_preceding_entityCreate(
 
     model = Polity_relationship_to_preceding_entity
     form_class = Polity_relationship_to_preceding_entityForm
-    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_form.html"
+    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
         """
-        Get the form of the view. Sort the choices of the relationship_to_preceding_entity field.
+        Get the form of the view. Sort the choices of the relationship_to_preceding_entity
+        field.
 
         Args:
             form_class: The form class. Defaults to None.
@@ -5697,7 +3719,7 @@ class Polity_relationship_to_preceding_entityCreate(
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5720,29 +3742,20 @@ class Polity_relationship_to_preceding_entityCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Relationship to Preceding Entity"
-        context["my_exp"] = "The polity relationship to preceding (quasi)polity"
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "relationship_to_preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The polity relationship to preceding (quasi)polity",
-                "units": None,
-                "choices": "RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES",
-                "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",
-            }
-        }
-        context["potential_cols"] = []
+        context["mysection"] = self.model.Code.section
+        context["mysubsection"] = (
+            self.model.Code.section
+        )  # TODO Note: wrong in the original code
+        context["myvar"] = self.model.Code.variable
+        context["my_exp"] = self.model.Code.description
+        context["var_null_meaning"] = self.model.Code.null_meaning
+        context["inner_vars"] = self.model.Code.inner_variables
+        context["potential_cols"] = self.model.Code.potential_cols
 
         return context
 
 
-class Polity_relationship_to_preceding_entityUpdate(
+class Polity_relationship_to_preceding_entityUpdateView(
     PermissionRequiredMixin, UpdateView
 ):
     """
@@ -5754,12 +3767,13 @@ class Polity_relationship_to_preceding_entityUpdate(
 
     model = Polity_relationship_to_preceding_entity
     form_class = Polity_relationship_to_preceding_entityForm
-    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_update.html"
+    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
         """
-        Get the form of the view. Sort the choices of the relationship_to_preceding_entity field.
+        Get the form of the view. Sort the choices of the relationship_to_preceding_entity
+        field.
 
         Args:
             form_class: The form class. Defaults to None.
@@ -5787,12 +3801,18 @@ class Polity_relationship_to_preceding_entityUpdate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Relationship to Preceding Entity"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_relationship_to_preceding_entityDelete(
+class Polity_relationship_to_preceding_entityDeleteView(
     PermissionRequiredMixin, DeleteView
 ):
     """
@@ -5808,16 +3828,16 @@ class Polity_relationship_to_preceding_entityDelete(
     permission_required = "core.add_capital"
 
 
-class Polity_relationship_to_preceding_entityListView(generic.ListView):
+class Polity_relationship_to_preceding_entityListView(ListView):
     """
     Paginated view for listing all Polity_relationship_to_preceding_entity instances.
     """
 
     model = Polity_relationship_to_preceding_entity
-    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list.html"
+    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5839,37 +3859,32 @@ class Polity_relationship_to_preceding_entityListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Relationship to Preceding Entity"
-        context["var_main_desc"] = "The polity relationship to preceding (quasi)polity"
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "relationship_to_preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The polity relationship to preceding (quasi)polity",
-                "units": None,
-                "choices": "RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES",
-                "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
+class Polity_relationship_to_preceding_entityListAllView(ListView):
     """
     View for listing all Polity_relationship_to_preceding_entity instances.
     """
 
     model = Polity_relationship_to_preceding_entity
-    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list_all.html"
+    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -5905,153 +3920,36 @@ class Polity_relationship_to_preceding_entityListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Relationship to Preceding Entity"
-        context["var_main_desc"] = "The polity relationship to preceding (quasi)polity"
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "relationship_to_preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The polity relationship to preceding (quasi)polity",
-                "units": None,
-                "choices": "RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES",
-                "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_relationship_to_preceding_entityDetailView(generic.DetailView):
+class Polity_relationship_to_preceding_entityDetailView(DetailView):
     """
     View for displaying a single Polity_relationship_to_preceding_entity instance.
     """
 
     model = Polity_relationship_to_preceding_entity
-    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_detail.html"
+    template_name = "general/polity_relationship_to_preceding_entity/polity_relationship_to_preceding_entity_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_relationship_to_preceding_entity_download(request):
-    """
-    Download a CSV file of all Polity_relationship_to_preceding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_relationship_to_preceding_entity.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_relationship_to_preceding_entitys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "relationship_to_preceding_entity",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.relationship_to_preceding_entity,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_relationship_to_preceding_entity_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_relationship_to_preceding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_relationship_to_preceding_entitys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The polity relationship to preceding (quasi)polity",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "relationship_to_preceding_entity": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The polity relationship to preceding (quasi)polity",
-            "units": None,
-            "choices": "RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES",
-            "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+class Polity_preceding_entityCreateView(
+    PermissionRequiredMixin, PolityIdMixin, CreateView
+):
     """
     View for creating a new Polity_preceding_entity.
 
@@ -6061,10 +3959,12 @@ class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Crea
 
     model = Polity_preceding_entity
     form_class = Polity_preceding_entityForm
-    template_name = "general/polity_preceding_entity/polity_preceding_entity_form.html"
+    template_name = (
+        "general/polity_preceding_entity/polity_preceding_entity_form.html"
+    )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6107,36 +4007,27 @@ class Polity_preceding_entityCreate(PermissionRequiredMixin, PolityIdMixin, Crea
         elif other_polity_id_x:
             # If polity is None, exclude it from the filter
             all_rels = Polity_preceding_entity.objects.filter(
-                Q(polity_id=other_polity_id_x) | Q(other_polity_id=other_polity_id_x)
+                Q(polity_id=other_polity_id_x)
+                | Q(other_polity_id=other_polity_id_x)
             )
         else:
             all_rels = Polity_preceding_entity.objects.none()
 
         # Add extra context
-        context["mysection"] = "General Variables"
+        context["mysection"] = self.model.Code.section
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Preceding Entity"
-        context["my_exp"] = "The preceding entity of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The preceding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a preceding entity.",
-            }
-        }
-        context["potential_cols"] = []
+        context["myvar"] = self.model.Code.variable
+        context["my_exp"] = self.model.Code.description
+        context["var_null_meaning"] = self.model.Code.null_meaning
+        context["inner_vars"] = self.model.Code.inner_variables
+        context["potential_cols"] = self.model.Code.potential_cols
+
         context["all_rels"] = all_rels  # Add filtered data to context
 
         return context
 
 
-class Polity_preceding_entityUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_preceding_entityUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_preceding_entity.
 
@@ -6188,13 +4079,13 @@ class Polity_preceding_entityUpdate(PermissionRequiredMixin, UpdateView):
             # If both polity and other_polity are None, exclude both from the filter
             all_rels = Polity_preceding_entity.objects.none()
 
-        context["myvar"] = "Polity Preceding Entity"
+        context["myvar"] = self.model.Code.variable
         context["all_rels"] = all_rels
 
         return context
 
 
-class Polity_preceding_entityDelete(PermissionRequiredMixin, DeleteView):
+class Polity_preceding_entityDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_preceding_entity.
 
@@ -6208,16 +4099,18 @@ class Polity_preceding_entityDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_preceding_entityListView(generic.ListView):
+class Polity_preceding_entityListView(ListView):
     """
     Paginated view for listing all Polity_preceding_entity instances.
     """
 
     model = Polity_preceding_entity
-    template_name = "general/polity_preceding_entity/polity_preceding_entity_list.html"
+    template_name = (
+        "general/polity_preceding_entity/polity_preceding_entity_list.html"
+    )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6239,29 +4132,24 @@ class Polity_preceding_entityListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Preceding Entity"
-        context["var_main_desc"] = "The preceding entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The preceding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a preceding entity.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_preceding_entityListViewAll(generic.ListView):
+class Polity_preceding_entityListAllView(ListView):
     """
     View for listing all Polity_preceding_entity instances.
     """
@@ -6271,7 +4159,7 @@ class Polity_preceding_entityListViewAll(generic.ListView):
         "general/polity_preceding_entity/polity_preceding_entity_list_all.html"
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6305,30 +4193,25 @@ class Polity_preceding_entityListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Preceding Entity"
-        context["var_main_desc"] = "The preceding entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "preceding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The preceding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a preceding entity.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_preceding_entityDetailView(generic.DetailView):
+class Polity_preceding_entityDetailView(DetailView):
     """
     View for displaying a single Polity_preceding_entity instance.
     """
@@ -6339,121 +4222,7 @@ class Polity_preceding_entityDetailView(generic.DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def polity_preceding_entity_download(request):
-    """
-    Download a CSV file of all Polity_preceding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_preceding_entity.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_preceding_entitys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "preceding_entity",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.preceding_entity,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_preceding_entity_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_preceding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_preceding_entitys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The preceding entity of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "preceding_entity": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The preceding entity (or the largest settlement) of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have a preceding entity.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_succeeding_entityCreate(
+class Polity_succeeding_entityCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -6470,7 +4239,7 @@ class Polity_succeeding_entityCreate(
     )
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6493,29 +4262,23 @@ class Polity_succeeding_entityCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Succeeding Entity"
-        context["my_exp"] = "The succeeding entity of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "succeeding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The succeeding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a succeeding entity.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_succeeding_entityUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_succeeding_entityUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_succeeding_entity.
 
@@ -6543,12 +4306,18 @@ class Polity_succeeding_entityUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Succeeding Entity"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_succeeding_entityDelete(PermissionRequiredMixin, DeleteView):
+class Polity_succeeding_entityDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_succeeding_entity.
 
@@ -6562,7 +4331,7 @@ class Polity_succeeding_entityDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_succeeding_entityListView(generic.ListView):
+class Polity_succeeding_entityListView(ListView):
     """
     Paginated view for listing all Polity_succeeding_entity instances.
     """
@@ -6573,7 +4342,7 @@ class Polity_succeeding_entityListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6595,39 +4364,32 @@ class Polity_succeeding_entityListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Succeeding Entity"
-        context["var_main_desc"] = "The succeeding entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "succeeding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The succeeding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a succeeding entity.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_succeeding_entityListViewAll(generic.ListView):
+class Polity_succeeding_entityListAllView(ListView):
     """
     View for listing all Polity_succeeding_entity instances.
     """
 
     model = Polity_succeeding_entity
-    template_name = (
-        "general/polity_succeeding_entity/polity_succeeding_entity_list_all.html"
-    )
+    template_name = "general/polity_succeeding_entity/polity_succeeding_entity_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6661,30 +4423,25 @@ class Polity_succeeding_entityListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Succeeding Entity"
-        context["var_main_desc"] = "The succeeding entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "succeeding_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The succeeding entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a succeeding entity.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_succeeding_entityDetailView(generic.DetailView):
+class Polity_succeeding_entityDetailView(DetailView):
     """
     View for displaying a single Polity_succeeding_entity instance.
     """
@@ -6695,121 +4452,7 @@ class Polity_succeeding_entityDetailView(generic.DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def polity_succeeding_entity_download(request):
-    """
-    Download a CSV file of all Polity_succeeding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_succeeding_entity.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_succeeding_entitys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "succeeding_entity",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.succeeding_entity,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_succeeding_entity_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_succeeding_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_succeeding_entitys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The succeeding entity of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "succeeding_entity": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The succeeding entity (or the largest settlement) of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have a succeeding entity.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_supracultural_entityCreate(
+class Polity_supracultural_entityCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -6821,12 +4464,10 @@ class Polity_supracultural_entityCreate(
 
     model = Polity_supracultural_entity
     form_class = Polity_supracultural_entityForm
-    template_name = (
-        "general/polity_supracultural_entity/polity_supracultural_entity_form.html"
-    )
+    template_name = "general/polity_supracultural_entity/polity_supracultural_entity_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6849,29 +4490,25 @@ class Polity_supracultural_entityCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Supracultural Entity"
-        context["my_exp"] = "The supracultural entity of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "supracultural_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The supracultural entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a supracultural entity.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_supracultural_entityUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_supracultural_entityUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_supracultural_entity.
 
@@ -6881,9 +4518,7 @@ class Polity_supracultural_entityUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_supracultural_entity
     form_class = Polity_supracultural_entityForm
-    template_name = (
-        "general/polity_supracultural_entity/polity_supracultural_entity_update.html"
-    )
+    template_name = "general/polity_supracultural_entity/polity_supracultural_entity_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -6899,12 +4534,20 @@ class Polity_supracultural_entityUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Supracultural Entity"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_supracultural_entityDelete(PermissionRequiredMixin, DeleteView):
+class Polity_supracultural_entityDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_supracultural_entity.
 
@@ -6918,18 +4561,16 @@ class Polity_supracultural_entityDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_supracultural_entityListView(generic.ListView):
+class Polity_supracultural_entityListView(ListView):
     """
     Paginated view for listing all Polity_supracultural_entity instances.
     """
 
     model = Polity_supracultural_entity
-    template_name = (
-        "general/polity_supracultural_entity/polity_supracultural_entity_list.html"
-    )
+    template_name = "general/polity_supracultural_entity/polity_supracultural_entity_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -6951,39 +4592,32 @@ class Polity_supracultural_entityListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Supracultural Entity"
-        context["var_main_desc"] = "The supracultural entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "supracultural_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The supracultural entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a supracultural entity.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_supracultural_entityListViewAll(generic.ListView):
+class Polity_supracultural_entityListAllView(ListView):
     """
     View for listing all Polity_supracultural_entity instances.
     """
 
     model = Polity_supracultural_entity
-    template_name = (
-        "general/polity_supracultural_entity/polity_supracultural_entity_list_all.html"
-    )
+    template_name = "general/polity_supracultural_entity/polity_supracultural_entity_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7002,7 +4636,9 @@ class Polity_supracultural_entityListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_supracultural_entity.objects.all().order_by(order, order2)
+        return Polity_supracultural_entity.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -7017,155 +4653,34 @@ class Polity_supracultural_entityListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Supracultural Entity"
-        context["var_main_desc"] = "The supracultural entity of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "supracultural_entity": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The supracultural entity (or the largest settlement) of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have a supracultural entity.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_supracultural_entityDetailView(generic.DetailView):
+class Polity_supracultural_entityDetailView(DetailView):
     """
     View for displaying a single Polity_supracultural_entity instance.
     """
 
     model = Polity_supracultural_entity
-    template_name = (
-        "general/polity_supracultural_entity/polity_supracultural_entity_detail.html"
-    )
+    template_name = "general/polity_supracultural_entity/polity_supracultural_entity_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_supracultural_entity_download(request):
-    """
-    Download a CSV file of all Polity_supracultural_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_supracultural_entity.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_supracultural_entitys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "supracultural_entity",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.supracultural_entity,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_supracultural_entity_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_supracultural_entity instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_supracultural_entitys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The supracultural entity of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "supracultural_entity": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The supracultural entity (or the largest settlement) of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have a supracultural entity.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_scale_of_supracultural_interactionCreate(
+class Polity_scale_of_supracultural_interactionCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -7177,10 +4692,10 @@ class Polity_scale_of_supracultural_interactionCreate(
 
     model = Polity_scale_of_supracultural_interaction
     form_class = Polity_scale_of_supracultural_interactionForm
-    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_form.html"
+    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7203,39 +4718,18 @@ class Polity_scale_of_supracultural_interactionCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
+        context["mysection"] = self.model.Code.section
         context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Scale of Supracultural Interaction"
-        context["my_exp"] = "The scale_of_supra_cultural_interaction of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "scale_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower scale of supra cultural interaction for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-            "scale_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper scale of supra cultural interaction for a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = []
+        context["myvar"] = self.model.Code.variable
+        context["my_exp"] = self.model.Code.description
+        context["var_null_meaning"] = self.model.Code.null_meaning
+        context["inner_vars"] = self.model.Code.inner_variables
+        context["potential_cols"] = self.model.Code.potential_cols
 
         return context
 
 
-class Polity_scale_of_supracultural_interactionUpdate(
+class Polity_scale_of_supracultural_interactionUpdateView(
     PermissionRequiredMixin, UpdateView
 ):
     """
@@ -7247,7 +4741,7 @@ class Polity_scale_of_supracultural_interactionUpdate(
 
     model = Polity_scale_of_supracultural_interaction
     form_class = Polity_scale_of_supracultural_interactionForm
-    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_update.html"
+    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -7263,12 +4757,18 @@ class Polity_scale_of_supracultural_interactionUpdate(
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Scale of Supracultural Interaction"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_scale_of_supracultural_interactionDelete(
+class Polity_scale_of_supracultural_interactionDeleteView(
     PermissionRequiredMixin, DeleteView
 ):
     """
@@ -7284,16 +4784,16 @@ class Polity_scale_of_supracultural_interactionDelete(
     permission_required = "core.add_capital"
 
 
-class Polity_scale_of_supracultural_interactionListView(generic.ListView):
+class Polity_scale_of_supracultural_interactionListView(ListView):
     """
     Paginated view for listing all Polity_scale_of_supracultural_interaction instances.
     """
 
     model = Polity_scale_of_supracultural_interaction
-    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list.html"
+    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7315,49 +4815,32 @@ class Polity_scale_of_supracultural_interactionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Scale of Supracultural Interaction"
-        context["var_main_desc"] = (
-            "The scale of Supra Cultural Interaction of a polity."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": ["Units"],
+            },
         )
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "scale_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower scale of supra cultural interactionfor a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-            "scale_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper scale of supra cultural interactionfor a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = ["Units"]
 
         return context
 
 
-class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
+class Polity_scale_of_supracultural_interactionListAllView(ListView):
     """
     View for listing all Polity_scale_of_supracultural_interaction instances.
     """
 
     model = Polity_scale_of_supracultural_interaction
-    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list_all.html"
+    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7376,8 +4859,10 @@ class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_scale_of_supracultural_interaction.objects.all().order_by(
-            order, order2
+        return (
+            Polity_scale_of_supracultural_interaction.objects.all().order_by(
+                order, order2
+            )
         )
 
     def get_context_data(self, **kwargs):
@@ -7393,177 +4878,34 @@ class Polity_scale_of_supracultural_interactionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Scale of Supracultural Interaction"
-        context["var_main_desc"] = (
-            "The scale of Supra Cultural Interaction of a polity."
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": ["Units"],
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
         )
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "scale_from": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The lower scale of supra cultural interactionfor a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-            "scale_to": {
-                "min": 0,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The upper scale of supra cultural interactionfor a polity.",
-                "units": "km squared",
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            },
-        }
-        context["potential_cols"] = ["Units"]
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
 
         return context
 
 
-class Polity_scale_of_supracultural_interactionDetailView(generic.DetailView):
+class Polity_scale_of_supracultural_interactionDetailView(DetailView):
     """
     View for displaying a single Polity_scale_of_supracultural_interaction instance.
     """
 
     model = Polity_scale_of_supracultural_interaction
-    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_detail.html"
+    template_name = "general/polity_scale_of_supracultural_interaction/polity_scale_of_supracultural_interaction_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_scale_of_supracultural_interaction_download(request):
-    """
-    Download a CSV file of all Polity_scale_of_supracultural_interaction instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_scale_of_supracultural_interaction.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_scale_of_supracultural_interactions.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "scale_from",
-            "scale_to",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.scale_from,
-                obj.scale_to,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_scale_of_supracultural_interaction_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_scale_of_supracultural_interaction instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_scale_of_supracultural_interactions.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The scale_of_supra_cultural_interaction of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "scale_from": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The lower scale of supra cultural interactionfor a polity.",
-            "units": "km squared",
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-        "scale_to": {
-            "min": 0,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The upper scale of supra cultural interactionfor a polity.",
-            "units": "km squared",
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        },
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_alternate_religion_genusCreate(
+class Polity_alternate_religion_genusCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -7575,7 +4917,7 @@ class Polity_alternate_religion_genusCreate(
 
     model = Polity_alternate_religion_genus
     form_class = Polity_alternate_religion_genusForm
-    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_form.html"
+    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -7590,11 +4932,12 @@ class Polity_alternate_religion_genusCreate(
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion_genus"].choices = sorted(
-            form.fields["alternate_religion_genus"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion_genus"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7617,29 +4960,25 @@ class Polity_alternate_religion_genusCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Alternate Religion Genus"
-        context["my_exp"] = "The alternate religion genus of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "alternate_religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a alternatereligion genus.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_genusUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_alternate_religion_genusUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_alternate_religion_genus.
 
@@ -7649,7 +4988,7 @@ class Polity_alternate_religion_genusUpdate(PermissionRequiredMixin, UpdateView)
 
     model = Polity_alternate_religion_genus
     form_class = Polity_alternate_religion_genusForm
-    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_update.html"
+    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -7664,7 +5003,8 @@ class Polity_alternate_religion_genusUpdate(PermissionRequiredMixin, UpdateView)
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion_genus"].choices = sorted(
-            form.fields["alternate_religion_genus"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion_genus"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -7681,12 +5021,20 @@ class Polity_alternate_religion_genusUpdate(PermissionRequiredMixin, UpdateView)
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Genus"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_genusDelete(PermissionRequiredMixin, DeleteView):
+class Polity_alternate_religion_genusDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_alternate_religion_genus.
 
@@ -7700,16 +5048,16 @@ class Polity_alternate_religion_genusDelete(PermissionRequiredMixin, DeleteView)
     permission_required = "core.add_capital"
 
 
-class Polity_alternate_religion_genusListView(generic.ListView):
+class Polity_alternate_religion_genusListView(ListView):
     """
     Paginated view for listing all Polity_alternate_religion_genus instances.
     """
 
     model = Polity_alternate_religion_genus
-    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list.html"
+    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7731,37 +5079,32 @@ class Polity_alternate_religion_genusListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Genus"
-        context["var_main_desc"] = "The alternate religion genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a alternatereligion genus.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_genusListViewAll(generic.ListView):
+class Polity_alternate_religion_genusListAllView(ListView):
     """
     View for listing all Polity_alternate_religion_genus instances.
     """
 
     model = Polity_alternate_religion_genus
-    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list_all.html"
+    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7780,7 +5123,9 @@ class Polity_alternate_religion_genusListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_alternate_religion_genus.objects.all().order_by(order, order2)
+        return Polity_alternate_religion_genus.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -7795,153 +5140,34 @@ class Polity_alternate_religion_genusListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Genus"
-        context["var_main_desc"] = "The alternate religion genus of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion_genus": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion genus of a polity.",
-                "units": None,
-                "choices": "RELIGION_GENUS_CHOICES",
-                "null_meaning": "This polity did not have a alternatereligion genus.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_genusDetailView(generic.DetailView):
+class Polity_alternate_religion_genusDetailView(DetailView):
     """
     View for displaying a single Polity_alternate_religion_genus instance.
     """
 
     model = Polity_alternate_religion_genus
-    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_detail.html"
+    template_name = "general/polity_alternate_religion_genus/polity_alternate_religion_genus_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_alternate_religion_genus_download(request):
-    """
-    Download a CSV file of all Polity_alternate_religion_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_alternate_religion_genus.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religion_genuss.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "alternate_religion_genus",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.alternate_religion_genus,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_alternate_religion_genus_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_alternate_religion_genus instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religion_genuss.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The alternate religion genus of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "alternate_religion_genus": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The alternate religion genus of a polity.",
-            "units": None,
-            "choices": "RELIGION_GENUS_CHOICES",
-            "null_meaning": "This polity did not have a alternatereligion genus.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_alternate_religion_familyCreate(
+class Polity_alternate_religion_familyCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -7953,7 +5179,7 @@ class Polity_alternate_religion_familyCreate(
 
     model = Polity_alternate_religion_family
     form_class = Polity_alternate_religion_familyForm
-    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_form.html"
+    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -7968,11 +5194,12 @@ class Polity_alternate_religion_familyCreate(
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion_family"].choices = sorted(
-            form.fields["alternate_religion_family"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion_family"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -7995,29 +5222,25 @@ class Polity_alternate_religion_familyCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Alternate Religion Family"
-        context["my_exp"] = "The alternate religion family of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "alternate_religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion family.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_familyUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_alternate_religion_familyUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_alternate_religion_family.
 
@@ -8027,7 +5250,7 @@ class Polity_alternate_religion_familyUpdate(PermissionRequiredMixin, UpdateView
 
     model = Polity_alternate_religion_family
     form_class = Polity_alternate_religion_familyForm
-    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_update.html"
+    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -8042,7 +5265,8 @@ class Polity_alternate_religion_familyUpdate(PermissionRequiredMixin, UpdateView
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion_family"].choices = sorted(
-            form.fields["alternate_religion_family"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion_family"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -8059,12 +5283,20 @@ class Polity_alternate_religion_familyUpdate(PermissionRequiredMixin, UpdateView
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Family"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_familyDelete(PermissionRequiredMixin, DeleteView):
+class Polity_alternate_religion_familyDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_alternate_religion_family.
 
@@ -8078,16 +5310,16 @@ class Polity_alternate_religion_familyDelete(PermissionRequiredMixin, DeleteView
     permission_required = "core.add_capital"
 
 
-class Polity_alternate_religion_familyListView(generic.ListView):
+class Polity_alternate_religion_familyListView(ListView):
     """
     Paginated view for listing all Polity_alternate_religion_family instances.
     """
 
     model = Polity_alternate_religion_family
-    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list.html"
+    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8109,37 +5341,32 @@ class Polity_alternate_religion_familyListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Family"
-        context["var_main_desc"] = "The alternate religion family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion family.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_familyListViewAll(generic.ListView):
+class Polity_alternate_religion_familyListAllView(ListView):
     """
     View for listing all Polity_alternate_religion_family instances.
     """
 
     model = Polity_alternate_religion_family
-    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list_all.html"
+    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8158,7 +5385,9 @@ class Polity_alternate_religion_familyListViewAll(generic.ListView):
         order = self.request.GET.get("orderby", "year_from")
         order2 = self.request.GET.get("orderby2", "year_to")
 
-        return Polity_alternate_religion_family.objects.all().order_by(order, order2)
+        return Polity_alternate_religion_family.objects.all().order_by(
+            order, order2
+        )
 
     def get_context_data(self, **kwargs):
         """
@@ -8173,153 +5402,34 @@ class Polity_alternate_religion_familyListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion Family"
-        context["var_main_desc"] = "The alternate religion family of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion_family": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion family of a polity.",
-                "units": None,
-                "choices": "RELIGION_FAMILY_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion family.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religion_familyDetailView(generic.DetailView):
+class Polity_alternate_religion_familyDetailView(DetailView):
     """
     View for displaying a single Polity_alternate_religion_family instance.
     """
 
     model = Polity_alternate_religion_family
-    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_detail.html"
+    template_name = "general/polity_alternate_religion_family/polity_alternate_religion_family_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_alternate_religion_family_download(request):
-    """
-    Download a CSV file of all Polity_alternate_religion_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_alternate_religion_family.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religion_familys.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "alternate_religion_family",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.alternate_religion_family,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_alternate_religion_family_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_alternate_religion_family instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religion_familys.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The alternate religion family of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "alternate_religion_family": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The alternate religion family of a polity.",
-            "units": None,
-            "choices": "RELIGION_FAMILY_CHOICES",
-            "null_meaning": "This polity did not have a alternate religion family.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_alternate_religionCreate(
+class Polity_alternate_religionCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -8348,11 +5458,12 @@ class Polity_alternate_religionCreate(
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion"].choices = sorted(
-            form.fields["alternate_religion"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8375,29 +5486,23 @@ class Polity_alternate_religionCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Alternate Religion"
-        context["my_exp"] = "The alternate religion  of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "alternate_religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion .",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religionUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_alternate_religionUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_alternate_religion.
 
@@ -8407,9 +5512,7 @@ class Polity_alternate_religionUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_alternate_religion
     form_class = Polity_alternate_religionForm
-    template_name = (
-        "general/polity_alternate_religion/polity_alternate_religion_update.html"
-    )
+    template_name = "general/polity_alternate_religion/polity_alternate_religion_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_form(self, form_class=None):
@@ -8424,7 +5527,8 @@ class Polity_alternate_religionUpdate(PermissionRequiredMixin, UpdateView):
         """
         form = super().get_form(form_class)
         form.fields["alternate_religion"].choices = sorted(
-            form.fields["alternate_religion"].choices, key=lambda x: x[1].lower()
+            form.fields["alternate_religion"].choices,
+            key=lambda x: x[1].lower(),
         )
         return form
 
@@ -8441,12 +5545,18 @@ class Polity_alternate_religionUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religionDelete(PermissionRequiredMixin, DeleteView):
+class Polity_alternate_religionDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_alternate_religion.
 
@@ -8460,7 +5570,7 @@ class Polity_alternate_religionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_alternate_religionListView(generic.ListView):
+class Polity_alternate_religionListView(ListView):
     """
     Paginated view for listing all Polity_alternate_religion instances.
     """
@@ -8471,7 +5581,7 @@ class Polity_alternate_religionListView(generic.ListView):
     )
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8493,39 +5603,32 @@ class Polity_alternate_religionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion"
-        context["var_main_desc"] = "The alternate religion  of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion .",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religionListViewAll(generic.ListView):
+class Polity_alternate_religionListAllView(ListView):
     """
     View for listing all Polity_alternate_religion instances.
     """
 
     model = Polity_alternate_religion
-    template_name = (
-        "general/polity_alternate_religion/polity_alternate_religion_list_all.html"
-    )
+    template_name = "general/polity_alternate_religion/polity_alternate_religion_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8559,155 +5662,34 @@ class Polity_alternate_religionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Alternate Religion"
-        context["var_main_desc"] = "The alternate religion  of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "alternate_religion": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The alternate religion of a polity.",
-                "units": None,
-                "choices": "RELIGION_CHOICES",
-                "null_meaning": "This polity did not have a alternate religion .",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_alternate_religionDetailView(generic.DetailView):
+class Polity_alternate_religionDetailView(DetailView):
     """
     View for displaying a single Polity_alternate_religion instance.
     """
 
     model = Polity_alternate_religion
-    template_name = (
-        "general/polity_alternate_religion/polity_alternate_religion_detail.html"
-    )
+    template_name = "general/polity_alternate_religion/polity_alternate_religion_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_alternate_religion_download(request):
-    """
-    Download a CSV file of all Polity_alternate_religion instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_alternate_religion.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religions.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "alternate_religion",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.alternate_religion,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_alternate_religion_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_alternate_religion instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_alternate_religions.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The alternate religion  of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "alternate_religion": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The alternate religion of a polity.",
-            "units": None,
-            "choices": "RELIGION_CHOICES",
-            "null_meaning": "This polity did not have a alternate religion .",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_expertCreate(PermissionRequiredMixin, CreateView):
+class Polity_expertCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Polity_expert.
 
@@ -8720,7 +5702,7 @@ class Polity_expertCreate(PermissionRequiredMixin, CreateView):
     template_name = "general/polity_expert/polity_expert_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8743,29 +5725,23 @@ class Polity_expertCreate(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Expert"
-        context["my_exp"] = "The expert of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "expert": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The expert of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an expert.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_expertUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_expertUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_expert.
 
@@ -8791,12 +5767,18 @@ class Polity_expertUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Expert"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_expertDelete(PermissionRequiredMixin, DeleteView):
+class Polity_expertDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_expert.
 
@@ -8810,7 +5792,7 @@ class Polity_expertDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_expertListView(generic.ListView):
+class Polity_expertListView(ListView):
     """
     Paginated view for listing all Polity_expert instances.
     """
@@ -8819,7 +5801,7 @@ class Polity_expertListView(generic.ListView):
     template_name = "general/polity_expert/polity_expert_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8841,29 +5823,24 @@ class Polity_expertListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Expert"
-        context["var_main_desc"] = "The expert of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "expert": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The expert of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an expert.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_expertListViewAll(generic.ListView):
+class Polity_expertListAllView(ListView):
     """
     View for listing all Polity_expert instances.
     """
@@ -8871,7 +5848,7 @@ class Polity_expertListViewAll(generic.ListView):
     model = Polity_expert
     template_name = "general/polity_expert/polity_expert_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -8905,30 +5882,25 @@ class Polity_expertListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Expert"
-        context["var_main_desc"] = "The expert of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "expert": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The expert of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an expert.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_expertDetailView(generic.DetailView):
+class Polity_expertDetailView(DetailView):
     """
     View for displaying a single Polity_expert instance.
     """
@@ -8937,117 +5909,7 @@ class Polity_expertDetailView(generic.DetailView):
     template_name = "general/polity_expert/polity_expert_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_expert_download(request):
-    """
-    Download a CSV file of all Polity_expert instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_expert.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_experts.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "expert",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.expert,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_expert_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_expert instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_experts.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The expert of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "expert": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The expert of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have an expert.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_editorCreate(PermissionRequiredMixin, CreateView):
+class Polity_editorCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Polity_editor.
 
@@ -9060,7 +5922,7 @@ class Polity_editorCreate(PermissionRequiredMixin, CreateView):
     template_name = "general/polity_editor/polity_editor_form.html"
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9083,29 +5945,23 @@ class Polity_editorCreate(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Editor"
-        context["my_exp"] = "The editor of a polity."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "editor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The editor of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an editor.",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_editorUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_editorUpdateView(PermissionRequiredMixin, UpdateView):
     """
     View for updating an existing Polity_editor.
 
@@ -9131,12 +5987,18 @@ class Polity_editorUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Editor"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_editorDelete(PermissionRequiredMixin, DeleteView):
+class Polity_editorDeleteView(PermissionRequiredMixin, DeleteView):
     """
     View for deleting an existing Polity_editor.
 
@@ -9150,7 +6012,7 @@ class Polity_editorDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_editorListView(generic.ListView):
+class Polity_editorListView(ListView):
     """
     Paginated view for listing all Polity_editor instances.
     """
@@ -9159,7 +6021,7 @@ class Polity_editorListView(generic.ListView):
     template_name = "general/polity_editor/polity_editor_list.html"
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9181,29 +6043,24 @@ class Polity_editorListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Editor"
-        context["var_main_desc"] = "The editor of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "editor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The editor of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an editor.",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_editorListViewAll(generic.ListView):
+class Polity_editorListAllView(ListView):
     """
     View for listing all Polity_editor instances.
     """
@@ -9211,7 +6068,7 @@ class Polity_editorListViewAll(generic.ListView):
     model = Polity_editor
     template_name = "general/polity_editor/polity_editor_list_all.html"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9245,30 +6102,25 @@ class Polity_editorListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Editor"
-        context["var_main_desc"] = "The editor of a polity."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "editor": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The editor of a polity.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "This polity did not have an editor.",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_editorDetailView(generic.DetailView):
+class Polity_editorDetailView(DetailView):
     """
     View for displaying a single Polity_editor instance.
     """
@@ -9277,117 +6129,7 @@ class Polity_editorDetailView(generic.DetailView):
     template_name = "general/polity_editor/polity_editor_detail.html"
 
 
-@permission_required("core.view_capital")
-def polity_editor_download(request):
-    """
-    Download a CSV file of all Polity_editor instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_editor.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_editors.csv"'
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "editor",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.editor,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_editor_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_editor instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="polity_editors.csv"'
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The editor of a polity.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "editor": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The editor of a polity.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "This polity did not have an editor.",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-class Polity_religious_traditionCreate(
+class Polity_religious_traditionCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
     """
@@ -9399,12 +6141,10 @@ class Polity_religious_traditionCreate(
 
     model = Polity_religious_tradition
     form_class = Polity_religious_traditionForm
-    template_name = (
-        "general/polity_religious_tradition/polity_religious_tradition_form.html"
-    )
+    template_name = "general/polity_religious_tradition/polity_religious_tradition_form.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9427,29 +6167,25 @@ class Polity_religious_traditionCreate(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "General Variables"
-        context["mysubsection"] = "General Variables"
-        context["myvar"] = "Polity Religious Tradition"
-        context["my_exp"] = "The details of religious traditions."
-        context["var_null_meaning"] = "The value is not available."
-        context["inner_vars"] = {
-            "religious_tradition": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of religious traditions.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+        context = dict(
+            context,
+            **{
+                "mysection": self.model.Code.section,
+                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religious_traditionUpdate(PermissionRequiredMixin, UpdateView):
+class Polity_religious_traditionUpdateView(
+    PermissionRequiredMixin, UpdateView
+):
     """
     View for updating an existing Polity_religious_tradition.
 
@@ -9459,9 +6195,7 @@ class Polity_religious_traditionUpdate(PermissionRequiredMixin, UpdateView):
 
     model = Polity_religious_tradition
     form_class = Polity_religious_traditionForm
-    template_name = (
-        "general/polity_religious_tradition/polity_religious_tradition_update.html"
-    )
+    template_name = "general/polity_religious_tradition/polity_religious_tradition_update.html"  # noqa: E501 pylint: disable=C0301
     permission_required = "core.add_capital"
 
     def get_context_data(self, **kwargs):
@@ -9477,12 +6211,20 @@ class Polity_religious_traditionUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religious Tradition"
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+            },
+        )
 
         return context
 
 
-class Polity_religious_traditionDelete(PermissionRequiredMixin, DeleteView):
+class Polity_religious_traditionDeleteView(
+    PermissionRequiredMixin, DeleteView
+):
     """
     View for deleting an existing Polity_religious_tradition.
 
@@ -9496,18 +6238,16 @@ class Polity_religious_traditionDelete(PermissionRequiredMixin, DeleteView):
     permission_required = "core.add_capital"
 
 
-class Polity_religious_traditionListView(generic.ListView):
+class Polity_religious_traditionListView(ListView):
     """
     Paginated view for listing all Polity_religious_tradition instances.
     """
 
     model = Polity_religious_tradition
-    template_name = (
-        "general/polity_religious_tradition/polity_religious_tradition_list.html"
-    )
+    template_name = "general/polity_religious_tradition/polity_religious_tradition_list.html"  # noqa: E501 pylint: disable=C0301
     paginate_by = 10
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9529,39 +6269,32 @@ class Polity_religious_traditionListView(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religious Tradition"
-        context["var_main_desc"] = "The details of religious traditions."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religious_tradition": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of religious traditions.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
 
-class Polity_religious_traditionListViewAll(generic.ListView):
+class Polity_religious_traditionListAllView(ListView):
     """
     View for listing all Polity_religious_tradition instances.
     """
 
     model = Polity_religious_tradition
-    template_name = (
-        "general/polity_religious_tradition/polity_religious_tradition_list_all.html"
-    )
+    template_name = "general/polity_religious_tradition/polity_religious_tradition_list_all.html"  # noqa: E501 pylint: disable=C0301
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Get the absolute URL of the view.
 
@@ -9595,384 +6328,40 @@ class Polity_religious_traditionListViewAll(generic.ListView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context["myvar"] = "Polity Religious Tradition"
-        context["var_main_desc"] = "The details of religious traditions."
-        context["var_main_desc_source"] = "None"
-        context["var_section"] = "General Variables"
-        context["var_subsection"] = "General"
-        context["inner_vars"] = {
-            "religious_tradition": {
-                "min": None,
-                "max": None,
-                "scale": None,
-                "var_exp_source": None,
-                "var_exp": "The details of religious traditions.",
-                "units": None,
-                "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
-            }
-        }
-        context["potential_cols"] = []
-        context["orderby"] = self.request.GET.get("orderby", "year_from")
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": "General Variables",
+                "var_subsection": "General",
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
 
         return context
 
 
-class Polity_religious_traditionDetailView(generic.DetailView):
+class Polity_religious_traditionDetailView(DetailView):
     """
     View for displaying a single Polity_religious_tradition instance.
     """
 
     model = Polity_religious_tradition
-    template_name = (
-        "general/polity_religious_tradition/polity_religious_tradition_detail.html"
-    )
+    template_name = "general/polity_religious_tradition/polity_religious_tradition_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def polity_religious_tradition_download(request):
-    """
-    Download a CSV file of all Polity_religious_tradition instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    items = Polity_religious_tradition.objects.all()
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religious_traditions.csv"'
-    )
-
-    writer = csv.writer(response, delimiter="|")
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "religious_tradition",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in items:
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.religious_tradition,
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def polity_religious_tradition_meta_download(request):
-    """
-    Download a CSV file of the meta data for Polity_religious_tradition instances.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="polity_religious_traditions.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": None,
-        "main_desc": "The details of religious traditions.",
-        "main_desc_source": None,
-        "section": "General Variables",
-        "subsection": "General",
-    }
-    my_meta_data_dic_inner_vars = {
-        "religious_tradition": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The details of religious traditions.",
-            "units": None,
-            "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
-        }
-    }
-    writer = csv.writer(response, delimiter="|")
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
-def generalvars(request):
-
-    app_name = "general"  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
-
-    unique_politys = set()
-    number_of_all_rows = 0
-    number_of_variables = 0
-
-    all_vars_grouped = {}
-
-    all_sect_download_links = {}
-
-    for model in models_1:
-        model_name = model.__name__
-        if model_name in [
+def generalvars_view(request):
+    context = get_variable_context(
+        app_name=APP_NAME,
+        exclude=[
             "Polity_research_assistant",
             "Polity_editor",
             "Polity_expert",
-        ]:
-            continue
-        s_value = str(model().subsection())
-        ss_value = str(model().sub_subsection())
-
-        better_name = (
-            "download_csv_"
-            + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
-        )
-        all_sect_download_links[s_value] = better_name
-        if s_value not in all_vars_grouped:
-            all_vars_grouped[s_value] = {}
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-        else:
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-
-    models = apps.get_app_config(app_name).get_models()
-
-    for model in models:
-        model_name = model.__name__
-        if model_name in [
-            "Polity_research_assistant",
-            "Polity_editor",
-            "Polity_expert",
-        ]:
-            continue
-        subsection_value = str(model().subsection())
-        sub_subsection_value = str(model().sub_subsection())
-        count = model.objects.count()
-        number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
-        model_create = model_name.lower() + "-create"
-        model_download = model_name.lower() + "-download"
-        model_metadownload = model_name.lower() + "-metadownload"
-        model_all = model_name.lower() + "s_all"
-        model_s = model_name.lower() + "s"
-
-        queryset = model.objects.all()
-        politys = queryset.values_list("polity", flat=True).distinct()
-        unique_politys.update(politys)
-        number_of_variables += 1
-
-        to_be_appended = [
-            model_title,
-            model_s,
-            model_create,
-            model_download,
-            model_metadownload,
-            model_all,
-            count,
-        ]
-
-        if sub_subsection_value:
-            all_vars_grouped[subsection_value][sub_subsection_value].append(
-                to_be_appended
-            )
-        else:
-            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
-
-    context = {}
-    context["all_vars_grouped"] = all_vars_grouped
-    context["all_sect_download_links"] = all_sect_download_links
-    context["all_polities"] = len(unique_politys)
-    context["number_of_all_rows"] = number_of_all_rows
-
-    context["number_of_variables"] = number_of_variables
-
+        ],
+    )
     return render(request, "general/generalvars.html", context=context)
-
-
-@permission_required("core.view_capital")
-def download_csv_all_general(request):
-    """
-    Download a CSV file of all general variables. This includes all models in the "general" app.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    # Fetch all models in the "general" app
-    app_name = "general"
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"general_data_{current_datetime}.csv"
-
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
-
-    writer.writerow(
-        [
-            "section",
-            "subsection",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "variable_name",
-            "value_from",
-            "value_to",
-            "year_from",
-            "year_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-        ]
-    )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        if model in [Polity_research_assistant, Polity_editor, Polity_expert]:
-            continue
-        items = model.objects.all()
-
-        for obj in items:
-            if obj.clean_name_spaced() == "Polity Duration":
-                writer.writerow(
-                    [
-                        "General Variables",
-                        obj.subsection(),
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.clean_name()[7:],
-                        obj.polity_year_from,
-                        obj.polity_year_to,
-                        obj.year_from,
-                        obj.year_to,
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                    ]
-                )
-            elif obj.clean_name_spaced() == "Polity Peak Years":
-                writer.writerow(
-                    [
-                        "General Variables",
-                        obj.subsection(),
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.clean_name()[7:],
-                        obj.peak_year_from,
-                        obj.peak_year_to,
-                        obj.year_from,
-                        obj.year_to,
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                    ]
-                )
-            else:
-                if (
-                    obj.show_value() == "NO_VALUE_ON_WIKI"
-                    or obj.show_value() == "NO_VALID_VALUE"
-                ):
-                    continue
-                elif "O_VALUE_ON_WIKI" in str(obj.show_value()):
-                    continue
-                else:
-                    writer.writerow(
-                        [
-                            "General Variables",
-                            obj.subsection(),
-                            obj.polity.long_name,
-                            obj.polity.new_name,
-                            obj.polity.name,
-                            obj.clean_name()[7:],
-                            obj.show_value(),
-                            None,
-                            obj.year_from,
-                            obj.year_to,
-                            obj.get_tag_display(),
-                            obj.is_disputed,
-                            obj.is_uncertain,
-                            obj.expert_reviewed,
-                        ]
-                    )
-
-    return response
-
-
-def send_test_email():
-    """
-    Send a test email.
-
-    Returns:
-        None
-    """
-    send_mail(
-        "Test Email",
-        "This is a test email from Django.",
-        "seshatdb@gmail.com",  # Replace with your sender email
-        ["benam@csh.ac.at"],  # Replace with recipient email(s)
-        fail_silently=False,
-    )
