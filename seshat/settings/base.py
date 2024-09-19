@@ -6,17 +6,68 @@ available in :doc:`/api/seshat/settings/local/index` and
 :doc:`/api/seshat/settings/production/index`.
 """
 
-from django.contrib.messages import constants as messages
+__all__ = [
+    "MESSAGE_TAGS",
+    "BASE_DIR",
+    "SECRET_KEY",
+    "DEBUG",
+    "MY_CURRENT_SERVER",
+    "ALLOWED_HOSTS",
+    "INSTALLED_APPS",
+    "AUTHENTICATION_BACKENDS",
+    "RECAPTCHA_PUBLIC_KEY",
+    "RECAPTCHA_PRIVATE_KEY",
+    "LOGIN_REDIRECT_URL",
+    "ACCOUNT_LOGOUT_REDIRECT",
+    "SITE_ID",
+    "EMAIL_BACKEND",
+    "ACCOUNT_EMAIL_REQUIRED",
+    "ACCOUNT_USERNAME_REQUIRED",
+    "ACCOUNT_AUTHENTICATION_METHOD",
+    "SOCIALACCOUNT_PROVIDERS",
+    "DEFAULT_AUTO_FIELD",
+    "ROOT_URLCONF",
+    "INTERNAL_IPS",
+    "WSGI_APPLICATION",
+    "MIDDLEWARE",
+    "TEMPLATES",
+    "DATABASES",
+    "AUTH_PASSWORD_VALIDATORS",
+    "CSRF_TRUSTED_ORIGINS",
+    "LANGUAGE_CODE",
+    "TIME_ZONE",
+    "USE_I18N",
+    "USE_L10N",
+    "USE_TZ",
+    "LOCALE_PATHS",
+    "EMAIL_FROM_USER",
+    "EMAIL_HOST",
+    "EMAIL_HOST_USER",
+    "EMAIL_HOST_PASSWORD",
+    "EMAIL_USE_TLS",
+    "EMAIL_PORT",
+    "STATIC_URL",
+    "STATIC_ROOT",
+    "STATICFILES_DIRS",
+    "STATICFILES_STORAGE",
+    "MEDIA_URL",
+    "MEDIA_ROOT",
+    "SESHAT_ENVIRONMENT",
+    "REST_FRAMEWORK",
+    "CORS_ALLOWED_ORIGINS",
+    "GEOGRAPHIC_DB",
+    "GDAL_LIBRARY_PATH",
+    "GEOS_LIBRARY_PATH",
+    "SECURE_CROSS_ORIGIN_OPENER_POLICY",
+]
 
 import os
 import django_heroku
 import sys
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
-
 from decouple import config
-
-# TODO: define __all__ for this module
 
 
 MESSAGE_TAGS = {
@@ -27,26 +78,32 @@ MESSAGE_TAGS = {
     messages.ERROR: "alert-danger",
 }
 
-local_env_path = str(Path.cwd()) + "/seshat/settings/.env"
+_local_env_path = str(Path.cwd()) + "/seshat/settings/.env"
+_local_env_path_exists = os.path.exists(_local_env_path)
+_is_github_action = os.getenv("GITHUB_ACTIONS") == "true"
 
 # BASE_DIR is calculated based on this file (base.py) and then goes to parents above.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-# ==============================================================================
-# CORE SETTINGS
-# ==============================================================================
+# Django's secret key is used to provide cryptographic signing for cookies and other
+# security mechanisms
+SECRET_KEY = config(
+    "SECRET_KEY", default="django-insecure$seshat.settings.local"
+)
 
-SECRET_KEY = config("SECRET_KEY", default="django-insecure$seshat.settings.local")
-
+# DEBUG is a boolean that turns on/off debug mode for Django
 DEBUG = config("DEBUG", default=True, cast=bool)
+
+# MY_CURRENT_SERVER is the current server that the application is running on
+MY_CURRENT_SERVER = "https://www.majidbenam.com"
 
 if DEBUG:
     MY_CURRENT_SERVER = "http://127.0.0.1:8000"
-else:
-    MY_CURRENT_SERVER = "https://www.majidbenam.com"
 
+# ALLOWED_HOSTS is a list of strings representing the host/domain names that this Django
+# site can serve
 ALLOWED_HOSTS = [
     "seshatdb.herokuapp.com",
     "127.0.0.1",
@@ -55,15 +112,13 @@ ALLOWED_HOSTS = [
     "https://majidbenam.com",
 ]
 
-
+# Define the installed apps
 INSTALLED_APPS = [
-    "seshat.apps.accounts",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "django.contrib.sites",  # Add this
     "django.contrib.humanize",
@@ -90,39 +145,33 @@ INSTALLED_APPS = [
     "django_extensions",
 ]
 
+# Define the authentication backends:
+# - django.contrib.auth.backends.ModelBackend is needed to login by username in Django admin
+# - allauth.account.auth_backends.AuthenticationBackend is needed for all-auth specific
+#   authentication methods
+# - allauth.socialaccount.auth_backends.AuthenticationBackend can potentially be added for
+#   all-auth social account authentication methods -- see the all-auth documentation for
+#   more
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
     "django.contrib.auth.backends.ModelBackend",
-    # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
-    #'allauth.socialaccount.auth_backends.AuthenticationBackend',
 ]
 
-if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "true":
-    RECAPTCHA_PUBLIC_KEY = config("GOOGLE_RECAPTCHA_SITE_KEY")
-    RECAPTCHA_PRIVATE_KEY = config("GOOGLE_RECAPTCHA_SECRET_KEY")
-    INSTALLED_APPS.append("django_recaptcha")
-
-# all-auth
+# all-auth settings
 LOGIN_REDIRECT_URL = "seshat-index"
 ACCOUNT_LOGOUT_REDIRECT = "seshat-index"
 SITE_ID = 2
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-# ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
-# ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Django Seshat] '  # Customize email subjects
-# ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
-
-# SOCIALACCOUNT_AUTO_SIGNUP = False
-
-if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "true":
+# Social account providers (all-auth)
+SOCIALACCOUNT_PROVIDERS = {}
+if (
+    not _local_env_path_exists
+    and not _is_github_action
+):
     SOCIALACCOUNT_PROVIDERS = {
         "google": {
             "APP": {
@@ -143,31 +192,38 @@ if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "tr
             },
         }
     }
-    """SOCIALACCOUNT_PROVIDERS defines the social account providers for the Django all-auth package."""
+    """SOCIALACCOUNT_PROVIDERS defines the social account providers for the Django all-auth package."""  # noqa: E501 pylint: disable=C0301
 
+# Google reCAPTCHA settings
+RECAPTCHA_PUBLIC_KEY, RECAPTCHA_PRIVATE_KEY = "", ""
+if (
+    not _local_env_path_exists
+    and not _is_github_action
+):
+    RECAPTCHA_PUBLIC_KEY = config("GOOGLE_RECAPTCHA_SITE_KEY")
+    RECAPTCHA_PRIVATE_KEY = config("GOOGLE_RECAPTCHA_SECRET_KEY")
+    INSTALLED_APPS.append("django_recaptcha")
+
+# Default auto field specifies the type of primary key that will be used for all models
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 """DEFAULT_AUTO_FIELD is set to `django.db.models.BigAutoField`."""
 
-# ROOT_URLCONF = "urls"
+# Root URL configuration defines the starting point for URL configurations
 ROOT_URLCONF = "seshat.urls"
 """ROOT_URLCONF is set to the URL configuration for the Seshat project."""
 
+# Internal IPs defines the list of IP addresses that are allowed to visit the debug toolbar
 INTERNAL_IPS = ["127.0.0.1"]
-"""INTERNAL_IPS defines the list of IP addresses that are allowed to visit the debug toolbar."""
+"""INTERNAL_IPS defines the list of IP addresses that are allowed to visit the debug toolbar."""  # noqa: E501 pylint: disable=C0301
 
+# WSGI application defines the WSGI application for the Seshat project
 WSGI_APPLICATION = "seshat.wsgi.application"
 """WSGI_APPLICATION is set to the WSGI application for the Seshat project."""
 
-# AUTH_USER_MODEL = 'accounts.CustomUser'
-
-# ==============================================================================
-# MIDDLEWARE SETTINGS
-# ==============================================================================
-
+# Django's middleware classes are used to modify the request/response objects
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    # "easyaudit.middleware.easyaudit.EasyAuditMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -178,12 +234,7 @@ MIDDLEWARE = [
 ]
 """MIDDLEWARE defines the list of middleware classes that Django will use."""
 
-# DJANGO_EASY_AUDIT_REGISTERED_CLASSES = ['sc.script']
-
-# ==============================================================================
-# TEMPLATES SETTINGS
-# ==============================================================================
-
+# Django's template engine settings
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -195,29 +246,19 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "seshat.apps.core.context_processors.notifications",  # Add your context processor
+                "seshat.apps.core.context_processors.notifications",
             ],
         },
     },
 ]
 """TEMPLATES defines the list of engines that Django can use to render templates."""
 
-
-# ==============================================================================
-# DATABASES SETTINGS
-# ==============================================================================
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-# db_from_env = dj_database_url.config()
-# DATABASES['default'].update(db_from_env)
-
-# Qing data database
-if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "true":
+# Settings for the database
+DATABASES = {}
+if (
+    not _local_env_path_exists
+    and not _is_github_action
+):
     DATABASES = {
         "default": {
             "ENGINE": "django.contrib.gis.db.backends.postgis",
@@ -231,8 +272,6 @@ if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "tr
     """
     Database settings for local development.
     """
-
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600)
 
 # ==============================================================================
 # AUTHENTICATION AND AUTHORIZATION SETTINGS
@@ -254,8 +293,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 """
 AUTH_PASSWORD_VALIDATORS defines the validators that are used to check the strength of passwords.
-"""
+"""  # noqa: E501 pylint: disable=C0301
 
+# Define the trusted origins for CSRF protection. The most important one is the last one.
 CSRF_TRUSTED_ORIGINS = [
     "https://majidbenam.com",
     "http://*.majidbenam.com",
@@ -263,15 +303,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://seshatdb.herokuapp.com",
     "http://seshatdb.herokuapp.com",
     "https://*.majidbenam.com",
-]  # the most important one is the last one.
-"""CSRF_TRUSTED_ORIGINS defines the trusted origins for Cross-Site Request Forgery (CSRF) protection."""
-# USE_X_FORWARDED_HOST = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+]
+"""CSRF_TRUSTED_ORIGINS defines the trusted origins for Cross-Site Request Forgery (CSRF) protection."""  # noqa: E501 pylint: disable=C0301
 
-# ==============================================================================
-# I18N AND L10N SETTINGS
-# ==============================================================================
-
+# Internationalization
 LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
 """LANGUAGE_CODE is set to en-us by default."""
 
@@ -288,10 +323,29 @@ USE_TZ = True
 """USE_TZ is set to True to enable time zone support."""
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
-"""LOCALE_PATHS defines the directories in which Django will search for translation files."""
+"""LOCALE_PATHS defines the directories in which Django will search for translation files."""  # noqa: E501 pylint: disable=C0301
 
 # Email config BACKUP:
-if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "true":
+(
+    EMAIL_FROM_USER,
+    EMAIL_HOST,
+    EMAIL_HOST_USER,
+    EMAIL_HOST_PASSWORD,
+    EMAIL_USE_TLS,
+    EMAIL_PORT,
+) = (  # noqa: E501 pylint: disable=C0301
+    "",
+    "",
+    "",
+    "",
+    "",
+    587,
+)
+
+if (
+    not _local_env_path_exists
+    and not _is_github_action
+):
     EMAIL_FROM_USER = config("EMAIL_FROM_USER")
     """The email address from which the emails will be sent."""
     EMAIL_HOST = config("EMAIL_HOST")
@@ -305,49 +359,24 @@ if not os.path.exists(local_env_path) and not os.getenv("GITHUB_ACTIONS") == "tr
     EMAIL_PORT = 587
     """The email port."""
 
-######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'xxxx.xxx@gmail.com'
-# EMAIL_HOST_PASSWORD = 'xxxx xxxx xxxx xxxx'
-
-
-# ==============================================================================
-# STATIC FILES SETTINGS
-# ==============================================================================
-
-# STATIC_URL = "/static/"
-# this is all browser stuff, what  you need to type in the address bar to see the image and stuff
 STATIC_URL = "static/"
 """
 The URL to use when referring to static files located in the `static` directory.
 """
 
-# this is not needed: the actual value is the default valu:
-# /home/majid/dev/seshat/seshat/seshat/staticfiles
-# and the files are actually stored there when we COLLECTSTATIC them
 STATIC_ROOT = BASE_DIR.parent.parent / "static"
 """
-The absolute path to the directory where `collectstatic` will collect static files for deployment.
+The absolute path to the directory where `collectstatic` will collect static files for
+deployment.
 
 Note:
     The value set here is the `static` directory in the base directory of the project.
 """
 
-# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-
-# This one is pretty pointless too but let's keep things as it is for the moment
-# I believe this says: anything under the base directory that is inside a directory
-# called 'static' will be collected as staticfile, egardless of how deep down in
-# the directory hierarchy it might be. It just needs to be a in a older called media
-# in any of the apps, etc.
 STATICFILES_DIRS = [BASE_DIR / "static"]
 """
 Defines the directories in which Django will search for additional static files.
 """
-
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 """
@@ -355,9 +384,10 @@ The static files storage is set to the whitenoise storage, which is a compressed
 manifest static files storage.
 """
 
-# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 if "test" in sys.argv:
-    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    STATICFILES_STORAGE = (
+        "django.contrib.staticfiles.storage.StaticFilesStorage"
+    )
     """
     The static files storage is set to the Django static files storage for testing
     environments.
@@ -365,32 +395,11 @@ if "test" in sys.argv:
     :noindex:
     """
 
-# We might need to turn these on in production!
-# STATICFILES_FINDERS = (
-#     "django.contrib.staticfiles.finders.FileSystemFinder",
-#     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-# )
-
-
-# ==============================================================================
-# MEDIA FILES SETTINGS
-# ==============================================================================
-
 MEDIA_URL = "/media/"
 """The URL to use when referring to media files located in the `media` directory."""
 
 MEDIA_ROOT = BASE_DIR.parent.parent / "media"
 """The absolute path to the directory where uploaded files will be saved."""
-
-
-# ==============================================================================
-# THIRD-PARTY SETTINGS
-# ==============================================================================
-
-
-# ==============================================================================
-# FIRST-PARTY SETTINGS
-# ==============================================================================
 
 SESHAT_ENVIRONMENT = config("SESHAT_ENVIRONMENT", default="local")
 """
@@ -400,13 +409,6 @@ Note:
     The value is set to `local` by default. This value can be changed in the
     environment variable SESHAT_ENVIRONMENT.
 """
-
-# =================
-# Login Redirect
-# =================
-
-# LOGIN_REDIRECT_URL = 'seshat-index'  # (see L100 above)
-
 
 # REST Framework
 REST_FRAMEWORK = {
@@ -428,17 +430,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
-"""CORS_ALLOWED_ORIGINS defines the allowed origins for Cross-Origin Resource Sharing (CORS)."""
+"""CORS_ALLOWED_ORIGINS defines the allowed origins for Cross-Origin Resource Sharing (CORS)."""  # noqa: E501 pylint: disable=C0301
 
-# =================
-# Logout Redirect
-# =================
-# LOGOUT_REDIRECT_URL = 'logout'
-
-# I believe this says: Hey Heroku, do your local settings, don't care about my static_root, static_url etc.
 django_heroku.settings(locals())
 
-# Geospatial stuff: modify the paths to the libraries for your system setup
 GEOGRAPHIC_DB = True
 """GEOGRAPHIC_DB is set to True to enable the geographic database."""
 
@@ -448,7 +443,7 @@ if sys.platform.startswith("darwin"):
     GEOS_LIBRARY_PATH = "/opt/homebrew/opt/geos/lib/libgeos_c.dylib"
 else:
     # Linux settings
-    if os.getenv("GITHUB_ACTIONS") == "true":
+    if _is_github_action:
         GDAL_LIBRARY_PATH = "/usr/lib/libgdal.so"
         GEOS_LIBRARY_PATH = "/usr/lib/x86_64-linux-gnu/libgeos_c.so"
     else:

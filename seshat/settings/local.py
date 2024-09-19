@@ -28,7 +28,6 @@ if os.getenv("GITHUB_ACTIONS") == "true":
     :noindex:
     """
 else:
-
     # Initialise environment variables
     env = environ.Env()
     environ.Env.read_env()
