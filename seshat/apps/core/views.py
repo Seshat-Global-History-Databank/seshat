@@ -1862,6 +1862,10 @@ def religion_create_view(request):
 
     Returns:
         HttpResponse: The response object.
+
+    ..
+
+        # TODO: Is there a reason this is not a class-based view?
     """
     if request.method == "POST":
         form = ReligionForm(request.POST)
@@ -1890,6 +1894,10 @@ def religion_update_view(request, pk):
 
     Returns:
         HttpResponse: The response object.
+
+    ..
+
+        # TODO: Is there a reason this is not a class-based view?
     """
     religion = get_object_or_404(Religion, pk=pk)
 
@@ -1928,13 +1936,7 @@ def methods_view(request):
     Returns:
         HttpResponse: The response object.
     """
-    context = dict(
-        CONTEXT,
-        **{
-            "trans": "Transitions All Over the Place",
-        },
-    )
-    return render(request, "core/seshat-methods.html", context=context)
+    return render(request, "core/seshat-methods.html", context={})
 
 
 def whoweare_view(request):
