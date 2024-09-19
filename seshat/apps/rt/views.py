@@ -1,24 +1,30 @@
-from django.apps import apps
 from django.contrib import messages
 from django.contrib.auth.decorators import (
     login_required,
     permission_required,
     user_passes_test,
 )
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 import csv
-import datetime
 
 from ..core.forms import SeshatCommentPartForm2
-from ..global_constants import ABSENT_PRESENT_CHOICES
+from ..global_utils import (
+    check_permissions,
+    get_date,
+    get_models,
+    get_problematic_data_context,
+    has_add_capital_permission,
+    get_variable_context,
+)
+from ..global_constants import ABSENT_PRESENT_STRING_LIST, CSV_DELIMITER
 
-from .constants import APP_NAME, SWAPPED_DICT
+from .constants import APP_NAME
 
 
-def rtvars(request):
+def rtvars_view(request):
     """
     View function for the RT variables page.
 
@@ -28,102 +34,8 @@ def rtvars(request):
     Returns:
         HttpResponse: The response object that contains the rendered RT variables page.
     """
-    app_name = "rt"  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
-
-    unique_politys = set()
-    number_of_all_rows = 0
-    number_of_variables = 0
-    all_vars_grouped = {}
-
-    all_sect_download_links = {}
-
-    for model in get_models(APP_NAME):
-
-        better_name = (
-            "download_csv_"
-            + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
-        )
-        all_sect_download_links[s_value] = better_name
-        if s_value not in all_vars_grouped:
-            all_vars_grouped[s_value] = {}
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-        else:
-            if ss_value:
-                all_vars_grouped[s_value][ss_value] = []
-            else:
-                all_vars_grouped[s_value]["None"] = []
-
-    models = apps.get_app_config(app_name).get_models()
-
-    for model in models:
-        model_name = model.__name__
-        if model_name in [
-            "RA",
-        ]:
-            continue
-        subsection_value = str(model().subsection())
-        sub_subsection_value = str(model().sub_subsection())
-        count = model.objects.count()
-        number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
-        model_title = SWAPPED_DICT[model_name]
-        model_create = model_name.lower() + "-create"
-        model_download = model_name.lower() + "-download"
-        model_metadownload = model_name.lower() + "-metadownload"
-        model_all = model_name.lower() + "s_all"
-        model_s = model_name.lower() + "s"
-
-        queryset = model.objects.all()
-        politys = queryset.values_list("polity", flat=True).distinct()
-        unique_politys.update(politys)
-        number_of_variables += 1
-
-        to_be_appended = [
-            model_title,
-            model_s,
-            model_create,
-            model_download,
-            model_metadownload,
-            model_all,
-            count,
-        ]
-
-        if sub_subsection_value:
-            all_vars_grouped[subsection_value][sub_subsection_value].append(
-                to_be_appended
-            )
-        else:
-            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
-
-    context = {}
-    context["all_vars_grouped"] = all_vars_grouped
-    context["all_sect_download_links"] = all_sect_download_links
-    context["all_polities"] = len(unique_politys)
-    context["number_of_all_rows"] = number_of_all_rows
-
-    context["number_of_variables"] = number_of_variables
-
+    context = get_variable_context(app_name=APP_NAME)
     return render(request, "rt/rtvars.html", context=context)
-
-
-def has_add_capital_permission(user):
-    """
-    Check if the user has the 'core.add_capital' permission.
-
-    Note:
-        TODO This is built-in functionality in Django. You can use the built-in permission_required decorator instead.
-
-    Args:
-        user (User): The user object.
-
-    Returns:
-        bool: True if the user has the 'core.add_capital' permission, False otherwise.
-    """
-    return user.has_perm("core.add_capital")
 
 
 # Use the login_required, permission_required, and user_passes_test decorators
@@ -136,7 +48,8 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -149,16 +62,16 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
         HttpResponse: The response object that contains the rendered detail page.
     """
     # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
+    o = get_object_or_404(model_class, pk=pk)
+
     form_inline_new = SeshatCommentPartForm2(request.POST)
 
     context = {
-        "object": obj,
+        "object": o,
         "myvar": myvar,
         "var_name_display": var_name_display,
         "create_new_url": myvar + "-create",
         "see_all_url": myvar + "s_all",
-        "letsdo": "Let us do it!!!",
         "form": form_inline_new,
     }
 
@@ -177,7 +90,8 @@ def dynamic_create_view(
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -209,7 +123,7 @@ def dynamic_create_view(
         if my_form.is_valid():
             new_object = my_form.save()
             return redirect(f"{x_name}-detail", pk=new_object.id)
-    else:
+    elif request.method == "GET":
         polity_id_x = request.GET.get("polity_id_x")
         my_form = form_class(
             initial={
@@ -266,7 +180,8 @@ def dynamic_update_view(
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -307,11 +222,10 @@ def dynamic_update_view(
             my_form.save()
             return redirect(f"{x_name}-detail", pk=my_object.id)
 
-    else:
+    elif request.method == "GET":
         # Create an instance of the form and populate it with the object's data
         my_form = form_class(instance=my_object)
 
-        # Define the context with the variables you want to pass to the template
         if x_name in [
             "widespread_religion",
         ]:
@@ -359,7 +273,8 @@ def generic_list_view(
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -376,19 +291,18 @@ def generic_list_view(
     if var_name in [
         "widespread_religion",
     ]:
-        object_list = model_class.objects.all().order_by("polity_id", "order")
+        objects = model_class.objects.all().order_by("polity_id", "order")
     else:
-        object_list = model_class.objects.all()
+        objects = model_class.objects.all()
 
-    extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
+    extra_var_dict = {o.id: o.show_value() for o in objects}
 
     orderby = request.GET.get("orderby", None)
 
     # Apply sorting if orderby is provided and is a valid field name
     if orderby and hasattr(model_class, orderby):
-        object_list = object_list.order_by(orderby)
+        objects = objects.order_by(orderby)
 
-    var_name_with_from = var_name
     var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
 
     if var_name in [
@@ -396,7 +310,7 @@ def generic_list_view(
         "elites_religion",
     ]:
         ordering_tag_value = "coded_value_id"
-    #     # ?orderby=formal_legal_code&orderby2=tag
+
     elif var_name in [
         "widespread_religion",
     ]:
@@ -404,9 +318,8 @@ def generic_list_view(
     else:
         ordering_tag_value = "coded_value"
 
-    # Define any additional context variables you want to pass to the template
     context = {
-        "object_list": object_list,
+        "object_list": objects,
         "var_name": var_name,
         "create_url": f"{var_name}-create",
         "update_url": f"{var_name}-update",
@@ -421,10 +334,6 @@ def generic_list_view(
         "var_main_desc": var_main_desc,
         "myvar": var_name_display,
         "extra_var_dict": extra_var_dict,  # Add the dictionary to the context
-        #'extra_var': obj[var_name],
-        #'obj_var': my_form[x_name],
-        # "myvar": myvar,
-        # "my_exp": my_exp,
     }
 
     context["inner_vars"] = {
@@ -435,7 +344,7 @@ def generic_list_view(
             "var_exp_source": None,
             "var_exp": var_exp_new,
             "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
+            "choices": ABSENT_PRESENT_STRING_LIST,
             "null_meaning": None,
         }
     }
@@ -446,13 +355,14 @@ def generic_list_view(
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_download(request, model_class, var_name):
+def generic_download_view(request, model_class, var_name):
     """
     Download all data for a given model.
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -462,16 +372,18 @@ def generic_download(request, model_class, var_name):
     Returns:
         HttpResponse: The response object that contains the CSV file.
     """
-    items = model_class.objects.all()
+    date = get_date()
 
+    # Create a response object with CSV content type
     response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    file_name = f"religion_tolerance_{var_name}_{current_datetime}.csv"
-
+    # Add filename to response object
+    file_name = f"religion_tolerance_{var_name}_{date}.csv"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
-    writer = csv.writer(response, delimiter="|")
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
     writer.writerow(
         [
             "variable_name",
@@ -488,39 +400,40 @@ def generic_download(request, model_class, var_name):
             "DRB_reviewed",
         ]
     )
-    for obj in items:
+
+    for o in model_class.objects.all():
         if var_name in ["widespread_religion"]:
             writer.writerow(
                 [
-                    obj.clean_name_dynamic(),
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.show_value_from(),
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.is_uncertain,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
+                    o.clean_name_dynamic(),
+                    o.year_from,
+                    o.year_to,
+                    o.polity.long_name,
+                    o.polity.new_name,
+                    o.polity.name,
+                    o.show_value_from(),
+                    o.get_tag_display(),
+                    o.is_disputed,
+                    o.is_uncertain,
+                    o.expert_reviewed,
+                    o.drb_reviewed,
                 ]
             )
         else:
             writer.writerow(
                 [
-                    obj.clean_name_spaced(),
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.long_name,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.show_value(),
-                    obj.get_tag_display(),
-                    obj.is_disputed,
-                    obj.is_uncertain,
-                    obj.expert_reviewed,
-                    obj.drb_reviewed,
+                    o.clean_name_spaced(),
+                    o.year_from,
+                    o.year_to,
+                    o.polity.long_name,
+                    o.polity.new_name,
+                    o.polity.name,
+                    o.show_value(),
+                    o.get_tag_display(),
+                    o.is_disputed,
+                    o.is_uncertain,
+                    o.expert_reviewed,
+                    o.drb_reviewed,
                 ]
             )
 
@@ -530,7 +443,7 @@ def generic_download(request, model_class, var_name):
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_metadata_download(
+def generic_metadata_download_view(
     request, var_name, var_name_display, var_section, var_subsection, var_main_desc
 ):
     """
@@ -538,7 +451,8 @@ def generic_metadata_download(
 
     Note:
         This function is a generic view function that can be used for any model.
-        This view is only accessible to users with the 'add_capital' permission.
+        This view is only accessible to users with the 'add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -569,12 +483,13 @@ def generic_metadata_download(
             "var_exp_source": None,
             "var_exp": f"The {var_name_display} for a polity.",
             "units": None,
-            "choices": "ABSENT_PRESENT_CHOICES",
+            "choices": ABSENT_PRESENT_STRING_LIST,
             "null_meaning": None,
         }
     }
 
-    writer = csv.writer(response, delimiter="|")
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
 
     for k, v in my_meta_data_dic.items():
         writer.writerow([k, v])
@@ -601,7 +516,8 @@ def confirm_delete_view(request, model_class, pk, var_name):
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -612,24 +528,18 @@ def confirm_delete_view(request, model_class, pk, var_name):
     Returns:
         HttpResponse: The response object that contains the rendered confirmation page.
     """
-    permission_required = "core.add_capital"
+    check_permissions(request)
 
     # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    # Check if the user has the required permission
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
-
-    template_name = "core/confirm_delete.html"
+    o = get_object_or_404(model_class, pk=pk)
 
     context = {
         "var_name": var_name,
-        "obj": obj,
+        "obj": o,
         "delete_object": f"{var_name}-delete",
     }
 
-    return render(request, template_name, context)
+    return render(request, "core/confirm_delete.html", context)
 
 
 @login_required
@@ -641,7 +551,8 @@ def delete_object_view(request, model_class, pk, var_name):
 
     Note:
         This function is a generic view function that can be used for any model.
-        The access to this view is restricted to users with the 'core.add_capital' permission.
+        The access to this view is restricted to users with the 'core.add_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -652,15 +563,13 @@ def delete_object_view(request, model_class, pk, var_name):
     Returns:
         HttpResponse: The response object that contains the rendered confirmation page.
     """
-    permission_required = "core.add_capital"
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
+    check_permissions(request)
 
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
+    # Retrieve the object for the given model class
+    o = get_object_or_404(model_class, pk=pk)
 
     # Delete the object
-    obj.delete()
+    o.delete()
 
     # Redirect to the success URL
     success_url_name = f"{var_name}s_all"  # Adjust the success URL as needed
@@ -678,7 +587,8 @@ def download_csv_all_rt(request):
     Download all data for all models in the RT app.
 
     Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -686,20 +596,17 @@ def download_csv_all_rt(request):
     Returns:
         HttpResponse: The response object that contains the CSV file.
     """
-    # Fetch all models in the "socomp" app
-    app_name = "rt"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    date = get_date()
 
     # Create a response object with CSV content type
     response = HttpResponse(content_type="text/csv")
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    file_name = f"religion_tolerance_data_{current_datetime}.csv"
-
+    # Add filename to response object
+    file_name = f"religion_tolerance_data_{date}.csv"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
     # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
 
     writer.writerow(
         [
@@ -719,48 +626,47 @@ def download_csv_all_rt(request):
             "DRB_reviewed",
         ]
     )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        items = model.objects.all()
 
-        for obj in items:
-            if obj.clean_name() == "widespread_religion":
+    # Iterate over each row of each model
+    for model in get_models(APP_NAME):
+        # Get all rows of data from the model
+        for o in model.objects.all():
+            if o.clean_name() == "widespread_religion":
                 writer.writerow(
                     [
-                        obj.subsection(),
-                        obj.clean_name_dynamic(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
+                        o.subsection(),
+                        o.clean_name_dynamic(),
+                        o.year_from,
+                        o.year_to,
+                        o.polity.long_name,
+                        o.polity.new_name,
+                        o.polity.name,
+                        o.show_value_from(),
+                        o.show_value_to(),
+                        o.get_tag_display(),
+                        o.is_disputed,
+                        o.is_uncertain,
+                        o.expert_reviewed,
+                        o.drb_reviewed,
                     ]
                 )
             else:
                 writer.writerow(
                     [
-                        obj.subsection(),
-                        obj.clean_name_spaced(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
+                        o.subsection(),
+                        o.clean_name_spaced(),
+                        o.year_from,
+                        o.year_to,
+                        o.polity.long_name,
+                        o.polity.new_name,
+                        o.polity.name,
+                        o.show_value_from(),
+                        o.show_value_to(),
+                        o.get_tag_display(),
+                        o.is_disputed,
+                        o.is_uncertain,
+                        o.expert_reviewed,
+                        o.drb_reviewed,
                     ]
                 )
 
@@ -773,7 +679,8 @@ def show_problematic_rt_data_table(request):
     View that shows a table of problematic data in the RT app.
 
     Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -781,24 +688,11 @@ def show_problematic_rt_data_table(request):
     Returns:
         HttpResponse: The response object that contains the rendered problematic data table.
     """
-    # Fetch all models in the "socomp" app
-    app_name = "rt"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Collect data from all models
-    data = []
-    for model in app_models:
-        items = model.objects.all()
-        for obj in items:
-            if (
-                obj.polity.start_year is not None
-                and obj.year_from is not None
-                and obj.polity.start_year > obj.year_from
-            ):
-                data.append(obj)
+    # Get the context data for the problematic data (with standard conditions)
+    context = get_problematic_data_context(APP_NAME)
 
     # Render the template with the data
-    return render(request, "rt/problematic_rt_data_table.html", {"data": data})
+    return render(request, "rt/problematic_rt_data_table.html", context)
 
 
 @permission_required("core.view_capital")
@@ -807,7 +701,8 @@ def download_csv_religious_landscape(request):
     Download all data for the Religious Landscape model in the RT app.
 
     Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -815,21 +710,17 @@ def download_csv_religious_landscape(request):
     Returns:
         HttpResponse: The response object that contains the CSV file.
     """
-    # Fetch all models in the "socomp" app
-    app_name = "rt"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    date = get_date()
 
     # Create a response object with CSV content type
     response = HttpResponse(content_type="text/csv")
 
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"religion_tolerance_religious_landscape_{current_datetime}.csv"
-
+    # Add filename to response object
+    file_name = f"religion_tolerance_religious_landscape_{date}.csv"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
     # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
 
     writer.writerow(
         [
@@ -849,32 +740,29 @@ def download_csv_religious_landscape(request):
             "DRB_reviewed",
         ]
     )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Religious Landscape":
-            items = model.objects.all()
-            for obj in items:
+
+    # Iterate over each row of each model
+    for model in get_models(APP_NAME, exclude=["Ra"]):
+        subsection = str(model().subsection())
+
+        if subsection == "Religious Landscape":
+            for o in model.objects.all():
                 writer.writerow(
                     [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
+                        o.subsection(),
+                        o.clean_name(),
+                        o.year_from,
+                        o.year_to,
+                        o.polity.long_name,
+                        o.polity.new_name,
+                        o.polity.name,
+                        o.show_value_from(),
+                        o.show_value_to(),
+                        o.get_tag_display(),
+                        o.is_disputed,
+                        o.is_uncertain,
+                        o.expert_reviewed,
+                        o.drb_reviewed,
                     ]
                 )
 
@@ -887,7 +775,8 @@ def download_csv_government_restrictions(request):
     Download all data for the Government Restrictions model in the RT app.
 
     Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -895,21 +784,17 @@ def download_csv_government_restrictions(request):
     Returns:
         HttpResponse: The response object that contains the CSV file.
     """
-    # Fetch all models in the "socomp" app
-    app_name = "rt"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    date = get_date()
 
     # Create a response object with CSV content type
     response = HttpResponse(content_type="text/csv")
 
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"religion_tolerance_government_restrictions_{current_datetime}.csv"
-
+    # Add filename to response object
+    file_name = f"religion_tolerance_government_restrictions_{date}.csv"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
     # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
 
     writer.writerow(
         [
@@ -929,32 +814,29 @@ def download_csv_government_restrictions(request):
             "DRB_reviewed",
         ]
     )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Government Restrictions":
-            items = model.objects.all()
-            for obj in items:
+
+    # Iterate over each row of each model
+    for model in get_models(APP_NAME):
+        subsection = str(model().subsection())
+
+        if subsection == "Government Restrictions":
+            for o in model.objects.all():
                 writer.writerow(
                     [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
+                        o.subsection(),
+                        o.clean_name(),
+                        o.year_from,
+                        o.year_to,
+                        o.polity.long_name,
+                        o.polity.new_name,
+                        o.polity.name,
+                        o.show_value_from(),
+                        o.show_value_to(),
+                        o.get_tag_display(),
+                        o.is_disputed,
+                        o.is_uncertain,
+                        o.expert_reviewed,
+                        o.drb_reviewed,
                     ]
                 )
 
@@ -967,7 +849,8 @@ def download_csv_societal_restrictions(request):
     Download all data for the Societal Restrictions model in the RT app.
 
     Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.
+        The access to this view is restricted to users with the 'core.view_capital'
+        permission.
 
     Args:
         request (HttpRequest): The request object used to generate this page.
@@ -975,21 +858,17 @@ def download_csv_societal_restrictions(request):
     Returns:
         HttpResponse: The response object that contains the CSV file.
     """
-    # Fetch all models in the "socomp" app
-    app_name = "rt"  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    date = get_date()
 
     # Create a response object with CSV content type
     response = HttpResponse(content_type="text/csv")
 
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"religion_tolerance_societal_restrictions_{current_datetime}.csv"
-
+    # Add filename to response object
+    file_name = f"religion_tolerance_societal_restrictions_{date}.csv"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
     # Create a CSV writer
-    writer = csv.writer(response, delimiter="|")
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
 
     writer.writerow(
         [
@@ -1009,32 +888,29 @@ def download_csv_societal_restrictions(request):
             "DRB_reviewed",
         ]
     )
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Societal Restrictions":
-            items = model.objects.all()
-            for obj in items:
+
+    # Iterate over each row of each model
+    for model in get_models(APP_NAME):  # skip Ra, but not part of this app?
+        subsection = str(model().subsection())
+
+        if subsection == "Societal Restrictions":
+            for o in model.objects.all():
                 writer.writerow(
                     [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
+                        o.subsection(),
+                        o.clean_name(),
+                        o.year_from,
+                        o.year_to,
+                        o.polity.long_name,
+                        o.polity.new_name,
+                        o.polity.name,
+                        o.show_value_from(),
+                        o.show_value_to(),
+                        o.get_tag_display(),
+                        o.is_disputed,
+                        o.is_uncertain,
+                        o.expert_reviewed,
+                        o.drb_reviewed,
                     ]
                 )
 
