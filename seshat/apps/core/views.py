@@ -31,6 +31,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     DetailView,
+    TemplateView,
 )
 from django.views.generic.edit import FormMixin
 
@@ -1999,9 +2000,7 @@ def acknowledgements_view(request):
     Returns:
         HttpResponse: The response object.
     """
-    return render(
-        request, "core/seshat-acknowledgements.html", context={}
-    )
+    return render(request, "core/seshat-acknowledgements.html", context={})
 
 
 def no_zotero_refs_list_view(request):
@@ -3152,137 +3151,125 @@ def download_oldcsv_view(request, file_name):
     return response
 
 
-def index_view(request):
-    """
-    Render the Seshat landing page.
+class IndexView(TemplateView):
+    template_name = "core/seshat-index.html"
 
-    Args:
-        request: The request object.
+    def get_context_data(self, **kwargs):
+        # Get the basic context
+        context = BASIC_CONTEXT
 
-    Returns:
-        HttpResponse: The HTTP response.
+        # Get region objects
+        seshat_regions = Seshat_region.objects.annotate(
+            num_polities=Count("home_seshat_region")
+        ).exclude(name="Somewhere")
 
-    ..
-        # TODO: quite the pull on the server.
-    """
-    context = BASIC_CONTEXT
+        macro_regions = Macro_region.objects.exclude(name="World")
+        polities = Polity.objects.all()
 
-    # Get region objects
-    seshat_regions = Seshat_region.objects.annotate(
-        num_polities=Count("home_seshat_region")
-    ).exclude(name="Somewhere")
+        seshat_region_count = seshat_regions.count()
+        macro_region_count = macro_regions.count()
+        polity_count = polities.count()
 
-    macro_regions = Macro_region.objects.exclude(name="World")
-
-    polities = Polity.objects.all()
-
-    seshat_region_count = seshat_regions.count()
-    macro_region_count = macro_regions.count()
-    polity_count = polities.count()
-
-    context = dict(
-        context,
-        **{
-            "sr_data": [seshat_region_count, macro_region_count],
-            "pols_data": [polity_count, seshat_region_count],
-            "eight_pols": Polity.objects.order_by("?")[:8],
-            "eight_srs": seshat_regions.order_by("-num_polities")[:8],
-        },
-    )
-
-    for app_name in ["general", "sc", "wf", "crisisdb"]:
-        models = get_models(app_name, exclude=["Ra"])
-
-        unique_polities = set()
-        variable_count = 0
-        row_count = 0
-
-        app_key = app_name + "_data"
-
-        for model in models:
-            model_name = model.__name__
-
-            if model_name.startswith("Us_"):
-                continue
-
-            queryset = model.objects.all()
-            polities = queryset.values_list("polity", flat=True).distinct()
-
-            if model_name.startswith("Us_violence"):
-                # noqa: E501  TODO: This will never happen because of model.startswith("Us_"): continue above  pylint: disable=C0301
-                context = dict(
-                    context,
-                    **{
-                        "us_data": [
-                            queryset.count(),
-                            1,
-                        ],
-                        "eight_uss": queryset.order_by("?")[:8],
-                    },
-                )
-                continue
-
-            if model_name.startswith("Power_transition"):
-                context = dict(
-                    context,
-                    **{
-                        "pt_data": [
-                            queryset.count(),
-                            1,
-                            polities.count(),
-                        ],
-                        "eight_pts": queryset.order_by("?")[:8],
-                    },
-                )
-                continue
-
-            if model_name.startswith("Crisis_consequence"):
-                context = dict(
-                    context,
-                    **{
-                        "cc_data": [
-                            queryset.count(),
-                            1,
-                            polities.count(),
-                        ],
-                        "eight_ccs": queryset.order_by("?")[:8],
-                    },
-                )
-                continue
-
-            if model_name.startswith("Human_sacrifice"):
-                context = dict(
-                    context,
-                    **{
-                        "hs_data": [
-                            queryset.count(),
-                            1,
-                            polities.count(),
-                        ],
-                        "eight_hss": queryset.order_by("?")[:8],
-                    },
-                )
-                continue
-
-            unique_polities.update(
-                queryset.values_list("polity", flat=True).distinct()
-            )
-
-            variable_count += 1
-            row_count += queryset.count()
-
-        context = dict(
-            context,
-            **{
-                app_key: [
-                    row_count,
-                    variable_count,
-                    len(unique_polities),
-                ],
-            },
+        # Update the context with counts and queryset data
+        context.update(
+            {
+                "sr_data": [seshat_region_count, macro_region_count],
+                "pols_data": [polity_count, seshat_region_count],
+                "eight_pols": Polity.objects.order_by("?")[:8],
+                "eight_srs": seshat_regions.order_by("-num_polities")[:8],
+            }
         )
 
-    return render(request, "core/seshat-index.html", context=context)
+        # Loop through apps and get their models and data
+        for app_name in ["general", "sc", "wf", "crisisdb"]:
+            models = get_models(app_name, exclude=["Ra"])
+
+            unique_polities = set()
+            variable_count = 0
+            row_count = 0
+
+            app_key = app_name + "_data"
+
+            for model in models:
+                model_name = model.__name__
+
+                queryset = model.objects.all()
+
+                if model_name.startswith("Us_violence"):
+                    print('here')
+                    context.update(
+                        {
+                            "us_data": [
+                                queryset.count(),
+                                1,
+                            ],
+                            "eight_uss": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Us_"):
+                    continue
+
+                polities = queryset.values_list("polity", flat=True).distinct()
+
+                if model_name.startswith("Power_transition"):
+                    context.update(
+                        {
+                            "pt_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_pts": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Crisis_consequence"):
+                    context.update(
+                        {
+                            "cc_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_ccs": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Human_sacrifice"):
+                    context.update(
+                        {
+                            "hs_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_hss": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                unique_polities.update(
+                    queryset.values_list("polity", flat=True).distinct()
+                )
+
+                variable_count += 1
+                row_count += queryset.count()
+
+            context.update(
+                {
+                    app_key: [
+                        row_count,
+                        variable_count,
+                        len(unique_polities),
+                    ],
+                }
+            )
+
+        return context
 
 
 def get_polity_data_single(polity_id):
@@ -4389,9 +4376,7 @@ def update_seshat_comment_part_view(request, pk):
 
 
 @login_required
-def create_subcomment_new_view(
-    request, app_name, model_name, instance_id
-):
+def create_subcomment_new_view(request, app_name, model_name, instance_id):
     """
     Create a Comment and assign it to a model instance.
 
@@ -4454,9 +4439,7 @@ def create_subcomment_new_view(
 
 
 @login_required
-def create_subcomment_newer_view(
-    request, app_name, model_name, instance_id
-):
+def create_subcomment_newer_view(request, app_name, model_name, instance_id):
     """
     Create the first chunk of a new comment and assign it to a model instance and a seshat
     comment. Get the data on citations and do the appropriate assignments there as well.

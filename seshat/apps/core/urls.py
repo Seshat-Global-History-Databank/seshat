@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
-    path("", views.index_view, name="seshat-index"),
+    path("", views.IndexView.as_view(), name="seshat-index"),
     path("methods/", views.methods_view, name="seshat-methods"),
     path("whoweare/", views.whoweare_view, name="seshat-whoweare"),
     path("codebook", views.codebook_view, name="seshat-codebook"),  # noqa: E501  TODO: The codebook_view is not used anywhere in the codebase
