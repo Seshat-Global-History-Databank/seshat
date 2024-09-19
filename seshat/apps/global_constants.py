@@ -1,11 +1,6 @@
-from django import forms
-
-from decouple import config, UndefinedValueError
-from pyzotero import zotero
-
-import re
-
-from .global_types import DotDict
+"""
+All the constants used in the Seshat application.
+"""
 
 __all__ = [
     "ABSENT_PRESENT_CHOICES",
@@ -26,8 +21,49 @@ __all__ = [
     "COMMON_WIDGETS",
     "CODED_VALUE_WIDGET",
     "ICONS",
-    "_ZOTERO_API_KEY"
+    "_ZOTERO_API_KEY",
+    "ZOTERO",
+    "PATTERNS",
+    "BASIC_CONTEXT",
+    "POLITY_NGA_NAME",
+    "CORRECT_YEAR",
+    "US_STATES_GEOJSON_PATH",
+    "NO_DATA",
+    "CSV_DELIMITER",
 ]
+
+import re
+
+from django import forms
+from django.db.models import (
+    Case,
+    F,
+    CharField,
+    ExpressionWrapper,
+    IntegerField,
+    When,
+)
+
+from decouple import config, UndefinedValueError
+from pyzotero import zotero
+
+from .global_types import DotDict
+
+
+def _wrap(label, simple=False):
+    """
+    Private function to wrap a label in HTML.
+
+    Args:
+        label (str): The label to wrap in HTML.
+
+    Returns:
+        str: The label wrapped in HTML
+    """
+    if simple:
+        return f"&nbsp;{label}:"
+    return f"&nbsp;<b>{label}:</b>"
+
 
 ABSENT_PRESENT_CHOICES = (
     ("present", "present"),
@@ -36,6 +72,8 @@ ABSENT_PRESENT_CHOICES = (
     ("A~P", "Transitional (Absent -> Present)"),
     ("P~A", "Transitional (Present -> Absent)"),
 )
+
+ABSENT_PRESENT_STRING_LIST = [f"- {x[1]}" for x in ABSENT_PRESENT_CHOICES]
 
 
 POLITY_LANGUAGE_CHOICES = (
@@ -326,6 +364,7 @@ POLITY_LINGUISTIC_FAMILY_CHOICES = (
 
 SECTIONS = DotDict(
     {
+        "general": "General Variables",
         "wf": "Warfare Variables",
         "economy": "Economy Variables",
         "conflict": "Conflict Variables",
@@ -375,8 +414,15 @@ SUBSECTIONS = DotDict(
                 "PostalSystems": "Postal systems",
             }
         ),
+        "general": DotDict(
+            {
+                "General": "General",
+            }
+        ),
     }
 )
+
+STANDARD_SETTINGS = DotDict({"null_meaning": "The value is not available."})
 
 LIGHT_COLORS = [
     "#e6b8af",
@@ -416,10 +462,10 @@ COMMON_LABELS = {
     "year_from": "Start Year",
     "year_to": "End Year",
     "tag": "Confidence Level",
-    "is_disputed": "&nbsp; <b>There is a Dispute?</b>",
-    "is_uncertain": "&nbsp; <b>There is Uncertainty?</b>",
-    "expert_reviewed": "&nbsp; Expert Checked?",
-    "drb_reviewed": "&nbsp; Data Review Board Reviewed?",
+    "is_disputed": _wrap("There is a Dispute?"),
+    "is_uncertain": _wrap("There is Uncertainty?"),
+    "expert_reviewed": _wrap("Expert Checked?", True),
+    "drb_reviewed": _wrap("Data Review Board Reviewed?", True),
     "citations": "Add one or more Citations",
     "finalized": "This piece of data is verified.",
 }
@@ -459,6 +505,7 @@ ATTRS_HTML = DotDict(
         "text_secondary": 'class="text-secondary"',
         "text_secondary_italic": 'class="text-secondary fst-italic"',
         "text_green_bold": 'class="text-success fw-bold"',
+        "text_bold": 'class="fw-bold"',
         "text_danger": 'class="text-danger"',
     }
 )
@@ -478,8 +525,10 @@ COMMON_WIDGETS = {
             MB3_ATTRS,
             **{
                 "style": "height: 240px; line-height: 1.2;",
-                "placeholder": "Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
-            }
+                "placeholder": "Add a meaningful description (optional)\n\
+Note: USe §REF§ opening and closing tags to include citations to the description.\n\
+Example: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.",
+            },
         )
     ),
     "citations": forms.SelectMultiple(
@@ -495,7 +544,9 @@ COMMON_WIDGETS = {
     "is_uncertain": forms.CheckboxInput(attrs=ATTRS.MB3_SIMPLE_ATTRS),
     "expert_reviewed": forms.CheckboxInput(attrs=ATTRS.MB3_SIMPLE_ATTRS),
     "drb_reviewed": forms.CheckboxInput(attrs=ATTRS.MB3_SIMPLE_ATTRS),
-    "finalized": forms.CheckboxInput(attrs=dict(MB3_ATTRS, **{"checked": True})),
+    "finalized": forms.CheckboxInput(
+        attrs=dict(MB3_ATTRS, **{"checked": True})
+    ),
 }
 
 CODED_VALUE_WIDGET = {"coded_value": forms.Select(attrs=ATTRS.MB3_ATTRS)}
@@ -511,11 +562,13 @@ ICONS = DotDict(
 )
 
 # Setting up Zotero
-# - use ZOTERO.CLIENT to access the Zotero API
+# - use ZOTERO.client to access the Zotero API
 try:
     _ZOTERO_API_KEY = config("ZOTERO_API_KEY")
 except UndefinedValueError:
-    print("Zotero key not found - setting to empty string.")  # TODO: add logger?
+    print(
+        "Zotero key not found - setting to empty string."
+    )  # TODO: add logger?
     _ZOTERO_API_KEY = ""
 
 ZOTERO = DotDict(
@@ -523,80 +576,124 @@ ZOTERO = DotDict(
         "LIBRARY_ID": 1051264,
         "LIBRARY_TYPE": "group",
         "API_KEY": _ZOTERO_API_KEY,
+        "BASEURL": "https://www.zotero.org/groups/1051264/seshat_databank/items/",
     }
 )
-ZOTERO.CLIENT = zotero.Zotero(ZOTERO.LIBRARY_ID, ZOTERO.LIBRARY_TYPE, ZOTERO.API_KEY)
+ZOTERO.client = zotero.Zotero(
+    ZOTERO.LIBRARY_ID, ZOTERO.LIBRARY_TYPE, ZOTERO.API_KEY
+)
 
-PATTERNS = DotDict({
-    "YEAR": re.compile(r"[12]\d{3}")
-})
+PATTERNS = DotDict(
+    {
+        "YEAR": re.compile(r"[12]\d{3}"),
+        "HTML_TAGS": re.compile("<.*?>"),
+    }
+)
 
 BASIC_CONTEXT = {
-        "pols_data": [],
-        "general_data": [],
-        "sc_data": [],
-        "wf_data": [],
-        "crisisdb": [],
-        "pt_data": [],
-        "cc_data": [],
-        "hs_data": [],
-        "sr_data": [],
-        "general_examples": [
-            (
-                "Alternative Name",
-                "polity_alternative_names_all",
-                "Identity and Location",
-            ),
-            ("Polity Peak Years", "polity_peak_yearss_all", "Temporal Bounds"),
-            ("Polity Capital", "polity_capitals_all", "Identity and Location"),
-            ("Polity Language", "polity_languages_all", "Language"),
-            ("Polity Religion", "polity_religions_all", "Religion"),
-            (
-                "Degree of Centralization",
-                "polity_degree_of_centralizations_all",
-                "Temporal Bounds",
-            ),
-            (
-                "Succeeding Entity",
-                "polity_succeeding_entitys_all",
-                "Supra-cultural relations",
-            ),
-            (
-                "Relationship to Preceding Entity",
-                "polity_relationship_to_preceding_entitys_all",
-                "Supra-cultural relations",
-            ),
-        ],
-        "sc_examples": [
-            ("Polity Territory", "polity_territorys_all", "Social Scale"),
-            ("Polity Population", "polity_populations_all", "Social Scale"),
-            (
-                "Settlement Hierarchy",
-                "settlement_hierarchys_all",
-                "Hierarchical Complexity",
-            ),
-            (
-                "Irrigation System",
-                "irrigation_systems_all",
-                "Specialized Buildings: polity owned",
-            ),
-            ("Merit Promotion", "merit_promotions_all", "Bureaucracy Characteristics"),
-            ("Formal Legal Code", "formal_legal_codes_all", "Law"),
-            ("Road", "roads_all", "Transport Infrastructure"),
-            ("Postal Station", "postal_stations_all", "Information / Postal System"),
-        ],
-        "wf_examples": [
-            ("Bronze", "bronzes_all", "Military use of Metals"),
-            ("Javelin", "javelins_all", "Projectiles"),
-            ("Battle Axe", "battle_axes_all", "Handheld Weapons"),
-            ("Sword", "swords_all", "Handheld Weapons"),
-            ("Horse", "horses_all", "Animals used in warfare"),
-            (
-                "Small Vessels (canoes, etc)",
-                "small_vessels_canoes_etcs_all",
-                "Naval technology",
-            ),
-            ("Shield", "shields_all", "Armor"),
-            ("Wooden Palisade", "small_vessels_canoes_etcs_all", "Fortifications"),
-        ],
+    "pols_data": [],
+    "general_data": [],
+    "sc_data": [],
+    "wf_data": [],
+    "crisisdb": [],
+    "pt_data": [],
+    "cc_data": [],
+    "hs_data": [],
+    "sr_data": [],
+    "general_examples": [
+        (
+            "Alternative Name",
+            "polity_alternative_names_all",
+            "Identity and Location",
+        ),
+        ("Polity Peak Years", "polity_peak_yearss_all", "Temporal Bounds"),
+        ("Polity Capital", "polity_capitals_all", "Identity and Location"),
+        ("Polity Language", "polity_languages_all", "Language"),
+        ("Polity Religion", "polity_religions_all", "Religion"),
+        (
+            "Degree of Centralization",
+            "polity_degree_of_centralizations_all",
+            "Temporal Bounds",
+        ),
+        (
+            "Succeeding Entity",
+            "polity_succeeding_entitys_all",
+            "Supra-cultural relations",
+        ),
+        (
+            "Relationship to Preceding Entity",
+            "polity_relationship_to_preceding_entitys_all",
+            "Supra-cultural relations",
+        ),
+    ],
+    "sc_examples": [
+        ("Polity Territory", "polity_territorys_all", "Social Scale"),
+        ("Polity Population", "polity_populations_all", "Social Scale"),
+        (
+            "Settlement Hierarchy",
+            "settlement_hierarchys_all",
+            "Hierarchical Complexity",
+        ),
+        (
+            "Irrigation System",
+            "irrigation_systems_all",
+            "Specialized Buildings: polity owned",
+        ),
+        (
+            "Merit Promotion",
+            "merit_promotions_all",
+            "Bureaucracy Characteristics",
+        ),
+        ("Formal Legal Code", "formal_legal_codes_all", "Law"),
+        ("Road", "roads_all", "Transport Infrastructure"),
+        (
+            "Postal Station",
+            "postal_stations_all",
+            "Information / Postal System",
+        ),
+    ],
+    "wf_examples": [
+        ("Bronze", "bronzes_all", "Military use of Metals"),
+        ("Javelin", "javelins_all", "Projectiles"),
+        ("Battle Axe", "battle_axes_all", "Handheld Weapons"),
+        ("Sword", "swords_all", "Handheld Weapons"),
+        ("Horse", "horses_all", "Animals used in warfare"),
+        (
+            "Small Vessels (canoes, etc)",
+            "small_vessels_canoes_etcs_all",
+            "Naval technology",
+        ),
+        ("Shield", "shields_all", "Armor"),
+        ("Wooden Palisade", "small_vessels_canoes_etcs_all", "Fortifications"),
+    ],
+}
+
+POLITY_NGA_NAME = ExpressionWrapper(
+    F("polity__home_nga__name"), output_field=CharField()
+)
+
+CORRECT_YEAR = Case(
+    When(year_from__isnull=False, then=F("year_from")),
+    default=F("polity__start_year"),
+    output_field=IntegerField(),
+)
+
+US_STATES_GEOJSON_PATH = "/home/majid/dev/seshat/seshat/seshat/apps/core/static/geojson/us_states_geojson.json"  # noqa: E501 pylint: disable=C0301
+
+NO_DATA = DotDict(
+    {
+        "explanation": "No_Explanations",
+        "section": "No_SECTION",
+        "subsection": "NO_SUBSECTION",
+        "name": "NO_NAME",
+        "nga": "NO_NGA_ASSOCIATED",
     }
+)
+
+CSV_DELIMITER = "|"
+
+STANDARD_CONDITIONS = [
+    lambda o: o.polity.start_year is not None,
+    lambda o: o.year_from is not None,
+    lambda o: o.polity.start_year > o.year_from,
+]

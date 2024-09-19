@@ -41,26 +41,27 @@ SWAPPED_DICT = {
     "Official_religion": "Official religion",
     "Elites_religion": "Elites religion",
     "Theo_sync_dif_rel": "Theological syncretism of different religions",
-    "Sync_rel_pra_ind_beli": "Syncretism of religious practices at the level of individual believers",
+    "Sync_rel_pra_ind_beli": "Syncretism of religious practices at the level of individual believers",  # noqa: E501 pylint: disable=C0301
     "Religious_fragmentation": "Religious fragmentation",
     "Gov_vio_freq_rel_grp": "Frequency of governmental violence against religious groups",
     "Gov_res_pub_wor": "Government restrictions on public worship",
     "Gov_res_pub_pros": "Government restrictions on public proselytizing",
     "Gov_res_conv": "Government restrictions on conversion",
     "Gov_press_conv": "Government pressure to convert",
-    "Gov_res_prop_own_for_rel_grp": "Government restrictions on property ownership for adherents of any religious group",
-    "Tax_rel_adh_act_ins": "Taxes based on religious adherence or on religious activities and institutions",
-    "Gov_obl_rel_grp_ofc_reco": "Governmental obligations for religious groups to apply for official recognition",
-    "Gov_res_cons_rel_buil": "Government restrictions on construction of religious buildings",
+    "Gov_res_prop_own_for_rel_grp": "Government restrictions on property ownership for adherents of any religious group",  # noqa: E501 pylint: disable=C0301
+    "Tax_rel_adh_act_ins": "Taxes based on religious adherence or on religious activities and institutions",  # noqa: E501 pylint: disable=C0301
+    "Gov_obl_rel_grp_ofc_reco": "Governmental obligations for religious groups to apply for official recognition",  # noqa: E501 pylint: disable=C0301
+    "Gov_res_cons_rel_buil": "Government restrictions on construction of religious buildings",  # noqa: E501 pylint: disable=C0301
     "Gov_res_rel_edu": "Government restrictions on religious education",
     "Gov_res_cir_rel_lit": "Government restrictions on circulation of religious literature",
-    "Gov_dis_rel_grp_occ_fun": "Government discrimination against religious groups taking up certain occupations or functions",
+    "Gov_dis_rel_grp_occ_fun": "Government discrimination against religious groups taking up certain occupations or functions",  # noqa: E501 pylint: disable=C0301
     "Soc_vio_freq_rel_grp": "Frequency of societal violence against religious groups",
-    "Soc_dis_rel_grp_occ_fun": "Societal discrimination against religious groups taking up certain occupations or functions",
+    "Soc_dis_rel_grp_occ_fun": "Societal discrimination against religious groups taking up certain occupations or functions",  # noqa: E501 pylint: disable=C0301
     "Gov_press_conv_for_aga": "Societal pressure to convert or against conversion",
 }
 
-# TODO: The last two values in this dictionary are doubled up. Verify with the team which one should be present here.
+# TODO: The last two values in this dictionary are doubled up (and have consequently been
+# commented out). Verify with the team which one should be present here.
 VARIABLE_DEFINITIONS = {
     "Official religion": "This variable is coded to capture the official religion within \
         the polity. It reflects the specific religious faith officially endorsed and \
@@ -106,15 +107,18 @@ VARIABLE_DEFINITIONS = {
         government-induced pressure for religious conversion, this variable reflects the \
         extent to which authorities influence or coerce individuals to adopt a specific \
         religious faith within the polity.",
-    "Government restrictions on property ownership for adherents of any religious group": "Coded to indicate the presence or absence of government restrictions on property \
+    "Government restrictions on property ownership for adherents of any religious group":
+        "Coded to indicate the presence or absence of government restrictions on property \
         ownership for religious adherents, this variable reflects limitations imposed on \
         individuals' rights to own property based on their religious affiliation within \
         the polity.",
-    "Taxes based on religious adherence or on religious activities and institutions": "This variable is coded to indicate the presence or absence of taxes based on \
+    "Taxes based on religious adherence or on religious activities and institutions":
+        "This variable is coded to indicate the presence or absence of taxes based on \
         religious adherence or on religious activities and institutions. It reflects the \
         financial burdens placed on religious individuals and institutions within the \
         polity.",
-    "Governmental obligations for religious groups to apply for official recognition": "Coded to indicate the presence or absence of governmental obligations for \
+    "Governmental obligations for religious groups to apply for official recognition":
+        "Coded to indicate the presence or absence of governmental obligations for \
         religious groups to seek official recognition, this variable reflects the extent \
         to which religious communities are required to obtain formal approval or \
         acknowledgment from authorities within the polity.",
@@ -130,14 +134,17 @@ VARIABLE_DEFINITIONS = {
         the presence or absence of government restrictions on the circulation of religious \
         literature, this variable reflects limitations on the production, distribution, \
         and accessibility of religious texts within the polity.",
-    "Government discrimination against religious groups taking up certain occupations or functions": "Coded to indicate the presence or absence of government discrimination against \
+    "Government discrimination against religious groups taking up certain occupations or functions":  # noqa: E501 pylint: disable=C0301
+        "Coded to indicate the presence or absence of government discrimination against \
         religious groups in terms of access to specific occupations or functions, this \
         variable reflects the degree to which authorities limit certain roles based on \
         religious affiliation within the polity.",
-    "Frequency of societal violence against religious groups": "This variable is coded to indicate the presence or absence of societal violence \
-        against religious groups within the polity. It reflects the extent to which \
-        non-governmental entities engage in violent actions against religious communities.",
-    "Societal discrimination against religious groups taking up certain occupations or functions": "Coded to indicate the presence or absence of societal discrimination against \
+    "Frequency of societal violence against religious groups": "This variable is coded to \
+        indicate the presence or absence of societal violence against religious groups \
+        within the polity. It reflects the extent to which non-governmental entities \
+        engage in violent actions against religious communities.",
+    "Societal discrimination against religious groups taking up certain occupations or functions":  # noqa: E501 pylint: disable=C0301
+        "Coded to indicate the presence or absence of societal discrimination against \
         religious groups in occupational or functional contexts, this variable reflects \
         the degree to which individuals face discrimination based on their religious \
         affiliation within the polity.",

@@ -80,7 +80,6 @@ CONTEXT = {
 }
 
 
-
 CUSTOM_ORDER = [
             5,
             2,
@@ -272,7 +271,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Kirch",
         "year": 2017,
-        "title": "On the Road of the Winds: An Archaeological History of the Pacific Islands before European Contact",
+        "title": "On the Road of the Winds: An Archaeological History of the Pacific Islands before European Contact",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "NZ5WCPT3",
@@ -307,7 +306,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Scarce",
         "year": 2007,
-        "title": "Entertainments East and West—Three Encounters between Iranians and Europeans during the Qajar Period (1786–1925)",
+        "title": "Entertainments East and West—Three Encounters between Iranians and Europeans during the Qajar Period (1786–1925)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "B6DA7U3R",
@@ -377,7 +376,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Simon",
         "year": 2013,
-        "title": 'Civil Society in China: The Legal Framework from Ancient Times to the "New Reform Era"',
+        "title": 'Civil Society in China: The Legal Framework from Ancient Times to the "New Reform Era"',  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "UH8VJUC3",
@@ -412,7 +411,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Clark",
         "year": 1994,
-        "title": "Onions Are My Husband: Survival and Accumulation by West African Market Women",
+        "title": "Onions Are My Husband: Survival and Accumulation by West African Market Women",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "J8RP7WWQ",
@@ -426,7 +425,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Mylonopoulos_Bonnechere_Gagné",
         "year": 2013,
-        "title": "Gory Details? The Iconography of Human Sacrifice in Greek Art (Plates II-IX)",
+        "title": "Gory Details? The Iconography of Human Sacrifice in Greek Art (Plates II-IX)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "M2IXX5FS",
@@ -440,7 +439,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "antiquary",
         "year": 1824,
-        "title": "The History of Origins: Containing Ancient Historical Facts, with Singular Customs, Institutions, and Manners of Different Ages",
+        "title": "The History of Origins: Containing Ancient Historical Facts, with Singular Customs, Institutions, and Manners of Different Ages",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "7JSBK8C4",
@@ -510,7 +509,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Kornhuber_et_al",
         "year": 2023,
-        "title": "Risks of synchronized low yields are underestimated in climate and crop model projections",
+        "title": "Risks of synchronized low yields are underestimated in climate and crop model projections",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "P6EW2SYF",
@@ -531,14 +530,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Cryer_Thomsen",
         "year": 2001,
-        "title": "Athlone History of Witchcraft and Magic in Europe: Biblical and Pagan Societies",
+        "title": "Athlone History of Witchcraft and Magic in Europe: Biblical and Pagan Societies",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "2RJWIN6K",
         "itemType": "bookSection",
         "mainCreator": "Patton",
         "year": 2003,
-        "title": "Cosmic men and fluid exchanges: Myths of Arya, Varna and Jati in the Hindu tradition",
+        "title": "Cosmic men and fluid exchanges: Myths of Arya, Varna and Jati in the Hindu tradition",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "9HPXJKXN",
@@ -580,21 +579,21 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Stotzer",
         "year": 2014,
-        "title": "Sexual Orientation and/or Gender Identity/Expression Discrimination and Victimization among Self-Identified LGBTQI Native Hawaiians in Hawai‘i",
+        "title": "Sexual Orientation and/or Gender Identity/Expression Discrimination and Victimization among Self-Identified LGBTQI Native Hawaiians in Hawai‘i",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "DNDWJFIK",
         "itemType": "journalArticle",
         "mainCreator": "Gonschor_Beamer",
         "year": 2014,
-        "title": "Toward in Inventory of Ahupua'a in the Hawaiian Kingdom: A survey of Nineteenth- and early Twentieth-Century Cartographic and Archival Records of the Island of Hawai'i",
+        "title": "Toward in Inventory of Ahupua'a in the Hawaiian Kingdom: A survey of Nineteenth- and early Twentieth-Century Cartographic and Archival Records of the Island of Hawai'i",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "EUCXQXIP",
         "itemType": "journalArticle",
         "mainCreator": "MacGinnis",
         "year": 2011,
-        "title": "Neo-Babylonian Court Procedure. By Shalom E. Holtz. (Cuneiform Monographs 38). pp. 335. Leiden, Brill, 2009.",
+        "title": "Neo-Babylonian Court Procedure. By Shalom E. Holtz. (Cuneiform Monographs 38). pp. 335. Leiden, Brill, 2009.",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "US7KVUSG",
@@ -622,7 +621,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Brown",
         "year": 1986,
-        "title": "Media and Secondary State Formation in the Neo-Assyrian Zagros: An Anthropological Approach to an Assyriological Problem",
+        "title": "Media and Secondary State Formation in the Neo-Assyrian Zagros: An Anthropological Approach to an Assyriological Problem",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GXEHKVZE",
@@ -643,7 +642,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Jordana_et_al",
         "year": 2009,
-        "title": "The warriors of the steppes: osteological evidence of warfare and violence from Pazyryk tumuli in the Mongolian Altai",
+        "title": "The warriors of the steppes: osteological evidence of warfare and violence from Pazyryk tumuli in the Mongolian Altai",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "NM6MWQPB",
@@ -664,14 +663,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Farazmand",
         "year": 1998,
-        "title": "Administration of the Persian achaemenid world-state empire: implications for modern public administration",
+        "title": "Administration of the Persian achaemenid world-state empire: implications for modern public administration",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "9E3NJ3EC",
         "itemType": "journalArticle",
         "mainCreator": "Hintze",
         "year": 2003,
-        "title": "Evil, Good, and Gender. Facets of the Feminine in Zoroastrian Religious History. BY Jamshed K. Choksy. pp. xii, 166. New York, Peter Lang, 2002.",
+        "title": "Evil, Good, and Gender. Facets of the Feminine in Zoroastrian Religious History. BY Jamshed K. Choksy. pp. xii, 166. New York, Peter Lang, 2002.",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "8ZS2N3UX",
@@ -706,28 +705,28 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Martini",
         "year": 2017,
-        "title": "‘Alā’ al-Dawla al-Simnānī Between Spiritual Authority and Political Power: A Persian Lord and Intellectual in the Heart of the Ilkhanate: With a Critical Edition of <i>al-Wārid al-šārid al-ṭārid šubhat al-mārid</i> and its Persian version <i>Zayn al-mu‘taqad li-zayn al-mu‘taqid</i>",
+        "title": "‘Alā’ al-Dawla al-Simnānī Between Spiritual Authority and Political Power: A Persian Lord and Intellectual in the Heart of the Ilkhanate: With a Critical Edition of <i>al-Wārid al-šārid al-ṭārid šubhat al-mārid</i> and its Persian version <i>Zayn al-mu‘taqad li-zayn al-mu‘taqid</i>",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "KBFW32QX",
         "itemType": "book",
         "mainCreator": "Gazerani",
         "year": 2015,
-        "title": "The Sistani Cycle of Epics and Iran’s National History: On the Margins of Historiography",
+        "title": "The Sistani Cycle of Epics and Iran’s National History: On the Margins of Historiography",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MRIPQZSR",
         "itemType": "book",
         "mainCreator": "Liebeschuetz",
         "year": 2015,
-        "title": "East and West in Late Antiquity: Invasion, Settlement, Ethnogenesis and Conflicts of Religion",
+        "title": "East and West in Late Antiquity: Invasion, Settlement, Ethnogenesis and Conflicts of Religion",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "35B5KRG4",
         "itemType": "book",
         "mainCreator": "Ascheri",
         "year": 2013,
-        "title": "The Laws of Late Medieval Italy (1000-1500): Foundations for a European Legal System",
+        "title": "The Laws of Late Medieval Italy (1000-1500): Foundations for a European Legal System",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "53T4RR8W",
@@ -755,7 +754,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Barkmann",
         "year": 2000,
-        "title": "Some Comments on the Consequences of the Decline of the Mongol Empire on the Social Development of the Mongols",
+        "title": "Some Comments on the Consequences of the Decline of the Mongol Empire on the Social Development of the Mongols",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "6IMBN45P",
@@ -769,7 +768,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Bareket",
         "year": 1997,
-        "title": "Personal Adversities of Jews during the Period of the Fatimid Wars in Eleventh Century Palestine",
+        "title": "Personal Adversities of Jews during the Period of the Fatimid Wars in Eleventh Century Palestine",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "N6NAFBTE",
@@ -811,7 +810,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Christie",
         "year": 2015,
-        "title": "Under the Volcano: Stabilizing the Early Javanese State in an Unstable Environment",
+        "title": "Under the Volcano: Stabilizing the Early Javanese State in an Unstable Environment",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "QAAEMM5E",
@@ -853,21 +852,21 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Lewis",
         "year": 1977,
-        "title": "Sparta and Persia: Lectures Delivered at the University of Cincinnati, Autumn 1976, in Memory of Donald W. Bradeen",
+        "title": "Sparta and Persia: Lectures Delivered at the University of Cincinnati, Autumn 1976, in Memory of Donald W. Bradeen",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "UFQ4NAXK",
         "itemType": "book",
         "mainCreator": "Stewart",
         "year": 2021,
-        "title": "The Armenian Kingdom and the Mamluks: War and Diplomacy during the Reigns of Het'um II (1289-1307)",
+        "title": "The Armenian Kingdom and the Mamluks: War and Diplomacy during the Reigns of Het'um II (1289-1307)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "8DV9Z6JE",
         "itemType": "journalArticle",
         "mainCreator": "Berlekamp",
         "year": 2010,
-        "title": "The Limits of Artistic Exchange in Fourteenth-Century Tabriz: The Paradox of Rashid Al-Din's Book on Chinese Medicine, Part I",
+        "title": "The Limits of Artistic Exchange in Fourteenth-Century Tabriz: The Paradox of Rashid Al-Din's Book on Chinese Medicine, Part I",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "Q7NPGAMJ",
@@ -881,7 +880,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Jianmin",
         "year": 2009,
-        "title": "They Shall Expel Demons: Etiology, The Medical Canon And The Transformation Of Medical Techniques Before The Tang",
+        "title": "They Shall Expel Demons: Etiology, The Medical Canon And The Transformation Of Medical Techniques Before The Tang",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "X4XDSEMQ",
@@ -895,7 +894,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Sato",
         "year": 2021,
-        "title": "The Confucian Quest for Order: The Origin and Formation of the Political Thought of Xun Zi",
+        "title": "The Confucian Quest for Order: The Origin and Formation of the Political Thought of Xun Zi",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GRNKMFHV",
@@ -923,21 +922,21 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Boyce_Grenet",
         "year": 2015,
-        "title": "A History of Zoroastrianism, Zoroastrianism under Macedonian and Roman Rule",
+        "title": "A History of Zoroastrianism, Zoroastrianism under Macedonian and Roman Rule",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "AJPN68DT",
         "itemType": "journalArticle",
         "mainCreator": "Fay",
         "year": 1997,
-        "title": "Women and Waqf: Toward a Reconsideration of Women's Place in the Mamluk Household",
+        "title": "Women and Waqf: Toward a Reconsideration of Women's Place in the Mamluk Household",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MHZWAKP3",
         "itemType": "book",
         "mainCreator": "Raphael",
         "year": 2013,
-        "title": "Climate and Political Climate: Environmental Disasters in the Medieval Levant",
+        "title": "Climate and Political Climate: Environmental Disasters in the Medieval Levant",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "SHFKCNMR",
@@ -965,7 +964,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Thomas_Mallett",
         "year": 2010,
-        "title": "Christian-Muslim Relations. A Bibliographical History. Volume 2 (900-1050)",
+        "title": "Christian-Muslim Relations. A Bibliographical History. Volume 2 (900-1050)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "2P9AXB7A",
@@ -979,7 +978,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Whitehouse",
         "year": 2023,
-        "title": "Ritual, community, and conflict: reflections on the science of the social and its practical implications",
+        "title": "Ritual, community, and conflict: reflections on the science of the social and its practical implications",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "TJNNSFQQ",
@@ -1070,14 +1069,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Garstang",
         "year": 1953,
-        "title": "Prehistoric Mersin, Yümük Tepe in Southern Turkey: The Neilson Expedition in Cilicia",
+        "title": "Prehistoric Mersin, Yümük Tepe in Southern Turkey: The Neilson Expedition in Cilicia",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GXDIESBW",
         "itemType": "thesis",
         "mainCreator": "Eren",
         "year": 2010,
-        "title": "An Application of Depth Analysis on Middle Bronze Agce Palaces at Açemhöyük, Tell Mardikh and Kültepe",
+        "title": "An Application of Depth Analysis on Middle Bronze Agce Palaces at Açemhöyük, Tell Mardikh and Kültepe",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "QC4QCQPC",
@@ -1140,14 +1139,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Geldof",
         "year": 2015,
-        "title": "2 “And to describe the shapes of the dead”: Making Sense of the Archaeology of Armed Violence",
+        "title": "2 “And to describe the shapes of the dead”: Making Sense of the Archaeology of Armed Violence",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "Z9BVSD3Q",
         "itemType": "book",
         "mainCreator": "Cohen",
         "year": 2005,
-        "title": "Death rituals, ideology, and the development of early Mesopotamian kingship: towards a new understanding of Iraq's royal cemetery of Ur",
+        "title": "Death rituals, ideology, and the development of early Mesopotamian kingship: towards a new understanding of Iraq's royal cemetery of Ur",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "N2HZX9XK",
@@ -1180,7 +1179,7 @@ MANUAL_IMPORT_REFS = [
     {
         "key": "GT2B3XXJ",
         "itemType": "book",
-        "mainCreator": "Society_for_the_Diffusion_of_Useful_Knowledge_(Great_Britain)_Britain)",
+        "mainCreator": "Society_for_the_Diffusion_of_Useful_Knowledge_(Great_Britain)_Britain)",  # noqa: E501 pylint: disable=C0301
         "year": 1833,
         "title": "Penny Cyclopaedia of the Society for the Diffusion of Useful Knowledge",
     },
@@ -1210,14 +1209,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Kosiba",
         "year": 2011,
-        "title": "The Politics of Locality: Pre-Inka social landscapes in the Cusco region, Peru",
+        "title": "The Politics of Locality: Pre-Inka social landscapes in the Cusco region, Peru",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "EHBCRWX7",
         "itemType": "journalArticle",
         "mainCreator": "Chittick",
         "year": 2010,
-        "title": "Competitive Spectacle during China's Northern and Southern Dynasties: With\nParticular Emphasis on Dragon Boat Racing",
+        "title": "Competitive Spectacle during China's Northern and Southern Dynasties: With\nParticular Emphasis on Dragon Boat Racing",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "7U439VPE",
@@ -1245,7 +1244,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Young_University_of_California_Libraries",
         "year": 1900,
-        "title": "The kingdom of the yellow robe; being sketches of the domestic and religious rites and ceremonies of the Siamese",
+        "title": "The kingdom of the yellow robe; being sketches of the domestic and religious rites and ceremonies of the Siamese",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "QPM6EBW9",
@@ -1266,7 +1265,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Christie",
         "year": 1996,
-        "title": "Money and its Uses in the Javanese States of the Ninth to Fifteenth Centuries A.D.",
+        "title": "Money and its Uses in the Javanese States of the Ninth to Fifteenth Centuries A.D.",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "AE9JC2GQ",
@@ -1301,7 +1300,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Creese",
         "year": 2004,
-        "title": "Women of the Kakawin World: Marriage and Sexuality in the Indic Courts of Java and Bali",
+        "title": "Women of the Kakawin World: Marriage and Sexuality in the Indic Courts of Java and Bali",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "4RJC7GV2",
@@ -1343,7 +1342,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Parthasarathi",
         "year": 2011,
-        "title": "Why Europe Grew Rich and Asia Did Not: Global Economic Divergence, 1600–1850",
+        "title": "Why Europe Grew Rich and Asia Did Not: Global Economic Divergence, 1600–1850",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "89DFW4AN",
@@ -1462,7 +1461,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Martin",
         "year": 2005,
-        "title": "The Qajar pact: bargaining, protest and the state in nineteenth-century Persia",
+        "title": "The Qajar pact: bargaining, protest and the state in nineteenth-century Persia",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "6Z2W4TIC",
@@ -1476,7 +1475,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Deng",
         "year": 2002,
-        "title": "The Premodern Chinese Economy: Structural Equilibrium and Capitalist Sterility",
+        "title": "The Premodern Chinese Economy: Structural Equilibrium and Capitalist Sterility",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "C2K9T7WH",
@@ -1504,7 +1503,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Jones",
         "year": 2012,
-        "title": "The Military History Book: The Ultimate Visual Guide to the Weapons that Shaped the World",
+        "title": "The Military History Book: The Ultimate Visual Guide to the Weapons that Shaped the World",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "SZ286Q33",
@@ -1623,7 +1622,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "de_Jong",
         "year": 2017,
-        "title": "The Archaeology of Death in Roman Syria: Burial, Commemoration, and Empire",
+        "title": "The Archaeology of Death in Roman Syria: Burial, Commemoration, and Empire",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "I5CDS8PW",
@@ -1651,7 +1650,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Cavallo",
         "year": 1995,
-        "title": "Charity and Power in Early Modern Italy: Benefactors and Their Motives in Turin, 1541-1789",
+        "title": "Charity and Power in Early Modern Italy: Benefactors and Their Motives in Turin, 1541-1789",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "T3DNQPQK",
@@ -1672,14 +1671,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Burroughs",
         "year": 1990,
-        "title": "From Signs to Design: Environmental Process and Reform in Early Renaissance Rome",
+        "title": "From Signs to Design: Environmental Process and Reform in Early Renaissance Rome",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "KFBT2XUD",
         "itemType": "book",
         "mainCreator": "Grierson_Blackburn",
         "year": 2007,
-        "title": "Medieval European Coinage: Volume 1, The Early Middle Ages (5th-10th Centuries)",
+        "title": "Medieval European Coinage: Volume 1, The Early Middle Ages (5th-10th Centuries)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "NNTDQC2K",
@@ -1728,7 +1727,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Folda",
         "year": 2005,
-        "title": "Crusader Art in the Holy Land, From the Third Crusade to the Fall of Acre",
+        "title": "Crusader Art in the Holy Land, From the Third Crusade to the Fall of Acre",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "KT4RBHFU",
@@ -1798,7 +1797,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Ephrat",
         "year": 2012,
-        "title": "The Seljuqs and the public sphere in the period of Sunni revivalism: The view from Baghdad",
+        "title": "The Seljuqs and the public sphere in the period of Sunni revivalism: The view from Baghdad",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "KJWGMI4Q",
@@ -1917,7 +1916,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Hauser",
         "year": 1974,
-        "title": "Economic Institutional Change in Tokugawa Japan: Osaka and the Kinai Cotton Trade",
+        "title": "Economic Institutional Change in Tokugawa Japan: Osaka and the Kinai Cotton Trade",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "W2SUQ5DZ",
@@ -1931,7 +1930,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Murphy_et_al",
         "year": 2021,
-        "title": "Modernity is incompatible with planetary limits: Developing a PLAN for the future",
+        "title": "Modernity is incompatible with planetary limits: Developing a PLAN for the future",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GX8I2DIE",
@@ -1959,7 +1958,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Pietrusewsky",
         "year": 2004,
-        "title": "Multivariate comparisons of female cranial series from the Ryukyu Islands and Japan",
+        "title": "Multivariate comparisons of female cranial series from the Ryukyu Islands and Japan",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "JSWG9GA3",
@@ -1973,21 +1972,21 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Lafferty",
         "year": 2013,
-        "title": "Law and Society in the Age of Theoderic the Great: A Study of the Edictum Theoderici",
+        "title": "Law and Society in the Age of Theoderic the Great: A Study of the Edictum Theoderici",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "QRHRJQAU",
         "itemType": "book",
         "mainCreator": "Lintott",
         "year": 1992,
-        "title": "Judicial Reform and Land Reform in the Roman Republic: A New Edition, with Translation and Commentary, of the Laws from Urbino",
+        "title": "Judicial Reform and Land Reform in the Roman Republic: A New Edition, with Translation and Commentary, of the Laws from Urbino",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "BQ2WEWN6",
         "itemType": "bookSection",
         "mainCreator": "Mizoguchi",
         "year": 2013,
-        "title": "An Archaeology of Monuments: The Early Kofun (AD 275–400) and Middle Kofun Periods (AD 400–500)",
+        "title": "An Archaeology of Monuments: The Early Kofun (AD 275–400) and Middle Kofun Periods (AD 400–500)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "74WUK9XA",
@@ -2001,7 +2000,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Fleet",
         "year": 2004,
-        "title": "European and Islamic Trade in the Early Ottoman State: The Merchants of Genoa and Turkey",
+        "title": "European and Islamic Trade in the Early Ottoman State: The Merchants of Genoa and Turkey",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "JXVACSEM",
@@ -2022,7 +2021,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Kirch_Sahlins",
         "year": 1994,
-        "title": "Anahulu: The Anthropology of History in the Kingdom of Hawaii, Volume 1: Historical Ethnography",
+        "title": "Anahulu: The Anthropology of History in the Kingdom of Hawaii, Volume 1: Historical Ethnography",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "HQQQPGZF",
@@ -2071,7 +2070,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Jager",
         "year": 2006,
-        "title": "The Last Duel: A True Story of Crime, Scandal, and Trial by Combat in Medieval France",
+        "title": "The Last Duel: A True Story of Crime, Scandal, and Trial by Combat in Medieval France",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "SGWSU5ZC",
@@ -2134,7 +2133,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Nijf_Stavrianopoulou",
         "year": 2013,
-        "title": "Ceremonies, Athletics and the City: Some Remarks on the Social Imaginary of the Greek City of the Hellenistic Period",
+        "title": "Ceremonies, Athletics and the City: Some Remarks on the Social Imaginary of the Greek City of the Hellenistic Period",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MU9VBDFC",
@@ -2148,7 +2147,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Carter",
         "year": 2011,
-        "title": "Creating Catholics: Catechism and Primary Education in Early Modern France",
+        "title": "Creating Catholics: Catechism and Primary Education in Early Modern France",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "7QN3X4W6",
@@ -2162,7 +2161,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Minerbi",
         "year": 1992,
-        "title": "Hawaiian Sanctuaries, Places of Refuge and Indigenous Knowledge in Hawaii",
+        "title": "Hawaiian Sanctuaries, Places of Refuge and Indigenous Knowledge in Hawaii",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GUFIPQ4X",
@@ -2197,14 +2196,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Tejada_Caller_et_al",
         "year": 2012,
-        "title": "From barter to coin: Shifting cognitive frames in Classical Greek economy",
+        "title": "From barter to coin: Shifting cognitive frames in Classical Greek economy",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "CR6SWN6S",
         "itemType": "book",
         "mainCreator": "Bavarian",
         "year": 2005,
-        "title": "Unearthing technology's influence on the ancient Chinese dynasties through metallurgical investigations",
+        "title": "Unearthing technology's influence on the ancient Chinese dynasties through metallurgical investigations",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "PR4SH56E",
@@ -2232,14 +2231,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Driessen",
         "year": 2010,
-        "title": "The goddess and the skull: some observations on group identity in Prepalatial Crete",
+        "title": "The goddess and the skull: some observations on group identity in Prepalatial Crete",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "BIQQNZGV",
         "itemType": "journalArticle",
         "mainCreator": "Buzon",
         "year": 2014,
-        "title": "Tombos during the Napatan period (∼750–660 BC): Exploring the consequences of sociopolitical transitions in ancient Nubia",
+        "title": "Tombos during the Napatan period (∼750–660 BC): Exploring the consequences of sociopolitical transitions in ancient Nubia",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "RR4Q7RVE",
@@ -2253,7 +2252,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Wang",
         "year": 2002,
-        "title": "Ming Qing sheng huo lüe ying: a glimpse of life in Ming and Qing dynasties",
+        "title": "Ming Qing sheng huo lüe ying: a glimpse of life in Ming and Qing dynasties",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "B5TCWHCW",
@@ -2330,14 +2329,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Raz",
         "year": 1983,
-        "title": "Audience and Actors: A Study of Their Interaction in the Japanese Traditional Theatre",
+        "title": "Audience and Actors: A Study of Their Interaction in the Japanese Traditional Theatre",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "UB82GTSG",
         "itemType": "bookSection",
         "mainCreator": "Radding_Ciaralli",
         "year": 2006,
-        "title": "The Corpus Iuris Civilis in the Middle Ages: Manuscripts and Transmission from the Sixth Century to the Juristic Revival",
+        "title": "The Corpus Iuris Civilis in the Middle Ages: Manuscripts and Transmission from the Sixth Century to the Juristic Revival",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "NM8ZQNK5",
@@ -2358,7 +2357,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Hamblin",
         "year": 2013,
-        "title": "Warfare in the Ancient Near East to 1600 BC: Holy Warriors at the Dawn of History",
+        "title": "Warfare in the Ancient Near East to 1600 BC: Holy Warriors at the Dawn of History",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "4NRH985K",
@@ -2379,7 +2378,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Keyvani",
         "year": 1982,
-        "title": "Artisans and Guild Life in the Later Safavid Period: Contributions to the Social-economic History of Persia",
+        "title": "Artisans and Guild Life in the Later Safavid Period: Contributions to the Social-economic History of Persia",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "8E3T7RUW",
@@ -2617,7 +2616,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "MacDonald",
         "year": 2015,
-        "title": "‘A Chacun son Bambara', encore une fois: History, Archaeology, and Bambara Origins",
+        "title": "‘A Chacun son Bambara', encore une fois: History, Archaeology, and Bambara Origins",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "F4B284BS",
@@ -2778,7 +2777,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "thesis",
         "mainCreator": "Lee",
         "year": 1999,
-        "title": "The new year's festivals and the shrine of Ali Ibn Abi Talib Sy Mazar-I-Sharif, Afghanistan",
+        "title": "The new year's festivals and the shrine of Ali Ibn Abi Talib Sy Mazar-I-Sharif, Afghanistan",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "2QG2I73Q",
@@ -2813,7 +2812,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Nikolenko",
         "year": 1962,
-        "title": "The Castle Balalyk-Tepe; A Contribution to the History of Material Culture and the Art of Tokharestan (In Russian)",
+        "title": "The Castle Balalyk-Tepe; A Contribution to the History of Material Culture and the Art of Tokharestan (In Russian)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "RLWG8CKS",
@@ -2904,7 +2903,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Reid_Morgan_Amitai",
         "year": 2010,
-        "title": "Armies and their economic basis in Iran and the surrounding lands, c. 1000–1500",
+        "title": "Armies and their economic basis in Iran and the surrounding lands, c. 1000–1500",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "KV6J6BXS",
@@ -2925,7 +2924,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Novak_Slaus",
         "year": 2012,
-        "title": "Frequency and patterning of bone trauma in the late medieval population (13th-16th century) from Dugopolje, southern Croatia",
+        "title": "Frequency and patterning of bone trauma in the late medieval population (13th-16th century) from Dugopolje, southern Croatia",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "AH4IM7GU",
@@ -2946,7 +2945,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "blogPost",
         "mainCreator": "admin",
         "year": 2019,
-        "title": "The Future of Food: Getting Beyond the Energy Blindness of Techno-Utopianism",
+        "title": "The Future of Food: Getting Beyond the Energy Blindness of Techno-Utopianism",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "S5GFV8FB",
@@ -2960,7 +2959,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Petrovich_Petrovich",
         "year": 2016,
-        "title": "Inner Purity and Pollution in Greek Religion: Volume I: Early Greek Religion",
+        "title": "Inner Purity and Pollution in Greek Religion: Volume I: Early Greek Religion",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "S232VC3Q",
@@ -2988,7 +2987,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Carlson",
         "year": 2010,
-        "title": "Performing Bodies in Pain: Medieval and Post-Modern Martyrs, Mystics, and Artists",
+        "title": "Performing Bodies in Pain: Medieval and Post-Modern Martyrs, Mystics, and Artists",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GR8XHAMG",
@@ -3016,7 +3015,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Hussain",
         "year": 2005,
-        "title": "The Mourning of History and the History of Mourning: The Evolution of Ritual Commemoration of the Battle of Karbala.",
+        "title": "The Mourning of History and the History of Mourning: The Evolution of Ritual Commemoration of the Battle of Karbala.",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "5EKPPB2E",
@@ -3037,7 +3036,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Christakis",
         "year": 2014,
-        "title": "The Sanctuary of Hermes and Aphrodite at Syme Viannou. V, Sēmeía keraméōn: Potters' marks from Syme and other sites of Bronze Age Crete / Kostis S. Christakis.",
+        "title": "The Sanctuary of Hermes and Aphrodite at Syme Viannou. V, Sēmeía keraméōn: Potters' marks from Syme and other sites of Bronze Age Crete / Kostis S. Christakis.",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "UVECBVP7",
@@ -3058,7 +3057,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Julien_et_al",
         "year": 1970,
-        "title": "History of North Africa: Tunisia, Algeria, Morocco, From the Arab Conquest to 1830",
+        "title": "History of North Africa: Tunisia, Algeria, Morocco, From the Arab Conquest to 1830",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "QDWZF6JW",
@@ -3149,7 +3148,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Halstead_et_al",
         "year": 2011,
-        "title": "Political cuisine: rituals of commensality in the Neolithic and Bronze Age Aegean",
+        "title": "Political cuisine: rituals of commensality in the Neolithic and Bronze Age Aegean",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "HUC5W7ET",
@@ -3205,7 +3204,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Shamasastry",
         "year": 1915,
-        "title": "Kautilya's Arthaśāstra. Translated by R. Shamasastry. With an introductory note by J.F. Fleet",
+        "title": "Kautilya's Arthaśāstra. Translated by R. Shamasastry. With an introductory note by J.F. Fleet",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "63W7VF9W",
@@ -3268,7 +3267,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Schneider",
         "year": 1986,
-        "title": "Mortification on Parade: Penitential Processions in Sixteenth- and Seventeenth-Century France",
+        "title": "Mortification on Parade: Penitential Processions in Sixteenth- and Seventeenth-Century France",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "4SGG5Z9J",
@@ -3310,7 +3309,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Kerr",
         "year": 2004,
-        "title": "A General History and Collection of Voyages and Travels — Volume 01Arranged in Systematic Order: Forming a Complete History of the Origin and Progress of Navigation, Discovery, and Commerce, by Sea and Land, from the Earliest Ages to the Present Time",
+        "title": "A General History and Collection of Voyages and Travels — Volume 01Arranged in Systematic Order: Forming a Complete History of the Origin and Progress of Navigation, Discovery, and Commerce, by Sea and Land, from the Earliest Ages to the Present Time",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "HCWRZVGP",
@@ -3408,7 +3407,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Ikegami",
         "year": 1997,
-        "title": "The Taming of the Samurai: Honorific Individualism and the Making of Modern Japan",
+        "title": "The Taming of the Samurai: Honorific Individualism and the Making of Modern Japan",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "H57UFNTB",
@@ -3443,14 +3442,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Wechsler",
         "year": 1985,
-        "title": "Offerings of Jade and Silk: Ritual and Symbol in the Legitimation of the T'ang Dynasty",
+        "title": "Offerings of Jade and Silk: Ritual and Symbol in the Legitimation of the T'ang Dynasty",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "73D95VFF",
         "itemType": "book",
         "mainCreator": "Murphey",
         "year": 2008,
-        "title": "Exploring Ottoman Sovereignty: Tradition, Image and Practice in the Ottoman Imperial Household, 1400-1800",
+        "title": "Exploring Ottoman Sovereignty: Tradition, Image and Practice in the Ottoman Imperial Household, 1400-1800",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "UW2F6BCG",
@@ -3555,7 +3554,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Christian",
         "year": 1998,
-        "title": "A History of Russia, Central Asia and Mongolia. Vol. 1, Inner Eurasia from Prehistory to the Mongol Empire",
+        "title": "A History of Russia, Central Asia and Mongolia. Vol. 1, Inner Eurasia from Prehistory to the Mongol Empire",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "FWP9WQKM",
@@ -3611,21 +3610,21 @@ MANUAL_IMPORT_REFS = [
         "itemType": "bookSection",
         "mainCreator": "Halstead_Pollock",
         "year": 2015,
-        "title": "Food and Fodder in Neolithic-Bronze Age Greece. Commensality and the Construction of Value",
+        "title": "Food and Fodder in Neolithic-Bronze Age Greece. Commensality and the Construction of Value",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "N3VM8I59",
         "itemType": "bookSection",
         "mainCreator": "Cook_Cook_Major",
         "year": 1999,
-        "title": "The Ideology of the Chu Ruling Class: Ritual Rhetoric and Bronze Inscriptions",
+        "title": "The Ideology of the Chu Ruling Class: Ritual Rhetoric and Bronze Inscriptions",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "K2PBQGDW",
         "itemType": "book",
         "mainCreator": "Debrunner",
         "year": 1961,
-        "title": "Witchcraft in Ghana: A Study on the Belief in Destructive Witches and Its Effect on the Akan Tribes",
+        "title": "Witchcraft in Ghana: A Study on the Belief in Destructive Witches and Its Effect on the Akan Tribes",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "U2BANZVR",
@@ -3709,7 +3708,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Hamilakis",
         "year": 1999,
-        "title": "Food technologies/technologies of the body: The social context of wine and oil production and consumption in Bronze Age Crete",
+        "title": "Food technologies/technologies of the body: The social context of wine and oil production and consumption in Bronze Age Crete",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MB8CTM49",
@@ -3723,7 +3722,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Bodde",
         "year": 1975,
-        "title": "Festivals in Classical China: New Year and Other Annual Observances During the Han Dynasty, 206 B.C.-A.D. 220",
+        "title": "Festivals in Classical China: New Year and Other Annual Observances During the Han Dynasty, 206 B.C.-A.D. 220",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MFW8ARZG",
@@ -3737,7 +3736,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Ebrey",
         "year": 1991,
-        "title": "Confucianism and Family Rituals in Imperial China: A Social History of Writing about Rites",
+        "title": "Confucianism and Family Rituals in Imperial China: A Social History of Writing about Rites",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "Z7XT6949",
@@ -3786,7 +3785,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Hägg_Μαρινάτου",
         "year": 1987,
-        "title": "The Function of the Minoan Palaces: Proceedings of the Fourth International Symposium at the Swedish Institute in Athens, 10-16 June, 1984",
+        "title": "The Function of the Minoan Palaces: Proceedings of the Fourth International Symposium at the Swedish Institute in Athens, 10-16 June, 1984",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "ANJUAT66",
@@ -3800,7 +3799,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Driessen_Schoep_Laffineur",
         "year": 2002,
-        "title": 'Monuments of Minos: rethinking the Minoan Palaces ; proceedings of the international workshop "Crete of the hundred palaces?" held at the Université Catholique de Louvain, Louvain-la-Neuve, 14-15 December 2001',
+        "title": 'Monuments of Minos: rethinking the Minoan Palaces ; proceedings of the international workshop "Crete of the hundred palaces?" held at the Université Catholique de Louvain, Louvain-la-Neuve, 14-15 December 2001',  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "3IMZR49J",
@@ -3814,28 +3813,28 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Sanders",
         "year": 1982,
-        "title": "Roman Crete: An Archaeological Survey and Gazetteer of Late Hellenistic, Roman and Early Byzantine Crete",
+        "title": "Roman Crete: An Archaeological Survey and Gazetteer of Late Hellenistic, Roman and Early Byzantine Crete",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "3HAJ49PE",
         "itemType": "journalArticle",
         "mainCreator": "Rethemiotakis_Christakis",
         "year": 2011,
-        "title": "Landscapes of power in Protopalatial Crete: new evidence from Galatas, Pediada",
+        "title": "Landscapes of power in Protopalatial Crete: new evidence from Galatas, Pediada",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "RZ2UFBPR",
         "itemType": "book",
         "mainCreator": "Nowicki",
         "year": 2000,
-        "title": "Defensible Sites in Crete, C. 1200-800 B.C.: LM IIIB/IIIC Through Early Geometric",
+        "title": "Defensible Sites in Crete, C. 1200-800 B.C.: LM IIIB/IIIC Through Early Geometric",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "HFIX5IVD",
         "itemType": "book",
         "mainCreator": "Willetts",
         "year": 1967,
-        "title": "The Law Code of Gortyn: Edited with Introduction, Translation and a Commentary",
+        "title": "The Law Code of Gortyn: Edited with Introduction, Translation and a Commentary",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "5XQV83IE",
@@ -3863,7 +3862,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "McCaskie",
         "year": 1983,
-        "title": "Accumulation, wealth and belief in Asante history: I. To the close of the nineteenth century",
+        "title": "Accumulation, wealth and belief in Asante history: I. To the close of the nineteenth century",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "U6V4SWX2",
@@ -3884,7 +3883,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Office",
         "year": 2021,
-        "title": "Census of the British Empire. 1901. Report With Summary and Detailed Tables for the Several Colonies, &c., Area, Houses, and Population; Also Populati",
+        "title": "Census of the British Empire. 1901. Report With Summary and Detailed Tables for the Several Colonies, &c., Area, Houses, and Population; Also Populati",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "JMKS4D5N",
@@ -3940,7 +3939,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "journalArticle",
         "mainCreator": "Love",
         "year": 2005,
-        "title": '"A Princelike Soldier and Soldierlike Prince": Contemporary Views of the Military Leadership of Henry IV',
+        "title": '"A Princelike Soldier and Soldierlike Prince": Contemporary Views of the Military Leadership of Henry IV',  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "IV8F9R3R",
@@ -3975,7 +3974,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Wilkinson",
         "year": 2002,
-        "title": "Genesis of the Pharaohs: Dramatic New Discoveries That Rewrite the Origins of Ancient Egypt by Toby A. H. Wilkinson (7-Apr-2003) Hardcover",
+        "title": "Genesis of the Pharaohs: Dramatic New Discoveries That Rewrite the Origins of Ancient Egypt by Toby A. H. Wilkinson (7-Apr-2003) Hardcover",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "GDCHKNFS",
@@ -4031,7 +4030,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Nielsen",
         "year": 1999,
-        "title": "The Domestic Mode of Production - and Beyond: An Archaeological Inquiry Into Urban Trends in Denmark, Iceland and Predynastic Egypt",
+        "title": "The Domestic Mode of Production - and Beyond: An Archaeological Inquiry Into Urban Trends in Denmark, Iceland and Predynastic Egypt",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "VVQ5JSWI",
@@ -4066,14 +4065,14 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Chen",
         "year": 2018,
-        "title": "Zinc for Coin and Brass: Bureaucrats, Merchants, Artisans, and Mining Laborers in Qing China, ca. 1680s–1830s",
+        "title": "Zinc for Coin and Brass: Bureaucrats, Merchants, Artisans, and Mining Laborers in Qing China, ca. 1680s–1830s",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "MQQVXPVT",
         "itemType": "journalArticle",
         "mainCreator": "Laichen",
         "year": 2003,
-        "title": "Military Technology Transfers from Ming China and the Emergence of Northern Mainland Southeast Asia (c. 1390–1527)",
+        "title": "Military Technology Transfers from Ming China and the Emergence of Northern Mainland Southeast Asia (c. 1390–1527)",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "U5HIQGEI",
@@ -4087,7 +4086,7 @@ MANUAL_IMPORT_REFS = [
         "itemType": "book",
         "mainCreator": "Coyet",
         "year": 1975,
-        "title": "Neglected Formosa: A Translation from the Dutch of Frederic Coyett's Verwaerloosde Formosa",
+        "title": "Neglected Formosa: A Translation from the Dutch of Frederic Coyett's Verwaerloosde Formosa",  # noqa: E501 pylint: disable=C0301
     },
     {
         "key": "9NECXWD5",
