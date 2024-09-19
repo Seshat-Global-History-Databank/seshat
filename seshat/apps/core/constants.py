@@ -14,7 +14,6 @@ __all__ = [
     "AS",
     "P_TO_A",
     "A_TO_P",
-    "CONTEXT",
     "CUSTOM_ORDER",
     "CUSTOM_ORDER_SR",
     "MANUAL_IMPORT_REFS",
@@ -74,10 +73,6 @@ CERTAINTY = (
     (P_TO_A, "uncertainty about when a given trait disappears"),
     (A_TO_P, "uncertainty about when a given trait appears"),
 )
-
-CONTEXT = {
-    "insta": "Instabilities All Over the Place..",
-}
 
 
 CUSTOM_ORDER = [

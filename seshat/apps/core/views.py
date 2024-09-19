@@ -122,7 +122,6 @@ from .models import (
 )
 from .tokens import account_activation_token
 from .constants import (
-    CONTEXT,
     CUSTOM_ORDER,
     CUSTOM_ORDER_SR,
     MANUAL_IMPORT_REFS,
@@ -1949,23 +1948,13 @@ def whoweare_view(request):
     Returns:
         HttpResponse: The response object.
     """
-    json_file_path = US_STATES_GEOJSON_PATH
-
     try:
-        with open(json_file_path, "r") as json_file:
+        with open(US_STATES_GEOJSON_PATH, "r") as json_file:
             json_data = json.load(json_file)
 
-        context = dict(CONTEXT, **{"json_data": json_data})
-
-    except FileNotFoundError:
-        # Handle the case when the file is not found
-        context = dict(CONTEXT, **{"json_error": "JSON file not found"})
-
-    except json.JSONDecodeError as e:
-        # Handle JSON decoding errors if the file is not valid JSON
-        context = dict(
-            CONTEXT, **{"json_error": f"JSON decoding error: {str(e)}"}
-        )
+        context = {"json_data": json_data}
+    except (FileNotFoundError, json.JSONDecodeError):
+        context = {}
 
     return render(request, "core/seshat-whoweare.html", context=context)
 
@@ -1980,7 +1969,7 @@ def downloads_page_view(request):
     Returns:
         HttpResponse: The response object.
     """
-    return render(request, "core/old_downloads.html", context=CONTEXT)
+    return render(request, "core/old_downloads.html", context={})
 
 
 def codebook_view(request):
@@ -1993,11 +1982,11 @@ def codebook_view(request):
     Returns:
         HttpResponse: The response object.
     """
-    return render(request, "core/old_codebook.html", context=CONTEXT)
+    return render(request, "core/old_codebook.html", context={})
 
 
 def code_book_new_1_view(request):
-    return render(request, "core/code_book_1.html", context=CONTEXT)
+    return render(request, "core/code_book_1.html", context={})
 
 
 def acknowledgements_view(request):
@@ -2011,7 +2000,7 @@ def acknowledgements_view(request):
         HttpResponse: The response object.
     """
     return render(
-        request, "core/seshat-acknowledgements.html", context=CONTEXT
+        request, "core/seshat-acknowledgements.html", context={}
     )
 
 
