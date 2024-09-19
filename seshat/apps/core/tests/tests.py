@@ -16,13 +16,14 @@ from ..models import (
     Polity,
     Capital,
 )
-from ..templatetags.core_tags import get_polity_capitals, polity_map
+from ..templatetags.core_tags import polity_map
 from ..views import (
     get_provinces,
     get_polity_shape_content,
     get_all_polity_capitals,
     assign_variables_to_shapes,
     assign_categorical_variables_to_shapes,
+    get_polity_capitals,
 )
 
 
