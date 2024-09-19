@@ -10,11 +10,8 @@ router.register(r"politys-api", views.PolityViewSet)
 urlpatterns = [
     path("", include(router.urls)),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
-]
 
-urlpatterns += [
-    path("refs/", views.reference_list),
-    path("refs/<int:pk>/", views.reference_detail),
-    path("albums/", views.album_list),
-    path("albums/<int:pk>/", views.album_detail),
+    # Refs
+    path("refs/", views.reference_list_view),
+    path("refs/<int:pk>/", views.reference_detail_view),
 ]

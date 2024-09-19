@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
 from ..crisisdb.models import (
@@ -27,37 +26,10 @@ from ..crisisdb.models import (
 from ..core.models import Polity, Reference
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    The base serializer for the User model. It is used to serialize the User model and return the serialized data in the API response.
-    """
-
-    class Meta:
-        """
-        :noindex:
-        """
-
-        model = User
-        fields = ["url", "username", "email", "groups"]
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    The base serializer for the Group model. It is used to serialize the Group model and return the serialized data in the API response.
-    """
-
-    class Meta:
-        """
-        :noindex:
-        """
-
-        model = Group
-        fields = ["url", "name"]
-
-
 class ReferenceSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Reference model. It is used to serialize the Reference model and return the serialized data in the API response.
+    The base serializer for the Reference model. It is used to serialize the Reference
+    model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -71,7 +43,8 @@ class ReferenceSerializer(serializers.ModelSerializer):
 
 class Human_sacrificeSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Human_sacrifice model. It is used to serialize the Human_sacrifice model and return the serialized data in the API response.
+    The base serializer for the Human_sacrifice model. It is used to serialize the
+    Human_sacrifice model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -85,7 +58,8 @@ class Human_sacrificeSerializer(serializers.ModelSerializer):
 
 class External_conflictSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the External_conflict model. It is used to serialize the External_conflict model and return the serialized data in the API response.
+    The base serializer for the External_conflict model. It is used to serialize the
+    External_conflict model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -99,7 +73,8 @@ class External_conflictSerializer(serializers.ModelSerializer):
 
 class Internal_conflictSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Internal_conflict model. It is used to serialize the Internal_conflict model and return the serialized data in the API response.
+    The base serializer for the Internal_conflict model. It is used to serialize the
+    Internal_conflict model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -121,7 +96,8 @@ class Internal_conflictSerializer(serializers.ModelSerializer):
 
 class External_conflict_sideSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the External_conflict_side model. It is used to serialize the External_conflict_side model and return the serialized data in the API response.
+    The base serializer for the External_conflict_side model. It is used to serialize the
+    External_conflict_side model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -143,7 +119,8 @@ class External_conflict_sideSerializer(serializers.ModelSerializer):
 
 class Agricultural_populationSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Agricultural_population model. It is used to serialize the Agricultural_population model and return the serialized data in the API response.
+    The base serializer for the Agricultural_population model. It is used to serialize the
+    Agricultural_population model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -157,7 +134,8 @@ class Agricultural_populationSerializer(serializers.ModelSerializer):
 
 class Arable_landSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Arable_land model. It is used to serialize the Arable_land model and return the serialized data in the API response.
+    The base serializer for the Arable_land model. It is used to serialize the Arable_land
+    model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -171,7 +149,8 @@ class Arable_landSerializer(serializers.ModelSerializer):
 
 class Arable_land_per_farmerSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Arable_land_per_farmer model. It is used to serialize the Arable_land_per_farmer model and return the serialized data in the API response.
+    The base serializer for the Arable_land_per_farmer model. It is used to serialize the
+    Arable_land_per_farmer model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -187,7 +166,9 @@ class Gross_grain_shared_per_agricultural_populationSerializer(
     serializers.ModelSerializer
 ):
     """
-    The base serializer for the Gross_grain_shared_per_agricultural_population model. It is used to serialize the Gross_grain_shared_per_agricultural_population model and return the serialized data in the API response.
+    The base serializer for the Gross_grain_shared_per_agricultural_population model. It is
+    used to serialize the Gross_grain_shared_per_agricultural_population model and return
+    the serialized data in the API response.
     """
 
     class Meta:
@@ -208,7 +189,9 @@ class Net_grain_shared_per_agricultural_populationSerializer(
     serializers.ModelSerializer
 ):
     """
-    The base serializer for the Net_grain_shared_per_agricultural_population model. It is used to serialize the Net_grain_shared_per_agricultural_population model and return the serialized data in the API response.
+    The base serializer for the Net_grain_shared_per_agricultural_population model. It is
+    used to serialize the Net_grain_shared_per_agricultural_population model and return the
+    serialized data in the API response.
     """
 
     class Meta:
@@ -227,7 +210,8 @@ class Net_grain_shared_per_agricultural_populationSerializer(
 
 class SurplusSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Surplus model. It is used to serialize the Surplus model and return the serialized data in the API response.
+    The base serializer for the Surplus model. It is used to serialize the Surplus model and
+    return the serialized data in the API response.
     """
 
     class Meta:
@@ -241,7 +225,8 @@ class SurplusSerializer(serializers.ModelSerializer):
 
 class Military_expenseSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Military_expense model. It is used to serialize the Military_expense model and return the serialized data in the API response.
+    The base serializer for the Military_expense model. It is used to serialize the
+    Military_expense model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -255,7 +240,8 @@ class Military_expenseSerializer(serializers.ModelSerializer):
 
 class Silver_inflowSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Silver_inflow model. It is used to serialize the Silver_inflow model and return the serialized data in the API response.
+    The base serializer for the Silver_inflow model. It is used to serialize the
+    Silver_inflow model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -269,7 +255,8 @@ class Silver_inflowSerializer(serializers.ModelSerializer):
 
 class Silver_stockSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Silver_stock model. It is used to serialize the Silver_stock model and return the serialized data in the API response.
+    The base serializer for the Silver_stock model. It is used to serialize the
+    Silver_stock model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -283,7 +270,8 @@ class Silver_stockSerializer(serializers.ModelSerializer):
 
 class Total_populationSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Total_population model. It is used to serialize the Total_population model and return the serialized data in the API response.
+    The base serializer for the Total_population model. It is used to serialize the
+    Total_population model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -297,7 +285,8 @@ class Total_populationSerializer(serializers.ModelSerializer):
 
 class Gdp_per_capitaSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Gdp_per_capita model. It is used to serialize the Gdp_per_capita model and return the serialized data in the API response.
+    The base serializer for the Gdp_per_capita model. It is used to serialize the
+    Gdp_per_capita model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -311,7 +300,8 @@ class Gdp_per_capitaSerializer(serializers.ModelSerializer):
 
 class Drought_eventSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Drought_event model. It is used to serialize the Drought_event model and return the serialized data in the API response.
+    The base serializer for the Drought_event model. It is used to serialize the
+    Drought_event model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -325,7 +315,8 @@ class Drought_eventSerializer(serializers.ModelSerializer):
 
 class Locust_eventSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Locust_event model. It is used to serialize the Locust_event model and return the serialized data in the API response.
+    The base serializer for the Locust_event model. It is used to serialize the Locust_event
+    model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -339,7 +330,9 @@ class Locust_eventSerializer(serializers.ModelSerializer):
 
 class Socioeconomic_turmoil_eventSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Socioeconomic_turmoil_event model. It is used to serialize the Socioeconomic_turmoil_event model and return the serialized data in the API response.
+    The base serializer for the Socioeconomic_turmoil_event model. It is used to serialize
+    the Socioeconomic_turmoil_event model and return the serialized data in the API
+    response.
     """
 
     class Meta:
@@ -353,7 +346,8 @@ class Socioeconomic_turmoil_eventSerializer(serializers.ModelSerializer):
 
 class Crop_failure_eventSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Crop_failure_event model. It is used to serialize the Crop_failure_event model and return the serialized data in the API response.
+    The base serializer for the Crop_failure_event model. It is used to serialize the
+    Crop_failure_event model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -367,7 +361,8 @@ class Crop_failure_eventSerializer(serializers.ModelSerializer):
 
 class Famine_eventSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Famine_event model. It is used to serialize the Famine_event model and return the serialized data in the API response.
+    The base serializer for the Famine_event model. It is used to serialize the Famine_event
+    model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -381,7 +376,8 @@ class Famine_eventSerializer(serializers.ModelSerializer):
 
 class Disease_outbreakSerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Disease_outbreak model. It is used to serialize the Disease_outbreak model and return the serialized data in the API response.
+    The base serializer for the Disease_outbreak model. It is used to serialize the
+    Disease_outbreak model and return the serialized data in the API response.
     """
 
     class Meta:
@@ -405,7 +401,8 @@ class Disease_outbreakSerializer(serializers.ModelSerializer):
 
 class PolitySerializer(serializers.ModelSerializer):
     """
-    The base serializer for the Polity model. It is used to serialize the Polity model and return the serialized data in the API response.
+    The base serializer for the Polity model. It is used to serialize the Polity model and
+    return the serialized data in the API response.
     """
 
     crisisdb_human_sacrifice_related = Human_sacrificeSerializer(
