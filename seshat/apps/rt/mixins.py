@@ -7,34 +7,10 @@ from ..global_utils import (
 )
 
 
-class PolityIdMixin:
+class RTMixin:
     """
-    Mixin to add the get_initial method to a view that sets the initial value of the polity
-    field.
+    A mixin class for common methods and attributes of the RT models.
     """
-
-    def get_initial(self):
-        """
-        Get the initial value of the polity field from the query string.
-
-        Returns:
-            dict: The initial value of the polity field.
-        """
-        initial = super().get_initial()
-
-        polity_id_x = self.request.GET.get("polity_id_x")
-        other_polity_id_x = self.request.GET.get("other_polity_id_x")
-
-        if polity_id_x:
-            initial["polity"] = polity_id_x
-
-        if other_polity_id_x:
-            initial["other_polity"] = other_polity_id_x
-
-        return initial
-
-
-class GeneralMixIn:
     @property
     def display_citations(self):
         """
@@ -114,13 +90,33 @@ class GeneralMixIn:
         return self._clean_name_spaced
 
     def subsection(self):
+        """
+        Return the subsection of the model instance.
+        """
         return self._subsection
 
     def sub_section(self):
+        """
+        Return the subsection of the model instance.
+
+        Note:
+
+            This method is an alias for the subsection method.
+        """
         return self._subsection
 
     def subsubsection(self):
+        """
+        Return the subsubsection of the model instance.
+        """
         return self._subsubsection
 
     def sub_subsection(self):
+        """
+        Return the subsubsection of the model instance.
+
+        Note:
+
+            This method is an alias for the subsubsection method.
+        """
         return self._subsubsection
