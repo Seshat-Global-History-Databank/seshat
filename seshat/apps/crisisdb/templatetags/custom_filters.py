@@ -3,13 +3,10 @@ from django import template
 import re
 import uuid
 
+from ...global_utils import get_color
+
 
 register = template.Library()
-
-
-@register.filter
-def zip_lists(a, b):
-    return zip(a, b)
 
 
 @register.filter
@@ -19,56 +16,82 @@ def get_columns_with_value(instance, value):
 
 @register.filter
 def get_columns_with_value_dic(instance, value):
+    """
+    This filter takes a CrisisDB instance and a value and returns a dictionary with the
+    column names as keys and the values as a list of values for the given column name.
+
+    Args:
+        instance (CrisisDB): The CrisisDB instance.
+
+    Returns:
+        dict: A dictionary with the column names as keys and the values as a list of values
+            for the given column name.
+    """
     return instance.get_columns_with_value_dic(value)
 
 
 @register.filter
 def replace_underscore_and_capitalize(value):
+    """
+    This filter takes a string and replaces all the underscores with spaces and capitalizes
+    the first letter of each word.
+
+    Args:
+        value (str): The string to be processed.
+
+    Returns:
+        str: The processed string.
+    """
     value = value.replace("_", " ")
     return value.title()
 
 
 @register.filter
 def get_item_from_dic(dictionary, key):
+    """
+    This filter takes a dictionary and a key and returns the value associated with the key
+    in the dictionary.
+
+    Args:
+        dictionary (dict): The dictionary.
+        key (str): The key to search for in the dictionary.
+
+    Returns:
+        Any: The value associated with the key in the dictionary.
+    """
     return dictionary.get(key)
 
 
 @register.filter
-def unique_descriptions(values):
-    unique_set = set()
-    result = []
-
-    for value in values:
-        if value.description and value.description not in unique_set:
-            unique_set.add(value.description)
-            result.append(value.description)
-
-    return result
-
-
-@register.filter
-def min_max_years(values):
-    if not values:
-        return ""
-
-    min_year = min(value.year_from for value in values)
-    max_year = max(value.year_to for value in values)
-
-    return f"{min_year} - {max_year}"
-
-
-@register.filter
-def beginswith(value, arg):
-    return value.startswith(arg)
-
-
-@register.filter
 def username_from_email(email):
+    """
+    This filter takes an email address and returns the username part of the email address.
+
+    Args:
+        email (str): The email address.
+
+    Returns:
+        str: The username part of the email address.
+    """
     return email.split("@")[0]
 
 
 @register.filter
 def make_references_look_nicer(value):
+    """
+    This filter takes a string and replaces all the references in the format
+    "§REF§Reference Text§REF§" with a superscript tag that contains a link to the reference
+    at the end of the string. The references are displayed in a separate <p> tag
+    at the end of the string with a red color.
+
+    Args:
+        value (str): The string containing references in the format
+            "§REF§Reference Text§REF§".
+
+    Returns:
+        str: The string with references replaced by superscript tags and references
+            displayed at the end of the string.
+    """
     value = value.replace("'", "&rsquo;").replace("\n", "MJD_BNM_NEWLINE_TAG_XYZ")
     pattern = r"§REF§(.*?)§REF§"
     replacement = r"""<sup class="fw-bold" id="sup_{ref_id}">
@@ -78,10 +101,12 @@ def make_references_look_nicer(value):
     new_string = value
     references = re.findall(pattern, value)
 
-    # Dictionary to store unique reference numbers and their corresponding unique identifiers
+    # Dictionary to store unique reference numbers and their corresponding unique
+    # identifiers
     reference_data = {}
 
-    # Assign a unique reference number and identifier to each reference in the order they appear
+    # Assign a unique reference number and identifier to each reference in the order they
+    # appear
     for _, reference in enumerate(references):
         if reference not in reference_data:
             ref_num = len(reference_data) + 1
@@ -92,55 +117,32 @@ def make_references_look_nicer(value):
         sup_tag = replacement.format(ref_num=data["ref_num"], ref_id=data["ref_id"])
         new_string = new_string.replace(f"§REF§{reference}§REF§", sup_tag, 1)
 
-    # Add the collected references at the end of the string in separate <p> tags with the color red
+    # Add the collected references at the end of the string in separate <p> tags with the
+    # color red
     if reference_data:
         reference_tags = "\n".join(
             [
-                f'<p id="{data["ref_id"]}" class="p-0 m-0 text-secondary"><span class="fw-bold">  <a href="#sup_{data["ref_id"]}">[{data["ref_num"]}]</a></span>: <span>{reference.replace("MJD_BNM_NEWLINE_TAG_XYZ", " ")}</span> </p>'
+                f'<p id="{data["ref_id"]}" class="p-0 m-0 text-secondary"><span class="fw-bold">  <a href="#sup_{data["ref_id"]}">[{data["ref_num"]}]</a></span>: <span>{reference.replace("MJD_BNM_NEWLINE_TAG_XYZ", " ")}</span> </p>'  # noqa: E501 pylint: disable=C0301
                 for reference, data in reference_data.items()
             ]
         )
         new_string += reference_tags
 
-    paargraphed_new_str = new_string.replace("MJD_BNM_NEWLINE_TAG_XYZ", "<br>")
-    return paargraphed_new_str
+    paragraphed_string = new_string.replace("MJD_BNM_NEWLINE_TAG_XYZ", "<br>")
+
+    return paragraphed_string
 
 
 @register.filter
 def give_me_a_color(value):
-    light_colors = [
-        "#e6b8af",
-        "#f4cccc",
-        "#fce5cd",
-        "#fff2cc",
-        "#d9ead3",
-        "#d0e0e3",
-        "#c9daf8",
-        "#cfe2f3",
-        "#d9d2e9",
-        "#ead1dc",
-        "#dd7e6b",
-        "#ea9999",
-        "#f9cb9c",
-        "#ffe599",
-        "#b6d7a8",
-        "#a2c4c9",
-        "#a4c2f4",
-        "#9fc5e8",
-        "#b4a7d6",
-        "#d5a6bd",
-        "#cc4125",
-        "#e06666",
-        "#f6b26b",
-        "#ffd966",
-        "#93c47d",
-        "#76a5af",
-        "#6d9eeb",
-        "#6fa8dc",
-        "#8e7cc3",
-        "#c27ba0",
-    ]
+    """
+    This filter takes a value and returns a color from the LIGHT_COLORS list based on the
+    value.
 
-    index = int(value) % 30
+    Args:
+        value (int): The value to determine the color.
 
-    return light_colors[index]
+    Returns:
+        str: The color from the LIGHT_COLORS list based on the value.
+    """
+    return get_color(value)
