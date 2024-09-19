@@ -26,9 +26,17 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("VideoShapefile table cleared"))
 
         # Get the start and end years for each shape
-        # Load a file with 'name_years.json' in the filename kept in the same dir as the geojson files.
+        #
+        # Load a file with 'name_years.json' in the filename kept in the same dir as the
+        # geojson files.
+        #
         # Loads a dict of polity names and their start and end years.
-        # The values are lists of the form [[first_start_year, first_end_year], [second_start_year, second_end_year], ...]
+        # The values are lists of the form:
+        #   [
+        #       [first_start_year, first_end_year],
+        #       [second_start_year, second_end_year],
+        #       ...
+        #   ]
 
         # List all files in the directory
         files = os.listdir(dir)
@@ -71,8 +79,10 @@ class Command(BaseCommand):
                     polity_colour_key = polity_name
                     try:
                         # If a shape has components we'll load the components instead
-                        # ... unless the components have their own components, then load the top level shape
-                        # ... or the shape is a personal union, then load the personal union shape
+                        # ... unless the components have their own components, then load the
+                        # top level shape
+                        # ... or the shape is a personal union, then load the personal
+                        # union shape
                         if properties["Components"]:
                             if ";" not in properties["SeshatID"]:
                                 if (
@@ -84,7 +94,8 @@ class Command(BaseCommand):
                         pass
                     try:
                         if properties["Member_of"]:
-                            # If a shape is a component, get the parent polity to use as the polity_colour_key
+                            # If a shape is a component, get the parent polity to use as the
+                            # polity_colour_key
                             if len(properties["Member_of"]) > 0:
                                 polity_colour_key = (
                                     properties["Member_of"]
@@ -119,7 +130,7 @@ class Command(BaseCommand):
             )
         )
         pol_col_map = polity_colour_mapping(unique_polities)
-        self.stdout.write(self.style.SUCCESS(f"Colour mapping generated"))
+        self.stdout.write(self.style.SUCCESS("Colour mapping generated"))
 
         # Iterate through polity_shapes and create VideoShapefile instances
         for polity_colour_key, features in polity_shapes.items():
@@ -140,7 +151,8 @@ class Command(BaseCommand):
                 # Get the end year for a shape
                 # Most of the time, the shape end year is the year of the next shape
                 # Some polities have a gap in their active years
-                # For a shape year at the start of a gap, set the end year to be the shape year, so it doesn't cover the inactive period
+                # For a shape year at the start of a gap, set the end year to be the shape
+                # year, so it doesn't cover the inactive period
                 start_end_years = name_years[properties["Name"]]
                 end_years = [x[1] for x in start_end_years]
 
@@ -150,7 +162,7 @@ class Command(BaseCommand):
                 # Raise an error if the shape year is not the start year of the polity
                 if this_polity_years[0] != polity_start_year:
                     raise ValueError(
-                        f"First shape year for {polity_name} is not the start year of the polity"
+                        f"First shape year for {polity_name} is not the start year of the polity"  # noqa: E501 pylint: disable=C0301
                     )
 
                 # Find the closest higher value from end_years to the shape year
@@ -159,13 +171,15 @@ class Command(BaseCommand):
                     key=lambda x: x if x >= properties["Year"] else float("inf"),
                 )
 
-                if (
-                    properties["Year"] in end_years
-                ):  # If the shape year is in the list of polity end years, the start year is the end year
+                if properties["Year"] in end_years:
+                    # If the shape year is in the list of polity end years, the start year
+                    # is the end year
                     end_year = properties["Year"]
                 else:
                     this_year_index = this_polity_years.index(properties["Year"])
-                    try:  # Try to use the next shape year minus one as the end year if possible, unless it's higher than the next_end_year
+                    try:
+                        # Try to use the next shape year minus one as the end year if
+                        # possible, unless it's higher than the next_end_year
                         next_shape_year_minus_one = (
                             this_polity_years[this_year_index + 1] - 1
                         )
@@ -174,9 +188,9 @@ class Command(BaseCommand):
                             if next_shape_year_minus_one < next_end_year
                             else next_end_year
                         )
-                    except (
-                        IndexError
-                    ):  # Otherwise assume the end year of the shape is the end year of the polity
+                    except IndexError:
+                        # Otherwise assume the end year of the shape is the end year of the
+                        # polity
                         end_year = polity_end_year
 
                 # Save geom and convert Polygon to MultiPolygon if necessary
@@ -186,7 +200,7 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f'Creating VideoShapefile instance for {polity_name} ({properties["Year"]} - {end_year})'
+                        f'Creating VideoShapefile instance for {polity_name} ({properties["Year"]} - {end_year})'  # noqa: E501 pylint: disable=C0301
                     )
                 )
 
@@ -206,7 +220,7 @@ class Command(BaseCommand):
 
                 self.stdout.write(
                     self.style.SUCCESS(
-                        f'Successfully imported shape for {polity_name} ({properties["Year"]})'
+                        f'Successfully imported shape for {polity_name} ({properties["Year"]})'  # noqa: E501 pylint: disable=C0301
                     )
                 )
 
@@ -221,21 +235,21 @@ class Command(BaseCommand):
         )
 
         ###########################################################
-        ### Adjust the tolerance param of ST_Simplify as needed ###
+        # Adjust the tolerance param of ST_Simplify as needed     #
         ###########################################################
 
         self.stdout.write(
             self.style.SUCCESS("Adding simplified geometries for faster loading...")
         )
 
-        ## Use this code if you want to simplify the geometries
+        # # Use this code if you want to simplify the geometries:
         # with connection.cursor() as cursor:
         #     cursor.execute("""
         #         UPDATE core_videoshapefile
         #         SET simplified_geom = ST_Simplify(geom, 0.07);
         #     """)
 
-        ## Use this code if you don't need to simplify the geometries
+        # # Use this code if you don't need to simplify the geometries:
         with connection.cursor() as cursor:
             cursor.execute(
                 """
@@ -246,9 +260,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Simplified geometries added"))
 
 
-def polity_colour_mapping(polities):
+def polity_colour_mapping(polities) -> dict:
     """Use DistinctiPy package to assign a colour to each polity"""
-    colours = []
-    for col in get_colors(len(polities)):
-        colours.append(get_hex(col))
-    return dict(zip(polities, colours))
+    colors = [get_hex(color) for color in get_colors(len(polities))]
+    return dict(zip(polities, colors))

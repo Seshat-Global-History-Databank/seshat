@@ -38,7 +38,7 @@ class Command(BaseCommand):
             # Create an entry in the GADMShapefile model for each feature in the layer
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Inserting features into the GADMShapefile table for {feature.get('COUNTRY')}..."
+                    f"Inserting features into the GADMShapefile table for {feature.get('COUNTRY')}..."  # noqa: E501 pylint: disable=C0301
                 )
             )
             GADMShapefile.objects.create(
@@ -98,55 +98,56 @@ class Command(BaseCommand):
             )
 
             self.stdout.write(
-                self.style.SUCCESS(f"Inserted feature into the GADMShapefile table.")
+                self.style.SUCCESS("Inserted feature into the GADMShapefile table.")
             )
 
         self.stdout.write(
-            self.style.SUCCESS(f"Successfully populated the GADMShapefile table.")
+            self.style.SUCCESS("Successfully populated the GADMShapefile table.")
         )
 
         # Populate the core_gadmcountries and core_gadmprovinces table
         # The 0.01 value is the simplification tolerance.
-        # Using a lower value will increase the resolution of the shapes used, but result in slower loading in the django app.
+        # Using a lower value will increase the resolution of the shapes used, but result in
+        # slower loading in the django app.
         # Some smaller countries/provinces cannot be simplified with 0.01, so try 0.001.
         self.stdout.write(
-            self.style.SUCCESS(f"Populating the core_gadmcountries table...")
+            self.style.SUCCESS("Populating the core_gadmcountries table...")
         )
         with connection.cursor() as cursor:
             cursor.execute(
                 """
                 INSERT INTO core_gadmcountries (geom, "COUNTRY")
-                SELECT 
+                SELECT
                     COALESCE(ST_Simplify(ST_Union(geom), 0.01), ST_Simplify(ST_Union(geom), 0.001)) AS geom,
                     "COUNTRY"
-                FROM 
+                FROM
                     core_gadmshapefile
-                GROUP BY 
+                GROUP BY
                     "COUNTRY";
-            """
+            """  # noqa: E501 pylint: disable=C0301
             )
         self.stdout.write(
-            self.style.SUCCESS(f"Successfully populated the core_gadmcountries table.")
+            self.style.SUCCESS("Successfully populated the core_gadmcountries table.")
         )
 
         self.stdout.write(
-            self.style.SUCCESS(f"Populating the core_gadmprovinces table...")
+            self.style.SUCCESS("Populating the core_gadmprovinces table...")
         )
         with connection.cursor() as cursor:
             cursor.execute(
                 """
                 INSERT INTO core_gadmprovinces (geom, "COUNTRY", "NAME_1", "ENGTYPE_1")
-                SELECT 
+                SELECT
                     COALESCE(ST_Simplify(ST_Union(geom), 0.01), ST_Simplify(ST_Union(geom), 0.001)) AS geom,
                     "COUNTRY",
                     "NAME_1",
                     "ENGTYPE_1"
-                FROM 
+                FROM
                     core_gadmshapefile
-                GROUP BY 
+                GROUP BY
                     "COUNTRY", "NAME_1", "ENGTYPE_1";
-            """
+            """  # noqa: E501 pylint: disable=C0301
             )
         self.stdout.write(
-            self.style.SUCCESS(f"Successfully populated the core_gadmprovinces table.")
+            self.style.SUCCESS("Successfully populated the core_gadmprovinces table.")
         )
