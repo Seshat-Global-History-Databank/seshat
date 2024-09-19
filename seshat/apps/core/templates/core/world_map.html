@@ -436,6 +436,9 @@
     <script src="{% static 'core/js/map_functions.js' %}"></script>
     <script>
 
+        // Start a new timer to measure the time it takes to load the page
+        console.time('Initial load time');
+
         function adjustScroll() {
             const slider = document.getElementById('dateSlide');
             const sliderDiv = document.getElementById('sliderdiv');
@@ -477,6 +480,12 @@
                 },
             {% endfor %}
         ];
+
+        // Show me the size of the shapesData in MB (for debugging)
+        console.log('Initial shapesData size: ' + (JSON.stringify(shapesData).length / 1024 / 1024).toFixed(2) + ' MB');
+
+        // Show me the time that has passed since the page started loading
+        console.timeEnd('Initial load time');
 
         // Iterate through shapesData and ensure that fields that are lists are interpreted properly
         // TODO: find a way to avoid having to do this
@@ -549,6 +558,8 @@
         var tick_years = {{ tick_years }};
         setSliderTicks(tick_years);
 
+        console.time('All load time');
+
         // Load all polity shapes and modern province/country shapes in background
         window.addEventListener('load', function () {
             function fetchData(url, displayYear) {
@@ -561,6 +572,8 @@
                                 shape.weight = polityBorderWeight;
                                 shapesData.push(shape);
                             });
+                        console.log('shapesDataAll size: ' + (JSON.stringify(shapesData).length / 1024 / 1024).toFixed(2) + ' MB');
+                        console.timeEnd('All load time');
 
                         seshat_id_page_id = data.seshat_id_page_id;
                         allCapitalsInfo = data.all_capitals_info;
@@ -572,6 +585,8 @@
                         allPolitiesLoaded = true;
                         document.getElementById('loadingIndicator').style.display = 'none';
                         document.getElementById('cliopatria-link').style.display = 'block';
+
+                        console.time('Vars load time');
 
                         return fetch('/core/world_map_all_with_vars');
                     })
@@ -591,6 +606,8 @@
                         });
 
                         shapesData = shapesDataWithVars;
+                        console.log('shapesDataWithVars size: ' + (JSON.stringify(shapesData).length / 1024 / 1024).toFixed(2) + ' MB');
+                        console.timeEnd('Vars load time');
                         populateVariableDropdown(data.variables);
                         document.getElementById('chooseVariable').disabled = false;
                         categorical_variables = data.categorical_variables;
