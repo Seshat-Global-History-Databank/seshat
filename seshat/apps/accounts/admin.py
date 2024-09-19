@@ -40,6 +40,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     def get_inline_instances(self, request, obj=None):
         if not obj:
             return list()
+
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 
