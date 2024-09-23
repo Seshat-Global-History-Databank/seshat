@@ -1,6 +1,6 @@
 from django import forms
 
-from ..global_constants import (
+from ..constants import (
     COMMON_FIELDS,
     COMMON_LABELS,
     COMMON_WIDGETS,

@@ -10,10 +10,6 @@ urlpatterns = [
         downloads.download_csv_all_general,
         name="download_csv_all_general",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_research_assistant/create/",
         views.Polity_research_assistantCreateView.as_view(),
@@ -54,10 +50,6 @@ urlpatterns += [
         downloads.polity_research_assistant_meta_download_view,
         name="polity_research_assistant-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_utm_zone/create/",
         views.Polity_utm_zoneCreateView.as_view(),
@@ -98,10 +90,6 @@ urlpatterns += [
         downloads.polity_utm_zone_meta_download_view,
         name="polity_utm_zone-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_original_name/create/",
         views.Polity_original_nameCreateView.as_view(),
@@ -142,10 +130,6 @@ urlpatterns += [
         downloads.polity_original_name_meta_download_view,
         name="polity_original_name-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_alternative_name/create/",
         views.Polity_alternative_nameCreateView.as_view(),
@@ -186,10 +170,6 @@ urlpatterns += [
         downloads.polity_alternative_name_meta_download_view,
         name="polity_alternative_name-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_peak_years/create/",
         views.Polity_peak_yearsCreateView.as_view(),
@@ -230,10 +210,6 @@ urlpatterns += [
         downloads.polity_peak_years_meta_download_view,
         name="polity_peak_years-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_duration/create/",
         views.Polity_durationCreateView.as_view(),
@@ -274,10 +250,6 @@ urlpatterns += [
         downloads.polity_duration_meta_download_view,
         name="polity_duration-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_degree_of_centralization/create/",
         views.Polity_degree_of_centralizationCreateView.as_view(),
@@ -318,10 +290,6 @@ urlpatterns += [
         downloads.polity_degree_of_centralization_meta_download_view,
         name="polity_degree_of_centralization-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_suprapolity_relations/create/",
         views.Polity_suprapolity_relationsCreateView.as_view(),
@@ -362,10 +330,6 @@ urlpatterns += [
         downloads.polity_suprapolity_relations_meta_download_view,
         name="polity_suprapolity_relations-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_capital/create/",
         views.Polity_capitalCreateView.as_view(),
@@ -406,10 +370,6 @@ urlpatterns += [
         downloads.polity_capital_meta_download_view,
         name="polity_capital-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_language/create/",
         views.Polity_languageCreateView.as_view(),
@@ -450,10 +410,6 @@ urlpatterns += [
         downloads.polity_language_meta_download_view,
         name="polity_language-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_linguistic_family/create/",
         views.Polity_linguistic_familyCreateView.as_view(),
@@ -494,10 +450,6 @@ urlpatterns += [
         downloads.polity_linguistic_family_meta_download_view,
         name="polity_linguistic_family-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_language_genus/create/",
         views.Polity_language_genusCreateView.as_view(),
@@ -538,10 +490,6 @@ urlpatterns += [
         downloads.polity_language_genus_meta_download_view,
         name="polity_language_genus-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_religion_genus/create/",
         views.Polity_religion_genusCreateView.as_view(),
@@ -582,10 +530,6 @@ urlpatterns += [
         downloads.polity_religion_genus_meta_download_view,
         name="polity_religion_genus-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_religion_family/create/",
         views.Polity_religion_familyCreateView.as_view(),
@@ -626,10 +570,6 @@ urlpatterns += [
         downloads.polity_religion_family_meta_download_view,
         name="polity_religion_family-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_religion/create/",
         views.Polity_religionCreateView.as_view(),
@@ -670,10 +610,6 @@ urlpatterns += [
         downloads.polity_religion_meta_download_view,
         name="polity_religion-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_relationship_to_preceding_entity/create/",
         views.Polity_relationship_to_preceding_entityCreateView.as_view(),
@@ -714,10 +650,6 @@ urlpatterns += [
         downloads.polity_relationship_to_preceding_entity_meta_download_view,
         name="polity_relationship_to_preceding_entity-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_preceding_entity/create/",
         views.Polity_preceding_entityCreateView.as_view(),
@@ -758,10 +690,6 @@ urlpatterns += [
         downloads.polity_preceding_entity_meta_download_view,
         name="polity_preceding_entity-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_succeeding_entity/create/",
         views.Polity_succeeding_entityCreateView.as_view(),
@@ -802,10 +730,6 @@ urlpatterns += [
         downloads.polity_succeeding_entity_meta_download_view,
         name="polity_succeeding_entity-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_supracultural_entity/create/",
         views.Polity_supracultural_entityCreateView.as_view(),
@@ -846,10 +770,6 @@ urlpatterns += [
         downloads.polity_supracultural_entity_meta_download_view,
         name="polity_supracultural_entity-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_scale_of_supracultural_interaction/create/",
         views.Polity_scale_of_supracultural_interactionCreateView.as_view(),
@@ -890,10 +810,6 @@ urlpatterns += [
         downloads.polity_scale_of_supracultural_interaction_meta_download_view,
         name="polity_scale_of_supracultural_interaction-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_alternate_religion_genus/create/",
         views.Polity_alternate_religion_genusCreateView.as_view(),
@@ -934,10 +850,6 @@ urlpatterns += [
         downloads.polity_alternate_religion_genus_meta_download_view,
         name="polity_alternate_religion_genus-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_alternate_religion_family/create/",
         views.Polity_alternate_religion_familyCreateView.as_view(),
@@ -978,10 +890,6 @@ urlpatterns += [
         downloads.polity_alternate_religion_family_meta_download_view,
         name="polity_alternate_religion_family-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_alternate_religion/create/",
         views.Polity_alternate_religionCreateView.as_view(),
@@ -1022,10 +930,6 @@ urlpatterns += [
         downloads.polity_alternate_religion_meta_download_view,
         name="polity_alternate_religion-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_expert/create/",
         views.Polity_expertCreateView.as_view(),
@@ -1064,10 +968,6 @@ urlpatterns += [
         downloads.polity_expert_meta_download_view,
         name="polity_expert-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_editor/create/",
         views.Polity_editorCreateView.as_view(),
@@ -1106,10 +1006,6 @@ urlpatterns += [
         downloads.polity_editor_meta_download_view,
         name="polity_editor-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_religious_tradition/create/",
         views.Polity_religious_traditionCreateView.as_view(),

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 
 from ..core.models import SeshatCommon
-from ..global_constants import (
+from ..constants import (
     ABSENT_PRESENT_CHOICES,
     ABSENT_PRESENT_STRING_LIST,
     SECTIONS,

@@ -49,6 +49,8 @@ from .models import (
 from .constants import VARIABLE_DEFINITIONS
 
 from . import views
+from .specific_views import generic
+from .specific_views import downloads
 
 
 model_form_pairs = [
@@ -224,26 +226,26 @@ model_form_pairs = [
 
 
 urlpatterns = [
-    path("rtvars/", views.rtvars_view, name="rtvars"),
+    path("rtvars/", views.RTVarsView.as_view(), name="rtvars"),
     path(
         "problematic_rt_data_table/",
-        views.show_problematic_rt_data_table,
+        views.ProblematicDataView.as_view(),
         name="problematic_rt_data_table",
     ),
-    path("download-csv-rt-all/", views.download_csv_all_rt, name="download_csv_all_rt"),
+    path("download-csv-rt-all/", downloads.download_csv_all_rt, name="download_csv_all_rt"),
     path(
         "download_csv_religious_landscape/",
-        views.download_csv_religious_landscape,
+        downloads.download_csv_religious_landscape,
         name="download_csv_religious_landscape",
     ),
     path(
         "download_csv_government_restrictions/",
-        views.download_csv_government_restrictions,
+        downloads.download_csv_government_restrictions,
         name="download_csv_government_restrictions",
     ),
     path(
         "download_csv_societal_restrictions/",
-        views.download_csv_societal_restrictions,
+        downloads.download_csv_societal_restrictions,
         name="download_csv_societal_restrictions",
     ),
 ]
@@ -254,7 +256,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/update/<int:object_id>/",
-            views.dynamic_update_view,
+            generic.generic_update_view,
             {
                 "form_class": form_class,
                 "model_class": model_class,
@@ -271,7 +273,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/create/",
-            views.dynamic_create_view,
+            generic.generic_create_view,
             {
                 "form_class": form_class,
                 "x_name": x_name,
@@ -286,7 +288,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}s_all/",
-            views.generic_list_view,
+            generic.generic_list_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,
@@ -301,7 +303,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}download/",
-            views.generic_download_view,
+            generic.generic_download_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,
@@ -312,7 +314,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}metadownload/",
-            views.generic_metadata_download_view,
+            generic.generic_metadata_download_view,
             {
                 "var_name": x_name,
                 "var_name_display": myvar,
@@ -326,7 +328,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/<int:pk>/",
-            views.dynamic_detail_view,
+            generic.generic_detail_view,
             {
                 "model_class": model_class,
                 "myvar": x_name,
@@ -338,7 +340,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/<int:pk>/confirm-delete/",
-            views.confirm_delete_view,
+            generic.generic_confirm_delete_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,
@@ -349,7 +351,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/<int:pk>/delete/",
-            views.delete_object_view,
+            generic.generic_delete_object_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,

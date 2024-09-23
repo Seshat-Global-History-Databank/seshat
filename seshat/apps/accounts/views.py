@@ -1,10 +1,12 @@
-from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.detail import DetailView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    TemplateView,
+    UpdateView,
+)
 
 from ..core.models import SeshatPrivateCommentPart
 
@@ -38,15 +40,12 @@ class ProfileUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super(ProfileUpdateView, self).get_context_data(**kwargs)
 
-        # Get the user object
-        user = self.request.user
-
         # Add the profile form to the context
         context["profile_form"] = ProfileForm(
-            instance=user.profile,
+            instance=self.request.user.profile,
             initial={
-                "first_name": user.first_name,
-                "last_name": user.last_name,
+                "first_name": self.request.user.first_name,
+                "last_name": self.request.user.last_name,
             },
         )
 
@@ -73,35 +72,30 @@ class ProfileUpdateView(PermissionRequiredMixin, UpdateView):
         return HttpResponseRedirect(reverse_lazy("user-profile"))
 
 
-@login_required
-@permission_required("core.add_seshatprivatecommentpart", raise_exception=True)
-def profile_view(request):
-    """
-    View function for displaying a user's profile.
+class Profile(PermissionRequiredMixin, TemplateView):
+    template_name = "registration/profile.html"
+    permission_required = "core.add_seshatprivatecommentpart"
 
-    Note:
-        This view requires that the user be logged in.
-        This view requires that the user have the 'core.add_seshatprivatecommentpart'
-        permission.
+    def get_context_data(self, **kwargs) -> dict:
+        context = {
+            "facts_verified_by_user": [],
+            "all_facts": 0,
+            "all_tasks_given": [],
+        }
 
-    Args:
-        request (HttpRequest): The request object.
+        try:
+            # Get the expert object for the logged in user
+            expert = Seshat_Expert.objects.get(user_id=self.request.user.id)
+        except Seshat_Expert.DoesNotExist:
+            pass
+        else:
+            context["facts_verified_by_user"] = (
+                SeshatPrivateCommentPart.objects.filter(
+                    private_comment_reader__id=expert.id
+                )
+            )
 
-    Returns:
-        HttpResponse: The response object.
-    """
-    # Get the expert object for the logged in user
-    expert = Seshat_Expert.objects.get(user_id=request.user.id)
-
-    context = {
-        "facts_verified_by_user": SeshatPrivateCommentPart.objects.filter(
-            private_comment_reader__id=expert.id
-        ),
-        "all_facts": 0,
-        "all_tasks_given": [],
-    }
-
-    return render(request, "registration/profile.html", context=context)
+        return context
 
 
 class Seshat_TaskCreateView(PermissionRequiredMixin, CreateView):

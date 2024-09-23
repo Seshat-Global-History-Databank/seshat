@@ -12,10 +12,11 @@ __all__ = [
     "CRISIS_DEFS_EXAMPLES",
     "POWER_TRANSITIONS_DEFS_EXAMPLES",
     "TAGS_DIC",
-    "NO_SECTION_DICT"
+    "NO_SECTION_DICT",
+    "QING_VARS"
 ]
 
-from ..global_constants import ICONS, ATTRS_HTML
+from ..constants import ICONS, ATTRS_HTML
 
 HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
     ("U", "Unknown"),
@@ -367,3 +368,139 @@ NO_SECTION_DICT = {
     "mysubsection": "Y",
     "myvar": "Z",
 }
+
+QING_VARS = {
+        "Economy Variables": {
+            "Productivity": [
+                [
+                    "Agricultural population",
+                    "agricultural_populations",
+                    "agricultural_population-create",
+                    "agricultural_population-download",
+                    "agricultural_population-metadownload",
+                ],
+                [
+                    "Arable land",
+                    "arable_lands",
+                    "arable_land-create",
+                    "arable_land-download",
+                    "arable_land-metadownload",
+                ],
+                [
+                    "Arable land per farmer",
+                    "arable_land_per_farmers",
+                    "arable_land_per_farmer-create",
+                    "arable_land_per_farmer-download",
+                    "arable_land_per_farmer-metadownload",
+                ],
+                [
+                    "Gross grain shared per agricultural population",
+                    "gross_grain_shared_per_agricultural_populations",
+                    "gross_grain_shared_per_agricultural_population-create",
+                    "gross_grain_shared_per_agricultural_population-download",
+                    "gross_grain_shared_per_agricultural_population-metadownload",
+                ],
+                [
+                    "Net grain shared per agricultural population",
+                    "net_grain_shared_per_agricultural_populations",
+                    "net_grain_shared_per_agricultural_population-create",
+                    "net_grain_shared_per_agricultural_population-download",
+                    "net_grain_shared_per_agricultural_population-metadownload",
+                ],
+                [
+                    "Surplus",
+                    "surplus",
+                    "surplus-create",
+                    "surplus-download",
+                    "surplus-metadownload",
+                ],
+                [
+                    "Gdp per capita",
+                    "gdp_per_capitas",
+                    "gdp_per_capita-create",
+                    "gdp_per_capita-download",
+                    "gdp_per_capita-metadownload",
+                ],
+            ],
+            "State Finances": [
+                [
+                    "Military expense",
+                    "military_expenses",
+                    "military_expense-create",
+                    "military_expense-download",
+                    "military_expense-metadownload",
+                ],
+                [
+                    "Silver inflow",
+                    "silver_inflows",
+                    "silver_inflow-create",
+                    "silver_inflow-download",
+                    "silver_inflow-metadownload",
+                ],
+                [
+                    "Silver stock",
+                    "silver_stocks",
+                    "silver_stock-create",
+                    "silver_stock-download",
+                    "silver_stock-metadownload",
+                ],
+            ],
+        },
+        "Social Complexity Variables": {
+            "Social Scale": [
+                [
+                    "Total population",
+                    "total_populations",
+                    "total_population-create",
+                    "total_population-download",
+                    "total_population-metadownload",
+                ]
+            ]
+        },
+        "Well Being": {
+            "Biological Well-Being": [
+                [
+                    "Drought event",
+                    "drought_events",
+                    "drought_event-create",
+                    "drought_event-download",
+                    "drought_event-metadownload",
+                ],
+                [
+                    "Locust event",
+                    "locust_events",
+                    "locust_event-create",
+                    "locust_event-download",
+                    "locust_event-metadownload",
+                ],
+                [
+                    "Socioeconomic turmoil event",
+                    "socioeconomic_turmoil_events",
+                    "socioeconomic_turmoil_event-create",
+                    "socioeconomic_turmoil_event-download",
+                    "socioeconomic_turmoil_event-metadownload",
+                ],
+                [
+                    "Crop failure event",
+                    "crop_failure_events",
+                    "crop_failure_event-create",
+                    "crop_failure_event-download",
+                    "crop_failure_event-metadownload",
+                ],
+                [
+                    "Famine event",
+                    "famine_events",
+                    "famine_event-create",
+                    "famine_event-download",
+                    "famine_event-metadownload",
+                ],
+                [
+                    "Disease outbreak",
+                    "disease_outbreaks",
+                    "disease_outbreak-create",
+                    "disease_outbreak-download",
+                    "disease_outbreak-metadownload",
+                ],
+            ]
+        },
+    }

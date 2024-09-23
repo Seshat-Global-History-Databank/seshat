@@ -11,8 +11,8 @@ from django.views.generic import (
 )
 
 from ..general.mixins import PolityIdMixin
-from ..global_utils import get_problematic_data_context
-from ..global_constants import (
+from ..utils import get_problematic_data_context
+from ..constants import (
     POLITY_NGA_NAME,
     ABSENT_PRESENT_STRING_LIST,
     CORRECT_YEAR,

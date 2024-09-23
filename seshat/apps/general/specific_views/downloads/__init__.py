@@ -54,7 +54,7 @@ __all__ = [
     "polity_editor_meta_download_view",
     "polity_religious_tradition_download_view",
     "polity_religious_tradition_meta_download_view",
-    
+
     # Specialized download views
     "download_csv_all_general",
 ]
@@ -64,22 +64,25 @@ import csv
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 
-from ....global_utils import get_date, get_models, write_csv
-from ....global_constants import CSV_DELIMITER
+from ....utils import get_date, get_models, write_csv
+from ....constants import (
+    CSV_DELIMITER,
+    # NO_DATA
+)
 
 from ...constants import (
     APP_NAME,
-    INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
-    INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
-    INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
-    INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
-    INNER_POLITY_LANGUAGE_CHOICES,
-    INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
-    INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
-    INNER_POLITY_RELIGION_CHOICES,
-    INNER_POLITY_RELIGION_FAMILY_CHOICES,
-    INNER_POLITY_RELIGION_GENUS_CHOICES,
-    INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
+    # INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+    # INNER_POLITY_LANGUAGE_CHOICES,
+    # INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
+    # INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+    # INNER_POLITY_RELIGION_CHOICES,
+    # INNER_POLITY_RELIGION_FAMILY_CHOICES,
+    # INNER_POLITY_RELIGION_GENUS_CHOICES,
+    # INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
 )
 
 from ...models import (
@@ -440,8 +443,131 @@ def polity_religious_tradition_meta_download_view(request):
 
 
 @permission_required("core.view_capital")
+def download_csv_all_general(request):
+    '''
+    Download a CSV file of all general variables. This includes all models in the "general"
+    app.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    '''
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"general_data_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "section",
+            "subsection",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "variable_name",
+            "value_from",
+            "value_to",
+            "year_from",
+            "year_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+        ]
+    )
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME,
+        exclude=[Polity_research_assistant, Polity_editor, Polity_expert],
+    ):
+        for obj in model.objects.all():
+            if obj.clean_name_spaced() == "Polity Duration":
+                writer.writerow(
+                    [
+                        "General Variables",
+                        obj.subsection(),
+                        obj.polity.long_name,
+                        obj.polity.new_name,
+                        obj.polity.name,
+                        obj.clean_name()[7:],
+                        obj.polity_year_from,
+                        obj.polity_year_to,
+                        obj.year_from,
+                        obj.year_to,
+                        obj.get_tag_display(),
+                        obj.is_disputed,
+                        obj.is_uncertain,
+                        obj.expert_reviewed,
+                    ]
+                )
+            elif obj.clean_name_spaced() == "Polity Peak Years":
+                writer.writerow(
+                    [
+                        "General Variables",
+                        obj.subsection(),
+                        obj.polity.long_name,
+                        obj.polity.new_name,
+                        obj.polity.name,
+                        obj.clean_name()[7:],
+                        obj.peak_year_from,
+                        obj.peak_year_to,
+                        obj.year_from,
+                        obj.year_to,
+                        obj.get_tag_display(),
+                        obj.is_disputed,
+                        obj.is_uncertain,
+                        obj.expert_reviewed,
+                    ]
+                )
+            else:
+                if any(
+                    [
+                        obj.show_value() == "NO_VALUE_ON_WIKI",
+                        obj.show_value() == "NO_VALID_VALUE",
+                    ]
+                ):
+                    continue
+                elif "O_VALUE_ON_WIKI" in str(obj.show_value()):
+                    continue
+                else:
+                    writer.writerow(
+                        [
+                            "General Variables",
+                            obj.subsection(),
+                            obj.polity.long_name,
+                            obj.polity.new_name,
+                            obj.polity.name,
+                            obj.clean_name()[7:],
+                            obj.show_value(),
+                            None,
+                            obj.year_from,
+                            obj.year_to,
+                            obj.get_tag_display(),
+                            obj.is_disputed,
+                            obj.is_uncertain,
+                            obj.expert_reviewed,
+                        ]
+                    )
+
+    return response
+
+
+"""
+@permission_required("core.view_capital")
 def polity_research_assistant_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_research_assistant instances.
 
     Note:
@@ -452,7 +578,7 @@ def polity_research_assistant_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -498,7 +624,7 @@ def polity_research_assistant_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_research_assistant_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_research_assistant instances.
 
     Note:
@@ -509,7 +635,7 @@ def polity_research_assistant_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_research_assistants.csv"'
@@ -554,7 +680,7 @@ def polity_research_assistant_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_utm_zone_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_utm_zone instances.
 
     Note:
@@ -565,7 +691,7 @@ def polity_utm_zone_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -611,7 +737,7 @@ def polity_utm_zone_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_utm_zone_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_utm_zone instances.
 
     Note:
@@ -622,7 +748,7 @@ def polity_utm_zone_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_utm_zones.csv"'
@@ -644,7 +770,7 @@ def polity_utm_zone_meta_download_view(request):
             "var_exp": "The details of UTM_ZONE.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -667,7 +793,7 @@ def polity_utm_zone_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_original_name_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_original_name instances.
 
     Note:
@@ -678,7 +804,7 @@ def polity_original_name_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -724,7 +850,7 @@ def polity_original_name_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_original_name_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_original_name instances.
 
     Note:
@@ -735,7 +861,7 @@ def polity_original_name_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_original_names.csv"'
@@ -757,7 +883,7 @@ def polity_original_name_meta_download_view(request):
             "var_exp": "The details of original_name.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -780,7 +906,7 @@ def polity_original_name_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternative_name_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_alternative_name instances.
 
     Note:
@@ -791,7 +917,7 @@ def polity_alternative_name_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -837,7 +963,7 @@ def polity_alternative_name_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternative_name_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_alternative_name instances.
 
     Note:
@@ -848,7 +974,7 @@ def polity_alternative_name_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_alternative_names.csv"'
@@ -870,7 +996,7 @@ def polity_alternative_name_meta_download_view(request):
             "var_exp": "The details of alternative_name.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -893,7 +1019,7 @@ def polity_alternative_name_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_peak_years_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_peak_years instances.
 
     Note:
@@ -904,7 +1030,7 @@ def polity_peak_years_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -952,7 +1078,7 @@ def polity_peak_years_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_peak_years_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_peak_years instances.
 
     Note:
@@ -963,7 +1089,7 @@ def polity_peak_years_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_peak_yearss.csv"'
@@ -985,7 +1111,7 @@ def polity_peak_years_meta_download_view(request):
             "var_exp": "The beginning of the peak years for a polity.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
         "peak_year_to": {
             "min": None,
@@ -995,7 +1121,7 @@ def polity_peak_years_meta_download_view(request):
             "var_exp": "The end of the peak years for a polity.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -1018,7 +1144,7 @@ def polity_peak_years_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_duration_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_duration instances.
 
     Note:
@@ -1029,7 +1155,7 @@ def polity_duration_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1077,7 +1203,7 @@ def polity_duration_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_duration_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_duration instances.
 
     Note:
@@ -1088,7 +1214,7 @@ def polity_duration_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_durations.csv"'
@@ -1110,7 +1236,7 @@ def polity_duration_meta_download_view(request):
             "var_exp": "The beginning year for a polity.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
         "polity_year_to": {
             "min": None,
@@ -1120,7 +1246,7 @@ def polity_duration_meta_download_view(request):
             "var_exp": "The end year for a polity.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -1143,7 +1269,7 @@ def polity_duration_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_degree_of_centralization_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_degree_of_centralization instances.
 
     Note:
@@ -1154,7 +1280,7 @@ def polity_degree_of_centralization_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1200,7 +1326,7 @@ def polity_degree_of_centralization_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_degree_of_centralization_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_degree_of_centralization instances.
 
     Note:
@@ -1211,7 +1337,7 @@ def polity_degree_of_centralization_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_degree_of_centralizations.csv"'
@@ -1233,7 +1359,7 @@ def polity_degree_of_centralization_meta_download_view(request):
             "var_exp": "The details of degree_of_centralization.",
             "units": None,
             "choices": INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -1256,7 +1382,7 @@ def polity_degree_of_centralization_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_suprapolity_relations_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_suprapolity_relations instances.
 
     Note:
@@ -1267,7 +1393,7 @@ def polity_suprapolity_relations_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1333,7 +1459,7 @@ def polity_suprapolity_relations_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_suprapolity_relations_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_suprapolity_relations instances.
 
     Note:
@@ -1344,7 +1470,7 @@ def polity_suprapolity_relations_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_suprapolity_relationss.csv"'
@@ -1366,7 +1492,7 @@ def polity_suprapolity_relations_meta_download_view(request):
             "var_exp": "The details of supra polity relations.",
             "units": None,
             "choices": INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -1389,7 +1515,7 @@ def polity_suprapolity_relations_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_capital_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_capital instances.
 
     Note:
@@ -1400,7 +1526,7 @@ def polity_capital_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1463,7 +1589,7 @@ def polity_capital_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_capital_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_capital instances.
 
     Note:
@@ -1474,7 +1600,7 @@ def polity_capital_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_capitals.csv"'
@@ -1519,7 +1645,7 @@ def polity_capital_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_language_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_language instances.
 
     Note:
@@ -1530,7 +1656,7 @@ def polity_language_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1576,7 +1702,7 @@ def polity_language_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_language_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_language instances.
 
     Note:
@@ -1587,7 +1713,7 @@ def polity_language_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_languages.csv"'
@@ -1632,7 +1758,7 @@ def polity_language_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_linguistic_family_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_linguistic_family instances.
 
     Note:
@@ -1643,7 +1769,7 @@ def polity_linguistic_family_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1689,7 +1815,7 @@ def polity_linguistic_family_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_linguistic_family_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_linguistic_family instances.
 
     Note:
@@ -1700,7 +1826,7 @@ def polity_linguistic_family_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_linguistic_familys.csv"'
@@ -1745,7 +1871,7 @@ def polity_linguistic_family_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_language_genus_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_language_genus instances.
 
     Note:
@@ -1756,7 +1882,7 @@ def polity_language_genus_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1802,7 +1928,7 @@ def polity_language_genus_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_language_genus_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_language_genus instances.
 
     Note:
@@ -1813,7 +1939,7 @@ def polity_language_genus_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_language_genuss.csv"'
@@ -1858,7 +1984,7 @@ def polity_language_genus_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_genus_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_religion_genus instances.
 
     Note:
@@ -1869,7 +1995,7 @@ def polity_religion_genus_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -1915,7 +2041,7 @@ def polity_religion_genus_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_genus_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_religion_genus instances.
 
     Note:
@@ -1926,7 +2052,7 @@ def polity_religion_genus_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_religion_genuss.csv"'
@@ -1971,7 +2097,7 @@ def polity_religion_genus_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_family_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_religion_family instances.
 
     Note:
@@ -1982,7 +2108,7 @@ def polity_religion_family_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2028,7 +2154,7 @@ def polity_religion_family_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_family_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_religion_family instances.
 
     Note:
@@ -2039,7 +2165,7 @@ def polity_religion_family_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_religion_familys.csv"'
@@ -2084,7 +2210,7 @@ def polity_religion_family_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_religion instances.
 
     Note:
@@ -2095,7 +2221,7 @@ def polity_religion_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2141,7 +2267,7 @@ def polity_religion_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religion_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_religion instances.
 
     Note:
@@ -2152,7 +2278,7 @@ def polity_religion_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_religions.csv"'
@@ -2197,7 +2323,7 @@ def polity_religion_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_relationship_to_preceding_entity_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_relationship_to_preceding_entity instances.
 
     Note:
@@ -2208,7 +2334,7 @@ def polity_relationship_to_preceding_entity_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2254,7 +2380,7 @@ def polity_relationship_to_preceding_entity_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_relationship_to_preceding_entity_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_relationship_to_preceding_entity
     instances.
 
@@ -2266,7 +2392,7 @@ def polity_relationship_to_preceding_entity_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_relationship_to_preceding_entitys.csv"'
@@ -2311,7 +2437,7 @@ def polity_relationship_to_preceding_entity_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_preceding_entity_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_preceding_entity instances.
 
     Note:
@@ -2322,7 +2448,7 @@ def polity_preceding_entity_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2368,7 +2494,7 @@ def polity_preceding_entity_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_preceding_entity_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_preceding_entity instances.
 
     Note:
@@ -2379,7 +2505,7 @@ def polity_preceding_entity_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_preceding_entitys.csv"'
@@ -2424,7 +2550,7 @@ def polity_preceding_entity_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_succeeding_entity_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_succeeding_entity instances.
 
     Note:
@@ -2435,7 +2561,7 @@ def polity_succeeding_entity_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2481,7 +2607,7 @@ def polity_succeeding_entity_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_succeeding_entity_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_succeeding_entity instances.
 
     Note:
@@ -2492,7 +2618,7 @@ def polity_succeeding_entity_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_succeeding_entitys.csv"'
@@ -2537,7 +2663,7 @@ def polity_succeeding_entity_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_supracultural_entity_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_supracultural_entity instances.
 
     Note:
@@ -2548,7 +2674,7 @@ def polity_supracultural_entity_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2594,7 +2720,7 @@ def polity_supracultural_entity_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_supracultural_entity_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_supracultural_entity instances.
 
     Note:
@@ -2605,7 +2731,7 @@ def polity_supracultural_entity_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_supracultural_entitys.csv"'
@@ -2650,7 +2776,7 @@ def polity_supracultural_entity_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_scale_of_supracultural_interaction_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_scale_of_supracultural_interaction instances.
 
     Note:
@@ -2661,7 +2787,7 @@ def polity_scale_of_supracultural_interaction_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2709,7 +2835,7 @@ def polity_scale_of_supracultural_interaction_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_scale_of_supracultural_interaction_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_scale_of_supracultural_interaction
     instances.
 
@@ -2721,7 +2847,7 @@ def polity_scale_of_supracultural_interaction_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_scale_of_supracultural_interactions.csv"'
@@ -2743,7 +2869,7 @@ def polity_scale_of_supracultural_interaction_meta_download_view(request):
             "var_exp": "The lower scale of supra cultural interactionfor a polity.",
             "units": "km squared",
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
         "scale_to": {
             "min": 0,
@@ -2753,7 +2879,7 @@ def polity_scale_of_supracultural_interaction_meta_download_view(request):
             "var_exp": "The upper scale of supra cultural interactionfor a polity.",
             "units": "km squared",
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         },
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -2776,7 +2902,7 @@ def polity_scale_of_supracultural_interaction_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_genus_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_alternate_religion_genus instances.
 
     Note:
@@ -2787,7 +2913,7 @@ def polity_alternate_religion_genus_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2833,7 +2959,7 @@ def polity_alternate_religion_genus_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_genus_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_alternate_religion_genus instances.
 
     Note:
@@ -2844,7 +2970,7 @@ def polity_alternate_religion_genus_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_alternate_religion_genuss.csv"'
@@ -2889,7 +3015,7 @@ def polity_alternate_religion_genus_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_family_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_alternate_religion_family instances.
 
     Note:
@@ -2900,7 +3026,7 @@ def polity_alternate_religion_family_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -2946,7 +3072,7 @@ def polity_alternate_religion_family_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_family_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_alternate_religion_family instances.
 
     Note:
@@ -2957,7 +3083,7 @@ def polity_alternate_religion_family_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_alternate_religion_familys.csv"'
@@ -3002,7 +3128,7 @@ def polity_alternate_religion_family_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_alternate_religion instances.
 
     Note:
@@ -3013,7 +3139,7 @@ def polity_alternate_religion_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -3059,7 +3185,7 @@ def polity_alternate_religion_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_alternate_religion_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_alternate_religion instances.
 
     Note:
@@ -3070,7 +3196,7 @@ def polity_alternate_religion_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_alternate_religions.csv"'
@@ -3115,7 +3241,7 @@ def polity_alternate_religion_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_expert_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_expert instances.
 
     Note:
@@ -3126,7 +3252,7 @@ def polity_expert_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -3172,7 +3298,7 @@ def polity_expert_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_expert_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_expert instances.
 
     Note:
@@ -3183,7 +3309,7 @@ def polity_expert_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_experts.csv"'
@@ -3228,7 +3354,7 @@ def polity_expert_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_editor_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_editor instances.
 
     Note:
@@ -3239,7 +3365,7 @@ def polity_editor_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -3285,7 +3411,7 @@ def polity_editor_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_editor_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_editor instances.
 
     Note:
@@ -3296,7 +3422,7 @@ def polity_editor_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_editors.csv"'
@@ -3341,7 +3467,7 @@ def polity_editor_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religious_tradition_download_view(request):
-    """
+    '''
     Download a CSV file of all Polity_religious_tradition instances.
 
     Note:
@@ -3352,7 +3478,7 @@ def polity_religious_tradition_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
 
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -3398,7 +3524,7 @@ def polity_religious_tradition_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_religious_tradition_meta_download_view(request):
-    """
+    '''
     Download a CSV file of the meta data for Polity_religious_tradition instances.
 
     Note:
@@ -3409,7 +3535,7 @@ def polity_religious_tradition_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="polity_religious_traditions.csv"'
@@ -3431,7 +3557,7 @@ def polity_religious_tradition_meta_download_view(request):
             "var_exp": "The details of religious traditions.",
             "units": None,
             "choices": None,
-            "null_meaning": "No_Value_Provided_in_Old_Wiki",
+            "null_meaning": NO_DATA.wiki,
         }
     }
     writer = csv.writer(response, delimiter=CSV_DELIMITER)
@@ -3454,7 +3580,7 @@ def polity_religious_tradition_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def download_csv_all_general(request):
-    """
+    '''
     Download a CSV file of all general variables. This includes all models in the "general"
     app.
 
@@ -3466,7 +3592,7 @@ def download_csv_all_general(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     date = get_date()
 
     # Create a response object with CSV content type
@@ -3502,76 +3628,74 @@ def download_csv_all_general(request):
         APP_NAME,
         exclude=[Polity_research_assistant, Polity_editor, Polity_expert],
     ):
-        # Get all rows of data from the model
-        items = model.objects.all()
-
-        for o in items:
-            if o.clean_name_spaced() == "Polity Duration":
+        for obj in model.objects.all():
+            if obj.clean_name_spaced() == "Polity Duration":
                 writer.writerow(
                     [
                         "General Variables",
-                        o.subsection(),
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.clean_name()[7:],
-                        o.polity_year_from,
-                        o.polity_year_to,
-                        o.year_from,
-                        o.year_to,
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
+                        obj.subsection(),
+                        obj.polity.long_name,
+                        obj.polity.new_name,
+                        obj.polity.name,
+                        obj.clean_name()[7:],
+                        obj.polity_year_from,
+                        obj.polity_year_to,
+                        obj.year_from,
+                        obj.year_to,
+                        obj.get_tag_display(),
+                        obj.is_disputed,
+                        obj.is_uncertain,
+                        obj.expert_reviewed,
                     ]
                 )
-            elif o.clean_name_spaced() == "Polity Peak Years":
+            elif obj.clean_name_spaced() == "Polity Peak Years":
                 writer.writerow(
                     [
                         "General Variables",
-                        o.subsection(),
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.clean_name()[7:],
-                        o.peak_year_from,
-                        o.peak_year_to,
-                        o.year_from,
-                        o.year_to,
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
+                        obj.subsection(),
+                        obj.polity.long_name,
+                        obj.polity.new_name,
+                        obj.polity.name,
+                        obj.clean_name()[7:],
+                        obj.peak_year_from,
+                        obj.peak_year_to,
+                        obj.year_from,
+                        obj.year_to,
+                        obj.get_tag_display(),
+                        obj.is_disputed,
+                        obj.is_uncertain,
+                        obj.expert_reviewed,
                     ]
                 )
             else:
                 if any(
                     [
-                        o.show_value() == "NO_VALUE_ON_WIKI",
-                        o.show_value() == "NO_VALID_VALUE",
+                        obj.show_value() == "NO_VALUE_ON_WIKI",
+                        obj.show_value() == "NO_VALID_VALUE",
                     ]
                 ):
                     continue
-                elif "O_VALUE_ON_WIKI" in str(o.show_value()):
+                elif "O_VALUE_ON_WIKI" in str(obj.show_value()):
                     continue
                 else:
                     writer.writerow(
                         [
                             "General Variables",
-                            o.subsection(),
-                            o.polity.long_name,
-                            o.polity.new_name,
-                            o.polity.name,
-                            o.clean_name()[7:],
-                            o.show_value(),
+                            obj.subsection(),
+                            obj.polity.long_name,
+                            obj.polity.new_name,
+                            obj.polity.name,
+                            obj.clean_name()[7:],
+                            obj.show_value(),
                             None,
-                            o.year_from,
-                            o.year_to,
-                            o.get_tag_display(),
-                            o.is_disputed,
-                            o.is_uncertain,
-                            o.expert_reviewed,
+                            obj.year_from,
+                            obj.year_to,
+                            obj.get_tag_display(),
+                            obj.is_disputed,
+                            obj.is_uncertain,
+                            obj.expert_reviewed,
                         ]
                     )
 
     return response
+"""

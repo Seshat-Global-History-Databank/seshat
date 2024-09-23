@@ -22,14 +22,12 @@ from ..core.models import (
     Polity,
 )
 from ..general.mixins import PolityIdMixin
-from ..global_constants import (
-    CSV_DELIMITER,
+from ..constants import (
     POLITY_NGA_NAME,
 )
-from ..global_utils import (
+from ..utils import (
     check_permissions,
     get_date,
-    remove_html_tags,
     get_api_results,
 )
 
@@ -95,10 +93,8 @@ from .constants import (
     ALL_VARS_IN_SECTIONS,
     ALL_VARS_WITH_HIERARCHY,
     TAGS_DIC,
-    INNER_SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES,
-    INNER_MAGNITUDE_DISEASE_OUTBREAK_CHOICES,
-    INNER_DURATION_DISEASE_OUTBREAK_CHOICES,
     NO_SECTION_DICT,
+    QING_VARS,
 )
 from .utils import expand_context_from_variable_hierarchy
 
@@ -152,10 +148,9 @@ class Crisis_consequenceCreateView(
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#crisis_case_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#crisis_case_var"
 
     def get_absolute_url(self) -> str:
         """
@@ -412,9 +407,7 @@ class Crisis_consequenceListView(PermissionRequiredMixin, ListView):
 
         new_context = (
             Crisis_consequence.objects.all()
-            .annotate(
-                home_nga=POLITY_NGA_NAME
-            )
+            .annotate(home_nga=POLITY_NGA_NAME)
             .order_by(order, order2)
         )
 
@@ -519,9 +512,7 @@ class Crisis_consequenceListAllView(PermissionRequiredMixin, ListView):
 
         new_context = (
             Crisis_consequence.objects.all()
-            .annotate(
-                home_nga=POLITY_NGA_NAME
-            )
+            .annotate(home_nga=POLITY_NGA_NAME)
             .order_by(order, order2)
         )
 
@@ -544,7 +535,7 @@ class Crisis_consequenceListAllView(PermissionRequiredMixin, ListView):
         context = dict(
             context,
             **{
-                "myvar": self.model.Code.variable,  # TODO: This was "uu" in the original code
+                "myvar": self.model.Code.variable,  # noqa: E501  TODO: This was "uu" in the original code
                 "var_main_desc": self.model.Code.description,
                 "var_main_desc_source": self.model.Code.description_source,
                 "var_section": "Religion and Normative Ideology",
@@ -572,270 +563,6 @@ class Crisis_consequenceDetailView(PermissionRequiredMixin, DetailView):
         "crisisdb/crisis_consequence/crisis_consequence_detail.html"
     )
     permission_required = "core.add_capital"
-
-
-@permission_required("core.view_capital")
-def crisis_consequence_download_view(request):
-    """
-    Download all Crisis_consequence instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"crisis_consequences_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_long_name",
-            "other_polity_new_ID",
-            "other_polity_old_ID",
-            "other_polity_long_name",
-            "crisis_consequence_id",
-            "decline",
-            "collapse",
-            "epidemic",
-            "downward_mobility",
-            "extermination",
-            "uprising",
-            "revolution",
-            "successful_revolution",
-            "civil_war",
-            "century_plus",
-            "fragmentation",
-            "capital",
-            "conquest",
-            "assassination",
-            "depose",
-            "constitution",
-            "labor",
-            "unfree_labor",
-            "suffrage",
-            "public_goods",
-            "religion",
-            "description",
-        ]
-    )
-
-    for obj in Crisis_consequence.objects.all():
-        if obj.other_polity and obj.polity:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.polity.long_name,
-                    obj.other_polity.new_name,
-                    obj.other_polity.name,
-                    obj.other_polity.long_name,
-                    obj.crisis_case_id,
-                    obj.decline,
-                    obj.collapse,
-                    obj.epidemic,
-                    obj.downward_mobility,
-                    obj.extermination,
-                    obj.uprising,
-                    obj.revolution,
-                    obj.successful_revolution,
-                    obj.civil_war,
-                    obj.century_plus,
-                    obj.fragmentation,
-                    obj.capital,
-                    obj.conquest,
-                    obj.assassination,
-                    obj.depose,
-                    obj.constitution,
-                    obj.labor,
-                    obj.unfree_labor,
-                    obj.suffrage,
-                    obj.public_goods,
-                    obj.religion,
-                ]
-            )
-        elif obj.polity:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.polity.long_name,
-                    "",
-                    "",
-                    "",
-                    obj.crisis_case_id,
-                    obj.decline,
-                    obj.collapse,
-                    obj.epidemic,
-                    obj.downward_mobility,
-                    obj.extermination,
-                    obj.uprising,
-                    obj.revolution,
-                    obj.successful_revolution,
-                    obj.civil_war,
-                    obj.century_plus,
-                    obj.fragmentation,
-                    obj.capital,
-                    obj.conquest,
-                    obj.assassination,
-                    obj.depose,
-                    obj.constitution,
-                    obj.labor,
-                    obj.unfree_labor,
-                    obj.suffrage,
-                    obj.public_goods,
-                    obj.religion,
-                ]
-            )
-        elif obj.other_polity:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    "",
-                    "",
-                    "",
-                    obj.other_polity.new_name,
-                    obj.other_polity.name,
-                    obj.other_polity.long_name,
-                    obj.crisis_case_id,
-                    obj.decline,
-                    obj.collapse,
-                    obj.epidemic,
-                    obj.downward_mobility,
-                    obj.extermination,
-                    obj.uprising,
-                    obj.revolution,
-                    obj.successful_revolution,
-                    obj.civil_war,
-                    obj.century_plus,
-                    obj.fragmentation,
-                    obj.capital,
-                    obj.conquest,
-                    obj.assassination,
-                    obj.depose,
-                    obj.constitution,
-                    obj.labor,
-                    obj.unfree_labor,
-                    obj.suffrage,
-                    obj.public_goods,
-                    obj.religion,
-                ]
-            )
-        else:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    obj.crisis_case_id,
-                    obj.decline,
-                    obj.collapse,
-                    obj.epidemic,
-                    obj.downward_mobility,
-                    obj.extermination,
-                    obj.uprising,
-                    obj.revolution,
-                    obj.successful_revolution,
-                    obj.civil_war,
-                    obj.century_plus,
-                    obj.fragmentation,
-                    obj.capital,
-                    obj.conquest,
-                    obj.assassination,
-                    obj.depose,
-                    obj.constitution,
-                    obj.labor,
-                    obj.unfree_labor,
-                    obj.suffrage,
-                    obj.public_goods,
-                    obj.religion,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def crisis_consequence_meta_download_view(request):
-    """
-    Download the metadata for Crisis_consequence instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="crisis_consequences_metadata.csv"'
-    )
-
-    meta_data_dic = {
-        "notes": "Notes for the Variable crisis_consequence are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    meta_data_dic_inner_vars = {
-        "crisis_consequence": {
-            "min": None,
-            "max": None,
-            "scale": 1000,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "mu?",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
 
 
 class Power_transitionCreateView(
@@ -1123,9 +850,7 @@ class Power_transitionListView(PermissionRequiredMixin, ListView):
 
         new_context = (
             Power_transition.objects.all()
-            .annotate(
-                home_nga=POLITY_NGA_NAME
-            )
+            .annotate(home_nga=POLITY_NGA_NAME)
             .order_by(order2, order)
         )
         return new_context
@@ -1215,16 +940,28 @@ class Power_transitionListAllView(PermissionRequiredMixin, ListView):
         order = self.request.GET.get("orderby", "year_to")
         order2 = self.request.GET.get("orderby2", "year_from")
 
-        power_transitions = Power_transition.objects.all().order_by(order2, order)
+        power_transitions = Power_transition.objects.all().order_by(
+            order2, order
+        )
 
         pols_dict = {
-            transition.polity_id or 0: {
-                "polity_new_name": getattr(transition.polity, "new_name", "NO_NAME"),
-                "polity_long_name": getattr(transition.polity, "long_name", "NO_LONG_NAME"),
-                "polity_start_year": getattr(transition.polity, "start_year", -10000),
-                "polity_end_year": getattr(transition.polity, "end_year", 2000),
+            transition.polity_id
+            or 0: {
+                "polity_new_name": getattr(
+                    transition.polity, "new_name", "NO_NAME"
+                ),
+                "polity_long_name": getattr(
+                    transition.polity, "long_name", "NO_LONG_NAME"
+                ),
+                "polity_start_year": getattr(
+                    transition.polity, "start_year", -10000
+                ),
+                "polity_end_year": getattr(
+                    transition.polity, "end_year", 2000
+                ),
                 "trans_list": [],
-            } for transition in power_transitions
+            }
+            for transition in power_transitions
         }
 
         for transition in power_transitions:
@@ -1294,160 +1031,6 @@ class Power_transitionDetailView(PermissionRequiredMixin, DetailView):
     permission_required = "core.add_capital"
 
 
-@permission_required("core.view_capital")
-def power_transition_download_view(request):
-    """
-    Download all Power_transition instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"power_transitions_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "predecessor",
-            "successor",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_long_form_name",
-            "conflict_name",
-            "contested",
-            "overturn",
-            "predecessor_assassination",
-            "intra_elite",
-            "military_revolt",
-            "popular_uprising",
-            "separatist_rebellion",
-            "external_invasion",
-            "external_interference",
-        ]
-    )
-
-    for obj in Power_transition.objects.all():
-        if obj.polity:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    obj.predecessor,
-                    obj.successor,
-                    obj.polity.new_name,
-                    obj.polity.name,
-                    obj.polity.long_name,
-                    obj.name,
-                    obj.contested,
-                    obj.overturn,
-                    obj.predecessor_assassination,
-                    obj.intra_elite,
-                    obj.military_revolt,
-                    obj.popular_uprising,
-                    obj.separatist_rebellion,
-                    obj.external_invasion,
-                    obj.external_interference,
-                ]
-            )
-        else:
-            writer.writerow(
-                [
-                    obj.year_from,
-                    obj.year_to,
-                    obj.predecessor,
-                    obj.successor,
-                    "",
-                    "",
-                    "",
-                    obj.name,
-                    obj.contested,
-                    obj.overturn,
-                    obj.predecessor_assassination,
-                    obj.intra_elite,
-                    obj.military_revolt,
-                    obj.popular_uprising,
-                    obj.separatist_rebellion,
-                    obj.external_invasion,
-                    obj.external_interference,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def power_transition_meta_download_view(request):
-    """
-    Download the metadata for Power_transition instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="power_transitions_metadata.csv"'
-    )
-
-    meta_data_dic = {
-        "notes": "Notes for the Variable power_transition are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    meta_data_dic_inner_vars = {
-        "power_transition": {
-            "min": None,
-            "max": None,
-            "scale": 1000,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "mu?",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Human_sacrificeCreateView(
     PermissionRequiredMixin, PolityIdMixin, CreateView
 ):
@@ -1471,7 +1054,8 @@ class Human_sacrificeCreateView(
             str: URL to redirect to
         """
         return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id}) + "#hs_var"
+            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+            + "#hs_var"
         )
 
     def get_absolute_url(self) -> str:
@@ -1497,7 +1081,9 @@ class Human_sacrificeCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Human_sacrifice", "Human Sacrifice")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Human_sacrifice", "Human Sacrifice"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -1538,7 +1124,8 @@ class Human_sacrificeUpdateView(PermissionRequiredMixin, UpdateView):
             str: URL to redirect to
         """
         return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id}) + "#hs_var"
+            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+            + "#hs_var"
         )
 
     def get_context_data(self, **kwargs):
@@ -1555,9 +1142,7 @@ class Human_sacrificeUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "Human Sacrifice"
-        })
+        context = dict(context, **{"myvar": "Human Sacrifice"})
 
         return context
 
@@ -1662,9 +1247,7 @@ class Human_sacrificeListAllView(PermissionRequiredMixin, ListView):
 
         new_context = (
             Human_sacrifice.objects.all()
-            .annotate(
-                home_nga=POLITY_NGA_NAME
-            )
+            .annotate(home_nga=POLITY_NGA_NAME)
             .order_by(order, order2)
         )
 
@@ -1715,70 +1298,6 @@ class Human_sacrificeDetailView(PermissionRequiredMixin, DetailView):
     permission_required = "core.view_capital"
 
 
-@permission_required("core.view_capital")
-def human_sacrifice_download_view(request):
-    """
-    Download all Human_sacrifice instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"human_sacrifices_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "human_sacrifice_abbr",
-            "human_sacrifice_long",
-            "confidence",
-            "is_disputed",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    for obj in Human_sacrifice.objects.all():
-        writer.writerow(
-            [
-                obj.name,
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.polity.new_name,
-                obj.polity.name,
-                obj.human_sacrifice,
-                obj.get_human_sacrifice_display(),
-                obj.get_tag_display(),
-                obj.is_disputed,
-                obj.expert_reviewed,
-                obj.drb_reviewed,
-            ]
-        )
-
-    return response
-
-
 @login_required
 def create_a_comment_with_a_subcomment(request, hs_instance_id):
     """
@@ -1827,53 +1346,6 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
     return redirect("seshatcomment-update", pk=comment_instance.id)
 
 
-@permission_required("core.view_capital")
-def human_sacrifice_meta_download_view(request):
-    """
-    Download the metadata for Human_sacrifice instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="human_sacrifices.csv"'
-    )
-
-    meta_data_dic = {
-        "notes": Human_sacrifice.Code.notes,
-        "main_desc": Human_sacrifice.Code.description,
-        "main_desc_source": Human_sacrifice.Code.description_source,
-        "section": Human_sacrifice.Code.section,
-        "subsection": Human_sacrifice.Code.subsection,
-        "null_meaning": Human_sacrifice.Code.null_meaning,
-    }
-    meta_data_dic_inner_vars = Human_sacrifice.Code.inner_variables
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class External_conflictCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new External_conflict instance.
@@ -1910,7 +1382,9 @@ class External_conflictCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "External_conflict", "External Conflict")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "External_conflict", "External Conflict"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -1942,9 +1416,7 @@ class External_conflictUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "External Conflict"
-        })
+        context = dict(context, **{"myvar": "External Conflict"})
 
         return context
 
@@ -2031,106 +1503,6 @@ class External_conflictDetailView(DetailView):
     template_name = "crisisdb/external_conflict/external_conflict_detail.html"
 
 
-@permission_required("core.view_capital")
-def external_conflict_download_view(request):
-    """
-    Download all External_conflict instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="external_conflicts.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "conflict_name",
-        ]
-    )
-
-    for obj in External_conflict.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.conflict_name,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def external_conflict_meta_download_view(request):
-    """
-    Download the metadata for External_conflict instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="external_conflicts.csv"'
-    )
-
-    meta_data_dic = {
-        "notes": "This is a new model definition for External conflicts",
-        "main_desc": "Main Descriptions for the Variable external_conflict are missing!",
-        "main_desc_source": "Main Descriptions for the Variable external_conflict are missing!",  # noqa: E501 pylint: disable=C0301
-        "section": "Conflict Variables",
-        "subsection": "External Conflicts Subsection",
-        "null_meaning": "The value is not available.",
-    }
-    meta_data_dic_inner_vars = {
-        "conflict_name": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The unique name of this external conflict",
-            "units": None,
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Internal_conflictCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Internal_conflict instance.
@@ -2167,7 +1539,9 @@ class Internal_conflictCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Internal_conflict", "Internal Conflict")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Internal_conflict", "Internal Conflict"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -2199,9 +1573,7 @@ class Internal_conflictUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "Internal Conflict"
-        })
+        context = dict(context, **{"myvar": "Internal Conflict"})
 
         return context
 
@@ -2315,139 +1687,6 @@ class Internal_conflictDetailView(DetailView):
     template_name = "crisisdb/internal_conflict/internal_conflict_detail.html"
 
 
-@permission_required("core.view_capital")
-def internal_conflict_download_view(request):
-    """
-    Download all Internal_conflict instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="internal_conflicts.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "conflict",
-            "expenditure",
-            "leader",
-            "casualty",
-        ]
-    )
-
-    for obj in Internal_conflict.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.conflict,
-                obj.expenditure,
-                obj.leader,
-                obj.casualty,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def internal_conflict_meta_download_view(request):
-    """
-    Download the metadata for Internal_conflict instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="internal_conflicts.csv"'
-    )
-
-    meta_data_dic = {
-        "notes": "This is a new model definition for internal conflicts",
-        "main_desc": "Main Descriptions for the Variable internal_conflict are missing!",
-        "main_desc_source": "Main Descriptions for the Variable internal_conflict are missing!",  # noqa: E501 pylint: disable=C0301
-        "section": "Conflict Variables",
-        "subsection": "Internal Conflicts Subsection",
-        "null_meaning": "The value is not available.",
-    }
-    meta_data_dic_inner_vars = {
-        "conflict": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The name of the conflict",
-            "units": None,
-            "choices": None,
-        },
-        "expenditure": {
-            "min": None,
-            "max": None,
-            "scale": 1000000,
-            "var_exp_source": None,
-            "var_exp": "The military expenses in millions silver taels.",
-            "units": "silver taels",
-            "choices": None,
-        },
-        "leader": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The leader of the conflict",
-            "units": None,
-            "choices": None,
-        },
-        "casualty": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "The number of people who died in this conflict.",
-            "units": "People",
-            "choices": None,
-        },
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class External_conflict_sideCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new External_conflict_side instance.
@@ -2486,7 +1725,9 @@ class External_conflict_sideCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "External_conflict_side", "External Conflict Side")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "External_conflict_side", "External Conflict Side"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -2520,9 +1761,7 @@ class External_conflict_sideUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "External Conflict Side"
-        })
+        context = dict(context, **{"myvar": "External Conflict Side"})
 
         return context
 
@@ -2640,139 +1879,6 @@ class External_conflict_sideDetailView(DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def external_conflict_side_download_view(request):
-    """
-    Download all External_conflict_side instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="external_conflict_sides.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "conflict_id",
-            "expenditure",
-            "leader",
-            "casualty",
-        ]
-    )
-
-    for obj in External_conflict_side.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.conflict_id,
-                obj.expenditure,
-                obj.leader,
-                obj.casualty,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def external_conflict_side_meta_download_view(request):
-    """
-    Download the metadata for External_conflict_side instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="external_conflict_sides.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "This is a new model definition for External conflict sides",
-        "main_desc": "Main Descriptions for the Variable external_conflict_side are missing!",  # noqa: E501 pylint: disable=C0301
-        "main_desc_source": "Main Descriptions for the Variable external_conflict_side are missing!",  # noqa: E501 pylint: disable=C0301
-        "section": "Conflict Variables",
-        "subsection": "External Conflicts Subsection",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "conflict_id": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The external_conflict which is the actual conflict we are talking about",  # noqa: E501 pylint: disable=C0301
-            "units": None,
-            "choices": None,
-        },
-        "expenditure": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "The military expenses (from this side) in silver taels.",
-            "units": "silver taels",
-            "choices": None,
-        },
-        "leader": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The leader of this side of conflict",
-            "units": None,
-            "choices": None,
-        },
-        "casualty": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "The number of people who died (from this side) in this conflict.",
-            "units": "People",
-            "choices": None,
-        },
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Agricultural_populationCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Agricultural_population instance.
@@ -2811,7 +1917,9 @@ class Agricultural_populationCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Agricultural_population", "Agricultural Population")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Agricultural_population", "Agricultural Population"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -2845,9 +1953,7 @@ class Agricultural_populationUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "Agricultural Population"
-        })
+        context = dict(context, **{"myvar": "Agricultural Population"})
 
         return context
 
@@ -2938,103 +2044,6 @@ class Agricultural_populationDetailView(DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def agricultural_population_download_view(request):
-    """
-    Download all Agricultural_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="agricultural_populations.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "agricultural_population",
-        ]
-    )
-
-    for obj in Agricultural_population.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.agricultural_population,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def agricultural_population_meta_download_view(request):
-    """
-    Download the metadata for Agricultural_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="agricultural_populations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable agricultural_population are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "agricultural_population": {
-            "min": 0,
-            "max": None,
-            "scale": 1000,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "People",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Arable_landCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Arable_land instance.
@@ -3071,7 +2080,9 @@ class Arable_landCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Arable_land", "Arable Land")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Arable_land", "Arable Land"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -3103,9 +2114,7 @@ class Arable_landUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "myvar": "Arable Land"
-        })
+        context = dict(context, **{"myvar": "Arable Land"})
 
         return context
 
@@ -3192,102 +2201,6 @@ class Arable_landDetailView(DetailView):
     template_name = "crisisdb/arable_land/arable_land_detail.html"
 
 
-@permission_required("core.view_capital")
-def arable_land_download_view(request):
-    """
-    Download all Arable_land instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="arable_lands.csv"'
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "arable_land",
-        ]
-    )
-
-    for obj in Arable_land.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.arable_land,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def arable_land_meta_download_view(request):
-    """
-    Download the metadata for Arable_land instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="arable_lands.csv"'
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable arable_land are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "arable_land": {
-            "min": None,
-            "max": None,
-            "scale": 1000,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "mu?",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Arable_land_per_farmerCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Arable_land_per_farmer instance.
@@ -3326,7 +2239,9 @@ class Arable_land_per_farmerCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Arable_land_per_farmer", "Arable Land Per Farmer")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Arable_land_per_farmer", "Arable Land Per Farmer"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -3456,106 +2371,6 @@ class Arable_land_per_farmerDetailView(DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def arable_land_per_farmer_download_view(request):
-    """
-    Download all Arable_land_per_farmer instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="arable_land_per_farmers.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "arable_land_per_farmer",
-        ]
-    )
-
-    for obj in Arable_land_per_farmer.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.arable_land_per_farmer,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def arable_land_per_farmer_meta_download_view(request):
-    """
-    Download the metadata for Arable_land_per_farmer instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="arable_land_per_farmers.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable arable_land_per_farmer are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "arable_land_per_farmer": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "mu?",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Gross_grain_shared_per_agricultural_populationCreateView(
     PermissionRequiredMixin, CreateView
 ):
@@ -3594,7 +2409,11 @@ class Gross_grain_shared_per_agricultural_populationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Gross_grain_shared_per_agricultural_population", "Gross Grain Shared Per Agricultural Population")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context,
+            "Gross_grain_shared_per_agricultural_population",
+            "Gross Grain Shared Per Agricultural Population",
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -3724,107 +2543,6 @@ class Gross_grain_shared_per_agricultural_populationDetailView(DetailView):
     template_name = "crisisdb/gross_grain_shared_per_agricultural_population/gross_grain_shared_per_agricultural_population_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def gross_grain_shared_per_agricultural_population_download_view(request):
-    """
-    Download all Gross_grain_shared_per_agricultural_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="gross_grain_shared_per_agricultural_populations.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "gross_grain_shared_per_agricultural_population",
-        ]
-    )
-
-    for obj in Gross_grain_shared_per_agricultural_population.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.gross_grain_shared_per_agricultural_population,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def gross_grain_shared_per_agricultural_population_meta_download_view(request):
-    """
-    Download the metadata for Gross_grain_shared_per_agricultural_population instances as
-    CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="gross_grain_shared_per_agricultural_populations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable gross_grain_shared_per_agricultural_population are missing!",  # noqa: E501 pylint: disable=C0301
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "gross_grain_shared_per_agricultural_population": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "(catties per capita)",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Net_grain_shared_per_agricultural_populationCreateView(
     PermissionRequiredMixin, CreateView
 ):
@@ -3863,7 +2581,11 @@ class Net_grain_shared_per_agricultural_populationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Net_grain_shared_per_agricultural_population", "Net Grain Shared Per Agricultural Population")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context,
+            "Net_grain_shared_per_agricultural_population",
+            "Net Grain Shared Per Agricultural Population",
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -3994,100 +2716,6 @@ class Net_grain_shared_per_agricultural_populationDetailView(DetailView):
     template_name = "crisisdb/net_grain_shared_per_agricultural_population/net_grain_shared_per_agricultural_population_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def net_grain_shared_per_agricultural_population_download_view(request):
-    """
-    Download all Net_grain_shared_per_agricultural_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="net_grain_shared_per_agricultural_populations.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "net_grain_shared_per_agricultural_population",
-        ]
-    )
-
-    for obj in Net_grain_shared_per_agricultural_population.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.net_grain_shared_per_agricultural_population,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def net_grain_shared_per_agricultural_population_meta_download_view(request):
-    """
-    Download the metadata for Net_grain_shared_per_agricultural_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="net_grain_shared_per_agricultural_populations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable net_grain_shared_per_agricultural_population are missing!",  # noqa: E501 pylint: disable=C0301
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "net_grain_shared_per_agricultural_population": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "(catties per capita)",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class SurplusCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Surplus instance.
@@ -4124,7 +2752,9 @@ class SurplusCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Surplus", "Surplus")
+        context = expand_context_from_variable_hierarchy(
+            context, "Surplus", "Surplus"
+        )
 
         return context
 
@@ -4248,102 +2878,6 @@ class SurplusDetailView(DetailView):
     template_name = "crisisdb/surplus/surplus_detail.html"
 
 
-@permission_required("core.view_capital")
-def surplus_download_view(request):
-    """
-    Download all Surplus instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="surplus.csv"'
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "surplus",
-        ]
-    )
-
-    for obj in Surplus.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.surplus,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def surplus_meta_download_view(request):
-    """
-    Download the metadata for Surplus instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="surplus.csv"'
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable surplus are missing!",
-        "main_desc": "No Explanations.",
-        "main_desc_source": "No Explanations.",
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "surplus": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "No Explanations.",
-            "units": "(catties per capita)",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Military_expenseCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Military_expense instance.
@@ -4380,7 +2914,9 @@ class Military_expenseCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Military_expense", "Military Expense")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Military_expense", "Military Expense"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -4513,117 +3049,6 @@ class Military_expenseDetailView(DetailView):
     template_name = "crisisdb/military_expense/military_expense_detail.html"
 
 
-@permission_required("core.view_capital")
-def military_expense_download_view(request):
-    """
-    Download all Military_expense instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="military_expenses.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "conflict",
-            "expenditure",
-        ]
-    )
-
-    for obj in Military_expense.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.conflict,
-                obj.expenditure,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def military_expense_meta_download_view(request):
-    """
-    Download the metadata for Military_expense instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="military_expenses.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Not sure about Section and Subsection.",
-        "main_desc": "Main Descriptions for the Variable military_expense are missing!",
-        "main_desc_source": "Main Descriptions for the Variable military_expense are missing!",  # noqa: E501 pylint: disable=C0301
-        "section": "Economy Variables",
-        "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "conflict": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The name of the conflict",
-            "units": None,
-            "choices": None,
-        },
-        "expenditure": {
-            "min": None,
-            "max": None,
-            "scale": 1000000,
-            "var_exp_source": None,
-            "var_exp": "The military expenses in millions silver taels.",
-            "units": "silver taels",
-            "choices": None,
-        },
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Silver_inflowCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Silver_inflow instance.
@@ -4660,7 +3085,9 @@ class Silver_inflowCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Silver_inflow", "Silver Inflow")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Silver_inflow", "Silver Inflow"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -4784,106 +3211,6 @@ class Silver_inflowDetailView(DetailView):
     template_name = "crisisdb/silver_inflow/silver_inflow_detail.html"
 
 
-@permission_required("core.view_capital")
-def silver_inflow_download_view(request):
-    """
-    Download all Silver_inflow instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="silver_inflows.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "silver_inflow",
-        ]
-    )
-
-    for obj in Silver_inflow.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.silver_inflow,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def silver_inflow_meta_download_view(request):
-    """
-    Download the metadata for Silver_inflow instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="silver_inflows.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Needs suoervision on the units and scale.",
-        "main_desc": "Silver inflow in Millions of silver taels??",
-        "main_desc_source": "Silver inflow in Millions of silver taels??",
-        "section": "Economy Variables",
-        "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "silver_inflow": {
-            "min": None,
-            "max": None,
-            "scale": 1000000,
-            "var_exp_source": None,
-            "var_exp": "Silver inflow in Millions of silver taels??",
-            "units": "silver taels??",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Silver_stockCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Silver_stock instance.
@@ -4920,7 +3247,9 @@ class Silver_stockCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Silver_stock", "Silver Stock")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Silver_stock", "Silver Stock"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -5044,106 +3373,6 @@ class Silver_stockDetailView(DetailView):
     template_name = "crisisdb/silver_stock/silver_stock_detail.html"
 
 
-@permission_required("core.view_capital")
-def silver_stock_download_view(request):
-    """
-    Download all Silver_stock instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="silver_stocks.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "silver_stock",
-        ]
-    )
-
-    for obj in Silver_stock.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.silver_stock,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def silver_stock_meta_download_view(request):
-    """
-    Download the metadata for Silver_stock instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="silver_stocks.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Needs suoervision on the units and scale.",
-        "main_desc": "Silver stock in Millions of silver taels??",
-        "main_desc_source": "Silver stock in Millions of silver taels??",
-        "section": "Economy Variables",
-        "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "silver_stock": {
-            "min": None,
-            "max": None,
-            "scale": 1000000,
-            "var_exp_source": None,
-            "var_exp": "Silver stock in Millions of silver taels??",
-            "units": "silver taels??",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Total_populationCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Total_population instance.
@@ -5180,7 +3409,9 @@ class Total_populationCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Total_population", "Total Population")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Total_population", "Total Population"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -5307,106 +3538,6 @@ class Total_populationDetailView(DetailView):
     template_name = "crisisdb/total_population/total_population_detail.html"
 
 
-@permission_required("core.view_capital")
-def total_population_download_view(request):
-    """
-    Download all Total_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="total_populations.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "total_population",
-        ]
-    )
-
-    for obj in Total_population.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.total_population,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def total_population_meta_download_view(request):
-    """
-    Download the metadata for Total_population instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="total_populations.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Note that the population values are scaled.",
-        "main_desc": "Total population or simply population, of a given area is the total number of people in that area at a given time.",  # noqa: E501 pylint: disable=C0301
-        "main_desc_source": "Total population or simply population, of a given area is the total number of people in that area at a given time.",  # noqa: E501 pylint: disable=C0301
-        "section": "Social Complexity Variables",
-        "subsection": "Social Scale",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "total_population": {
-            "min": 0,
-            "max": None,
-            "scale": 1000,
-            "var_exp_source": None,
-            "var_exp": "The total population of a country (or a polity).",
-            "units": "People",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Gdp_per_capitaCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Gdp_per_capita instance.
@@ -5443,7 +3574,9 @@ class Gdp_per_capitaCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Gdp_per_capita", "GDP Per Capita")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Gdp_per_capita", "GDP Per Capita"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -5570,106 +3703,6 @@ class Gdp_per_capitaDetailView(DetailView):
     template_name = "crisisdb/gdp_per_capita/gdp_per_capita_detail.html"
 
 
-@permission_required("core.view_capital")
-def gdp_per_capita_download_view(request):
-    """
-    Download all Gdp_per_capita instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="gdp_per_capitas.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "gdp_per_capita",
-        ]
-    )
-
-    for obj in Gdp_per_capita.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.gdp_per_capita,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def gdp_per_capita_meta_download_view(request):
-    """
-    Download the metadata for Gdp_per_capita instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="gdp_per_capitas.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "The exact year based on which the value of Dollar is taken into account is not clear.",  # noqa: E501 pylint: disable=C0301
-        "main_desc": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.",  # noqa: E501 pylint: disable=C0301
-        "main_desc_source": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.",  # noqa: E501 pylint: disable=C0301
-        "section": "Economy Variables",
-        "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "gdp_per_capita": {
-            "min": None,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": "https://www.thebalance.com/gdp-per-capita-formula-u-s-compared-to-highest-and-lowest-3305848",  # noqa: E501 pylint: disable=C0301
-            "var_exp": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.",  # noqa: E501 pylint: disable=C0301
-            "units": "Dollars (in 2009?)",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Drought_eventCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Drought_event instance.
@@ -5706,7 +3739,9 @@ class Drought_eventCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Drought_event", "Drought Event")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Drought_event", "Drought Event"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -5833,106 +3868,6 @@ class Drought_eventDetailView(DetailView):
     template_name = "crisisdb/drought_event/drought_event_detail.html"
 
 
-@permission_required("core.view_capital")
-def drought_event_download_view(request):
-    """
-    Download all Drought_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="drought_events.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "drought_event",
-        ]
-    )
-
-    for obj in Drought_event.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.drought_event,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def drought_event_meta_download_view(request):
-    """
-    Download the metadata for Drought_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="drought_events.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable drought_event are missing!",
-        "main_desc": "number of geographic sites indicating drought",
-        "main_desc_source": "number of geographic sites indicating drought",
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "drought_event": {
-            "min": 0,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "number of geographic sites indicating drought",
-            "units": "Numbers",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Locust_eventCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Locust_event instance.
@@ -5969,7 +3904,9 @@ class Locust_eventCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Locust_event", "Locust Event")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Locust_event", "Locust Event"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -6093,106 +4030,6 @@ class Locust_eventDetailView(DetailView):
     template_name = "crisisdb/locust_event/locust_event_detail.html"
 
 
-@permission_required("core.view_capital")
-def locust_event_download_view(request):
-    """
-    Download all Locust_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="locust_events.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "locust_event",
-        ]
-    )
-
-    for obj in Locust_event.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.locust_event,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def locust_event_meta_download_view(request):
-    """
-    Download the metadata for Locust_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="locust_events.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable locust_event are missing!",
-        "main_desc": "number of geographic sites indicating locusts",
-        "main_desc_source": "number of geographic sites indicating locusts",
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "locust_event": {
-            "min": 0,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "number of geographic sites indicating locusts",
-            "units": "Numbers",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Socioeconomic_turmoil_eventCreateView(
     PermissionRequiredMixin, CreateView
 ):
@@ -6231,7 +4068,11 @@ class Socioeconomic_turmoil_eventCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Socioeconomic_turmoil_event", "Socioeconomic Turmoil Event")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context,
+            "Socioeconomic_turmoil_event",
+            "Socioeconomic Turmoil Event",
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -6359,106 +4200,6 @@ class Socioeconomic_turmoil_eventDetailView(DetailView):
     template_name = "crisisdb/socioeconomic_turmoil_event/socioeconomic_turmoil_event_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-@permission_required("core.view_capital")
-def socioeconomic_turmoil_event_download_view(request):
-    """
-    Download all Socioeconomic_turmoil_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="socioeconomic_turmoil_events.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "socioeconomic_turmoil_event",
-        ]
-    )
-
-    for obj in Socioeconomic_turmoil_event.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.socioeconomic_turmoil_event,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def socioeconomic_turmoil_event_meta_download_view(request):
-    """
-    Download the metadata for Socioeconomic_turmoil_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="socioeconomic_turmoil_events.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable socioeconomic_turmoil_event are missing!",
-        "main_desc": "number of geographic sites indicating socioeconomic turmoil",
-        "main_desc_source": "number of geographic sites indicating socioeconomic turmoil",
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "socioeconomic_turmoil_event": {
-            "min": 0,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "number of geographic sites indicating socioeconomic turmoil",
-            "units": "Numbers",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Crop_failure_eventCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Crop_failure_event instance.
@@ -6495,7 +4236,9 @@ class Crop_failure_eventCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Crop_failure_event", "Crop Failure Event")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Crop_failure_event", "Crop Failure Event"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -6624,107 +4367,6 @@ class Crop_failure_eventDetailView(DetailView):
     )
 
 
-@permission_required("core.view_capital")
-def crop_failure_event_download_view(request):
-    """
-    Download all Crop_failure_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="crop_failure_events.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "crop_failure_event",
-        ]
-    )
-
-    for obj in Crop_failure_event.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.crop_failure_event,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def crop_failure_event_meta_download_view(request):
-    """
-    Download the metadata for Crop_failure_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="crop_failure_events.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable crop_failure_event are missing!",
-        "main_desc": "number of geographic sites indicating crop failure",
-        "main_desc_source": "number of geographic sites indicating crop failure",
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "crop_failure_event": {
-            "min": 0,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "number of geographic sites indicating crop failure",
-            "units": "Numbers",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Famine_eventCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Famine_event instance.
@@ -6761,7 +4403,9 @@ class Famine_eventCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Famine_event", "Famine Event")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Famine_event", "Famine Event"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -6885,107 +4529,6 @@ class Famine_eventDetailView(DetailView):
     template_name = "crisisdb/famine_event/famine_event_detail.html"
 
 
-@permission_required("core.view_capital")
-def famine_event_download_view(request):
-    """
-    Download all Famine_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="famine_events.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "famine_event",
-        ]
-    )
-
-    for obj in Famine_event.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.famine_event,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def famine_event_meta_download_view(request):
-    """
-    Download the metadata for Famine_event instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="famine_events.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable famine_event are missing!",
-        "main_desc": "number of geographic sites indicating famine",
-        "main_desc_source": "number of geographic sites indicating famine",
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "famine_event": {
-            "min": 0,
-            "max": None,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "number of geographic sites indicating famine",
-            "units": "Numbers",
-            "choices": None,
-        }
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 class Disease_outbreakCreateView(PermissionRequiredMixin, CreateView):
     """
     View for creating a new Disease_outbreak instance.
@@ -7022,7 +4565,9 @@ class Disease_outbreakCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = expand_context_from_variable_hierarchy(context, "Disease_outbreak", "Disease Outbreak")  # noqa: E501 pylint: disable=C0301
+        context = expand_context_from_variable_hierarchy(
+            context, "Disease_outbreak", "Disease Outbreak"
+        )  # noqa: E501 pylint: disable=C0301
 
         return context
 
@@ -7218,162 +4763,6 @@ class Disease_outbreakDetailView(DetailView):
     template_name = "crisisdb/disease_outbreak/disease_outbreak_detail.html"
 
 
-@permission_required("core.view_capital")
-def disease_outbreak_download_view(request):
-    """
-    Download all Disease_outbreak instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="disease_outbreaks.csv"'
-    )
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "year_from",
-            "year_to",
-            "polity",
-            "longitude",
-            "latitude",
-            "elevation",
-            "sub_category",
-            "magnitude",
-            "duration",
-        ]
-    )
-
-    for obj in Disease_outbreak.objects.all():
-        writer.writerow(
-            [
-                obj.year_from,
-                obj.year_to,
-                obj.polity.long_name,
-                obj.longitude,
-                obj.latitude,
-                obj.elevation,
-                obj.sub_category,
-                obj.magnitude,
-                obj.duration,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def disease_outbreak_meta_download_view(request):
-    """
-    Download the metadata for Disease_outbreak instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        'attachment; filename="disease_outbreaks.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "Notes for the Variable disease_outbreak are missing!",
-        "main_desc": "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season.",  # noqa: E501 pylint: disable=C0301
-        "main_desc_source": "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season.",  # noqa: E501 pylint: disable=C0301
-        "section": "Well Being",
-        "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
-    }
-    my_meta_data_dic_inner_vars = {
-        "longitude": {
-            "min": -180,
-            "max": 180,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "The longitude (in degrees) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
-            "units": "Degrees",
-            "choices": None,
-        },
-        "latitude": {
-            "min": -180,
-            "max": 180,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "The latitude (in degrees) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
-            "units": "Degrees",
-            "choices": None,
-        },
-        "elevation": {
-            "min": 0,
-            "max": 5000,
-            "scale": 1,
-            "var_exp_source": None,
-            "var_exp": "Elevation from mean sea level (in meters) of the place where the disease was spread.",  # noqa: E501 pylint: disable=C0301
-            "units": "Meters",
-            "choices": None,
-        },
-        "sub_category": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "The category of the disease.",
-            "units": None,
-            "choices": INNER_SUB_CATEGORY_DISEASE_OUTBREAK_CHOICES,
-        },
-        "magnitude": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "How heavy the disease was.",
-            "units": None,
-            "choices": INNER_MAGNITUDE_DISEASE_OUTBREAK_CHOICES,
-        },
-        "duration": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": "How long the disease lasted.",
-            "units": None,
-            "choices": INNER_DURATION_DISEASE_OUTBREAK_CHOICES,
-        },
-    }
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
-
-
 # The temporary function for creating the my_sections_dic dic: test_for_varhier_dic inside
 # utils and the qing_vars_links_creator() inside utils.py
 def qing_vars_view(request):
@@ -7389,145 +4778,7 @@ def qing_vars_view(request):
     Returns:
         dict: Context data for the view
     """
-    my_sections_dic = {
-        "Economy Variables": {
-            "Productivity": [
-                [
-                    "Agricultural population",
-                    "agricultural_populations",
-                    "agricultural_population-create",
-                    "agricultural_population-download",
-                    "agricultural_population-metadownload",
-                ],
-                [
-                    "Arable land",
-                    "arable_lands",
-                    "arable_land-create",
-                    "arable_land-download",
-                    "arable_land-metadownload",
-                ],
-                [
-                    "Arable land per farmer",
-                    "arable_land_per_farmers",
-                    "arable_land_per_farmer-create",
-                    "arable_land_per_farmer-download",
-                    "arable_land_per_farmer-metadownload",
-                ],
-                [
-                    "Gross grain shared per agricultural population",
-                    "gross_grain_shared_per_agricultural_populations",
-                    "gross_grain_shared_per_agricultural_population-create",
-                    "gross_grain_shared_per_agricultural_population-download",
-                    "gross_grain_shared_per_agricultural_population-metadownload",
-                ],
-                [
-                    "Net grain shared per agricultural population",
-                    "net_grain_shared_per_agricultural_populations",
-                    "net_grain_shared_per_agricultural_population-create",
-                    "net_grain_shared_per_agricultural_population-download",
-                    "net_grain_shared_per_agricultural_population-metadownload",
-                ],
-                [
-                    "Surplus",
-                    "surplus",
-                    "surplus-create",
-                    "surplus-download",
-                    "surplus-metadownload",
-                ],
-                [
-                    "Gdp per capita",
-                    "gdp_per_capitas",
-                    "gdp_per_capita-create",
-                    "gdp_per_capita-download",
-                    "gdp_per_capita-metadownload",
-                ],
-            ],
-            "State Finances": [
-                [
-                    "Military expense",
-                    "military_expenses",
-                    "military_expense-create",
-                    "military_expense-download",
-                    "military_expense-metadownload",
-                ],
-                [
-                    "Silver inflow",
-                    "silver_inflows",
-                    "silver_inflow-create",
-                    "silver_inflow-download",
-                    "silver_inflow-metadownload",
-                ],
-                [
-                    "Silver stock",
-                    "silver_stocks",
-                    "silver_stock-create",
-                    "silver_stock-download",
-                    "silver_stock-metadownload",
-                ],
-            ],
-        },
-        "Social Complexity Variables": {
-            "Social Scale": [
-                [
-                    "Total population",
-                    "total_populations",
-                    "total_population-create",
-                    "total_population-download",
-                    "total_population-metadownload",
-                ]
-            ]
-        },
-        "Well Being": {
-            "Biological Well-Being": [
-                [
-                    "Drought event",
-                    "drought_events",
-                    "drought_event-create",
-                    "drought_event-download",
-                    "drought_event-metadownload",
-                ],
-                [
-                    "Locust event",
-                    "locust_events",
-                    "locust_event-create",
-                    "locust_event-download",
-                    "locust_event-metadownload",
-                ],
-                [
-                    "Socioeconomic turmoil event",
-                    "socioeconomic_turmoil_events",
-                    "socioeconomic_turmoil_event-create",
-                    "socioeconomic_turmoil_event-download",
-                    "socioeconomic_turmoil_event-metadownload",
-                ],
-                [
-                    "Crop failure event",
-                    "crop_failure_events",
-                    "crop_failure_event-create",
-                    "crop_failure_event-download",
-                    "crop_failure_event-metadownload",
-                ],
-                [
-                    "Famine event",
-                    "famine_events",
-                    "famine_event-create",
-                    "famine_event-download",
-                    "famine_event-metadownload",
-                ],
-                [
-                    "Disease outbreak",
-                    "disease_outbreaks",
-                    "disease_outbreak-create",
-                    "disease_outbreak-download",
-                    "disease_outbreak-metadownload",
-                ],
-            ]
-        },
-    }
-
-    context = {
-        "my_dict": my_sections_dic
-    }
+    context = {"my_dict": QING_VARS}
 
     return render(request, "crisisdb/qing-vars.html", context=context)
 
@@ -7853,127 +5104,8 @@ class UsViolenceUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("us_violence_paginated")
 
 
-@permission_required("core.view_capital")
-def download_csv_all_american_violence(request):
-    """
-    Download all Us_violence instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"american_violence_data_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "id",
-            "date",
-            "type",
-            "subtypes",
-            "locations",
-            "fatality",
-            "sources",
-            "url_address",
-            "source_details",
-            "narrative",
-        ]
-    )
-
-    for obj in Us_violence.objects.all().order_by("id"):
-        locations_text = remove_html_tags(obj.show_locations())
-        short_data_sources_text = remove_html_tags(
-            obj.show_short_data_sources()
-        )
-
-        writer.writerow(
-            [
-                obj.id,
-                obj.violence_date,
-                obj.violence_type,
-                obj.show_violence_subtypes(),
-                locations_text,
-                obj.fatalities,
-                short_data_sources_text,
-                obj.url_address,
-                obj.source_details,
-                obj.narrative,
-            ]
-        )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_all_american_violence2(request):
-    """
-    Download all Us_violence instances as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-        This function is not currently used in the application.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"american_violence_data_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "date",
-            "type",
-            "subtypes",
-            "locations",
-            "fatality",
-            "sources",
-            "url_address",
-        ]
-    )
-
-    for obj in Us_violence.objects.all():
-        locations_text = remove_html_tags(obj.show_locations())
-        short_data_sources_text = remove_html_tags(
-            obj.show_short_data_sources()
-        )
-
-        writer.writerow(
-            [
-                obj.violence_date,
-                obj.violence_type,
-                obj.show_violence_subtypes(),
-                locations_text,
-                obj.fatalities,
-                short_data_sources_text,
-                obj.url_address,
-            ]
-        )
-
-    return response
-
-
 @permission_required("core.add_capital")
-def confirm_delete_view(request, model_class, pk, var_name):
+def generic_confirm_delete_view(request, model_class, pk, var_name):
     """
     View for confirming the deletion of an object.
 
@@ -8007,7 +5139,7 @@ def confirm_delete_view(request, model_class, pk, var_name):
 
 
 @permission_required("core.add_capital")
-def delete_object_view(request, model_class, pk, var_name):
+def generic_delete_object_view(request, model_class, pk, var_name):
     """
     View for deleting an object.
 
@@ -8032,8 +5164,7 @@ def delete_object_view(request, model_class, pk, var_name):
     obj.delete()
 
     # Redirect to the success URL
-    success_url_name = f"{var_name}_list"  # Adjust the success URL as needed
-    success_url = reverse(success_url_name)
+    success_url = reverse(f"{var_name}_list")
 
     # Display a success message
     messages.success(request, f"{var_name} has been deleted successfully.")

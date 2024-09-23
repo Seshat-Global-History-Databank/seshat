@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-from ..global_utils import (
+from ..utils import (
     return_citations,
     validate_time_range,
     get_model_instance_name,
 )
-from ..global_constants import ICONS
+from ..constants import ICONS
 
 
 class CrisisDBMixin:

@@ -22,11 +22,12 @@ def notifications(request):
     if request.user.is_authenticated:
         try:
             expert = Seshat_Expert.objects.get(user_id=request.user.id)
+        except Seshat_Expert.DoesNotExist:
+            private_comment_count = 0
+        else:
             private_comment_count = SeshatPrivateCommentPart.objects.filter(
                 private_comment_reader__id=expert.id
             ).count()
-        except:  # noqa: E722  TODO: Don't use bare except
-            private_comment_count = 0
     else:
         private_comment_count = 0
 

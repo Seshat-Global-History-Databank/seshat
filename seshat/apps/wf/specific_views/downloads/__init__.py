@@ -4,8 +4,8 @@ from django.shortcuts import HttpResponse
 import csv
 import datetime
 
-from ....global_utils import get_models, write_csv
-from ....global_constants import CSV_DELIMITER
+from ....utils import get_models, write_csv
+from ....constants import CSV_DELIMITER, SUBSECTIONS
 
 from ...models import (
     Long_wall,
@@ -748,9 +748,7 @@ def download_csv_all_wf(request):
     # Iterate over each model
     for model in get_models(APP_NAME):
         # Get all rows of data from the model
-        items = model.objects.all()
-
-        for obj in items:
+        for obj in model.objects.all():
             if obj.clean_name() == "long_wall":
                 writer.writerow(
                     [
@@ -823,29 +821,26 @@ def download_csv_fortifications(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Fortifications":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.Fortifications):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -882,30 +877,26 @@ def download_csv_military_use_of_metals(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-
-        if s_value == "Military use of Metals":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.MilitaryUseOfMetals):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -943,29 +934,26 @@ def download_csv_projectiles(request):
     )
 
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Projectiles":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.Projectiles):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -1002,29 +990,26 @@ def download_csv_handheld_weapons(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Handheld weapons":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.HandheldWeapons):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -1061,29 +1046,26 @@ def download_csv_animals_used_in_warfare(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Animals used in warfare":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.AnimalsUsedInWarfare):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -1120,29 +1102,26 @@ def download_csv_armor(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Armor":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.Armor):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response
 
@@ -1179,28 +1158,25 @@ def download_csv_naval_technology(request):
         ]
     )
     # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        s_value = str(model().subsection())
-        if s_value == "Naval technology":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow(
-                    [
-                        obj.subsection(),
-                        obj.clean_name(),
-                        obj.year_from,
-                        obj.year_to,
-                        obj.polity.long_name,
-                        obj.polity.new_name,
-                        obj.polity.name,
-                        obj.show_value_from(),
-                        obj.show_value_to(),
-                        obj.get_tag_display(),
-                        obj.is_disputed,
-                        obj.is_uncertain,
-                        obj.expert_reviewed,
-                        obj.drb_reviewed,
-                    ]
-                )
+    for model in get_models(APP_NAME, subsection=SUBSECTIONS.wf.NavalTechnology):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
 
     return response

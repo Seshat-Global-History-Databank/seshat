@@ -64,6 +64,7 @@ from .constants import SC_VAR_DEFS
 
 from . import views
 from .specific_views import downloads
+from .specific_views import generic
 
 
 model_form_pairs = [
@@ -339,120 +340,6 @@ urlpatterns = [
         downloads.download_csv_information,
         name="download_csv_information",
     ),
-]
-
-
-# Create URL patterns dynamically for each model-class pair: UPDATE
-for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
-    urlpatterns.append(
-        path(
-            f"{x_name}/update/<int:object_id>/",
-            views.dynamic_update_view,
-            {
-                "form_class": form_class,
-                "model_class": model_class,
-                "x_name": x_name,
-                "myvar": myvar,
-                "my_exp": SC_VAR_DEFS[x_name],
-                "var_section": sec,
-                "var_subsection": subsec,
-                "delete_url_name": x_name + "-confirm-delete",
-            },
-            name=f"{x_name}-update",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}/create/",
-            views.dynamic_create_view,
-            {
-                "form_class": form_class,
-                "x_name": x_name,
-                "myvar": myvar,
-                "my_exp": SC_VAR_DEFS[x_name],
-                "var_section": sec,
-                "var_subsection": subsec,
-            },
-            name=f"{x_name}-create",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}s_all/",
-            views.generic_list_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-                "var_name_display": myvar,
-                "var_section": sec,
-                "var_subsection": subsec,
-                "var_main_desc": SC_VAR_DEFS[x_name],
-            },
-            name=f"{x_name}s_all",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}download/",
-            downloads.generic_download_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-download",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}metadownload/",
-            downloads.generic_metadata_download_view,
-            {
-                "var_name": x_name,
-                "var_name_display": myvar,
-                "var_section": sec,
-                "var_subsection": subsec,
-                "var_main_desc": SC_VAR_DEFS[x_name],
-            },
-            name=f"{x_name}-metadownload",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}/<int:pk>/",
-            views.dynamic_detail_view,
-            {
-                "model_class": model_class,
-                "myvar": x_name,
-                "var_name_display": myvar,
-            },
-            name=f"{x_name}-detail",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}/<int:pk>/confirm-delete/",
-            views.confirm_delete_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-confirm-delete",
-        )
-    )
-    urlpatterns.append(
-        path(
-            f"{x_name}/<int:pk>/delete/",
-            views.delete_object_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-delete",
-        )
-    )
-
-
-urlpatterns += [
     path("ra/create/", views.RaCreateView.as_view(), name="ra-create"),
     path("ras/", views.RaListView.as_view(), name="ras"),
     path("ras_all/", views.RaListAllView.as_view(), name="ras_all"),
@@ -461,10 +348,6 @@ urlpatterns += [
     path("ra/<int:pk>/delete/", views.RaDeleteView.as_view(), name="ra-delete"),
     path("radownload/", downloads.ra_download_view, name="ra-download"),
     path("rametadownload/", downloads.ra_meta_download_view, name="ra-metadownload"),
-]
-
-
-urlpatterns += [
     path(
         "polity_territory/create/",
         views.Polity_territoryCreateView.as_view(),
@@ -505,10 +388,6 @@ urlpatterns += [
         downloads.polity_territory_meta_download_view,
         name="polity_territory-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "polity_population/create/",
         views.Polity_populationCreateView.as_view(),
@@ -549,10 +428,6 @@ urlpatterns += [
         downloads.polity_population_meta_download_view,
         name="polity_population-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "population_of_the_largest_settlement/create/",
         views.Population_of_the_largest_settlementCreateView.as_view(),
@@ -593,10 +468,6 @@ urlpatterns += [
         downloads.population_of_the_largest_settlement_meta_download_view,
         name="population_of_the_largest_settlement-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "settlement_hierarchy/create/",
         views.Settlement_hierarchyCreateView.as_view(),
@@ -637,10 +508,6 @@ urlpatterns += [
         downloads.settlement_hierarchy_meta_download_view,
         name="settlement_hierarchy-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "administrative_level/create/",
         views.Administrative_levelCreateView.as_view(),
@@ -681,10 +548,6 @@ urlpatterns += [
         downloads.administrative_level_meta_download_view,
         name="administrative_level-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "religious_level/create/",
         views.Religious_levelCreateView.as_view(),
@@ -725,10 +588,6 @@ urlpatterns += [
         downloads.religious_level_meta_download_view,
         name="religious_level-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "military_level/create/",
         views.Military_levelCreateView.as_view(),
@@ -764,10 +623,6 @@ urlpatterns += [
         downloads.military_level_meta_download_view,
         name="military_level-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "professional_military_officer/create/",
         views.Professional_military_officerCreateView.as_view(),
@@ -808,10 +663,6 @@ urlpatterns += [
         downloads.professional_military_officer_meta_download_view,
         name="professional_military_officer-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "professional_soldier/create/",
         views.Professional_soldierCreateView.as_view(),
@@ -852,10 +703,6 @@ urlpatterns += [
         downloads.professional_soldier_meta_download_view,
         name="professional_soldier-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "professional_priesthood/create/",
         views.Professional_priesthoodCreateView.as_view(),
@@ -896,10 +743,6 @@ urlpatterns += [
         downloads.professional_priesthood_meta_download_view,
         name="professional_priesthood-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "full_time_bureaucrat/create/",
         views.Full_time_bureaucratCreateView.as_view(),
@@ -940,10 +783,6 @@ urlpatterns += [
         downloads.full_time_bureaucrat_meta_download_view,
         name="full_time_bureaucrat-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "examination_system/create/",
         views.Examination_systemCreateView.as_view(),
@@ -984,10 +823,6 @@ urlpatterns += [
         downloads.examination_system_meta_download_view,
         name="examination_system-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "merit_promotion/create/",
         views.Merit_promotionCreateView.as_view(),
@@ -1028,10 +863,6 @@ urlpatterns += [
         downloads.merit_promotion_meta_download_view,
         name="merit_promotion-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "specialized_government_building/create/",
         views.Specialized_government_buildingCreateView.as_view(),
@@ -1072,10 +903,6 @@ urlpatterns += [
         downloads.specialized_government_building_meta_download_view,
         name="specialized_government_building-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "formal_legal_code/create/",
         views.Formal_legal_codeCreateView.as_view(),
@@ -1116,10 +943,6 @@ urlpatterns += [
         downloads.formal_legal_code_meta_download_view,
         name="formal_legal_code-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("judge/create/", views.JudgeCreateView.as_view(), name="judge-create"),
     path("judges/", views.JudgeListView.as_view(), name="judges"),
     path("judges_all/", views.JudgeListAllView.as_view(), name="judges_all"),
@@ -1140,10 +963,6 @@ urlpatterns += [
         downloads.judge_meta_download_view,
         name="judge-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("court/create/", views.CourtCreateView.as_view(), name="court-create"),
     path("courts/", views.CourtListView.as_view(), name="courts"),
     path("courts_all/", views.CourtListAllView.as_view(), name="courts_all"),
@@ -1164,10 +983,6 @@ urlpatterns += [
         downloads.court_meta_download_view,
         name="court-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "professional_lawyer/create/",
         views.Professional_lawyerCreateView.as_view(),
@@ -1208,10 +1023,6 @@ urlpatterns += [
         downloads.professional_lawyer_meta_download_view,
         name="professional_lawyer-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "irrigation_system/create/",
         views.Irrigation_systemCreateView.as_view(),
@@ -1252,10 +1063,6 @@ urlpatterns += [
         downloads.irrigation_system_meta_download_view,
         name="irrigation_system-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "drinking_water_supply_system/create/",
         views.Drinking_water_supply_systemCreateView.as_view(),
@@ -1296,10 +1103,6 @@ urlpatterns += [
         downloads.drinking_water_supply_system_meta_download_view,
         name="drinking_water_supply_system-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("market/create/", views.MarketCreateView.as_view(), name="market-create"),
     path("markets/", views.MarketListView.as_view(), name="markets"),
     path("markets_all/", views.MarketListAllView.as_view(), name="markets_all"),
@@ -1324,10 +1127,6 @@ urlpatterns += [
         downloads.market_meta_download_view,
         name="market-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "food_storage_site/create/",
         views.Food_storage_siteCreateView.as_view(),
@@ -1368,10 +1167,6 @@ urlpatterns += [
         downloads.food_storage_site_meta_download_view,
         name="food_storage_site-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("road/create/", views.RoadCreateView.as_view(), name="road-create"),
     path("roads/", views.RoadListView.as_view(), name="roads"),
     path("roads_all/", views.RoadListAllView.as_view(), name="roads_all"),
@@ -1380,10 +1175,6 @@ urlpatterns += [
     path("road/<int:pk>/delete/", views.RoadDeleteView.as_view(), name="road-delete"),
     path("roaddownload/", downloads.road_download_view, name="road-download"),
     path("roadmetadownload/", downloads.road_meta_download_view, name="road-metadownload"),
-]
-
-
-urlpatterns += [
     path("bridge/create/", views.BridgeCreateView.as_view(), name="bridge-create"),
     path("bridges/", views.BridgeListView.as_view(), name="bridges"),
     path("bridges_all/", views.BridgeListAllView.as_view(), name="bridges_all"),
@@ -1408,10 +1199,6 @@ urlpatterns += [
         downloads.bridge_meta_download_view,
         name="bridge-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("canal/create/", views.CanalCreateView.as_view(), name="canal-create"),
     path("canals/", views.CanalListView.as_view(), name="canals"),
     path("canals_all/", views.CanalListAllView.as_view(), name="canals_all"),
@@ -1432,10 +1219,6 @@ urlpatterns += [
         downloads.canal_meta_download_view,
         name="canal-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("port/create/", views.PortCreateView.as_view(), name="port-create"),
     path("ports/", views.PortListView.as_view(), name="ports"),
     path("ports_all/", views.PortListAllView.as_view(), name="ports_all"),
@@ -1444,10 +1227,6 @@ urlpatterns += [
     path("port/<int:pk>/delete/", views.PortDeleteView.as_view(), name="port-delete"),
     path("portdownload/", downloads.port_download_view, name="port-download"),
     path("portmetadownload/", downloads.port_meta_download_view, name="port-metadownload"),
-]
-
-
-urlpatterns += [
     path(
         "mines_or_quarry/create/",
         views.Mines_or_quarryCreateView.as_view(),
@@ -1488,10 +1267,6 @@ urlpatterns += [
         downloads.mines_or_quarry_meta_download_view,
         name="mines_or_quarry-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "mnemonic_device/create/",
         views.Mnemonic_deviceCreateView.as_view(),
@@ -1532,10 +1307,6 @@ urlpatterns += [
         downloads.mnemonic_device_meta_download_view,
         name="mnemonic_device-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "nonwritten_record/create/",
         views.Nonwritten_recordCreateView.as_view(),
@@ -1576,10 +1347,6 @@ urlpatterns += [
         downloads.nonwritten_record_meta_download_view,
         name="nonwritten_record-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "written_record/create/",
         views.Written_recordCreateView.as_view(),
@@ -1620,10 +1387,6 @@ urlpatterns += [
         downloads.written_record_meta_download_view,
         name="written_record-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("script/create/", views.ScriptCreateView.as_view(), name="script-create"),
     path("scripts/", views.ScriptListView.as_view(), name="scripts"),
     path("scripts_all/", views.ScriptListAllView.as_view(), name="scripts_all"),
@@ -1648,10 +1411,6 @@ urlpatterns += [
         downloads.script_meta_download_view,
         name="script-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "non_phonetic_writing/create/",
         views.Non_phonetic_writingCreateView.as_view(),
@@ -1692,10 +1451,6 @@ urlpatterns += [
         downloads.non_phonetic_writing_meta_download_view,
         name="non_phonetic_writing-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "phonetic_alphabetic_writing/create/",
         views.Phonetic_alphabetic_writingCreateView.as_view(),
@@ -1736,10 +1491,6 @@ urlpatterns += [
         downloads.phonetic_alphabetic_writing_meta_download_view,
         name="phonetic_alphabetic_writing-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "lists_tables_and_classification/create/",
         views.Lists_tables_and_classificationCreateView.as_view(),
@@ -1780,10 +1531,6 @@ urlpatterns += [
         downloads.lists_tables_and_classification_meta_download_view,
         name="lists_tables_and_classification-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "calendar/create/",
         views.CalendarCreateView.as_view(),
@@ -1816,10 +1563,6 @@ urlpatterns += [
         downloads.calendar_meta_download_view,
         name="calendar-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "sacred_text/create/",
         views.Sacred_textCreateView.as_view(),
@@ -1860,10 +1603,6 @@ urlpatterns += [
         downloads.sacred_text_meta_download_view,
         name="sacred_text-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "religious_literature/create/",
         views.Religious_literatureCreateView.as_view(),
@@ -1904,10 +1643,6 @@ urlpatterns += [
         downloads.religious_literature_meta_download_view,
         name="religious_literature-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "practical_literature/create/",
         views.Practical_literatureCreateView.as_view(),
@@ -1948,10 +1683,6 @@ urlpatterns += [
         downloads.practical_literature_meta_download_view,
         name="practical_literature-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("history/create/", views.HistoryCreateView.as_view(), name="history-create"),
     path("historys/", views.HistoryListView.as_view(), name="historys"),
     path(
@@ -1980,10 +1711,6 @@ urlpatterns += [
         downloads.history_meta_download_view,
         name="history-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "philosophy/create/",
         views.PhilosophyCreateView.as_view(),
@@ -2020,10 +1747,6 @@ urlpatterns += [
         downloads.philosophy_meta_download_view,
         name="philosophy-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "scientific_literature/create/",
         views.Scientific_literatureCreateView.as_view(),
@@ -2064,10 +1787,6 @@ urlpatterns += [
         downloads.scientific_literature_meta_download_view,
         name="scientific_literature-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("fiction/create/", views.FictionCreateView.as_view(), name="fiction-create"),
     path("fictions/", views.FictionListView.as_view(), name="fictions"),
     path(
@@ -2096,10 +1815,6 @@ urlpatterns += [
         downloads.fiction_meta_download_view,
         name="fiction-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("article/create/", views.ArticleCreateView.as_view(), name="article-create"),
     path("articles/", views.ArticleListView.as_view(), name="articles"),
     path(
@@ -2128,10 +1843,6 @@ urlpatterns += [
         downloads.article_meta_download_view,
         name="article-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("token/create/", views.TokenCreateView.as_view(), name="token-create"),
     path("tokens/", views.TokenListView.as_view(), name="tokens"),
     path("tokens_all/", views.TokenListAllView.as_view(), name="tokens_all"),
@@ -2152,10 +1863,6 @@ urlpatterns += [
         downloads.token_meta_download_view,
         name="token-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "precious_metal/create/",
         views.Precious_metalCreateView.as_view(),
@@ -2196,10 +1903,6 @@ urlpatterns += [
         downloads.precious_metal_meta_download_view,
         name="precious_metal-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "foreign_coin/create/",
         views.Foreign_coinCreateView.as_view(),
@@ -2240,10 +1943,6 @@ urlpatterns += [
         downloads.foreign_coin_meta_download_view,
         name="foreign_coin-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "indigenous_coin/create/",
         views.Indigenous_coinCreateView.as_view(),
@@ -2284,10 +1983,6 @@ urlpatterns += [
         downloads.indigenous_coin_meta_download_view,
         name="indigenous_coin-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "paper_currency/create/",
         views.Paper_currencyCreateView.as_view(),
@@ -2328,10 +2023,6 @@ urlpatterns += [
         downloads.paper_currency_meta_download_view,
         name="paper_currency-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path("courier/create/", views.CourierCreateView.as_view(), name="courier-create"),
     path("couriers/", views.CourierListView.as_view(), name="couriers"),
     path(
@@ -2360,10 +2051,6 @@ urlpatterns += [
         downloads.courier_meta_download_view,
         name="courier-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "postal_station/create/",
         views.Postal_stationCreateView.as_view(),
@@ -2404,10 +2091,6 @@ urlpatterns += [
         downloads.postal_station_meta_download_view,
         name="postal_station-metadownload",
     ),
-]
-
-
-urlpatterns += [
     path(
         "general_postal_service/create/",
         views.General_postal_serviceCreateView.as_view(),
@@ -2449,3 +2132,113 @@ urlpatterns += [
         name="general_postal_service-metadownload",
     ),
 ]
+
+
+# Create URL patterns dynamically for each model-class pair: UPDATE
+for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
+    urlpatterns.append(
+        path(
+            f"{x_name}/update/<int:object_id>/",
+            generic.generic_update_view,
+            {
+                "form_class": form_class,
+                "model_class": model_class,
+                "x_name": x_name,
+                "myvar": myvar,
+                "my_exp": SC_VAR_DEFS[x_name],
+                "var_section": sec,
+                "var_subsection": subsec,
+                "delete_url_name": x_name + "-confirm-delete",
+            },
+            name=f"{x_name}-update",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}/create/",
+            generic.generic_create_view,
+            {
+                "form_class": form_class,
+                "x_name": x_name,
+                "myvar": myvar,
+                "my_exp": SC_VAR_DEFS[x_name],
+                "var_section": sec,
+                "var_subsection": subsec,
+            },
+            name=f"{x_name}-create",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}s_all/",
+            generic.generic_list_view,
+            {
+                "model_class": model_class,
+                "var_name": x_name,
+                "var_name_display": myvar,
+                "var_section": sec,
+                "var_subsection": subsec,
+                "var_main_desc": SC_VAR_DEFS[x_name],
+            },
+            name=f"{x_name}s_all",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}download/",
+            generic.generic_download_view,
+            {
+                "model_class": model_class,
+                "var_name": x_name,
+            },
+            name=f"{x_name}-download",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}metadownload/",
+            generic.generic_metadata_download_view,
+            {
+                "var_name": x_name,
+                "var_name_display": myvar,
+                "var_section": sec,
+                "var_subsection": subsec,
+                "var_main_desc": SC_VAR_DEFS[x_name],
+            },
+            name=f"{x_name}-metadownload",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}/<int:pk>/",
+            generic.generic_detail_view,
+            {
+                "model_class": model_class,
+                "myvar": x_name,
+                "var_name_display": myvar,
+            },
+            name=f"{x_name}-detail",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}/<int:pk>/confirm-delete/",
+            generic.generic_confirm_delete_view,
+            {
+                "model_class": model_class,
+                "var_name": x_name,
+            },
+            name=f"{x_name}-confirm-delete",
+        )
+    )
+    urlpatterns.append(
+        path(
+            f"{x_name}/<int:pk>/delete/",
+            generic.generic_delete_object_view,
+            {
+                "model_class": model_class,
+                "var_name": x_name,
+            },
+            name=f"{x_name}-delete",
+        )
+    )

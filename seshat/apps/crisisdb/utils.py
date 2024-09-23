@@ -3,9 +3,9 @@ __all__ = [
     "expand_context_from_variable_hierarchy",
 ]
 
-from ..global_constants import ICONS
+from ..constants import ICONS
 from ..core.models import Variablehierarchy
-from ..global_constants import NO_DATA
+from ..constants import NO_DATA
 
 
 def return_citations(cls):

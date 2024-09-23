@@ -1,27 +1,28 @@
 from django.urls import path, re_path
 
 from . import views
+from .specific_views import downloads
 
 urlpatterns = [
     path("", views.IndexView.as_view(), name="seshat-index"),
-    path("methods/", views.methods_view, name="seshat-methods"),
-    path("whoweare/", views.whoweare_view, name="seshat-whoweare"),
-    path("codebook", views.codebook_view, name="seshat-codebook"),  # noqa: E501  TODO: The codebook_view is not used anywhere in the codebase
-    path("downloads_page/", views.downloads_page_view, name="seshat-olddownloads"),
+    path("methods/", views.MethodsView.as_view(), name="seshat-methods"),
+    path("whoweare/", views.WhoWeAreView.as_view(), name="seshat-whoweare"),
+    path("codebook", views.CodebookView.as_view(), name="seshat-codebook"),  # noqa: E501  TODO: The codebook_view is not used anywhere in the codebase
+    path("code_book_new_1", views.CodebookNewView.as_view(), name="code_book_1"),
+    path("downloads_page/", views.DownloadsView.as_view(), name="seshat-olddownloads"),
     path(
         "acknowledgements/",
-        views.acknowledgements_view,
+        views.AcknowledgementsView.as_view(),
         name="seshat-acknowledgements",
     ),
     path(
         "download_oldcsv/<str:file_name>/",
-        views.download_oldcsv_view,
+        downloads.download_oldcsv_view,
         name="download_oldcsv",
     ),
-    path("code_book_new_1", views.code_book_new_1_view, name="code_book_1"),
     path(
         "download_csv_all_polities/",
-        views.download_csv_all_polities_view,
+        downloads.download_csv_all_polities_view,
         name="download_csv_all_polities",
     ),
     path(
@@ -30,10 +31,10 @@ urlpatterns = [
         name="polity_filter_options",
     ),
     path("core/religions_all/", views.ReligionListView.as_view(), name="religion_list"),
-    path("core/create_religion/", views.religion_create_view, name="religion_create"),
+    path("core/create_religion/", views.ReligionCreateView.as_view(), name="religion_create"),
     path(
         "core/update_religion/<int:pk>/",
-        views.religion_update_view,
+        views.ReligionUpdateView.as_view(),
         name="religion_update",
     ),
     path("core/references/", views.ReferenceListView.as_view(), name="references"),
@@ -74,7 +75,7 @@ urlpatterns = [
     ),
     path(
         "referencesdownload/",
-        views.referencesdownload_view,  # noqa: E501  TODO: The references_download_view is not used anywhere in the codebase
+        downloads.referencesdownload_view,  # noqa: E501  TODO: The references_download_view is not used anywhere in the codebase
         name="references_download_view",
     ),
     path(
@@ -83,7 +84,7 @@ urlpatterns = [
     path("core/polities/", views.PolityListView.as_view(), name="polities"),
     path(
         "core/polities-light/",
-        views.PolityListViewLight.as_view(),
+        views.PolityLightListView.as_view(),
         name="polities-light",
     ),
     path(
@@ -128,7 +129,7 @@ urlpatterns = [
         views.CapitalDeleteView.as_view(),
         name="capital-delete",
     ),
-    path("capitaldownload/", views.capital_download_view, name="capital-download"),
+    path("capitaldownload/", downloads.capital_download_view, name="capital-download"),
     path("search/", views.search_view, name="search"),
     path(
         "search_suggestions/", views.search_suggestions_view, name="search_suggestions"  # noqa: E501  TODO: The search_suggestions_view is not used anywhere in the codebase
@@ -288,7 +289,8 @@ urlpatterns = [
     path(
         "core/nlp_datapoints_2/", views.nlp_datapoints_2_view, name="nlp_datapoints_2"
     ),
-    path("core/not_found_404", views.four_o_four, name="four-o-four"),
+    # TODO: Correct? The below is commented out as it is not used in the codebase
+    # path("core/not_found_404", views.NotFoundView.as_view(), name="four-o-four"),
     path("core/world_map/", views.world_map_view, name="world_map"),
     path(
         "core/world_map_one_year/",

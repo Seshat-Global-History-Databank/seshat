@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from ...constants import APP_NAME
-from ....global_utils import get_variable_context
+from ....utils import get_variable_context
 
 
 def wfvars_view(request):

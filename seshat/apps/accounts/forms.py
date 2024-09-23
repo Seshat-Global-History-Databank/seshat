@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from ..global_constants import ATTRS
-from ..global_utils import clean_email
+from ..constants import ATTRS
+from ..utils import clean_email
 
 from .models import Seshat_Task, Profile
 

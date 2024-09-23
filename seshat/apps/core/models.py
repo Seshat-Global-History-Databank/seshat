@@ -8,8 +8,8 @@ from django.db.models import Q, ManyToManyField
 from django.urls import reverse
 
 from ..accounts.models import Seshat_Expert
-from ..global_utils import get_color, get_date, ATTRS_HTML
-from ..global_constants import ZOTERO
+from ..utils import get_color, get_date, ATTRS_HTML
+from ..constants import ZOTERO
 
 from .constants import (
     POLITY_TAG_CHOICES,

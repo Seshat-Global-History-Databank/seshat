@@ -3,7 +3,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path("userprofile/", views.profile_view, name="user-profile"),
+    path("userprofile/", views.Profile.as_view(), name="user-profile"),
     path("accounts/", include("django.contrib.auth.urls")),
     path(
         "seshat_task/create/",

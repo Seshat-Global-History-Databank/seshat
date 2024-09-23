@@ -4,8 +4,8 @@ from django.db import models
 from django.utils.safestring import mark_safe
 
 from ..core.models import SeshatCommon, Polity
-from ..global_constants import SECTIONS, SUBSECTIONS, ICONS, NO_DATA
-from ..global_utils import (
+from ..constants import SECTIONS, SUBSECTIONS, ICONS, NO_DATA
+from ..utils import (
     _wrap_in_warning,
     get_model_instance_name,
     validate_time_range,

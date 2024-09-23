@@ -3,7 +3,7 @@ from django import template
 import re
 import uuid
 
-from ...global_utils import get_color
+from ...utils import get_color
 
 
 register = template.Library()

@@ -37,21 +37,20 @@ import requests
 
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
-from django.shortcuts import HttpResponse
 from django.apps import apps
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.utils.safestring import mark_safe
 
-from .global_constants import (
+from .constants import (
     ICONS,
     ATTRS_HTML,
-    PATTERNS,
     LIGHT_COLORS,
     CSV_DELIMITER,
     STANDARD_CONDITIONS,
 )
+from .patterns import PATTERNS
 
 
 def get_model_instance_name(cls) -> str:
@@ -280,7 +279,7 @@ def get_date(fmt=None) -> str:
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
-def get_models(app_name: str, exclude: list = None) -> list:
+def get_models(app_name: str, exclude: list = None, subsection=None) -> list:
     """
     This function is used to get all models from an app.
 
@@ -294,15 +293,30 @@ def get_models(app_name: str, exclude: list = None) -> list:
     if not exclude:
         exclude = []
 
-    return [
+    # Make all exclude lowercase to avoid case sensitivity
+    exclude = [x.lower() for x in exclude]
+
+    # Drop excluded models
+    models = [
         model
         for model in apps.get_app_config(app_name).get_models()
-        if model.__name__ not in exclude
+        if model.__name__.lower() not in exclude
     ]
+
+    if subsection:
+        return [
+            model
+            for model in models
+            if str(model().subsection()) == subsection
+        ]
+
+    return models
 
 
 def get_problematic_data_context(
-    app_name: str = "", conditions: list = STANDARD_CONDITIONS, models: list = None
+    app_name: str = "",
+    conditions: list = STANDARD_CONDITIONS,
+    models: list = None,
 ) -> dict:
     """
     This function is intended to be used to find problematic data in the database.
@@ -350,17 +364,17 @@ def get_problematic_data_context(
         models = get_models(app_name)
 
     for model in models:
-        for o in model.objects.all():
+        for obj in model.objects.all():
             passes = True
             for condition in conditions:
-                if not condition(o):
+                if not condition(obj):
                     # Exit loop if any condition fails
                     passes = False
                     break
 
             # Add object to context only if it passed all conditions
             if passes:
-                context["data"] += [o]
+                context["data"] += [obj]
 
     return context
 
@@ -490,15 +504,13 @@ def get_filename(model, prefix: str = "") -> str:
     Returns:
         str: The filename for the CSV file.
     """
-    name = model._meta.verbose_name_plural.lower().replace(
-        " ", "_"
-    )  # noqa: E501 pylint: disable=W0212
+    plural_model_name = model._meta.verbose_name_plural.lower().replace(" ", "_")
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    return f"{prefix}{name}_{current_datetime}.csv"
+    return f"{prefix}{plural_model_name}_{current_datetime}.csv"
 
 
-def get_response(model, prefix: str = "") -> HttpResponse:
+def get_response(model=None, prefix: str = "", filename=None) -> HttpResponse:
     """
     Get the response object for the CSV file.
 
@@ -508,12 +520,17 @@ def get_response(model, prefix: str = "") -> HttpResponse:
     Returns:
         HttpResponse: The response object for the CSV file.
     """
-    file_name = get_filename(model, prefix)
+    if not any([model, filename]):
+        raise ValueError("You must provide either a model or a filename.")
 
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+    filename = get_filename(model, prefix) if not filename else filename
 
-    return response
+    return HttpResponse(
+        headers={
+            "Content-Type": "text/csv",
+            "Content-Disposition": f'attachment; filename="{filename}"',
+        }
+    )
 
 
 def get_headers(

@@ -1,7 +1,7 @@
 from django import template
 
 from ..models import Polity
-from ..views import get_polity_shape_content, get_polity_capitals
+from ..utils import get_polity_shape_content, get_polity_capitals
 
 from ...general.models import Polity_peak_years
 
@@ -28,9 +28,9 @@ def polity_map(pk, test=False):
     polity = Polity.objects.get(id=page_id)
     try:
         if test:
-            content = get_polity_shape_content(seshat_id=polity.new_name, tick_number=3)
+            context = get_polity_shape_content(seshat_id=polity.new_name, tick_number=3)
         else:
-            content = get_polity_shape_content(
+            context = get_polity_shape_content(
                 seshat_id=polity.new_name, tick_number=10
             )
         capitals_info = get_polity_capitals(pk)
@@ -43,19 +43,19 @@ def polity_map(pk, test=False):
             if capital_info["year_to"] is None:
                 modified_caps[i]["year_to"] = polity.end_year
 
-        content["capitals_info"] = modified_caps
-        content["include_polity_map"] = True
+        context["capitals_info"] = modified_caps
+        context["include_polity_map"] = True
     except:  # noqa: E722  TODO: Don't use bare except
-        content = {
+        context = {
             "include_polity_map": False,
         }
 
-    if content["include_polity_map"]:
+    if context["include_polity_map"]:
         # Update the default display year to be the peak year (if it exists)
         try:
             peak_years = Polity_peak_years.objects.get(polity_id=page_id)
-            content["display_year"] = peak_years.peak_year_from
+            context["display_year"] = peak_years.peak_year_from
         except:  # noqa: E722  TODO: Don't use bare except
             pass
 
-    return {"content": content}
+    return {"content": context}

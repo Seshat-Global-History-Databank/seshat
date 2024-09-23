@@ -22,6 +22,8 @@ urlpatterns = [
     path("api/", include("seshat.apps.seshat_api.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
+
+# TODO: do we have the debug toolbar installed?
 urlpatterns += [
     path("__debug__/", include("debug_toolbar.urls")),
 ]

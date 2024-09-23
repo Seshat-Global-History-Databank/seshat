@@ -23,7 +23,6 @@ __all__ = [
     "ICONS",
     "_ZOTERO_API_KEY",
     "ZOTERO",
-    "PATTERNS",
     "BASIC_CONTEXT",
     "POLITY_NGA_NAME",
     "CORRECT_YEAR",
@@ -32,7 +31,6 @@ __all__ = [
     "CSV_DELIMITER",
 ]
 
-import re
 
 from django import forms
 from django.db.models import (
@@ -47,7 +45,7 @@ from django.db.models import (
 from decouple import config, UndefinedValueError
 from pyzotero import zotero
 
-from .global_types import DotDict
+from .types import DotDict
 
 
 def _wrap(label, simple=False):
@@ -412,6 +410,7 @@ SUBSECTIONS = DotDict(
                 "WrittenDocuments": "Kinds of Written Documents",
                 "FormsOfMoney": "Forms of money",
                 "PostalSystems": "Postal systems",
+                "Information": "Information",
             }
         ),
         "general": DotDict(
@@ -583,13 +582,6 @@ ZOTERO.client = zotero.Zotero(
     ZOTERO.LIBRARY_ID, ZOTERO.LIBRARY_TYPE, ZOTERO.API_KEY
 )
 
-PATTERNS = DotDict(
-    {
-        "YEAR": re.compile(r"[12]\d{3}"),
-        "HTML_TAGS": re.compile("<.*?>"),
-    }
-)
-
 BASIC_CONTEXT = {
     "pols_data": [],
     "general_data": [],
@@ -687,6 +679,7 @@ NO_DATA = DotDict(
         "subsection": "NO_SUBSECTION",
         "name": "NO_NAME",
         "nga": "NO_NGA_ASSOCIATED",
+        "wiki": "No_Value_Provided_in_Old_Wiki"
     }
 )
 

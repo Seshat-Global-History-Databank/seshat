@@ -10,7 +10,7 @@ from django.views.generic import (
     DetailView,
 )
 
-from ..global_utils import get_variable_context, _get_context
+from ..utils import get_variable_context, _get_context
 
 from .forms import (
     Polity_research_assistantForm,

@@ -8,6 +8,7 @@ from .models import (
     Power_transition,
 )
 from . import views
+from .specific_views import downloads
 
 
 urlpatterns = [
@@ -86,7 +87,7 @@ urlpatterns = [
     ),
     path(
         "uspvdb_download/",
-        views.download_csv_all_american_violence,
+        downloads.us_violence_download_view,
         name="us_violence_download",
     ),
     # CrisisDB
@@ -132,12 +133,12 @@ urlpatterns = [
     ),
     path(
         "crisis_consequencedownload/",
-        views.crisis_consequence_download_view,
+        downloads.crisis_consequence_download_view,
         name="crisis_consequence-download",
     ),
     path(
         "crisis_consequencemetadownload/",
-        views.crisis_consequence_meta_download_view,
+        downloads.crisis_consequence_meta_download_view,
         name="crisis_consequence-metadownload",
     ),
     path(
@@ -187,12 +188,12 @@ urlpatterns = [
     ),
     path(
         "power_transitiondownload/",
-        views.power_transition_download_view,
+        downloads.power_transition_download_view,
         name="power_transition-download",
     ),
     path(
         "power_transitionmetadownload/",
-        views.power_transition_meta_download_view,
+        downloads.power_transition_meta_download_view,
         name="power_transition-metadownload",
     ),
     # Human Sacrifice
@@ -228,12 +229,12 @@ urlpatterns = [
     ),
     path(
         "human_sacrificedownload/",
-        views.human_sacrifice_download_view,
+        downloads.human_sacrifice_download_view,
         name="human_sacrifice-download",
     ),
     path(
         "human_sacrificemetadownload/",
-        views.human_sacrifice_meta_download_view,
+        downloads.human_sacrifice_meta_download_view,
         name="human_sacrifice-metadownload",
     ),
     path(
@@ -269,12 +270,12 @@ urlpatterns = [
     ),
     path(
         "external_conflictdownload/",
-        views.external_conflict_download_view,
+        downloads.external_conflict_download_view,
         name="external_conflict-download",
     ),
     path(
         "external_conflictmetadownload/",
-        views.external_conflict_meta_download_view,
+        downloads.external_conflict_meta_download_view,
         name="external_conflict-metadownload",
     ),
     path(
@@ -304,12 +305,12 @@ urlpatterns = [
     ),
     path(
         "external_conflict_sidedownload/",
-        views.external_conflict_side_download_view,
+        downloads.external_conflict_side_download_view,
         name="external_conflict_side-download",
     ),
     path(
         "external_conflict_sidemetadownload/",
-        views.external_conflict_side_meta_download_view,
+        downloads.external_conflict_side_meta_download_view,
         name="external_conflict_side-metadownload",
     ),
     # Internal conflict
@@ -340,12 +341,12 @@ urlpatterns = [
     ),
     path(
         "internal_conflictdownload/",
-        views.internal_conflict_download_view,
+        downloads.internal_conflict_download_view,
         name="internal_conflict-download",
     ),
     path(
         "internal_conflictmetadownload/",
-        views.internal_conflict_meta_download_view,
+        downloads.internal_conflict_meta_download_view,
         name="internal_conflict-metadownload",
     ),
     # Agricultural
@@ -376,12 +377,12 @@ urlpatterns = [
     ),
     path(
         "agricultural_populationdownload/",
-        views.agricultural_population_download_view,
+        downloads.agricultural_population_download_view,
         name="agricultural_population-download",
     ),
     path(
         "agricultural_populationmetadownload/",
-        views.agricultural_population_meta_download_view,
+        downloads.agricultural_population_meta_download_view,
         name="agricultural_population-metadownload",
     ),
     # Arable
@@ -412,12 +413,12 @@ urlpatterns = [
     ),
     path(
         "arable_landdownload/",
-        views.arable_land_download_view,
+        downloads.arable_land_download_view,
         name="arable_land-download",
     ),
     path(
         "arable_landmetadownload/",
-        views.arable_land_meta_download_view,
+        downloads.arable_land_meta_download_view,
         name="arable_land-metadownload",
     ),
     path(
@@ -447,12 +448,12 @@ urlpatterns = [
     ),
     path(
         "arable_land_per_farmerdownload/",
-        views.arable_land_per_farmer_download_view,
+        downloads.arable_land_per_farmer_download_view,
         name="arable_land_per_farmer-download",
     ),
     path(
         "arable_land_per_farmermetadownload/",
-        views.arable_land_per_farmer_meta_download_view,
+        downloads.arable_land_per_farmer_meta_download_view,
         name="arable_land_per_farmer-metadownload",
     ),
     # Grains
@@ -483,12 +484,12 @@ urlpatterns = [
     ),
     path(
         "gross_grain_shared_per_agricultural_populationdownload/",
-        views.gross_grain_shared_per_agricultural_population_download_view,
+        downloads.gross_grain_shared_per_agricultural_population_download_view,
         name="gross_grain_shared_per_agricultural_population-download",
     ),
     path(
         "gross_grain_shared_per_agricultural_populationmetadownload/",
-        views.gross_grain_shared_per_agricultural_population_meta_download_view,
+        downloads.gross_grain_shared_per_agricultural_population_meta_download_view,
         name="gross_grain_shared_per_agricultural_population-metadownload",
     ),
     path(
@@ -518,12 +519,12 @@ urlpatterns = [
     ),
     path(
         "net_grain_shared_per_agricultural_populationdownload/",
-        views.net_grain_shared_per_agricultural_population_download_view,
+        downloads.net_grain_shared_per_agricultural_population_download_view,
         name="net_grain_shared_per_agricultural_population-download",
     ),
     path(
         "net_grain_shared_per_agricultural_populationmetadownload/",
-        views.net_grain_shared_per_agricultural_population_meta_download_view,
+        downloads.net_grain_shared_per_agricultural_population_meta_download_view,
         name="net_grain_shared_per_agricultural_population-metadownload",
     ),
     # Surplus
@@ -550,12 +551,12 @@ urlpatterns = [
     ),
     path(
         "surplusdownload/",
-        views.surplus_download_view,
+        downloads.surplus_download_view,
         name="surplus-download",
     ),
     path(
         "surplusmetadownload/",
-        views.surplus_meta_download_view,
+        downloads.surplus_meta_download_view,
         name="surplus-metadownload",
     ),
     # Military expense
@@ -586,12 +587,12 @@ urlpatterns = [
     ),
     path(
         "military_expensedownload/",
-        views.military_expense_download_view,
+        downloads.military_expense_download_view,
         name="military_expense-download",
     ),
     path(
         "military_expensemetadownload/",
-        views.military_expense_meta_download_view,
+        downloads.military_expense_meta_download_view,
         name="military_expense-metadownload",
     ),
     # Silver
@@ -622,12 +623,12 @@ urlpatterns = [
     ),
     path(
         "silver_inflowdownload/",
-        views.silver_inflow_download_view,
+        downloads.silver_inflow_download_view,
         name="silver_inflow-download",
     ),
     path(
         "silver_inflowmetadownload/",
-        views.silver_inflow_meta_download_view,
+        downloads.silver_inflow_meta_download_view,
         name="silver_inflow-metadownload",
     ),
     path(
@@ -657,12 +658,12 @@ urlpatterns = [
     ),
     path(
         "silver_stockdownload/",
-        views.silver_stock_download_view,
+        downloads.silver_stock_download_view,
         name="silver_stock-download",
     ),
     path(
         "silver_stockmetadownload/",
-        views.silver_stock_meta_download_view,
+        downloads.silver_stock_meta_download_view,
         name="silver_stock-metadownload",
     ),
     # Population
@@ -693,12 +694,12 @@ urlpatterns = [
     ),
     path(
         "total_populationdownload/",
-        views.total_population_download_view,
+        downloads.total_population_download_view,
         name="total_population-download",
     ),
     path(
         "total_populationmetadownload/",
-        views.total_population_meta_download_view,
+        downloads.total_population_meta_download_view,
         name="total_population-metadownload",
     ),
     # GDP
@@ -729,12 +730,12 @@ urlpatterns = [
     ),
     path(
         "gdp_per_capitadownload/",
-        views.gdp_per_capita_download_view,
+        downloads.gdp_per_capita_download_view,
         name="gdp_per_capita-download",
     ),
     path(
         "gdp_per_capitametadownload/",
-        views.gdp_per_capita_meta_download_view,
+        downloads.gdp_per_capita_meta_download_view,
         name="gdp_per_capita-metadownload",
     ),
     # Drought
@@ -765,12 +766,12 @@ urlpatterns = [
     ),
     path(
         "drought_eventdownload/",
-        views.drought_event_download_view,
+        downloads.drought_event_download_view,
         name="drought_event-download",
     ),
     path(
         "drought_eventmetadownload/",
-        views.drought_event_meta_download_view,
+        downloads.drought_event_meta_download_view,
         name="drought_event-metadownload",
     ),
     # Locust
@@ -801,12 +802,12 @@ urlpatterns = [
     ),
     path(
         "locust_eventdownload/",
-        views.locust_event_download_view,
+        downloads.locust_event_download_view,
         name="locust_event-download",
     ),
     path(
         "locust_eventmetadownload/",
-        views.locust_event_meta_download_view,
+        downloads.locust_event_meta_download_view,
         name="locust_event-metadownload",
     ),
     # Socioeconomic turmoil
@@ -837,12 +838,12 @@ urlpatterns = [
     ),
     path(
         "socioeconomic_turmoil_eventdownload/",
-        views.socioeconomic_turmoil_event_download_view,
+        downloads.socioeconomic_turmoil_event_download_view,
         name="socioeconomic_turmoil_event-download",
     ),
     path(
         "socioeconomic_turmoil_eventmetadownload/",
-        views.socioeconomic_turmoil_event_meta_download_view,
+        downloads.socioeconomic_turmoil_event_meta_download_view,
         name="socioeconomic_turmoil_event-metadownload",
     ),
     # Crop failure
@@ -873,12 +874,12 @@ urlpatterns = [
     ),
     path(
         "crop_failure_eventdownload/",
-        views.crop_failure_event_download_view,
+        downloads.crop_failure_event_download_view,
         name="crop_failure_event-download",
     ),
     path(
         "crop_failure_eventmetadownload/",
-        views.crop_failure_event_meta_download_view,
+        downloads.crop_failure_event_meta_download_view,
         name="crop_failure_event-metadownload",
     ),
     # Famine
@@ -909,12 +910,12 @@ urlpatterns = [
     ),
     path(
         "famine_eventdownload/",
-        views.famine_event_download_view,
+        downloads.famine_event_download_view,
         name="famine_event-download",
     ),
     path(
         "famine_eventmetadownload/",
-        views.famine_event_meta_download_view,
+        downloads.famine_event_meta_download_view,
         name="famine_event-metadownload",
     ),
     # Disease outbreak
@@ -945,12 +946,12 @@ urlpatterns = [
     ),
     path(
         "disease_outbreakdownload/",
-        views.disease_outbreak_download_view,
+        downloads.disease_outbreak_download_view,
         name="disease_outbreak-download",
     ),
     path(
         "disease_outbreakmetadownload/",
-        views.disease_outbreak_meta_download_view,
+        downloads.disease_outbreak_meta_download_view,
         name="disease_outbreak-metadownload",
     ),
 ]
@@ -988,7 +989,7 @@ for model_class, x_name in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/<int:pk>/confirm-delete/",
-            views.confirm_delete_view,
+            views.generic_confirm_delete_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,
@@ -1000,7 +1001,7 @@ for model_class, x_name in model_form_pairs:
     urlpatterns.append(
         path(
             f"{x_name}/<int:pk>/delete/",
-            views.delete_object_view,
+            views.generic_delete_object_view,
             {
                 "model_class": model_class,
                 "var_name": x_name,

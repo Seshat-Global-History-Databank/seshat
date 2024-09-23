@@ -4,15 +4,16 @@ from django.utils.safestring import mark_safe
 
 from ..accounts.models import Seshat_Expert
 from ..core.models import SeshatCommon, Polity, Capital
-from ..global_constants import (
+from ..constants import (
     POLITY_LANGUAGE_CHOICES,
     POLITY_LANGUAGE_GENUS_CHOICES,
     POLITY_LINGUISTIC_FAMILY_CHOICES,
     SECTIONS,
     SUBSECTIONS,
-    STANDARD_SETTINGS
+    STANDARD_SETTINGS,
+    NO_DATA
 )
-from ..global_utils import (
+from ..utils import (
     convert_to_year_span,
     get_model_instance_name,
 )
@@ -157,7 +158,7 @@ class Polity_original_name(SeshatCommon, GeneralMixIn):
                 "var_exp": "The details of original_name.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             }
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -220,7 +221,7 @@ class Polity_alternative_name(SeshatCommon, GeneralMixIn):
                 "var_exp": "The details of alternative_name.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             }
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -284,7 +285,7 @@ class Polity_duration(SeshatCommon, GeneralMixIn):
                 "var_exp": "The beginning year for a polity.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
             "polity_year_to": {
                 "min": None,
@@ -294,7 +295,7 @@ class Polity_duration(SeshatCommon, GeneralMixIn):
                 "var_exp": "The end year for a polity.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -361,7 +362,7 @@ class Polity_peak_years(SeshatCommon, GeneralMixIn):
                 "var_exp": "The beginning of the peak years for a polity.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
             "peak_year_to": {
                 "min": None,
@@ -371,7 +372,7 @@ class Polity_peak_years(SeshatCommon, GeneralMixIn):
                 "var_exp": "The end of the peak years for a polity.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -440,7 +441,7 @@ class Polity_degree_of_centralization(SeshatCommon, GeneralMixIn):
                 "var_exp": "The details of degree_of_centralization.",
                 "units": None,
                 "choices": INNER_POLITY_DEGREE_OF_CENTRALIZATION_CHOICES,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             }
         }
         null_value = "The value is not available."
@@ -521,7 +522,7 @@ class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
                 "var_exp": "The details of supra polity relations.",
                 "units": None,
                 "choices": INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             }
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -605,7 +606,7 @@ class Polity_utm_zone(SeshatCommon, GeneralMixIn):
                 "var_exp": "The UTM Zone of a polity.",  # noqa: E501   TODO: This was set to "The capital of a polity." -- I updated it. OK?  pylint: disable=C0301
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",  # noqa: E501   TODO: This comes from value provided in seshat.apps.general.views.Polity_utm_zoneCreateView.get_context_data. OK?  pylint: disable=C0301
+                "null_meaning": NO_DATA.wiki,  # noqa: E501   TODO: This comes from value provided in seshat.apps.general.views.Polity_utm_zoneCreateView.get_context_data. OK?  pylint: disable=C0301
             }
         }
         null_value = "The value is not available."
@@ -1458,7 +1459,7 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon, GeneralMixIn):
                 "var_exp": "The lower scale of supra cultural interactionfor a polity.",
                 "units": "km squared",
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
             "scale_to": {
                 "min": 0,
@@ -1468,7 +1469,7 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon, GeneralMixIn):
                 "var_exp": "The upper scale of supra cultural interactionfor a polity.",
                 "units": "km squared",
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             },
         }
         null_meaning = STANDARD_SETTINGS.null_meaning
@@ -1893,7 +1894,7 @@ class Polity_religious_tradition(SeshatCommon, GeneralMixIn):
                 "var_exp": "The details of religious traditions.",
                 "units": None,
                 "choices": None,
-                "null_meaning": "No_Value_Provided_in_Old_Wiki",
+                "null_meaning": NO_DATA.wiki,
             }
         }
         null_meaning = STANDARD_SETTINGS.null_meaning

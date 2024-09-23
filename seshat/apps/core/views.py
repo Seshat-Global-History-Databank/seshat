@@ -4,16 +4,12 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.gis.db.models.functions import AsGeoJSON
-from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
-from django.db.models import F, Value, Q, Min, Max, Count
+from django.db.models import F, Value, Q, Count
 from django.db.models.functions import Replace
 from django.http import (
-    FileResponse,
     HttpResponse,
     Http404,
     HttpResponseRedirect,
@@ -35,43 +31,27 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormMixin
 
-import csv
 import json
-import numpy as np
-import random
 import sys
 
 from ..accounts.models import Seshat_Expert
 from ..crisisdb.models import (
     Power_transition,
     Crisis_consequence,
-    Human_sacrifice,
 )
 from ..general.models import (
-    Polity_capital,
     Polity_duration,
-    Polity_language_genus,
-    Polity_language,
-    Polity_linguistic_family,
     Polity_preceding_entity,
     Polity_research_assistant,
 )
-from ..global_constants import (
-    ABSENT_PRESENT_CHOICES,
+from ..constants import (
     BASIC_CONTEXT,
-    POLITY_LANGUAGE_CHOICES,
-    POLITY_LANGUAGE_GENUS_CHOICES,
-    POLITY_LINGUISTIC_FAMILY_CHOICES,
     ZOTERO,
-    PATTERNS,
     US_STATES_GEOJSON_PATH,
-    CSV_DELIMITER,
 )
-from ..global_utils import (
-    get_date,
+from ..utils import (
     get_models,
     get_api_results,
-    get_csv_path,
     get_all_data,
 )
 
@@ -103,8 +83,7 @@ from .forms import (
 from .models import (
     Capital,
     Citation,
-    GADMCountries,
-    GADMProvinces,
+    Reference,
     Macro_region,
     Nga,
     Polity,
@@ -119,20 +98,147 @@ from .models import (
     SeshatPrivateCommentPart,
     Subsection,
     Variablehierarchy,
-    VideoShapefile,
 )
 from .tokens import account_activation_token
 from .constants import (
     CUSTOM_ORDER,
     CUSTOM_ORDER_SR,
-    MANUAL_IMPORT_REFS,
-    NLP_ZOTERO_LINKS_TO_FILTER,
+    WORLD_MAP_INITIAL_DISPLAYED_YEAR,
+    WORLD_MAP_INITIAL_POLITY
 )
+from .specific_constants.zotero import MANUAL_IMPORT_REFS, NLP_ZOTERO_LINKS_TO_FILTER
 from .utils import (
+    common_map_view_content,
+    do_zotero_manually,
+    do_zotero,
     get_data_for_polity,
     get_model_data,
     get_polity_app_data,
+    get_polity_shape_content,
+    get_provinces,
+    random_polity_shape,
+    update_citations_from_inside_zotero_update,
 )
+
+
+class IndexView(TemplateView):
+    template_name = "core/seshat-index.html"
+
+    def get_context_data(self, **kwargs):
+        # Get the basic context
+        context = BASIC_CONTEXT
+
+        # Get region objects
+        seshat_regions = Seshat_region.objects.annotate(
+            num_polities=Count("home_seshat_region")
+        ).exclude(name="Somewhere")
+
+        macro_regions = Macro_region.objects.exclude(name="World")
+        polities = Polity.objects.all()
+
+        seshat_region_count = seshat_regions.count()
+        macro_region_count = macro_regions.count()
+        polity_count = polities.count()
+
+        # Update the context with counts and queryset data
+        context.update(
+            {
+                "sr_data": [seshat_region_count, macro_region_count],
+                "pols_data": [polity_count, seshat_region_count],
+                "eight_pols": Polity.objects.order_by("?")[:8],
+                "eight_srs": seshat_regions.order_by("-num_polities")[:8],
+            }
+        )
+
+        # Loop through apps and get their models and data
+        for app_name in ["general", "sc", "wf", "crisisdb"]:
+            models = get_models(app_name, exclude=["Ra"])
+
+            unique_polities = set()
+            variable_count = 0
+            row_count = 0
+
+            app_key = app_name + "_data"
+
+            for model in models:
+                model_name = model.__name__
+
+                queryset = model.objects.all()
+
+                if model_name.startswith("Us_violence"):
+                    context.update(
+                        {
+                            "us_data": [
+                                queryset.count(),
+                                1,
+                            ],
+                            "eight_uss": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Us_"):
+                    continue
+
+                polities = queryset.values_list("polity", flat=True).distinct()
+
+                if model_name.startswith("Power_transition"):
+                    context.update(
+                        {
+                            "pt_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_pts": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Crisis_consequence"):
+                    context.update(
+                        {
+                            "cc_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_ccs": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                if model_name.startswith("Human_sacrifice"):
+                    context.update(
+                        {
+                            "hs_data": [
+                                queryset.count(),
+                                1,
+                                polities.count(),
+                            ],
+                            "eight_hss": queryset.order_by("?")[:8],
+                        }
+                    )
+                    continue
+
+                unique_polities.update(
+                    queryset.values_list("polity", flat=True).distinct()
+                )
+
+                variable_count += 1
+                row_count += queryset.count()
+
+            context.update(
+                {
+                    app_key: [
+                        row_count,
+                        variable_count,
+                        len(unique_polities),
+                    ],
+                }
+            )
+
+        return context
 
 
 class ReligionListView(ListView):
@@ -651,7 +757,6 @@ class SeshatCommentPartListView(ListView):
         return reverse("seshatcommentparts")
 
 
-# SeshatCommentPart
 class SeshatCommentPartListView3(ListView):
     """
     List all comment parts.
@@ -750,13 +855,13 @@ class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
 
         logged_in_expert = Seshat_Expert.objects.get(user=self.request.user)
 
-        context = {
+        context = dict(context, **{
             "com_id": self.kwargs["com_id"],
             "subcom_order": self.kwargs["subcom_order"],
             "comment_curator": logged_in_expert,
             "comment_curator_id": logged_in_expert.id,
             "comment_curator_name": "Selected USER",
-        }
+        })
 
         return context
 
@@ -1000,7 +1105,7 @@ class PolityUpdateView(
         )
 
 
-class PolityListViewLight(SuccessMessageMixin, ListView):
+class PolityLightListView(SuccessMessageMixin, ListView):
     """
     List all polities.
     """
@@ -1434,10 +1539,10 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
         try:
             research_assistants = Polity_research_assistant.objects.filter(
                 polity_id=self.object.pk
-            )  # noqa: 501
+            )
             research_assistant_ids = research_assistants.values_list(
                 "polity_ra_id", flat=True
-            )  # noqa: 501
+            )
 
             experts = Seshat_Expert.objects.filter(
                 id__in=research_assistant_ids
@@ -1445,7 +1550,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             all_research_assistants = [
                 f"{expert.user.first_name} {expert.user.last_name}"
                 for expert in experts
-            ]  # noqa: 501
+            ]
 
             context = dict(
                 context,
@@ -1458,11 +1563,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             context = dict(
                 context,
                 **{
-                    "all_data": None,
-                    "all_general_data": None,
-                    "all_sc_data": None,
-                    "all_wf_data": None,
-                    "all_rt_data": None,
+                    "all_Ras": "",
                 },
             )
 
@@ -1484,7 +1585,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
                 polity_duration.polity_year_from,
                 polity_duration.polity_year_to,
             ]
-        except:  # noqa: E722  TODO: Don't use bare except
+        except Polity_duration.DoesNotExist:
             pass
 
         # Pow Trans Data
@@ -1502,7 +1603,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
                     maxima += [power_transition.year_to]
 
             all_durations["pt"] = [min(minima), max(maxima)]
-        except:  # noqa: E722  TODO: Don't use bare except
+        except Power_transition.DoesNotExist:
             pass
 
         if all(
@@ -1548,34 +1649,30 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             },
         )
 
-        try:
-            nga_pol_relations = self.object.polity_sides.all()
+        nga_pol_relations = self.object.polity_sides.all()
 
-            time_deltas = []
+        time_deltas = []
+        for relation in nga_pol_relations:
+            if (relation.year_from, relation.year_to) not in time_deltas:
+                time_deltas += [(relation.year_from, relation.year_to)]
+
+        context["nga_pol_rel"] = {}
+        for time_delta in time_deltas:
+            nga_list = []
             for relation in nga_pol_relations:
-                if (relation.year_from, relation.year_to) not in time_deltas:
-                    time_deltas += [(relation.year_from, relation.year_to)]
+                if all(
+                    [
+                        time_delta[0] == relation.year_from,
+                        time_delta[1] == relation.year_to,
+                    ]
+                ):
+                    nga_list += [relation.nga_party]
 
-            context["nga_pol_rel"] = {}
-            for time_delta in time_deltas:
-                nga_list = []
-                for relation in nga_pol_relations:
-                    if all(
-                        [
-                            time_delta[0] == relation.year_from,
-                            time_delta[1] == relation.year_to,
-                        ]
-                    ):
-                        nga_list += [relation.nga_party]
+            context["nga_pol_rel"][time_delta] = nga_list
 
-                context["nga_pol_rel"][time_delta] = nga_list
-        except:  # noqa: E722  TODO: Don't use bare except
-            context["nga_pol_rel"] = None
-
+        _filter = Q(polity_id=self.object.pk) | Q(other_polity_id=self.object.pk)
         preceding_data, succeeding_data = [], []
-        for preceding_entity in Polity_preceding_entity.objects.filter(
-            Q(polity_id=self.object.pk) | Q(other_polity_id=self.object.pk)
-        ):
+        for preceding_entity in Polity_preceding_entity.objects.filter(_filter):
             if (
                 preceding_entity.polity
                 and preceding_entity.polity.id == self.object.pk
@@ -1847,160 +1944,70 @@ class SeshatPrivateCommentUpdateView(
         return context
 
 
-@login_required
-@permission_required("core.add_seshatprivatecommentpart")
-def religion_create_view(request):
+class ReligionCreateView(PermissionRequiredMixin, CreateView):
     """
     Create a new religion.
-
-    Note:
-        This view is only accessible to users with the 'add_seshatprivatecommentpart'
-        permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-
-    ..
-
-        # TODO: Is there a reason this is not a class-based view?
     """
-    if request.method == "POST":
-        form = ReligionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("religion_list")
-    elif request.method == "GET":
-        form = ReligionForm()
 
-    return render(request, "core/religion_create.html", {"form": form})
+    model = Religion
+    form_class = ReligionForm
+    template_name = "core/religion_create.html"
+    permission_required = "core.add_seshatprivatecommentpart"
+    success_url = reverse_lazy("religion_list")
 
 
-@login_required
-@permission_required("core.add_seshatprivatecommentpart")
-def religion_update_view(request, pk):
+class ReligionUpdateView(PermissionRequiredMixin, UpdateView):
     """
-    Update an existing religion.
-
-    Note:
-        This view is only accessible to users with the 'add_seshatprivatecommentpart'
-        permission.
-
-    Args:
-        request (HttpRequest): The request object.
-        pk (int): The primary key of the religion.
-
-    Returns:
-        HttpResponse: The response object.
-
-    ..
-
-        # TODO: Is there a reason this is not a class-based view?
+    Update a religion.
     """
-    religion = get_object_or_404(Religion, pk=pk)
 
-    if request.method == "POST":
-        form = ReligionForm(request.POST, instance=religion)
-
-        if form.is_valid():
-            form.save()
-            return redirect("religion_list")
-    elif request.method == "GET":
-        form = ReligionForm(instance=religion)
-
-    return render(request, "core/religion_update.html", {"form": form})
+    model = Religion
+    form_class = ReligionForm
+    template_name = "core/religion_update.html"
+    permission_required = "core.add_seshatprivatecommentpart"
+    success_url = reverse_lazy("religion_list")
 
 
-def four_o_four(request):
-    """
-    Return a 404 error page.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    return render(request, "core/not_found_404.html")
+class NotFoundView(TemplateView):
+    template_name = "core/not_found_404.html"
 
 
-def methods_view(request):
-    """
-    Return the Seshat "Methods" page.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    return render(request, "core/seshat-methods.html", context={})
+class MethodsView(TemplateView):
+    template_name = "core/seshat-methods.html"
 
 
-def whoweare_view(request):
-    """
-    Return the Seshat "Who We are" page.
+class WhoWeAreView(TemplateView):
+    template_name = "core/seshat-whoweare.html"
 
-    Args:
-        request (HttpRequest): The request object.
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
 
-    Returns:
-        HttpResponse: The response object.
-    """
-    try:
-        with open(US_STATES_GEOJSON_PATH, "r") as json_file:
-            json_data = json.load(json_file)
+        try:
+            with open(US_STATES_GEOJSON_PATH, "r") as json_file:
+                json_data = json.load(json_file)
 
-        context = {"json_data": json_data}
-    except (FileNotFoundError, json.JSONDecodeError):
-        context = {}
+            context["json_data"] = json_data
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
 
-    return render(request, "core/seshat-whoweare.html", context=context)
+        return context
 
 
-def downloads_page_view(request):
-    """
-    Return the Seshat "Downloads" page.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    return render(request, "core/old_downloads.html", context={})
+class DownloadsView(TemplateView):
+    template_name = "core/old_downloads.html"
 
 
-def codebook_view(request):
-    """
-    Return the Seshat "Codebook" page.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    return render(request, "core/old_codebook.html", context={})
+class CodebookView(TemplateView):
+    template_name = "core/old_codebook.html"
 
 
-def code_book_new_1_view(request):
-    return render(request, "core/code_book_1.html", context={})
+class CodebookNewView(TemplateView):
+    template_name = "core/code_book_1.html"
 
 
-def acknowledgements_view(request):
-    """
-    Return the Seshat "Acknowledgements" page.
+class AcknowledgementsView(TemplateView):
+    template_name = "core/seshat-acknowledgements.html"
 
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    return render(request, "core/seshat-acknowledgements.html", context={})
 
 
 def no_zotero_refs_list_view(request):
@@ -2071,137 +2078,6 @@ def reference_update_modal_view(request, pk):
     }
 
     return render(request, template_name, context)
-
-
-@permission_required("core.view_capital")
-def referencesdownload_view(request):
-    """
-    Download all references as a CSV file.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="references.csv"'
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(["zotero_link", "creator"])
-
-    for o in Reference.objects.all():
-        writer.writerow([o.zotero_link, o.creator])
-
-    return response
-
-
-@permission_required("core.add_capital")
-def seshat_comment_part_create_from_null_view_OLD(
-    request, com_id, subcom_order
-):
-    """
-    Create a new comment part.
-
-    Note:
-        This function is not used in the current implementation.
-        This view is only accessible to users with the 'add_capital' permission.
-
-    Args:
-        request (HttpRequest): The request object.
-        com_id (int): The primary key of the comment.
-        subcom_order (int): The order of the comment part.
-
-    Returns:
-        HttpResponse: The response object.
-    """
-    if request.method == "POST":
-        form = SeshatCommentPartForm2(request.POST)
-        parent_comment = SeshatComment.objects.get(id=com_id)
-
-        if form.is_valid():
-            comment_text = form.cleaned_data["comment_text"]
-
-            try:
-                seshat_expert_instance = Seshat_Expert.objects.get(
-                    user=request.user
-                )
-            except Seshat_Expert.DoesNotExist:
-                seshat_expert_instance = None
-
-            seshat_comment_part = SeshatCommentPart(
-                comment_part_text=comment_text,
-                comment_order=subcom_order,
-                comment_curator=seshat_expert_instance,
-                comment=parent_comment,
-            )
-
-            seshat_comment_part.save()
-
-            # Process the formset
-            reference_formset = ReferenceFormSet2(request.POST, prefix="refs")
-
-            if reference_formset.is_valid():
-                to_be_added = []
-                to_be_deleted_later = []
-                for reference_form in reference_formset:
-                    if reference_form.is_valid():
-                        try:
-                            reference = reference_form.cleaned_data["ref"]
-                            page_from = reference_form.cleaned_data[
-                                "page_from"
-                            ]
-                            page_to = reference_form.cleaned_data["page_to"]
-                            to_be_deleted = reference_form.cleaned_data[
-                                "DELETE"
-                            ]
-
-                            # Get or create the Citation instance
-                            if page_from and page_to:
-                                citation, _ = Citation.objects.get_or_create(
-                                    ref=reference,
-                                    page_from=int(page_from),
-                                    page_to=int(page_to),
-                                )
-                            else:
-                                citation, _ = Citation.objects.get_or_create(
-                                    ref=reference, page_from=None, page_to=None
-                                )
-
-                            # Associate the Citation with the SeshatCommentPart
-                            if to_be_deleted:
-                                to_be_deleted_later.append(citation)
-                            else:
-                                to_be_added.append(citation)
-                        except:  # noqa: E722  TODO: Don't use bare except
-                            # TODO: Handle the exception
-                            pass
-
-                seshat_comment_part.comment_citations.clear()
-                seshat_comment_part.comment_citations.add(*to_be_added)
-
-            return redirect(
-                reverse("seshatcomment-update", kwargs={"pk": com_id})
-            )
-
-    elif request.method == "GET":
-        init_data = ReferenceFormSet2(prefix="refs")
-        form = SeshatCommentPartForm2()
-
-    context = {
-        "form": form,
-        "com_id": com_id,
-        "subcom_order": subcom_order,
-        "formset": init_data,
-    }
-
-    return render(
-        request, "core/seshatcomments/seshatcommentpart_create2.html", context
-    )
 
 
 @permission_required("core.add_capital")
@@ -2291,7 +2167,7 @@ def seshatcommentparts_create2_view(request, com_id, subcom_order):
                                     (citation, parent_pars_inserted)
                                 )
                         except:  # noqa: E722  TODO: Don't use bare except
-                            pass  # Handle the exception as per your requirement
+                            pass  # TODO: Handle the exception
 
                 seshat_comment_part.comment_citations_plus.clear()
 
@@ -2416,7 +2292,7 @@ def seshatcommentparts_create2_inline_view(
                                     (citation, parent_pars_inserted)
                                 )
                         except:  # noqa: E722  TODO: Don't use bare except
-                            pass  # Handle the exception as per your requirement
+                            pass  # TODO: Handle the exception
 
                 seshat_comment_part.comment_citations_plus.clear()
 
@@ -2527,51 +2403,6 @@ def seshatprivatecommentparts_create2_view(request, private_com_id):
     )
 
 
-@permission_required("core.view_capital")
-def capital_download_view(request):
-    """
-    Download all Capitals as CSV.
-
-    Note:
-        This view is only accessible to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The HTTP response.
-    """
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="capitals.csv"'
-
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    writer.writerow(
-        [
-            "capital",
-            "current_country",
-            "longitude",
-            "latitude",
-            "is_verified",
-            "note",
-        ]
-    )
-
-    for obj in Capital.objects.all():
-        writer.writerow(
-            [
-                obj.name,
-                obj.current_country,
-                obj.longitude,
-                obj.latitude,
-                obj.is_verified,
-                obj.note,
-            ]
-        )
-
-    return response
-
-
 def signup_traditional_view(request):
     """
     Handle user signup.
@@ -2608,10 +2439,13 @@ def signup_traditional_view(request):
             )
 
             return redirect("account_activation_sent")
+
     elif request.method == "GET":
         form = SignUpForm()
 
-    return render(request, "core/signup_traditional.html", {"form": form})
+    context = {"form": form}
+
+    return render(request, "core/signup_traditional.html", context)
 
 
 def signupfollowup_view(request):
@@ -2711,8 +2545,8 @@ def variablehierarchy_view(request):
         good_variables.append(good_key)
 
     variable_hierarchies_to_be_hidden = []
-    for o in Variablehierarchy.objects.filter(is_verified=True):
-        crisis_db_name = "crisisdb_" + o.name[0].lower() + o.name[1:]
+    for obj in Variablehierarchy.objects.filter(is_verified=True):
+        crisis_db_name = "crisisdb_" + obj.name[0].lower() + obj.name[1:]
         crisis_db_name = crisis_db_name.replace("gdp", "GDP")
         crisis_db_name = crisis_db_name.replace("gDP", "GDP")
 
@@ -2720,9 +2554,9 @@ def variablehierarchy_view(request):
             variable_hierarchies_to_be_hidden.append(crisis_db_name)
 
     select_variable = [("", " -- Select a CrisisDB Variable -- ")]
-    for o in good_variables:
-        if o not in variable_hierarchies_to_be_hidden:
-            var_name = o.name[9].lower() + o.name[10:]
+    for obj in good_variables:
+        if obj not in variable_hierarchies_to_be_hidden:
+            var_name = obj.name[9].lower() + obj.name[10:]
             var_name = var_name.replace("gdp", "GDP")
             var_name = var_name.replace("gDP", "GDP")
 
@@ -2813,221 +2647,6 @@ def variablehierarchy_view(request):
     return render(request, "core/variablehierarchy.html", context)
 
 
-def do_zotero(results):
-    """
-    Process the results from the Zotero API.
-
-    Args:
-        results: The results from the Zotero API.
-
-    Returns:
-        list: A list of dictionaries containing the processed data.
-    """
-    references_parent_lst = []
-    for _, item in enumerate(results):
-        a_key = item["data"]["key"]
-        if a_key == "3BQQ8WN8":
-            # Skipped because it is not in database
-            continue
-        if a_key == "RR6R3383":
-            # Skipped because title is too big
-            continue
-
-        try:
-            # We need to make sure that all the changes in Zotero will be reflected here.
-            continue
-        except:  # noqa: E722  TODO: Don't use bare except
-            dic = {}
-            try:
-                if item["data"]["key"]:
-                    tuple_key = item["data"]["key"]
-                    dic["key"] = tuple_key
-                else:
-                    # Key is empty for index: {i}: {item['data']['itemType']}
-                    pass
-            except:  # noqa: E722  TODO: Don't use bare except
-                # No key for item with index: {i}
-                pass
-
-            try:
-                if item["data"]["itemType"]:
-                    tuple_item = item["data"]["itemType"]
-                    dic["itemType"] = tuple_item
-                else:
-                    # itemType is empty for index: {i}: {item['data']['itemType']}
-                    pass
-            except:  # noqa: E722  TODO: Don't use bare except
-                # No itemType for item with index: {i}
-                pass
-
-            try:
-                num_of_creators = len(item["data"]["creators"])
-                if num_of_creators < 4 and num_of_creators > 0:
-                    all_creators_list = []
-                    for j in range(num_of_creators):
-                        if a_key == "MM6AEU7H":
-                            # Skipped because it has contributors and not authors
-                            continue
-                        try:
-                            try:
-                                good_name = item["data"]["creators"][j][
-                                    "lastName"
-                                ]
-                            except:  # noqa: E722  TODO: Don't use bare except
-                                good_name = item["data"]["creators"][j]["name"]
-                        except:  # noqa: E722  TODO: Don't use bare except
-                            good_name = ("NO_NAMES",)
-                        all_creators_list.append(good_name)
-
-                    good_name_with_space = "_".join(all_creators_list)
-                    good_name_with_underscore = good_name_with_space.replace(
-                        " ", "_"
-                    )
-
-                    dic["mainCreator"] = good_name_with_underscore
-                elif num_of_creators > 3:
-                    try:
-                        try:
-                            good_name = item["data"]["creators"][0]["lastName"]
-                        except:  # noqa: E722  TODO: Don't use bare except
-                            good_name = item["data"]["creators"][0]["name"]
-                    except:  # noqa: E722  TODO: Don't use bare except
-                        good_name = ("NO_NAME",)
-
-                    good_name_with_space = good_name + "_et_al"
-                    good_name_with_underscore = good_name_with_space.replace(
-                        " ", "_"
-                    )
-
-                    dic["mainCreator"] = good_name_with_underscore
-                else:
-                    dic["mainCreator"] = "NO_CREATOR"
-            except:  # noqa: E722  TODO: Don't use bare except
-                # No mainCreator for item with index: {i}: {item['data']['itemType']}
-                dic["mainCreator"] = "NO_CREATORS"
-
-            try:
-                if item["data"]["date"]:
-                    full_date = item["data"]["date"]
-                    year = PATTERNS.YEAR.search(full_date)
-                    year_int = int(year[0])
-                    dic["year"] = year_int
-                else:
-                    # Year is empty for index {i}: {item['data']['itemType']}
-                    dic["year"] = 0
-            except:  # noqa: E722  TODO: Don't use bare except
-                # No year for index {i}: {item['data']['itemType']}
-                dic["year"] = -1
-
-            try:
-                try:
-                    if item["data"]["bookTitle"]:
-                        if a_key == "MM6AEU7H":
-                            pass
-                        if item["data"]["itemType"] == "bookSection":
-                            good_title = (
-                                item["data"]["title"]
-                                + " (IN) "
-                                + item["data"]["bookTitle"]
-                            )
-                            pass
-                        else:
-                            good_title = item["data"]["title"]
-
-                        dic["title"] = good_title
-                    else:
-                        good_title = item["data"]["title"]
-                        dic["title"] = good_title
-
-                        if a_key == "MM6AEU7H":
-                            pass
-                except:  # noqa: E722  TODO: Don't use bare except
-                    dic["title"] = item["data"]["title"]
-            except:  # noqa: E722  TODO: Don't use bare except
-                # No title for item with index: {i}
-                pass
-
-            pot_title = dic.get("title")
-            if not pot_title:
-                pot_title = "NO_TITLE_PROVIDED_IN_ZOTERO"
-
-            newref = Reference(
-                title=pot_title,
-                year=dic.get("year"),
-                creator=dic.get("mainCreator"),
-                zotero_link=dic.get("key"),
-            )
-
-            if dic.get("year") < 2040:
-                newref.save()
-                references_parent_lst.append(dic)
-
-    return references_parent_lst
-
-
-def do_zotero_manually(results):
-    """
-    Process the results from the Zotero API.
-
-    Args:
-        results: The results from the Zotero API.
-
-    Returns:
-        list: A list of dictionaries containing the processed data.
-    """
-    references_parent_lst = []
-    for item in results:
-        key = item["key"]
-
-        if key == "3BQQ8WN8":
-            # Skipped because it is not in database
-            continue
-        if key == "RR6R3383":
-            # Skipped because title is too big
-            continue
-
-        try:
-            Reference.objects.get(zotero_link=key)
-            continue
-        except:  # noqa: E722  TODO: Don't use bare except
-            dic = {
-                "key": key,
-                "mainCreator": item["mainCreator"],
-                "year": item["year"],
-                "title": item["title"],
-            }
-
-            newref = Reference(
-                title=dic.get("title"),
-                year=dic.get("year"),
-                creator=dic.get("mainCreator"),
-                zotero_link=dic.get("key"),
-            )
-
-            if dic.get("year") < 2040:
-                newref.save()
-                references_parent_lst.append(dic)
-
-    return references_parent_lst
-
-
-def update_citations_from_inside_zotero_update():
-    """
-    This function takes all the references and build a citation for them.
-
-    Args:
-        None
-
-    Returns:
-        None
-    """
-    for ref in Reference.objects.all():
-        obj, _ = Citation.objects.get_or_create(
-            ref=ref, page_from=None, page_to=None
-        )
-        obj.save()
-
-
 def synczoteromanually_view(request):
     """
     This function is used to manually input the references from the Zotero data
@@ -3039,7 +2658,9 @@ def synczoteromanually_view(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    context = {"newly_adds": do_zotero_manually(MANUAL_IMPORT_REFS)}
+    newly_adds = do_zotero_manually(MANUAL_IMPORT_REFS, Reference)
+
+    context = {"newly_adds": newly_adds}
 
     update_citations_from_inside_zotero_update()
 
@@ -3057,8 +2678,9 @@ def synczotero_view(request):
         HttpResponse: The HTTP response.
     """
     results = ZOTERO.client.everything(ZOTERO.client.top())
+    newly_adds = do_zotero(results[0:300], Reference)
 
-    context = {"newly_adds": do_zotero(results[0:300])}
+    context = {"newly_adds": newly_adds}
 
     update_citations_from_inside_zotero_update()
 
@@ -3080,7 +2702,7 @@ def synczotero100_view(request):
     """
     results = ZOTERO.client.top(limit=100)
 
-    context = {"newly_adds": do_zotero(results)}
+    context = {"newly_adds": do_zotero(results, Reference)}
 
     update_citations_from_inside_zotero_update()
 
@@ -3097,9 +2719,9 @@ def update_citations_view(request):
     Returns:
         HttpResponse: The HTTP response.
     """
-    for ref in Reference.objects.all():
+    for reference in Reference.objects.all():
         citation, _ = Citation.objects.get_or_create(
-            ref=ref, page_from=None, page_to=None
+            ref=reference, page_from=None, page_to=None
         )
         citation.save()
 
@@ -3121,333 +2743,12 @@ def polity_filter_options_view(request):
     Returns:
         JsonResponse: The JSON response.
     """
-
     # Filter the options based on the search text
     options = Polity.objects.filter(
         name__icontains=request.GET.get("search_text", "")
-    ).values("id", "name")
-
-    return JsonResponse({"options": options})
-
-
-def download_oldcsv_view(request, file_name):
-    """
-    Download a CSV file.
-
-    Args:
-        request: The request object.
-        file_name (str): The name of the file to download.
-
-    Returns:
-        FileResponse: The file response.
-    """
-    # Get file path
-    file_path = get_csv_path(file_name)
-
-    # Create a response
-    response = FileResponse(open(file_path, "rb"))
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    return response
-
-
-class IndexView(TemplateView):
-    template_name = "core/seshat-index.html"
-
-    def get_context_data(self, **kwargs):
-        # Get the basic context
-        context = BASIC_CONTEXT
-
-        # Get region objects
-        seshat_regions = Seshat_region.objects.annotate(
-            num_polities=Count("home_seshat_region")
-        ).exclude(name="Somewhere")
-
-        macro_regions = Macro_region.objects.exclude(name="World")
-        polities = Polity.objects.all()
-
-        seshat_region_count = seshat_regions.count()
-        macro_region_count = macro_regions.count()
-        polity_count = polities.count()
-
-        # Update the context with counts and queryset data
-        context.update(
-            {
-                "sr_data": [seshat_region_count, macro_region_count],
-                "pols_data": [polity_count, seshat_region_count],
-                "eight_pols": Polity.objects.order_by("?")[:8],
-                "eight_srs": seshat_regions.order_by("-num_polities")[:8],
-            }
-        )
-
-        # Loop through apps and get their models and data
-        for app_name in ["general", "sc", "wf", "crisisdb"]:
-            models = get_models(app_name, exclude=["Ra"])
-
-            unique_polities = set()
-            variable_count = 0
-            row_count = 0
-
-            app_key = app_name + "_data"
-
-            for model in models:
-                model_name = model.__name__
-
-                queryset = model.objects.all()
-
-                if model_name.startswith("Us_violence"):
-                    print('here')
-                    context.update(
-                        {
-                            "us_data": [
-                                queryset.count(),
-                                1,
-                            ],
-                            "eight_uss": queryset.order_by("?")[:8],
-                        }
-                    )
-                    continue
-
-                if model_name.startswith("Us_"):
-                    continue
-
-                polities = queryset.values_list("polity", flat=True).distinct()
-
-                if model_name.startswith("Power_transition"):
-                    context.update(
-                        {
-                            "pt_data": [
-                                queryset.count(),
-                                1,
-                                polities.count(),
-                            ],
-                            "eight_pts": queryset.order_by("?")[:8],
-                        }
-                    )
-                    continue
-
-                if model_name.startswith("Crisis_consequence"):
-                    context.update(
-                        {
-                            "cc_data": [
-                                queryset.count(),
-                                1,
-                                polities.count(),
-                            ],
-                            "eight_ccs": queryset.order_by("?")[:8],
-                        }
-                    )
-                    continue
-
-                if model_name.startswith("Human_sacrifice"):
-                    context.update(
-                        {
-                            "hs_data": [
-                                queryset.count(),
-                                1,
-                                polities.count(),
-                            ],
-                            "eight_hss": queryset.order_by("?")[:8],
-                        }
-                    )
-                    continue
-
-                unique_polities.update(
-                    queryset.values_list("polity", flat=True).distinct()
-                )
-
-                variable_count += 1
-                row_count += queryset.count()
-
-            context.update(
-                {
-                    app_key: [
-                        row_count,
-                        variable_count,
-                        len(unique_polities),
-                    ],
-                }
-            )
-
-        return context
-
-
-def get_polity_data_single(polity_id):
-    """
-    Get the data for a single polity. The returned data includes the number of
-    records for each app (general, sc, wf, hs, cc, pt).
-
-    Args:
-        polity_id: The ID of the polity.
-
-    Returns:
-        dict: The data for the polity.
-    """
-    models = {k: get_models(k) for k in ["general", "sc", "wf"]}
-
-    data = {
-        "g": 0,
-        "sc": 0,
-        "wf": 0,
-    }
-
-    for model in models["general"]:
-        if all(
-            [
-                hasattr(model, "polity_id"),
-                model.objects.filter(polity_id=polity_id),
-            ]
-        ):
-            data["g"] += model.objects.filter(polity_id=polity_id).count()
-
-    for model in models["sc"]:
-        if all(
-            [
-                hasattr(model, "polity_id"),
-                model.objects.filter(polity_id=polity_id),
-            ]
-        ):
-            data["sc"] += model.objects.filter(polity_id=polity_id).count()
-
-    for model in models["wf"]:
-        if all(
-            [
-                hasattr(model, "polity_id"),
-                model.objects.filter(polity_id=polity_id),
-            ]
-        ):
-            data["wf"] += model.objects.filter(polity_id=polity_id).count()
-
-    data["hs"] = Human_sacrifice.objects.filter(polity=polity_id).count()
-    data["cc"] = Crisis_consequence.objects.filter(polity=polity_id).count()
-    data["pt"] = Power_transition.objects.filter(polity=polity_id).count()
-
-    return data
-
-
-@permission_required("core.view_capital")
-def download_csv_all_polities_view(request):
-    """
-    Download a CSV file containing all polities.
-
-    Note:
-        This view is restricted to users with the 'view_capital' permission.
-
-    Args:
-        request: The request object.
-
-    Returns:
-        HttpResponse: The HTTP response.
-    """
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"polities_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "macro_region",
-            "home_seshat_region",
-            "polity_new_ID",
-            "polity_old_ID",
-            "polity_long_name",
-            "start_year",
-            "end_year",
-            "home_nga",
-            "G",
-            "SC",
-            "WF",
-            "RT",
-            "HS",
-            "CC",
-            "PT",
-            "polity_tag",
-            "shapefile_name",
-        ]
     )
 
-    coded_value_data = get_polity_app_data(
-        Polity, return_freq=False, return_contain=True
-    )
-
-    for obj in Polity.objects.all():
-        if obj.home_seshat_region:
-            writer.writerow(
-                [
-                    obj.home_seshat_region.mac_region.name,
-                    obj.home_seshat_region.name,
-                    obj.new_name,
-                    obj.name,
-                    obj.long_name,
-                    obj.start_year,
-                    obj.end_year,
-                    obj.home_nga,
-                    coded_value_data[obj.id]["g"],
-                    coded_value_data[obj.id]["sc"],
-                    coded_value_data[obj.id]["wf"],
-                    coded_value_data[obj.id]["rt"],
-                    coded_value_data[obj.id]["hs"],
-                    coded_value_data[obj.id]["cc"],
-                    coded_value_data[obj.id]["pt"],
-                    obj.get_polity_tag_display(),
-                    obj.shapefile_name,
-                ]
-            )
-        else:
-            writer.writerow(
-                [
-                    "None",
-                    "None",
-                    obj.new_name,
-                    obj.name,
-                    obj.long_name,
-                    obj.start_year,
-                    obj.end_year,
-                    obj.home_nga,
-                    coded_value_data[obj.id]["g"],
-                    coded_value_data[obj.id]["sc"],
-                    coded_value_data[obj.id]["wf"],
-                    coded_value_data[obj.id]["rt"],
-                    coded_value_data[obj.id]["hs"],
-                    coded_value_data[obj.id]["cc"],
-                    coded_value_data[obj.id]["pt"],
-                    obj.get_polity_tag_display(),
-                    obj.shapefile_name,
-                ]
-            )
-
-    return response
-
-
-def get_or_create_citation(reference, page_from, page_to):
-    """
-    Get or create a Citation instance. If a matching citation already exists, it
-    is returned; otherwise, a new one is created.
-
-    Args:
-        reference (Reference): The reference.
-        page_from (int): The starting page number.
-        page_to (int): The ending page number.
-
-    Returns:
-        Citation: The Citation instance.
-    """
-    # Check if a matching citation already exists
-    existing_citation = Citation.objects.filter(
-        ref=reference, page_from=page_from, page_to=page_to
-    ).first()
-
-    # If a matching citation exists, return it; otherwise, create a new one
-    return existing_citation or Citation.objects.create(
-        ref=reference, page_from=page_from, page_to=page_to
-    )
+    return JsonResponse({"options": options.values("id", "name")})
 
 
 def seshatcommentparts_create3_view(request):
@@ -3466,39 +2767,32 @@ def seshatcommentparts_create3_view(request):
             comment_text = form.cleaned_data["comment_text"]
             comment_order = form.cleaned_data["comment_order"]
 
-            comment_instance = SeshatComment.objects.create(
+            comment = SeshatComment.objects.create(
                 text="a new_comment_text"
             )
 
             try:
-                seshat_expert_instance = Seshat_Expert.objects.get(
-                    user=request.user
-                )
+                seshat_expert = Seshat_Expert.objects.get(user=request.user)
             except Seshat_Expert.DoesNotExist:
-                seshat_expert_instance = None
+                seshat_expert = None
 
             # Create the SeshatCommentPart instance
             comment_part = SeshatCommentPart.objects.create(
-                comment=comment_instance,
+                comment=comment,
                 comment_part_text=comment_text,
                 comment_order=comment_order,
-                comment_curator=seshat_expert_instance,
+                comment_curator=seshat_expert,
             )
 
             # Process the formset
-            reference_formset = ReferenceFormSet(
-                request.POST, prefix="refs"
-            )  # noqa: E501   TODO: this will crash  pylint: disable=C0301
+            # Note: the below will crash as ReferenceFormSet is not defined (#TODO?)
+            reference_formset = ReferenceFormSet(request.POST, prefix="refs")
 
-            if not reference_formset.is_valid():
-                print(
-                    f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"  # noqa: E501 pylint: disable=C0301
-                )
+            if not reference_formset.is_valid() or not reference_formset.has_changed():
+                error_message = f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"  # noqa: E501 pylint: disable=C0301
 
-            if not reference_formset.has_changed():
-                print(
-                    f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"  # noqa: E501 pylint: disable=C0301
-                )
+                # TODO: Should we handle errors differently here, rather than printing?
+                print(error_message)
 
             for reference_form in reference_formset:
                 if reference_form.is_valid():
@@ -3506,7 +2800,10 @@ def seshatcommentparts_create3_view(request):
                         reference = reference_form.cleaned_data["ref"]
                         page_from = reference_form.cleaned_data["page_from"]
                         page_to = reference_form.cleaned_data["page_to"]
-
+                    except KeyError:
+                        # TODO: Handle the exception better here?
+                        pass
+                    else:
                         # Get or create the Citation instance
                         citation, _ = Citation.objects.get_or_create(
                             ref=reference,
@@ -3516,575 +2813,27 @@ def seshatcommentparts_create3_view(request):
 
                         # Associate the Citation with the SeshatCommentPart
                         comment_part.comment_citations.add(citation)
-                    except:  # noqa: E722  TODO: Don't use bare except
-                        pass  # TODO: Handle the exception
                 else:
-                    # TODO: Handle error differently
+                    # TODO: Handle the exception better here?
                     print(f"Form errors: {reference_form.errors}")
 
-            # Redirect to a success page
+            # Redirect to the index page
             return redirect("seshat-index")
 
     elif request.method == "GET":
         form = SeshatCommentPartForm2()
 
+    context = {"form": form}
+
     return render(
         request,
         "core/seshatcomments/seshatcommentpart_create.html",
-        {"form": form},
+        context,
     )
-
-
-# Shapefile views
-
-
-def get_provinces(selected_base_map_gadm="province"):
-    """
-    Get all the province or country shapes for the map base layer.
-
-    Args:
-        selected_base_map_gadm (str): The selected base map GADM level.
-
-    Returns:
-        list: A list of dictionaries containing the province or country shapes.
-    """
-
-    # Use the appropriate Django ORM query based on the selected baseMapGADM value
-    if selected_base_map_gadm == "country":
-        rows = GADMCountries.objects.values_list("geom", "COUNTRY")
-        provinces = [
-            {
-                "aggregated_geometry": GEOSGeometry(geom).geojson,
-                "country": country,
-            }
-            for geom, country in rows
-            if geom is not None
-        ]
-    elif selected_base_map_gadm == "province":
-        rows = GADMProvinces.objects.values_list(
-            "geom", "COUNTRY", "NAME_1", "ENGTYPE_1"
-        )
-        provinces = [
-            {
-                "aggregated_geometry": GEOSGeometry(geom).geojson,
-                "country": country,
-                "province": name,
-                "province_type": engtype,
-            }
-            for geom, country, name, engtype in rows
-            if geom is not None
-        ]
-
-    return provinces
-
-
-def get_polity_shape_content(
-    displayed_year="all",
-    seshat_id="all",
-    tick_number=80,
-    override_earliest_year=None,
-    override_latest_year=None,
-):
-    """
-    This function returns the polity shapes and other content for the map.
-    Only one of displayed_year or seshat_id should be set; not both.
-
-    Note:
-        seshat_id in VideoShapefile is new_name in Polity.
-
-    Args:
-        displayed_year (str): The year to display the polities for. "all" will return all
-            polities. Any given year will return polities that were active in that year.
-        seshat_id (str): The seshat_id of the polity to display. If a value is provided,
-            only the shapes for that polity being returned.
-
-    Returns:
-        dict: The content for the polity shapes.
-    """
-
-    if displayed_year != "all" and seshat_id != "all":
-        raise ValueError(
-            "Only one of displayed_year or seshat_id should be set not both."
-        )
-
-    if displayed_year != "all":
-        rows = VideoShapefile.objects.filter(
-            polity_start_year__lte=displayed_year,
-            polity_end_year__gte=displayed_year,
-        )
-    elif seshat_id != "all":
-        rows = VideoShapefile.objects.filter(seshat_id=seshat_id)
-    else:
-        rows = VideoShapefile.objects.all()
-
-    # Convert 'geom' to GeoJSON in the database query
-    rows = rows.annotate(geom_json=AsGeoJSON("geom")).values(
-        "id",
-        "seshat_id",
-        "name",
-        "polity",
-        "start_year",
-        "end_year",
-        "polity_start_year",
-        "polity_end_year",
-        "colour",
-        "area",
-        "geom_json",
-    )
-
-    shapes = list(rows)
-
-    seshat_ids = [shape["seshat_id"] for shape in shapes if shape["seshat_id"]]
-
-    polities = Polity.objects.filter(new_name__in=seshat_ids).values(
-        "new_name", "id", "long_name"
-    )
-
-    polity_info = [
-        (polity["new_name"], polity["id"], polity["long_name"])
-        for polity in polities
-    ]
-
-    seshat_id_page_id = {
-        new_name: {"id": id, "long_name": long_name or ""}
-        for new_name, id, long_name in polity_info
-    }
-
-    if "migrate" not in sys.argv:
-        result = VideoShapefile.objects.aggregate(
-            min_year=Min("polity_start_year"), max_year=Max("polity_end_year")
-        )
-        earliest_year = result["min_year"]
-        latest_year = result["max_year"]
-        initial_displayed_year = earliest_year
-    else:
-        earliest_year, latest_year = 2014, 2014
-        initial_displayed_year = -3400
-
-    if override_earliest_year is not None:
-        earliest_year = override_earliest_year
-    if override_latest_year is not None:
-        latest_year = override_latest_year
-
-    if displayed_year == "all":
-        displayed_year = initial_displayed_year
-
-    if seshat_id != "all":  # Used in the polity pages
-        earliest_year = min([shape["start_year"] for shape in shapes])
-        displayed_year = earliest_year
-        latest_year = max([shape["end_year"] for shape in shapes])
-
-    # Get the years for the tick marks on the year slider
-    tick_years = [
-        round(year)
-        for year in np.linspace(earliest_year, latest_year, num=tick_number)
-    ]
-
-    content = {
-        "shapes": shapes,
-        "earliest_year": earliest_year,
-        "display_year": displayed_year,
-        "tick_years": json.dumps(tick_years),
-        "latest_year": latest_year,
-        "seshat_id_page_id": seshat_id_page_id,
-    }
-
-    return content
-
-
-def get_all_polity_capitals():
-    """
-    Get capital cities for polities that have them.
-
-    Returns:
-        dict: A dictionary containing the capital cities for polities.
-    """
-    # Try to get the capitals from the cache
-    all_capitals_info = cache.get("all_capitals_info")
-
-    if all_capitals_info is None:
-        all_capitals_info = {}
-        for polity in Polity.objects.all():
-            caps = get_polity_capitals(polity.id)
-
-            if caps:
-                # Set the start and end years to be the same as the polity where missing
-                modified_caps = caps
-                i = 0
-                for capital_info in caps:
-                    if capital_info["year_from"] is None:
-                        modified_caps[i]["year_from"] = polity.start_year
-                    if capital_info["year_to"] is None:
-                        modified_caps[i]["year_to"] = polity.end_year
-                    i += 1
-                all_capitals_info[polity.new_name] = modified_caps
-        # Store the capitals in the cache for 1 hour
-        cache.set("all_capitals_info", all_capitals_info, 3600)
-
-    return all_capitals_info
-
-
-def assign_variables_to_shapes(shapes, app_map):
-    """
-    Assign the absent/present variables to the shapes.
-
-    Args:
-        shapes (list): The shapes to assign the variables to.
-        app_map (dict): A dictionary mapping app names to their long names.
-
-    Returns:
-        tuple: A tuple containing the shapes and the variables.
-    """
-    # Try to get the variables from the cache
-    variables = cache.get("variables")
-    if variables is None:
-        variables = {}
-        for app_name, app_name_long in app_map.items():
-            variables[app_name_long] = {}
-            for model in get_models(app_name):
-                fields = list(model._meta.get_fields())
-
-                for field in fields:
-                    if (
-                        hasattr(field, "choices")
-                        and field.choices == ABSENT_PRESENT_CHOICES
-                    ):
-                        # Get the variable name and formatted name
-                        if field.name == "coded_value":
-                            # Use the class name lower case for rt models where coded_value
-                            # is used
-                            var_name = model.__name__.lower()
-                            var_long = getattr(
-                                model._meta,
-                                "verbose_name_plural",
-                                var_name,
-                            )
-                            if var_name == var_long:
-                                variable_formatted = (
-                                    var_name.capitalize().replace("_", " ")
-                                )
-                            else:
-                                variable_formatted = var_long
-                        else:  # Use the field name for other models
-                            var_name = field.name
-                            variable_formatted = (
-                                field.name.capitalize().replace("_", " ")
-                            )
-                        variables[app_name_long][var_name] = {}
-                        variables[app_name_long][var_name][
-                            "formatted"
-                        ] = variable_formatted
-                        # Get the variable subsection and subsubsection if they exist
-                        variable_full_name = variable_formatted
-                        instance = model()
-                        if hasattr(instance, "subsubsection"):
-                            variable_full_name = (
-                                instance.subsubsection()
-                                + ": "
-                                + variable_full_name
-                            )
-                        if hasattr(instance, "subsection"):
-                            variable_full_name = (
-                                instance.subsection()
-                                + ": "
-                                + variable_full_name
-                            )
-                        variables[app_name_long][var_name][
-                            "full_name"
-                        ] = variable_full_name
-
-        # Store the variables in the cache for 1 hour
-        cache.set("variables", variables, 3600)
-
-    for app_name, app_name_long in app_map.items():
-
-        app_variables_list = list(variables[app_name_long].keys())
-        module_path = "seshat.apps." + app_name + ".models"
-        module = __import__(
-            module_path,
-            fromlist=[
-                variable.capitalize() for variable in app_variables_list
-            ],
-        )
-        variable_classes = {
-            variable: getattr(module, variable.capitalize())
-            for variable in app_variables_list
-        }
-
-        seshat_ids = [
-            shape["seshat_id"]
-            for shape in shapes
-            if shape["seshat_id"] != "none"
-        ]
-        polities = {
-            polity.new_name: polity
-            for polity in Polity.objects.filter(new_name__in=seshat_ids)
-        }
-
-        for variable, class_ in variable_classes.items():
-            variable_formatted = variables[app_name_long][variable][
-                "formatted"
-            ]
-            variable_objs = {
-                obj.polity_id: obj
-                for obj in class_.objects.filter(
-                    polity_id__in=polities.values()
-                )
-            }
-
-            all_variable_objs = {}
-            for obj in class_.objects.filter(polity_id__in=polities.values()):
-                try:
-                    variable_value = getattr(obj, variable)
-                except (
-                    AttributeError
-                ):  # For rt models where coded_value is used
-                    variable_value = getattr(obj, "coded_value")
-                if obj.polity_id not in all_variable_objs:
-                    all_variable_objs[obj.polity_id] = {}
-                all_variable_objs[obj.polity_id][variable_value] = [
-                    obj.year_from,
-                    obj.year_to,
-                ]
-
-            for shape in shapes:
-                shape[variable_formatted] = "uncoded"  # Default value
-                polity = polities.get(shape["seshat_id"])
-                if polity:
-                    variable_obj = variable_objs.get(polity.id)
-                    try:
-                        variable_obj_dict = all_variable_objs[polity.id]
-                    except KeyError:
-                        pass
-                    if variable_obj:
-                        try:
-                            # Absent/present choice
-                            shape[variable_formatted] = getattr(
-                                variable_obj, variable
-                            )
-                            shape[variable_formatted + "_dict"] = (
-                                variable_obj_dict
-                            )
-                        except AttributeError:
-                            # For rt models where coded_value is used
-                            shape[variable_formatted] = getattr(
-                                variable_obj, "coded_value"
-                            )
-                            shape[variable_formatted + "_dict"] = (
-                                variable_obj_dict
-                            )
-                else:
-                    shape[variable_formatted] = "no seshat page"
-
-    return shapes, variables
-
-
-def assign_categorical_variables_to_shapes(shapes, variables):
-    """
-    Assign the categorical variables to the shapes.
-
-    Note:
-        Currently only language is implemented.
-
-    Args:
-        shapes (list): The shapes to assign the variables to.
-        variables (dict): The variables to assign to the shapes.
-
-    Returns:
-        tuple: A tuple containing the shapes and the variables.
-    """
-    # Add language variables to the variables
-    variables["General Variables"] = {
-        "polity_linguistic_family": {
-            "formatted": "linguistic_family",
-            "full_name": "Linguistic Family",
-        },
-        "polity_language_genus": {
-            "formatted": "language_genus",
-            "full_name": "Language Genus",
-        },
-        "polity_language": {"formatted": "language", "full_name": "Language"},
-    }
-
-    # Fetch all polities and store them in a dictionary for quick access
-    polities = {polity.new_name: polity for polity in Polity.objects.all()}
-
-    # Fetch all linguistic families, language genuses, and languages and store them in
-    # dictionaries for quick access
-    linguistic_families = {}
-    for lf in Polity_linguistic_family.objects.all():
-        if lf.polity_id not in linguistic_families:
-            linguistic_families[lf.polity_id] = []
-        linguistic_families[lf.polity_id].append(lf)
-
-    language_genuses = {}
-    for lg in Polity_language_genus.objects.all():
-        if lg.polity_id not in language_genuses:
-            language_genuses[lg.polity_id] = []
-        language_genuses[lg.polity_id].append(lg)
-
-    languages = {}
-    for language in Polity_language.objects.all():
-        if language.polity_id not in languages:
-            languages[language.polity_id] = []
-        languages[language.polity_id].append(language)
-
-    # Add language variable info to polity shapes
-    for shape in shapes:
-        shape["linguistic_family"] = []
-        shape["linguistic_family_dict"] = {}
-        shape["language_genus"] = []
-        shape["language_genus_dict"] = {}
-        shape["language"] = []
-        shape["language_dict"] = {}
-        if shape["seshat_id"] != "none":  # Skip shapes with no seshat_id
-            polity = polities.get(shape["seshat_id"])
-            if polity:
-                # Get the linguistic family, language genus, and language for the polity
-                shape["linguistic_family"].extend(
-                    [
-                        lf.linguistic_family
-                        for lf in linguistic_families.get(polity.id, [])
-                    ]
-                )
-                shape["language_genus"].extend(
-                    [
-                        lg.language_genus
-                        for lg in language_genuses.get(polity.id, [])
-                    ]
-                )
-                shape["language"].extend(
-                    [lang.language for lang in languages.get(polity.id, [])]
-                )
-
-                # Get the years for the linguistic family, language genus, and language for
-                # the polity
-                shape["linguistic_family_dict"].update(
-                    {
-                        lf.linguistic_family: [lf.year_from, lf.year_to]
-                        for lf in linguistic_families.get(polity.id, [])
-                    }
-                )
-                shape["language_genus_dict"].update(
-                    {
-                        lg.language_genus: [lg.year_from, lg.year_to]
-                        for lg in language_genuses.get(polity.id, [])
-                    }
-                )
-                shape["language_dict"].update(
-                    {
-                        lang.language: [lang.year_from, lang.year_to]
-                        for lang in languages.get(polity.id, [])
-                    }
-                )
-
-        # If no linguistic family, language genus, or language was found, append 'Uncoded'
-        polity = polities.get(shape["seshat_id"])
-        if polity:
-            if not shape["linguistic_family"]:
-                shape["linguistic_family"].append("Uncoded")
-            if not shape["language_genus"]:
-                shape["language_genus"].append("Uncoded")
-            if not shape["language"]:
-                shape["language"].append("Uncoded")
-        else:
-            if not shape["linguistic_family"]:
-                shape["linguistic_family"].append("No Seshat page")
-            if not shape["language_genus"]:
-                shape["language_genus"].append("No Seshat page")
-            if not shape["language"]:
-                shape["language"].append("No Seshat page")
-
-    return shapes, variables
-
-
-# Get all the variables used in the map view
-app_map = {
-    "sc": "Social Complexity Variables",
-    "wf": "Warfare Variables (Military Technologies)",
-    # TODO: Implemented but temporarily restricted. Uncomment when ready.
-    # 'rt': 'Religion Tolerance',
-    # TODO: Partially implmented and hardcoded in assign_categorical_variables_to_shapes.
-    # 'general': 'General Variables',
-}
-
-# Get sorted lists of choices for each categorical variable
-categorical_variables = {
-    "linguistic_family": sorted(
-        [x[0] for x in POLITY_LINGUISTIC_FAMILY_CHOICES]
-    ),
-    "language_genus": sorted([x[0] for x in POLITY_LANGUAGE_GENUS_CHOICES]),
-    "language": sorted([x[0] for x in POLITY_LANGUAGE_CHOICES]),
-}
-
-
-def random_polity_shape():
-    """
-    This function is used to get a random polity for the world map initial view.
-    It selects a polity with a seshat_id and a start year.
-
-    Use the VideoShapefile model to get the polity shapes.
-    Choose one that has a seshat_id.
-    Return the seshat_id and start year.
-
-    Returns:
-        tuple: A tuple containing the start year and seshat_id.
-    """
-    max_id = VideoShapefile.objects.filter(seshat_id__isnull=False).aggregate(
-        max_id=Max("id")
-    )["max_id"]
-    while True:
-        pk = random.randint(1, max_id)
-        shape = VideoShapefile.objects.filter(
-            seshat_id__isnull=False, id=pk
-        ).first()
-        if shape:
-            if shape.seshat_id and shape.area > 600000:  # Big empires only
-                break
-    return shape.start_year, shape.seshat_id
-
-
-def common_map_view_content(content):
-    """
-    Set of functions that update content and run in each map view function.
-
-    Args:
-        content (dict): The content for the polity shapes.
-
-    Returns:
-        dict: The updated content for the polity shapes.
-    """
-    # Add in the present/absent variables to view for the shapes
-    content["shapes"], content["variables"] = assign_variables_to_shapes(
-        content["shapes"], app_map
-    )
-
-    # Add in the categorical variables to view for the shapes
-    content["shapes"], content["variables"] = (
-        assign_categorical_variables_to_shapes(
-            content["shapes"], content["variables"]
-        )
-    )
-
-    # Load the capital cities for polities that have them
-    content["all_capitals_info"] = get_all_polity_capitals()
-
-    # Add categorical variable choices to content for dropdown selection
-    content["categorical_variables"] = categorical_variables
-
-    # Set the initial polity to highlight
-    content["world_map_initial_polity"] = world_map_initial_polity
-
-    return content
-
-
-# World map defalut settings
-world_map_initial_displayed_year = 117
-world_map_initial_polity = "it_roman_principate"
 
 
 def world_map_view(request):
-    global world_map_initial_displayed_year, world_map_initial_polity
+    # global WORLD_MAP_INITIAL_DISPLAYED_YEAR, WORLD_MAP_INITIAL_POLITY
     """
     This view is used to display a map with polities plotted on it. The initial
     view just loads a polity with a seshat_id picked at random and sets the
@@ -4096,34 +2845,27 @@ def world_map_view(request):
     Returns:
         HttpResponse: The HTTP response.
     """
+    seshat_id = WORLD_MAP_INITIAL_POLITY
+    display_year = WORLD_MAP_INITIAL_DISPLAYED_YEAR
 
     # Check if 'year' parameter is different from the world_map_initial_displayed_year or
     # not present then redirect
     if "year" in request.GET:
-        if request.GET["year"] != str(world_map_initial_displayed_year):
-            return redirect(
-                "{}?year={}".format(
-                    request.path, world_map_initial_displayed_year
-                )
-            )
+        if request.GET["year"] != str(seshat_id):
+            return redirect(f"{request.path}?year={seshat_id}")
     else:
         # Select a random polity for the initial view
         if "test" not in sys.argv:
-            world_map_initial_displayed_year, world_map_initial_polity = (
-                random_polity_shape()
-            )
-        return redirect(
-            "{}?year={}".format(request.path, world_map_initial_displayed_year)
-        )
+            display_year, seshat_id = random_polity_shape()
+        return redirect(f"{request.path}?year={seshat_id}")
 
-    content = get_polity_shape_content(seshat_id=world_map_initial_polity)
-
-    content = common_map_view_content(content)
+    context = get_polity_shape_content(seshat_id=seshat_id)
+    context = common_map_view_content(context)
 
     # For the initial view, set the displayed year to the polity's start year
-    content["display_year"] = world_map_initial_displayed_year
+    context["display_year"] = display_year
 
-    return render(request, "core/world_map.html", content)
+    return render(request, "core/world_map.html", context)
 
 
 def world_map_one_year_view(request):
@@ -4137,9 +2879,9 @@ def world_map_one_year_view(request):
     Returns:
         JsonResponse: The HTTP response with serialized JSON.
     """
-    year = request.GET.get("year", world_map_initial_displayed_year)
-    content = get_polity_shape_content(displayed_year=year)
+    year = request.GET.get("year", WORLD_MAP_INITIAL_DISPLAYED_YEAR)
 
+    content = get_polity_shape_content(displayed_year=year)
     content = common_map_view_content(content)
 
     return JsonResponse(content)
@@ -4361,17 +3103,19 @@ def update_seshat_comment_part_view(request, pk):
                 }
             )
 
-    return render(
-        request,
-        "core/seshatcomments/seshatcommentpart_update2.html",
-        {
+    context = {
             "form": form,
             "formset": formset,
             "comm_num": pk,
             "comm_part_display": comment_part,
             "parent_comment": parent_comment_part,
             "subcom_order": subcomment_order,
-        },
+        }
+
+    return render(
+        request,
+        "core/seshatcomments/seshatcommentpart_update2.html",
+        context,
     )
 
 
@@ -4465,8 +3209,8 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
                 request.POST, prefix="refs"
             )
             if references_formset.is_valid():
-                to_be_added = []
-                to_be_deleted_later = []
+                to_be_added, to_be_deleted_later = [], []
+                page_from, page_to = None, None
                 for reference_form in references_formset:
                     if reference_form.is_valid():
                         try:
@@ -4481,7 +3225,9 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
                             parent_pars_inserted = reference_form.cleaned_data[
                                 "parent_pars"
                             ]
-
+                        except KeyError:
+                            pass  # TODO: Handle the exception
+                        else:
                             # Get or create the Citation instance
                             if page_from and page_to:
                                 citation, created = (
@@ -4509,8 +3255,6 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
                                 to_be_added.append(
                                     (citation, parent_pars_inserted)
                                 )
-                        except:  # noqa: E722  TODO: Don't use bare except
-                            pass  # Handle the exception as per your requirement
 
                 seshat_comment_part.comment_citations_plus.clear()  # TODO: this will crash
 
@@ -4537,8 +3281,10 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
     elif request.method == "GET":
         form = SeshatCommentPartForm2_UPGRADE()
 
+    context = {"form": form}
+
     return render(
-        request, "core/seshatcomments/your_template.html", {"form": form}
+        request, "core/seshatcomments/your_template.html", context
     )
 
 
@@ -4646,7 +3392,7 @@ def seshatcomments_create3_view(request):
                 request.POST, prefix="commentpart"
             )
 
-            for _, subcomment_form in enumerate(comment_formset):
+            for subcomment_form in comment_formset:
                 if subcomment_form.is_valid():
                     comment_text = subcomment_form.cleaned_data["comment_text"]
                     comment_order = subcomment_form.cleaned_data[
@@ -4662,9 +3408,8 @@ def seshatcomments_create3_view(request):
                     )
 
                     # Process the formset
-                    reference_formset = ReferenceFormSet(
-                        request.POST, prefix="refs"
-                    )  # noqa: E501   TODO: This will crash  pylint: disable=C0301
+                    # Note: the below will crash as ReferenceFormSet is not defined (#TODO?)
+                    reference_formset = ReferenceFormSet(request.POST, prefix="refs")
 
                     for reference_form in reference_formset:
                         if reference_form.is_valid():
@@ -4676,7 +3421,10 @@ def seshatcomments_create3_view(request):
                                 page_to = reference_form.cleaned_data[
                                     "page_to"
                                 ]
-
+                            except KeyError:
+                                # TODO: Handle exception
+                                pass
+                            else:
                                 citation, _ = Citation.objects.get_or_create(
                                     ref=reference,
                                     page_from=int(page_from),
@@ -4685,9 +3433,6 @@ def seshatcomments_create3_view(request):
 
                                 # Associate the Citation with the SeshatCommentPart
                                 comment_part.comment_citations.add(citation)
-                            except:  # noqa: E722  TODO: Don't use bare except
-                                # TODO: Handle exception
-                                pass
                         else:
                             # TODO: Handle error differently
                             print(f"Form errors: {reference_form.errors}")
@@ -4698,10 +3443,12 @@ def seshatcomments_create3_view(request):
     elif request.method == "GET":
         form = SeshatCommentForm2()
 
+    context = {"form": form}
+
     return render(
         request,
         "core/seshatcomments/seshatcomment_create.html",
-        {"form": form},
+        context,
     )
 
 
@@ -4764,45 +3511,3 @@ def search_suggestions_view(request):
     return render(request, "core/partials/_search_suggestions.html", context)
 
 
-def get_polity_capitals(pk):
-    """
-    Get all the capitals for a polity and coordinates.
-
-    Args:
-        pk (int): The primary key of the polity.
-
-    Returns:
-        list: A list of dictionaries containing the capital name, latitude,
-            longitude, start year (or 0 or None if they aren't present in the
-            database), and end year (or 0 or None if they aren't present in
-            the database).
-    """
-    capitals_info = []
-    for polity_capital in Polity_capital.objects.filter(polity_id=pk):
-        capitals = Capital.objects.filter(name=polity_capital.capital)
-
-        for capital in capitals:
-            if capital.name and capital.latitude and capital.longitude:
-                capital_info = {
-                    "capital": capital.name,
-                    "latitude": float(capital.latitude),
-                    "longitude": float(capital.longitude),
-                }
-
-                if polity_capital.year_from == 0:
-                    capital_info["year_from"] = 0
-                elif polity_capital.year_from is not None:
-                    capital_info["year_from"] = polity_capital.year_from
-                else:
-                    capital_info["year_from"] = None
-
-                if polity_capital.year_to == 0:
-                    capital_info["year_to"] = 0
-                elif polity_capital.year_to is not None:
-                    capital_info["year_to"] = polity_capital.year_to
-                else:
-                    capital_info["year_to"] = None
-
-                capitals_info.append(capital_info)
-
-    return capitals_info

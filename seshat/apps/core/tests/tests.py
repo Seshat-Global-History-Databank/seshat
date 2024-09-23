@@ -17,7 +17,7 @@ from ..models import (
     Capital,
 )
 from ..templatetags.core_tags import polity_map
-from ..views import (
+from ..utils import (
     get_provinces,
     get_polity_shape_content,
     get_all_polity_capitals,

@@ -1,8 +1,8 @@
 from django.db import models
 
 from ..core.models import SeshatCommon, Religion
-from ..global_constants import ABSENT_PRESENT_CHOICES
-from ..global_utils import (
+from ..constants import ABSENT_PRESENT_CHOICES
+from ..utils import (
     get_model_instance_name,
 )
 

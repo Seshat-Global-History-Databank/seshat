@@ -106,20 +106,18 @@ __all__ = [
 
 import csv
 
-from django.contrib.auth.decorators import (
-    login_required,
-    permission_required,
-    user_passes_test,
-)
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import HttpResponse
 
-from ....global_utils import (
+from ....utils import (
     get_date,
     get_models,
-    has_add_capital_permission,
     write_csv,
 )
-from ....global_constants import ABSENT_PRESENT_STRING_LIST, CSV_DELIMITER
+from ....constants import (
+    CSV_DELIMITER,
+    SUBSECTIONS,
+)
 
 from ...constants import APP_NAME
 from ...models import (
@@ -555,6 +553,12 @@ def professional_soldier_meta_download_view(request):
 
 
 @permission_required("core.view_capital")
+def professional_priesthood_meta_download_view(request):
+    response = write_csv(Professional_priesthood, "meta", prefix=PREFIX)
+    return response
+
+
+@permission_required("core.view_capital")
 def full_time_bureaucrat_meta_download_view(request):
     response = write_csv(Full_time_bureaucrat, "meta", prefix=PREFIX)
     return response
@@ -805,8 +809,620 @@ def general_postal_service_meta_download_view(request):
 
 
 @permission_required("core.view_capital")
+def download_csv_all_sc(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_data_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(APP_NAME):
+        # Get all rows of data from the model
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_social_scale(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_social_scale_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME, exclude=["Ra"], subsection=SUBSECTIONS.sc.SocialScale
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_professions(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_professions_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME, exclude=["Ra"], subsection=SUBSECTIONS.sc.Professions
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_bureaucracy_characteristics(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_bureaucracy_characteristics_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME,
+        exclude=["Ra"],
+        subsection=SUBSECTIONS.sc.BureaucracyCharacteristics,
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_hierarchical_complexity(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_hierarchical_complexity_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME,
+        exclude=["Ra"],
+        subsection=SUBSECTIONS.sc.HierarchicalComplexity,
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_law(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_law_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME, exclude=["Ra"], subsection=SUBSECTIONS.sc.Law
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_specialized_buildings_polity_owned(request):
+    date = get_date()
+
+    # Create a file name
+    file_name = (
+        f"social_complexity_specialized_buildings_polity_owned_{date}.csv"
+    )
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME,
+        exclude=["Ra"],
+        subsection=SUBSECTIONS.sc.SpecializedBuildings,
+    ):
+        # TODO: Note the subsection was changed in the line above from "Specialized
+        # Buildings: polity owned" to "Specialized Buildings Polity Owned"
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_transport_infrastructure(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_transport_infrastructure_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME,
+        exclude=["Ra"],
+        subsection=SUBSECTIONS.sc.TransportInfrastructure,
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_special_purpose_sites(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_special_purpose_sites_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME, exclude=["Ra"], subsection=SUBSECTIONS.sc.SpecialPurposeSites
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+@permission_required("core.view_capital")
+def download_csv_information(request):
+    date = get_date()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type="text/csv")
+
+    # Add filename to response object
+    file_name = f"social_complexity_information_{date}.csv"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter=CSV_DELIMITER)
+
+    writer.writerow(
+        [
+            "subsection",
+            "variable_name",
+            "year_from",
+            "year_to",
+            "polity_name",
+            "polity_new_ID",
+            "polity_old_ID",
+            "value_from",
+            "value_to",
+            "confidence",
+            "is_disputed",
+            "is_uncertain",
+            "expert_checked",
+            "DRB_reviewed",
+        ]
+    )
+
+    # Iterate over each model
+    for model in get_models(
+        APP_NAME, exclude=["Ra"], subsection=SUBSECTIONS.sc.Information
+    ):
+        for obj in model.objects.all():
+            writer.writerow(
+                [
+                    obj.subsection(),
+                    obj.clean_name(),
+                    obj.year_from,
+                    obj.year_to,
+                    obj.polity.long_name,
+                    obj.polity.new_name,
+                    obj.polity.name,
+                    obj.show_value_from(),
+                    obj.show_value_to(),
+                    obj.get_tag_display(),
+                    obj.is_disputed,
+                    obj.is_uncertain,
+                    obj.expert_reviewed,
+                    obj.drb_reviewed,
+                ]
+            )
+
+    return response
+
+
+"""
+@permission_required("core.view_capital")
 def ra_download_view(request):
-    """
+    '''
     Download all the data in the Ra model as a CSV file.
 
     Note:
@@ -818,7 +1434,7 @@ def ra_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     date = get_date()
 
     # Create a response object with CSV content type
@@ -871,7 +1487,7 @@ def ra_download_view(request):
 
 @permission_required("core.view_capital")
 def ra_meta_download_view(request):
-    """
+    '''
     Download the metadata of the Ra model as a CSV file.
 
     Note:
@@ -883,7 +1499,7 @@ def ra_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="metadata_ras.csv"'
 
@@ -928,7 +1544,7 @@ def ra_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_territory_download_view(request):
-    """
+    '''
     Download all the data in the Polity_territory model as a CSV file.
 
     Note:
@@ -940,7 +1556,7 @@ def polity_territory_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     date = get_date()
 
     # Create a response object with CSV content type
@@ -995,7 +1611,7 @@ def polity_territory_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_territory_meta_download_view(request):
-    """
+    '''
     Download the metadata of the Polity_territory model as a CSV file.
 
     Note:
@@ -1007,7 +1623,7 @@ def polity_territory_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="metadata_polity_territorys.csv"'
@@ -1064,7 +1680,7 @@ def polity_territory_meta_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_population_download_view(request):
-    """
+    '''
     Download all the data of the Polity_population model as a CSV file.
 
     Note:
@@ -1076,7 +1692,7 @@ def polity_population_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     date = get_date()
 
     # Create a response object with CSV content type
@@ -1131,7 +1747,7 @@ def polity_population_download_view(request):
 
 @permission_required("core.view_capital")
 def polity_population_meta_download_view(request):
-    """
+    '''
     Download the metadata of the Polity_population model as a CSV file.
 
     Note:
@@ -1143,7 +1759,7 @@ def polity_population_meta_download_view(request):
 
     Returns:
         HttpResponse: The response object.
-    """
+    '''
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
         'attachment; filename="metadata_polity_populations.csv"'
@@ -6051,825 +6667,4 @@ def general_postal_service_meta_download_view(request):
                 writer.writerow([inner_key, inner_value])
 
     return response
-
-
-@permission_required("core.view_capital")
-def download_csv_all_sc(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_data_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        items = model.objects.all()
-
-        for o in items:
-            writer.writerow(
-                [
-                    o.subsection(),
-                    o.clean_name(),
-                    o.year_from,
-                    o.year_to,
-                    o.polity.long_name,
-                    o.polity.new_name,
-                    o.polity.name,
-                    o.show_value_from(),
-                    o.show_value_to(),
-                    o.get_tag_display(),
-                    o.is_disputed,
-                    o.is_uncertain,
-                    o.expert_reviewed,
-                    o.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_social_scale(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_social_scale_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Social Scale":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_professions(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_professions_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Professions":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_bureaucracy_characteristics(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_bureaucracy_characteristics_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Bureaucracy Characteristics":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_hierarchical_complexity(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_hierarchical_complexity_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        subsection = str(model().subsection())
-
-        if subsection == "Hierarchical Complexity":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_law(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_law_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Law":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_specialized_buildings_polity_owned(request):
-    date = get_date()
-
-    # Create a file name
-    file_name = (
-        f"social_complexity_specialized_buildings_polity_owned_{date}.csv"
-    )
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Specialized Buildings: polity owned":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_transport_infrastructure(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_transport_infrastructure_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME):
-        # Get all rows of data from the model
-        if model.__name__ == "Ra":
-            continue
-
-        subsection = str(model().subsection())
-
-        if subsection == "Transport Infrastructure":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_special_purpose_sites(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_special_purpose_sites_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        subsection = str(model().subsection())
-
-        if subsection == "Special-purpose Sites":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@permission_required("core.view_capital")
-def download_csv_information(request):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_information_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    writer.writerow(
-        [
-            "subsection",
-            "variable_name",
-            "year_from",
-            "year_to",
-            "polity_name",
-            "polity_new_ID",
-            "polity_old_ID",
-            "value_from",
-            "value_to",
-            "confidence",
-            "is_disputed",
-            "is_uncertain",
-            "expert_checked",
-            "DRB_reviewed",
-        ]
-    )
-
-    # Iterate over each model
-    for model in get_models(APP_NAME, exclude=["Ra"]):
-        subsection = str(model().subsection())
-
-        if subsection == "Information":
-            items = model.objects.all()
-
-            for o in items:
-                writer.writerow(
-                    [
-                        o.subsection(),
-                        o.clean_name(),
-                        o.year_from,
-                        o.year_to,
-                        o.polity.long_name,
-                        o.polity.new_name,
-                        o.polity.name,
-                        o.show_value_from(),
-                        o.show_value_to(),
-                        o.get_tag_display(),
-                        o.is_disputed,
-                        o.is_uncertain,
-                        o.expert_reviewed,
-                        o.drb_reviewed,
-                    ]
-                )
-
-    return response
-
-
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_download_view(request, model_class, var_name):
-    date = get_date()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type="text/csv")
-
-    # Add filename to response object
-    file_name = f"social_complexity_{var_name}_{date}.csv"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-
-    if var_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        var_name_with_from = var_name + "_from"
-        var_name_with_to = var_name + "_to"
-    else:
-        var_name_with_from = var_name
-        var_name_with_to = None
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-    if var_name in [
-        "largest_communication_distance",
-        "fastest_individual_communication",
-        "military_level",
-    ]:
-        writer.writerow(
-            [
-                "variable_name",
-                "year_from",
-                "year_to",
-                "polity_name",
-                "polity_new_ID",
-                "polity_old_ID",
-                var_name_with_from,
-                var_name_with_to,
-                "confidence",
-                "is_disputed",
-                "is_uncertain",
-                "expert_checked",
-                "DRB_reviewed",
-            ]
-        )
-    else:
-        writer.writerow(
-            [
-                "variable_name",
-                "year_from",
-                "year_to",
-                "polity_name",
-                "polity_new_ID",
-                "polity_old_ID",
-                var_name,
-                "confidence",
-                "is_disputed",
-                "is_uncertain",
-                "expert_checked",
-                "DRB_reviewed",
-            ]
-        )
-
-    for o in model_class.objects.all():
-        if var_name in [
-            "largest_communication_distance",
-            "fastest_individual_communication",
-            "military_level",
-        ]:
-            dynamic_value_from = getattr(o, var_name_with_from, "")
-            dynamic_value_to = getattr(o, var_name_with_to, "")
-            writer.writerow(
-                [
-                    o.name,
-                    o.year_from,
-                    o.year_to,
-                    o.polity.long_name,
-                    o.polity.new_name,
-                    o.polity.name,
-                    dynamic_value_from,
-                    dynamic_value_to,
-                    o.get_tag_display(),
-                    o.is_disputed,
-                    o.is_uncertain,
-                    o.expert_reviewed,
-                    o.drb_reviewed,
-                ]
-            )
-        else:
-            dynamic_value = getattr(o, var_name, "")
-            writer.writerow(
-                [
-                    o.name,
-                    o.year_from,
-                    o.year_to,
-                    o.polity.long_name,
-                    o.polity.new_name,
-                    o.polity.name,
-                    dynamic_value,
-                    o.get_tag_display(),
-                    o.is_disputed,
-                    o.is_uncertain,
-                    o.expert_reviewed,
-                    o.drb_reviewed,
-                ]
-            )
-
-    return response
-
-
-@login_required
-@permission_required("core.add_capital", raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url="permission_denied")
-def generic_metadata_download_view(
-    request,
-    var_name,
-    var_name_display,
-    var_section,
-    var_subsection,
-    var_main_desc,
-):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = (
-        f'attachment; filename="metadata_{var_name}s.csv"'
-    )
-
-    my_meta_data_dic = {
-        "notes": "No_Actual_note",
-        "main_desc": var_main_desc,
-        "main_desc_source": "NOTHING",
-        "section": var_section,
-        "subsection": var_subsection,
-    }
-    my_meta_data_dic_inner_vars = {
-        "general_postal_service": {
-            "min": None,
-            "max": None,
-            "scale": None,
-            "var_exp_source": None,
-            "var_exp": f"The {var_name_display} for a polity.",
-            "units": None,
-            "choices": ABSENT_PRESENT_STRING_LIST,
-            "null_meaning": None,
-        }
-    }
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter=CSV_DELIMITER)
-
-    for k, v in my_meta_data_dic.items():
-        writer.writerow([k, v])
-
-    for k_in, v_in in my_meta_data_dic_inner_vars.items():
-        writer.writerow(
-            [
-                k_in,
-            ]
-        )
-        for inner_key, inner_value in v_in.items():
-            if inner_value:
-                writer.writerow([inner_key, inner_value])
-
-    return response
+"""

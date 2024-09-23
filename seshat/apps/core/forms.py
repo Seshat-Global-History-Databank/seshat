@@ -9,8 +9,8 @@ from django.forms.formsets import BaseFormSet
 from django.core.exceptions import ValidationError
 from django_recaptcha.fields import ReCaptchaField
 
-from ..global_constants import _wrap, ATTRS
-from ..global_utils import clean_email
+from ..constants import _wrap, ATTRS
+from ..utils import clean_email
 from ..core.models import (
     Reference,
     Citation,
