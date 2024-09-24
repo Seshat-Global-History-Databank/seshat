@@ -1,7 +1,14 @@
+# TODO: add __all__
+
 from django.db import models
 
 from ..core.models import SeshatCommon, Religion
-from ..constants import ABSENT_PRESENT_CHOICES
+from ..constants import (
+    ABSENT_PRESENT_CHOICES,
+    NO_DATA,
+    # SECTIONS,
+    SUBSECTIONS,
+)
 from ..utils import (
     get_model_instance_name,
 )
@@ -27,6 +34,12 @@ class Widespread_religion(SeshatCommon, RTMixin):
         max_length=500, choices=PREVALENCE_CHOICES, null=True, blank=True
     )
 
+    _clean_name = "widespread_religion"
+    _clean_name_spaced = "Widespread Religion"
+    _reverse = "widespread_religion-detail"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
+    _subsubsection = None
+
     class Meta:
         """
         :noindex:
@@ -46,17 +59,11 @@ class Widespread_religion(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Widespread Religion"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
-
-    _clean_name = "widespread_religion"
-    _clean_name_spaced = "Widespread Religion"
-    _reverse = "widespread_religion-detail"
-    _subsection = "Religious Landscape"
-    _subsubsection = None
 
     def clean_name_dynamic(self):
         if self.order == "1":
@@ -81,7 +88,7 @@ class Widespread_religion(SeshatCommon, RTMixin):
         order_display = self.get_order_display()
 
         if not self.widespread_religion:
-            return " - "
+            return NO_DATA.default
 
         if not degree_of_prevalence or degree_of_prevalence in [
             "uncoded",
@@ -114,6 +121,12 @@ class Official_religion(SeshatCommon, RTMixin):
         blank=True,
     )
 
+    _clean_name = "official_religion"
+    _clean_name_spaced = "Official Religion"
+    _reverse = "official_religion-detail"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
+    _subsubsection = None
+
     class Meta:
         """
         :noindex:
@@ -132,21 +145,15 @@ class Official_religion(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Official Religion"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "official_religion"
-    _clean_name_spaced = "Official Religion"
-    _reverse = "official_religion-detail"
-    _subsection = "Religious Landscape"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.coded_value
 
@@ -173,6 +180,12 @@ class Elites_religion(SeshatCommon, RTMixin):
         blank=True,
     )
 
+    _clean_name = "elites_religion"
+    _clean_name_spaced = "Elites Religion"
+    _reverse = "elites_religion-detail"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
+    _subsubsection = None
+
     class Meta:
         """
         :noindex:
@@ -191,21 +204,15 @@ class Elites_religion(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Elites' Religion"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "elites_religion"
-    _clean_name_spaced = "Elites Religion"
-    _reverse = "elites_religion-detail"
-    _subsection = "Religious Landscape"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.coded_value
 
@@ -224,6 +231,12 @@ class Theo_sync_dif_rel(SeshatCommon, RTMixin):
 
     name = models.CharField(max_length=100, default="Theo_sync_dif_rel")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "theo_sync_dif_rel"
+    _clean_name_spaced = "Theological Syncretism of Different Religions"
+    _reverse = "theo_sync_dif_rel-detail"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
+    _subsubsection = None
 
     class Meta:
         """
@@ -244,21 +257,15 @@ class Theo_sync_dif_rel(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Theological Syncretism of Different Religions"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "theo_sync_dif_rel"
-    _clean_name_spaced = "Theological Syncretism of Different Religions"
-    _reverse = "theo_sync_dif_rel-detail"
-    _subsection = "Religious Landscape"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -283,7 +290,7 @@ class Sync_rel_pra_ind_beli(SeshatCommon, RTMixin):
         "Syncretism of Religious Practices at the Level of Individual Believers"
     )
     _reverse = "sync_rel_pra_ind_beli-detail"
-    _subsection = "Religious Landscape"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
     _subsubsection = None
 
     class Meta:
@@ -307,7 +314,7 @@ class Sync_rel_pra_ind_beli(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Syncretism of Religious Practices at the Level of Individual Believers"
         notes = ""
         description = ""
         description_source = ""
@@ -315,7 +322,7 @@ class Sync_rel_pra_ind_beli(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -338,7 +345,7 @@ class Religious_fragmentation(SeshatCommon, RTMixin):
     _clean_name = "religious_fragmentation"
     _clean_name_spaced = "Religious Fragmentation"
     _reverse = "religious_fragmentation-detail"
-    _subsection = "Religious Landscape"
+    _subsection = SUBSECTIONS.rt.ReligiousLandscape
     _subsubsection = None
 
     class Meta:
@@ -360,7 +367,7 @@ class Religious_fragmentation(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Religious Fragmentations"
         notes = ""
         description = ""
         description_source = ""
@@ -368,7 +375,7 @@ class Religious_fragmentation(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -391,7 +398,7 @@ class Gov_vio_freq_rel_grp(SeshatCommon, RTMixin):
     _clean_name = "gov_vio_freq_rel_grp"
     _clean_name_spaced = "Frequency of Governmental Violence Against Religious Groups"
     _reverse = "gov_vio_freq_rel_grp-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -415,7 +422,7 @@ class Gov_vio_freq_rel_grp(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Frequency of Governmental Violence Against Religious Groups"
         notes = ""
         description = ""
         description_source = ""
@@ -423,7 +430,7 @@ class Gov_vio_freq_rel_grp(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -446,7 +453,7 @@ class Gov_res_pub_wor(SeshatCommon, RTMixin):
     _clean_name = "gov_res_pub_wor"
     _clean_name_spaced = "Government Restrictions on Public Worship"
     _reverse = "gov_res_pub_wor-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -468,7 +475,7 @@ class Gov_res_pub_wor(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Public Worships"
         notes = ""
         description = ""
         description_source = ""
@@ -476,7 +483,7 @@ class Gov_res_pub_wor(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -502,7 +509,7 @@ class Gov_res_pub_pros(SeshatCommon, RTMixin):
     _clean_name = "gov_res_pub_pros"
     _clean_name_spaced = "Government Restrictions on Public Proselytizing"
     _reverse = "gov_res_pub_pros-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -524,7 +531,7 @@ class Gov_res_pub_pros(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Public Proselytizings"
         notes = ""
         description = ""
         description_source = ""
@@ -532,7 +539,7 @@ class Gov_res_pub_pros(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -558,7 +565,7 @@ class Gov_res_conv(SeshatCommon, RTMixin):
     _clean_name = "gov_res_conv"
     _clean_name_spaced = "Government Restrictions on Conversion"
     _reverse = "gov_res_conv-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -580,7 +587,7 @@ class Gov_res_conv(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Conversions"
         notes = ""
         description = ""
         description_source = ""
@@ -588,7 +595,7 @@ class Gov_res_conv(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -614,7 +621,7 @@ class Gov_press_conv(SeshatCommon, RTMixin):
     _clean_name = "gov_press_conv"
     _clean_name_spaced = "Government Pressure to Convert"
     _reverse = "gov_press_conv-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -636,7 +643,7 @@ class Gov_press_conv(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Pressure to Converts"
         notes = ""
         description = ""
         description_source = ""
@@ -644,7 +651,7 @@ class Gov_press_conv(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -670,7 +677,7 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon, RTMixin):
     _clean_name = "gov_res_prop_own_for_rel_grp"
     _clean_name_spaced = "Government Restrictions on Property Ownership for Adherents of Any Religious Group"  # noqa: E501 pylint: disable=C0301
     _reverse = "gov_res_prop_own_for_rel_grp-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -692,7 +699,7 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Property Ownership for Adherents of Any Religious Groups"  # noqa: E501 pylint: disable=C0301
         notes = ""
         description = ""
         description_source = ""
@@ -700,7 +707,7 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -728,7 +735,7 @@ class Tax_rel_adh_act_ins(SeshatCommon, RTMixin):
         "Taxes Based on Religious Adherence or on Religious Activities and Institutions"
     )
     _reverse = "tax_rel_adh_act_ins-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -750,7 +757,7 @@ class Tax_rel_adh_act_ins(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Taxes Based on Religious Adherence or on Religious Activities and Institutionss"  # noqa: E501   TODO: "Institutionss"?  pylint: disable=C0301
         notes = ""
         description = ""
         description_source = ""
@@ -758,7 +765,7 @@ class Tax_rel_adh_act_ins(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -784,7 +791,7 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon, RTMixin):
     _clean_name = "gov_obl_rel_grp_ofc_reco"
     _clean_name_spaced = "Governmental Obligations for Religious Groups to Apply for Official Recognition"  # noqa: E501 pylint: disable=C0301
     _reverse = "gov_obl_rel_grp_ofc_reco-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -806,7 +813,7 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Governmental Obligations for Religious Groups to Apply for Official Recognitions"  # noqa: E501 pylint: disable=C0301
         notes = ""
         description = ""
         description_source = ""
@@ -814,7 +821,7 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -842,7 +849,7 @@ class Gov_res_cons_rel_buil(SeshatCommon, RTMixin):
         "Government Restrictions on Construction of Religious Buildings"
     )
     _reverse = "gov_res_cons_rel_buil-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -866,7 +873,7 @@ class Gov_res_cons_rel_buil(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Construction of Religious Buildings"
         notes = ""
         description = ""
         description_source = ""
@@ -874,7 +881,7 @@ class Gov_res_cons_rel_buil(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -900,7 +907,7 @@ class Gov_res_rel_edu(SeshatCommon, RTMixin):
     _clean_name = "gov_res_rel_edu"
     _clean_name_spaced = "Government Restrictions on Religious Education"
     _reverse = "gov_res_rel_edu-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -922,7 +929,7 @@ class Gov_res_rel_edu(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Religious Educations"
         notes = ""
         description = ""
         description_source = ""
@@ -930,7 +937,7 @@ class Gov_res_rel_edu(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -958,7 +965,7 @@ class Gov_res_cir_rel_lit(SeshatCommon, RTMixin):
         "Government Restrictions on Circulation of Religious Literature"
     )
     _reverse = "gov_res_cir_rel_lit-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -982,7 +989,7 @@ class Gov_res_cir_rel_lit(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Restrictions on Circulation of Religious Literatures"
         notes = ""
         description = ""
         description_source = ""
@@ -990,7 +997,7 @@ class Gov_res_cir_rel_lit(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -1016,7 +1023,7 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon, RTMixin):
     _clean_name = "gov_dis_rel_grp_occ_fun"
     _clean_name_spaced = "Government Discrimination Against Religious Groups Taking up Certain Occupations or Functions"  # noqa: E501 pylint: disable=C0301
     _reverse = "gov_dis_rel_grp_occ_fun-detail"
-    _subsection = "Government Restrictions"
+    _subsection = SUBSECTIONS.rt.GovernmentRestrictions
     _subsubsection = None
 
     class Meta:
@@ -1038,7 +1045,7 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Government Discrimination Against Religious Groups Taking up Certain Occupations or Functionss"  # noqa: E501   TODO: "functionss"?  pylint: disable=C0301
         notes = ""
         description = ""
         description_source = ""
@@ -1046,7 +1053,7 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon, RTMixin):
 
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -1069,6 +1076,12 @@ class Soc_vio_freq_rel_grp(SeshatCommon, RTMixin):
     name = models.CharField(max_length=100, default="Soc_vio_freq_rel_grp")
     coded_value = models.CharField(max_length=500, choices=FREQUENCY_CHOICES)
 
+    _clean_name = "soc_vio_freq_rel_grp"
+    _clean_name_spaced = "Frequency of Societal Violence Against Religious Groups"
+    _reverse = "soc_vio_freq_rel_grp-detail"
+    _subsection = SUBSECTIONS.rt.SocietalRestrictions
+    _subsubsection = None
+
     class Meta:
         """
         :noindex:
@@ -1088,21 +1101,15 @@ class Soc_vio_freq_rel_grp(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Frequency of Societal Violence Against Religious Groups"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "soc_vio_freq_rel_grp"
-    _clean_name_spaced = "Frequency of Societal Violence Against Religious Groups"
-    _reverse = "soc_vio_freq_rel_grp-detail"
-    _subsection = "Societal Restrictions"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -1121,6 +1128,12 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon, RTMixin):
 
     name = models.CharField(max_length=100, default="Soc_dis_rel_grp_occ_fun")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "soc_dis_rel_grp_occ_fun"
+    _clean_name_spaced = "Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functions"  # noqa: E501 pylint: disable=C0301
+    _reverse = "soc_dis_rel_grp_occ_fun-detail"
+    _subsection = SUBSECTIONS.rt.SocietalRestrictions
+    _subsubsection = None
 
     class Meta:
         """
@@ -1141,21 +1154,15 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functions"  # noqa: E501   TODO: "Functionss"?  pylint: disable=C0301
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "soc_dis_rel_grp_occ_fun"
-    _clean_name_spaced = "Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functions"  # noqa: E501 pylint: disable=C0301
-    _reverse = "soc_dis_rel_grp_occ_fun-detail"
-    _subsection = "Societal Restrictions"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 
@@ -1174,6 +1181,12 @@ class Gov_press_conv_for_aga(SeshatCommon, RTMixin):
 
     name = models.CharField(max_length=100, default="Gov_press_conv_for_aga")
     coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    _clean_name = "gov_press_conv_for_aga"
+    _clean_name_spaced = "Societal Pressure to Convert or Against Conversion"
+    _reverse = "gov_press_conv_for_aga-detail"
+    _subsection = SUBSECTIONS.rt.SocietalRestrictions
+    _subsubsection = None
 
     class Meta:
         """
@@ -1194,21 +1207,15 @@ class Gov_press_conv_for_aga(SeshatCommon, RTMixin):
 
         section = None
         subsection = None
-        variable = ""
+        variable = "Societal Pressure to Convert or Against Conversions"
         notes = ""
         description = ""
         description_source = ""
         inner_variables = {}
 
-    _clean_name = "gov_press_conv_for_aga"
-    _clean_name_spaced = "Societal Pressure to Convert or Against Conversion"
-    _reverse = "gov_press_conv_for_aga-detail"
-    _subsection = "Societal Restrictions"
-    _subsubsection = None
-
     def show_value(self):
         if not self.coded_value:
-            return " - "
+            return NO_DATA.default
 
         return self.get_coded_value_display()
 

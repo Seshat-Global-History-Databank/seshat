@@ -1,4 +1,6 @@
 # TODO: move the metadata values to the Code attribute on models.
+# TODO: rewrite all these into the general class-based views (GenericDownloadView and
+# GenericMetaDownloadView)
 
 __all__ = [
     # Model-based download views

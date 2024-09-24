@@ -9,7 +9,7 @@ from .models import (
 )
 from . import views
 from .specific_views import downloads
-
+from ..generic_views import GenericConfirmDeleteView, GenericDeleteView
 
 urlpatterns = [
     path("vars/", views.qing_vars_view, name="qing_vars"),
@@ -143,7 +143,7 @@ urlpatterns = [
     ),
     path(
         "get-citations-dropdown/",
-        views.get_citations_dropdown_view,
+        views.CitationsDropdownView.as_view(),
         name="get_citations_dropdown_view",
     ),
     path(
@@ -962,7 +962,7 @@ Programmatically create the following URL patterns for each model:
 - /model_name/<int:pk>/confirm-delete
 - /model_name/<int:pk>/delete/
 """
-model_form_pairs = [
+models = [
     (
         Us_location,
         "us_location",
@@ -985,27 +985,25 @@ model_form_pairs = [
     ),
 ]
 
-for model_class, x_name in model_form_pairs:
+for model_class, var_name in models:
     urlpatterns.append(
         path(
-            f"{x_name}/<int:pk>/confirm-delete/",
-            views.generic_confirm_delete_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-confirm-delete",
+            f"{var_name}/<int:pk>/confirm-delete/",
+            GenericConfirmDeleteView.as_view(
+                model_class=model_class,
+                var_name=var_name,
+                template="core/confirm_delete.html",
+            ),
+            name=f"{var_name}-confirm-delete",
         )
     )
 
     urlpatterns.append(
         path(
-            f"{x_name}/<int:pk>/delete/",
-            views.generic_delete_object_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-delete",
+            f"{var_name}/<int:pk>/delete/",
+            GenericDeleteView.as_view(
+                model_class=model_class, var_name=var_name
+            ),
+            name=f"{var_name}-delete",
         )
     )

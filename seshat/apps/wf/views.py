@@ -1,21 +1,18 @@
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
-    UpdateView,
     DeleteView,
-    ListView,
     DetailView,
+    ListView,
+    UpdateView,
 )
 
 from ..general.mixins import PolityIdMixin
-from ..utils import get_problematic_data_context
 from ..constants import (
-    POLITY_NGA_NAME,
     ABSENT_PRESENT_STRING_LIST,
     CORRECT_YEAR,
+    POLITY_NGA_NAME,
 )
 
 from .forms import (
@@ -120,118 +117,6 @@ from .models import (
     Modern_fortification,
     Chainmail,
 )
-from .specific_views.downloads import (  # noqa: F401 E501  TODO: currently imported for passing onto urls but maybe can be solved otherwise
-    long_wall_download_view,
-    copper_download_view,
-    bronze_download_view,
-    iron_download_view,
-    steel_download_view,
-    javelin_download_view,
-    atlatl_download_view,
-    sling_download_view,
-    self_bow_download_view,
-    composite_bow_download_view,
-    crossbow_download_view,
-    tension_siege_engine_download_view,
-    sling_siege_engine_download_view,
-    gunpowder_siege_artillery_download_view,
-    handheld_firearm_download_view,
-    war_club_download_view,
-    battle_axe_download_view,
-    dagger_download_view,
-    sword_download_view,
-    spear_download_view,
-    polearm_download_view,
-    dog_download_view,
-    donkey_download_view,
-    horse_download_view,
-    camel_download_view,
-    elephant_download_view,
-    wood_bark_etc_download_view,
-    leather_cloth_download_view,
-    shield_download_view,
-    helmet_download_view,
-    breastplate_download_view,
-    limb_protection_download_view,
-    scaled_armor_download_view,
-    laminar_armor_download_view,
-    plate_armor_download_view,
-    small_vessels_canoes_etc_download_view,
-    merchant_ships_pressed_into_service_download_view,
-    specialized_military_vessel_download_view,
-    settlements_in_a_defensive_position_download_view,
-    wooden_palisade_download_view,
-    earth_rampart_download_view,
-    ditch_download_view,
-    moat_download_view,
-    stone_walls_mortared_download_view,
-    stone_walls_non_mortared_download_view,
-    fortified_camp_download_view,
-    complex_fortification_download_view,
-    modern_fortification_download_view,
-    chainmail_download_view,
-    long_wall_meta_download_view,
-    copper_meta_download_view,
-    bronze_meta_download_view,
-    iron_meta_download_view,
-    steel_meta_download_view,
-    javelin_meta_download_view,
-    atlatl_meta_download_view,
-    sling_meta_download_view,
-    self_bow_meta_download_view,
-    composite_bow_meta_download_view,
-    crossbow_meta_download_view,
-    tension_siege_engine_meta_download_view,
-    sling_siege_engine_meta_download_view,
-    gunpowder_siege_artillery_meta_download_view,
-    handheld_firearm_meta_download_view,
-    war_club_meta_download_view,
-    battle_axe_meta_download_view,
-    dagger_meta_download_view,
-    sword_meta_download_view,
-    spear_meta_download_view,
-    polearm_meta_download_view,
-    dog_meta_download_view,
-    donkey_meta_download_view,
-    horse_meta_download_view,
-    camel_meta_download_view,
-    elephant_meta_download_view,
-    wood_bark_etc_meta_download_view,
-    leather_cloth_meta_download_view,
-    shield_meta_download_view,
-    helmet_meta_download_view,
-    breastplate_meta_download_view,
-    limb_protection_meta_download_view,
-    scaled_armor_meta_download_view,
-    laminar_armor_meta_download_view,
-    plate_armor_meta_download_view,
-    small_vessels_canoes_etc_meta_download_view,
-    merchant_ships_pressed_into_service_meta_download_view,
-    specialized_military_vessel_meta_download_view,
-    settlements_in_a_defensive_position_meta_download_view,
-    wooden_palisade_meta_download_view,
-    earth_rampart_meta_download_view,
-    ditch_meta_download_view,
-    moat_meta_download_view,
-    stone_walls_mortared_meta_download_view,
-    stone_walls_non_mortared_meta_download_view,
-    fortified_camp_meta_download_view,
-    complex_fortification_meta_download_view,
-    modern_fortification_meta_download_view,
-    chainmail_meta_download_view,
-    download_csv_naval_technology,
-    download_csv_armor,
-    download_csv_animals_used_in_warfare,
-    download_csv_handheld_weapons,
-    download_csv_projectiles,
-    download_csv_military_use_of_metals,
-    download_csv_fortifications,
-    download_csv_all_wf,
-)
-from .specific_views.variables import (  # noqa: F401 E501  TODO: currently imported for passing onto urls but maybe can be solved otherwise
-    wfvars_view,
-)
-from .constants import APP_NAME
 
 
 class Long_wallCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
@@ -10254,7 +10139,7 @@ class ChainmailListAllView(ListView):
         order = self.request.GET.get("orderby", "home_nga")
         order2 = self.request.GET.get("orderby2", "year")
 
-        new_context = (
+        queryset = (
             Chainmail.objects.all()
             .annotate(
                 home_nga=POLITY_NGA_NAME,
@@ -10263,7 +10148,7 @@ class ChainmailListAllView(ListView):
             .order_by(order, order2)
         )
 
-        return new_context
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -10301,24 +10186,3 @@ class ChainmailDetailView(DetailView):
 
     model = Chainmail
     template_name = "wf/chainmail/chainmail_detail.html"
-
-
-@permission_required("core.view_capital")
-def show_problematic_wf_data_table(request):
-    """
-    View that shows a table of problematic data in the WF app.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital' permission.  # noqa: E501 pylint: disable=C0301
-
-    Args:
-        request (HttpRequest): The request object used to generate this page.
-
-    Returns:
-        HttpResponse: The response object that contains the rendered problematic data table.
-    """
-    # Get the context data for the problematic data (with standard conditions)
-    context = get_problematic_data_context(APP_NAME)
-
-    # Render the template with the data
-    return render(request, "wf/problematic_wf_data_table.html", context)

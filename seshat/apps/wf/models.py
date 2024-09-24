@@ -34,10 +34,10 @@ class Long_wall(SeshatCommon, WFMixIn):
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.MilitaryTechnologies
         variable = "Long Wall"
-        notes = "No actual note"
+        notes = NO_DATA.note
         description = "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "long_wall": {
                 "min": None,
@@ -115,7 +115,7 @@ class Copper(SeshatCommon, WFMixIn):
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.MilitaryUseOfMetals
         variable = "Copper"
-        notes = "No actual note"
+        notes = NO_DATA.note
         description = "The absence or presence of copper as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -139,7 +139,7 @@ class Copper(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.copper:
-            return " - "
+            return NO_DATA.default
 
         return self.get_copper_display()
 
@@ -169,7 +169,7 @@ class Bronze(SeshatCommon, WFMixIn):
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.MilitaryUseOfMetals
         variable = "Bronze"
-        notes = "No actual note"
+        notes = NO_DATA.note
         description = "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."  # noqa: E501   # noqa: E501 pylint: disable=C0301  pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -193,7 +193,7 @@ class Bronze(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.bronze:
-            return " - "
+            return NO_DATA.default
 
         return self.get_bronze_display()
 
@@ -222,8 +222,8 @@ class Iron(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.MilitaryUseOfMetals
-        variable = ""
-        notes = "No actual note"
+        variable = "Iron"
+        notes = NO_DATA.note
         description = (
             "The absence or presence of iron as a military technology used in warfare."
         )
@@ -249,7 +249,7 @@ class Iron(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.iron:
-            return " - "
+            return NO_DATA.default
 
         return self.get_iron_display()
 
@@ -278,8 +278,8 @@ class Steel(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.MilitaryUseOfMetals
-        variable = ""
-        notes = "No actual note"
+        variable = "Steel"
+        notes = NO_DATA.note
         description = "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -303,7 +303,7 @@ class Steel(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.steel:
-            return " - "
+            return NO_DATA.default
 
         return self.get_steel_display()
 
@@ -332,8 +332,8 @@ class Javelin(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Javelin"
+        notes = NO_DATA.note
         description = "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -357,7 +357,7 @@ class Javelin(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.javelin:
-            return " - "
+            return NO_DATA.default
 
         return self.get_javelin_display()
 
@@ -386,8 +386,8 @@ class Atlatl(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Atlatl"
+        notes = NO_DATA.note
         description = "The absence or presence of atlatl as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -411,7 +411,7 @@ class Atlatl(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.atlatl:
-            return " - "
+            return NO_DATA.default
 
         return self.get_atlatl_display()
 
@@ -440,8 +440,8 @@ class Sling(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Sling"
+        notes = NO_DATA.note
         description = "The absence or presence of slings as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -465,7 +465,7 @@ class Sling(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.sling:
-            return " - "
+            return NO_DATA.default
 
         return self.get_sling_display()
 
@@ -494,8 +494,8 @@ class Self_bow(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Self Bow"
+        notes = NO_DATA.note
         description = "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -519,7 +519,7 @@ class Self_bow(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.self_bow:
-            return " - "
+            return NO_DATA.default
 
         return self.get_self_bow_display()
 
@@ -548,8 +548,8 @@ class Composite_bow(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Composite Bow"
+        notes = NO_DATA.note
         description = "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -573,7 +573,7 @@ class Composite_bow(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.composite_bow:
-            return " - "
+            return NO_DATA.default
 
         return self.get_composite_bow_display()
 
@@ -602,8 +602,8 @@ class Crossbow(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Crossbow"
+        notes = NO_DATA.note
         description = "The absence or presence of crossbow as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -627,7 +627,7 @@ class Crossbow(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.crossbow:
-            return " - "
+            return NO_DATA.default
 
         return self.get_crossbow_display()
 
@@ -658,8 +658,8 @@ class Tension_siege_engine(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Tension Siege Engine"
+        notes = NO_DATA.note
         description = "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -683,7 +683,7 @@ class Tension_siege_engine(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.tension_siege_engine:
-            return " - "
+            return NO_DATA.default
 
         return self.get_tension_siege_engine_display()
 
@@ -714,8 +714,8 @@ class Sling_siege_engine(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Sling Siege Engine"
+        notes = NO_DATA.note
         description = "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -739,7 +739,7 @@ class Sling_siege_engine(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.sling_siege_engine:
-            return " - "
+            return NO_DATA.default
 
         return self.get_sling_siege_engine_display()
 
@@ -770,8 +770,8 @@ class Gunpowder_siege_artillery(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Projectiles
-        variable = ""
-        notes = "No actual note"
+        variable = "Gunpowder Siege Engine"
+        notes = NO_DATA.note
         description = "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -795,7 +795,7 @@ class Gunpowder_siege_artillery(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.gunpowder_siege_artillery:
-            return " - "
+            return NO_DATA.default
 
         return self.get_gunpowder_siege_artillery_display()
 
@@ -824,8 +824,8 @@ class Handheld_firearm(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Handheld Firearm"
+        notes = NO_DATA.note
         description = "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -849,7 +849,7 @@ class Handheld_firearm(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.handheld_firearm:
-            return " - "
+            return NO_DATA.default
 
         return self.get_handheld_firearm_display()
 
@@ -878,8 +878,8 @@ class War_club(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "War Club"
+        notes = NO_DATA.note
         description = "The absence or presence of war clubs as a military technology used in warfare. Includes maces."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -903,7 +903,7 @@ class War_club(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.war_club:
-            return " - "
+            return NO_DATA.default
 
         return self.get_war_club_display()
 
@@ -932,8 +932,8 @@ class Battle_axe(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Battle Axe"
+        notes = NO_DATA.note
         description = "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -957,7 +957,7 @@ class Battle_axe(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.battle_axe:
-            return " - "
+            return NO_DATA.default
 
         return self.get_battle_axe_display()
 
@@ -986,8 +986,8 @@ class Dagger(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Dagger"
+        notes = NO_DATA.note
         description = "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1011,7 +1011,7 @@ class Dagger(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.dagger:
-            return " - "
+            return NO_DATA.default
 
         return self.get_dagger_display()
 
@@ -1040,8 +1040,8 @@ class Sword(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Sword"
+        notes = NO_DATA.note
         description = "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1065,7 +1065,7 @@ class Sword(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.sword:
-            return " - "
+            return NO_DATA.default
 
         return self.get_sword_display()
 
@@ -1094,8 +1094,8 @@ class Spear(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Spear"
+        notes = NO_DATA.note
         description = "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1119,7 +1119,7 @@ class Spear(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.spear:
-            return " - "
+            return NO_DATA.default
 
         return self.get_spear_display()
 
@@ -1148,8 +1148,8 @@ class Polearm(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.HandheldWeapons
-        variable = ""
-        notes = "No actual note"
+        variable = "Polearm"
+        notes = NO_DATA.note
         description = "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {}
@@ -1162,7 +1162,7 @@ class Polearm(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.polearm:
-            return " - "
+            return NO_DATA.default
 
         return self.get_polearm_display()
 
@@ -1191,8 +1191,8 @@ class Dog(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.AnimalsUsedInWarfare
-        variable = ""
-        notes = "No actual note"
+        variable = "Dog"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1205,7 +1205,7 @@ class Dog(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.dog:
-            return " - "
+            return NO_DATA.default
 
         return self.get_dog_display()
 
@@ -1234,8 +1234,8 @@ class Donkey(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.AnimalsUsedInWarfare
-        variable = ""
-        notes = "No actual note"
+        variable = "Donkey"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1248,7 +1248,7 @@ class Donkey(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.donkey:
-            return " - "
+            return NO_DATA.default
 
         return self.get_donkey_display()
 
@@ -1277,8 +1277,8 @@ class Horse(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.AnimalsUsedInWarfare
-        variable = ""
-        notes = "No actual note"
+        variable = "Horse"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1291,7 +1291,7 @@ class Horse(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.horse:
-            return " - "
+            return NO_DATA.default
 
         return self.get_horse_display()
 
@@ -1320,8 +1320,8 @@ class Camel(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.AnimalsUsedInWarfare
-        variable = ""
-        notes = "No actual note"
+        variable = "Camel"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1334,7 +1334,7 @@ class Camel(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.camel:
-            return " - "
+            return NO_DATA.default
 
         return self.get_camel_display()
 
@@ -1363,8 +1363,8 @@ class Elephant(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.AnimalsUsedInWarfare
-        variable = ""
-        notes = "No actual note"
+        variable = "Elephant"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1377,7 +1377,7 @@ class Elephant(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.elephant:
-            return " - "
+            return NO_DATA.default
 
         return self.get_elephant_display()
 
@@ -1406,8 +1406,8 @@ class Wood_bark_etc(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Wood bark etc."
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1420,7 +1420,7 @@ class Wood_bark_etc(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.wood_bark_etc:
-            return " - "
+            return NO_DATA.default
 
         return self.get_wood_bark_etc_display()
 
@@ -1449,8 +1449,8 @@ class Leather_cloth(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Leather Cloth"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1463,7 +1463,7 @@ class Leather_cloth(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.leather_cloth:
-            return " - "
+            return NO_DATA.default
 
         return self.get_leather_cloth_display()
 
@@ -1492,8 +1492,8 @@ class Shield(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Shield"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1506,7 +1506,7 @@ class Shield(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.shield:
-            return " - "
+            return NO_DATA.default
 
         return self.get_shield_display()
 
@@ -1535,8 +1535,8 @@ class Helmet(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Helmet"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1549,7 +1549,7 @@ class Helmet(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.helmet:
-            return " - "
+            return NO_DATA.default
 
         return self.get_helmet_display()
 
@@ -1578,8 +1578,8 @@ class Breastplate(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Breastplate"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1592,7 +1592,7 @@ class Breastplate(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.breastplate:
-            return " - "
+            return NO_DATA.default
 
         return self.get_breastplate_display()
 
@@ -1621,8 +1621,8 @@ class Limb_protection(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Limb Protection"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1635,7 +1635,7 @@ class Limb_protection(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.limb_protection:
-            return " - "
+            return NO_DATA.default
 
         return self.get_limb_protection_display()
 
@@ -1664,8 +1664,8 @@ class Scaled_armor(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Scaled Armor"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1678,7 +1678,7 @@ class Scaled_armor(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.scaled_armor:
-            return " - "
+            return NO_DATA.default
 
         return self.get_scaled_armor_display()
 
@@ -1707,8 +1707,8 @@ class Laminar_armor(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Laminar Armor"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1721,7 +1721,7 @@ class Laminar_armor(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.laminar_armor:
-            return " - "
+            return NO_DATA.default
 
         return self.get_laminar_armor_display()
 
@@ -1750,8 +1750,8 @@ class Plate_armor(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Plate Armor"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1764,7 +1764,7 @@ class Plate_armor(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.plate_armor:
-            return " - "
+            return NO_DATA.default
 
         return self.get_plate_armor_display()
 
@@ -1795,8 +1795,8 @@ class Small_vessels_canoes_etc(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.NavalTechnology
-        variable = ""
-        notes = "No actual note"
+        variable = "Small Vessels, Canoes, etc."
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1809,7 +1809,7 @@ class Small_vessels_canoes_etc(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.small_vessels_canoes_etc:
-            return " - "
+            return NO_DATA.default
 
         return self.get_small_vessels_canoes_etc_display()
 
@@ -1842,8 +1842,8 @@ class Merchant_ships_pressed_into_service(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.NavalTechnology
-        variable = ""
-        notes = "No actual note"
+        variable = "Merchant Ships Pressed Into Service"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1856,7 +1856,7 @@ class Merchant_ships_pressed_into_service(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.merchant_ships_pressed_into_service:
-            return " - "
+            return NO_DATA.default
 
         return self.get_merchant_ships_pressed_into_service_display()
 
@@ -1887,8 +1887,8 @@ class Specialized_military_vessel(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.NavalTechnology
-        variable = ""
-        notes = "No actual note"
+        variable = "Specialized Military Vessel"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1901,7 +1901,7 @@ class Specialized_military_vessel(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.specialized_military_vessel:
-            return " - "
+            return NO_DATA.default
 
         return self.get_specialized_military_vessel_display()
 
@@ -1934,8 +1934,8 @@ class Settlements_in_a_defensive_position(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Settlements in a Defensive Position"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1948,7 +1948,7 @@ class Settlements_in_a_defensive_position(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.settlements_in_a_defensive_position:
-            return " - "
+            return NO_DATA.default
 
         return self.get_settlements_in_a_defensive_position_display()
 
@@ -1977,8 +1977,8 @@ class Wooden_palisade(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Wooden Palisade"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -1991,7 +1991,7 @@ class Wooden_palisade(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.wooden_palisade:
-            return " - "
+            return NO_DATA.default
 
         return self.get_wooden_palisade_display()
 
@@ -2020,8 +2020,8 @@ class Earth_rampart(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Earth Rampart"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2034,7 +2034,7 @@ class Earth_rampart(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.earth_rampart:
-            return " - "
+            return NO_DATA.default
 
         return self.get_earth_rampart_display()
 
@@ -2063,8 +2063,8 @@ class Ditch(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Ditch"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2077,7 +2077,7 @@ class Ditch(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.ditch:
-            return " - "
+            return NO_DATA.default
 
         return self.get_ditch_display()
 
@@ -2106,8 +2106,8 @@ class Moat(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Moat"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2120,7 +2120,7 @@ class Moat(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.moat:
-            return " - "
+            return NO_DATA.default
 
         return self.get_moat_display()
 
@@ -2151,8 +2151,8 @@ class Stone_walls_non_mortared(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Stone Walls, Non-Mortared"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2165,7 +2165,7 @@ class Stone_walls_non_mortared(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.stone_walls_non_mortared:
-            return " - "
+            return NO_DATA.default
 
         return self.get_stone_walls_non_mortared_display()
 
@@ -2196,8 +2196,8 @@ class Stone_walls_mortared(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Stone Walls, Mortared"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2210,7 +2210,7 @@ class Stone_walls_mortared(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.stone_walls_mortared:
-            return " - "
+            return NO_DATA.default
 
         return self.get_stone_walls_mortared_display()
 
@@ -2239,8 +2239,8 @@ class Fortified_camp(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Fortified Camp"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2253,7 +2253,7 @@ class Fortified_camp(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.fortified_camp:
-            return " - "
+            return NO_DATA.default
 
         return self.get_fortified_camp_display()
 
@@ -2284,8 +2284,8 @@ class Complex_fortification(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Complex Fortification"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2298,7 +2298,7 @@ class Complex_fortification(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.complex_fortification:
-            return " - "
+            return NO_DATA.default
 
         return self.get_complex_fortification_display()
 
@@ -2329,8 +2329,8 @@ class Modern_fortification(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Fortifications
-        variable = ""
-        notes = "No actual note"
+        variable = "Modern Fortification"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2343,7 +2343,7 @@ class Modern_fortification(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.modern_fortification:
-            return " - "
+            return NO_DATA.default
 
         return self.get_modern_fortification_display()
 
@@ -2372,8 +2372,8 @@ class Chainmail(SeshatCommon, WFMixIn):
     class Code:
         section = SECTIONS.wf
         subsection = SUBSECTIONS.wf.Armor
-        variable = ""
-        notes = "No actual note"
+        variable = "Chainmail"
+        notes = NO_DATA.note
         description = ""
         description_source = "NOTHING"
         inner_variables = {}
@@ -2386,7 +2386,7 @@ class Chainmail(SeshatCommon, WFMixIn):
 
     def show_value(self):
         if not self.chainmail:
-            return " - "
+            return NO_DATA.default
 
         return self.get_chainmail_display()
 

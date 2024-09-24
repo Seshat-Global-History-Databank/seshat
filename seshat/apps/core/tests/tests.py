@@ -4,7 +4,11 @@ from django.urls import reverse
 
 import json
 
-from ...general.models import Polity_capital, Polity_peak_years, Polity_language
+from ...general.models import (
+    Polity_capital,
+    Polity_peak_years,
+    Polity_language,
+)
 from ...rt.models import Gov_res_pub_pros
 from ...sc.models import Judge
 
@@ -37,9 +41,11 @@ class ShapesTest(TestCase):
         self.pk = 1
         # Simple square polygon to use in geospatial data table tests
         self.square = MultiPolygon(Polygon(((0, 0), (0, 1), (1, 1), (0, 0))))
-        self.geo_square = (
-            '{"type":"MultiPolygon","coordinates":[[[[0,0],[0,1],[1,1],[0,0]]]]}'
-        )
+        self.geo_square = {
+            "type": "MultiPolygon",
+            "coordinates": [[[[0, 0], [0, 1], [1, 1], [0, 0]]]],
+        }
+        self.geo_square = json.dumps(self.geo_square)
         self.geo_square_for_gadm = GEOSGeometry(self.square).geojson
         self.polity = Polity.objects.create(
             name="TestPolity",
@@ -133,7 +139,11 @@ class ShapesTest(TestCase):
             polity_id=self.pk, peak_year_from=2001, peak_year_to=2002
         )
         Judge.objects.create(
-            name="judge", judge="present", year_from=2003, year_to=2004, polity_id=2
+            name="judge",
+            judge="present",
+            year_from=2003,
+            year_to=2004,
+            polity_id=2,
         )
         Gov_res_pub_pros.objects.create(
             name="gov_res_pub_pros",
@@ -195,7 +205,10 @@ class ShapesTest(TestCase):
             }
         ]
         country_expected_result = [
-            {"aggregated_geometry": self.geo_square_for_gadm, "country": "Test Country"}
+            {
+                "aggregated_geometry": self.geo_square_for_gadm,
+                "country": "Test Country",
+            }
         ]
 
         self.assertEqual(province_result, province_expected_result)
@@ -248,7 +261,8 @@ class ShapesTest(TestCase):
     def test_get_polity_shape_content_single_year(self):
         """
         Test the get_polity_shape_content function for a single year.
-        This gets run when loading one year of the world map whilst waiting for the rest of the data to load.
+        This gets run when loading one year of the world map whilst waiting for the rest of
+        the data to load.
         """
         expected_result = {
             "shapes": [
@@ -266,7 +280,7 @@ class ShapesTest(TestCase):
                     "id": 1,
                 }
             ],
-            "earliest_year": 0,  # This is the earliest year in the database, not the earliest year of the polity
+            "earliest_year": 0,  # noqa: E501  Note: This is the earliest year in the database, not the earliest year of the polity
             "display_year": 2000,
             "tick_years": json.dumps([0, 1010, 2020]),
             "latest_year": 2020,
@@ -307,11 +321,15 @@ class ShapesTest(TestCase):
                 "Test seshat_id": {"id": 1, "long_name": "TestPolity"}
             },
         }
-        result = get_polity_shape_content(seshat_id="Test seshat_id", tick_number=3)
+        result = get_polity_shape_content(
+            seshat_id="Test seshat_id", tick_number=3
+        )
 
         self.assertEqual(result, expected_result)
 
-    def test_get_polity_shape_content_displayed_year_and_seshat_id_both_set(self):
+    def test_get_polity_shape_content_displayed_year_and_seshat_id_both_set(
+        self,
+    ):
         """Test that a ValueError is raised if both displayed_year and seshat_id are set."""
         self.assertRaises(
             ValueError,
@@ -424,7 +442,7 @@ class ShapesTest(TestCase):
                         "polity": "Testpolityname2",
                         "start_year": 0,
                         "end_year": 1000,
-                        "polity_start_year": 0,  # Note: this is taken from the shape objectm, not the polity object (they don't match in this test case)
+                        "polity_start_year": 0,  # noqa: E501  Note: this is taken from the shape object, not the polity object (they don't match in this test case)
                         "polity_end_year": 1000,
                         "colour": "#FFFFFF",
                         "area": 100.0,
@@ -506,7 +524,9 @@ class ShapesTest(TestCase):
             "wf": "Warfare Variables (Military Technologies)",
             "rt": "Religion Tolerance",
         }
-        result_shapes, result_variables = assign_variables_to_shapes(shapes, app_map)
+        result_shapes, result_variables = assign_variables_to_shapes(
+            shapes, app_map
+        )
         # Choose some example variables to test
         expected_result_variables_judge = {
             "formatted": "Judge",
@@ -514,7 +534,7 @@ class ShapesTest(TestCase):
         }
         expected_result_variables_gov_res_pub_pros = {
             "formatted": "Government Restrictions on Public Proselytizings",
-            "full_name": "Government Restrictions: Government Restrictions on Public Proselytizings",
+            "full_name": "Government Restrictions: Government Restrictions on Public Proselytizings",  # noqa: E501
         }
         self.assertEqual(
             result_variables["Social Complexity Variables"]["judge"],
@@ -526,13 +546,19 @@ class ShapesTest(TestCase):
         )
         # Test that the shapes have been updated with the variables
         self.assertEqual(result_shapes[0]["Judge"], "present")
-        self.assertEqual(result_shapes[0]["Judge_dict"], {"present": [2003, 2004]})
         self.assertEqual(
-            result_shapes[0]["Government Restrictions on Public Proselytizings"],
+            result_shapes[0]["Judge_dict"], {"present": [2003, 2004]}
+        )
+        self.assertEqual(
+            result_shapes[0][
+                "Government Restrictions on Public Proselytizings"
+            ],
             "absent",
         )
         self.assertEqual(
-            result_shapes[0]["Government Restrictions on Public Proselytizings_dict"],
+            result_shapes[0][
+                "Government Restrictions on Public Proselytizings_dict"
+            ],
             {"absent": [2002, 2003]},
         )
 
@@ -553,8 +579,8 @@ class ShapesTest(TestCase):
                 "id": 2,
             }
         ]
-        result_shapes, result_variables = assign_categorical_variables_to_shapes(
-            shapes, {}
+        result_shapes, result_variables = (
+            assign_categorical_variables_to_shapes(shapes, {})
         )
         expected_result_variables_language = {
             "formatted": "language",
@@ -565,5 +591,9 @@ class ShapesTest(TestCase):
             expected_result_variables_language,
         )
         self.assertEqual(result_shapes[0]["language"], ["English", "French"])
-        self.assertEqual(result_shapes[0]["language_dict"]["English"], [1998, 2000])
-        self.assertEqual(result_shapes[0]["language_dict"]["French"], [1999, 2007])
+        self.assertEqual(
+            result_shapes[0]["language_dict"]["English"], [1998, 2000]
+        )
+        self.assertEqual(
+            result_shapes[0]["language_dict"]["French"], [1999, 2007]
+        )

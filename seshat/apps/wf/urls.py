@@ -2,54 +2,98 @@ from django.urls import path
 
 from . import views
 from .specific_views import downloads
+from ..generic_views import GenericMultipleDownloadView, VariableView, ProblematicDataView
+from ..constants import SUBSECTIONS
 
+APP_LABEL = "wf"
 
 urlpatterns = [
-    path("wfvars/", views.wfvars_view, name="wfvars"),  # TODO: This crashes
     path(
-        "download-csv-wf-all/",
-        downloads.download_csv_all_wf,
-        name="download_csv_all_wf",
-    ),  # TODO: This crashes
+        "wfvars/",
+        VariableView.as_view(
+            app_label=APP_LABEL,
+            template_name="wf/wfvars.html"
+        ),
+        name="wfvars"
+    ),
     path(
         "problematic_wf_data_table/",
-        views.show_problematic_wf_data_table,
+        ProblematicDataView.as_view(
+            app_label=APP_LABEL,
+            template_name="wf/problematic_wf_data_table.html"
+        ),
         name="problematic_wf_data_table",
+    ),
+    path(
+        "download-csv-wf-all/",
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            prefix="warfare_data_"
+        ),
+        name="download_csv_all_wf",
     ),
     # General/category downloads
     path(
         "download_csv_fortifications/",
-        downloads.download_csv_fortifications,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.Fortifications,
+            prefix="warfare_fortifications_",
+        ),
         name="download_csv_fortifications",
     ),
     path(
         "download_csv_military_use_of_metals/",
-        downloads.download_csv_military_use_of_metals,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.MilitaryUseOfMetals,
+            prefix="warfare_military_use_of_metals_",
+        ),
         name="download_csv_military_use_of_metals",
     ),
     path(
         "download_csv_projectiles/",
-        downloads.download_csv_projectiles,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.Projectiles,
+            prefix="warfare_projectiles_",
+        ),
         name="download_csv_projectiles",
     ),
     path(
         "download_csv_handheld_weapons/",
-        downloads.download_csv_handheld_weapons,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.HandheldWeapons,
+            prefix="warfare_handheld_weapons_",
+        ),
         name="download_csv_handheld_weapons",
     ),
     path(
         "download_csv_animals_used_in_warfare/",
-        downloads.download_csv_animals_used_in_warfare,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.AnimalsUsedInWarfare,
+            prefix="warfare_animals_used_in_warfare_",
+        ),
         name="download_csv_animals_used_in_warfare",
     ),
     path(
         "download_csv_armor/",
-        downloads.download_csv_armor,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.Armor,
+            prefix="warfare_armor_",
+        ),
         name="download_csv_armor",
     ),
     path(
         "download_csv_naval_technology/",
-        downloads.download_csv_naval_technology,
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.wf.NavalTechnology,
+            prefix="warfare_naval_technology_",
+        ),
         name="download_csv_naval_technology",
     ),
     # Long wall
@@ -81,12 +125,12 @@ urlpatterns = [
     ),
     path(
         "long_walldownload/",
-        views.long_wall_download_view,
+        downloads.long_wall_download_view,
         name="long_wall-download",
     ),
     path(
         "long_wallmetadownload/",
-        views.long_wall_meta_download_view,
+        downloads.long_wall_meta_download_view,
         name="long_wall-metadownload",
     ),
     # Copper
@@ -119,7 +163,7 @@ urlpatterns = [
     ),
     path(
         "coppermetadownload/",
-        views.copper_meta_download_view,
+        downloads.copper_meta_download_view,
         name="copper-metadownload",
     ),
     # Bronze
@@ -152,7 +196,7 @@ urlpatterns = [
     ),
     path(
         "bronzemetadownload/",
-        views.bronze_meta_download_view,
+        downloads.bronze_meta_download_view,
         name="bronze-metadownload",
     ),
     # Iron
@@ -173,7 +217,7 @@ urlpatterns = [
     path("irondownload/", downloads.iron_download_view, name="iron-download"),
     path(
         "ironmetadownload/",
-        views.iron_meta_download_view,
+        downloads.iron_meta_download_view,
         name="iron-metadownload",
     ),
     # Steel
@@ -198,7 +242,7 @@ urlpatterns = [
     path("steeldownload/", downloads.steel_download_view, name="steel-download"),
     path(
         "steelmetadownload/",
-        views.steel_meta_download_view,
+        downloads.steel_meta_download_view,
         name="steel-metadownload",
     ),
     # Javelin
@@ -230,12 +274,12 @@ urlpatterns = [
     ),
     path(
         "javelindownload/",
-        views.javelin_download_view,
+        downloads.javelin_download_view,
         name="javelin-download",
     ),
     path(
         "javelinmetadownload/",
-        views.javelin_meta_download_view,
+        downloads.javelin_meta_download_view,
         name="javelin-metadownload",
     ),
     # Atlatl
@@ -268,7 +312,7 @@ urlpatterns = [
     ),
     path(
         "atlatlmetadownload/",
-        views.atlatl_meta_download_view,
+        downloads.atlatl_meta_download_view,
         name="atlatl-metadownload",
     ),
     # Sling
@@ -293,7 +337,7 @@ urlpatterns = [
     path("slingdownload/", downloads.sling_download_view, name="sling-download"),
     path(
         "slingmetadownload/",
-        views.sling_meta_download_view,
+        downloads.sling_meta_download_view,
         name="sling-metadownload",
     ),
     # Self bow
@@ -325,12 +369,12 @@ urlpatterns = [
     ),
     path(
         "self_bowdownload/",
-        views.self_bow_download_view,
+        downloads.self_bow_download_view,
         name="self_bow-download",
     ),
     path(
         "self_bowmetadownload/",
-        views.self_bow_meta_download_view,
+        downloads.self_bow_meta_download_view,
         name="self_bow-metadownload",
     ),
     # Composite bow
@@ -366,12 +410,12 @@ urlpatterns = [
     ),
     path(
         "composite_bowdownload/",
-        views.composite_bow_download_view,
+        downloads.composite_bow_download_view,
         name="composite_bow-download",
     ),
     path(
         "composite_bowmetadownload/",
-        views.composite_bow_meta_download_view,
+        downloads.composite_bow_meta_download_view,
         name="composite_bow-metadownload",
     ),
     # Crossbow
@@ -403,12 +447,12 @@ urlpatterns = [
     ),
     path(
         "crossbowdownload/",
-        views.crossbow_download_view,
+        downloads.crossbow_download_view,
         name="crossbow-download",
     ),
     path(
         "crossbowmetadownload/",
-        views.crossbow_meta_download_view,
+        downloads.crossbow_meta_download_view,
         name="crossbow-metadownload",
     ),
     # Sieges
@@ -444,12 +488,12 @@ urlpatterns = [
     ),
     path(
         "tension_siege_enginedownload/",
-        views.tension_siege_engine_download_view,
+        downloads.tension_siege_engine_download_view,
         name="tension_siege_engine-download",
     ),
     path(
         "tension_siege_enginemetadownload/",
-        views.tension_siege_engine_meta_download_view,
+        downloads.tension_siege_engine_meta_download_view,
         name="tension_siege_engine-metadownload",
     ),
     path(
@@ -484,12 +528,12 @@ urlpatterns = [
     ),
     path(
         "sling_siege_enginedownload/",
-        views.sling_siege_engine_download_view,
+        downloads.sling_siege_engine_download_view,
         name="sling_siege_engine-download",
     ),
     path(
         "sling_siege_enginemetadownload/",
-        views.sling_siege_engine_meta_download_view,
+        downloads.sling_siege_engine_meta_download_view,
         name="sling_siege_engine-metadownload",
     ),
     path(
@@ -524,12 +568,12 @@ urlpatterns = [
     ),
     path(
         "gunpowder_siege_artillerydownload/",
-        views.gunpowder_siege_artillery_download_view,
+        downloads.gunpowder_siege_artillery_download_view,
         name="gunpowder_siege_artillery-download",
     ),
     path(
         "gunpowder_siege_artillerymetadownload/",
-        views.gunpowder_siege_artillery_meta_download_view,
+        downloads.gunpowder_siege_artillery_meta_download_view,
         name="gunpowder_siege_artillery-metadownload",
     ),
     # Handheld firearm
@@ -565,12 +609,12 @@ urlpatterns = [
     ),
     path(
         "handheld_firearmdownload/",
-        views.handheld_firearm_download_view,
+        downloads.handheld_firearm_download_view,
         name="handheld_firearm-download",
     ),
     path(
         "handheld_firearmmetadownload/",
-        views.handheld_firearm_meta_download_view,
+        downloads.handheld_firearm_meta_download_view,
         name="handheld_firearm-metadownload",
     ),
     # Warclub
@@ -602,12 +646,12 @@ urlpatterns = [
     ),
     path(
         "war_clubdownload/",
-        views.war_club_download_view,
+        downloads.war_club_download_view,
         name="war_club-download",
     ),
     path(
         "war_clubmetadownload/",
-        views.war_club_meta_download_view,
+        downloads.war_club_meta_download_view,
         name="war_club-metadownload",
     ),
     # Battle axe
@@ -641,12 +685,12 @@ urlpatterns = [
     ),
     path(
         "battle_axedownload/",
-        views.battle_axe_download_view,
+        downloads.battle_axe_download_view,
         name="battle_axe-download",
     ),
     path(
         "battle_axemetadownload/",
-        views.battle_axe_meta_download_view,
+        downloads.battle_axe_meta_download_view,
         name="battle_axe-metadownload",
     ),
     # Dagger
@@ -679,7 +723,7 @@ urlpatterns = [
     ),
     path(
         "daggermetadownload/",
-        views.dagger_meta_download_view,
+        downloads.dagger_meta_download_view,
         name="dagger-metadownload",
     ),
     # Sword
@@ -704,7 +748,7 @@ urlpatterns = [
     path("sworddownload/", downloads.sword_download_view, name="sword-download"),
     path(
         "swordmetadownload/",
-        views.sword_meta_download_view,
+        downloads.sword_meta_download_view,
         name="sword-metadownload",
     ),
     # Spear
@@ -729,7 +773,7 @@ urlpatterns = [
     path("speardownload/", downloads.spear_download_view, name="spear-download"),
     path(
         "spearmetadownload/",
-        views.spear_meta_download_view,
+        downloads.spear_meta_download_view,
         name="spear-metadownload",
     ),
     # Polearm
@@ -761,12 +805,12 @@ urlpatterns = [
     ),
     path(
         "polearmdownload/",
-        views.polearm_download_view,
+        downloads.polearm_download_view,
         name="polearm-download",
     ),
     path(
         "polearmmetadownload/",
-        views.polearm_meta_download_view,
+        downloads.polearm_meta_download_view,
         name="polearm-metadownload",
     ),
     # Dog
@@ -787,7 +831,7 @@ urlpatterns = [
     path("dogdownload/", downloads.dog_download_view, name="dog-download"),
     path(
         "dogmetadownload/",
-        views.dog_meta_download_view,
+        downloads.dog_meta_download_view,
         name="dog-metadownload",
     ),
     # Donkey
@@ -820,7 +864,7 @@ urlpatterns = [
     ),
     path(
         "donkeymetadownload/",
-        views.donkey_meta_download_view,
+        downloads.donkey_meta_download_view,
         name="donkey-metadownload",
     ),
     # Horse
@@ -845,7 +889,7 @@ urlpatterns = [
     path("horsedownload/", downloads.horse_download_view, name="horse-download"),
     path(
         "horsemetadownload/",
-        views.horse_meta_download_view,
+        downloads.horse_meta_download_view,
         name="horse-metadownload",
     ),
     # Camel
@@ -870,7 +914,7 @@ urlpatterns = [
     path("cameldownload/", downloads.camel_download_view, name="camel-download"),
     path(
         "camelmetadownload/",
-        views.camel_meta_download_view,
+        downloads.camel_meta_download_view,
         name="camel-metadownload",
     ),
     # Elephant
@@ -902,12 +946,12 @@ urlpatterns = [
     ),
     path(
         "elephantdownload/",
-        views.elephant_download_view,
+        downloads.elephant_download_view,
         name="elephant-download",
     ),
     path(
         "elephantmetadownload/",
-        views.elephant_meta_download_view,
+        downloads.elephant_meta_download_view,
         name="elephant-metadownload",
     ),
     # Wood, bark
@@ -943,12 +987,12 @@ urlpatterns = [
     ),
     path(
         "wood_bark_etcdownload/",
-        views.wood_bark_etc_download_view,
+        downloads.wood_bark_etc_download_view,
         name="wood_bark_etc-download",
     ),
     path(
         "wood_bark_etcmetadownload/",
-        views.wood_bark_etc_meta_download_view,
+        downloads.wood_bark_etc_meta_download_view,
         name="wood_bark_etc-metadownload",
     ),
     # Leather
@@ -984,12 +1028,12 @@ urlpatterns = [
     ),
     path(
         "leather_clothdownload/",
-        views.leather_cloth_download_view,
+        downloads.leather_cloth_download_view,
         name="leather_cloth-download",
     ),
     path(
         "leather_clothmetadownload/",
-        views.leather_cloth_meta_download_view,
+        downloads.leather_cloth_meta_download_view,
         name="leather_cloth-metadownload",
     ),
     # Shield
@@ -1022,7 +1066,7 @@ urlpatterns = [
     ),
     path(
         "shieldmetadownload/",
-        views.shield_meta_download_view,
+        downloads.shield_meta_download_view,
         name="shield-metadownload",
     ),
     # Helmet
@@ -1055,7 +1099,7 @@ urlpatterns = [
     ),
     path(
         "helmetmetadownload/",
-        views.helmet_meta_download_view,
+        downloads.helmet_meta_download_view,
         name="helmet-metadownload",
     ),
     # Breastplate
@@ -1091,12 +1135,12 @@ urlpatterns = [
     ),
     path(
         "breastplatedownload/",
-        views.breastplate_download_view,
+        downloads.breastplate_download_view,
         name="breastplate-download",
     ),
     path(
         "breastplatemetadownload/",
-        views.breastplate_meta_download_view,
+        downloads.breastplate_meta_download_view,
         name="breastplate-metadownload",
     ),
     # Limb protection
@@ -1132,12 +1176,12 @@ urlpatterns = [
     ),
     path(
         "limb_protectiondownload/",
-        views.limb_protection_download_view,
+        downloads.limb_protection_download_view,
         name="limb_protection-download",
     ),
     path(
         "limb_protectionmetadownload/",
-        views.limb_protection_meta_download_view,
+        downloads.limb_protection_meta_download_view,
         name="limb_protection-metadownload",
     ),
     # Armors
@@ -1173,12 +1217,12 @@ urlpatterns = [
     ),
     path(
         "scaled_armordownload/",
-        views.scaled_armor_download_view,
+        downloads.scaled_armor_download_view,
         name="scaled_armor-download",
     ),
     path(
         "scaled_armormetadownload/",
-        views.scaled_armor_meta_download_view,
+        downloads.scaled_armor_meta_download_view,
         name="scaled_armor-metadownload",
     ),
     path(
@@ -1213,12 +1257,12 @@ urlpatterns = [
     ),
     path(
         "laminar_armordownload/",
-        views.laminar_armor_download_view,
+        downloads.laminar_armor_download_view,
         name="laminar_armor-download",
     ),
     path(
         "laminar_armormetadownload/",
-        views.laminar_armor_meta_download_view,
+        downloads.laminar_armor_meta_download_view,
         name="laminar_armor-metadownload",
     ),
     path(
@@ -1253,12 +1297,12 @@ urlpatterns = [
     ),
     path(
         "plate_armordownload/",
-        views.plate_armor_download_view,
+        downloads.plate_armor_download_view,
         name="plate_armor-download",
     ),
     path(
         "plate_armormetadownload/",
-        views.plate_armor_meta_download_view,
+        downloads.plate_armor_meta_download_view,
         name="plate_armor-metadownload",
     ),
     # Small vessels
@@ -1294,12 +1338,12 @@ urlpatterns = [
     ),
     path(
         "small_vessels_canoes_etcdownload/",
-        views.small_vessels_canoes_etc_download_view,
+        downloads.small_vessels_canoes_etc_download_view,
         name="small_vessels_canoes_etc-download",
     ),
     path(
         "small_vessels_canoes_etcmetadownload/",
-        views.small_vessels_canoes_etc_meta_download_view,
+        downloads.small_vessels_canoes_etc_meta_download_view,
         name="small_vessels_canoes_etc-metadownload",
     ),
     # Merchant ships
@@ -1335,12 +1379,12 @@ urlpatterns = [
     ),
     path(
         "merchant_ships_pressed_into_servicedownload/",
-        views.merchant_ships_pressed_into_service_download_view,
+        downloads.merchant_ships_pressed_into_service_download_view,
         name="merchant_ships_pressed_into_service-download",
     ),
     path(
         "merchant_ships_pressed_into_servicemetadownload/",
-        views.merchant_ships_pressed_into_service_meta_download_view,
+        downloads.merchant_ships_pressed_into_service_meta_download_view,
         name="merchant_ships_pressed_into_service-metadownload",
     ),
     # Military vessel
@@ -1376,12 +1420,12 @@ urlpatterns = [
     ),
     path(
         "specialized_military_vesseldownload/",
-        views.specialized_military_vessel_download_view,
+        downloads.specialized_military_vessel_download_view,
         name="specialized_military_vessel-download",
     ),
     path(
         "specialized_military_vesselmetadownload/",
-        views.specialized_military_vessel_meta_download_view,
+        downloads.specialized_military_vessel_meta_download_view,
         name="specialized_military_vessel-metadownload",
     ),
     # Defensive settlements
@@ -1417,12 +1461,12 @@ urlpatterns = [
     ),
     path(
         "settlements_in_a_defensive_positiondownload/",
-        views.settlements_in_a_defensive_position_download_view,
+        downloads.settlements_in_a_defensive_position_download_view,
         name="settlements_in_a_defensive_position-download",
     ),
     path(
         "settlements_in_a_defensive_positionmetadownload/",
-        views.settlements_in_a_defensive_position_meta_download_view,
+        downloads.settlements_in_a_defensive_position_meta_download_view,
         name="settlements_in_a_defensive_position-metadownload",
     ),
     # Wooden palisades
@@ -1458,12 +1502,12 @@ urlpatterns = [
     ),
     path(
         "wooden_palisadedownload/",
-        views.wooden_palisade_download_view,
+        downloads.wooden_palisade_download_view,
         name="wooden_palisade-download",
     ),
     path(
         "wooden_palisademetadownload/",
-        views.wooden_palisade_meta_download_view,
+        downloads.wooden_palisade_meta_download_view,
         name="wooden_palisade-metadownload",
     ),
     # Earth rampart
@@ -1499,12 +1543,12 @@ urlpatterns = [
     ),
     path(
         "earth_rampartdownload/",
-        views.earth_rampart_download_view,
+        downloads.earth_rampart_download_view,
         name="earth_rampart-download",
     ),
     path(
         "earth_rampartmetadownload/",
-        views.earth_rampart_meta_download_view,
+        downloads.earth_rampart_meta_download_view,
         name="earth_rampart-metadownload",
     ),
     # Ditch
@@ -1529,7 +1573,7 @@ urlpatterns = [
     path("ditchdownload/", downloads.ditch_download_view, name="ditch-download"),
     path(
         "ditchmetadownload/",
-        views.ditch_meta_download_view,
+        downloads.ditch_meta_download_view,
         name="ditch-metadownload",
     ),
     # Moat
@@ -1550,7 +1594,7 @@ urlpatterns = [
     path("moatdownload/", downloads.moat_download_view, name="moat-download"),
     path(
         "moatmetadownload/",
-        views.moat_meta_download_view,
+        downloads.moat_meta_download_view,
         name="moat-metadownload",
     ),
     # Stone walls
@@ -1586,12 +1630,12 @@ urlpatterns = [
     ),
     path(
         "stone_walls_non_mortareddownload/",
-        views.stone_walls_non_mortared_download_view,
+        downloads.stone_walls_non_mortared_download_view,
         name="stone_walls_non_mortared-download",
     ),
     path(
         "stone_walls_non_mortaredmetadownload/",
-        views.stone_walls_non_mortared_meta_download_view,
+        downloads.stone_walls_non_mortared_meta_download_view,
         name="stone_walls_non_mortared-metadownload",
     ),
     path(
@@ -1626,12 +1670,12 @@ urlpatterns = [
     ),
     path(
         "stone_walls_mortareddownload/",
-        views.stone_walls_mortared_download_view,
+        downloads.stone_walls_mortared_download_view,
         name="stone_walls_mortared-download",
     ),
     path(
         "stone_walls_mortaredmetadownload/",
-        views.stone_walls_mortared_meta_download_view,
+        downloads.stone_walls_mortared_meta_download_view,
         name="stone_walls_mortared-metadownload",
     ),
     # Fortified camps
@@ -1667,12 +1711,12 @@ urlpatterns = [
     ),
     path(
         "fortified_campdownload/",
-        views.fortified_camp_download_view,
+        downloads.fortified_camp_download_view,
         name="fortified_camp-download",
     ),
     path(
         "fortified_campmetadownload/",
-        views.fortified_camp_meta_download_view,
+        downloads.fortified_camp_meta_download_view,
         name="fortified_camp-metadownload",
     ),
     # Fortifications
@@ -1708,12 +1752,12 @@ urlpatterns = [
     ),
     path(
         "complex_fortificationdownload/",
-        views.complex_fortification_download_view,
+        downloads.complex_fortification_download_view,
         name="complex_fortification-download",
     ),
     path(
         "complex_fortificationmetadownload/",
-        views.complex_fortification_meta_download_view,
+        downloads.complex_fortification_meta_download_view,
         name="complex_fortification-metadownload",
     ),
     path(
@@ -1748,12 +1792,12 @@ urlpatterns = [
     ),
     path(
         "modern_fortificationdownload/",
-        views.modern_fortification_download_view,
+        downloads.modern_fortification_download_view,
         name="modern_fortification-download",
     ),
     path(
         "modern_fortificationmetadownload/",
-        views.modern_fortification_meta_download_view,
+        downloads.modern_fortification_meta_download_view,
         name="modern_fortification-metadownload",
     ),
     # Chainmail
@@ -1785,12 +1829,12 @@ urlpatterns = [
     ),
     path(
         "chainmaildownload/",
-        views.chainmail_download_view,
+        downloads.chainmail_download_view,
         name="chainmail-download",
     ),
     path(
         "chainmailmetadownload/",
-        views.chainmail_meta_download_view,
+        downloads.chainmail_meta_download_view,
         name="chainmail-metadownload",
     ),
 ]

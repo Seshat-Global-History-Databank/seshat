@@ -4,7 +4,11 @@ from . import views
 from .specific_views import downloads
 
 urlpatterns = [
-    path("generalvars/", views.generalvars_view, name="generalvars"),
+    path(
+        "generalvars/",
+        views.GeneralVariablesView.as_view(),
+        name="generalvars",
+    ),
     path(
         "download-csv-general-all/",
         downloads.download_csv_all_general,
@@ -936,7 +940,9 @@ urlpatterns = [
         name="polity_expert-create",
     ),
     path(
-        "polity_experts/", views.Polity_expertListView.as_view(), name="polity_experts"
+        "polity_experts/",
+        views.Polity_expertListView.as_view(),
+        name="polity_experts",
     ),
     path(
         "polity_experts_all/",
@@ -974,7 +980,9 @@ urlpatterns = [
         name="polity_editor-create",
     ),
     path(
-        "polity_editors/", views.Polity_editorListView.as_view(), name="polity_editors"
+        "polity_editors/",
+        views.Polity_editorListView.as_view(),
+        name="polity_editors",
     ),
     path(
         "polity_editors_all/",

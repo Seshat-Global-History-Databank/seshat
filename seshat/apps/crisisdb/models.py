@@ -328,11 +328,11 @@ class Crisis_consequence(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Crisis consequence"
         notes = "Notes for the Variable crisis_consequence are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "crisis_consequence": {
                 "min": None,
@@ -477,11 +477,11 @@ class Power_transition(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Power Transition"
         notes = "Notes for the Variable power_transition are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "power_transition": {
                 "min": None,
@@ -635,7 +635,7 @@ class Human_sacrifice(SeshatCommon, CrisisDBMixin):
         notes = "This is a new model definition for Human Sacrifice."
         description = "The deliberate and ritualized killing of a person to please or placate supernatural entities (including gods, spirits, and ancestors) or gain other supernatural benefits."  # noqa: E501 pylint: disable=C0301
         description_source = ""
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "human_sacrifice": {
                 "min": None,
@@ -647,7 +647,7 @@ class Human_sacrifice(SeshatCommon, CrisisDBMixin):
                 "choices": ["U", "A;P", "P*", "P", "A~P", "A", "A*", "P~A"],
             }
         }
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         potential_cols = ["choices"]
 
     def show_value(self):
@@ -688,15 +688,11 @@ class External_conflict(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.conflict
         subsection = SUBSECTIONS.crisisdb.ExternalConflicts
-        variable = ""
+        variable = "External Conflict"
         notes = "This is a new model definition for External conflicts."
-        description = (
-            "Main Descriptions for the Variable external_conflict are missing!"
-        )
-        description_source = (
-            "Main Descriptions for the Variable external_conflict are missing!"
-        )
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "conflict_name": {
                 "min": None,
@@ -741,15 +737,11 @@ class Internal_conflict(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.conflict
         subsection = SUBSECTIONS.crisisdb.InternalConflicts
-        variable = ""
+        variable = "Internal Conflict"
         notes = "This is a new model definition for internal conflicts."
-        description = (
-            "Main Descriptions for the Variable internal_conflict are missing!"
-        )
-        description_source = (
-            "Main Descriptions for the Variable internal_conflict are missing!"
-        )
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "conflict": {
                 "min": None,
@@ -826,15 +818,11 @@ class External_conflict_side(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.conflict
         subsection = SUBSECTIONS.crisisdb.ExternalConflicts
-        variable = ""
+        variable = "External Conflict Side"
         notes = "This is a new model definition for External conflict sides"
-        description = (
-            "Main Descriptions for the Variable external_conflict_side are missing!"
-        )
-        description_source = (
-            "Main Descriptions for the Variable external_conflict_side are missing!"
-        )
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "conflict_id": {
                 "min": None,
@@ -901,11 +889,11 @@ class Agricultural_population(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Agricultural Population"
         notes = "Notes for the Variable agricultural_population are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "agricultural_population": {
                 "min": 0,
@@ -945,11 +933,11 @@ class Arable_land(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Arable Land"
         notes = "Notes for the Variable arable_land are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "arable_land": {
                 "min": None,
@@ -989,11 +977,11 @@ class Arable_land_per_farmer(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Arable Land Per Farmer"
         notes = "Notes for the Variable arable_land_per_farmer are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "arable_land_per_farmer": {
                 "min": None,
@@ -1038,11 +1026,11 @@ class Gross_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Gross Grain Shared Per Agricultural Population"
         notes = "Notes for the Variable gross_grain_shared_per_agricultural_population are missing!"  # noqa: E501 pylint: disable=C0301
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "gross_grain_shared_per_agricultural_population": {
                 "min": None,
@@ -1086,11 +1074,11 @@ class Net_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Net Grain Shared Per Agricultural Population"
         notes = "Notes for the Variable net_grain_shared_per_agricultural_population are missing!"  # noqa: E501 pylint: disable=C0301
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "net_grain_shared_per_agricultural_population": {
                 "min": None,
@@ -1130,11 +1118,11 @@ class Surplus(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "Surplus"
         notes = "Notes for the Variable surplus are missing!"
-        description = "No Explanations."
-        description_source = "No Explanations."
-        null_meaning = "The value is not available."
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "surplus": {
                 "min": None,
@@ -1177,13 +1165,13 @@ class Military_expense(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.StateFinances
-        variable = ""
+        variable = "Military Expense"
         notes = "Not sure about Section and Subsection."
         description = "Main Descriptions for the Variable military_expense are missing!"
         description_source = (
             "Main Descriptions for the Variable military_expense are missing!"
         )
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "conflict": {
                 "min": None,
@@ -1232,11 +1220,11 @@ class Silver_inflow(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.StateFinances
-        variable = ""
+        variable = "Silver Inflow"
         notes = "Needs supervision on the units and scale."
         description = "Silver inflow in Millions of silver taels??"
         description_source = "Silver inflow in Millions of silver taels??"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "silver_inflow": {
                 "min": None,
@@ -1276,11 +1264,11 @@ class Silver_stock(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.StateFinances
-        variable = ""
+        variable = "Silver Stock"
         notes = "Needs supervision on the units and scale."
         description = "Silver stock in Millions of silver taels??"
         description_source = "Silver stock in Millions of silver taels??"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "silver_stock": {
                 "min": None,
@@ -1320,11 +1308,11 @@ class Total_population(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.sc
         subsection = SUBSECTIONS.crisisdb.SocialScale
-        variable = ""
+        variable = "Total Population"
         notes = "Note that the population values are scaled."
         description = "Total population or simply population, of a given area is the total number of people in that area at a given time."  # noqa: E501 pylint: disable=C0301
         description_source = "Total population or simply population, of a given area is the total number of people in that area at a given time."  # noqa: E501 pylint: disable=C0301
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "total_population": {
                 "min": 0,
@@ -1366,7 +1354,7 @@ class Gdp_per_capita(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.economy
         subsection = SUBSECTIONS.crisisdb.Productivity
-        variable = ""
+        variable = "GDP Per Capita"
         notes = "The exact year based on which the value of Dollar is taken into account is not clear."  # noqa: E501 pylint: disable=C0301
         description = "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population."  # noqa: E501 pylint: disable=C0301
         description_source = "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population."  # noqa: E501 pylint: disable=C0301
@@ -1409,11 +1397,11 @@ class Drought_event(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Drought Event"
         notes = "Notes for the Variable drought_event are missing!"
         description = "number of geographic sites indicating drought"
         description_source = "number of geographic sites indicating drought"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "drought_event": {
                 "min": 0,
@@ -1453,11 +1441,11 @@ class Locust_event(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Locust Event"
         notes = "Notes for the Variable locust_event are missing!"
         description = "number of geographic sites indicating locusts"
         description_source = "number of geographic sites indicating locusts"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "locust_event": {
                 "min": 0,
@@ -1497,13 +1485,13 @@ class Socioeconomic_turmoil_event(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Socioeconomic Turmoil Event"
         notes = "Notes for the Variable socioeconomic_turmoil_event are missing!"
         description = "number of geographic sites indicating socioeconomic turmoil"
         description_source = (
             "number of geographic sites indicating socioeconomic turmoil"
         )
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "socioeconomic_turmoil_event": {
                 "min": 0,
@@ -1543,11 +1531,11 @@ class Crop_failure_event(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Crop Failure Event"
         notes = "Notes for the Variable crop_failure_event are missing!"
         description = "number of geographic sites indicating crop failure"
         description_source = "number of geographic sites indicating crop failure"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "crop_failure_event": {
                 "min": 0,
@@ -1587,11 +1575,11 @@ class Famine_event(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Famine Event"
         notes = "Notes for the Variable famine_event are missing!"
         description = "number of geographic sites indicating famine"
         description_source = "number of geographic sites indicating famine"
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "famine_event": {
                 "min": 0,
@@ -1648,11 +1636,11 @@ class Disease_outbreak(SeshatCommon, CrisisDBMixin):
 
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
-        variable = ""
+        variable = "Disease Outbreak"
         notes = "Notes for the Variable disease_outbreak are missing!"
         description = "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season."  # noqa: E501 pylint: disable=C0301
         description_source = "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season."  # noqa: E501 pylint: disable=C0301
-        null_meaning = "The value is not available."
+        null_meaning = NO_DATA.no_value
         inner_variables = {
             "longitude": {
                 "min": -180,

@@ -1,3 +1,5 @@
+# TODO: add __all__
+
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -9,7 +11,7 @@ from ..constants import (
     ABSENT_PRESENT_STRING_LIST,
     SECTIONS,
     SUBSECTIONS,
-    STANDARD_SETTINGS
+    NO_DATA,
 )
 
 from .constants import SOURCE_OF_SUPPORT_CHOICES
@@ -54,7 +56,7 @@ class Ra(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Staff
         variable = "ra"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "The name of the research assistant or associate who coded the data. If more than one RA made a substantial contribution, list all via separate entries."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -69,12 +71,12 @@ class Ra(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.sc_ra:
-            return " - "
+            return NO_DATA.default
 
         return self.sc_ra
 
@@ -114,7 +116,7 @@ class Polity_territory(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SocialScale
         variable = "Polity Territory"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Social Scale, Polity territory is coded in squared kilometers."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -139,7 +141,7 @@ class Polity_territory(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = ["Units"]
 
     def show_value(self):
@@ -168,7 +170,7 @@ class Polity_territory(SeshatCommon, SCMixIn):
         if self.polity_territory_to is not None:
             return f"[..., {self.polity_territory_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.polity_territory_from:
@@ -212,7 +214,7 @@ class Polity_population(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SocialScale
         variable = "Polity Population"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Social Scale, Polity Population is the estimated population of the polity; can change as a result of both adding/losing new territories or by population growth/decline within a region."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -237,7 +239,7 @@ class Polity_population(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -266,7 +268,7 @@ class Polity_population(SeshatCommon, SCMixIn):
         if self.polity_population_to is not None:
             return f"[..., {self.polity_population_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.polity_population_from:
@@ -316,7 +318,7 @@ class Population_of_the_largest_settlement(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SocialScale
         variable = "Population of the Largest Settlement"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Social Scale, Population of the largest settlement is the estimated population of the largest settlement of the polity. Note that the largest settlement could be different from the capital (coded under General Variables). If possible, indicate the dynamics (that is, how population changed during the temporal period of the polity). Note that we are also building a city database - you should consult it as it may already have the needed data."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -341,7 +343,7 @@ class Population_of_the_largest_settlement(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -371,7 +373,7 @@ class Population_of_the_largest_settlement(SeshatCommon, SCMixIn):
         if self.population_of_the_largest_settlement_to is not None:
             return f"[..., {self.population_of_the_largest_settlement_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.population_of_the_largest_settlement_from:
@@ -428,7 +430,7 @@ class Settlement_hierarchy(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.HierarchicalComplexity
         variable = "Settlement Hierarchy"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Hierarchical Complexity, Settlement hierarchy records (in levels) the hierarchy of not just settlement sizes, but also their complexity as reflected in different roles they play within the (quasi)polity. As settlements become more populous they acquire more complex functions: transportational (e.g. port); economic (e.g. market); administrative (e.g. storehouse, local government building); cultural (e.g. theatre); religious (e.g. temple), utilitarian (e.g. hospital), monumental (e.g. statues, plazas). Example: (1) Large City (monumental structures, theatre, market, hospital, central government buildings) (2) City (market, theatre, regional government buildings) (3) Large Town (market, administrative buildings) (4) Town (administrative buildings, storehouse)) (5) Village (shrine) (6) Hamlet (residential only). In the narrative paragraph explain the different levels and list their functions. Provide a (crude) estimate of population sizes. For example, Large Town (market, temple, administrative buildings): 2,000-5,000 inhabitants."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -453,7 +455,7 @@ class Settlement_hierarchy(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -480,7 +482,7 @@ class Settlement_hierarchy(SeshatCommon, SCMixIn):
         if self.settlement_hierarchy_to is not None:
             return f"[..., {self.settlement_hierarchy_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.settlement_hierarchy_from:
@@ -524,7 +526,7 @@ class Administrative_level(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.HierarchicalComplexity
         variable = "Administrative Level"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Hierarchical Complexity, Administrative levels records the administrative levels of a polity. An example of hierarchy for a state society could be (1) the overall ruler, (2) provincial/regional governors, (3) district heads, (4) town mayors, (5) village heads. Note that unlike in settlement hierarchy, here you code people hierarchy. Do not simply copy settlement hierarchy data here. For archaeological polities, you will usually code as 'unknown', unless experts identified ranks of chiefs or officials independently of the settlement hierarchy. Note: Often there are more than one concurrent administrative hierarchy. In the example above the hierarchy refers to the territorial government. In addition, the ruler may have a hierarchically organized central bureaucracy located in the capital. For example, (4)the overall ruler, (3) chiefs of various ministries, (2) midlevel bureaucrats, (1) scribes and clerks. In the narrative paragraph detail what is known about both hierarchies. The machine-readable code should reflect the largest number (the longer chain of command)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -549,7 +551,7 @@ class Administrative_level(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -576,7 +578,7 @@ class Administrative_level(SeshatCommon, SCMixIn):
         if self.administrative_level_to is not None:
             return f"[..., {self.administrative_level_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.administrative_level_from:
@@ -620,7 +622,7 @@ class Religious_level(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.HierarchicalComplexity
         variable = "Religious Level"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Hierarchical Complexity, Religious levels records the Religious levels of a polity. Same principle as with Administrative levels. Start with the head of the official cult (if present) coded as: level 1, and work down to the local priest."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -645,7 +647,7 @@ class Religious_level(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -672,7 +674,7 @@ class Religious_level(SeshatCommon, SCMixIn):
         if self.religious_level_to is not None:
             return f"[..., {self.religious_level_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.religious_level_from:
@@ -716,7 +718,7 @@ class Military_level(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.HierarchicalComplexity
         variable = "Military Level"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -741,7 +743,7 @@ class Military_level(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -768,7 +770,7 @@ class Military_level(SeshatCommon, SCMixIn):
         if self.military_level_to is not None:
             return f"[..., {self.military_level_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.military_level_from:
@@ -815,7 +817,7 @@ class Professional_military_officer(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Professions
         variable = "Professional Military Officer"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Professions, Professional military officers refer to Full-time Professional military officers."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -830,12 +832,12 @@ class Professional_military_officer(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.professional_military_officer:
-            return " - "
+            return NO_DATA.default
 
         return self.get_professional_military_officer_display()
 
@@ -876,7 +878,7 @@ class Professional_soldier(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Professions
         variable = "Professional Soldier"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Professions, Professional soldiers refer to Full-time Professional soldiers."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -891,12 +893,12 @@ class Professional_soldier(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.professional_soldier:
-            return " - "
+            return NO_DATA.default
 
         return self.get_professional_soldier_display()
 
@@ -937,7 +939,7 @@ class Professional_priesthood(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Professions
         variable = "Professional Priesthood"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Professions, Professional priesthood refers to Full-time Professional priesthood."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -952,11 +954,11 @@ class Professional_priesthood(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
 
     def show_value(self):
         if not self.professional_priesthood:
-            return " - "
+            return NO_DATA.default
 
         return self.get_professional_priesthood_display()
 
@@ -997,7 +999,7 @@ class Full_time_bureaucrat(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
         variable = "Full Time Bureaucrat"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Bureaucracy characteristics, Full-time bureaucrats refer to Full-time administrative specialists. Code this absent if administrative duties are performed by generalists such as chiefs and subchiefs. Also code it absent if state officials perform multiple functions, e.g. combining administrative tasks with military duties. Note that this variable shouldn't be coded 'present' only on the basis of the presence of specialized government buildings; there must be some additional evidence of functional specialization in government."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1012,12 +1014,12 @@ class Full_time_bureaucrat(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.full_time_bureaucrat:
-            return " - "
+            return NO_DATA.default
 
         return self.get_full_time_bureaucrat_display()
 
@@ -1058,7 +1060,7 @@ class Examination_system(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
         variable = "Examination System"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Bureaucracy characteristics, The paradigmatic example of an Examination system is the Chinese imperial system."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1073,12 +1075,12 @@ class Examination_system(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.examination_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_examination_system_display()
 
@@ -1119,7 +1121,7 @@ class Merit_promotion(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
         variable = "Merit Promotion"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Bureaucracy characteristics, Merit promotion is coded present if there are regular, institutionalized procedures for promotion based on performance. When exceptional individuals are promoted to the top ranks, in the absence of institutionalized procedures, we code it under institution and equity variables."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1134,12 +1136,12 @@ class Merit_promotion(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.merit_promotion:
-            return " - "
+            return NO_DATA.default
 
         return self.get_merit_promotion_display()
 
@@ -1182,7 +1184,7 @@ class Specialized_government_building(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.BureaucracyCharacteristics
         variable = "Specialized Government Building"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Bureaucracy characteristics, These buildings are where administrative officials are located, and must be distinct from the ruler's palace. They may be used for document storage, registration offices, minting money, etc. Defense structures also are not coded here (see Military). State-owned/operated workshop should also not be coded here."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1197,12 +1199,12 @@ class Specialized_government_building(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.specialized_government_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_specialized_government_building_display()
 
@@ -1243,7 +1245,7 @@ class Formal_legal_code(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Law
         variable = "Formal Legal Code"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Law, Formal legal code refers to legal code usually, but not always written down. If not written down, code it 'present' when a uniform legal system is established by oral transmission (e.g., officials are taught the rules, or the laws are announced in a public space). Provide a short description."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1258,12 +1260,12 @@ class Formal_legal_code(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.formal_legal_code:
-            return " - "
+            return NO_DATA.default
 
         return self.get_formal_legal_code_display()
 
@@ -1302,7 +1304,7 @@ class Judge(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Law
         variable = "Judge"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Law, judges refers only to full-time professional judges."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1317,12 +1319,12 @@ class Judge(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.judge:
-            return " - "
+            return NO_DATA.default
 
         return self.get_judge_display()
 
@@ -1364,7 +1366,7 @@ class Court(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Law
         variable = "Court"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Law, courts are buildings specialized for legal proceedings only."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1379,12 +1381,12 @@ class Court(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.court:
-            return " - "
+            return NO_DATA.default
 
         return self.get_court_display()
 
@@ -1425,7 +1427,7 @@ class Professional_lawyer(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.Law
         variable = "Professional Lawyer"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Law, NO_DESCRIPTIONS_IN_CODEBOOK."
         description_source = "NOTHING"
         inner_variables = {
@@ -1440,12 +1442,12 @@ class Professional_lawyer(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.professional_lawyer:
-            return " - "
+            return NO_DATA.default
 
         return self.get_professional_lawyer_display()
 
@@ -1486,7 +1488,7 @@ class Irrigation_system(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SpecializedBuildings
         variable = "Irrigation System"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Specialized Buildings, irrigation systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1501,12 +1503,12 @@ class Irrigation_system(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.irrigation_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_irrigation_system_display()
 
@@ -1549,7 +1551,7 @@ class Drinking_water_supply_system(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SpecializedBuildings
         variable = "Drinking Water Supply System"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Specialized Buildings, drinking water supply systems are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1564,12 +1566,12 @@ class Drinking_water_supply_system(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.drinking_water_supply_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_drinking_water_supply_system_display()
 
@@ -1608,7 +1610,7 @@ class Market(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SpecializedBuildings
         variable = "Market"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Specialized Buildings, markets are polity owned (which includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1623,12 +1625,12 @@ class Market(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.market:
-            return " - "
+            return NO_DATA.default
 
         return self.get_market_display()
 
@@ -1669,7 +1671,7 @@ class Food_storage_site(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SpecializedBuildings
         variable = "Food Storage Site"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Specialized Buildings, food storage sites are polity owned (which  includes owned by the community, or the state), NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1684,12 +1686,12 @@ class Food_storage_site(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.food_storage_site:
-            return " - "
+            return NO_DATA.default
         return self.get_food_storage_site_display()
 
     def show_value_from(self):
@@ -1727,7 +1729,7 @@ class Road(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.TransportInfrastructure
         variable = "Road"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Transport infrastructure, roads refers to deliberately constructed roads that connect settlements or other sites. It excludes streets/accessways within settlements and paths between settlements that develop through repeated use."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1742,12 +1744,12 @@ class Road(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.road:
-            return " - "
+            return NO_DATA.default
 
         return self.get_road_display()
 
@@ -1786,7 +1788,7 @@ class Bridge(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.TransportInfrastructure
         variable = "Bridge"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Transport infrastructure, bridges refers to bridges built and/or maintained by the polity (that is, code 'present' even if the polity did not build a bridge, but devotes resources to maintaining it)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1801,12 +1803,12 @@ class Bridge(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.bridge:
-            return " - "
+            return NO_DATA.default
 
         return self.get_bridge_display()
 
@@ -1845,7 +1847,7 @@ class Canal(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.TransportInfrastructure
         variable = "Canal"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Transport infrastructure, canals refers to canals built and/or maintained by the polity (that is, code 'present' even if the polity did not build a canal, but devotes resources to maintaining it)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1860,12 +1862,12 @@ class Canal(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.canal:
-            return " - "
+            return NO_DATA.default
 
         return self.get_canal_display()
 
@@ -1904,7 +1906,7 @@ class Port(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.TransportInfrastructure
         variable = "Port"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Transport infrastructure, Ports include river ports. Direct historical or archaeological evidence of Ports is absent when no port has been excavated or all evidence of such has been obliterated. Indirect historical or archaeological data is absent when there is no evidence that suggests that the polity engaged in maritime or riverine trade, conflict, or transportation, such as evidence of merchant shipping, administrative records of customs duties, or evidence that at the same period of time a trading relation in the region had a port (for example, due to natural processes, there is little evidence of ancient ports in delta Egypt at a time we know there was a timber trade with the Levant). When evidence for the variable itself is available the code is 'present.' When other forms of evidence suggests the existence of the variable (or not) the code may be 'inferred present' (or 'inferred absent'). When indirect evidence is not available the code will be either absent, temporal uncertainty, suspected unknown, or unknown."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -1919,12 +1921,12 @@ class Port(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.port:
-            return " - "
+            return NO_DATA.default
 
         return self.get_port_display()
 
@@ -1965,7 +1967,7 @@ class Mines_or_quarry(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.SpecialPurposeSites
         variable = "Mines or Quarry"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = (
             "Talking about Special purpose sites, NO_DESCRIPTIONS_IN_CODEBOOK."
         )
@@ -1982,12 +1984,12 @@ class Mines_or_quarry(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.mines_or_quarry:
-            return " - "
+            return NO_DATA.default
 
         return self.get_mines_or_quarry_display()
 
@@ -2028,7 +2030,7 @@ class Mnemonic_device(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Mnemonic Device"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Writing Systems, Mnemonic devices are: For example, tallies."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2043,12 +2045,12 @@ class Mnemonic_device(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.mnemonic_device:
-            return " - "
+            return NO_DATA.default
 
         return self.get_mnemonic_device_display()
 
@@ -2089,7 +2091,7 @@ class Nonwritten_record(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Nonwritten Record"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Writing Systems, Nonwritten Records are more extensive than mnemonics, but don't utilize script. Example: quipu; seals and stamps."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2104,12 +2106,12 @@ class Nonwritten_record(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.nonwritten_record:
-            return " - "
+            return NO_DATA.default
 
         return self.get_nonwritten_record_display()
 
@@ -2150,7 +2152,7 @@ class Written_record(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Written Record"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Writing Systems, Written records are more than short and fragmentary inscriptions, such as found on tombs or runic stones. There must be several sentences strung together, at the very minimum. For example, royal proclamations from Mesopotamia and Egypt qualify as written records."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2165,12 +2167,12 @@ class Written_record(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.written_record:
-            return " - "
+            return NO_DATA.default
 
         return self.get_written_record_display()
 
@@ -2209,7 +2211,7 @@ class Script(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Script"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Writing Systems, script is as indicated at least by fragmentary inscriptions (note that if written records are present, then so is script)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2224,12 +2226,12 @@ class Script(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.script:
-            return " - "
+            return NO_DATA.default
 
         return self.get_script_display()
 
@@ -2270,7 +2272,7 @@ class Non_phonetic_writing(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Non Phonetic Writing"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = (
             "Talking about Writing Systems, this refers to the kind of script."
         )
@@ -2287,12 +2289,12 @@ class Non_phonetic_writing(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.non_phonetic_writing:
-            return " - "
+            return NO_DATA.default
 
         return self.get_non_phonetic_writing_display()
 
@@ -2335,7 +2337,7 @@ class Phonetic_alphabetic_writing(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WritingSystems
         variable = "Phonetic Alphabetic Writing"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = (
             "Talking about Writing Systems, this refers to the kind of script."
         )
@@ -2352,12 +2354,12 @@ class Phonetic_alphabetic_writing(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.phonetic_alphabetic_writing:
-            return " - "
+            return NO_DATA.default
 
         return self.get_phonetic_alphabetic_writing_display()
 
@@ -2400,7 +2402,7 @@ class Lists_tables_and_classification(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Lists Tables and Classification"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2415,12 +2417,12 @@ class Lists_tables_and_classification(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.lists_tables_and_classification:
-            return " - "
+            return NO_DATA.default
 
         return self.get_lists_tables_and_classification_display()
 
@@ -2459,7 +2461,7 @@ class Calendar(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Calendar"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2474,12 +2476,12 @@ class Calendar(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.calendar:
-            return " - "
+            return NO_DATA.default
 
         return self.get_calendar_display()
 
@@ -2520,7 +2522,7 @@ class Sacred_text(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Sacred Text"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, Sacred Texts originate from supernatural agents (deities), or are directly inspired by them."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2535,12 +2537,12 @@ class Sacred_text(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.sacred_text:
-            return " - "
+            return NO_DATA.default
 
         return self.get_sacred_text_display()
 
@@ -2581,7 +2583,7 @@ class Religious_literature(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Religious Literature"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, Religious literature differs from the sacred texts. For example, it may provide commentary on the sacred texts, or advice on how to live a virtuous life."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2596,12 +2598,12 @@ class Religious_literature(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.religious_literature:
-            return " - "
+            return NO_DATA.default
 
         return self.get_religious_literature_display()
 
@@ -2642,7 +2644,7 @@ class Practical_literature(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Practical Literature"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, Practical literature refers to texts written with the aim of providing guidance on a certain topic, for example manuals on agriculture, warfare, or cooking. Letters do not count as practical literature."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2657,12 +2659,12 @@ class Practical_literature(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.practical_literature:
-            return " - "
+            return NO_DATA.default
 
         return self.get_practical_literature_display()
 
@@ -2701,7 +2703,7 @@ class History(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "History"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2716,12 +2718,12 @@ class History(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.history:
-            return " - "
+            return NO_DATA.default
 
         return self.get_history_display()
 
@@ -2762,7 +2764,7 @@ class Philosophy(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Philosophy"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, NO_DESCRIPTIONS_IN_CODEBOOK."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2777,12 +2779,12 @@ class Philosophy(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.philosophy:
-            return " - "
+            return NO_DATA.default
 
         return self.get_philosophy_display()
 
@@ -2823,7 +2825,7 @@ class Scientific_literature(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Scientific Literature"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, Scientific literature includes mathematics, natural sciences, social sciences."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2838,12 +2840,12 @@ class Scientific_literature(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.scientific_literature:
-            return " - "
+            return NO_DATA.default
 
         return self.get_scientific_literature_display()
 
@@ -2882,7 +2884,7 @@ class Fiction(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.WrittenDocuments
         variable = "Fiction"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about Kinds of Written Documents, fiction includes poetry."
         description_source = "NOTHING"
         inner_variables = {
@@ -2897,12 +2899,12 @@ class Fiction(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.fiction:
-            return " - "
+            return NO_DATA.default
 
         return self.get_fiction_display()
 
@@ -2941,7 +2943,7 @@ class Article(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Article"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about forms of money, articles are items that have both a regular use and are used as money (example: axes, cattle, measures of grain, ingots of non-precious metals)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -2956,12 +2958,12 @@ class Article(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.article:
-            return " - "
+            return NO_DATA.default
 
         return self.get_article_display()
 
@@ -3003,7 +3005,7 @@ class Token(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Token"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about forms of money, tokens, unlike articles, are used only for exchange, and unlike coins, are not manufactured (example: cowries)."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -3018,12 +3020,12 @@ class Token(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.token:
-            return " - "
+            return NO_DATA.default
 
         return self.get_token_display()
 
@@ -3064,7 +3066,7 @@ class Precious_metal(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Precious Metal"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about forms of money, Precious metals are non-coined silver, gold, platinum."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -3079,12 +3081,12 @@ class Precious_metal(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.precious_metal:
-            return " - "
+            return NO_DATA.default
 
         return self.get_precious_metal_display()
 
@@ -3125,9 +3127,9 @@ class Foreign_coin(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Foreign Coin"
-        notes = "No_Actual_note"
-        description = "NO_DESCRIPTIONS_IN_CODEBOOK"
-        description_source = "NOTHING"
+        notes = NO_DATA.note
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
         inner_variables = {
             "foreign_coin": {
                 "min": None,
@@ -3140,12 +3142,12 @@ class Foreign_coin(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.foreign_coin:
-            return " - "
+            return NO_DATA.default
 
         return self.get_foreign_coin_display()
 
@@ -3186,9 +3188,9 @@ class Indigenous_coin(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Indigenous Coin"
-        notes = "No_Actual_note"
-        description = "NO_DESCRIPTIONS_IN_CODEBOOK"
-        description_source = "NOTHING"
+        notes = NO_DATA.note
+        description = NO_DATA.explanation
+        description_source = NO_DATA.explanation
         inner_variables = {
             "indigenous_coin": {
                 "min": None,
@@ -3201,12 +3203,12 @@ class Indigenous_coin(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.indigenous_coin:
-            return " - "
+            return NO_DATA.default
 
         return self.get_indigenous_coin_display()
 
@@ -3247,7 +3249,7 @@ class Paper_currency(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.FormsOfMoney
         variable = "Paper Currency"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Paper currency or another kind of fiat money. Note that this only refers to indigenously produced paper currency. Code absent if colonial money is used."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -3262,12 +3264,12 @@ class Paper_currency(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.paper_currency:
-            return " - "
+            return NO_DATA.default
 
         return self.get_paper_currency_display()
 
@@ -3306,7 +3308,7 @@ class Courier(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.PostalSystems
         variable = "Courier"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Full-time professional couriers."
         description_source = "NOTHING"
         inner_variables = {
@@ -3321,12 +3323,12 @@ class Courier(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.courier:
-            return " - "
+            return NO_DATA.default
 
         return self.get_courier_display()
 
@@ -3367,7 +3369,7 @@ class Postal_station(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.PostalSystems
         variable = "Postal Station"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about postal systems, Postal stations are specialized buildings exclusively devoted to the postal service. If there is a special building that has other functions than a postal station, we still code postal station as present. The intent is to capture additional infrastructure beyond having a corps of messengers."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -3382,12 +3384,12 @@ class Postal_station(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.postal_station:
-            return " - "
+            return NO_DATA.default
 
         return self.get_postal_station_display()
 
@@ -3428,7 +3430,7 @@ class General_postal_service(SeshatCommon, SCMixIn):
         section = SECTIONS.sc
         subsection = SUBSECTIONS.sc.PostalSystems
         variable = "General Postal Service"
-        notes = "No_Actual_note"
+        notes = NO_DATA.note
         description = "Talking about postal systems, 'General postal service' refers to a postal service that not only serves the ruler's needs, but carries mail for private citizens."  # noqa: E501 pylint: disable=C0301
         description_source = "NOTHING"
         inner_variables = {
@@ -3443,12 +3445,12 @@ class General_postal_service(SeshatCommon, SCMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
         if not self.general_postal_service:
-            return " - "
+            return NO_DATA.default
 
         return self.get_general_postal_service_display()
 
@@ -3491,15 +3493,15 @@ class Communal_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Communal Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.communal_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_communal_building_display()
 
@@ -3544,15 +3546,15 @@ class Utilitarian_public_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Utilitarian Public Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.utilitarian_public_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_utilitarian_public_building_display()
 
@@ -3595,15 +3597,15 @@ class Symbolic_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Symbolic Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.symbolic_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_symbolic_building_display()
 
@@ -3646,15 +3648,15 @@ class Entertainment_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Entertainment Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.entertainment_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_entertainment_building_display()
 
@@ -3699,15 +3701,15 @@ class Knowledge_or_information_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Knowledge or Information Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.knowledge_or_information_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_knowledge_or_information_building_display()
 
@@ -3752,15 +3754,15 @@ class Other_utilitarian_public_building(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Other Utilitarian Building"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.other_utilitarian_public_building:
-            return " - "
+            return NO_DATA.default
 
         return self.get_other_utilitarian_public_building_display()
 
@@ -3803,15 +3805,15 @@ class Special_purpose_site(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Special Purpose Site"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.special_purpose_site:
-            return " - "
+            return NO_DATA.default
 
         return self.get_special_purpose_site_display()
 
@@ -3854,15 +3856,15 @@ class Ceremonial_site(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Ceremonial Site"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.ceremonial_site:
-            return " - "
+            return NO_DATA.default
 
         return self.get_ceremonial_site_display()
 
@@ -3905,15 +3907,15 @@ class Burial_site(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Burial Site"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.burial_site:
-            return " - "
+            return NO_DATA.default
 
         return self.get_burial_site_display()
 
@@ -3956,15 +3958,15 @@ class Trading_emporia(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Trading Emporium"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.trading_emporia:
-            return " - "
+            return NO_DATA.default
 
         return self.get_trading_emporia_display()
 
@@ -4007,15 +4009,15 @@ class Enclosure(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Enclosure"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.enclosure:
-            return " - "
+            return NO_DATA.default
 
         return self.get_enclosure_display()
 
@@ -4060,15 +4062,15 @@ class Length_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Length Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.length_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_length_measurement_system_display()
 
@@ -4111,15 +4113,15 @@ class Area_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Area Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.area_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_area_measurement_system_display()
 
@@ -4164,15 +4166,15 @@ class Volume_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Volume Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.volume_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_volume_measurement_system_display()
 
@@ -4217,15 +4219,15 @@ class Weight_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Weight Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.weight_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_weight_measurement_system_display()
 
@@ -4268,15 +4270,15 @@ class Time_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Time Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.time_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_time_measurement_system_display()
 
@@ -4320,15 +4322,15 @@ class Geometrical_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Geometrical Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.geometrical_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_geometrical_measurement_system_display()
 
@@ -4371,15 +4373,15 @@ class Other_measurement_system(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Other Measurement System"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.other_measurement_system:
-            return " - "
+            return NO_DATA.default
 
         return self.get_other_measurement_system_display()
 
@@ -4424,15 +4426,15 @@ class Debt_and_credit_structure(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Debt and Credit Structure"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.debt_and_credit_structure:
-            return " - "
+            return NO_DATA.default
 
         return self.get_debt_and_credit_structure_display()
 
@@ -4475,15 +4477,15 @@ class Store_of_wealth(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Store of Wealth"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.store_of_wealth:
-            return " - "
+            return NO_DATA.default
 
         return self.get_store_of_wealth_display()
 
@@ -4526,15 +4528,15 @@ class Source_of_support(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Source of Support"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.source_of_support:
-            return " - "
+            return NO_DATA.default
 
         return self.get_source_of_support_display()
 
@@ -4577,15 +4579,15 @@ class Occupational_complexity(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Occupational Complexity"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.occupational_complexity:
-            return " - "
+            return NO_DATA.default
 
         return self.get_occupational_complexity_display()
 
@@ -4628,15 +4630,15 @@ class Special_purpose_house(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Special Purpose House"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.special_purpose_house:
-            return " - "
+            return NO_DATA.default
 
         return self.get_special_purpose_house_display()
 
@@ -4681,15 +4683,15 @@ class Other_special_purpose_site(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Other Special Purpose House"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
 
     def show_value(self):
         if not self.other_special_purpose_site:
-            return " - "
+            return NO_DATA.default
 
         return self.get_other_special_purpose_site_display()
 
@@ -4737,8 +4739,8 @@ class Largest_communication_distance(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Largest Communication Distance"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
@@ -4768,7 +4770,7 @@ class Largest_communication_distance(SeshatCommon, SCMixIn):
         if self.largest_communication_distance_to is not None:
             return f"[..., {self.largest_communication_distance_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.largest_communication_distance_from:
@@ -4820,8 +4822,8 @@ class Fastest_individual_communication(SeshatCommon, SCMixIn):
 
         section = None
         subsection = None
-        variable = ""
-        notes = "No_Actual_note"
+        variable = "Fastest Individual Communication"
+        notes = NO_DATA.note
         description = ""
         description_source = ""
         inner_variables = {}
@@ -4851,7 +4853,7 @@ class Fastest_individual_communication(SeshatCommon, SCMixIn):
         if self.fastest_individual_communication_to is not None:
             return f"[..., {self.fastest_individual_communication_to:,}]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value_from(self):
         if not self.fastest_individual_communication_from:

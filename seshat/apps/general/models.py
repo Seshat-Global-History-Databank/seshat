@@ -1,3 +1,5 @@
+# TODO: add __all__
+
 from django.db import models
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -10,7 +12,6 @@ from ..constants import (
     POLITY_LINGUISTIC_FAMILY_CHOICES,
     SECTIONS,
     SUBSECTIONS,
-    STANDARD_SETTINGS,
     NO_DATA
 )
 from ..utils import (
@@ -103,7 +104,7 @@ class Polity_research_assistant(SeshatCommon, GeneralMixIn):
                 "null_meaning": None,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -115,7 +116,7 @@ class Polity_research_assistant(SeshatCommon, GeneralMixIn):
             str: The name of the research assistant (or " - " if it does not exist).
         """
         if not self.polity_ra:
-            return " - "
+            return NO_DATA.default
 
         return self.polity_ra
 
@@ -161,7 +162,7 @@ class Polity_original_name(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_original_name"
@@ -178,7 +179,7 @@ class Polity_original_name(SeshatCommon, GeneralMixIn):
             str: The original name (or " - " if it does not exist).
         """
         if not self.original_name:
-            return " - "
+            return NO_DATA.default
 
         return self.original_name
 
@@ -224,7 +225,7 @@ class Polity_alternative_name(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_alternative_name"
@@ -241,7 +242,7 @@ class Polity_alternative_name(SeshatCommon, GeneralMixIn):
             str: The alternative name (or " - " if it does not exist).
         """
         if not self.alternative_name:
-            return " - "
+            return NO_DATA.default
 
         return self.alternative_name
 
@@ -298,7 +299,7 @@ class Polity_duration(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_duration"
@@ -375,7 +376,7 @@ class Polity_peak_years(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_peak_years"
@@ -463,7 +464,7 @@ class Polity_degree_of_centralization(SeshatCommon, GeneralMixIn):
                 on the instance).
         """
         if not self.degree_of_centralization:
-            return " - "
+            return NO_DATA.default
 
         return self.get_degree_of_centralization_display()
 
@@ -504,7 +505,7 @@ class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
 
         section = SECTIONS.general
         subsection = "Political and Cultural Relations"  # noqa: E501   TODO: This was set to "General" but I changed it to "Political and Cultural Relations" because of data found in seshat.apps.general.views.Polity_suprapolity_relationsUpdateView.get_context_data  pylint: disable=C0301
-        variable = "Polity Suprapolity Relations"
+        variable = "Polity Suprapolity Relation"
         notes = None
         description = """The supra polity relations of a polity. <u>Possible Codes</u>: <br> alliance / nominal allegiance / personal union / vassalage / unknown / none <br>
                 <br>
@@ -525,7 +526,7 @@ class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_suprapolity_relations"
@@ -548,7 +549,7 @@ class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
         if self.supra_polity_relations:
             return f"{self.get_supra_polity_relations_display()} [---]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value(self):
         """
@@ -565,7 +566,7 @@ class Polity_suprapolity_relations(SeshatCommon, GeneralMixIn):
         if self.supra_polity_relations:
             return self.get_supra_polity_relations_display()
 
-        return " - "
+        return NO_DATA.default
 
 
 class Polity_utm_zone(SeshatCommon, GeneralMixIn):
@@ -627,7 +628,7 @@ class Polity_utm_zone(SeshatCommon, GeneralMixIn):
             str: The UTM zone of the polity (or " - " if it does not exist on the instance).
         """
         if not self.utm_zone:
-            return " - "
+            return NO_DATA.default
 
         return self.utm_zone
 
@@ -679,7 +680,7 @@ class Polity_capital(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a capital.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_capital"
@@ -751,7 +752,7 @@ class Polity_language(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a language.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_language"
@@ -769,7 +770,7 @@ class Polity_language(SeshatCommon, GeneralMixIn):
             str: The language of the polity (or " - " if it does not exist on the instance).
         """
         if not self.language:
-            return " - "
+            return NO_DATA.default
 
         return self.get_language_display()
 
@@ -817,7 +818,7 @@ class Polity_linguistic_family(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a linguistic family.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_linguistic_family"
@@ -836,7 +837,7 @@ class Polity_linguistic_family(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.linguistic_family:
-            return " - "
+            return NO_DATA.default
 
         return self.get_linguistic_family_display()
 
@@ -884,7 +885,7 @@ class Polity_language_genus(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a language Genus.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_language_genus"
@@ -903,7 +904,7 @@ class Polity_language_genus(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.language_genus:
-            return " - "
+            return NO_DATA.default
 
         return self.get_language_genus_display()
 
@@ -951,7 +952,7 @@ class Polity_religion_genus(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a religion genus.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_religion_genus"
@@ -970,7 +971,7 @@ class Polity_religion_genus(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.religion_genus:
-            return " - "
+            return NO_DATA.default
 
         return self.get_religion_genus_display()
 
@@ -1017,7 +1018,7 @@ class Polity_religion_family(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a religion family.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_religion_family"
@@ -1036,7 +1037,7 @@ class Polity_religion_family(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.religion_family:
-            return " - "
+            return NO_DATA.default
 
         return self.get_religion_family_display()
 
@@ -1084,7 +1085,7 @@ class Polity_religion(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a religion.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_religion"
@@ -1102,7 +1103,7 @@ class Polity_religion(SeshatCommon, GeneralMixIn):
             str: The religion of the polity (or " - " if it does not exist on the instance).
         """
         if not self.religion:
-            return " - "
+            return NO_DATA.default
 
         return self.get_religion_display()
 
@@ -1152,7 +1153,7 @@ class Polity_relationship_to_preceding_entity(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a relationship to preceding (quasi)polity",  # noqa: E501 pylint: disable=C0301
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_relationship_to_preceding_entity"
@@ -1171,7 +1172,7 @@ class Polity_relationship_to_preceding_entity(SeshatCommon, GeneralMixIn):
                 exist on the instance).
         """
         if not self.relationship_to_preceding_entity:
-            return " - "
+            return NO_DATA.default
 
         return self.get_relationship_to_preceding_entity_display()
 
@@ -1259,7 +1260,7 @@ class Polity_preceding_entity(SeshatCommon, GeneralMixIn):
         if self.preceding_entity:
             return f"{self.preceding_entity} [---]"
 
-        return " - "
+        return NO_DATA.default
 
     def show_value(self):
         """
@@ -1280,7 +1281,7 @@ class Polity_preceding_entity(SeshatCommon, GeneralMixIn):
         if self.preceding_entity:
             return self.preceding_entity
 
-        return " - "
+        return NO_DATA.default
 
 
 class Polity_succeeding_entity(SeshatCommon, GeneralMixIn):
@@ -1325,7 +1326,7 @@ class Polity_succeeding_entity(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a succeeding entity.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_succeeding_entity"
@@ -1344,7 +1345,7 @@ class Polity_succeeding_entity(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.succeeding_entity:
-            return " - "
+            return NO_DATA.default
 
         return self.succeeding_entity
 
@@ -1394,7 +1395,7 @@ class Polity_supracultural_entity(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a supracultural entity.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_supracultural_entity"
@@ -1413,7 +1414,7 @@ class Polity_supracultural_entity(SeshatCommon, GeneralMixIn):
                 the instance).
         """
         if not self.supracultural_entity:
-            return " - "
+            return NO_DATA.default
 
         return self.supracultural_entity
 
@@ -1472,7 +1473,7 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             },
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_scale_of_supracultural_interaction"
@@ -1506,7 +1507,7 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon, GeneralMixIn):
         if self.scale_to:
             return f"[{self.scale_to:,}"
 
-        return " - "
+        return NO_DATA.default
 
 
 class Polity_alternate_religion_genus(SeshatCommon, GeneralMixIn):
@@ -1554,7 +1555,7 @@ class Polity_alternate_religion_genus(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a alternatereligion genus.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_alternate_religion_genus"
@@ -1573,7 +1574,7 @@ class Polity_alternate_religion_genus(SeshatCommon, GeneralMixIn):
                 on the instance).
         """
         if not self.alternate_religion_genus:
-            return " - "
+            return NO_DATA.default
 
         return self.get_alternate_religion_genus_display()
 
@@ -1629,7 +1630,7 @@ class Polity_alternate_religion_family(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a alternate religion family.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     def show_value(self):
@@ -1642,7 +1643,7 @@ class Polity_alternate_religion_family(SeshatCommon, GeneralMixIn):
                 on the instance).
         """
         if not self.alternate_religion_family:
-            return " - "
+            return NO_DATA.default
 
         return self.get_alternate_religion_family_display()
 
@@ -1692,7 +1693,7 @@ class Polity_alternate_religion(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have a alternate religion .",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_alternate_religion"
@@ -1711,7 +1712,7 @@ class Polity_alternate_religion(SeshatCommon, GeneralMixIn):
                 instance).
         """
         if not self.alternate_religion:
-            return " - "
+            return NO_DATA.default
 
         return self.get_alternate_religion_display()
 
@@ -1761,7 +1762,7 @@ class Polity_expert(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have an expert.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_expert"
@@ -1779,7 +1780,7 @@ class Polity_expert(SeshatCommon, GeneralMixIn):
             str: The expert of the polity (or " - " if it does not exist on the instance).
         """
         if not self.expert:
-            return " - "
+            return NO_DATA.default
 
         return self.expert
 
@@ -1829,7 +1830,7 @@ class Polity_editor(SeshatCommon, GeneralMixIn):
                 "null_meaning": "This polity did not have an editor.",
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_editor"
@@ -1847,7 +1848,7 @@ class Polity_editor(SeshatCommon, GeneralMixIn):
             str: The editor of the polity (or " - " if it does not exist on the instance).
         """
         if not self.editor:
-            return " - "
+            return NO_DATA.default
 
         return self.editor
 
@@ -1897,7 +1898,7 @@ class Polity_religious_tradition(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             }
         }
-        null_meaning = STANDARD_SETTINGS.null_meaning
+        null_meaning = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_religious_tradition"
@@ -1916,6 +1917,6 @@ class Polity_religious_tradition(SeshatCommon, GeneralMixIn):
                 the instance).
         """
         if not self.religious_tradition:
-            return " - "
+            return NO_DATA.default
 
         return self.religious_tradition

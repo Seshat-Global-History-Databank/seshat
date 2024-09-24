@@ -20,10 +20,6 @@ urlpatterns = [
     path("rt/", include("seshat.apps.rt.urls")),
     path("crisisdb/", include("seshat.apps.crisisdb.urls")),
     path("api/", include("seshat.apps.seshat_api.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-# TODO: do we have the debug toolbar installed?
-urlpatterns += [
+    # TODO: do we have the debug toolbar installed?
     path("__debug__/", include("debug_toolbar.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

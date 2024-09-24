@@ -279,9 +279,9 @@ def do_zotero(results, reference_model):
                     try:
                         try:
                             good_name = item["data"]["creators"][0]["lastName"]
-                        except:  # noqa: E722  TODO: Don't use bare except
+                        except KeyError:
                             good_name = item["data"]["creators"][0]["name"]
-                    except:  # noqa: E722  TODO: Don't use bare except
+                    except KeyError:
                         good_name = ("NO_NAME",)
 
                     good_name_with_space = good_name + "_et_al"
@@ -731,28 +731,21 @@ def assign_variables_to_shapes(shapes, app_map):
                             variable_formatted = (
                                 field.name.capitalize().replace("_", " ")
                             )
-                        variables[app_name_long][var_name] = {}
-                        variables[app_name_long][var_name][
-                            "formatted"
-                        ] = variable_formatted
+
                         # Get the variable subsection and subsubsection if they exist
                         variable_full_name = variable_formatted
+
                         instance = model()
                         if hasattr(instance, "subsubsection"):
-                            variable_full_name = (
-                                instance.subsubsection()
-                                + ": "
-                                + variable_full_name
-                            )
+                            variable_full_name = f"{instance.subsubsection()}: {variable_full_name}"  # noqa: E501
+
                         if hasattr(instance, "subsection"):
-                            variable_full_name = (
-                                instance.subsection()
-                                + ": "
-                                + variable_full_name
-                            )
-                        variables[app_name_long][var_name][
-                            "full_name"
-                        ] = variable_full_name
+                            variable_full_name = f"{instance.subsection()}: {variable_full_name}"  # noqa: E501
+
+                        variables[app_name_long][var_name] = {
+                            "formatted": variable_formatted,
+                            "full_name": variable_full_name
+                        }
 
         # Store the variables in the cache for 1 hour
         cache.set("variables", variables, 3600)

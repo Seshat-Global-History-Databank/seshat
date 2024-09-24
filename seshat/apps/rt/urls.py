@@ -1,5 +1,16 @@
 from django.urls import path
 
+from ..generic_views import (
+    GenericConfirmDeleteView,
+    GenericCreateView,
+    GenericDeleteView,
+    GenericDetailView,
+    GenericDownloadView,
+    GenericListView,
+    GenericMetaDownloadView,
+    GenericUpdateView,
+)
+
 from .forms import (
     Widespread_religionForm,
     Official_religionForm,
@@ -48,9 +59,60 @@ from .models import (
 )
 from .constants import VARIABLE_DEFINITIONS
 
-from . import views
-from .specific_views import generic
-from .specific_views import downloads
+from ..generic_views import GenericMultipleDownloadView, VariableView, ProblematicDataView
+from ..constants import SUBSECTIONS
+
+APP_LABEL = "rt"
+
+urlpatterns = [
+    path("rtvars/", VariableView.as_view(
+        app_label=APP_LABEL,
+        template_name="rt/rtvars.html",
+    ), name="rtvars"),
+    path(
+        "problematic_rt_data_table/",
+        ProblematicDataView.as_view(
+            app_label=APP_LABEL,
+            template_name="rt/problematic_rt_data_table.html",
+        ),
+        name="problematic_rt_data_table",
+    ),
+    path(
+        "download-csv-rt-all/",
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            prefix="religion_tolerance_data_"
+        ),
+        name="download_csv_all_rt",
+    ),
+    path(
+        "download_csv_religious_landscape/",
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.rt.ReligiousLandscape,
+            prefix="religion_tolerance_religious_landscape_",
+        ),
+        name="download_csv_religious_landscape",
+    ),
+    path(
+        "download_csv_government_restrictions/",
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.rt.GovernmentRestrictions,
+            prefix="religion_tolerance_government_restrictions_",
+        ),
+        name="download_csv_government_restrictions",
+    ),
+    path(
+        "download_csv_societal_restrictions/",
+        GenericMultipleDownloadView.as_view(
+            app_label=APP_LABEL,
+            subsection=SUBSECTIONS.rt.SocietalRestrictions,
+            prefix="religion_tolerance_societal_restrictions_",
+        ),
+        name="download_csv_societal_restrictions",
+    ),
+]
 
 
 model_form_pairs = [
@@ -225,137 +287,96 @@ model_form_pairs = [
 ]
 
 
-urlpatterns = [
-    path("rtvars/", views.RTVarsView.as_view(), name="rtvars"),
-    path(
-        "problematic_rt_data_table/",
-        views.ProblematicDataView.as_view(),
-        name="problematic_rt_data_table",
-    ),
-    path("download-csv-rt-all/", downloads.download_csv_all_rt, name="download_csv_all_rt"),
-    path(
-        "download_csv_religious_landscape/",
-        downloads.download_csv_religious_landscape,
-        name="download_csv_religious_landscape",
-    ),
-    path(
-        "download_csv_government_restrictions/",
-        downloads.download_csv_government_restrictions,
-        name="download_csv_government_restrictions",
-    ),
-    path(
-        "download_csv_societal_restrictions/",
-        downloads.download_csv_societal_restrictions,
-        name="download_csv_societal_restrictions",
-    ),
-]
-
-
 # Create URL patterns dynamically for each model-class pair
-for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
-    urlpatterns.append(
+for model_class, form_class, var_name, myvar, section, subsection in model_form_pairs:
+    my_exp = VARIABLE_DEFINITIONS[myvar.lower().capitalize()]
+
+    urlpatterns += [
         path(
-            f"{x_name}/update/<int:object_id>/",
-            generic.generic_update_view,
-            {
-                "form_class": form_class,
-                "model_class": model_class,
-                "x_name": x_name,
-                "myvar": myvar,
-                "my_exp": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
-                "var_section": sec,
-                "var_subsection": subsec,
-                "delete_url_name": x_name + "-confirm-delete",
-            },
-            name=f"{x_name}-update",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}/update/<int:object_id>/",
+            GenericUpdateView.as_view(
+                form_class=form_class,
+                model_class=model_class,
+                var_name=var_name,
+                myvar=myvar,
+                my_exp=my_exp,
+                var_section=section,
+                var_subsection=subsection,
+                delete_url_name=f"{var_name}-confirm-delete",
+                template="rt/rt_update.html",
+            ),
+            name=f"{var_name}-update",
+        ),
         path(
-            f"{x_name}/create/",
-            generic.generic_create_view,
-            {
-                "form_class": form_class,
-                "x_name": x_name,
-                "myvar": myvar,
-                "my_exp": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
-                "var_section": sec,
-                "var_subsection": subsec,
-            },
-            name=f"{x_name}-create",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}/create/",
+            GenericCreateView.as_view(
+                form_class=form_class,
+                var_name=var_name,
+                myvar=myvar,
+                my_exp=my_exp,
+                var_section=section,
+                var_subsection=subsection,
+                template="rt/rt_create.html",
+            ),
+            name=f"{var_name}-create",
+        ),
         path(
-            f"{x_name}s_all/",
-            generic.generic_list_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-                "var_name_display": myvar,
-                "var_section": sec,
-                "var_subsection": subsec,
-                "var_main_desc": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
-            },
-            name=f"{x_name}s_all",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}/<int:pk>/",
+            GenericDetailView.as_view(
+                # form_class=form_class,
+                model_class=model_class,
+                myvar=var_name,
+                var_name_display=myvar,
+                template="rt/rt_detail.html",
+            ),
+            name=f"{var_name}-detail",
+        ),
         path(
-            f"{x_name}download/",
-            generic.generic_download_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-download",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}s_all/",
+            GenericListView.as_view(
+                template="rt/rt_list_all.html",
+                model_class=model_class,
+                var_name=var_name,
+                var_name_display=myvar,
+                var_section=section,
+                var_subsection=subsection,
+                var_main_desc=my_exp,
+            ),
+            name=f"{var_name}s_all",
+        ),
         path(
-            f"{x_name}metadownload/",
-            generic.generic_metadata_download_view,
-            {
-                "var_name": x_name,
-                "var_name_display": myvar,
-                "var_section": sec,
-                "var_subsection": subsec,
-                "var_main_desc": VARIABLE_DEFINITIONS[myvar.lower().capitalize()],
-            },
-            name=f"{x_name}-metadownload",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}download/",
+            GenericDownloadView.as_view(
+                model_class=model_class,
+                var_name=var_name,
+                prefix="religion_tolerance_",
+            ),
+            name=f"{var_name}-download",
+        ),
         path(
-            f"{x_name}/<int:pk>/",
-            generic.generic_detail_view,
-            {
-                "model_class": model_class,
-                "myvar": x_name,
-                "var_name_display": myvar,
-            },
-            name=f"{x_name}-detail",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}metadownload/",
+            GenericMetaDownloadView.as_view(
+                model_class=model_class,
+                var_name=var_name,
+            ),
+            name=f"{var_name}-metadownload",
+        ),
         path(
-            f"{x_name}/<int:pk>/confirm-delete/",
-            generic.generic_confirm_delete_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-confirm-delete",
-        )
-    )
-    urlpatterns.append(
+            f"{var_name}/<int:pk>/confirm-delete/",
+            GenericConfirmDeleteView.as_view(
+                model_class=model_class,
+                var_name=var_name,
+                template="core/confirm_delete.html",
+            ),
+            name=f"{var_name}-confirm-delete",
+        ),
         path(
-            f"{x_name}/<int:pk>/delete/",
-            generic.generic_delete_object_view,
-            {
-                "model_class": model_class,
-                "var_name": x_name,
-            },
-            name=f"{x_name}-delete",
+            f"{var_name}/<int:pk>/delete/",
+            GenericDeleteView.as_view(
+                model_class=model_class,
+                var_name=var_name,
+                redirect=f"{var_name}s_all",
+            ),
+            name=f"{var_name}-delete",
         )
-    )
+    ]

@@ -83,7 +83,6 @@ from .forms import (
 from .models import (
     Capital,
     Citation,
-    Reference,
     Macro_region,
     Nga,
     Polity,
@@ -104,9 +103,12 @@ from .constants import (
     CUSTOM_ORDER,
     CUSTOM_ORDER_SR,
     WORLD_MAP_INITIAL_DISPLAYED_YEAR,
-    WORLD_MAP_INITIAL_POLITY
+    WORLD_MAP_INITIAL_POLITY,
 )
-from .specific_constants.zotero import MANUAL_IMPORT_REFS, NLP_ZOTERO_LINKS_TO_FILTER
+from .specific_constants.zotero import (
+    MANUAL_IMPORT_REFS,
+    NLP_ZOTERO_LINKS_TO_FILTER,
+)
 from .utils import (
     common_map_view_content,
     do_zotero_manually,
@@ -122,7 +124,7 @@ from .utils import (
 
 
 class IndexView(TemplateView):
-    template_name = "core/seshat-index.html"
+    template_name = "core/index.html"
 
     def get_context_data(self, **kwargs):
         # Get the basic context
@@ -158,7 +160,7 @@ class IndexView(TemplateView):
             variable_count = 0
             row_count = 0
 
-            app_key = app_name + "_data"
+            app_key = f"{app_name}_data"
 
             for model in models:
                 model_name = model.__name__
@@ -385,7 +387,7 @@ class ReferenceCreateView(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
 
 class ReferenceUpdateView(PermissionRequiredMixin, UpdateView):
@@ -653,7 +655,7 @@ class SeshatCommentCreateView(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
 
 class SeshatCommentUpdateView(PermissionRequiredMixin, UpdateView):
@@ -680,13 +682,13 @@ class SeshatCommentUpdateView(PermissionRequiredMixin, UpdateView):
         """
         context = super().get_context_data(**kwargs)
 
-        apps = ["rt", "general", "sc", "wf", "crisisdb"]
-        apps_models = {name: apps.all_models[name] for name in apps}
+        app_labels = ["rt", "general", "sc", "wf", "crisisdb"]
+        apps_models = {name: apps.all_models[name] for name in app_labels}
 
-        abc = []
+        my_app_models = []
         for _, models in apps_models.items():
             for mm, model in models.items():
-                if all(
+                if hasattr(model, "comment") and all(
                     [
                         "_citations" not in mm,
                         "_curator" not in mm,
@@ -694,26 +696,26 @@ class SeshatCommentUpdateView(PermissionRequiredMixin, UpdateView):
                         model.objects.filter(comment=self.object.id),
                     ]
                 ):
-                    o = model.objects.get(comment=self.object.id)
+                    obj = model.objects.get(comment=self.object.id)
 
                     try:
-                        var_name = o.clean_name_spaced()
+                        var_name = obj.clean_name_spaced()
                     except AttributeError:
-                        var_name = o.name
+                        var_name = obj.name
 
-                    abc.append(
+                    my_app_models.append(
                         {
-                            "my_polity": o.polity,
-                            "my_value": o.show_value,
-                            "my_year_from": o.year_from,
-                            "my_year_to": o.year_to,
-                            "my_tag": o.get_tag_display(),
+                            "my_polity": obj.polity,
+                            "my_value": obj.show_value,
+                            "my_year_from": obj.year_from,
+                            "my_year_to": obj.year_to,
+                            "my_tag": obj.get_tag_display(),
                             "my_var_name": var_name,
-                            "my_polity_id": o.polity.id,
+                            "my_polity_id": obj.polity.id,
                         }
                     )
 
-        context["my_app_models"] = abc
+        context["my_app_models"] = my_app_models
 
         return context
 
@@ -805,7 +807,7 @@ class SeshatCommentPartCreateView(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
 
 class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
@@ -837,7 +839,7 @@ class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
     def get_context_data(self, **kwargs):
         """
@@ -855,13 +857,16 @@ class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
 
         logged_in_expert = Seshat_Expert.objects.get(user=self.request.user)
 
-        context = dict(context, **{
-            "com_id": self.kwargs["com_id"],
-            "subcom_order": self.kwargs["subcom_order"],
-            "comment_curator": logged_in_expert,
-            "comment_curator_id": logged_in_expert.id,
-            "comment_curator_name": "Selected USER",
-        })
+        context = dict(
+            context,
+            **{
+                "com_id": self.kwargs["com_id"],
+                "subcom_order": self.kwargs["subcom_order"],
+                "comment_curator": logged_in_expert,
+                "comment_curator_id": logged_in_expert.id,
+                "comment_curator_name": "Selected USER",
+            },
+        )
 
         return context
 
@@ -897,7 +902,7 @@ class SeshatPrivateCommentPartCreate2(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
     def get_context_data(self, **kwargs):
         """
@@ -1670,9 +1675,13 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
 
             context["nga_pol_rel"][time_delta] = nga_list
 
-        _filter = Q(polity_id=self.object.pk) | Q(other_polity_id=self.object.pk)
+        _filter = Q(polity_id=self.object.pk) | Q(
+            other_polity_id=self.object.pk
+        )
         preceding_data, succeeding_data = [], []
-        for preceding_entity in Polity_preceding_entity.objects.filter(_filter):
+        for preceding_entity in Polity_preceding_entity.objects.filter(
+            _filter
+        ):
             if (
                 preceding_entity.polity
                 and preceding_entity.polity.id == self.object.pk
@@ -1716,7 +1725,7 @@ class NgaCreateView(PermissionRequiredMixin, CreateView):
         Returns:
             HttpResponse: The response object.
         """
-        return HttpResponseRedirect(reverse("seshat-index"))
+        return HttpResponseRedirect(reverse("index"))
 
 
 class NgaUpdateView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -1878,58 +1887,60 @@ class SeshatPrivateCommentUpdateView(
         """
         context = super().get_context_data(**kwargs)
 
-        apps = ["core", "rt", "general", "sc", "wf", "crisisdb"]
-        apps_models = {app: get_models(app) for app in apps}
+        app_labels = ["core", "rt", "general", "sc", "wf", "crisisdb"]
+        apps_models = {app: get_models(app) for app in app_labels}
 
         my_app_models = []
         for app, models in apps_models.items():
             if app == "core":
                 # Handle the case where the app is 'core'
-                for mm, mymodel in models.items():
-                    if mm == "polity" and mymodel.objects.filter(
+                for model_name, model in models.items():
+                    if model_name == "polity" and model.objects.filter(
                         private_comment_n=self.object.id
                     ):
-                        o = mymodel.objects.get(
+                        obj = model.objects.get(
                             private_comment_n=self.object.id
                         )
 
                         my_app_models.append(
                             {
-                                "my_polity": o,
-                                "my_polity_id": o.id,
+                                "my_polity": obj,
+                                "my_polity_id": obj.id,
                                 "commented_pols_link": True,
-                                "start_year": o.start_year,
-                                "end_year": o.end_year,
+                                "start_year": obj.start_year,
+                                "end_year": obj.end_year,
                             }
                         )
             else:
                 # Handle the case where the app is not 'core'
-                for mm, mymodel in models.items():
-                    if (
-                        "_citations" not in mm
-                        and "_curator" not in mm
-                        and not mm.startswith("us_")
-                        and mymodel.objects.filter(
-                            private_comment=self.object.id
-                        )
+                for model_name, model in models.items():
+                    if hasattr(model, "private_comment") and all(
+                        [
+                            "_citations" not in model_name,
+                            "_curator" not in model_name,
+                            not model_name.startswith("us_"),
+                            model.objects.filter(
+                                private_comment=self.object.id
+                            ),
+                        ]
                     ):
-                        o = mymodel.objects.get(private_comment=self.object.id)
+                        obj = model.objects.get(private_comment=self.object.id)
 
                         try:
-                            variable_name = o.clean_name_spaced()
+                            variable_name = obj.clean_name_spaced()
                         except AttributeError:
-                            variable_name = o.name
+                            variable_name = obj.name
 
                         my_app_models.append(
                             {
-                                "my_polity": o.polity,
-                                "my_value": o.show_value,
-                                "my_year_from": o.year_from,
-                                "my_year_to": o.year_to,
-                                "my_tag": o.get_tag_display(),
+                                "my_polity": obj.polity,
+                                "my_value": obj.show_value,
+                                "my_year_from": obj.year_from,
+                                "my_year_to": obj.year_to,
+                                "my_tag": obj.get_tag_display(),
                                 "my_var_name": variable_name,
-                                "my_polity_id": o.polity.id,
-                                "my_description": o.description,
+                                "my_polity_id": obj.polity.id,
+                                "my_description": obj.description,
                             }
                         )
 
@@ -1973,11 +1984,11 @@ class NotFoundView(TemplateView):
 
 
 class MethodsView(TemplateView):
-    template_name = "core/seshat-methods.html"
+    template_name = "core/methods.html"
 
 
 class WhoWeAreView(TemplateView):
-    template_name = "core/seshat-whoweare.html"
+    template_name = "core/whoweare.html"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
@@ -1994,20 +2005,23 @@ class WhoWeAreView(TemplateView):
 
 
 class DownloadsView(TemplateView):
-    template_name = "core/old_downloads.html"
+    template_name = "core/downloads-old.html"
 
 
 class CodebookView(TemplateView):
-    template_name = "core/old_codebook.html"
+    template_name = "core/codebook-old.html"
 
 
 class CodebookNewView(TemplateView):
-    template_name = "core/code_book_1.html"
+    template_name = "core/codebook-new.html"
 
 
 class AcknowledgementsView(TemplateView):
-    template_name = "core/seshat-acknowledgements.html"
+    template_name = "core/acknowledgements.html"
 
+
+class ZoteroNoRefsListView(ListView):
+    pass  # TODO: create from no_zotero_refs_list_view
 
 
 def no_zotero_refs_list_view(request):
@@ -2039,6 +2053,7 @@ def no_zotero_refs_list_view(request):
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def reference_update_modal_view(request, pk):
     """
     Update a reference using a modal or a standalone page depending on the
@@ -2080,6 +2095,7 @@ def reference_update_modal_view(request, pk):
     return render(request, template_name, context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 @permission_required("core.add_capital")
 def seshatcommentparts_create2_view(request, com_id, subcom_order):
     """
@@ -2210,6 +2226,7 @@ def seshatcommentparts_create2_view(request, com_id, subcom_order):
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 @permission_required("core.add_capital")
 def seshatcommentparts_create2_inline_view(
     request, app_name, model_name, instance_id
@@ -2312,6 +2329,7 @@ def seshatcommentparts_create2_inline_view(
                     if not created:
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
+
             return redirect(
                 reverse(
                     "seshatcomment-update", kwargs={"pk": parent_comment.pk}
@@ -2334,6 +2352,7 @@ def seshatcommentparts_create2_inline_view(
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 @permission_required("core.add_seshatprivatecommentpart")
 def seshatprivatecommentparts_create2_view(request, private_com_id):
     """
@@ -2403,6 +2422,7 @@ def seshatprivatecommentparts_create2_view(request, private_com_id):
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def signup_traditional_view(request):
     """
     Handle user signup.
@@ -2448,6 +2468,7 @@ def signup_traditional_view(request):
     return render(request, "core/signup_traditional.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def signupfollowup_view(request):
     """
     Handle user signup follow-up.
@@ -2484,13 +2505,15 @@ def activate_view(request, uidb64, token):
         user.profile.email_confirmed = True
         user.backend = "django.contrib.auth.backends.ModelBackend"
         user.save()
+
         login(request, user)
+
         return redirect("signup-followup")
 
     return render(request, "core/account_activation_invalid.html")
 
 
-# Discussion Room
+# TODO: rewrite as a class-based view (TemplateView/View)
 def discussion_room_view(request):
     """
     Render the discussion room page.
@@ -2498,7 +2521,7 @@ def discussion_room_view(request):
     return render(request, "core/discussion_room.html")
 
 
-# NLP Room 1
+# TODO: rewrite as a class-based view (TemplateView/View)
 def nlp_datapoints_view(request):
     """
     Render the NLP data points page.
@@ -2506,7 +2529,7 @@ def nlp_datapoints_view(request):
     return render(request, "core/nlp_datapoints.html")
 
 
-# NLP Room 2
+# TODO: rewrite as a class-based view (TemplateView/View)
 def nlp_datapoints_2_view(request):
     """
     Render the NLP data points page.
@@ -2514,6 +2537,7 @@ def nlp_datapoints_2_view(request):
     return render(request, "core/nlp_datapoints_2.html")
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def account_activation_sent_view(request):
     """
     Render the account activation sent page.
@@ -2521,6 +2545,7 @@ def account_activation_sent_view(request):
     return render(request, "core/account_activation_sent.html")
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def variablehierarchy_view(request):
     """
     Handle variable hierarchy setting. This is a view for the admin to set the
@@ -2647,6 +2672,7 @@ def variablehierarchy_view(request):
     return render(request, "core/variablehierarchy.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def synczoteromanually_view(request):
     """
     This function is used to manually input the references from the Zotero data
@@ -2667,6 +2693,7 @@ def synczoteromanually_view(request):
     return render(request, "core/references/synczotero.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def synczotero_view(request):
     """
     This function is used to sync the Zotero data with the database.
@@ -2687,6 +2714,7 @@ def synczotero_view(request):
     return render(request, "core/references/synczotero.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def synczotero100_view(request):
     """
     This function is used to sync the Zotero data with the database.
@@ -2709,6 +2737,7 @@ def synczotero100_view(request):
     return render(request, "core/references/synczotero.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def update_citations_view(request):
     """
     This function takes all the references and build a citation for them.
@@ -2728,6 +2757,7 @@ def update_citations_view(request):
     return render(request, "core/references/reference_list.html")
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 @require_GET
 def polity_filter_options_view(request):
     """
@@ -2751,6 +2781,7 @@ def polity_filter_options_view(request):
     return JsonResponse({"options": options.values("id", "name")})
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def seshatcommentparts_create3_view(request):
     """
     Create a new SeshatCommentPart instance.
@@ -2767,9 +2798,7 @@ def seshatcommentparts_create3_view(request):
             comment_text = form.cleaned_data["comment_text"]
             comment_order = form.cleaned_data["comment_order"]
 
-            comment = SeshatComment.objects.create(
-                text="a new_comment_text"
-            )
+            comment = SeshatComment.objects.create(text="a new_comment_text")
 
             try:
                 seshat_expert = Seshat_Expert.objects.get(user=request.user)
@@ -2788,7 +2817,12 @@ def seshatcommentparts_create3_view(request):
             # Note: the below will crash as ReferenceFormSet is not defined (#TODO?)
             reference_formset = ReferenceFormSet(request.POST, prefix="refs")
 
-            if not reference_formset.is_valid() or not reference_formset.has_changed():
+            if any(
+                [
+                    not reference_formset.is_valid(),
+                    not reference_formset.has_changed(),
+                ]
+            ):
                 error_message = f"Formset errors: {reference_formset.errors}, {reference_formset.non_form_errors()}"  # noqa: E501 pylint: disable=C0301
 
                 # TODO: Should we handle errors differently here, rather than printing?
@@ -2818,7 +2852,7 @@ def seshatcommentparts_create3_view(request):
                     print(f"Form errors: {reference_form.errors}")
 
             # Redirect to the index page
-            return redirect("seshat-index")
+            return redirect("index")
 
     elif request.method == "GET":
         form = SeshatCommentPartForm2()
@@ -2832,6 +2866,7 @@ def seshatcommentparts_create3_view(request):
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def world_map_view(request):
     # global WORLD_MAP_INITIAL_DISPLAYED_YEAR, WORLD_MAP_INITIAL_POLITY
     """
@@ -2868,6 +2903,7 @@ def world_map_view(request):
     return render(request, "core/world_map.html", context)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def world_map_one_year_view(request):
     """
     This view is used to display a map with polities plotted on it. The view
@@ -2887,6 +2923,7 @@ def world_map_one_year_view(request):
     return JsonResponse(content)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def world_map_all_view(request):
     """
     This view is used to display a map with polities plotted on it. The view
@@ -2907,6 +2944,7 @@ def world_map_all_view(request):
     return JsonResponse(content)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def provinces_and_countries_view(request):
     """
     This view is used to get the provinces and countries for the map.
@@ -2928,6 +2966,7 @@ def provinces_and_countries_view(request):
     return JsonResponse(content)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def update_seshat_comment_part_view(request, pk):
     """
     View to update a SeshatCommentPart instance.
@@ -3104,13 +3143,13 @@ def update_seshat_comment_part_view(request, pk):
             )
 
     context = {
-            "form": form,
-            "formset": formset,
-            "comm_num": pk,
-            "comm_part_display": comment_part,
-            "parent_comment": parent_comment_part,
-            "subcom_order": subcomment_order,
-        }
+        "form": form,
+        "formset": formset,
+        "comm_num": pk,
+        "comm_part_display": comment_part,
+        "parent_comment": parent_comment_part,
+        "subcom_order": subcomment_order,
+    }
 
     return render(
         request,
@@ -3119,6 +3158,7 @@ def update_seshat_comment_part_view(request, pk):
     )
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 @login_required
 def create_subcomment_new_view(request, app_name, model_name, instance_id):
     """
@@ -3182,6 +3222,7 @@ def create_subcomment_new_view(request, app_name, model_name, instance_id):
     return redirect("seshatcomment-update", pk=comment_instance.id)
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 @login_required
 def create_subcomment_newer_view(request, app_name, model_name, instance_id):
     """
@@ -3283,11 +3324,10 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
 
     context = {"form": form}
 
-    return render(
-        request, "core/seshatcomments/your_template.html", context
-    )
+    return render(request, "core/seshatcomments/your_template.html", context)
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 @login_required
 @permission_required("core.add_seshatprivatecommentpart")
 def create_private_subcomment_new_view(
@@ -3355,6 +3395,7 @@ def create_private_subcomment_new_view(
     )
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def seshatcomments_create3_view(request):
     """
     View to create a SeshatComment instance.
@@ -3409,7 +3450,9 @@ def seshatcomments_create3_view(request):
 
                     # Process the formset
                     # Note: the below will crash as ReferenceFormSet is not defined (#TODO?)
-                    reference_formset = ReferenceFormSet(request.POST, prefix="refs")
+                    reference_formset = ReferenceFormSet(
+                        request.POST, prefix="refs"
+                    )
 
                     for reference_form in reference_formset:
                         if reference_form.is_valid():
@@ -3438,7 +3481,7 @@ def seshatcomments_create3_view(request):
                             print(f"Form errors: {reference_form.errors}")
 
             # Redirect to a success page
-            return redirect("seshat-index")
+            return redirect("index")
 
     elif request.method == "GET":
         form = SeshatCommentForm2()
@@ -3452,6 +3495,7 @@ def seshatcomments_create3_view(request):
     )
 
 
+# TODO: rewrite as a class-based view (RedirectView? View?)
 def search_view(request):
     """
     View to search for a polity.
@@ -3475,15 +3519,16 @@ def search_view(request):
                 return redirect("polity-detail-main", pk=polity.pk)
             else:
                 # No polity found = redirect to home
-                return redirect("seshat-index")
+                return redirect("index")
         except Polity.DoesNotExist:
             # Handle the case where no polity matches the search term
             pass
 
     # Redirect to home if no search term is provided or no match is found
-    return redirect("seshat-index")
+    return redirect("index")
 
 
+# TODO: rewrite as a class-based view (TemplateView/View)
 def search_suggestions_view(request):
     """
     View to get search suggestions for a polity.
@@ -3498,16 +3543,15 @@ def search_suggestions_view(request):
         HttpResponse: The HTTP response.
     """
     search_term = request.GET.get("search", "")
+    _filter = (
+        Q(name__icontains=search_term)
+        | Q(long_name__icontains=search_term)
+        | Q(new_name__icontains=search_term)
+    )
 
     # TODO? Limit to 5 suggestions [:5]
     context = {
-        "polities": Polity.objects.filter(
-            Q(name__icontains=search_term)
-            | Q(long_name__icontains=search_term)
-            | Q(new_name__icontains=search_term)
-        ).order_by("start_year")
+        "polities": Polity.objects.filter(_filter).order_by("start_year")
     }
 
     return render(request, "core/partials/_search_suggestions.html", context)
-
-

@@ -4,10 +4,11 @@ from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
-    UpdateView,
     DeleteView,
-    ListView,
     DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
 )
 
 from ..utils import get_variable_context, _get_context
@@ -71,15 +72,15 @@ from .models import (
 )
 from .constants import (
     APP_NAME,
-    INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
-    INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
-    INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
-    INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
-    INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
-    INNER_POLITY_RELIGION_CHOICES,
-    INNER_POLITY_RELIGION_FAMILY_CHOICES,
-    INNER_POLITY_RELIGION_GENUS_CHOICES,
-    INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_FAMILY_CHOICES,
+    # INNER_POLITY_ALTERNATE_RELIGION_GENUS_CHOICES,
+    # INNER_POLITY_LINGUISTIC_FAMILY_CHOICES,
+    # INNER_POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES,
+    # INNER_POLITY_RELIGION_CHOICES,
+    # INNER_POLITY_RELIGION_FAMILY_CHOICES,
+    # INNER_POLITY_RELIGION_GENUS_CHOICES,
+    # INNER_POLITY_SUPRAPOLITY_RELATIONS_CHOICES,
 )
 
 
@@ -6355,6 +6356,7 @@ class Polity_religious_traditionDetailView(DetailView):
     template_name = "general/polity_religious_tradition/polity_religious_tradition_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
+# TODO: rewrite as a class-based view + move
 def generalvars_view(request):
     context = get_variable_context(
         app_name=APP_NAME,
@@ -6365,3 +6367,32 @@ def generalvars_view(request):
         ],
     )
     return render(request, "general/generalvars.html", context=context)
+
+
+class GeneralVariablesView(TemplateView):
+    """
+    View for displaying all general variables.
+    """
+
+    template_name = "general/generalvars.html"
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = get_variable_context(
+            app_name=APP_NAME,
+            exclude=[
+                "Polity_research_assistant",
+                "Polity_editor",
+                "Polity_expert",
+            ],
+        )
+
+        return context

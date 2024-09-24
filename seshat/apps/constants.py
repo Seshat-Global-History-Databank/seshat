@@ -367,6 +367,7 @@ SECTIONS = DotDict(
         "economy": "Economy Variables",
         "conflict": "Conflict Variables",
         "sc": "Social Complexity",
+        "rt": "Religious Tolerance",
         "wb": "Well Being",
     }
 )
@@ -418,10 +419,15 @@ SUBSECTIONS = DotDict(
                 "General": "General",
             }
         ),
+        "rt": DotDict(
+            {
+                "ReligiousLandscape": "Religious Landscape",
+                "GovernmentRestrictions": "Government Restrictions",
+                "SocietalRestrictions": "Societal Restrictions",
+            }
+        )
     }
 )
-
-STANDARD_SETTINGS = DotDict({"null_meaning": "The value is not available."})
 
 LIGHT_COLORS = [
     "#e6b8af",
@@ -674,19 +680,17 @@ US_STATES_GEOJSON_PATH = "/home/majid/dev/seshat/seshat/seshat/apps/core/static/
 
 NO_DATA = DotDict(
     {
+        "default": " - ",
         "explanation": "No_Explanations",
         "section": "No_SECTION",
         "subsection": "NO_SUBSECTION",
         "name": "NO_NAME",
         "nga": "NO_NGA_ASSOCIATED",
-        "wiki": "No_Value_Provided_in_Old_Wiki"
+        "wiki": "No_Value_Provided_in_Old_Wiki",
+        "note": "No_Actual_note",
+        "no_value": "The value is not available.",
+        "nothing": "NOTHING",
     }
 )
 
-CSV_DELIMITER = "|"
-
-STANDARD_CONDITIONS = [
-    lambda o: o.polity.start_year is not None,
-    lambda o: o.year_from is not None,
-    lambda o: o.polity.start_year > o.year_from,
-]
+CSV_DELIMITER = ","  # TODO: this one was set to "|" in the past; not standard

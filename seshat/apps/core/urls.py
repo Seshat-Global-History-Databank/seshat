@@ -4,16 +4,24 @@ from . import views
 from .specific_views import downloads
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="seshat-index"),
-    path("methods/", views.MethodsView.as_view(), name="seshat-methods"),
-    path("whoweare/", views.WhoWeAreView.as_view(), name="seshat-whoweare"),
-    path("codebook", views.CodebookView.as_view(), name="seshat-codebook"),  # noqa: E501  TODO: The codebook_view is not used anywhere in the codebase
-    path("code_book_new_1", views.CodebookNewView.as_view(), name="code_book_1"),
-    path("downloads_page/", views.DownloadsView.as_view(), name="seshat-olddownloads"),
+    path("", views.IndexView.as_view(), name="index"),
+    path("methods/", views.MethodsView.as_view(), name="methods"),
+    path("whoweare/", views.WhoWeAreView.as_view(), name="whoweare"),
+    path(
+        "codebook/", views.CodebookView.as_view(), name="codebook"
+    ),  # noqa: E501  TODO: The "codebook" view is not used anywhere in the codebase
+    path(
+        "code_book_new_1/",
+        views.CodebookNewView.as_view(),
+        name="codebook-new",
+    ),  # noqa: E501  TODO: The "codebook-new" view is not used anywhere in the codebase
+    path(
+        "downloads_page/", views.DownloadsView.as_view(), name="downloads-old"
+    ),
     path(
         "acknowledgements/",
         views.AcknowledgementsView.as_view(),
-        name="seshat-acknowledgements",
+        name="acknowledgements",
     ),
     path(
         "download_oldcsv/<str:file_name>/",
@@ -30,14 +38,26 @@ urlpatterns = [
         views.polity_filter_options_view,
         name="polity_filter_options",
     ),
-    path("core/religions_all/", views.ReligionListView.as_view(), name="religion_list"),
-    path("core/create_religion/", views.ReligionCreateView.as_view(), name="religion_create"),
+    path(
+        "core/religions_all/",
+        views.ReligionListView.as_view(),
+        name="religion_list",
+    ),
+    path(
+        "core/create_religion/",
+        views.ReligionCreateView.as_view(),
+        name="religion_create",
+    ),
     path(
         "core/update_religion/<int:pk>/",
         views.ReligionUpdateView.as_view(),
         name="religion_update",
     ),
-    path("core/references/", views.ReferenceListView.as_view(), name="references"),
+    path(
+        "core/references/",
+        views.ReferenceListView.as_view(),
+        name="references",
+    ),
     path(
         "core/nlp-references/",
         views.NlpReferenceListView.as_view(),
@@ -79,7 +99,9 @@ urlpatterns = [
         name="references_download_view",
     ),
     path(
-        "core/polities/create/", views.PolityCreateView.as_view(), name="polity-create"
+        "core/polities/create/",
+        views.PolityCreateView.as_view(),
+        name="polity-create",
     ),
     path("core/polities/", views.PolityListView.as_view(), name="polities"),
     path(
@@ -107,11 +129,17 @@ urlpatterns = [
         views.PolityUpdateView.as_view(),
         name="polity-update",
     ),
-    path("core/ngas/create/", views.NgaCreateView.as_view(), name="nga-create"),
-    path("core/ngas/", views.NgaListView.as_view(), name="ngas"),
-    path("core/nga/<int:pk>", views.NgaDetailView.as_view(), name="nga-detail"),
     path(
-        "core/ngas/<int:pk>/update/", views.NgaUpdateView.as_view(), name="nga-update"
+        "core/ngas/create/", views.NgaCreateView.as_view(), name="nga-create"
+    ),
+    path("core/ngas/", views.NgaListView.as_view(), name="ngas"),
+    path(
+        "core/nga/<int:pk>", views.NgaDetailView.as_view(), name="nga-detail"
+    ),
+    path(
+        "core/ngas/<int:pk>/update/",
+        views.NgaUpdateView.as_view(),
+        name="nga-update",
     ),
     path(
         "core/capitals/create/",
@@ -129,19 +157,31 @@ urlpatterns = [
         views.CapitalDeleteView.as_view(),
         name="capital-delete",
     ),
-    path("capitaldownload/", downloads.capital_download_view, name="capital-download"),
+    path(
+        "capitaldownload/",
+        downloads.capital_download_view,
+        name="capital-download",
+    ),
     path("search/", views.search_view, name="search"),
     path(
-        "search_suggestions/", views.search_suggestions_view, name="search_suggestions"  # noqa: E501  TODO: The search_suggestions_view is not used anywhere in the codebase
+        "search_suggestions/",
+        views.search_suggestions_view,
+        name="search_suggestions",  # noqa: E501  TODO: The search_suggestions_view is not used anywhere in the codebase
     ),
     path("signup/", views.signup_traditional_view, name="signup"),
-    path("signup_followup/", views.signupfollowup_view, name="signup-followup"),  # noqa: E501  TODO: The signupfollowup_view is not used anywhere in the codebase
+    path(
+        "signup_followup/", views.signupfollowup_view, name="signup-followup"
+    ),  # noqa: E501  TODO: The signupfollowup_view is not used anywhere in the codebase
     path(
         "account_activation_sent/",
         views.account_activation_sent_view,
         name="account_activation_sent",
     ),
-    path("activate/<slug:uidb64>/<slug:token>/", views.activate_view, name="activate"),
+    path(
+        "activate/<slug:uidb64>/<slug:token>/",
+        views.activate_view,
+        name="activate",
+    ),
     path(
         "variablehierarchy/",
         views.variablehierarchy_view,
@@ -149,16 +189,22 @@ urlpatterns = [
     ),
     path("synczotero/", views.synczotero_view, name="synczotero"),
     path(
-        "synczoteromanually/", views.synczoteromanually_view, name="synczoteromanually"
+        "synczoteromanually/",
+        views.synczoteromanually_view,
+        name="synczoteromanually",
     ),
     path("synczotero100/", views.synczotero100_view, name="synczotero100"),
-    path("updatecitations/", views.update_citations_view, name="updatecitations"),
+    path(
+        "updatecitations/", views.update_citations_view, name="updatecitations"
+    ),
     path(
         "core/citations/create/",
         views.CitationCreateView.as_view(),
         name="citation-create",
     ),
-    path("core/citations/", views.CitationListView.as_view(), name="citations"),
+    path(
+        "core/citations/", views.CitationListView.as_view(), name="citations"
+    ),
     path(
         "core/citations/<slug:id>",
         views.CitationDetailView.as_view(),
@@ -284,10 +330,20 @@ urlpatterns = [
         views.SeshatPrivateCommentPartUpdateView.as_view(),
         name="seshatprivatecommentpart-update",
     ),
-    path("core/discussion_room/", views.discussion_room_view, name="discussion_room"),
-    path("core/nlp_datapoints/", views.nlp_datapoints_view, name="nlp_datapoints"),
     path(
-        "core/nlp_datapoints_2/", views.nlp_datapoints_2_view, name="nlp_datapoints_2"
+        "core/discussion_room/",
+        views.discussion_room_view,
+        name="discussion_room",
+    ),
+    path(
+        "core/nlp_datapoints/",
+        views.nlp_datapoints_view,
+        name="nlp_datapoints",
+    ),
+    path(
+        "core/nlp_datapoints_2/",
+        views.nlp_datapoints_2_view,
+        name="nlp_datapoints_2",
     ),
     # TODO: Correct? The below is commented out as it is not used in the codebase
     # path("core/not_found_404", views.NotFoundView.as_view(), name="four-o-four"),
@@ -297,7 +353,9 @@ urlpatterns = [
         views.world_map_one_year_view,
         name="world_map_one_year",
     ),
-    path("core/world_map_all/", views.world_map_all_view, name="world_map_all"),
+    path(
+        "core/world_map_all/", views.world_map_all_view, name="world_map_all"
+    ),
     path(
         "core/provinces_and_countries",
         views.provinces_and_countries_view,

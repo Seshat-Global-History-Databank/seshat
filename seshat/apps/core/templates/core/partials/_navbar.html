@@ -49,7 +49,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-brown  navbar-hide-on-scroll sticky-top" id="my_seshat_navbar" style="z-index: 1000;">
     <div class="container">
             <span>
-                <a class="navbar-brand fw-bold" href="{% url 'seshat-index' %}"> <img style="width:50px" src="{% static 'SeshatLogo2.png' %}" class="seshat-logo img-thumbnail rounded" alt="No Seshat Logo found.">&nbsp;&nbsp;&nbsp;&nbsp;Home</a> 
+                <a class="navbar-brand fw-bold" href="{% url 'index' %}"> <img style="width:50px" src="{% static 'SeshatLogo2.png' %}" class="seshat-logo img-thumbnail rounded" alt="No Seshat Logo found.">&nbsp;&nbsp;&nbsp;&nbsp;Home</a> 
             </span>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -118,7 +118,7 @@
                      </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'seshat-olddownloads' %}" class="nav-link  active"><strong>Downloads </strong></a>
+                    <a href="{% url 'downloads-old' %}" class="nav-link  active"><strong>Downloads </strong></a>
                 </li>
                 <li class="nav-item">
                     <a href="{% url 'world_map' %}" class="nav-link  active"><strong>World Map </strong></a>

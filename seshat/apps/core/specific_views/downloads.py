@@ -1,3 +1,6 @@
+# TODO: rewrite all these into the general class-based views (GenericDownloadView and
+# GenericMetaDownloadView)
+
 import csv
 
 from django.contrib.auth.decorators import permission_required

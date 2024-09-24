@@ -655,14 +655,14 @@ class Citation(models.Model):
             short_title = "BlaBlaBla"
 
         if self.ref and self.ref.long_name:
-            original_long_name = self.ref.long_name
+            self.ref.long_name = self.ref.long_name
         else:
-            original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
-        if original_long_name and len(original_long_name) > 50:
-            last_word = original_long_name[50:].split(" ")[0]
-            shorter_name = f"{original_long_name[0:50]} {last_word}..."
-        elif original_long_name:
-            shorter_name = original_long_name
+            self.ref.long_name = "REFERENCE_WITH_NO_LONG_NAME"
+        if self.ref.long_name and len(self.ref.long_name) > 50:
+            last_word = self.ref.long_name[50:].split(" ")[0]
+            shorter_name = f"{self.ref.long_name[0:50]} {last_word}..."
+        elif self.ref.long_name:
+            shorter_name = self.ref.long_name
         else:
             shorter_name = "BlaBla"
 
@@ -713,12 +713,12 @@ class Citation(models.Model):
             shorter_title = "BlaBlaBla"
 
         if self.ref and self.ref.long_name:
-            original_long_name = self.ref.long_name
+            self.ref.long_name = self.ref.long_name
         else:
-            original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
+            self.ref.long_name = "REFERENCE_WITH_NO_LONG_NAME"
 
-        if original_long_name:
-            shorter_name = original_long_name
+        if self.ref.long_name:
+            shorter_name = self.ref.long_name
         else:
             shorter_name = "BlaBla"
 
@@ -786,16 +786,17 @@ class Citation(models.Model):
         Returns:
             str: A short title for the citation.
         """
-        original_long_name = self.ref.long_name
-        if original_long_name and len(original_long_name) > 40:
+        if self.ref.long_name and len(self.ref.long_name) > 40:
             shorter_name = (
-                original_long_name[0:40]
-                + original_long_name[40:].split(" ")[0]
+                self.ref.long_name[0:40]
+                + self.ref.long_name[40:].split(" ")[0]
                 + "..."
             )
-        elif original_long_name:
-            shorter_name = original_long_name
+        elif self.ref.long_name:
+            shorter_name = self.ref.long_name
         else:
+            # TODO: Does this ever happen? If so, should we handle it differently?
+            # (shorter_name = "BlaBla" doesn't seem helpful)
             shorter_name = "BlaBla"
 
         if "NOZOTERO_LINK" in self.ref.zotero_link:
@@ -1302,7 +1303,7 @@ class GADMShapefile(models.Model):
     SUBCONT = models.CharField(max_length=100, null=True)
 
     def __str__(self) -> str:
-        return "Name: %s" % self.name
+        return f"Name: {self.name}"
 
 
 class GADMCountries(models.Model):
@@ -1314,7 +1315,7 @@ class GADMCountries(models.Model):
     COUNTRY = models.CharField(max_length=100, null=True)
 
     def __str__(self) -> str:
-        return "Name: %s" % self.name
+        return f"Name: {self.name}"
 
 
 class GADMProvinces(models.Model):
@@ -1328,4 +1329,4 @@ class GADMProvinces(models.Model):
     ENGTYPE_1 = models.CharField(max_length=100, null=True)
 
     def __str__(self) -> str:
-        return "Name: %s" % self.name
+        return f"Name: {self.name}"

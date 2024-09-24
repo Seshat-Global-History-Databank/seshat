@@ -44,11 +44,11 @@ from django.http import HttpResponseForbidden, HttpResponse
 from django.utils.safestring import mark_safe
 
 from .constants import (
-    ICONS,
     ATTRS_HTML,
-    LIGHT_COLORS,
     CSV_DELIMITER,
-    STANDARD_CONDITIONS,
+    ICONS,
+    LIGHT_COLORS,
+    NO_DATA,
 )
 from .patterns import PATTERNS
 
@@ -315,7 +315,11 @@ def get_models(app_name: str, exclude: list = None, subsection=None) -> list:
 
 def get_problematic_data_context(
     app_name: str = "",
-    conditions: list = STANDARD_CONDITIONS,
+    conditions: list = [
+        lambda o: o.polity.start_year is not None,
+        lambda o: o.year_from is not None,
+        lambda o: o.polity.start_year > o.year_from,
+    ],
     models: list = None,
 ) -> dict:
     """
@@ -401,7 +405,7 @@ def convert_to_year_span(year_from: int, year_to: int) -> str:
     """
     # We have no years
     if all([year_from is None, year_to is None]):
-        return " - "
+        return NO_DATA.default
 
     # year_from is the same as year_to or we only have a year_from
     if year_from == year_to or year_to is None:
@@ -504,7 +508,9 @@ def get_filename(model, prefix: str = "") -> str:
     Returns:
         str: The filename for the CSV file.
     """
-    plural_model_name = model._meta.verbose_name_plural.lower().replace(" ", "_")
+    plural_model_name = model._meta.verbose_name_plural.lower().replace(
+        " ", "_"
+    )
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
     return f"{prefix}{plural_model_name}_{current_datetime}.csv"
@@ -896,15 +902,9 @@ def get_variable_context(
         subsection = str(model().subsection())
         subsubsection = str(model().subsubsection())
 
-        better_name = (
-            prefix
-            + subsection.replace("-", "_")
-            .replace(" ", "_")
-            .replace(":", "")
-            .lower()
-        )
+        subsection_str = subsection.replace("-", "_").replace(" ", "_").replace(":", "").lower()  # noqa: E501
 
-        section_download_names[subsection] = better_name
+        section_download_names[subsection] = f"{prefix}{subsection_str}"
 
         if subsection not in all_vars_grouped:
             all_vars_grouped[subsection] = {}

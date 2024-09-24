@@ -1,8 +1,7 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     ListView,
@@ -10,6 +9,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     DetailView,
+    View,
 )
 
 import csv
@@ -26,7 +26,6 @@ from ..constants import (
     POLITY_NGA_NAME,
 )
 from ..utils import (
-    check_permissions,
     get_date,
     get_api_results,
 )
@@ -99,30 +98,31 @@ from .constants import (
 from .utils import expand_context_from_variable_hierarchy
 
 
-def get_citations_dropdown_view(request):
+class CitationsDropdownView(PermissionRequiredMixin, View):
     """
-    Get all citations as JSON.
+    View for getting all citations as JSON.
 
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        JsonResponse: JSON response with all citations for dropdown
+    Note:
+        This view is only accessible to users with the 'add_capital' permission.
     """
-    # Get dropdown data here
-    data = Citation.objects.all()
-    citations_list = []
-    for counter, item in enumerate(data):
-        if counter < 5000:
-            citations_list.append(
-                {
-                    "id": item.id,
-                    "name": item.__str__(),
-                }
-            )
 
-    # Return dropdown template as JSON response
-    return JsonResponse({"data": citations_list})
+    permission_required = "core.add_capital"  # noqa: E501  TODO: added this as we don't want citations to be viewable for non-authorised users?
+
+    def get(self, request, *args, **kwargs):
+        """
+        Get all citations as JSON.
+
+        Returns:
+            JsonResponse: JSON response with all citations for dropdown
+        """
+        # Get dropdown data here
+        data = [
+            {"id": item.id, "name": str(item)}
+            for item in Citation.objects.all()[:5000]
+        ]
+
+        # Return dropdown template as JSON response
+        return JsonResponse({"data": data})
 
 
 class Crisis_consequenceCreateView(
@@ -148,7 +148,9 @@ class Crisis_consequenceCreateView(
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#crisis_case_var"
 
@@ -209,10 +211,9 @@ class Crisis_consequenceUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#crisis_case_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#crisis_case_var"
 
     def get_context_data(self, **kwargs):
         """
@@ -264,10 +265,9 @@ class Crisis_consequenceCreateHeavyView(PermissionRequiredMixin, CreateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#crisis_case_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#crisis_case_var"
 
     def get_absolute_url(self) -> str:
         """
@@ -329,10 +329,9 @@ class Crisis_consequenceUpdateHeavyView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#crisis_case_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#crisis_case_var"
 
     def get_context_data(self, **kwargs):
         """
@@ -588,10 +587,9 @@ class Power_transitionCreateView(
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#power_transition_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        
+        return f"{url}#power_transition_var"
 
     def get_absolute_url(self) -> str:
         """
@@ -650,10 +648,9 @@ class Power_transitionUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#power_transition_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#power_transition_var"
 
     def get_context_data(self, **kwargs):
         """
@@ -705,10 +702,9 @@ class Power_transitionCreateHeavyView(PermissionRequiredMixin, CreateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#power_transition_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#power_transition_var"
 
     def get_absolute_url(self) -> str:
         """
@@ -770,10 +766,9 @@ class Power_transitionUpdateHeavyView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#power_transition_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#power_transition_var"
 
     def get_context_data(self, **kwargs):
         """
@@ -1053,10 +1048,9 @@ class Human_sacrificeCreateView(
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#hs_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#hs_var"
 
     def get_absolute_url(self) -> str:
         """
@@ -1123,10 +1117,9 @@ class Human_sacrificeUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        return (
-            reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-            + "#hs_var"
-        )
+        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+
+        return f"{url}#hs_var"
 
     def get_context_data(self, **kwargs):
         """
@@ -1298,6 +1291,7 @@ class Human_sacrificeDetailView(PermissionRequiredMixin, DetailView):
     permission_required = "core.view_capital"
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 @login_required
 def create_a_comment_with_a_subcomment(request, hs_instance_id):
     """
@@ -4754,6 +4748,7 @@ class Disease_outbreakListView(ListView):
         return context
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 class Disease_outbreakDetailView(DetailView):
     """
     View for displaying a single Disease_outbreak instance.
@@ -4763,14 +4758,17 @@ class Disease_outbreakDetailView(DetailView):
     template_name = "crisisdb/disease_outbreak/disease_outbreak_detail.html"
 
 
-# The temporary function for creating the my_sections_dic dic: test_for_varhier_dic inside
-# utils and the qing_vars_links_creator() inside utils.py
+# TODO: rewrite as a class-based view (RedirectView)
 def qing_vars_view(request):
     """
     View for listing all Qing Variables.
 
     Note:
         This is a temporary view for testing the Qing variables.
+
+        The temporary function for creating the my_sections_dic dic:
+        test_for_varhier_dic inside utils and the qing_vars_links_creator()
+        inside utils.py.
 
     Args:
         request: HttpRequest object
@@ -4783,6 +4781,7 @@ def qing_vars_view(request):
     return render(request, "crisisdb/qing-vars.html", context=context)
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 def playground(request):
     """
     View for the playground.
@@ -4802,6 +4801,7 @@ def playground(request):
     return render(request, "crisisdb/playground.html", context=context)
 
 
+# TODO: rewrite as a class-based view (RedirectView)
 def playgrounddownload_view(request):
     """
     Download the data from the playground.
@@ -4897,13 +4897,6 @@ def playgrounddownload_view(request):
                                 writer.writerow(an_equinox_row)
 
     return final_response
-
-
-def fpl_all(request):
-    """
-    View for the Famine, Plague, and Locust page.
-    """
-    return render(request, "crisisdb/fpl_all.html")
 
 
 class UsLocationListView(ListView):
@@ -5102,71 +5095,3 @@ class UsViolenceUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = "crisisdb/us_violence/update.html"
     permission_required = "core.add_capital"
     success_url = reverse_lazy("us_violence_paginated")
-
-
-@permission_required("core.add_capital")
-def generic_confirm_delete_view(request, model_class, pk, var_name):
-    """
-    View for confirming the deletion of an object.
-
-    Note:
-        This view is only accessible to users with the 'add_capital' permission.
-
-    Args:
-        request: HttpRequest object
-        model_class: Model class of the object to be deleted
-        pk: Primary key of the object to be deleted
-        var_name: Name of the object to be deleted
-
-    Returns:
-        HttpResponse: HTTP response with the confirmation page
-
-    Raises:
-        Http404: If the object with the given primary key does not exist
-    """
-    check_permissions(request)
-
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    context = {
-        "var_name": var_name,
-        "obj": obj,
-        "delete_object": f"{var_name}-delete",
-    }
-
-    return render(request, "core/confirm_delete.html", context)
-
-
-@permission_required("core.add_capital")
-def generic_delete_object_view(request, model_class, pk, var_name):
-    """
-    View for deleting an object.
-
-    Note:
-        This view is only accessible to users with the 'add_capital' permission.
-
-    Args:
-        request: HttpRequest object
-        model_class: Model class of the object to be deleted
-        pk: Primary key of the object to be deleted
-        var_name: Name of the object to be deleted
-
-    Returns:
-        HttpResponse: HTTP response with the confirmation page
-    """
-    check_permissions(request)
-
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    # Delete the object
-    obj.delete()
-
-    # Redirect to the success URL
-    success_url = reverse(f"{var_name}_list")
-
-    # Display a success message
-    messages.success(request, f"{var_name} has been deleted successfully.")
-
-    return redirect(success_url)

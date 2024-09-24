@@ -18,9 +18,11 @@ from ....utils import (
 from ....constants import (
     ABSENT_PRESENT_STRING_LIST,
     CSV_DELIMITER,
+    NO_DATA,
 )
 
 
+# TODO: rewrite as a class-based view
 def generic_list_view(
     request,
     model_class,
@@ -89,6 +91,8 @@ def generic_list_view(
     return render(request, "sc/sc_list_all.html", context)
 
 
+# TODO: rewrite as a class-based view
+# TODO: Is it necessary to use all three decorators to restrict access to this view?
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url="permission_denied")
@@ -202,6 +206,8 @@ def generic_download_view(request, model_class, var_name):
     return response
 
 
+# TODO: rewrite as a class-based view
+# TODO: Is it necessary to use all three decorators to restrict access to this view?
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url="permission_denied")
@@ -219,9 +225,9 @@ def generic_metadata_download_view(
     )
 
     my_meta_data_dic = {
-        "notes": "No_Actual_note",
+        "notes": NO_DATA.note,
         "main_desc": var_main_desc,
-        "main_desc_source": "NOTHING",
+        "main_desc_source": NO_DATA.nothing,
         "section": var_section,
         "subsection": var_subsection,
     }
@@ -257,39 +263,9 @@ def generic_metadata_download_view(
     return response
 
 
-def generic_confirm_delete_view(request, model_class, pk, var_name):
-    check_permissions(request)
-
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    context = {
-        "var_name": var_name,
-        "obj": obj,
-        "delete_object": f"{var_name}-delete",
-    }
-
-    return render(request, "core/confirm_delete.html", context)
-
-
-def generic_delete_object_view(request, model_class, pk, var_name):
-    check_permissions(request)
-
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
-
-    # Delete the object
-    obj.delete()
-
-    success_url = reverse(f"{var_name}s_all")
-
-    # Display a success message
-    messages.success(request, f"{var_name} has been deleted successfully.")
-
-    return redirect(success_url)
-
-
+# TODO: rewrite as a class-based view
 # Use the login_required, permission_required, and user_passes_test decorators
+# TODO: Is it necessary to use all three decorators to restrict access to this view?
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url="permission_denied")
@@ -363,6 +339,7 @@ def generic_update_view(
     return render(request, "sc/sc_update.html", context)
 
 
+# TODO: rewrite as a class-based view
 # Use the login_required, permission_required, and user_passes_test decorators
 @login_required
 @permission_required("core.add_capital", raise_exception=True)
@@ -382,6 +359,7 @@ def generic_detail_view(request, pk, model_class, myvar, var_name_display):
     return render(request, "sc/sc_detail.html", context)
 
 
+# TODO: rewrite as a class-based view
 # Use the login_required, permission_required, and user_passes_test decorators
 @login_required
 @permission_required("core.add_capital", raise_exception=True)

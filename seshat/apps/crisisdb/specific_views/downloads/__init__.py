@@ -1,3 +1,6 @@
+# TODO: rewrite all these into the general class-based views (GenericDownloadView and
+# GenericMetaDownloadView)
+
 __all__ = [
     # Model-based downloads
     "crisis_consequence_download_view",

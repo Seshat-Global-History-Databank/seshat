@@ -7,13 +7,15 @@ from pathlib import Path
 
 def main():
     """Run administrative tasks."""
-    local_env_path = str(Path.cwd()) + "/seshat/settings/.env"
+    local_env_path = f"{Path.cwd()}/seshat/settings/.env"
+
     if os.path.exists(local_env_path):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                               'seshat.settings.local')
     else:
         os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                               'seshat.settings.production')
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -22,6 +24,7 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+
     execute_from_command_line(sys.argv)
 
 

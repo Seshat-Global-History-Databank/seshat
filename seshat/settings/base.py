@@ -158,8 +158,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # all-auth settings
-LOGIN_REDIRECT_URL = "seshat-index"
-ACCOUNT_LOGOUT_REDIRECT = "seshat-index"
+LOGIN_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_REDIRECT = "index"
 SITE_ID = 2
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 ACCOUNT_EMAIL_REQUIRED = True

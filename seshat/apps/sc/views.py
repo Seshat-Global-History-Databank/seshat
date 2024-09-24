@@ -1,7 +1,7 @@
 # TODO: move the metadata values to the Code attribute on models.
+# TODO: add __all__
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -10,14 +10,9 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
-from django.contrib.auth.decorators import permission_required
 
 from ..core.models import Reference
 from ..general.mixins import PolityIdMixin
-from ..utils import (
-    get_problematic_data_context,
-    get_variable_context,
-)
 
 from .forms import (
     RaForm,
@@ -127,7 +122,6 @@ from .models import (
     Postal_station,
     General_postal_service,
 )
-from .constants import APP_NAME
 
 
 class RaCreateView(PermissionRequiredMixin, CreateView):
@@ -11244,30 +11238,3 @@ class General_postal_serviceDetailView(DetailView):
     template_name = (
         "sc/general_postal_service/general_postal_service_detail.html"
     )
-
-
-def scvars_view(request):
-    context = get_variable_context(app_name=APP_NAME)
-    return render(request, "sc/scvars.html", context=context)
-
-
-@permission_required("core.view_capital")
-def show_problematic_sc_data_table(request):
-    """
-    View that shows a table of problematic data in the SC app.
-
-    Note:
-        The access to this view is restricted to users with the 'core.view_capital'
-        permission.
-
-    Args:
-        request (HttpRequest): The request object used to generate this page.
-
-    Returns:
-        HttpResponse: The response object that contains the rendered problematic data table.
-    """
-    # Get the context data for the problematic data (with standard conditions)
-    context = get_problematic_data_context(APP_NAME)
-
-    # Render the template with the data
-    return render(request, "sc/problematic_sc_data_table.html", context)
