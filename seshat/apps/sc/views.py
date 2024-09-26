@@ -161,7 +161,6 @@ class RaCreateView(PermissionRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -172,7 +171,6 @@ class RaCreateView(PermissionRequiredMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -373,7 +371,6 @@ class Polity_territoryCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -384,7 +381,6 @@ class Polity_territoryCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -591,7 +587,6 @@ class Polity_populationCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -602,7 +597,6 @@ class Polity_populationCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -809,7 +803,6 @@ class Population_of_the_largest_settlementCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -820,7 +813,6 @@ class Population_of_the_largest_settlementCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -1029,7 +1021,6 @@ class Settlement_hierarchyCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -1040,7 +1031,6 @@ class Settlement_hierarchyCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -1245,7 +1235,6 @@ class Administrative_levelCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -1256,7 +1245,6 @@ class Administrative_levelCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -1461,7 +1449,6 @@ class Religious_levelCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -1472,7 +1459,6 @@ class Religious_levelCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -1675,7 +1661,6 @@ class Military_levelCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -1686,7 +1671,6 @@ class Military_levelCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -1837,7 +1821,6 @@ class Professional_military_officerCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -1848,7 +1831,6 @@ class Professional_military_officerCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -2057,7 +2039,6 @@ class Professional_soldierCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -2068,7 +2049,6 @@ class Professional_soldierCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -2275,7 +2255,6 @@ class Professional_priesthoodCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -2286,7 +2265,6 @@ class Professional_priesthoodCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -2497,7 +2475,6 @@ class Full_time_bureaucratCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -2508,7 +2485,6 @@ class Full_time_bureaucratCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -2713,7 +2689,6 @@ class Examination_systemCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -2724,7 +2699,6 @@ class Examination_systemCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -2927,7 +2901,6 @@ class Merit_promotionCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -2938,7 +2911,6 @@ class Merit_promotionCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -3141,7 +3113,6 @@ class Specialized_government_buildingCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -3152,7 +3123,6 @@ class Specialized_government_buildingCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -3361,7 +3331,6 @@ class Formal_legal_codeCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -3372,7 +3341,6 @@ class Formal_legal_codeCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -3573,7 +3541,6 @@ class JudgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -3584,7 +3551,6 @@ class JudgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -3785,7 +3751,6 @@ class CourtCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -3796,7 +3761,6 @@ class CourtCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -3999,7 +3963,6 @@ class Professional_lawyerCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -4010,7 +3973,6 @@ class Professional_lawyerCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -4213,7 +4175,6 @@ class Irrigation_systemCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -4224,7 +4185,6 @@ class Irrigation_systemCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -4427,7 +4387,6 @@ class Drinking_water_supply_systemCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -4438,7 +4397,6 @@ class Drinking_water_supply_systemCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -4645,7 +4603,6 @@ class MarketCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -4656,7 +4613,6 @@ class MarketCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -4859,7 +4815,6 @@ class Food_storage_siteCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -4870,7 +4825,6 @@ class Food_storage_siteCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -5071,7 +5025,6 @@ class RoadCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -5082,7 +5035,6 @@ class RoadCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -5283,7 +5235,6 @@ class BridgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -5294,7 +5245,6 @@ class BridgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -5495,7 +5445,6 @@ class CanalCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -5506,7 +5455,6 @@ class CanalCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -5707,7 +5655,6 @@ class PortCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -5718,7 +5665,6 @@ class PortCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -5921,7 +5867,6 @@ class Mines_or_quarryCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -5932,7 +5877,6 @@ class Mines_or_quarryCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -6135,7 +6079,6 @@ class Mnemonic_deviceCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -6146,7 +6089,6 @@ class Mnemonic_deviceCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -6349,7 +6291,6 @@ class Nonwritten_recordCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -6360,7 +6301,6 @@ class Nonwritten_recordCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -6563,7 +6503,6 @@ class Written_recordCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -6574,7 +6513,6 @@ class Written_recordCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -6775,7 +6713,6 @@ class ScriptCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -6786,7 +6723,6 @@ class ScriptCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -6989,7 +6925,6 @@ class Non_phonetic_writingCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -7000,7 +6935,6 @@ class Non_phonetic_writingCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -7207,7 +7141,6 @@ class Phonetic_alphabetic_writingCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -7218,7 +7151,6 @@ class Phonetic_alphabetic_writingCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -7429,7 +7361,6 @@ class Lists_tables_and_classificationCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -7440,7 +7371,6 @@ class Lists_tables_and_classificationCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -7647,7 +7577,6 @@ class CalendarCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -7658,7 +7587,6 @@ class CalendarCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -7861,7 +7789,6 @@ class Sacred_textCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -7872,7 +7799,6 @@ class Sacred_textCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -8075,7 +8001,6 @@ class Religious_literatureCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -8086,7 +8011,6 @@ class Religious_literatureCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -8291,7 +8215,6 @@ class Practical_literatureCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -8302,7 +8225,6 @@ class Practical_literatureCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -8505,7 +8427,6 @@ class HistoryCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -8516,7 +8437,6 @@ class HistoryCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -8717,7 +8637,6 @@ class PhilosophyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -8728,7 +8647,6 @@ class PhilosophyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -8931,7 +8849,6 @@ class Scientific_literatureCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -8942,7 +8859,6 @@ class Scientific_literatureCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -9149,7 +9065,6 @@ class FictionCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -9160,7 +9075,6 @@ class FictionCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -9361,7 +9275,6 @@ class ArticleCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -9372,7 +9285,6 @@ class ArticleCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -9575,7 +9487,6 @@ class TokenCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -9586,7 +9497,6 @@ class TokenCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -9784,7 +9694,6 @@ class Precious_metalCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -9795,7 +9704,6 @@ class Precious_metalCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -9998,7 +9906,6 @@ class Foreign_coinCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -10009,7 +9916,6 @@ class Foreign_coinCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -10212,7 +10118,6 @@ class Indigenous_coinCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -10223,7 +10128,6 @@ class Indigenous_coinCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -10426,7 +10330,6 @@ class Paper_currencyCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -10437,7 +10340,6 @@ class Paper_currencyCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -10638,7 +10540,6 @@ class CourierCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -10649,7 +10550,6 @@ class CourierCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -10841,7 +10741,6 @@ class Postal_stationCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -10852,7 +10751,6 @@ class Postal_stationCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context
@@ -11057,7 +10955,6 @@ class General_postal_serviceCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysection": self.model.Code.section,
             "mysubsection": self.model.Code.subsection,
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
@@ -11068,7 +10965,6 @@ class General_postal_serviceCreateView(
 
         # TODO: What are section/subsection and why are they different on the view contexts
         # compared to the model Code attributes?
-        context["mysection"] = "General Variables"
         context["mysubsection"] = "General Variables"
 
         return context

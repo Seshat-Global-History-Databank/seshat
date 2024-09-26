@@ -72,7 +72,6 @@ def expand_context_from_variable_hierarchy(
         >     context = dict(
         >         context,
         >         **{
-        >             "mysection": my_sec,
         >             "mysubsection": my_subsec,
         >             "myvar": myvar,
         >             "my_exp": my_exp,
@@ -88,14 +87,12 @@ def expand_context_from_variable_hierarchy(
 
     if variable_hierarchy:
         context = dict(context, **{
-            "mysection": variable_hierarchy.section.name,
             "mysubsection": variable_hierarchy.subsection.name,
             "myvar": variable_hierarchy.name,
             "my_exp": variable_hierarchy.explanation,
         })
     else:
         context = dict(context, **{
-            "mysection": NO_DATA.section,
             "mysubsection": NO_DATA.subsection,
             "myvar": variable_name,
             "my_exp": NO_DATA.explanation,

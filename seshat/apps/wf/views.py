@@ -144,7 +144,6 @@ class Long_wallCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Long Wall"
         context["my_exp"] = (
@@ -348,7 +347,6 @@ class CopperCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Copper"
         context["my_exp"] = (
@@ -552,7 +550,6 @@ class BronzeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Bronze"
         context["my_exp"] = (
@@ -756,7 +753,6 @@ class IronCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Iron"
         context["my_exp"] = (
@@ -960,7 +956,6 @@ class SteelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Steel"
         context["my_exp"] = (
@@ -1164,7 +1159,6 @@ class JavelinCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Javelin"
         context["my_exp"] = (
@@ -1368,7 +1362,6 @@ class AtlatlCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Atlatl"
         context["my_exp"] = (
@@ -1572,7 +1565,6 @@ class SlingCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling"
         context["my_exp"] = (
@@ -1776,7 +1768,6 @@ class Self_bowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Self Bow"
         context["my_exp"] = (
@@ -1982,7 +1973,6 @@ class Composite_bowCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Composite Bow"
         context["my_exp"] = (
@@ -2186,7 +2176,6 @@ class CrossbowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Crossbow"
         context["my_exp"] = (
@@ -2392,7 +2381,6 @@ class Tension_siege_engineCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Tension Siege Engine"
         context["my_exp"] = (
@@ -2600,7 +2588,6 @@ class Sling_siege_engineCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling Siege Engine"
         context["my_exp"] = (
@@ -2808,7 +2795,6 @@ class Gunpowder_siege_artilleryCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Gunpowder Siege Artillery"
         context["my_exp"] = (
@@ -3022,7 +3008,6 @@ class Handheld_firearmCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Handheld Firearm"
         context["my_exp"] = (
@@ -3226,7 +3211,6 @@ class War_clubCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "War Club"
         context["my_exp"] = (
@@ -3430,7 +3414,6 @@ class Battle_axeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Battle Axe"
         context["my_exp"] = (
@@ -3634,7 +3617,6 @@ class DaggerCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dagger"
         context["my_exp"] = (
@@ -3842,7 +3824,6 @@ class SwordCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sword"
         context["my_exp"] = (
@@ -4046,7 +4027,6 @@ class SpearCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Spear"
         context["my_exp"] = (
@@ -4250,7 +4230,6 @@ class PolearmCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Polearm"
         context["my_exp"] = (
@@ -4454,7 +4433,6 @@ class DogCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dog"
         context["my_exp"] = (
@@ -4658,7 +4636,6 @@ class DonkeyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Donkey"
         context["my_exp"] = (
@@ -4862,7 +4839,6 @@ class HorseCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Horse"
         context["my_exp"] = (
@@ -5066,7 +5042,6 @@ class CamelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Camel"
         context["my_exp"] = (
@@ -5270,7 +5245,6 @@ class ElephantCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Elephant"
         context["my_exp"] = (
@@ -5476,7 +5450,6 @@ class Wood_bark_etcCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wood Bark Etc"
         context["my_exp"] = (
@@ -5682,7 +5655,6 @@ class Leather_clothCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Leather Cloth"
         context["my_exp"] = (
@@ -5886,7 +5858,6 @@ class ShieldCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Shield"
         context["my_exp"] = (
@@ -6090,7 +6061,6 @@ class HelmetCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Helmet"
         context["my_exp"] = (
@@ -6296,7 +6266,6 @@ class BreastplateCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Breastplate"
         context["my_exp"] = (
@@ -6502,7 +6471,6 @@ class Limb_protectionCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Limb Protection"
         context["my_exp"] = (
@@ -6708,7 +6676,6 @@ class Scaled_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Scaled Armor"
         context["my_exp"] = (
@@ -6914,7 +6881,6 @@ class Laminar_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Laminar Armor"
         context["my_exp"] = (
@@ -7120,7 +7086,6 @@ class Plate_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Plate Armor"
         context["my_exp"] = (
@@ -7328,7 +7293,6 @@ class Small_vessels_canoes_etcCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Small Vessels Canoes Etc"
         context["my_exp"] = (
@@ -7542,7 +7506,6 @@ class Merchant_ships_pressed_into_serviceCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Merchant Ships Pressed Into Service"
         context["my_exp"] = (
@@ -7754,7 +7717,6 @@ class Specialized_military_vesselCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Specialized Military Vessel"
         context["my_exp"] = (
@@ -7966,7 +7928,6 @@ class Settlements_in_a_defensive_positionCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Settlements in a Defensive Position"
         context["my_exp"] = (
@@ -8176,7 +8137,6 @@ class Wooden_palisadeCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wooden Palisade"
         context["my_exp"] = (
@@ -8382,7 +8342,6 @@ class Earth_rampartCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Earth Rampart"
         context["my_exp"] = (
@@ -8586,7 +8545,6 @@ class DitchCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Ditch"
         context["my_exp"] = (
@@ -8790,7 +8748,6 @@ class MoatCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Moat"
         context["my_exp"] = (
@@ -8998,7 +8955,6 @@ class Stone_walls_non_mortaredCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Non Mortared"
         context["my_exp"] = (
@@ -9212,7 +9168,6 @@ class Stone_walls_mortaredCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Mortared"
         context["my_exp"] = (
@@ -9420,7 +9375,6 @@ class Fortified_campCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Fortified Camp"
         context["my_exp"] = (
@@ -9616,7 +9570,6 @@ class Complex_fortificationCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Complex Fortification"
         context["my_exp"] = (
@@ -9818,7 +9771,6 @@ class Modern_fortificationCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Modern Fortification"
         context["my_exp"] = (
@@ -10014,7 +9966,6 @@ class ChainmailCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysection"] = "Warfare Variables"
         context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Chainmail"
         context["my_exp"] = (

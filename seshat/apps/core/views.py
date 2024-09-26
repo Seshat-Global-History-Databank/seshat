@@ -370,7 +370,6 @@ class ReferenceCreateView(PermissionRequiredMixin, CreateView):
         context = dict(
             context,
             **{
-                "mysection": "xyz",
                 "mysubsection": "abc",
                 "myvar": "def reference",
                 "errors": "Halooooooooo",
@@ -421,7 +420,6 @@ class ReferenceUpdateView(PermissionRequiredMixin, UpdateView):
         context = dict(
             context,
             **{
-                "mysection": "Fiscal Heeeelath",
                 "mysubsection": "No Subsection Proeeeevided",
                 "myvar": "Reference Daeeeeta",
             },
@@ -524,7 +522,6 @@ class CitationCreateView(
         context = dict(
             context,
             **{
-                "mysection": "xyz",
                 "mysubsection": "abc",
                 "myvar": "def citation",
                 "errors": "Halooooooooo",
@@ -580,7 +577,6 @@ class CitationUpdateView(
         context = dict(
             context,
             **{
-                "mysection": "Fiscal Heeeelath",
                 "mysubsection": "No Subsection Proeeeevided",
                 "myvar": "Citation Data xyz",
             },

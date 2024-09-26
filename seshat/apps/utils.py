@@ -742,7 +742,6 @@ def _get_context(cls, standard=True, context=None):
         dict: The standard context for the view.
     """
     _context = {
-        "mysection": cls.model.Code.section,
         "mysubsection": cls.model.Code.subsection,
         "myvar": cls.model.Code.variable,
         "my_exp": cls.model.Code.description,
@@ -753,7 +752,6 @@ def _get_context(cls, standard=True, context=None):
 
     if not standard:
         _context = {
-            "mysection": cls.model.Code.section,
             "mysubsection": cls.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
             "myvar": cls.model.Code.variable,
             "my_exp": cls.model.Code.description,
