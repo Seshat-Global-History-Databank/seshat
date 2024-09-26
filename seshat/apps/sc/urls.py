@@ -2290,7 +2290,7 @@ urlpatterns = [
 
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
-    myexp = SC_VAR_DEFS[x_name]
+    my_exp = SC_VAR_DEFS[x_name]
 
     urlpatterns += [
         path(
@@ -2301,7 +2301,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 "model_class": model_class,
                 "x_name": x_name,
                 "myvar": myvar,
-                "my_exp": myexp,
+                "my_exp": my_exp,
                 "var_section": sec,
                 "var_subsection": subsec,
                 "delete_url_name": f"{x_name}-confirm-delete",
@@ -2314,7 +2314,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 form_class=form_class,
                 var_name=x_name,
                 myvar=myvar,
-                my_exp=myexp,
+                my_exp=my_exp,
                 var_section=sec,
                 var_subsection=subsec,
                 template="sc/sc_create.html",
@@ -2323,7 +2323,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
             #     "form_class": form_class,
             #     "x_name": x_name,
             #     "myvar": myvar,
-            #     "my_exp": myexp,
+            #     "my_exp": my_exp,
             #     "var_section": sec,
             #     "var_subsection": subsec,
             # },
@@ -2347,7 +2347,7 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
                 var_name_display=myvar,
                 var_section=sec,
                 var_subsection=subsec,
-                var_main_desc=myexp,
+                var_main_desc=my_exp,
                 template="sc/sc_list_all.html",
             ),
             name=f"{x_name}s_all",
