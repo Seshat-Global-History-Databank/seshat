@@ -33,7 +33,6 @@ from django.views.generic import (
 )
 from django.views.generic.edit import FormMixin
 
-import json
 import sys
 
 from ..accounts.models import Seshat_Expert
@@ -49,12 +48,12 @@ from ..general.models import (
 from ..constants import (
     BASIC_CONTEXT,
     ZOTERO,
-    US_STATES_GEOJSON_PATH,
 )
 from ..utils import (
-    get_models,
-    get_api_results,
     get_all_data,
+    get_api_results,
+    get_models,
+    get_us_states_geojson,
 )
 
 from .forms import (
@@ -1135,12 +1134,12 @@ class PolityLightListView(SuccessMessageMixin, ListView):
         """
         macro_regions = Macro_region.objects.all()
         macro_regions = sorted(
-            macro_regions, key=lambda i: CUSTOM_ORDER.index(i.id)
+            macro_regions, key=lambda item: CUSTOM_ORDER.index(item.id)
         )
 
         seshat_regions = Seshat_region.objects.all()
         seshat_regions = sorted(
-            seshat_regions, key=lambda i: CUSTOM_ORDER_SR.index(i.id)
+            seshat_regions, key=lambda item: CUSTOM_ORDER_SR.index(item.id)
         )
 
         polities = Polity.objects.all().order_by("start_year")
@@ -1974,6 +1973,11 @@ class ReligionUpdateView(PermissionRequiredMixin, UpdateView):
 
 
 class NotFoundView(TemplateView):
+    """
+    TODO: this view doesn't look like it's being used? To use the below template for 404
+    errors, the template should be named "404.html" and placed in a root template directory.
+    """
+
     template_name = "core/not_found_404.html"
 
 
@@ -1987,13 +1991,7 @@ class WhoWeAreView(TemplateView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
 
-        try:
-            with open(US_STATES_GEOJSON_PATH, "r") as json_file:
-                json_data = json.load(json_file)
-
-            context["json_data"] = json_data
-        except (FileNotFoundError, json.JSONDecodeError):
-            pass
+        context = dict(context, **{"json_data": get_us_states_geojson()})
 
         return context
 
@@ -3520,9 +3518,14 @@ class SearchSuggestionsView(TemplateView):
             | Q(new_name__icontains=search_term)
         )
 
-        context = dict(context, **{
-            "polities": Polity.objects.filter(_filter).order_by("start_year")[:8]
-        })
+        context = dict(
+            context,
+            **{
+                "polities": Polity.objects.filter(_filter).order_by(
+                    "start_year"
+                )[:8]
+            },
+        )
 
         return context
 
@@ -3533,9 +3536,7 @@ class SearchRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         search_term = self.request.GET.get("search", "")
 
-        polity = Polity.objects.filter(
-            name__icontains=search_term
-        ).first()
+        polity = Polity.objects.filter(name__icontains=search_term).first()
 
         if not polity:
             return reverse("index")

@@ -31,6 +31,7 @@ __all__ = [
 import csv
 import datetime
 import functools
+import json
 import os
 import warnings
 
@@ -52,6 +53,7 @@ from .constants import (
     ICONS,
     LIGHT_COLORS,
     NO_DATA,
+    US_STATES_GEOJSON_PATH
 )
 from .patterns import PATTERNS
 
@@ -970,3 +972,13 @@ def deprecated(func):
         return func(*args, **kwargs)
 
     return new_func
+
+
+def get_us_states_geojson():
+    try:
+        with open(US_STATES_GEOJSON_PATH, "r") as json_file:
+            data = json.load(json_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+
+    return data
