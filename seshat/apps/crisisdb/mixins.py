@@ -52,8 +52,10 @@ class CrisisDBMixin:
         Raises:
             ValidationError: If the year_from is greater than the year_to.
             ValidationError: If the year_from is out of range.
-            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
-            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_from is earlier than the start year of the
+                corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding
+                polity.
             ValidationError: If the year_to is out of range.
         """
         validate_time_range(self)

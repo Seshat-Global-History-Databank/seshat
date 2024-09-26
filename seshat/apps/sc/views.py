@@ -160,18 +160,16 @@ class RaCreateView(PermissionRequiredMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -370,18 +368,16 @@ class Polity_territoryCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -586,18 +582,16 @@ class Polity_populationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -802,18 +796,16 @@ class Population_of_the_largest_settlementCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -1020,18 +1012,16 @@ class Settlement_hierarchyCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -1234,18 +1224,16 @@ class Administrative_levelCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -1448,18 +1436,16 @@ class Religious_levelCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -1660,18 +1646,16 @@ class Military_levelCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -1820,18 +1804,16 @@ class Professional_military_officerCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -2038,18 +2020,16 @@ class Professional_soldierCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -2254,18 +2234,16 @@ class Professional_priesthoodCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -2474,18 +2452,16 @@ class Full_time_bureaucratCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -2688,18 +2664,16 @@ class Examination_systemCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -2900,18 +2874,16 @@ class Merit_promotionCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -3112,18 +3084,16 @@ class Specialized_government_buildingCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -3330,18 +3300,16 @@ class Formal_legal_codeCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -3540,18 +3508,16 @@ class JudgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -3750,18 +3716,16 @@ class CourtCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -3962,18 +3926,16 @@ class Professional_lawyerCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -4174,18 +4136,16 @@ class Irrigation_systemCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -4386,18 +4346,16 @@ class Drinking_water_supply_systemCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -4602,18 +4560,16 @@ class MarketCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -4814,18 +4770,16 @@ class Food_storage_siteCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -5024,18 +4978,16 @@ class RoadCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -5234,18 +5186,16 @@ class BridgeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -5444,18 +5394,16 @@ class CanalCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -5654,18 +5602,16 @@ class PortCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -5866,18 +5812,16 @@ class Mines_or_quarryCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -6078,18 +6022,16 @@ class Mnemonic_deviceCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -6290,18 +6232,16 @@ class Nonwritten_recordCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -6502,18 +6442,16 @@ class Written_recordCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -6712,18 +6650,16 @@ class ScriptCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -6924,18 +6860,16 @@ class Non_phonetic_writingCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -7140,18 +7074,16 @@ class Phonetic_alphabetic_writingCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -7360,18 +7292,16 @@ class Lists_tables_and_classificationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -7576,18 +7506,16 @@ class CalendarCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -7788,18 +7716,16 @@ class Sacred_textCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -8000,18 +7926,16 @@ class Religious_literatureCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -8214,18 +8138,16 @@ class Practical_literatureCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -8426,18 +8348,16 @@ class HistoryCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -8636,18 +8556,16 @@ class PhilosophyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -8848,18 +8766,16 @@ class Scientific_literatureCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -9064,18 +8980,16 @@ class FictionCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -9274,18 +9188,16 @@ class ArticleCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -9486,18 +9398,16 @@ class TokenCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -9693,18 +9603,16 @@ class Precious_metalCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -9905,18 +9813,16 @@ class Foreign_coinCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -10117,18 +10023,16 @@ class Indigenous_coinCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -10329,18 +10233,16 @@ class Paper_currencyCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -10539,18 +10441,16 @@ class CourierCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -10740,18 +10640,16 @@ class Postal_stationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 
@@ -10954,18 +10852,16 @@ class General_postal_serviceCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{
-            "mysubsection": self.model.Code.subsection,
-            "myvar": self.model.Code.variable,
-            "my_exp": self.model.Code.description,
-            "var_null_meaning": self.model.Code.null_meaning,
-            "inner_vars": self.model.Code.inner_variables,
-            "potential_cols": self.model.Code.potential_cols,
-        })
-
-        # TODO: What are section/subsection and why are they different on the view contexts
-        # compared to the model Code attributes?
-        context["mysubsection"] = "General Variables"
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "my_exp": self.model.Code.description,
+                "var_null_meaning": self.model.Code.null_meaning,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": self.model.Code.potential_cols,
+            },
+        )
 
         return context
 

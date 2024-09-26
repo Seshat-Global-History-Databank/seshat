@@ -1002,7 +1002,6 @@ class Polity_peak_yearsCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_section": self.model.Code.section,
@@ -1047,7 +1046,6 @@ class Polity_peak_yearsUpdateView(PermissionRequiredMixin, UpdateView):
             context,
             **{
                 "myvar": self.model.Code.variable,
-                "mysubsection": self.model.Code.subsection,
                 "var_section": self.model.Code.section,
                 "var_subsection": self.model.Code.subsection,
             },
@@ -1108,7 +1106,6 @@ class Polity_peak_yearsListView(ListView):
                 "myvar": self.model.Code.variable,
                 "var_main_desc": self.model.Code.description,
                 "var_main_desc_source": self.model.Code.description_source,
-                "mysubsection": self.model.Code.subsection,
                 "var_section": self.model.Code.section,
                 "var_subsection": self.model.Code.subsection,
                 "inner_vars": self.model.Code.inner_variables,
@@ -1226,7 +1223,6 @@ class Polity_durationCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Temporal Bounds"
         context["var_section"] = "General Variables"
         context["var_subsection"] = "Temporal Bounds"
         context["myvar"] = self.model.Code.variable
@@ -1269,7 +1265,6 @@ class Polity_durationUpdateView(PermissionRequiredMixin, UpdateView):
             context,
             **{
                 "myvar": self.model.Code.variable,
-                "mysubsection": "Temporal Bounds",
                 "var_section": "General Variables",
                 "var_subsection": "Temporal Bounds",
             },
@@ -1467,7 +1462,6 @@ class Polity_degree_of_centralizationCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_value,
@@ -1725,7 +1719,6 @@ class Polity_suprapolity_relationsCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "General Variables"
         context["var_section"] = "General Variables"
         context["var_subsection"] = "Political and Cultural Relations"
         context["myvar"] = self.model.Code.variable
@@ -2691,7 +2684,6 @@ class Polity_language_genusCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -2938,7 +2930,6 @@ class Polity_religion_genusCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -3219,7 +3210,6 @@ class Polity_religion_familyCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -3480,7 +3470,6 @@ class Polity_religionCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -3732,9 +3721,6 @@ class Polity_relationship_to_preceding_entityCreateView(
         """
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = (
-            self.model.Code.section
-        )  # TODO Note: wrong in the original code
         context["myvar"] = self.model.Code.variable
         context["my_exp"] = self.model.Code.description
         context["var_null_meaning"] = self.model.Code.null_meaning
@@ -4003,7 +3989,6 @@ class Polity_preceding_entityCreateView(
             all_rels = Polity_preceding_entity.objects.none()
 
         # Add extra context
-        context["mysubsection"] = "General Variables"
         context["myvar"] = self.model.Code.variable
         context["my_exp"] = self.model.Code.description
         context["var_null_meaning"] = self.model.Code.null_meaning
@@ -4253,7 +4238,6 @@ class Polity_succeeding_entityCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -4480,7 +4464,6 @@ class Polity_supracultural_entityCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -4705,7 +4688,6 @@ class Polity_scale_of_supracultural_interactionCreateView(
         context = super().get_context_data(**kwargs)
 
         context = dict(context, **{
-            "mysubsection": "General Variables",
             "myvar": self.model.Code.variable,
             "my_exp": self.model.Code.description,
             "var_null_meaning": self.model.Code.null_meaning,
@@ -4950,7 +4932,6 @@ class Polity_alternate_religion_genusCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -5211,7 +5192,6 @@ class Polity_alternate_religion_familyCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -5474,7 +5454,6 @@ class Polity_alternate_religionCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -5712,7 +5691,6 @@ class Polity_expertCreateView(PermissionRequiredMixin, CreateView):
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -5931,7 +5909,6 @@ class Polity_editorCreateView(PermissionRequiredMixin, CreateView):
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,
@@ -6152,7 +6129,6 @@ class Polity_religious_traditionCreateView(
         context = dict(
             context,
             **{
-                "mysubsection": self.model.Code.section,  # noqa: E501   TODO: This should be subsection -- misdefined in the original script?  pylint: disable=C0301
                 "myvar": self.model.Code.variable,
                 "my_exp": self.model.Code.description,
                 "var_null_meaning": self.model.Code.null_meaning,

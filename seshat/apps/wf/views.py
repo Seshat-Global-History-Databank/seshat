@@ -144,7 +144,6 @@ class Long_wallCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Long Wall"
         context["my_exp"] = (
             "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"  # noqa: E501 pylint: disable=C0301
@@ -347,7 +346,6 @@ class CopperCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Copper"
         context["my_exp"] = (
             "The absence or presence of copper as a military technology used in warfare. "
@@ -550,7 +548,6 @@ class BronzeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Bronze"
         context["my_exp"] = (
             "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
@@ -753,7 +750,6 @@ class IronCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Iron"
         context["my_exp"] = (
             "The absence or presence of iron as a military technology used in warfare. "
@@ -956,7 +952,6 @@ class SteelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Steel"
         context["my_exp"] = (
             "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
@@ -1159,7 +1154,6 @@ class JavelinCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Javelin"
         context["my_exp"] = (
             "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears"  # noqa: E501 pylint: disable=C0301
@@ -1362,7 +1356,6 @@ class AtlatlCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Atlatl"
         context["my_exp"] = (
             "The absence or presence of atlatl as a military technology used in warfare. "
@@ -1565,7 +1558,6 @@ class SlingCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling"
         context["my_exp"] = (
             "The absence or presence of slings as a military technology used in warfare. "
@@ -1768,7 +1760,6 @@ class Self_bowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Self Bow"
         context["my_exp"] = (
             "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)"  # noqa: E501 pylint: disable=C0301
@@ -1973,7 +1964,6 @@ class Composite_bowCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Composite Bow"
         context["my_exp"] = (
             "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."  # noqa: E501 pylint: disable=C0301
@@ -2176,7 +2166,6 @@ class CrossbowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Crossbow"
         context["my_exp"] = (
             "The absence or presence of crossbow as a military technology used in warfare. "
@@ -2381,7 +2370,6 @@ class Tension_siege_engineCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Tension Siege Engine"
         context["my_exp"] = (
             "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager"  # noqa: E501 pylint: disable=C0301
@@ -2588,7 +2576,6 @@ class Sling_siege_engineCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sling Siege Engine"
         context["my_exp"] = (
             "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here"  # noqa: E501 pylint: disable=C0301
@@ -2795,7 +2782,6 @@ class Gunpowder_siege_artilleryCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Gunpowder Siege Artillery"
         context["my_exp"] = (
             "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."  # noqa: E501 pylint: disable=C0301
@@ -3008,7 +2994,6 @@ class Handheld_firearmCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Handheld Firearm"
         context["my_exp"] = (
             "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles"  # noqa: E501 pylint: disable=C0301
@@ -3211,7 +3196,6 @@ class War_clubCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "War Club"
         context["my_exp"] = (
             "The absence or presence of war clubs as a military technology used in warfare. Includes maces"  # noqa: E501 pylint: disable=C0301
@@ -3414,7 +3398,6 @@ class Battle_axeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Battle Axe"
         context["my_exp"] = (
             "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."  # noqa: E501 pylint: disable=C0301
@@ -3617,7 +3600,6 @@ class DaggerCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dagger"
         context["my_exp"] = (
             "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."  # noqa: E501 pylint: disable=C0301
@@ -3824,7 +3806,6 @@ class SwordCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Sword"
         context["my_exp"] = (
             "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."  # noqa: E501 pylint: disable=C0301
@@ -4027,7 +4008,6 @@ class SpearCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Spear"
         context["my_exp"] = (
             "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."  # noqa: E501 pylint: disable=C0301
@@ -4230,7 +4210,6 @@ class PolearmCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Polearm"
         context["my_exp"] = (
             "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars"  # noqa: E501 pylint: disable=C0301
@@ -4433,7 +4412,6 @@ class DogCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Dog"
         context["my_exp"] = (
             "The absence or presence of dogs as a military technology used in warfare. "
@@ -4636,7 +4614,6 @@ class DonkeyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Donkey"
         context["my_exp"] = (
             "The absence or presence of donkeys as a military technology used in warfare. "
@@ -4839,7 +4816,6 @@ class HorseCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Horse"
         context["my_exp"] = (
             "The absence or presence of horses as a military technology used in warfare. "
@@ -5042,7 +5018,6 @@ class CamelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Camel"
         context["my_exp"] = (
             "The absence or presence of camels as a military technology used in warfare. "
@@ -5245,7 +5220,6 @@ class ElephantCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Elephant"
         context["my_exp"] = (
             "The absence or presence of elephants as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -5450,7 +5424,6 @@ class Wood_bark_etcCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wood Bark Etc"
         context["my_exp"] = (
             "The absence or presence of wood, bark, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -5655,7 +5628,6 @@ class Leather_clothCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Leather Cloth"
         context["my_exp"] = (
             "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor"  # noqa: E501 pylint: disable=C0301
@@ -5858,7 +5830,6 @@ class ShieldCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Shield"
         context["my_exp"] = (
             "The absence or presence of shields as a military technology used in warfare. "
@@ -6061,7 +6032,6 @@ class HelmetCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Helmet"
         context["my_exp"] = (
             "The absence or presence of helmets as a military technology used in warfare. "
@@ -6266,7 +6236,6 @@ class BreastplateCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Breastplate"
         context["my_exp"] = (
             "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."  # noqa: E501 pylint: disable=C0301
@@ -6471,7 +6440,6 @@ class Limb_protectionCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Limb Protection"
         context["my_exp"] = (
             "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both."  # noqa: E501 pylint: disable=C0301
@@ -6676,7 +6644,6 @@ class Scaled_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Scaled Armor"
         context["my_exp"] = (
             "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."  # noqa: E501 pylint: disable=C0301
@@ -6881,7 +6848,6 @@ class Laminar_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Laminar Armor"
         context["my_exp"] = (
             "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates."  # noqa: E501 pylint: disable=C0301
@@ -7086,7 +7052,6 @@ class Plate_armorCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Plate Armor"
         context["my_exp"] = (
             "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates."  # noqa: E501 pylint: disable=C0301
@@ -7293,7 +7258,6 @@ class Small_vessels_canoes_etcCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Small Vessels Canoes Etc"
         context["my_exp"] = (
             "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -7506,7 +7470,6 @@ class Merchant_ships_pressed_into_serviceCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Merchant Ships Pressed Into Service"
         context["my_exp"] = (
             "The absence or presence of merchant ships pressed into service as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
@@ -7717,7 +7680,6 @@ class Specialized_military_vesselCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Specialized Military Vessel"
         context["my_exp"] = (
             "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"  # noqa: E501 pylint: disable=C0301
@@ -7928,7 +7890,6 @@ class Settlements_in_a_defensive_positionCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Settlements in a Defensive Position"
         context["my_exp"] = (
             "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula."  # noqa: E501 pylint: disable=C0301
@@ -8137,7 +8098,6 @@ class Wooden_palisadeCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Wooden Palisade"
         context["my_exp"] = (
             "The absence or presence of wooden palisades as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
@@ -8342,7 +8302,6 @@ class Earth_rampartCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Earth Rampart"
         context["my_exp"] = (
             "The absence or presence of earth ramparts as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -8545,7 +8504,6 @@ class DitchCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Ditch"
         context["my_exp"] = (
             "The absence or presence of ditch as a military technology used in warfare. "
@@ -8748,7 +8706,6 @@ class MoatCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Moat"
         context["my_exp"] = (
             "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water"  # noqa: E501 pylint: disable=C0301
@@ -8955,7 +8912,6 @@ class Stone_walls_non_mortaredCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Non Mortared"
         context["my_exp"] = (
             "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -9168,7 +9124,6 @@ class Stone_walls_mortaredCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Stone Walls Mortared"
         context["my_exp"] = (
             "The absence or presence of stone walls (mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
@@ -9375,7 +9330,6 @@ class Fortified_campCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Fortified Camp"
         context["my_exp"] = (
             "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."  # noqa: E501 pylint: disable=C0301
@@ -9570,7 +9524,6 @@ class Complex_fortificationCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Complex Fortification"
         context["my_exp"] = (
             "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough."  # noqa: E501 pylint: disable=C0301
@@ -9771,7 +9724,6 @@ class Modern_fortificationCreateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Modern Fortification"
         context["my_exp"] = (
             "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."  # noqa: E501 pylint: disable=C0301
@@ -9966,7 +9918,6 @@ class ChainmailCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context["mysubsection"] = "Military Technologies"
         context["myvar"] = "Chainmail"
         context["my_exp"] = (
             "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh."  # noqa: E501 pylint: disable=C0301

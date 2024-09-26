@@ -364,7 +364,6 @@ INNER_DURATION_DISEASE_OUTBREAK_CHOICES = [
 ]
 
 NO_SECTION_DICT = {
-    "mysubsection": "Y",
     "myvar": "Z",
 }
 
