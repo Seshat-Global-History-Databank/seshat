@@ -1,4 +1,5 @@
 import uuid
+import warnings
 
 from django.contrib.gis.db import models
 from django.core.exceptions import ValidationError
@@ -8,14 +9,15 @@ from django.db.models import Q, ManyToManyField
 from django.urls import reverse
 
 from ..accounts.models import Seshat_Expert
-from ..utils import get_color, get_date, ATTRS_HTML
-from ..constants import ZOTERO
+from ..utils import get_color, get_date, deprecated, ATTRS_HTML
+from ..constants import NO_DATA, ZOTERO
 
 from .constants import (
     POLITY_TAG_CHOICES,
     WORLD_REGION_CHOICES,
     TAGS,
 )
+from .mixins import ZoteroMixIn
 
 
 class SeshatPrivateComment(models.Model):
@@ -126,7 +128,7 @@ class SeshatPrivateCommentPart(models.Model):
         if self.private_comment_part_text:
             return self.private_comment_part_text
 
-        return "NO_Private_COMMENTS_TO_SHOW"
+        return NO_DATA.private_comments
 
 
 class Macro_region(models.Model):
@@ -537,22 +539,39 @@ class Reference(models.Model):
     )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    def __str__(self) -> str:
-        original_title = self.title
+    def get_reference_string(self):
+        if not self.year:
+            return f"{self.creator}_XXXX"
 
-        if len(original_title) > 60:
-            last_word = original_title[60:].split(" ")[0]
-            shorter_title = f"{original_title[0:60]} {last_word} ..."
-        else:
-            shorter_title = original_title
+        return f"{self.creator}_{self.year}"
 
-        if self.year:
-            return f"({self.creator}_{self.year}): {shorter_title}"
+    def get_short_title(self) -> str:
+        if not self.long_name:
+            return "BlaBla"
 
-        return f"({self.creator}_XXXX): {shorter_title}"
+        if len(self.long_name) < 60:
+            return self.long_name
+
+        first_part, last_word = (
+            self.long_name[0:60],
+            self.long_name[60:].split(" ")[0],
+        )
+
+        return f"{first_part} {last_word} ..."
 
     @property
-    def reference_short_title(self) -> str:
+    def full_zotero_link(self) -> str:
+        if not self.has_zotero:
+            return ""
+
+        return f"{ZOTERO.BASEURL}{self.zotero_link}"
+
+    @property
+    def has_zotero(self) -> bool:
+        return self.zotero_link and "NOZOTERO_LINK" not in self.zotero_link
+
+    @property
+    def short_title(self) -> str:
         """
         Returns a short title for the reference. If the title is longer than
         60 characters, it is truncated. If the title is not provided, a default
@@ -561,26 +580,17 @@ class Reference(models.Model):
         Returns:
             str: A short title for the reference.
         """
-        shorter_name = ""
-
-        # Set shorter_name to the first 60 characters of the long_name
-        if self.long_name and len(self.long_name) > 60:
-            last_word = self.long_name[60:].split(" ")[0]
-            shorter_name = f"{self.long_name[0:60]} {last_word} ..."
-        elif self.long_name:
-            shorter_name = self.long_name
-        else:
-            shorter_name = "BlaBla"
+        shorter_name = self.get_short_title()
 
         # If the zotero link is not provided, return a default title
-        if self.zotero_link and "NOZOTERO_LINK" in self.zotero_link:
+        if not self.has_zotero:
             return f"(NOZOTERO_REF: {shorter_name})"
 
-        # If there is a title, return the title
-        if self.title:
-            return self.title
+        # If there is no title, return the title
+        if not self.title:
+            return NO_DATA.title
 
-        return "NO_TITLES_PROVIDED"
+        return shorter_name
 
     def get_absolute_url(self) -> str:
         """
@@ -593,6 +603,24 @@ class Reference(models.Model):
         """
         return reverse("references")
 
+    @property
+    def reference_short_title(self) -> str:
+        """
+        Property kept here for backward compatibility. Use the short_title property instead.
+        """
+        warnings.simplefilter("always", DeprecationWarning)  # turn off filter
+        warnings.warn(
+            "This property is deprecated - use short_title instead",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        warnings.simplefilter("default", DeprecationWarning)  # reset filter
+
+        return self.short_title
+
+    def __str__(self) -> str:
+        return f"({self.get_reference_string()}): {self.get_short_title()}"
+
     class Meta:
         """
         :noindex:
@@ -602,7 +630,7 @@ class Reference(models.Model):
         ordering = ["-created_date", "title"]
 
 
-class Citation(models.Model):
+class Citation(ZoteroMixIn, models.Model):
     """
     Model representing a specific citation.
     """
@@ -625,73 +653,78 @@ class Citation(models.Model):
     )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    def zoteroer(self) -> str:
+    def get_title(self) -> str:
         """
-        Returns the Zotero link for the citation.
-
-        Returns:
-            str: The Zotero link for the citation.
+        # TODO: docstring
         """
-        if (
-            self.ref.zotero_link
-            and "NOZOTERO_LINK" not in self.ref.zotero_link
-        ):
-            return f"{ZOTERO.BASEURL}{self.ref.zotero_link}"
+        if not self.ref or (self.ref and not self.ref.title):
+            return NO_DATA.ref_no_title
 
-        return reverse("citation-update", args=[self.id])
+        return self.ref.title
 
-    def __str__(self) -> str:
-        if self.ref and self.ref.title:
-            original_title = self.ref.title
-        else:
-            original_title = "REFERENCE_WITH_NO_TITLE"
+    def get_short_title(self, cutoff=50) -> str:
+        """
+        # TODO: docstring
+        """
+        title = self.get_title()
 
-        if original_title and len(original_title) > 50:
-            last_word = original_title[50:].split(" ")[0]
-            short_title = f"{original_title[0:50]} {last_word}..."
-        elif original_title:
-            short_title = original_title
-        else:
-            short_title = "BlaBlaBla"
+        if not title:
+            return "BlaBlaBla"
 
-        if self.ref and self.ref.long_name:
-            self.ref.long_name = self.ref.long_name
-        else:
-            self.ref.long_name = "REFERENCE_WITH_NO_LONG_NAME"
-        if self.ref.long_name and len(self.ref.long_name) > 50:
-            last_word = self.ref.long_name[50:].split(" ")[0]
-            shorter_name = f"{self.ref.long_name[0:50]} {last_word}..."
-        elif self.ref.long_name:
-            shorter_name = self.ref.long_name
-        else:
-            shorter_name = "BlaBla"
+        if len(title) < cutoff:
+            return title
 
-        if (
-            self.ref
-            and self.ref.zotero_link
-            and "NOZOTERO_LINK" in self.ref.zotero_link
-        ):
-            return f"(NOZOTERO: {shorter_name})"
+        first_part, last_word = title[0:cutoff], title[cutoff:].split(" ")[0]
 
-        if self.ref and self.ref.creator:
-            if self.page_from is None and self.page_to is None:
-                return f"({self.ref.creator} {self.ref.year}): {short_title}"
-            elif self.page_from == self.page_to or (
-                (not self.page_to) and self.page_from
-            ):
-                return f"({self.ref.creator} {self.ref.year}, p. {self.page_from}): {short_title}"  # noqa: E501 pylint: disable=C0301
-            elif self.page_from == self.page_to or (
-                (not self.page_from) and self.page_to
-            ):
-                return f"({self.ref.creator} {self.ref.year}, p. {self.page_to}): {short_title}"  # noqa: E501 pylint: disable=C0301
-            elif self.page_from and self.page_to:
-                return f"({self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to}): {short_title}"  # noqa: E501 pylint: disable=C0301
-            else:
-                return "({self.ref.creator} {self.ref.year}): {shorter_title}"
-        else:
-            return "BADBADREFERENCE"
+        return f"{first_part} {last_word}..."
 
-    def full_citation_display(self) -> str:
+    def get_name(self):
+        """
+        # TODO: docstring
+        """
+        if not self.ref or (self.ref and not self.ref.long_name):
+            return NO_DATA.ref_no_long_name
+
+        return self.ref.long_name
+
+    def get_short_name(self):
+        """
+        # TODO: docstring
+        """
+        name = self.get_name()
+
+        if not name:
+            return "BlaBlaBla"
+
+        if len(name) < 50:
+            return name
+
+        first_part, last_word = name[0:50], name[50:].split(" ")[0]
+
+        return f"{first_part} {last_word}..."
+
+    def get_page_range(self):
+        """
+        # TODO: docstring
+        """
+        if not self.page_from and not self.page_to:
+            return ""  # TODO: Should this case be handled differently?
+
+        if not self.page_from and self.page_to:
+            return f"p. {self.page_to}"
+
+        if self.page_from == self.page_to or not self.page_to:
+            return f"p. {self.page_from}"
+
+        return f"pp. {self.page_from}-{self.page_to}"
+
+    def get_reference_string(self):
+        """
+        # TODO: docstring
+        """
+        return f"{self.ref.creator} {self.ref.year}"
+
+    def get_citation_display(self, include_html=False):
         """
         Returns a string of the full citation. If the citation has a title, it
         is included in the string. If the citation has a creator, it is
@@ -699,85 +732,41 @@ class Citation(models.Model):
         the string. If the citation has a page_from, it is included in the
         string. If the citation has a page_to, it is included in the string.
 
+        Args:
+            include_html  # TODO
+
         Returns:
             str: A string of the full citation.
         """
-        if self.ref and self.ref.title:
-            original_title = self.ref.title
-        else:
-            original_title = "REFERENCE_WITH_NO_TITLE"
+        # First, check whether we have a Zotero reference - if not, return
+        if not self.has_zotero:
+            return f"(NOZOTERO: {self.get_short_name()})"
 
-        if original_title:
-            shorter_title = original_title
-        else:
-            shorter_title = "BlaBlaBla"
+        # Check if we have a reference at all
+        if not self.ref or (self.ref and not self.ref.creator):
+            return NO_DATA.bad_reference
 
-        if self.ref and self.ref.long_name:
-            self.ref.long_name = self.ref.long_name
-        else:
-            self.ref.long_name = "REFERENCE_WITH_NO_LONG_NAME"
+        # Start putting together the reference
+        reference_string = self.get_reference_string()
+        short_title = self.get_short_title()
+        page_range = self.get_page_range()
 
-        if self.ref.long_name:
-            shorter_name = self.ref.long_name
-        else:
-            shorter_name = "BlaBla"
+        if include_html:
+            if not page_range:
+                return f"<b {ATTRS_HTML.text_bold}>({reference_string})</b>: {short_title}"
 
-        if (
-            self.ref
-            and self.ref.zotero_link
-            and "NOZOTERO_LINK" in self.ref.zotero_link
-        ):
-            return f"(NOZOTERO: {shorter_name})"
+            return f"<b {ATTRS_HTML.text_bold}>({reference_string}, {page_range})</b>: {short_title}"  # noqa: E501
 
-        if self.ref and self.ref.creator:
-            if self.page_from is None and self.page_to is None:
-                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+        if not page_range:
+            return f"({reference_string}): {short_title}"
 
-            if self.page_from == self.page_to or (
-                (not self.page_to) and self.page_from
-            ):
-                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, p. {self.page_from})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
+        return f"({reference_string}, {page_range}): {short_title}"
 
-            if self.page_from == self.page_to or (
-                (not self.page_from) and self.page_to
-            ):
-                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, p. {self.page_to})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
-
-            if self.page_from and self.page_to:
-                return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
-
-            return f"<b {ATTRS_HTML.text_bold}>({self.ref.creator} {self.ref.year})</b>: {shorter_title}"  # noqa: E501 pylint: disable=C0301
-
-        return "BADBADREFERENCE"
-
-    class Meta:
-        """
-        :noindex:
-        """
-
-        ordering = ["-modified_date"]
-        constraints = [
-            models.UniqueConstraint(
-                name="No_PAGE_TO_AND_FROM",
-                fields=("ref",),
-                condition=(
-                    Q(page_to__isnull=True) & Q(page_from__isnull=True)
-                ),
-            ),
-            models.UniqueConstraint(
-                name="No_PAGE_TO",
-                fields=("ref", "page_from"),
-                condition=Q(page_to__isnull=True),
-            ),
-            models.UniqueConstraint(
-                name="No_PAGE_FROM",
-                fields=("ref", "page_to"),
-                condition=Q(page_from__isnull=True),
-            ),
-        ]
+    def full_citation_display(self) -> str:
+        return self.get_citation_display(include_html=True)
 
     @property
-    def citation_short_title(self) -> str:
+    def short_title(self) -> str:
         """
         Returns a short title for the citation. If the title is longer than
         40 characters, it is truncated. If the title is not provided, a default
@@ -786,39 +775,32 @@ class Citation(models.Model):
         Returns:
             str: A short title for the citation.
         """
-        if self.ref.long_name and len(self.ref.long_name) > 40:
-            shorter_name = (
-                self.ref.long_name[0:40]
-                + self.ref.long_name[40:].split(" ")[0]
-                + "..."
-            )
-        elif self.ref.long_name:
-            shorter_name = self.ref.long_name
-        else:
-            # TODO: Does this ever happen? If so, should we handle it differently?
-            # (shorter_name = "BlaBla" doesn't seem helpful)
-            shorter_name = "BlaBla"
+        if not self.has_zotero:
+            return f"(NOZOTERO: {self.get_short_title(cutoff=40)})"
 
-        if "NOZOTERO_LINK" in self.ref.zotero_link:
-            return f"(NOZOTERO: {shorter_name})"
+        reference_string = self.get_reference_string()
 
         if self.page_from is None and self.page_to is None:
-            return f"[{self.ref.creator} {self.ref.year}]"
+            return f"[{reference_string}]"
 
-        if self.page_from == self.page_to or (
-            (not self.page_to) and self.page_from
-        ):
-            return f"[{self.ref.creator} {self.ref.year}, p. {self.page_from}]"
+        page_range = self.get_page_range()
 
-        if self.page_from == self.page_to or (
-            (not self.page_from) and self.page_to
-        ):
-            return f"[{self.ref.creator} {self.ref.year}, p. {self.page_to}]"
+        if not page_range:
+            return f"[{reference_string}]"
 
-        if self.page_from and self.page_to:
-            return f"[{self.ref.creator} {self.ref.year}, pp. {self.page_from}-{self.page_to}]"  # noqa: E501 pylint: disable=C0301
+        return f"[{reference_string}, {page_range}]"
 
-        return f"[{self.ref.creator} {self.ref.year}]"
+    @property
+    def citation_short_title(self) -> str:
+        warnings.simplefilter("always", DeprecationWarning)  # turn off filter
+        warnings.warn(
+            "This property is deprecated - use short_title instead",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        warnings.simplefilter("default", DeprecationWarning)  # reset filter
+
+        return self.short_title
 
     def get_absolute_url(self) -> str:
         """
@@ -848,7 +830,37 @@ class Citation(models.Model):
         try:
             super(Citation, self).save(*args, **kwargs)
         except IntegrityError as e:
-            print(e)  # TODO: We probably want to handle this differently
+            # TODO: We will want to handle this differently
+            print(e)
+
+    def __str__(self) -> str:
+        return self.get_citation_display(include_html=False)
+
+    class Meta:
+        """
+        :noindex:
+        """
+
+        ordering = ["-modified_date"]
+        constraints = [
+            models.UniqueConstraint(
+                name="No_PAGE_TO_AND_FROM",
+                fields=("ref",),
+                condition=(
+                    Q(page_to__isnull=True) & Q(page_from__isnull=True)
+                ),
+            ),
+            models.UniqueConstraint(
+                name="No_PAGE_TO",
+                fields=("ref", "page_from"),
+                condition=Q(page_to__isnull=True),
+            ),
+            models.UniqueConstraint(
+                name="No_PAGE_FROM",
+                fields=("ref", "page_to"),
+                condition=Q(page_from__isnull=True),
+            ),
+        ]
 
 
 class SeshatComment(models.Model):
@@ -861,54 +873,15 @@ class SeshatComment(models.Model):
         null=True,
     )
 
-    def zoteroer(self):
-        """
-        Returns the Zotero link for the comment. If the comment has a Zotero
-        link, it is returned. Otherwise, a default link (#) is returned.
-
-        Returns:
-            str: The Zotero link for the comment.
-        """
-        if (
-            self.ref.zotero_link
-            and "NOZOTERO_LINK" not in self.ref.zotero_link
-        ):
-            return f"{ZOTERO.BASEURL}{self.ref.zotero_link}"
-
+    @property
+    def __no_zotero_link__(self) -> str:
         return "#"
 
     def __str__(self) -> str:
-        inner_comments = self.inner_comments_related.all()
-
-        if not inner_comments and self.text:
-            return "No descriptions."
-
-        if not inner_comments:
-            return "EMPTY_COMMENT"
-
-        comment_parts = []
-        for comment in inner_comments.order_by("comment_order"):
-            if comment.citation_index:
-                separation_point = comment.citation_index
-                before, after = (
-                    comment.comment_part_text[0:separation_point],
-                    comment.comment_part_text[separation_point:],
-                )
-                text = f"{before}{comment.display_citations_plus} {after}"
-            else:
-                text = comment.comment_part_text if comment.comment_part_text else ""
-                text = text.strip("<br>")  # drop any leading <br> tags
-
-                if comment.display_citations_plus:
-                    text = f"{text}{comment.display_citations_plus}"
-
-            comment_parts.append(text)
-
-        # Drop empty strings
-        comment_parts = [x for x in comment_parts if x]
+        comment_parts = self.get_comment_parts()
 
         if not comment_parts:
-            return " Nothing "
+            return NO_DATA.comment_parts
 
         return " ".join(comment_parts)
 
@@ -922,6 +895,42 @@ class SeshatComment(models.Model):
             str: A string of the url to access a particular instance of the model.
         """
         return reverse("seshatcomments")
+
+    def get_comment_parts(self):
+        inner_comments = self.inner_comments_related.all()
+
+        if not inner_comments and self.text:
+            return NO_DATA.descriptions
+
+        if not inner_comments:
+            return NO_DATA.comment
+
+        comment_parts = []
+        for comment in inner_comments.order_by("comment_order"):
+            if comment.citation_index:
+                separation_point = comment.citation_index
+                before, after = (
+                    comment.comment_part_text[0:separation_point],
+                    comment.comment_part_text[separation_point:],
+                )
+                text = f"{before}{comment.display_citations_plus} {after}"
+            else:
+                text = (
+                    comment.comment_part_text
+                    if comment.comment_part_text
+                    else ""
+                )
+                text = text.strip("<br>")  # drop any leading <br> tags
+
+                if comment.display_citations_plus:
+                    text = f"{text}{comment.display_citations_plus}"
+
+            comment_parts.append(text)
+
+        # Drop empty strings
+        comment_parts = [x for x in comment_parts if x]
+
+        return comment_parts
 
 
 class SeshatCommentPart(models.Model):
@@ -984,7 +993,7 @@ class SeshatCommentPart(models.Model):
 
         return ", ".join(
             [
-                f' <a href="{x.citation.zoteroer()}">{x.citation.citation_short_title}</a>'  # noqa: E501 pylint: disable=C0301
+                f' <a href="{x.citation.zotero_link}">{x.citation.short_title}</a>'
                 for x in scp_tr
             ]
         )
@@ -1002,15 +1011,15 @@ class SeshatCommentPart(models.Model):
         Returns:
             str: The citations of the model instance, separated by comma.
         """
-        if self.comment_citations.all():
-            return ", ".join(
-                [
-                    f' <a href="{citation.zoteroer()}">{citation.citation_short_title}</a>'
-                    for citation in self.comment_citations.all()
-                ]
-            )
+        if not self.comment_citations.all():
+            return ""
 
-        return ""
+        return ", ".join(
+            [
+                f' <a href="{citation.zotero_link}">{citation.short_title}</a>'
+                for citation in self.comment_citations.all()
+            ]
+        )
 
     @property
     def display_citations_plus(self):
@@ -1065,16 +1074,16 @@ class SeshatCommentPart(models.Model):
         ordering = ["comment_order", "modified_date"]
 
     def __str__(self) -> str:
+        if not self.comment_part_text:
+            return "NO_SUB_COMMENTS_TO_SHOW"
+
         if self.comment_part_text and self.display_citations_plus:
             return f"{self.comment_part_text} {self.display_citations_plus}"
 
         if self.comment_part_text and self.display_citations:
             return f"{self.comment_part_text} {self.display_citations}"
 
-        if self.comment_part_text:
-            return self.comment_part_text
-
-        return "NO_SUB_COMMENTS_TO_SHOW"
+        return self.comment_part_text
 
 
 class ScpThroughCtn(models.Model):

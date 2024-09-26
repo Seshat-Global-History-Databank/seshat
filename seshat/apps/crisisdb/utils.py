@@ -3,9 +3,8 @@ __all__ = [
     "expand_context_from_variable_hierarchy",
 ]
 
-from ..constants import ICONS
+from ..constants import ICONS, NO_DATA
 from ..core.models import Variablehierarchy
-from ..constants import NO_DATA
 
 
 def return_citations(cls):
@@ -29,7 +28,7 @@ def return_citations(cls):
     """
     return "<br />".join(
         [
-            f'<a href="{citation.zoteroer()}">{ICONS.book} {citation.full_citation_display()}</a>'  # noqa: E501 pylint: disable=C0301
+            f'<a href="{citation.zotero_link}">{ICONS.book} {citation.full_citation_display()}</a>'  # noqa: E501 pylint: disable=C0301
             for citation in cls.citations.all()
         ]
     )

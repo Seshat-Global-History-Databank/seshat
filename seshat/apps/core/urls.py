@@ -162,10 +162,10 @@ urlpatterns = [
         downloads.capital_download_view,
         name="capital-download",
     ),
-    path("search/", views.search_view, name="search"),
+    path("search/", views.SearchRedirectView.as_view(), name="search"),
     path(
         "search_suggestions/",
-        views.search_suggestions_view,
+        views.SearchSuggestionsView.as_view(),
         name="search_suggestions",  # noqa: E501  TODO: The search_suggestions_view is not used anywhere in the codebase
     ),
     path("signup/", views.signup_traditional_view, name="signup"),
@@ -345,20 +345,20 @@ urlpatterns = [
         views.nlp_datapoints_2_view,
         name="nlp_datapoints_2",
     ),
-    # TODO: Correct? The below is commented out as it is not used in the codebase
-    # path("core/not_found_404", views.NotFoundView.as_view(), name="four-o-four"),
     path("core/world_map/", views.world_map_view, name="world_map"),
     path(
         "core/world_map_one_year/",
-        views.world_map_one_year_view,
+        views.WorldmapView.as_view(one_year=True),
         name="world_map_one_year",
     ),
     path(
-        "core/world_map_all/", views.world_map_all_view, name="world_map_all"
+        "core/world_map_all/",
+        views.WorldmapView.as_view(),
+        name="world_map_all",
     ),
     path(
         "core/provinces_and_countries",
-        views.provinces_and_countries_view,
+        views.ProvincesCountriesView.as_view(),
         name="provinces_and_countries",
     ),
 ]

@@ -690,6 +690,14 @@ NO_DATA = DotDict(
         "note": "No_Actual_note",
         "no_value": "The value is not available.",
         "nothing": "NOTHING",
+        "private_comments": "NO_Private_COMMENTS_TO_SHOW",
+        "titles": "NO_TITLES_PROVIDED",
+        "ref_no_title": "REFERENCE_WITH_NO_TITLE",
+        "ref_no_long_name": "REFERENCE_WITH_NO_LONG_NAME",
+        "bad_reference": "BADBADREFERENCE",
+        "comment_parts": " Nothing ",
+        "descriptions": "No descriptions.",
+        "comment": "EMPTY_COMMENT",
     }
 )
 

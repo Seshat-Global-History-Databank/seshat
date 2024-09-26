@@ -22,12 +22,14 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.http import require_GET
 from django.views.generic import (
+    View,
     ListView,
     CreateView,
     UpdateView,
     DeleteView,
     DetailView,
     TemplateView,
+    RedirectView,
 )
 from django.views.generic.edit import FormMixin
 
@@ -2923,47 +2925,65 @@ def world_map_one_year_view(request):
     return JsonResponse(content)
 
 
-# TODO: rewrite as a class-based view (TemplateView/View)
-def world_map_all_view(request):
-    """
-    This view is used to display a map with polities plotted on it. The view
-    loads all polities for the range of years.
+class WorldmapView(View):
+    one_year = False
 
-    Args:
-        request: The request object.
+    def get(self, request, *args, **kwargs):
+        """
+        This view is used to display a map with polities plotted on it. The view
+        loads all polities for the range of years.
 
-    Returns:
-        JsonResponse: The HTTP response with serialized JSON.
-    """
+        Returns:
+            JsonResponse: The HTTP response with serialized JSON.
+        """
+        if self.one_year:
+            year = request.GET.get("year", WORLD_MAP_INITIAL_DISPLAYED_YEAR)
+            data = get_polity_shape_content(displayed_year=year)
+        else:
+            # Temporary restriction on the latest year for the whole map view
+            data = get_polity_shape_content(override_latest_year=2014)
 
-    # Temporary restriction on the latest year for the whole map view
-    content = get_polity_shape_content(override_latest_year=2014)
+        data = common_map_view_content(data)
 
-    content = common_map_view_content(content)
+        return JsonResponse(data)
 
-    return JsonResponse(content)
+    @classmethod
+    def as_view(
+        cls,
+        one_year=None,
+        **initkwargs,
+    ):
+        """
+        # TODO: docstring
+
+        Returns:
+            A callable view.
+        """
+        initkwargs = {
+            "one_year": one_year,
+        }
+
+        return super().as_view(**initkwargs)
 
 
-# TODO: rewrite as a class-based view (TemplateView/View)
-def provinces_and_countries_view(request):
-    """
-    This view is used to get the provinces and countries for the map.
+class ProvincesCountriesView(View):
+    def get(self, request, *args, **kwargs):
+        """
+        This view is used to get the provinces and countries for the map as JSON data.
 
-    Args:
-        request: The request object.
+        Returns:
+            JsonResponse: The HTTP response with serialized JSON.
+        """
+        provinces = get_provinces()
+        countries = get_provinces(selected_base_map_gadm="country")
 
-    Returns:
-        JsonResponse: The HTTP response with serialized JSON.
-    """
-    provinces = get_provinces()
-    countries = get_provinces(selected_base_map_gadm="country")
+        data = {
+            "provinces": provinces,
+            "countries": countries,
+        }
 
-    content = {
-        "provinces": provinces,
-        "countries": countries,
-    }
-
-    return JsonResponse(content)
+        # Return dropdown template as JSON response
+        return JsonResponse(data)
 
 
 # TODO: rewrite as a class-based view (TemplateView/View)
@@ -3158,7 +3178,7 @@ def update_seshat_comment_part_view(request, pk):
     )
 
 
-# TODO: rewrite as a class-based view (RedirectView)
+# TODO: rewrite as a class-based view (CreateView)
 @login_required
 def create_subcomment_new_view(request, app_name, model_name, instance_id):
     """
@@ -3327,7 +3347,7 @@ def create_subcomment_newer_view(request, app_name, model_name, instance_id):
     return render(request, "core/seshatcomments/your_template.html", context)
 
 
-# TODO: rewrite as a class-based view (RedirectView)
+# TODO: rewrite as a class-based view (CreateView)
 @login_required
 @permission_required("core.add_seshatprivatecommentpart")
 def create_private_subcomment_new_view(
@@ -3495,63 +3515,40 @@ def seshatcomments_create3_view(request):
     )
 
 
-# TODO: rewrite as a class-based view (RedirectView? View?)
-def search_view(request):
-    """
-    View to search for a polity.
+class SearchSuggestionsView(TemplateView):
+    template_name = "core/partials/_search_suggestions.html"
 
-    Note:
-        This view can handle GET requests.
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
 
-    Args:
-        request: The request object.
+        search_term = self.request.GET.get("search", "")
+        _filter = (
+            Q(name__icontains=search_term)
+            | Q(long_name__icontains=search_term)
+            | Q(new_name__icontains=search_term)
+        )
 
-    Returns:
-        HttpResponse: The HTTP response.
-    """
-    search_term = request.GET.get("search", "")
+        context = dict(context, **{
+            "polities": Polity.objects.filter(_filter).order_by("start_year")[:8]
+        })
 
-    if search_term:
-        try:
-            polity = Polity.objects.filter(name__icontains=search_term).first()
-
-            if polity:
-                return redirect("polity-detail-main", pk=polity.pk)
-            else:
-                # No polity found = redirect to home
-                return redirect("index")
-        except Polity.DoesNotExist:
-            # Handle the case where no polity matches the search term
-            pass
-
-    # Redirect to home if no search term is provided or no match is found
-    return redirect("index")
+        return context
 
 
-# TODO: rewrite as a class-based view (TemplateView/View)
-def search_suggestions_view(request):
-    """
-    View to get search suggestions for a polity.
+class SearchRedirectView(RedirectView):
+    pattern_name = "polity-detail-main"
 
-    Note:
-        This view can handle GET requests.
+    def get_redirect_url(self, *args, **kwargs):
+        search_term = self.request.GET.get("search", "")
 
-    Args:
-        request: The request object.
+        polity = Polity.objects.filter(
+            name__icontains=search_term
+        ).first()
 
-    Returns:
-        HttpResponse: The HTTP response.
-    """
-    search_term = request.GET.get("search", "")
-    _filter = (
-        Q(name__icontains=search_term)
-        | Q(long_name__icontains=search_term)
-        | Q(new_name__icontains=search_term)
-    )
+        if not polity:
+            return reverse("index")
 
-    # TODO? Limit to 5 suggestions [:5]
-    context = {
-        "polities": Polity.objects.filter(_filter).order_by("start_year")
-    }
-
-    return render(request, "core/partials/_search_suggestions.html", context)
+        return reverse(
+            self.pattern_name,
+            kwargs={"pk": polity.pk},
+        )

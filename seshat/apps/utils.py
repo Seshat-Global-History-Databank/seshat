@@ -30,7 +30,10 @@ __all__ = [
 
 import csv
 import datetime
+import functools
 import os
+import warnings
+
 from typing import Union
 
 import requests
@@ -201,7 +204,7 @@ def return_citations(
 
     return join_str.join(
         [
-            f'<a href="{citation.zoteroer()}">{custom_func(citation) if isinstance(custom_func, callable) else citation}"</a>"'  # noqa: E501 pylint: disable=C0301
+            f'<a href="{citation.zotero_link}">{custom_func(citation) if isinstance(custom_func, callable) else citation}"</a>"'  # noqa: E501 pylint: disable=C0301
             for citation in cls.citations.all()[:limit]
         ]
     )
@@ -902,7 +905,12 @@ def get_variable_context(
         subsection = str(model().subsection())
         subsubsection = str(model().subsubsection())
 
-        subsection_str = subsection.replace("-", "_").replace(" ", "_").replace(":", "").lower()  # noqa: E501
+        subsection_str = (
+            subsection.replace("-", "_")
+            .replace(" ", "_")
+            .replace(":", "")
+            .lower()
+        )  # noqa: E501
 
         section_download_names[subsection] = f"{prefix}{subsection_str}"
 
@@ -947,3 +955,22 @@ def get_variable_context(
         "number_of_all_rows": row_count,
         "number_of_variables": variable_count,
     }
+
+
+def deprecated(func):
+    """This is a decorator which can be used to mark functions
+    as deprecated. It will result in a warning being emitted
+    when the function is used."""
+
+    @functools.wraps(func)
+    def new_func(*args, **kwargs):
+        warnings.simplefilter("always", DeprecationWarning)  # turn off filter
+        warnings.warn(
+            f"Call to deprecated function {func.__name__}.",
+            category=DeprecationWarning,
+            stacklevel=2,
+        )
+        warnings.simplefilter("default", DeprecationWarning)  # reset filter
+        return func(*args, **kwargs)
+
+    return new_func
