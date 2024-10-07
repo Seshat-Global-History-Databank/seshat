@@ -50,7 +50,7 @@
 
     .highlighted-value-title {
         display: inline-block; 
-        border: none; /* 1px solid #198754;*/ 
+        border: 2px solid rgba(25, 135, 84, 0.5);
         padding: 5px; 
         border-radius: 5px;
         box-shadow: 0 0 4px rgba(25, 135, 84, 0.5); 
@@ -59,10 +59,9 @@
 
     .highlighted-value {
         display: inline-block; 
-        border: none; /* 1px solid #198754;*/ 
+        border-bottom: 1px solid rgba(25, 135, 84, 0.5);
         padding: 5px; 
-        border-radius: 5px;
-        box-shadow: 0 0 2px rgba(25, 135, 84, 0.5); 
+        border-radius: 1px;
         background-color:#fffdf2; /* fffdf2   fefae6*/
     }
     .montserrat-font {
@@ -1388,17 +1387,17 @@
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
                             <div class="col-md-9">
-                                <span class="h5 text-teal pt-0 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                                <span class="h5 text-dark pt-0 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
                                     {% if key == "Polity_suprapolity_relations" %}
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold  text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    <span class="ps-1 h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.display_value }}
     
                                     </span>
                                     {% else %}
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    <span class="ps-1 h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.show_value }}
     
@@ -1437,6 +1436,7 @@
                                 <p class="fs-6 my-1 py-1" id="{{key}}"> 
                                     <b>(New Approach):</b>  {{ value.comment }}    
                                     <span>
+                                        {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                         <a class="p-0 m-0" 
                                         style="display:block; overflow: hidden;" 
                                         href="{% url 'seshatcomment-update' value.comment.id %}">
@@ -1447,6 +1447,8 @@
                                                 </span>
                                             </span>
                                         </a>  
+                                        {% endif %}
+
                                     </span>       
                                  </p> 
                             </div>
@@ -1494,9 +1496,9 @@
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
                             <div class="col-md-9">
-                                <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                                    <span class="ps-1 h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced }}:            
                                         </span>  <br>{{ value.show_value }}
                                     </span>
@@ -1531,6 +1533,7 @@
                                     <p class="fs-6 my-1 py-1" id="{{key}}"> 
                                         <b>(New Approach):</b>  {{ value.comment }}    
                                         <span>
+                                            {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                             <a class="p-0 m-0" 
                                             style="display:block; overflow: hidden;" 
                                             href="{% url 'seshatcomment-update' value.comment.id %}">
@@ -1541,6 +1544,7 @@
                                                     </span>
                                                 </span>
                                             </a>  
+                                            {% endif %}
                                         </span>       
                                      </p> 
                                 </div>
@@ -1590,9 +1594,9 @@
                         <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                 {% for value in values %}
                                 <div class="col-md-9">
-                                    <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                        <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                            <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                                        <span class="ps-1 h5 fw-bold" >
+                                            <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                 {{ value.clean_name_spaced }}:            
                                             </span>  <br>{{ value.show_value }}
                                         </span>
@@ -1619,7 +1623,7 @@
                                 </div>
                                 {% if value.description %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
-                                        <p class="fs-6 my-1 py-1">
+                                        <p class="fs-6 my-1 py-1" >
                                                 {{ value.description|make_references_look_nicer }}
                                         </p>
                                     </div>
@@ -1630,6 +1634,7 @@
                                         <p class="fs-6 my-1 py-1" id="{{key}}"> 
                                             <b>(New Approach):</b>  {{ value.comment }}    
                                             <span>
+                                                {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                                 <a class="p-0 m-0" 
                                                 style="display:block; overflow: hidden;" 
                                                 href="{% url 'seshatcomment-update' value.comment.id %}">
@@ -1640,6 +1645,7 @@
                                                         </span>
                                                     </span>
                                                 </a>  
+                                                {% endif %}
                                             </span>       
                                          </p> 
                                     </div>
@@ -1689,9 +1695,9 @@
                             <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                     {% for value in values %}
                                     <div class="col-md-10">
-                                        <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                            <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                                <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                        <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                                            <span class="ps-1 h5 fw-bold" >
+                                                <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                     {{ value.clean_name_spaced }}:            
                                                 </span>  <br>{{ value.show_value }}
                                             </span>
@@ -1726,6 +1732,7 @@
                                             <p class="fs-6 my-1 py-1" id="{{key}}"> 
                                                 <b>(New Approach):</b>  {{ value.comment }}    
                                                 <span>
+                                                    {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                                     <a class="p-0 m-0" 
                                                     style="display:block; overflow: hidden;" 
                                                     href="{% url 'seshatcomment-update' value.comment.id %}">
@@ -1736,6 +1743,7 @@
                                                             </span>
                                                         </span>
                                                     </a>  
+                                                    {% endif %}
                                                 </span>       
                                              </p> 
 
@@ -1777,9 +1785,9 @@
 
                 {% for value in values %}
                 <div class="col-md-9">
-                    <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                        <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                            <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                    <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                        <span class="ps-1 h5 fw-bold" >
+                            <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                 Human Sacrifice:           
                             </span>  <br>{{ value.show_value }}
                         </span>
