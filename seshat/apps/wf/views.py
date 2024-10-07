@@ -2540,7 +2540,6 @@ class Battle_axeDetailView(generic.DetailView):
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_detail.html"
 
-
 @permission_required('core.view_capital')
 def battle_axe_download(request):
     items = Battle_axe.objects.all()

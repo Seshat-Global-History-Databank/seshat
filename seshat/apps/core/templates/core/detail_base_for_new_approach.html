@@ -15,33 +15,123 @@
 input[type="number"] {
     -moz-appearance: textfield; /* For Firefox */
 }
+
+    
+    
+.tab-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  margin: 0 2px;
+  padding: 5px 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  transition: background-color 0.3s ease;
+}
+
+.tab a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.tab:hover {
+  background-color: #d1d1d1;
+}
+
+.tab.active {
+  background-color: #4CAF50;
+  color: white;
+  border-color: #4CAF50;
+}
+
+.tab.done {
+  background-color: #782823;
+  color: lightgray;
+  border-color: #782823;
+}
+
+.tab.waiting {
+  color: gray;
+  border-color: darkgray;
+}
+
+.tab.active a {
+  color: white;
+}
+
+.arrow {
+  font-size: 24px;
+  margin: 0 10px;
+  color: #4CAF50;
+}
+
+.content {
+  text-align: center;
+  margin: 50px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 </style>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-8">
-        <h6 class="lead-2 text-success pt-3">You entered the following data for:</h6>
-      <h3 class="mb-4 mt-2">{{var_name_display}}  </h3>
+<div class="container mt-1">
+  <div class="tab-container">
+    <div class="tab done" id="step1-tab">
+        <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data.</span>
     </div>
-    <div class="col-md-4"> 
+    <div class="arrow">&#10132;</div>
+    <div class="tab active" id="step2-tab">
+        <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description.</span>
+    </div>
+    <div class="arrow">&#10132;</div>
+    <div class="tab waiting" id="step3-tab">
+      <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description.</span>
+    </div>
+</div>
+
+    <div class="row d-flex">
+      <div class="col-md-8">
+          <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
+              {% if var_subsection %}
+              {{var_subsection}}
+              {% else %}
+                  &nbsp;- 
+              {% endif %}
+          </h6>
+          <h4><span >{{ var_name_display }}</span></h4>
+      </div>
+      <div class="col-md-4"> 
         {% block addmore %}
         {% endblock addmore %}
 
-          <span class="col-md-4 align-right mt-1">
-              <a href="{% url 'synczotero100' %}" class="btn btn-outline-success pb-0 pt-1 mb-2 mt-1 float-end" id="syncBtn" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');">
+          <span class="col-md-4 align-right">
+              <a href="{% url 'synczotero100' %}" class="btn btn-outline-success pb-1 pt-1 my-1 float-end" id="syncBtn" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');">
                   <b>Sync Refs with Zotero: <i class="fa-solid fa-arrows-rotate"></i> &nbsp; Last 100</b>
               </a>
               <span class="h6 text-secondary px-1"></span>
           </span>
       
     </div>
+
+
   </div>
+
+  
   {% if messages %}
   <ul class="messages mt-3">
       {% for message in messages %}
       <div class="container-fluid p-0">
           <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-              <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
+              <i class="fa-solid fa-circle-info"></i>  <b>{{ message }}</b>. 
           </div>
       </div>
       {% endfor %}
@@ -53,10 +143,8 @@ input[type="number"] {
         </div>
       </div>
       {% endfor %}
-      <hr> 
       {% endif %}
   </ul>
-  <hr>
   {% endif %}
   <table class="table align-middle table-bordered">
     <thead>        

@@ -35,15 +35,19 @@ POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (
 
 POLITY_CONSECUTIVE_ENTITY_CHOICES = (
 ('continuity', 'continuity'),
-('elite migration', 'elite migration'),
-('cultural assimilation', 'cultural assimilation'),
-('continuation', 'continuation'),
-('indigenous revolt', 'indigenous revolt'),
+('elite replacement', 'elite replacement'),
+#('elite migration', 'elite migration'),
+#('cultural assimilation', 'cultural assimilation'),
+#('continuation', 'continuation'),
+#('indigenous revolt', 'indigenous revolt'),
+('absorption', 'absorption'),
 ('replacement', 'replacement'),
-('population migration', 'population migration'),
-('hostile', 'hostile'),
-('disruption/continuity', 'disruption/continuity'),
-('continuity/discontinuity', 'continuity/discontinuity'),
+('population replacement', 'population replacement'),
+
+#('population migration', 'population migration'),
+#('hostile', 'hostile'),
+#('disruption/continuity', 'disruption/continuity'),
+#('continuity/discontinuity', 'continuity/discontinuity'),
 ('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
 ('suspected unknown', 'suspected unknown'),
 ('vassalage', 'vassalage'),
@@ -51,6 +55,7 @@ POLITY_CONSECUTIVE_ENTITY_CHOICES = (
 ('unknown', 'unknown'),
 ('economic displacement', 'economic displacement'),
 ('secession', 'secession'),
+('territorial consolidation', 'territorial consolidation'),
 )
 
 POLITY_SUPRAPOLITY_RELATIONS_CHOICES = (
@@ -456,23 +461,29 @@ POLITY_RELIGION_CHOICES = (
 
 POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
 ('continuity', 'continuity'),
-('elite migration', 'elite migration'),
-('cultural assimilation', 'cultural assimilation'),
-('continuation', 'continuation'),
-('indigenous revolt', 'indigenous revolt'),
-('replacement', 'replacement'),
-('population migration', 'population migration'),
-('hostile', 'hostile'),
-('disruption/continuity', 'disruption/continuity'),
-('continuity/discontinuity', 'continuity/discontinuity'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
-('suspected unknown', 'suspected unknown'),
+('elite replacement', 'elite replacement'),
+('absorption', 'absorption'),
+
+#('elite migration', 'elite migration'),
+#('cultural assimilation', 'cultural assimilation'),
+#('continuation', 'continuation'),
+#('indigenous revolt', 'indigenous revolt'),
+#('replacement', 'replacement'),
+('population replacement', 'population replacement'),
+#('population migration', 'population migration'),
+#('hostile', 'hostile'),
+#('disruption/continuity', 'disruption/continuity'),
+#('continuity/discontinuity', 'continuity/discontinuity'),
+#('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+#('suspected unknown', 'suspected unknown'),
 ('vassalage', 'vassalage'),
-('not applicable', 'not applicable'),
+#('not applicable', 'not applicable'),
 ('unknown', 'unknown'),
 ('economic displacement', 'economic displacement'),
 ('secession', 'secession'),
+('territorial consolidation', 'territorial consolidation'),
 )
+
 
 
 ########## TUPLE CHOICES THAT ARE THE SAME 

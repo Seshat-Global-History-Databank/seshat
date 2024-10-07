@@ -119,36 +119,15 @@
         margin: 0 10px;
         color: #4CAF50;
     }
-    
-    .content {
-        text-align: center;
-        margin: 50px;
-        padding: 20px;
-        background-color: white;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
+
     
     
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-1">
-    <div class="tab-container">
-        <div class="tab active" id="step1-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 1: Insert the data.</span>
-        </div>
-        <div class="arrow">&#10132;</div>
-        <div class="tab waiting" id="step2-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description.</span>
-        </div>
-        <div class="arrow">&#10132;</div>
-        <div class="tab waiting" id="step3-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description.</span>
-        </div>
-        
-    </div>
 
-    <div class="row d-flex">
+
+    <div class="row d-flex mt-3">
         <div class="col-md-4">
             <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
                 {% if var_subsection %}

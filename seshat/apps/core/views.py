@@ -2433,7 +2433,27 @@ def synczotero100(request):
     #num_1_ref = Reference.objects.get(zotero_link ="FGFSZUNB")
     #num_1_ref.year = 2014
     #num_1_ref.save()
-    return render (request, 'core/references/synczotero.html', context)
+    
+    # Add a success message
+    if len(new_refs) > 1:
+        messages.success(request, f'You successfully synchronized {len(new_refs)} new references.')
+    elif len(new_refs) == 0:
+        messages.success(request, f'Our References Database is already up-to-date with the Zotero Repository')
+    if len(new_refs) == 1:
+        messages.success(request, f'You successfully synchronized {len(new_refs)} new reference.')
+
+    # Use request.META.get to get the referring URL
+    referer = request.META.get('HTTP_REFERER')
+    
+    if referer:
+        # If there is a referer URL, redirect to it
+        return HttpResponseRedirect(referer)
+    else:
+        # If there is no referer URL, render the synczotero page
+        return render(request, 'core/references/synczotero.html', context)
+    
+    
+    #return render (request, 'core/references/synczotero.html', context)
 
 
 

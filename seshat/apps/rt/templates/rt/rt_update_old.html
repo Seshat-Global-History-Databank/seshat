@@ -1,0 +1,36 @@
+{% extends "core/form_base_for_new_approach_downgrade.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_vars %}
+
+    {% if extra_var2 %}
+        <div class="col-md-3">
+            {{ extra_var|as_crispy_field }}
+        </div>
+        <div class="col-md-3">
+            {{ extra_var3|as_crispy_field }}
+        </div>
+        <div class="col-md-6 pb-4">
+            {{ extra_var2|as_crispy_field }}
+        </div>
+
+    {% else %}
+    <div class="col-md-6 pb-2">
+        {{ extra_var|as_crispy_field }}
+    </div>
+    {% endif %}
+
+    <div class="col-md-12 pb-2">
+        {{form.description|as_crispy_field }}
+    </div>
+{% endblock extra_vars %}
+
+{% block delete_button %}
+    <!-- Render the delete button for the specified object ID -->
+    <a href="{% url delete_url object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete</a>
+{% endblock delete_button %}
+
+
+
+

@@ -231,6 +231,82 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
+    # Retrieve the object based on the object_id
+    my_object = model_class.objects.get(id=object_id)
+
+    if x_name in ["widespread_religion",]:
+        x_name_1 = "order"
+        x_name_2 = "widespread_religion"
+        x_name_3 = "degree_of_prevalence"
+
+    else:
+        x_name_1 = x_name
+        x_name_2 = None
+        x_name_3 = None
+
+
+    #return_url = f"{x_name}s_all"
+    if request.method == 'POST':
+        # Bind the form to the POST data
+        my_form = form_class(request.POST, instance=my_object)
+        
+        if my_form.is_valid():
+            # Save the changes to the object
+            my_form.save()   
+            #return redirect(return_url) 
+            return redirect("polity-detail-main", pk=my_object.polity.id) 
+
+    else:
+        # Create an instance of the form and populate it with the object's data
+        my_form = form_class(instance=my_object)
+
+        # Define the context with the variables you want to pass to the template
+        if x_name in ["widespread_religion",]:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form[x_name_1], 
+                'extra_var2': my_form[x_name_2], 
+                'extra_var3': my_form[x_name_3], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+        else:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form["coded_value"], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+
+
+
+
+        # context = {
+        #         'form': my_form,
+        #         'object': my_object,
+        #         'delete_url': delete_url_name,
+        #         'extra_var':  my_form['coded_value'],
+        #         "myvar": myvar,
+        #         'var_section': var_section,
+        #         'var_subsection': var_subsection,
+        #         "my_exp": my_exp,
+        #     }
+
+    return render(request, 'rt/rt_update_old.html', context)
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def dynamic_update_view(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)

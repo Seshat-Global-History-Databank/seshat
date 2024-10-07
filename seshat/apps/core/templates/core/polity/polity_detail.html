@@ -1431,6 +1431,27 @@
 
                                 </div>
                             {% endif %}
+                            {% if value.comment %}
+                                {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
+                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                    <b>(New Approach):</b>  {{ value.comment }}    
+                                    <span>
+                                        <a class="p-0 m-0" 
+                                        style="display:block; overflow: hidden;" 
+                                        href="{% url 'seshatcomment-update' value.comment.id %}">
+                                            <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <span >
+                                                    &nbsp;&nbsp;Edit Description (New Approach)
+                                                </span>
+                                            </span>
+                                        </a>  
+                                    </span>       
+                                 </p> 
+                            </div>
+                            {% endif %}
+                        {% endif %}
                             {% endfor %}
                     </div>
                     <br>
@@ -1506,11 +1527,22 @@
                                 </div>
                             {% endif %}
                             {% if value.comment %}
-                                {% if value.comment_id > 1 %}
-                                <div class="col-md-12 highlighted-value my-0 py-0">
-                                    <p class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                                        (NEW APPROACH): {{ value.comment }}             
-                                    </p> 
+                                {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                    <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                        <b>(New Approach):</b>  {{ value.comment }}    
+                                        <span>
+                                            <a class="p-0 m-0" 
+                                            style="display:block; overflow: hidden;" 
+                                            href="{% url 'seshatcomment-update' value.comment.id %}">
+                                                <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                    <span >
+                                                        &nbsp;&nbsp;Edit Description (New Approach)
+                                                    </span>
+                                                </span>
+                                            </a>  
+                                        </span>       
+                                     </p> 
                                 </div>
                                 {% endif %}
                             {% endif %}
@@ -1593,11 +1625,23 @@
                                     </div>
                                 {% endif %}
                                 {% if value.comment %}
-                                    {% if value.comment_id > 1 %}
+                                    {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
-                                        <p class="pt-1 fs-5 pb-1 fw-bold bg-info" id="{{key}}"> 
-                                            (NEW APPROACH): {{ value.comment }}             
-                                        </p> 
+                                        <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                            <b>(New Approach):</b>  {{ value.comment }}    
+                                            <span>
+                                                <a class="p-0 m-0" 
+                                                style="display:block; overflow: hidden;" 
+                                                href="{% url 'seshatcomment-update' value.comment.id %}">
+                                                    <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                        <span >
+                                                            &nbsp;&nbsp;Edit Description (New Approach)
+                                                        </span>
+                                                    </span>
+                                                </a>  
+                                            </span>       
+                                         </p> 
                                     </div>
                                     {% endif %}
                                 {% endif %}
@@ -1662,8 +1706,9 @@
                                             </div>
                                         </span>
                                         {% with my_app_name='rt' %}
-                                            {% include "core/partials/_abc.html" %}
+                                            {% include "core/partials/_abc_rt.html" %}
                                         {% endwith %}
+
                                     </div>
                                     <div class="col-md-2">
                                         <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
@@ -1676,11 +1721,24 @@
                                         </div>
                                     {% endif %}
                                     {% if value.comment %}
-                                        {% if value.comment_id > 1 %}
+                                        {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
-                                            <p class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                                                (NEW APPROACH): {{ value.comment }}             
-                                            </p> 
+                                            <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                                <b>(New Approach):</b>  {{ value.comment }}    
+                                                <span>
+                                                    <a class="p-0 m-0" 
+                                                    style="display:block; overflow: hidden;" 
+                                                    href="{% url 'seshatcomment-update' value.comment.id %}">
+                                                        <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                            <span >
+                                                                &nbsp;&nbsp;Edit Description (New Approach)
+                                                            </span>
+                                                        </span>
+                                                    </a>  
+                                                </span>       
+                                             </p> 
+
                                         </div>
                                         {% endif %}
                                     {% endif %}
