@@ -2438,7 +2438,7 @@ def synczotero100(request):
     if len(new_refs) > 1:
         messages.success(request, f'You successfully synchronized {len(new_refs)} new references.')
     elif len(new_refs) == 0:
-        messages.success(request, f'Our References Database is already up-to-date with the Zotero Repository')
+        messages.success(request, 'Our References Database is fully synchronized with the Zotero Repository and up to date.')
     if len(new_refs) == 1:
         messages.success(request, f'You successfully synchronized {len(new_refs)} new reference.')
 
