@@ -1,0 +1,1332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.seshat_api.filters.wf &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../../_static/doctools.js"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="seshat.apps.seshat_api.views" href="../../views/index.html" />
+    <link rel="prev" title="seshat.apps.seshat_api.filters.sc" href="../sc/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps.seshat_api</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.seshat_api.filters</a></li>
+      <li class="breadcrumb-item active">seshat.apps.seshat_api.filters.wf</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/api/seshat/apps/seshat_api/filters/wf/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.seshat_api.filters.wf">
+<span id="seshat-apps-seshat-api-filters-wf"></span><h1>seshat.apps.seshat_api.filters.wf<a class="headerlink" href="#module-seshat.apps.seshat_api.filters.wf" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.AtlatlFilter" title="seshat.apps.seshat_api.filters.wf.AtlatlFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtlatlFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.BattleAxeFilter" title="seshat.apps.seshat_api.filters.wf.BattleAxeFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BattleAxeFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.BreastplateFilter" title="seshat.apps.seshat_api.filters.wf.BreastplateFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BreastplateFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.BronzeFilter" title="seshat.apps.seshat_api.filters.wf.BronzeFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BronzeFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.CamelFilter" title="seshat.apps.seshat_api.filters.wf.CamelFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamelFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ChainmailFilter" title="seshat.apps.seshat_api.filters.wf.ChainmailFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChainmailFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter" title="seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComplexFortificationFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.CompositeBowFilter" title="seshat.apps.seshat_api.filters.wf.CompositeBowFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeBowFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.CopperFilter" title="seshat.apps.seshat_api.filters.wf.CopperFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CopperFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.CrossbowFilter" title="seshat.apps.seshat_api.filters.wf.CrossbowFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrossbowFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.DaggerFilter" title="seshat.apps.seshat_api.filters.wf.DaggerFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DaggerFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.DitchFilter" title="seshat.apps.seshat_api.filters.wf.DitchFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DitchFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.DogFilter" title="seshat.apps.seshat_api.filters.wf.DogFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DogFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.DonkeyFilter" title="seshat.apps.seshat_api.filters.wf.DonkeyFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DonkeyFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.EarthRampartFilter" title="seshat.apps.seshat_api.filters.wf.EarthRampartFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EarthRampartFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ElephantFilter" title="seshat.apps.seshat_api.filters.wf.ElephantFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElephantFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.FortifiedCampFilter" title="seshat.apps.seshat_api.filters.wf.FortifiedCampFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FortifiedCampFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter" title="seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GunpowderSiegeArtilleryFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter" title="seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HandheldFirearmFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.HelmetFilter" title="seshat.apps.seshat_api.filters.wf.HelmetFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HelmetFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.HorseFilter" title="seshat.apps.seshat_api.filters.wf.HorseFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HorseFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.IronFilter" title="seshat.apps.seshat_api.filters.wf.IronFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IronFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.JavelinFilter" title="seshat.apps.seshat_api.filters.wf.JavelinFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JavelinFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.LaminarArmorFilter" title="seshat.apps.seshat_api.filters.wf.LaminarArmorFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LaminarArmorFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.LeatherClothFilter" title="seshat.apps.seshat_api.filters.wf.LeatherClothFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LeatherClothFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.LimbProtectionFilter" title="seshat.apps.seshat_api.filters.wf.LimbProtectionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LimbProtectionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.LongWallFilter" title="seshat.apps.seshat_api.filters.wf.LongWallFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LongWallFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter" title="seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MerchantShipsPressedIntoServiceFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.MoatFilter" title="seshat.apps.seshat_api.filters.wf.MoatFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MoatFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ModernFortificationFilter" title="seshat.apps.seshat_api.filters.wf.ModernFortificationFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModernFortificationFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.PlateArmorFilter" title="seshat.apps.seshat_api.filters.wf.PlateArmorFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlateArmorFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.PolearmFilter" title="seshat.apps.seshat_api.filters.wf.PolearmFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolearmFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ScaledArmorFilter" title="seshat.apps.seshat_api.filters.wf.ScaledArmorFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScaledArmorFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SelfBowFilter" title="seshat.apps.seshat_api.filters.wf.SelfBowFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SelfBowFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter" title="seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SettlementsInADefensivePositionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.ShieldFilter" title="seshat.apps.seshat_api.filters.wf.ShieldFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShieldFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SlingFilter" title="seshat.apps.seshat_api.filters.wf.SlingFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SlingFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter" title="seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SlingSiegeEngineFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter" title="seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SmallVesselsCanoesEtcFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SpearFilter" title="seshat.apps.seshat_api.filters.wf.SpearFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpearFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter" title="seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpecializedMilitaryVesselFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SteelFilter" title="seshat.apps.seshat_api.filters.wf.SteelFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SteelFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter" title="seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoneWallsMortaredFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter" title="seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoneWallsNonMortaredFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.SwordFilter" title="seshat.apps.seshat_api.filters.wf.SwordFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SwordFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter" title="seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TensionSiegeEngineFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.WarClubFilter" title="seshat.apps.seshat_api.filters.wf.WarClubFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WarClubFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter" title="seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WoodBarkEtcFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter" title="seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WoodenPalisadeFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.AtlatlFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">AtlatlFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.AtlatlFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.AtlatlFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BattleAxeFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">BattleAxeFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BattleAxeFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BattleAxeFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BreastplateFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">BreastplateFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BreastplateFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BreastplateFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BronzeFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">BronzeFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BronzeFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.BronzeFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CamelFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">CamelFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CamelFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CamelFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CamelFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CamelFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CamelFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CamelFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CamelFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ChainmailFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ChainmailFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ChainmailFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ChainmailFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ComplexFortificationFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CompositeBowFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">CompositeBowFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CompositeBowFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CompositeBowFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CopperFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">CopperFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CopperFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CopperFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CopperFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CopperFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CopperFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CopperFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CopperFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CrossbowFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">CrossbowFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CrossbowFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.CrossbowFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DaggerFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">DaggerFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DaggerFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DaggerFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DitchFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">DitchFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DitchFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DitchFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DitchFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DitchFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DitchFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DitchFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DitchFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DogFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">DogFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DogFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DogFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DogFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DogFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DogFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DogFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DogFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DonkeyFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">DonkeyFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DonkeyFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.DonkeyFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.EarthRampartFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">EarthRampartFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.EarthRampartFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.EarthRampartFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ElephantFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ElephantFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ElephantFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ElephantFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.FortifiedCampFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">FortifiedCampFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.FortifiedCampFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.FortifiedCampFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">GunpowderSiegeArtilleryFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">HandheldFirearmFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HelmetFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">HelmetFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HelmetFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HelmetFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HorseFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">HorseFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HorseFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HorseFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HorseFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HorseFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HorseFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.HorseFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.HorseFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.IronFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">IronFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.IronFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.IronFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.IronFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.IronFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.IronFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.IronFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.IronFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.JavelinFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">JavelinFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.JavelinFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.JavelinFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LaminarArmorFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">LaminarArmorFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LaminarArmorFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LaminarArmorFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LeatherClothFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">LeatherClothFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LeatherClothFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LeatherClothFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LimbProtectionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">LimbProtectionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LimbProtectionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LimbProtectionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LongWallFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">LongWallFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LongWallFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.LongWallFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">MerchantShipsPressedIntoServiceFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MoatFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">MoatFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MoatFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MoatFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MoatFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MoatFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MoatFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.MoatFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.MoatFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ModernFortificationFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ModernFortificationFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ModernFortificationFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ModernFortificationFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PlateArmorFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">PlateArmorFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PlateArmorFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PlateArmorFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PolearmFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">PolearmFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PolearmFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.PolearmFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ScaledArmorFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ScaledArmorFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ScaledArmorFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ScaledArmorFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SelfBowFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SelfBowFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SelfBowFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SelfBowFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SettlementsInADefensivePositionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ShieldFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">ShieldFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ShieldFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.ShieldFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SlingFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SlingSiegeEngineFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SmallVesselsCanoesEtcFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpearFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SpearFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpearFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpearFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpearFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpearFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpearFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpearFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpearFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SpecializedMilitaryVesselFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SteelFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SteelFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SteelFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SteelFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SteelFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SteelFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SteelFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SteelFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SteelFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">StoneWallsMortaredFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">StoneWallsNonMortaredFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SwordFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">SwordFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SwordFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SwordFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SwordFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SwordFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SwordFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.SwordFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.SwordFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">TensionSiegeEngineFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WarClubFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">WarClubFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WarClubFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WarClubFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">WoodBarkEtcFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.wf.</span></span><span class="sig-name descname"><span class="pre">WoodenPalisadeFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../sc/index.html" class="btn btn-neutral float-left" title="seshat.apps.seshat_api.filters.sc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../views/index.html" class="btn btn-neutral float-right" title="seshat.apps.seshat_api.views" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

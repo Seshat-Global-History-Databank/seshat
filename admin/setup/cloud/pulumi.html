@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MS Azure cloud setup with Pulumi (Alan Turing Institute) &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/clipboard.min.js"></script>
+      <script src="../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="AWS cloud setup (Complexity Science Hub)" href="CSH_manual.html" />
+    <link rel="prev" title="Setting up a local Ubuntu environment on a Mac" href="../local/macos-ubuntu.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../schema.html">Database schema map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../websites.html">Websites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Setting up Seshat</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../local/index.html">Setting up Seshat in a local environment</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MS Azure cloud setup with Pulumi (Alan Turing Institute)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#step-1-log-in-to-azure">Step 1: Log in to Azure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#step-2-create-a-virtual-environment-for-pulumi">Step 2: Create a virtual environment for Pulumi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#step-3-set-up-a-pulumi-stack">Step 3: Set up a Pulumi stack</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#step-4-configure-pulumi">Step 4: Configure Pulumi</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#step-5-deploy-the-app">Step 5: Deploy the app</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#manual-steps">Manual steps</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="CSH_manual.html">AWS cloud setup (Complexity Science Hub)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html">Cliopatria shape dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#gadm">GADM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#how-to-add-new-shape-datasets-to-the-maps">How to add new shape datasets to the maps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Seshat Databank Admin</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Setting up Seshat</a></li>
+      <li class="breadcrumb-item active">MS Azure cloud setup with Pulumi (Alan Turing Institute)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/admin/setup/cloud/pulumi.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ms-azure-cloud-setup-with-pulumi-alan-turing-institute">
+<h1>MS Azure cloud setup with Pulumi (Alan Turing Institute)<a class="headerlink" href="#ms-azure-cloud-setup-with-pulumi-alan-turing-institute" title="Permalink to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This guide on how to run a full setup of the Seshat django app on Azure with Pulumi based on <a class="reference external" href="https://www.pulumi.com/docs/clouds/azure/get-started/begin/">this guide</a>.</p>
+<p>It assumes that you have access to a Seshat database dump, including all the spatial data. You can access it through the project’s <a class="reference external" href="https://drive.google.com/drive/folders/1c5djM48ve91t84Ug4a8JksSC0p4J-eav?usp=sharing">Google Drive</a> if you have access to it.</p>
+<p>It assumes that you are located in the UK and have access to the Azure subscription that the Seshat project is under.</p>
+<p>It assumes that your data tables are populated with the shape data. If it is not, you can populate them with the instructions in <a class="reference internal" href="../spatialdb.html"><span class="doc">spatialdb.rst</span></a>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The setup is only partially automated with Pulumi currently. As you’ll see below, subsequent steps are required to that involve SSH-ing into the created VM.</p>
+<p>This setup guide is specific to Azure, but can be followed outside The Alan Turing Institute with a credited Azure subscription.</p>
+</div>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>The following instructions assume you have the following software installed:</p>
+<ul class="simple">
+<li><p>Python 3 (in order to use <code class="docutils literal notranslate"><span class="pre">venv</span></code>)</p></li>
+<li><p>Pulumi</p></li>
+<li><p>Azure CLI</p></li>
+</ul>
+<div class="dropdown admonition">
+<p class="admonition-title">Installation instructions for prerequisites</p>
+<p><strong>Python 3</strong></p>
+<p>Ensure you have a working installation of Python 3. The application has been tested with Python <strong>3.8.13</strong>.</p>
+<p>If you don’t have Python installed, you can download it from <a class="reference external" href="https://www.python.org/downloads/">Python’s official website</a>.</p>
+<p><strong>Pulumi</strong></p>
+<p>Ensure you have a working installation of Pulumi.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If you need to install Homebrew, you can find instructions on how to do so on <a class="reference external" href="https://brew.sh/">Homebrew’s website</a>.</p>
+</div>
+<p>If you don’t have Pulumi installed, follow the <a class="reference external" href="https://www.pulumi.com/docs/install/">documentation</a> e.g. on a Mac:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>pulumi/tap/pulumi
+</pre></div>
+</div>
+<p><strong>Azure CLI</strong></p>
+<p>Ensure you have a working installation of the Azure CLI.</p>
+<p>If you don’t have the Azure CLI installed, you can download it from <a class="reference external" href="https://learn.microsoft.com/en-us/cli/azure/install-azure-cli">Microsoft’s official website</a>.</p>
+</div>
+</section>
+<section id="step-1-log-in-to-azure">
+<h2>Step 1: Log in to Azure<a class="headerlink" href="#step-1-log-in-to-azure" title="Permalink to this heading"></a></h2>
+<p>Ensure that you are correctly logged in and that the subscription you will use comes up in the list of subscriptions printed out, then set to that subscription:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>az<span class="w"> </span>login
+$<span class="w"> </span>az<span class="w"> </span>account<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--subscription<span class="w"> </span><span class="s2">&quot;&lt;subscription-id&gt;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-create-a-virtual-environment-for-pulumi">
+<h2>Step 2: Create a virtual environment for Pulumi<a class="headerlink" href="#step-2-create-a-virtual-environment-for-pulumi" title="Permalink to this heading"></a></h2>
+<p>You can use either Conda or Python’s built-in <code class="docutils literal notranslate"><span class="pre">venv</span></code> module to create a virtual environment (you could also re-use the environment you set up for Seshat development and install the requirements there).</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Conda example</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">venv example</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Create the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>seshat_pulumi
+</pre></div>
+</div>
+<p>Activate the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>seshat_pulumi
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Create the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>seshat_pulumi
+</pre></div>
+</div>
+<p>Activate the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>seshat_pulumi/bin/activate
+</pre></div>
+</div>
+</div></div>
+<p>Install the requirements:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>pulumi/requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="step-3-set-up-a-pulumi-stack">
+<h2>Step 3: Set up a Pulumi stack<a class="headerlink" href="#step-3-set-up-a-pulumi-stack" title="Permalink to this heading"></a></h2>
+<p>We assume here that you’ll use our provided Pulumi setup (located in the <code class="docutils literal notranslate"><span class="pre">/pulumi</span></code> directory in this repository).</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Setting up a Pulumi stack from scratch</p>
+<p>If you’re setting up a Pulumi stack from scratch, you can follow the below steps:</p>
+<ol class="arabic">
+<li><p>Set up a Pulumi stack for Azure Python:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>new<span class="w"> </span>azure-python
+</pre></div>
+</div>
+</li>
+<li><p>Initialize a new Pulumi stack:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>stack<span class="w"> </span>init<span class="w"> </span>&lt;stack-name&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Select the stack:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>stack<span class="w"> </span><span class="k">select</span><span class="w"> </span>&lt;stack-name&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>In the provided set up in the <code class="docutils literal notranslate"><span class="pre">/pulumi</span></code> directory, we have already set up the Pulumi stack for you.</p>
+<p>In the included set up, we:</p>
+<ul class="simple">
+<li><p>Chose a sensible project name: <cite>seshat-dev</cite></p></li>
+<li><p>Chose the stack name <cite>seshat</cite></p></li>
+<li><p>Chose <code class="docutils literal notranslate"><span class="pre">UKSouth</span></code> location</p></li>
+<li><p>Made custom edits to the config files for the Seshat app</p></li>
+</ul>
+</div>
+<p>To set up this Pulumi stack, run the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>stack<span class="w"> </span>init<span class="w"> </span>seshat
+$<span class="w"> </span>pulumi<span class="w"> </span>stack<span class="w"> </span><span class="k">select</span><span class="w"> </span>seshat
+</pre></div>
+</div>
+</section>
+<section id="step-4-configure-pulumi">
+<h2>Step 4: Configure Pulumi<a class="headerlink" href="#step-4-configure-pulumi" title="Permalink to this heading"></a></h2>
+<p>You will need to provide the following configuration values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sshPublicKey</span></code>: The public key that will be used to SSH into the VM. You can find your public key by running:</p>
+</li>
+</ul>
+<p>The following command will set the <cite>sshPublicKey</cite> configuration value:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--secret<span class="w"> </span>sshPublicKey<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>cat<span class="w"> </span>~/.ssh/id_rsa.pub<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-5-deploy-the-app">
+<h2>Step 5: Deploy the app<a class="headerlink" href="#step-5-deploy-the-app" title="Permalink to this heading"></a></h2>
+<p>To deploy the app, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>up
+</pre></div>
+</div>
+</section>
+<section id="manual-steps">
+<h2>Manual steps<a class="headerlink" href="#manual-steps" title="Permalink to this heading"></a></h2>
+<p>The Pulumi setup is only partially automated. The following steps are required to complete the setup:</p>
+<ul class="simple">
+<li><p>SSH into the created VM</p></li>
+<li><p>Set up the database</p></li>
+<li><p>Run the Django app</p></li>
+</ul>
+<section id="manual-step-1-ssh-into-the-created-vm">
+<h3>Manual step 1: SSH into the created VM<a class="headerlink" href="#manual-step-1-ssh-into-the-created-vm" title="Permalink to this heading"></a></h3>
+<p>First, we want to get the public IP address of the VM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pulumi<span class="w"> </span>stack<span class="w"> </span>output
+</pre></div>
+</div>
+<p>This will output the public IP address of the VM. Make a note of this IP address as you will need it to SSH into the VM.</p>
+<p>In order to SSH into the VM, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>webadmin@&lt;VM<span class="w"> </span>IP<span class="w"> </span>adress&gt;
+</pre></div>
+</div>
+</section>
+<section id="manual-step-2-set-up-the-database">
+<h3>Manual step 2: Set up the database<a class="headerlink" href="#manual-step-2-set-up-the-database" title="Permalink to this heading"></a></h3>
+<p>Once we’ve logged inot the VM, we need to set up the database. In this step, we create the database, add PostGIS to it, set a password for the superuser, update postgres to use md5, and restore the database from the dump.</p>
+<p>To create the database, we need to open <code class="docutils literal notranslate"><span class="pre">psql</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+</pre></div>
+</div>
+<p>Then, create the database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">seshat_db_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Exit out of <code class="docutils literal notranslate"><span class="pre">psql</span></code> using <code class="docutils literal notranslate"><span class="pre">\q</span></code>.</p>
+<p>Next, we need to add PostGIS to the database by opening <code class="docutils literal notranslate"><span class="pre">psql</span></code> again using the correct user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-d<span class="w"> </span>&lt;seshat_db_name&gt;
+</pre></div>
+</div>
+<p>Then, add PostGIS to the database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">postgis</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Exit out of <code class="docutils literal notranslate"><span class="pre">psql</span></code> using <code class="docutils literal notranslate"><span class="pre">\q</span></code>.</p>
+</section>
+<section id="manual-step-3-secure-the-database">
+<h3>Manual step 3: Secure the database<a class="headerlink" href="#manual-step-3-secure-the-database" title="Permalink to this heading"></a></h3>
+<p>Choose a password for Postgres. At Turing we have an Azure Key Vault set up under the project subscription where this can be saved (the one we have set up can be reused).</p>
+<p>In order to add the password for the superuser, open <code class="docutils literal notranslate"><span class="pre">psql</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+</pre></div>
+</div>
+<p>Then, add the password for the superuser:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;&lt;db_password&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Update postgres to use md5:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/postgresql/16/main/pg_hba.conf
+</pre></div>
+</div>
+<img alt="../../../_images/pg_hba.conf.png" src="../../../_images/pg_hba.conf.png" />
+<p>In order for the changes to take effect, reload postgres:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postgresql
+</pre></div>
+</div>
+<p>Exit out of <code class="docutils literal notranslate"><span class="pre">psql</span></code> using <code class="docutils literal notranslate"><span class="pre">\q</span></code>.</p>
+</section>
+<section id="manual-step-4-restore-the-database-from-the-dump">
+<h3>Manual step 4: Restore the database from the dump<a class="headerlink" href="#manual-step-4-restore-the-database-from-the-dump" title="Permalink to this heading"></a></h3>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>This step assumes that you have access to the Seshat database dump.</p>
+<p>You can access it through the project’s <a class="reference external" href="https://drive.google.com/drive/folders/1c5djM48ve91t84Ug4a8JksSC0p4J-eav?usp=sharing">Google Drive</a>.</p>
+</div>
+<p>In order to restore the database from the dump, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>&lt;seshat_db_name&gt;<span class="w"> </span>&lt;<span class="w"> </span>~/seshat.dump
+</pre></div>
+</div>
+<section id="optional-manual-step-4-1-update-the-database-with-the-latest-shape-data">
+<h4>[Optional] manual step 4.1: Update the database with the latest shape data<a class="headerlink" href="#optional-manual-step-4-1-update-the-database-with-the-latest-shape-data" title="Permalink to this heading"></a></h4>
+<p>If you need to update the database with the latest shape datasets, you can do so by following the instructions in <a class="reference internal" href="../spatialdb.html"><span class="doc">spatialdb.rst</span></a>.</p>
+<p>You can first upload the data files required to the VM using <code class="docutils literal notranslate"><span class="pre">scp</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>scp<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_rsa<span class="w"> </span>path/to/datafile<span class="w"> </span>webadmin@&lt;VM<span class="w"> </span>IP<span class="w"> </span>adress&gt;:location_on_vm/datafile
+</pre></div>
+</div>
+</section>
+</section>
+<section id="manual-step-5-collect-static-files">
+<h3>Manual step 5: Collect static files<a class="headerlink" href="#manual-step-5-collect-static-files" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>seshat
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>venv/bin/activate
+$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+</pre></div>
+</div>
+</section>
+<section id="manual-step-6-add-the-ip-address-to-the-allowed-hosts">
+<h3>Manual step 6: Add the IP address to the allowed hosts<a class="headerlink" href="#manual-step-6-add-the-ip-address-to-the-allowed-hosts" title="Permalink to this heading"></a></h3>
+<p>First, open <code class="docutils literal notranslate"><span class="pre">seshat/settings/local.py</span></code> and add the created IP address to <code class="docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;public IP&gt;&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then, ensure local (test site) settings are set:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">DJANGO_SETTINGS_MODULE</span><span class="o">=</span>seshat.settings.local
+</pre></div>
+</div>
+</section>
+<section id="manual-step-7-run-the-django-app">
+<h3>Manual step 7: Run the Django app<a class="headerlink" href="#manual-step-7-run-the-django-app" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">8000</span>
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>seshat
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>venv/bin/activate
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">DJANGO_SETTINGS_MODULE</span><span class="o">=</span>seshat.settings.local
+$<span class="w"> </span>gunicorn<span class="w"> </span>seshat.wsgi:application<span class="w"> </span>--config<span class="w"> </span>gunicorn.conf.py
+</pre></div>
+</div>
+<p>Now, you should be able to go to the publicly’ exposed IP on port 8000: <code class="docutils literal notranslate"><span class="pre">http://&lt;public</span> <span class="pre">IP&gt;:8000/</span></code>.</p>
+</section>
+<section id="wip-manual-step-8-set-up-nginx-to-work-with-gunicorn">
+<h3>[WIP] Manual step 8: Set up Nginx to work with Gunicorn<a class="headerlink" href="#wip-manual-step-8-set-up-nginx-to-work-with-gunicorn" title="Permalink to this heading"></a></h3>
+<p>Untested instructions</p>
+<div class="toggle docutils container">
+<p>You can test the app by running it with Gunicorn:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>gunicorn<span class="w"> </span>seshat.wsgi:application<span class="w"> </span>--config<span class="w"> </span>gunicorn.conf.py
+</pre></div>
+</div>
+<p>Visiting the public IP address in your browser should now show the Seshat app on the port 8000: <code class="docutils literal notranslate"><span class="pre">http://&lt;public</span> <span class="pre">IP&gt;:8000/</span></code>.</p>
+<p>Kill the Gunicorn process with <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code>.</p>
+<p>Create a systemd service for Gunicorn:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/systemd/system/gunicorn.socket
+</pre></div>
+</div>
+<p>Inside the file, add the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>gunicorn<span class="w"> </span>socket
+
+<span class="o">[</span>Socket<span class="o">]</span>
+<span class="nv">ListenStream</span><span class="o">=</span>/run/gunicorn.sock
+
+<span class="o">[</span>Install<span class="o">]</span>
+<span class="nv">WantedBy</span><span class="o">=</span>sockets.target
+</pre></div>
+</div>
+<p>Next, create a systemd service file for Gunicorn. The service filename should match the socket filename with the exception of the extension:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/systemd/system/gunicorn.service
+</pre></div>
+</div>
+<p>Inside the file, add the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>gunicorn<span class="w"> </span>daemon
+<span class="nv">Requires</span><span class="o">=</span>gunicorn.socket
+<span class="nv">After</span><span class="o">=</span>network.target
+
+<span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">User</span><span class="o">=</span>webadmin
+<span class="nv">Group</span><span class="o">=</span>webadmin
+<span class="nv">WorkingDirectory</span><span class="o">=</span>/home/webadmin/seshat
+<span class="nv">ExecStart</span><span class="o">=</span>/home/webadmin/seshat/venv/bin/gunicorn<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>--access-logfile<span class="w"> </span>-<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>--workers<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>--bind<span class="w"> </span>unix:/run/gunicorn.sock<span class="w"> </span><span class="se">\</span>
+<span class="w">          </span>seshat.wsgi:application<span class="w"> </span>--config<span class="w"> </span>gunicorn.conf.py
+
+<span class="o">[</span>Install<span class="o">]</span>
+<span class="nv">WantedBy</span><span class="o">=</span>multi-user.target
+</pre></div>
+</div>
+<p>You can now start and enable the Gunicorn socket.
+This will create the socket file at <cite>/run/gunicorn.sock`</cite> now and at boot.
+When a connection is made to that socket, systemd will automatically start the gunicorn.service to handle it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>gunicorn.socket
+$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>gunicorn.socket
+</pre></div>
+</div>
+<p>You can check the status of the Gunicorn socket and Gunicorn with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>gunicorn.socket
+$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>gunicorn
+</pre></div>
+</div>
+<p>Next, we need to set up Nginx to pass web requests to the socket file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/sites-available/seshat
+</pre></div>
+</div>
+<p>Add the following configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>server<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span>listen<span class="w"> </span><span class="m">80</span><span class="p">;</span>
+<span class="w">    </span>server_name<span class="w"> </span>&lt;public<span class="w"> </span>IP&gt;<span class="p">;</span>
+
+<span class="w">    </span><span class="nv">location</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/favicon.ico<span class="w"> </span><span class="o">{</span><span class="w"> </span>access_log<span class="w"> </span>off<span class="p">;</span><span class="w"> </span>log_not_found<span class="w"> </span>off<span class="p">;</span><span class="w"> </span><span class="o">}</span>
+
+<span class="w">    </span>location<span class="w"> </span>/<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>include<span class="w"> </span>proxy_params<span class="p">;</span>
+<span class="w">        </span>proxy_pass<span class="w"> </span>http://unix:/run/gunicorn.sock<span class="p">;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="w">    </span>location<span class="w"> </span>/static/<span class="w"> </span><span class="o">{</span>
+<span class="w">        </span>autoindex<span class="w"> </span>on<span class="p">;</span>
+<span class="w">        </span><span class="nb">alias</span><span class="w"> </span>/home/webadmin/seshat/seshat/staticfiles/<span class="p">;</span>
+<span class="w">    </span><span class="o">}</span>
+
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Change the content of nginx config to make sure that it can access all the files in our project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/nginx/nginx.conf
+</pre></div>
+</div>
+<p>On the top of the file, the user should be changed from www-data to webadmin:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>user<span class="w"> </span>webadmin<span class="p">;</span>
+</pre></div>
+</div>
+<p>Then, link the file to the sites-enabled directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/seshat<span class="w"> </span>/etc/nginx/sites-enabled
+</pre></div>
+</div>
+<p>Check the Nginx configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nginx<span class="w"> </span>-t
+</pre></div>
+</div>
+<p>If the test is successful, restart Nginx:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
+</pre></div>
+</div>
+<p>You should now be able to access the Seshat app on the public IP address <code class="docutils literal notranslate"><span class="pre">http://&lt;public</span> <span class="pre">IP&gt;/</span></code>.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../local/macos-ubuntu.html" class="btn btn-neutral float-left" title="Setting up a local Ubuntu environment on a Mac" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CSH_manual.html" class="btn btn-neutral float-right" title="AWS cloud setup (Complexity Science Hub)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

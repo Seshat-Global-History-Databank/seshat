@@ -1,0 +1,180 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/clipboard.min.js"></script>
+      <script src="../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Websites" href="websites.html" />
+    <link rel="prev" title="Database schema map" href="schema.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="schema.html">Database schema map</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests-locally">Running tests locally</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ci">CI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-new-tests">Adding new tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="websites.html">Websites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup/index.html">Setting up Seshat</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Seshat Databank Admin</a></li>
+      <li class="breadcrumb-item active">Testing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/admin/testing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="testing">
+<h1>Testing<a class="headerlink" href="#testing" title="Permalink to this heading"></a></h1>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Activate your project python environment. Then install all the required test packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements/tests.txt
+</pre></div>
+</div>
+</section>
+<section id="running-tests-locally">
+<h2>Running tests locally<a class="headerlink" href="#running-tests-locally" title="Permalink to this heading"></a></h2>
+<p>First, make sure the Seshat repo root directory is in your PYTHONPATH:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PYTHONPATH</span><span class="si">}</span><span class="s2">:/path/to/seshat&quot;</span>
+</pre></div>
+</div>
+<p>Then use the Django test interface to run tests for apps:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span><span class="nb">test</span><span class="w"> </span>&lt;app<span class="w"> </span>name&gt;<span class="w"> </span>--keepdb
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;app</span> <span class="pre">name&gt;</span></code> with the app’s full name (e.g. <code class="docutils literal notranslate"><span class="pre">seshat.apps.core</span></code>) (or leave this setting entirely off to run all tests).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--keepdb</span></code> flag ensures you can rerun tests quickly if the setup hasn’t changed.</p>
+</section>
+<section id="ci">
+<h2>CI<a class="headerlink" href="#ci" title="Permalink to this heading"></a></h2>
+<p>GitHub actions is set up to run on this repo. It uses a custom Docker image that gets built on every push or PR to <code class="docutils literal notranslate"><span class="pre">dev</span></code> if the Dockerfile has changed.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">.github/workflows</span></code> and the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The tests (<code class="docutils literal notranslate"><span class="pre">.github/workflows/tests.yml</span></code>) and any subsequently introduced workflows should always run on push/PR to <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p>
+<p>To set up pushing the docker image using the GH action workflow, I first did the following:</p>
+<ul class="simple">
+<li><p>Generated a new GitHub token with the <code class="docutils literal notranslate"><span class="pre">read:packages</span></code> and <code class="docutils literal notranslate"><span class="pre">write:packages</span></code> scopes. Under my <code class="docutils literal notranslate"><span class="pre">Settings</span> <span class="pre">&gt;</span> <span class="pre">Developer</span> <span class="pre">settings</span> <span class="pre">&gt;</span> <span class="pre">Personal</span> <span class="pre">access</span> <span class="pre">tokens</span></code> (classic token).</p></li>
+<li><p>Stored the GitHub token as a secret in the Seshat GitHub repository, <code class="docutils literal notranslate"><span class="pre">Settings</span> <span class="pre">&gt;</span> <span class="pre">Secrets</span></code>, named <code class="docutils literal notranslate"><span class="pre">GH_TOKEN</span></code>.</p></li>
+</ul>
+</section>
+<section id="adding-new-tests">
+<h2>Adding new tests<a class="headerlink" href="#adding-new-tests" title="Permalink to this heading"></a></h2>
+<p><em>TODO: Add instructions for adding new tests.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="schema.html" class="btn btn-neutral float-left" title="Database schema map" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="websites.html" class="btn btn-neutral float-right" title="Websites" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

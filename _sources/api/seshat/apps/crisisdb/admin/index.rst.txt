@@ -1,0 +1,79 @@
+seshat.apps.crisisdb.admin
+==========================
+
+.. py:module:: seshat.apps.crisisdb.admin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.crisisdb.admin.UsLocationAdmin
+   seshat.apps.crisisdb.admin.UsViolenceDataSourceAdmin
+   seshat.apps.crisisdb.admin.UsViolenceSubtypeAdmin
+
+
+Module Contents
+---------------
+
+.. py:class:: UsLocationAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:attribute:: list_display
+      :value: ['us_state', 'city', 'county', 'special_place']
+
+
+
+   .. py:attribute:: list_filter
+      :value: ['us_state', 'city', 'county']
+
+
+
+   .. py:attribute:: search_fields
+      :value: ['us_state', 'city', 'county', 'special_place']
+
+
+
+.. py:class:: UsViolenceDataSourceAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:attribute:: list_display
+      :value: ['name', 'abbreviation', 'is_uncertain', 'attention_tag']
+
+
+
+   .. py:attribute:: list_filter
+      :value: ['is_uncertain', 'attention_tag']
+
+
+
+   .. py:attribute:: search_fields
+      :value: ['name', 'abbreviation']
+
+
+
+.. py:class:: UsViolenceSubtypeAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:attribute:: list_display
+      :value: ['name', 'is_uncertain']
+
+
+
+   .. py:attribute:: list_filter
+      :value: ['is_uncertain']
+
+
+
+   .. py:attribute:: search_fields
+      :value: ['name']
+
+
+

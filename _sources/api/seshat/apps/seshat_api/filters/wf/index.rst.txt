@@ -1,0 +1,751 @@
+seshat.apps.seshat_api.filters.wf
+=================================
+
+.. py:module:: seshat.apps.seshat_api.filters.wf
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.seshat_api.filters.wf.AtlatlFilter
+   seshat.apps.seshat_api.filters.wf.BattleAxeFilter
+   seshat.apps.seshat_api.filters.wf.BreastplateFilter
+   seshat.apps.seshat_api.filters.wf.BronzeFilter
+   seshat.apps.seshat_api.filters.wf.CamelFilter
+   seshat.apps.seshat_api.filters.wf.ChainmailFilter
+   seshat.apps.seshat_api.filters.wf.ComplexFortificationFilter
+   seshat.apps.seshat_api.filters.wf.CompositeBowFilter
+   seshat.apps.seshat_api.filters.wf.CopperFilter
+   seshat.apps.seshat_api.filters.wf.CrossbowFilter
+   seshat.apps.seshat_api.filters.wf.DaggerFilter
+   seshat.apps.seshat_api.filters.wf.DitchFilter
+   seshat.apps.seshat_api.filters.wf.DogFilter
+   seshat.apps.seshat_api.filters.wf.DonkeyFilter
+   seshat.apps.seshat_api.filters.wf.EarthRampartFilter
+   seshat.apps.seshat_api.filters.wf.ElephantFilter
+   seshat.apps.seshat_api.filters.wf.FortifiedCampFilter
+   seshat.apps.seshat_api.filters.wf.GunpowderSiegeArtilleryFilter
+   seshat.apps.seshat_api.filters.wf.HandheldFirearmFilter
+   seshat.apps.seshat_api.filters.wf.HelmetFilter
+   seshat.apps.seshat_api.filters.wf.HorseFilter
+   seshat.apps.seshat_api.filters.wf.IronFilter
+   seshat.apps.seshat_api.filters.wf.JavelinFilter
+   seshat.apps.seshat_api.filters.wf.LaminarArmorFilter
+   seshat.apps.seshat_api.filters.wf.LeatherClothFilter
+   seshat.apps.seshat_api.filters.wf.LimbProtectionFilter
+   seshat.apps.seshat_api.filters.wf.LongWallFilter
+   seshat.apps.seshat_api.filters.wf.MerchantShipsPressedIntoServiceFilter
+   seshat.apps.seshat_api.filters.wf.MoatFilter
+   seshat.apps.seshat_api.filters.wf.ModernFortificationFilter
+   seshat.apps.seshat_api.filters.wf.PlateArmorFilter
+   seshat.apps.seshat_api.filters.wf.PolearmFilter
+   seshat.apps.seshat_api.filters.wf.ScaledArmorFilter
+   seshat.apps.seshat_api.filters.wf.SelfBowFilter
+   seshat.apps.seshat_api.filters.wf.SettlementsInADefensivePositionFilter
+   seshat.apps.seshat_api.filters.wf.ShieldFilter
+   seshat.apps.seshat_api.filters.wf.SlingFilter
+   seshat.apps.seshat_api.filters.wf.SlingSiegeEngineFilter
+   seshat.apps.seshat_api.filters.wf.SmallVesselsCanoesEtcFilter
+   seshat.apps.seshat_api.filters.wf.SpearFilter
+   seshat.apps.seshat_api.filters.wf.SpecializedMilitaryVesselFilter
+   seshat.apps.seshat_api.filters.wf.SteelFilter
+   seshat.apps.seshat_api.filters.wf.StoneWallsMortaredFilter
+   seshat.apps.seshat_api.filters.wf.StoneWallsNonMortaredFilter
+   seshat.apps.seshat_api.filters.wf.SwordFilter
+   seshat.apps.seshat_api.filters.wf.TensionSiegeEngineFilter
+   seshat.apps.seshat_api.filters.wf.WarClubFilter
+   seshat.apps.seshat_api.filters.wf.WoodBarkEtcFilter
+   seshat.apps.seshat_api.filters.wf.WoodenPalisadeFilter
+
+
+Module Contents
+---------------
+
+.. py:class:: AtlatlFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: BattleAxeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: BreastplateFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: BronzeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CamelFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ChainmailFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ComplexFortificationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CompositeBowFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CopperFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CrossbowFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DaggerFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DitchFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DogFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DonkeyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: EarthRampartFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ElephantFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FortifiedCampFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: GunpowderSiegeArtilleryFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: HandheldFirearmFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: HelmetFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: HorseFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: IronFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: JavelinFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LaminarArmorFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LeatherClothFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LimbProtectionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LongWallFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MerchantShipsPressedIntoServiceFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MoatFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ModernFortificationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PlateArmorFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolearmFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ScaledArmorFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SelfBowFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SettlementsInADefensivePositionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ShieldFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SlingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SlingSiegeEngineFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SmallVesselsCanoesEtcFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SpearFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SpecializedMilitaryVesselFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SteelFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: StoneWallsMortaredFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: StoneWallsNonMortaredFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SwordFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: TensionSiegeEngineFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: WarClubFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: WoodBarkEtcFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: WoodenPalisadeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+

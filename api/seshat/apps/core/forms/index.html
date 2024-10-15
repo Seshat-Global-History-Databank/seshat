@@ -1,0 +1,980 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.core.forms &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.core.manual_input_refs" href="../manual_input_refs/index.html" />
+    <link rel="prev" title="seshat.apps.core.custom_filters" href="../custom_filters/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.core</a></li>
+      <li class="breadcrumb-item active">seshat.apps.core.forms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/core/forms/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.core.forms">
+<span id="seshat-apps-core-forms"></span><h1>seshat.apps.core.forms<a class="headerlink" href="#module-seshat.apps.core.forms" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.CommentPartFormSet" title="seshat.apps.core.forms.CommentPartFormSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CommentPartFormSet</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceFormSet10" title="seshat.apps.core.forms.ReferenceFormSet10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceFormSet10</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceFormSet2" title="seshat.apps.core.forms.ReferenceFormSet2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceFormSet2</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceFormSet2_UPGRADE" title="seshat.apps.core.forms.ReferenceFormSet2_UPGRADE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceFormSet2_UPGRADE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceFormSet5" title="seshat.apps.core.forms.ReferenceFormSet5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceFormSet5</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.BaseReferenceFormSet" title="seshat.apps.core.forms.BaseReferenceFormSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseReferenceFormSet</span></code></a></p></td>
+<td><p>Base formset for adding or updating multiple references to a comment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.CapitalForm" title="seshat.apps.core.forms.CapitalForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CapitalForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new capital in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.CitationForm" title="seshat.apps.core.forms.CitationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CitationForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new citation in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.NgaForm" title="seshat.apps.core.forms.NgaForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NgaForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new NGA in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.PolityForm" title="seshat.apps.core.forms.PolityForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new polity in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.PolityUpdateForm" title="seshat.apps.core.forms.PolityUpdateForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityUpdateForm</span></code></a></p></td>
+<td><p>Form for adding or updating an existing polity in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceForm" title="seshat.apps.core.forms.ReferenceForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new reference in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceWithPageForm" title="seshat.apps.core.forms.ReferenceWithPageForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceWithPageForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new reference with page numbers in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE" title="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceWithPageForm_UPGRADE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.ReligionForm" title="seshat.apps.core.forms.ReligionForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReligionForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new religion in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentForm" title="seshat.apps.core.forms.SeshatCommentForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new comment in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentForm2" title="seshat.apps.core.forms.SeshatCommentForm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentForm2</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentPartForm" title="seshat.apps.core.forms.SeshatCommentPartForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new comment part in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentPartForm10" title="seshat.apps.core.forms.SeshatCommentPartForm10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartForm10</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentPartForm2" title="seshat.apps.core.forms.SeshatCommentPartForm2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartForm2</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE" title="seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartForm2_UPGRADE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatCommentPartForm5" title="seshat.apps.core.forms.SeshatCommentPartForm5"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartForm5</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatPrivateCommentForm" title="seshat.apps.core.forms.SeshatPrivateCommentForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatPrivateCommentForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new private comment in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm" title="seshat.apps.core.forms.SeshatPrivateCommentPartForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatPrivateCommentPartForm</span></code></a></p></td>
+<td><p>Form for adding or updating a new private comment part in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.forms.SignUpForm" title="seshat.apps.core.forms.SignUpForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignUpForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.forms.VariablehierarchyFormNew" title="seshat.apps.core.forms.VariablehierarchyFormNew"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariablehierarchyFormNew</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.BaseReferenceFormSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">BaseReferenceFormSet</span></span><a class="headerlink" href="#seshat.apps.core.forms.BaseReferenceFormSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.formsets.BaseFormSet</span></code></p>
+<p>Base formset for adding or updating multiple references to a comment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.BaseReferenceFormSet.add_fields">
+<span class="sig-name descname"><span class="pre">add_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.forms.BaseReferenceFormSet.add_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Add fields to the form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>form</strong> (<em>Form</em>) – The form to add fields to.</p></li>
+<li><p><strong>index</strong> (<em>int</em>) – The index of the form.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">CapitalForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new capital in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'latitude',</span> <span class="pre">'longitude',</span> <span class="pre">'current_country',</span> <span class="pre">'alternative_names',</span> <span class="pre">'is_verified',...</span></em><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CapitalForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.CapitalForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">CitationForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new citation in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('ref',</span> <span class="pre">'page_from',</span> <span class="pre">'page_to')</span></em><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CitationForm.clean">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.forms.CitationForm.clean" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the citation is a duplicate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cleaned data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValidationError</strong> – If the citation is a duplicate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">NgaForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.NgaForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new NGA in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.NgaForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'world_region',</span> <span class="pre">'subregion',</span> <span class="pre">'fao_country')</span></em><a class="headerlink" href="#seshat.apps.core.forms.NgaForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.NgaForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.NgaForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.NgaForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.NgaForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">PolityForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new polity in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'new_name',</span> <span class="pre">'long_name',</span> <span class="pre">'start_year',</span> <span class="pre">'end_year',</span> <span class="pre">'home_seshat_region',</span> <span class="pre">'polity_tag',...</span></em><a class="headerlink" href="#seshat.apps.core.forms.PolityForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">PolityUpdateForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating an existing polity in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'new_name',</span> <span class="pre">'long_name',</span> <span class="pre">'start_year',</span> <span class="pre">'end_year',</span> <span class="pre">'home_seshat_region',</span> <span class="pre">'polity_tag',...</span></em><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.PolityUpdateForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.PolityUpdateForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new reference in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('title',</span> <span class="pre">'year',</span> <span class="pre">'creator',</span> <span class="pre">'zotero_link',</span> <span class="pre">'long_name')</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceWithPageForm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<p>Form for adding or updating a new reference with page numbers in the database.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.form_action">
+<span class="sig-name descname"><span class="pre">form_action</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'submit_survey'</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.form_action" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.form_class">
+<span class="sig-name descname"><span class="pre">form_class</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'blueForms'</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.form_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.form_id">
+<span class="sig-name descname"><span class="pre">form_id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'id-exampleForm'</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.form_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.form_method">
+<span class="sig-name descname"><span class="pre">form_method</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'post'</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.form_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.helper">
+<span class="sig-name descname"><span class="pre">helper</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.helper" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.page_from">
+<span class="sig-name descname"><span class="pre">page_from</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.page_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.page_to">
+<span class="sig-name descname"><span class="pre">page_to</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.page_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.parent_pars">
+<span class="sig-name descname"><span class="pre">parent_pars</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.parent_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm.ref">
+<span class="sig-name descname"><span class="pre">ref</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm.ref" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceWithPageForm_UPGRADE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.form_method">
+<span class="sig-name descname"><span class="pre">form_method</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'post'</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.form_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.helper">
+<span class="sig-name descname"><span class="pre">helper</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.helper" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.page_from">
+<span class="sig-name descname"><span class="pre">page_from</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.page_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.page_to">
+<span class="sig-name descname"><span class="pre">page_to</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.page_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.parent_pars">
+<span class="sig-name descname"><span class="pre">parent_pars</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.parent_pars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.ref">
+<span class="sig-name descname"><span class="pre">ref</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceWithPageForm_UPGRADE.ref" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReligionForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReligionForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReligionForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new religion in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReligionForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReligionForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReligionForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['religion_name']</span></em><a class="headerlink" href="#seshat.apps.core.forms.ReligionForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReligionForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReligionForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReligionForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReligionForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new comment in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('text',)</span></em><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentForm2</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentForm2.formset">
+<span class="sig-name descname"><span class="pre">formset</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentForm2.formset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new comment part in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('comment',</span> <span class="pre">'comment_part_text',</span> <span class="pre">'comment_citations',</span> <span class="pre">'comment_order',</span> <span class="pre">'comment_curator')</span></em><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm10">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartForm10</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm10" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm10.comment_order">
+<span class="sig-name descname"><span class="pre">comment_order</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm10.comment_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm10.comment_text">
+<span class="sig-name descname"><span class="pre">comment_text</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm10.comment_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm10.formset">
+<span class="sig-name descname"><span class="pre">formset</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm10.formset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartForm2</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2.comment_order">
+<span class="sig-name descname"><span class="pre">comment_order</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2.comment_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2.comment_text">
+<span class="sig-name descname"><span class="pre">comment_text</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2.comment_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2.formset">
+<span class="sig-name descname"><span class="pre">formset</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2.formset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartForm2_UPGRADE</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.comment_order">
+<span class="sig-name descname"><span class="pre">comment_order</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.comment_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.comment_text">
+<span class="sig-name descname"><span class="pre">comment_text</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.comment_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.references_formset">
+<span class="sig-name descname"><span class="pre">references_formset</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm2_UPGRADE.references_formset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm5">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartForm5</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm5" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm5.comment_order">
+<span class="sig-name descname"><span class="pre">comment_order</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm5.comment_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm5.comment_text">
+<span class="sig-name descname"><span class="pre">comment_text</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm5.comment_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatCommentPartForm5.formset">
+<span class="sig-name descname"><span class="pre">formset</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatCommentPartForm5.formset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatPrivateCommentForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new private comment in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('text',)</span></em><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SeshatPrivateCommentPartForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for adding or updating a new private comment part in the database.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('private_comment',</span> <span class="pre">'private_comment_part_text',</span> <span class="pre">'private_comment_owner',</span> <span class="pre">'private_comment_reader')</span></em><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.SeshatPrivateCommentPartForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">SignUpForm</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.auth.forms.UserCreationForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('username',</span> <span class="pre">'first_name',</span> <span class="pre">'last_name',</span> <span class="pre">'email',</span> <span class="pre">'password1',</span> <span class="pre">'password2',</span> <span class="pre">'captcha')</span></em><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.clean_email">
+<span class="sig-name descname"><span class="pre">clean_email</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.clean_email" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.captcha">
+<span class="sig-name descname"><span class="pre">captcha</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.captcha" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.password1">
+<span class="sig-name descname"><span class="pre">password1</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.password1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.SignUpForm.password2">
+<span class="sig-name descname"><span class="pre">password2</span></span><a class="headerlink" href="#seshat.apps.core.forms.SignUpForm.password2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">VariablehierarchyFormNew</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.Form</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('variable_name',</span> <span class="pre">'section_name',</span> <span class="pre">'subsection_name')</span></em><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.is_verified">
+<span class="sig-name descname"><span class="pre">is_verified</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.is_verified" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.my_vars">
+<span class="sig-name descname"><span class="pre">my_vars</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.my_vars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.my_vars_tuple">
+<span class="sig-name descname"><span class="pre">my_vars_tuple</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[('',</span> <span class="pre">'</span> <span class="pre">--</span> <span class="pre">Select</span> <span class="pre">Variable</span> <span class="pre">--</span> <span class="pre">')]</span></em><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.my_vars_tuple" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.section_name">
+<span class="sig-name descname"><span class="pre">section_name</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.section_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.subsection_name">
+<span class="sig-name descname"><span class="pre">subsection_name</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.subsection_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.VariablehierarchyFormNew.variable_name">
+<span class="sig-name descname"><span class="pre">variable_name</span></span><a class="headerlink" href="#seshat.apps.core.forms.VariablehierarchyFormNew.variable_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.CommentPartFormSet">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">CommentPartFormSet</span></span><a class="headerlink" href="#seshat.apps.core.forms.CommentPartFormSet" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceFormSet10">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceFormSet10</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceFormSet10" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceFormSet2">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceFormSet2</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceFormSet2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceFormSet2_UPGRADE">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceFormSet2_UPGRADE</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceFormSet2_UPGRADE" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.forms.ReferenceFormSet5">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.forms.</span></span><span class="sig-name descname"><span class="pre">ReferenceFormSet5</span></span><a class="headerlink" href="#seshat.apps.core.forms.ReferenceFormSet5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../custom_filters/index.html" class="btn btn-neutral float-left" title="seshat.apps.core.custom_filters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../manual_input_refs/index.html" class="btn btn-neutral float-right" title="seshat.apps.core.manual_input_refs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

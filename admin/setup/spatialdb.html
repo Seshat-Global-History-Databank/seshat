@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cliopatria shape dataset &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/clipboard.min.js"></script>
+      <script src="../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Researcher" href="../../researcher/index.html" />
+    <link rel="prev" title="AWS cloud setup (Complexity Science Hub)" href="cloud/CSH_manual.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../schema.html">Database schema map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../websites.html">Websites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Setting up Seshat</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="local/index.html">Setting up Seshat in a local environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cloud/pulumi.html">MS Azure cloud setup with Pulumi (Alan Turing Institute)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cloud/CSH_manual.html">AWS cloud setup (Complexity Science Hub)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cliopatria shape dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gadm">GADM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-add-new-shape-datasets-to-the-maps">How to add new shape datasets to the maps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Seshat Databank Admin</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Setting up Seshat</a></li>
+      <li class="breadcrumb-item active">Cliopatria shape dataset</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/admin/setup/spatialdb.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cliopatria-shape-dataset">
+<h1>Cliopatria shape dataset<a class="headerlink" href="#cliopatria-shape-dataset" title="Permalink to this heading"></a></h1>
+<ol class="arabic">
+<li><p>Clone the <a class="reference external" href="https://github.com/Seshat-Global-History-Databank/cliopatria">Cliopatria GitHub repository</a>.</p></li>
+<li><p>Unzip the file <code class="docutils literal notranslate"><span class="pre">cliopatria.geojson.zip</span></code>.</p></li>
+<li><p>Enter the <cite>notebooks</cite> directory and set up the Python environment as per the instructions in the <cite>README.md</cite> file in the same directory.</p></li>
+<li><p>Run the following command to add colours to the dataset:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>convert_data.py<span class="w"> </span>../cliopatria.geojson
+</pre></div>
+</div>
+<p>This will create a new file with the name “cliopatria_seshat_processed.geojson”.
+Note: You can preview the file in the Jupyter notebook found in the <cite>notebooks</cite> directory. Instructions on how to run the notebook are found in the <cite>README.md</cite> file in the same directory.</p>
+</li>
+<li><p>Go back to the Seshat repo on the machine the website code is running from (if you are running it on a remote server, upload the processed GeoJSON). With your Seshat Python environment activated, you can populate <code class="docutils literal notranslate"><span class="pre">core_cliopatria</span></code> table using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>populate_cliopatria<span class="w"> </span>/path/to/cliopatria_seshat_processed.geojson
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="gadm">
+<h1>GADM<a class="headerlink" href="#gadm" title="Permalink to this heading"></a></h1>
+<ol class="arabic">
+<li><p><a class="reference external" href="https://geodata.ucdavis.edu/gadm/gadm4.1/gadm_410-gpkg.zip">Download</a> the whole world GeoPackage file from the <a class="reference external" href="https://gadm.org/download_world.html">GADM website</a>.</p></li>
+<li><p>Populate the <code class="docutils literal notranslate"><span class="pre">core_gadmshapefile</span></code>, <code class="docutils literal notranslate"><span class="pre">core_gadmcountries</span></code> and <code class="docutils literal notranslate"><span class="pre">core_gadmprovinces</span></code> tables using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>populate_gadm<span class="w"> </span>/path/to/gpkg_file
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="how-to-add-new-shape-datasets-to-the-maps">
+<h1>How to add new shape datasets to the maps<a class="headerlink" href="#how-to-add-new-shape-datasets-to-the-maps" title="Permalink to this heading"></a></h1>
+<p>Ensure that the database and Django are already set up (see the relevant <a class="reference internal" href="index.html"><span class="doc">setup</span></a> page for more detail) and all migrations have been run for the “core” Django app (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">manage.py</span> <span class="pre">migrate</span> <span class="pre">core</span></code>).</p>
+<p>To create a new shape dataset for use in the Seshat map explorer, you can do the following:</p>
+<ol class="arabic">
+<li><p>Create a new model for the new dataset in <code class="docutils literal notranslate"><span class="pre">seshat/apps/core/models.py</span></code></p></li>
+<li><p>Generate migration from model, and run it for your database to create the table</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>makemigrations<span class="w"> </span>core
+$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate<span class="w"> </span>core
+</pre></div>
+</div>
+</li>
+<li><p>Create a new “command” at <cite>seshat/apps/core/management/commands</cite> which can be used to populate the db table from the dataset files
+- See the examples below
+- Add a new header on this page to document here how this works</p></li>
+<li><p>Create a new view and update the the map template with the necessary logic to use this dataset
+- views at <code class="docutils literal notranslate"><span class="pre">seshat/apps/core/views.py</span></code>
+- template e.g. <code class="docutils literal notranslate"><span class="pre">seshat/apps/core/templates/core/world_map.html</span></code></p></li>
+</ol>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cloud/CSH_manual.html" class="btn btn-neutral float-left" title="AWS cloud setup (Complexity Science Hub)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../researcher/index.html" class="btn btn-neutral float-right" title="Researcher" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

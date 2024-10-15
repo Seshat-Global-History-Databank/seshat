@@ -1,0 +1,2107 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.core.models &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.core.nlp_zotero_links" href="../nlp_zotero_links/index.html" />
+    <link rel="prev" title="seshat.apps.core.middleware" href="../middleware/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.core</a></li>
+      <li class="breadcrumb-item active">seshat.apps.core.models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/core/models/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.core.models">
+<span id="seshat-apps-core-models"></span><h1>seshat.apps.core.models<a class="headerlink" href="#module-seshat.apps.core.models" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.AA" title="seshat.apps.core.models.AA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AA</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.AP" title="seshat.apps.core.models.AP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.APS" title="seshat.apps.core.models.APS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">APS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.AS" title="seshat.apps.core.models.AS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.A_TO_P" title="seshat.apps.core.models.A_TO_P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">A_TO_P</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Certainty" title="seshat.apps.core.models.Certainty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Certainty</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.NFY" title="seshat.apps.core.models.NFY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NFY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.POLITY_TAG_CHOICES" title="seshat.apps.core.models.POLITY_TAG_CHOICES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">POLITY_TAG_CHOICES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.PP" title="seshat.apps.core.models.PP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.PS" title="seshat.apps.core.models.PS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.P_TO_A" title="seshat.apps.core.models.P_TO_A"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P_TO_A</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Tags" title="seshat.apps.core.models.Tags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tags</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.U" title="seshat.apps.core.models.U"><code class="xref py py-obj docutils literal notranslate"><span class="pre">U</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.UU" title="seshat.apps.core.models.UU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UU</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.WORLD_REGION_CHOICES" title="seshat.apps.core.models.WORLD_REGION_CHOICES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WORLD_REGION_CHOICES</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Capital" title="seshat.apps.core.models.Capital"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Capital</span></code></a></p></td>
+<td><p>Model representing a capital.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Citation" title="seshat.apps.core.models.Citation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Citation</span></code></a></p></td>
+<td><p>Model representing a specific citation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Cliopatria" title="seshat.apps.core.models.Cliopatria"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cliopatria</span></code></a></p></td>
+<td><p>Model representing Cliopatria polity borders dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Country" title="seshat.apps.core.models.Country"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Country</span></code></a></p></td>
+<td><p>Model representing a country.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.GADMCountries" title="seshat.apps.core.models.GADMCountries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMCountries</span></code></a></p></td>
+<td><p>Model representing a country (GADM).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.GADMProvinces" title="seshat.apps.core.models.GADMProvinces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMProvinces</span></code></a></p></td>
+<td><p>Model representing a province (GADM).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.GADMShapefile" title="seshat.apps.core.models.GADMShapefile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMShapefile</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Macro_region" title="seshat.apps.core.models.Macro_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Macro_region</span></code></a></p></td>
+<td><p>Model representing a macro region.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Nga" title="seshat.apps.core.models.Nga"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nga</span></code></a></p></td>
+<td><p>Model representing a NGA.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Ngapolityrel" title="seshat.apps.core.models.Ngapolityrel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ngapolityrel</span></code></a></p></td>
+<td><p>Model representing a relationship between a NGA and a polity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Polity" title="seshat.apps.core.models.Polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Polity</span></code></a></p></td>
+<td><p>Model representing a polity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Reference" title="seshat.apps.core.models.Reference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reference</span></code></a></p></td>
+<td><p>Model Representing a reference.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Religion" title="seshat.apps.core.models.Religion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Religion</span></code></a></p></td>
+<td><p>Model representing a religion.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.ScpThroughCtn" title="seshat.apps.core.models.ScpThroughCtn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScpThroughCtn</span></code></a></p></td>
+<td><p>Model representing a through model for the many-to-many relationship between</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Section" title="seshat.apps.core.models.Section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Section</span></code></a></p></td>
+<td><p>Model representing a section.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.SeshatComment" title="seshat.apps.core.models.SeshatComment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatComment</span></code></a></p></td>
+<td><p>Model representing a comment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.SeshatCommentPart" title="seshat.apps.core.models.SeshatCommentPart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPart</span></code></a></p></td>
+<td><p>Model representing a part of a comment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.SeshatCommon" title="seshat.apps.core.models.SeshatCommon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommon</span></code></a></p></td>
+<td><p>Model representing a common Seshat model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.SeshatPrivateComment" title="seshat.apps.core.models.SeshatPrivateComment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatPrivateComment</span></code></a></p></td>
+<td><p>Model representing a private comment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.SeshatPrivateCommentPart" title="seshat.apps.core.models.SeshatPrivateCommentPart"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatPrivateCommentPart</span></code></a></p></td>
+<td><p>Model representing a part of a private comment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Seshat_region" title="seshat.apps.core.models.Seshat_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Seshat_region</span></code></a></p></td>
+<td><p>Model representing a Seshat region.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.Subsection" title="seshat.apps.core.models.Subsection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subsection</span></code></a></p></td>
+<td><p>Model representing a subsection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.Variablehierarchy" title="seshat.apps.core.models.Variablehierarchy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Variablehierarchy</span></code></a></p></td>
+<td><p>Model representing a variable hierarchy.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.give_me_a_color_for_expert" title="seshat.apps.core.models.give_me_a_color_for_expert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">give_me_a_color_for_expert</span></code></a>(value)</p></td>
+<td><p>Returns a color for a given expert.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.return_citations_for_comments" title="seshat.apps.core.models.return_citations_for_comments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_citations_for_comments</span></code></a>(self)</p></td>
+<td><p>This function is used to return the citations of the model instance</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.return_citations_plus_for_comments" title="seshat.apps.core.models.return_citations_plus_for_comments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_citations_plus_for_comments</span></code></a>(self)</p></td>
+<td><p>Returns a string of all the citations for a comment.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.core.models.return_number_of_citations_for_comments" title="seshat.apps.core.models.return_number_of_citations_for_comments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_number_of_citations_for_comments</span></code></a>(self)</p></td>
+<td><p>Returns the number of citations for a comment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.core.models.return_number_of_citations_plus_for_comments" title="seshat.apps.core.models.return_number_of_citations_plus_for_comments"><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_number_of_citations_plus_for_comments</span></code></a>(self)</p></td>
+<td><p>Returns the number of citations for a comment.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Capital</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a capital.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['is_verified']</span></em><a class="headerlink" href="#seshat.apps.core.models.Capital.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Capital.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.alternative_names">
+<span class="sig-name descname"><span class="pre">alternative_names</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.alternative_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.current_country">
+<span class="sig-name descname"><span class="pre">current_country</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.current_country" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.is_verified">
+<span class="sig-name descname"><span class="pre">is_verified</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.is_verified" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.latitude">
+<span class="sig-name descname"><span class="pre">latitude</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.latitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.longitude">
+<span class="sig-name descname"><span class="pre">longitude</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.longitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.note">
+<span class="sig-name descname"><span class="pre">note</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.note" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.url_on_the_map">
+<span class="sig-name descname"><span class="pre">url_on_the_map</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.url_on_the_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.year_from">
+<span class="sig-name descname"><span class="pre">year_from</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.year_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Capital.year_to">
+<span class="sig-name descname"><span class="pre">year_to</span></span><a class="headerlink" href="#seshat.apps.core.models.Capital.year_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Citation</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a specific citation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.Meta.constraints">
+<span class="sig-name descname"><span class="pre">constraints</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.Meta.constraints" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['-modified_date']</span></em><a class="headerlink" href="#seshat.apps.core.models.Citation.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.full_citation_display">
+<span class="sig-name descname"><span class="pre">full_citation_display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Citation.full_citation_display" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a string of the full citation. If the citation has a title, it
+is included in the string. If the citation has a creator, it is
+included in the string. If the citation has a year, it is included in
+the string. If the citation has a page_from, it is included in the
+string. If the citation has a page_to, it is included in the string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string of the full citation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Citation.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Citation.save" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the citation to the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – Additional arguments.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>IntegrityError</strong> – If the citation cannot be saved to the database.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.zoteroer">
+<span class="sig-name descname"><span class="pre">zoteroer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Citation.zoteroer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the Zotero link for the citation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Zotero link for the citation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.citation_short_title">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">citation_short_title</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.citation_short_title" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">a</span> <span class="pre">short</span> <span class="pre">title</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">citation.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">title</span> <span class="pre">is</span> <span class="pre">longer</span> <span class="pre">than</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">40</span> <span class="pre">characters,</span> <span class="pre">it</span> <span class="pre">is</span> <span class="pre">truncated.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">title</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">provided,</span> <span class="pre">a</span> <span class="pre">default</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">title</span> <span class="pre">is</span> <span class="pre">returned.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A short title for the citation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.created_date">
+<span class="sig-name descname"><span class="pre">created_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.created_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.modified_date">
+<span class="sig-name descname"><span class="pre">modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.page_from">
+<span class="sig-name descname"><span class="pre">page_from</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.page_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.page_to">
+<span class="sig-name descname"><span class="pre">page_to</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.page_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Citation.ref">
+<span class="sig-name descname"><span class="pre">ref</span></span><a class="headerlink" href="#seshat.apps.core.models.Citation.ref" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Cliopatria</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing Cliopatria polity borders dataset.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.area">
+<span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.area" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.colour">
+<span class="sig-name descname"><span class="pre">colour</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.colour" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.components">
+<span class="sig-name descname"><span class="pre">components</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.components" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.end_year">
+<span class="sig-name descname"><span class="pre">end_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.end_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.geom">
+<span class="sig-name descname"><span class="pre">geom</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.geom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.member_of">
+<span class="sig-name descname"><span class="pre">member_of</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.member_of" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.polity_end_year">
+<span class="sig-name descname"><span class="pre">polity_end_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.polity_end_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.polity_start_year">
+<span class="sig-name descname"><span class="pre">polity_start_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.polity_start_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.seshat_id">
+<span class="sig-name descname"><span class="pre">seshat_id</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.seshat_id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.simplified_geom">
+<span class="sig-name descname"><span class="pre">simplified_geom</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.simplified_geom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.start_year">
+<span class="sig-name descname"><span class="pre">start_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.start_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Cliopatria.wikipedia_name">
+<span class="sig-name descname"><span class="pre">wikipedia_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Cliopatria.wikipedia_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Country</span></span><a class="headerlink" href="#seshat.apps.core.models.Country" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a country.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Country.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',)</span></em><a class="headerlink" href="#seshat.apps.core.models.Country.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.Meta.verbose_name">
+<span class="sig-name descname"><span class="pre">verbose_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'country'</span></em><a class="headerlink" href="#seshat.apps.core.models.Country.Meta.verbose_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.Meta.verbose_name_plural">
+<span class="sig-name descname"><span class="pre">verbose_name_plural</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'countries'</span></em><a class="headerlink" href="#seshat.apps.core.models.Country.Meta.verbose_name_plural" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Country.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Country.polity">
+<span class="sig-name descname"><span class="pre">polity</span></span><a class="headerlink" href="#seshat.apps.core.models.Country.polity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMCountries">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">GADMCountries</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMCountries" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a country (GADM).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMCountries.COUNTRY">
+<span class="sig-name descname"><span class="pre">COUNTRY</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMCountries.COUNTRY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMCountries.geom">
+<span class="sig-name descname"><span class="pre">geom</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMCountries.geom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMProvinces">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">GADMProvinces</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMProvinces" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a province (GADM).</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMProvinces.COUNTRY">
+<span class="sig-name descname"><span class="pre">COUNTRY</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMProvinces.COUNTRY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMProvinces.ENGTYPE_1">
+<span class="sig-name descname"><span class="pre">ENGTYPE_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMProvinces.ENGTYPE_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMProvinces.NAME_1">
+<span class="sig-name descname"><span class="pre">NAME_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMProvinces.NAME_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMProvinces.geom">
+<span class="sig-name descname"><span class="pre">geom</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMProvinces.geom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">GADMShapefile</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CC_1">
+<span class="sig-name descname"><span class="pre">CC_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CC_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CC_2">
+<span class="sig-name descname"><span class="pre">CC_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CC_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CC_3">
+<span class="sig-name descname"><span class="pre">CC_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CC_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CC_4">
+<span class="sig-name descname"><span class="pre">CC_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CC_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CC_5">
+<span class="sig-name descname"><span class="pre">CC_5</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CC_5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.CONTINENT">
+<span class="sig-name descname"><span class="pre">CONTINENT</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.CONTINENT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.COUNTRY">
+<span class="sig-name descname"><span class="pre">COUNTRY</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.COUNTRY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.DISPUTEDBY">
+<span class="sig-name descname"><span class="pre">DISPUTEDBY</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.DISPUTEDBY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ENGTYPE_1">
+<span class="sig-name descname"><span class="pre">ENGTYPE_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ENGTYPE_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ENGTYPE_2">
+<span class="sig-name descname"><span class="pre">ENGTYPE_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ENGTYPE_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ENGTYPE_3">
+<span class="sig-name descname"><span class="pre">ENGTYPE_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ENGTYPE_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ENGTYPE_4">
+<span class="sig-name descname"><span class="pre">ENGTYPE_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ENGTYPE_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ENGTYPE_5">
+<span class="sig-name descname"><span class="pre">ENGTYPE_5</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ENGTYPE_5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_0">
+<span class="sig-name descname"><span class="pre">GID_0</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_0" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_1">
+<span class="sig-name descname"><span class="pre">GID_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_2">
+<span class="sig-name descname"><span class="pre">GID_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_3">
+<span class="sig-name descname"><span class="pre">GID_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_4">
+<span class="sig-name descname"><span class="pre">GID_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GID_5">
+<span class="sig-name descname"><span class="pre">GID_5</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GID_5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.GOVERNEDBY">
+<span class="sig-name descname"><span class="pre">GOVERNEDBY</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.GOVERNEDBY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.HASC_1">
+<span class="sig-name descname"><span class="pre">HASC_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.HASC_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.HASC_2">
+<span class="sig-name descname"><span class="pre">HASC_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.HASC_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.HASC_3">
+<span class="sig-name descname"><span class="pre">HASC_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.HASC_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.ISO_1">
+<span class="sig-name descname"><span class="pre">ISO_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.ISO_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_0">
+<span class="sig-name descname"><span class="pre">NAME_0</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_0" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_1">
+<span class="sig-name descname"><span class="pre">NAME_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_2">
+<span class="sig-name descname"><span class="pre">NAME_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_3">
+<span class="sig-name descname"><span class="pre">NAME_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_4">
+<span class="sig-name descname"><span class="pre">NAME_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NAME_5">
+<span class="sig-name descname"><span class="pre">NAME_5</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NAME_5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NL_NAME_1">
+<span class="sig-name descname"><span class="pre">NL_NAME_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NL_NAME_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NL_NAME_2">
+<span class="sig-name descname"><span class="pre">NL_NAME_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NL_NAME_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.NL_NAME_3">
+<span class="sig-name descname"><span class="pre">NL_NAME_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.NL_NAME_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.REGION">
+<span class="sig-name descname"><span class="pre">REGION</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.REGION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.SOVEREIGN">
+<span class="sig-name descname"><span class="pre">SOVEREIGN</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.SOVEREIGN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.SUBCONT">
+<span class="sig-name descname"><span class="pre">SUBCONT</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.SUBCONT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.TYPE_1">
+<span class="sig-name descname"><span class="pre">TYPE_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.TYPE_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.TYPE_2">
+<span class="sig-name descname"><span class="pre">TYPE_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.TYPE_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.TYPE_3">
+<span class="sig-name descname"><span class="pre">TYPE_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.TYPE_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.TYPE_4">
+<span class="sig-name descname"><span class="pre">TYPE_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.TYPE_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.TYPE_5">
+<span class="sig-name descname"><span class="pre">TYPE_5</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.TYPE_5" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.UID">
+<span class="sig-name descname"><span class="pre">UID</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.UID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VALIDFR_1">
+<span class="sig-name descname"><span class="pre">VALIDFR_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VALIDFR_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VALIDFR_2">
+<span class="sig-name descname"><span class="pre">VALIDFR_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VALIDFR_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VALIDFR_3">
+<span class="sig-name descname"><span class="pre">VALIDFR_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VALIDFR_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VALIDFR_4">
+<span class="sig-name descname"><span class="pre">VALIDFR_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VALIDFR_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARNAME_0">
+<span class="sig-name descname"><span class="pre">VARNAME_0</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARNAME_0" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARNAME_1">
+<span class="sig-name descname"><span class="pre">VARNAME_1</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARNAME_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARNAME_2">
+<span class="sig-name descname"><span class="pre">VARNAME_2</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARNAME_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARNAME_3">
+<span class="sig-name descname"><span class="pre">VARNAME_3</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARNAME_3" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARNAME_4">
+<span class="sig-name descname"><span class="pre">VARNAME_4</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARNAME_4" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.VARREGION">
+<span class="sig-name descname"><span class="pre">VARREGION</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.VARREGION" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.GADMShapefile.geom">
+<span class="sig-name descname"><span class="pre">geom</span></span><a class="headerlink" href="#seshat.apps.core.models.GADMShapefile.geom" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Macro_region">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Macro_region</span></span><a class="headerlink" href="#seshat.apps.core.models.Macro_region" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a macro region.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Macro_region.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Macro_region.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Macro_region.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name']</span></em><a class="headerlink" href="#seshat.apps.core.models.Macro_region.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Macro_region.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Macro_region.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Nga</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a NGA.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name']</span></em><a class="headerlink" href="#seshat.apps.core.models.Nga.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Nga.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.capital_city">
+<span class="sig-name descname"><span class="pre">capital_city</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.capital_city" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.fao_country">
+<span class="sig-name descname"><span class="pre">fao_country</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.fao_country" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.latitude">
+<span class="sig-name descname"><span class="pre">latitude</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.latitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.longitude">
+<span class="sig-name descname"><span class="pre">longitude</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.longitude" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.nga_code">
+<span class="sig-name descname"><span class="pre">nga_code</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.nga_code" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.subregion">
+<span class="sig-name descname"><span class="pre">subregion</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.subregion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Nga.world_region">
+<span class="sig-name descname"><span class="pre">world_region</span></span><a class="headerlink" href="#seshat.apps.core.models.Nga.world_region" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Ngapolityrel</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a relationship between a NGA and a polity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.is_home_nga">
+<span class="sig-name descname"><span class="pre">is_home_nga</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.is_home_nga" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.nga_party">
+<span class="sig-name descname"><span class="pre">nga_party</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.nga_party" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.polity_party">
+<span class="sig-name descname"><span class="pre">polity_party</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.polity_party" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.year_from">
+<span class="sig-name descname"><span class="pre">year_from</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.year_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Ngapolityrel.year_to">
+<span class="sig-name descname"><span class="pre">year_to</span></span><a class="headerlink" href="#seshat.apps.core.models.Ngapolityrel.year_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Polity</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a polity.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['long_name']</span></em><a class="headerlink" href="#seshat.apps.core.models.Polity.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',)</span></em><a class="headerlink" href="#seshat.apps.core.models.Polity.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.Meta.verbose_name">
+<span class="sig-name descname"><span class="pre">verbose_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'polity'</span></em><a class="headerlink" href="#seshat.apps.core.models.Polity.Meta.verbose_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.Meta.verbose_name_plural">
+<span class="sig-name descname"><span class="pre">verbose_name_plural</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'polities'</span></em><a class="headerlink" href="#seshat.apps.core.models.Polity.Meta.verbose_name_plural" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.clean">
+<span class="sig-name descname"><span class="pre">clean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Polity.clean" title="Permalink to this definition"></a></dt>
+<dd><p>Verifies a number of conditions on the start and end years of the polity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValidationError</strong> – If the start year is greater than the end year.</p></li>
+<li><p><strong>ValidationError</strong> – If the end year is greater than the current year.</p></li>
+<li><p><strong>ValidationError</strong> – If the start year is greater than the current year.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.created_date">
+<span class="sig-name descname"><span class="pre">created_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.created_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.end_year">
+<span class="sig-name descname"><span class="pre">end_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.end_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.general_description">
+<span class="sig-name descname"><span class="pre">general_description</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.general_description" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.home_nga">
+<span class="sig-name descname"><span class="pre">home_nga</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.home_nga" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.home_seshat_region">
+<span class="sig-name descname"><span class="pre">home_seshat_region</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.home_seshat_region" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.long_name">
+<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.long_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.modified_date">
+<span class="sig-name descname"><span class="pre">modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.new_name">
+<span class="sig-name descname"><span class="pre">new_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.new_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.polity_tag">
+<span class="sig-name descname"><span class="pre">polity_tag</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.polity_tag" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.private_comment">
+<span class="sig-name descname"><span class="pre">private_comment</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.private_comment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.private_comment_n">
+<span class="sig-name descname"><span class="pre">private_comment_n</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.private_comment_n" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.shapefile_name">
+<span class="sig-name descname"><span class="pre">shapefile_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.shapefile_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Polity.start_year">
+<span class="sig-name descname"><span class="pre">start_year</span></span><a class="headerlink" href="#seshat.apps.core.models.Polity.start_year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Reference</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model Representing a reference.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['-created_date',</span> <span class="pre">'title']</span></em><a class="headerlink" href="#seshat.apps.core.models.Reference.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('zotero_link',)</span></em><a class="headerlink" href="#seshat.apps.core.models.Reference.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.Reference.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.created_date">
+<span class="sig-name descname"><span class="pre">created_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.created_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.creator">
+<span class="sig-name descname"><span class="pre">creator</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.creator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.item_type">
+<span class="sig-name descname"><span class="pre">item_type</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.item_type" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.long_name">
+<span class="sig-name descname"><span class="pre">long_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.long_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.modified_date">
+<span class="sig-name descname"><span class="pre">modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.reference_short_title">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reference_short_title</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.reference_short_title" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">a</span> <span class="pre">short</span> <span class="pre">title</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">reference.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">title</span> <span class="pre">is</span> <span class="pre">longer</span> <span class="pre">than</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">60</span> <span class="pre">characters,</span> <span class="pre">it</span> <span class="pre">is</span> <span class="pre">truncated.</span> <span class="pre">If</span> <span class="pre">the</span> <span class="pre">title</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">provided,</span> <span class="pre">a</span> <span class="pre">default</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">title</span> <span class="pre">is</span> <span class="pre">returned.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A short title for the reference.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.title">
+<span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.title" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.url_link">
+<span class="sig-name descname"><span class="pre">url_link</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.url_link" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.year" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Reference.zotero_link">
+<span class="sig-name descname"><span class="pre">zotero_link</span></span><a class="headerlink" href="#seshat.apps.core.models.Reference.zotero_link" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Religion</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a religion.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name']</span></em><a class="headerlink" href="#seshat.apps.core.models.Religion.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.religion_family">
+<span class="sig-name descname"><span class="pre">religion_family</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion.religion_family" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.religion_genus">
+<span class="sig-name descname"><span class="pre">religion_genus</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion.religion_genus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Religion.religion_name">
+<span class="sig-name descname"><span class="pre">religion_name</span></span><a class="headerlink" href="#seshat.apps.core.models.Religion.religion_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.ScpThroughCtn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">ScpThroughCtn</span></span><a class="headerlink" href="#seshat.apps.core.models.ScpThroughCtn" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a through model for the many-to-many relationship between
+a comment part and a citation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.ScpThroughCtn.citation">
+<span class="sig-name descname"><span class="pre">citation</span></span><a class="headerlink" href="#seshat.apps.core.models.ScpThroughCtn.citation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.ScpThroughCtn.parent_paragraphs">
+<span class="sig-name descname"><span class="pre">parent_paragraphs</span></span><a class="headerlink" href="#seshat.apps.core.models.ScpThroughCtn.parent_paragraphs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.ScpThroughCtn.seshatcommentpart">
+<span class="sig-name descname"><span class="pre">seshatcommentpart</span></span><a class="headerlink" href="#seshat.apps.core.models.ScpThroughCtn.seshatcommentpart" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Section">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Section</span></span><a class="headerlink" href="#seshat.apps.core.models.Section" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a section.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Section.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Section.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Section.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',)</span></em><a class="headerlink" href="#seshat.apps.core.models.Section.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Section.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Section.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatComment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">SeshatComment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatComment" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a comment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatComment.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.SeshatComment.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatComment.zoteroer">
+<span class="sig-name descname"><span class="pre">zoteroer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.SeshatComment.zoteroer" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the Zotero link for the comment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Zotero link for the comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatComment.text">
+<span class="sig-name descname"><span class="pre">text</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatComment.text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPart</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a part of a comment.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['comment_order',</span> <span class="pre">'modified_date']</span></em><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.citation_index">
+<span class="sig-name descname"><span class="pre">citation_index</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.citation_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.citations_count">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">citations_count</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.citations_count" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">citations</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">comment.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.citations_count_plus">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">citations_count_plus</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.citations_count_plus" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">the</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">citations</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">comment.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment">
+<span class="sig-name descname"><span class="pre">comment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment_citations">
+<span class="sig-name descname"><span class="pre">comment_citations</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment_citations" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment_citations_plus">
+<span class="sig-name descname"><span class="pre">comment_citations_plus</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment_citations_plus" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment_curator">
+<span class="sig-name descname"><span class="pre">comment_curator</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment_curator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment_order">
+<span class="sig-name descname"><span class="pre">comment_order</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment_order" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.comment_part_text">
+<span class="sig-name descname"><span class="pre">comment_part_text</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.comment_part_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.display_citations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_citations</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.display_citations" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Display</span> <span class="pre">the</span> <span class="pre">citations</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">model</span> <span class="pre">instance.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The method is a property, and an alias for the
+return_citations_for_comments function.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The citations of the model instance, separated by comma.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.display_citations_plus">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_citations_plus</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.display_citations_plus" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Returns</span> <span class="pre">a</span> <span class="pre">string</span> <span class="pre">of</span> <span class="pre">all</span> <span class="pre">the</span> <span class="pre">citations</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">comment.</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The method is a property, and an alias for the
+return_citations_for_comments function.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string of all the citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommentPart.modified_date">
+<span class="sig-name descname"><span class="pre">modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommentPart.modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">SeshatCommon</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a common Seshat model.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.Meta.abstract">
+<span class="sig-name descname"><span class="pre">abstract</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.Meta.abstract" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['polity']</span></em><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.citations">
+<span class="sig-name descname"><span class="pre">citations</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.citations" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.comment">
+<span class="sig-name descname"><span class="pre">comment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.comment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.created_date">
+<span class="sig-name descname"><span class="pre">created_date</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.created_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.curator">
+<span class="sig-name descname"><span class="pre">curator</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.curator" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.description" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.drb_reviewed">
+<span class="sig-name descname"><span class="pre">drb_reviewed</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.drb_reviewed" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.expert_reviewed">
+<span class="sig-name descname"><span class="pre">expert_reviewed</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.expert_reviewed" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.finalized">
+<span class="sig-name descname"><span class="pre">finalized</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.finalized" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.is_disputed">
+<span class="sig-name descname"><span class="pre">is_disputed</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.is_disputed" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.is_uncertain">
+<span class="sig-name descname"><span class="pre">is_uncertain</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.is_uncertain" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.modified_date">
+<span class="sig-name descname"><span class="pre">modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.note">
+<span class="sig-name descname"><span class="pre">note</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.note" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.polity">
+<span class="sig-name descname"><span class="pre">polity</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.polity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.private_comment">
+<span class="sig-name descname"><span class="pre">private_comment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.private_comment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.tag" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.year_from">
+<span class="sig-name descname"><span class="pre">year_from</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.year_from" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatCommon.year_to">
+<span class="sig-name descname"><span class="pre">year_to</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatCommon.year_to" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateComment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">SeshatPrivateComment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateComment" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a private comment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateComment.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateComment.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateComment.text">
+<span class="sig-name descname"><span class="pre">text</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateComment.text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">SeshatPrivateCommentPart</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a part of a private comment.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['created_date',</span> <span class="pre">'last_modified_date']</span></em><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.get_absolute_url">
+<span class="sig-name descname"><span class="pre">get_absolute_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.get_absolute_url" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the url to access a particular instance of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string of the url to access a particular instance of the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.created_date">
+<span class="sig-name descname"><span class="pre">created_date</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.created_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.is_done">
+<span class="sig-name descname"><span class="pre">is_done</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.is_done" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.last_modified_date">
+<span class="sig-name descname"><span class="pre">last_modified_date</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.last_modified_date" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.private_comment">
+<span class="sig-name descname"><span class="pre">private_comment</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.private_comment" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_owner">
+<span class="sig-name descname"><span class="pre">private_comment_owner</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_owner" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_part_text">
+<span class="sig-name descname"><span class="pre">private_comment_part_text</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_part_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_reader">
+<span class="sig-name descname"><span class="pre">private_comment_reader</span></span><a class="headerlink" href="#seshat.apps.core.models.SeshatPrivateCommentPart.private_comment_reader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Seshat_region</span></span><a class="headerlink" href="#seshat.apps.core.models.Seshat_region" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a Seshat region.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Seshat_region.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region.Meta.ordering">
+<span class="sig-name descname"><span class="pre">ordering</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['mac_region__name',</span> <span class="pre">'name']</span></em><a class="headerlink" href="#seshat.apps.core.models.Seshat_region.Meta.ordering" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region.mac_region">
+<span class="sig-name descname"><span class="pre">mac_region</span></span><a class="headerlink" href="#seshat.apps.core.models.Seshat_region.mac_region" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Seshat_region.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Seshat_region.subregions_list">
+<span class="sig-name descname"><span class="pre">subregions_list</span></span><a class="headerlink" href="#seshat.apps.core.models.Seshat_region.subregions_list" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Subsection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Subsection</span></span><a class="headerlink" href="#seshat.apps.core.models.Subsection" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a subsection.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Subsection.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Subsection.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Subsection.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'section')</span></em><a class="headerlink" href="#seshat.apps.core.models.Subsection.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Subsection.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Subsection.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Subsection.section">
+<span class="sig-name descname"><span class="pre">section</span></span><a class="headerlink" href="#seshat.apps.core.models.Subsection.section" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Variablehierarchy</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.gis.db.models.Model</span></code></p>
+<p>Model representing a variable hierarchy.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.Meta.unique_together">
+<span class="sig-name descname"><span class="pre">unique_together</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('name',</span> <span class="pre">'section',</span> <span class="pre">'subsection')</span></em><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.Meta.unique_together" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.explanation">
+<span class="sig-name descname"><span class="pre">explanation</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.explanation" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.is_verified">
+<span class="sig-name descname"><span class="pre">is_verified</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.is_verified" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.section">
+<span class="sig-name descname"><span class="pre">section</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.section" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Variablehierarchy.subsection">
+<span class="sig-name descname"><span class="pre">subsection</span></span><a class="headerlink" href="#seshat.apps.core.models.Variablehierarchy.subsection" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.core.models.give_me_a_color_for_expert">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">give_me_a_color_for_expert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.give_me_a_color_for_expert" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a color for a given expert.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>int</em>) – The id of the expert.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A color for the expert.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.core.models.return_citations_for_comments">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">return_citations_for_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.return_citations_for_comments" title="Permalink to this definition"></a></dt>
+<dd><p>This function is used to return the citations of the model instance
+(returning the value used in the display_citations method of the model
+instance).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The model instance must have the following attribute:
+- citations</p>
+<p>The model instance must have the following methods:
+- zoteroer</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>self</strong> (<em>model instance</em>) – The model instance.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The citations of the model instance, separated by comma.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.core.models.return_citations_plus_for_comments">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">return_citations_plus_for_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.return_citations_plus_for_comments" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a string of all the citations for a comment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string of all the citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.core.models.return_number_of_citations_for_comments">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">return_number_of_citations_for_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.return_number_of_citations_for_comments" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of citations for a comment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.core.models.return_number_of_citations_plus_for_comments">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">return_number_of_citations_plus_for_comments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.core.models.return_number_of_citations_plus_for_comments" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the number of citations for a comment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of citations for a comment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.AA">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">AA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A'</span></em><a class="headerlink" href="#seshat.apps.core.models.AA" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.AP">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">AP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A;P'</span></em><a class="headerlink" href="#seshat.apps.core.models.AP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.APS">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">APS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A;P*'</span></em><a class="headerlink" href="#seshat.apps.core.models.APS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.AS">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">AS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A*'</span></em><a class="headerlink" href="#seshat.apps.core.models.AS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.A_TO_P">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">A_TO_P</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'A~P'</span></em><a class="headerlink" href="#seshat.apps.core.models.A_TO_P" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Certainty">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Certainty</span></span><a class="headerlink" href="#seshat.apps.core.models.Certainty" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.NFY">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">NFY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NFY'</span></em><a class="headerlink" href="#seshat.apps.core.models.NFY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.POLITY_TAG_CHOICES">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">POLITY_TAG_CHOICES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('LEGACY',</span> <span class="pre">'Equinox</span> <span class="pre">2020</span> <span class="pre">Polities'),</span> <span class="pre">('POL_AFR_EAST',</span> <span class="pre">'NEW</span> <span class="pre">East</span> <span class="pre">African</span> <span class="pre">Polities'),...</span></em><a class="headerlink" href="#seshat.apps.core.models.POLITY_TAG_CHOICES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.PP">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">PP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'P'</span></em><a class="headerlink" href="#seshat.apps.core.models.PP" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.PS">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">PS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'P*'</span></em><a class="headerlink" href="#seshat.apps.core.models.PS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.P_TO_A">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">P_TO_A</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'P~A'</span></em><a class="headerlink" href="#seshat.apps.core.models.P_TO_A" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.Tags">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">Tags</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('TRS',</span> <span class="pre">'Confident'),</span> <span class="pre">('SSP',</span> <span class="pre">'Suspected'),</span> <span class="pre">('IFR',</span> <span class="pre">'Inferred'))</span></em><a class="headerlink" href="#seshat.apps.core.models.Tags" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.U">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">U</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'U'</span></em><a class="headerlink" href="#seshat.apps.core.models.U" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.UU">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">UU</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'U*'</span></em><a class="headerlink" href="#seshat.apps.core.models.UU" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.core.models.WORLD_REGION_CHOICES">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.core.models.</span></span><span class="sig-name descname"><span class="pre">WORLD_REGION_CHOICES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(('Europe',</span> <span class="pre">'Europe'),</span> <span class="pre">('Southwest</span> <span class="pre">Asia',</span> <span class="pre">'Southwest</span> <span class="pre">Asia'),</span> <span class="pre">('Africa',</span> <span class="pre">'Africa'),</span> <span class="pre">('Central...</span></em><a class="headerlink" href="#seshat.apps.core.models.WORLD_REGION_CHOICES" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../middleware/index.html" class="btn btn-neutral float-left" title="seshat.apps.core.middleware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../nlp_zotero_links/index.html" class="btn btn-neutral float-right" title="seshat.apps.core.nlp_zotero_links" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

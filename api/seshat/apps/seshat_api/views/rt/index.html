@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.seshat_api.views.rt &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../../_static/doctools.js"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="seshat.apps.seshat_api.views.sc" href="../sc/index.html" />
+    <link rel="prev" title="seshat.apps.seshat_api.views.general" href="../general/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps.seshat_api</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.seshat_api.views</a></li>
+      <li class="breadcrumb-item active">seshat.apps.seshat_api.views.rt</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/api/seshat/apps/seshat_api/views/rt/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.seshat_api.views.rt">
+<span id="seshat-apps-seshat-api-views-rt"></span><h1>seshat.apps.seshat_api.views.rt<a class="headerlink" href="#module-seshat.apps.seshat_api.views.rt" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.ElitesReligionViewSet" title="seshat.apps.seshat_api.views.rt.ElitesReligionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElitesReligionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Elites Religions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet" title="seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovDisRelGrpOccFunViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet" title="seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovOblRelGrpOfcRecoViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Governmental Obligations for Religious Groups to Apply for Official Recognitions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet" title="seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovPressConvForAgaViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Societal Pressure to Convert or Against Conversions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovPressConvViewSet" title="seshat.apps.seshat_api.views.rt.GovPressConvViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovPressConvViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Pressures to Converts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet" title="seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResCirRelLitViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Circulation of Religious Literature.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet" title="seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResConsRelBuilViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Construction of Religious Buildings.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResConvViewSet" title="seshat.apps.seshat_api.views.rt.GovResConvViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResConvViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Conversions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet" title="seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResPropOwnForRelGrpViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Property Ownership for Adherents of and Religious Groups.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResPubProsViewSet" title="seshat.apps.seshat_api.views.rt.GovResPubProsViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResPubProsViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Public Proselytizings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResPubWorViewSet" title="seshat.apps.seshat_api.views.rt.GovResPubWorViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResPubWorViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Public Worships.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovResRelEduViewSet" title="seshat.apps.seshat_api.views.rt.GovResRelEduViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovResRelEduViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Government Restrictions on Religious Education.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet" title="seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GovVioFreqRelGrpViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Frequency of Governmental Violence Against Religious Groups.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.OfficialReligionViewSet" title="seshat.apps.seshat_api.views.rt.OfficialReligionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OfficialReligionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Official Religions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet" title="seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReligiousFragmentationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Religious Fragmentations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet" title="seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SocDisRelGrpOccFunViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Social Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet" title="seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SocVioFreqRelGrpViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Social Violence Against Religious Groups.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet" title="seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SyncRelPraIndBeliViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Syncretism of Religious Practices at the Level of Individual Believers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet" title="seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TaxRelAdhActInsViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Taxes Based on Religious Adherence or on Religious Activities and Institutions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet" title="seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TheoSyncDifRelViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Theological Syncretism of Different Religions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet" title="seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WidespreadReligionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Widespread Religions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ElitesReligionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">ElitesReligionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ElitesReligionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Elites Religions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ElitesReligionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovDisRelGrpOccFunViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovDisRelGrpOccFunViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovOblRelGrpOfcRecoViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Governmental Obligations for Religious Groups to Apply for Official Recognitions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovOblRelGrpOfcRecoViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovPressConvForAgaViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Societal Pressure to Convert or Against Conversions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvForAgaViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovPressConvViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Pressures to Converts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovPressConvViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovPressConvViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResCirRelLitViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Circulation of Religious Literature.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResCirRelLitViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResConsRelBuilViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Construction of Religious Buildings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConsRelBuilViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConvViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResConvViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConvViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Conversions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConvViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConvViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConvViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConvViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResConvViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResConvViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResPropOwnForRelGrpViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Property Ownership for Adherents of and Religious Groups.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPropOwnForRelGrpViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubProsViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResPubProsViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubProsViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Public Proselytizings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubProsViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubWorViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResPubWorViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubWorViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Public Worships.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResPubWorViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResRelEduViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovResRelEduViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResRelEduViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Government Restrictions on Religious Education.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovResRelEduViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">GovVioFreqRelGrpViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Frequency of Governmental Violence Against Religious Groups.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.GovVioFreqRelGrpViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.OfficialReligionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">OfficialReligionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.OfficialReligionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Official Religions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.OfficialReligionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">ReligiousFragmentationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Religious Fragmentations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.ReligiousFragmentationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">SocDisRelGrpOccFunViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Social Discrimination Against Religious Groups Taking Up Certain Occupations or Functions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocDisRelGrpOccFunViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">SocVioFreqRelGrpViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Social Violence Against Religious Groups.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SocVioFreqRelGrpViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">SyncRelPraIndBeliViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Syncretism of Religious Practices at the Level of Individual Believers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.SyncRelPraIndBeliViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">TaxRelAdhActInsViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Taxes Based on Religious Adherence or on Religious Activities and Institutions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TaxRelAdhActInsViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">TheoSyncDifRelViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Theological Syncretism of Different Religions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.TheoSyncDifRelViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.rt.</span></span><span class="sig-name descname"><span class="pre">WidespreadReligionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Widespread Religions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.rt.WidespreadReligionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../general/index.html" class="btn btn-neutral float-left" title="seshat.apps.seshat_api.views.general" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../sc/index.html" class="btn btn-neutral float-right" title="seshat.apps.seshat_api.views.sc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

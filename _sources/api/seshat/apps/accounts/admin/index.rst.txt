@@ -1,0 +1,68 @@
+seshat.apps.accounts.admin
+==========================
+
+.. py:module:: seshat.apps.accounts.admin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.accounts.admin.CustomUserAdmin
+   seshat.apps.accounts.admin.ProfileInline
+
+
+Module Contents
+---------------
+
+.. py:class:: CustomUserAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:method:: get_email_confirmed(instance)
+
+
+   .. py:method:: get_inline_instances(request, obj=None)
+
+
+   .. py:method:: get_location(instance)
+
+
+   .. py:attribute:: inlines
+
+
+   .. py:attribute:: list_display
+      :value: ('username', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined', 'last_login',...
+
+
+
+   .. py:attribute:: list_select_related
+      :value: ('profile',)
+
+
+
+.. py:class:: ProfileInline
+
+   Bases: :py:obj:`django.contrib.admin.StackedInline`
+
+
+   .. py:attribute:: can_delete
+      :value: False
+
+
+
+   .. py:attribute:: fk_name
+      :value: 'user'
+
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: verbose_name_plural
+      :value: 'Profile'
+
+
+

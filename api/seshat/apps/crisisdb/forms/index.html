@@ -1,0 +1,1204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.crisisdb.forms &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.crisisdb.models" href="../models/index.html" />
+    <link rel="prev" title="seshat.apps.crisisdb.custom_vars" href="../custom_vars/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.crisisdb</a></li>
+      <li class="breadcrumb-item active">seshat.apps.crisisdb.forms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/crisisdb/forms/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.crisisdb.forms">
+<span id="seshat-apps-crisisdb-forms"></span><h1>seshat.apps.crisisdb.forms<a class="headerlink" href="#module-seshat.apps.crisisdb.forms" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.commonfields" title="seshat.apps.crisisdb.forms.commonfields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonfields</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.commonlabels" title="seshat.apps.crisisdb.forms.commonlabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonlabels</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.commonwidgets" title="seshat.apps.crisisdb.forms.commonwidgets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonwidgets</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm" title="seshat.apps.crisisdb.forms.Agricultural_populationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Agricultural_populationForm</span></code></a></p></td>
+<td><p>Form for creating and updating an agricultural population.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Arable_landForm" title="seshat.apps.crisisdb.forms.Arable_landForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Arable_landForm</span></code></a></p></td>
+<td><p>Form for creating and updating an arable land.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm" title="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Arable_land_per_farmerForm</span></code></a></p></td>
+<td><p>Form for creating and updating an arable land per farmer.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm" title="seshat.apps.crisisdb.forms.Crisis_consequenceForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Crisis_consequenceForm</span></code></a></p></td>
+<td><p>Form for creating and updating a crisis consequence.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm" title="seshat.apps.crisisdb.forms.Crop_failure_eventForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Crop_failure_eventForm</span></code></a></p></td>
+<td><p>Form for creating and updating a crop failure event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm" title="seshat.apps.crisisdb.forms.Disease_outbreakForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Disease_outbreakForm</span></code></a></p></td>
+<td><p>Form for creating and updating a disease outbreak.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Drought_eventForm" title="seshat.apps.crisisdb.forms.Drought_eventForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Drought_eventForm</span></code></a></p></td>
+<td><p>Form for creating and updating a drought event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.External_conflictForm" title="seshat.apps.crisisdb.forms.External_conflictForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">External_conflictForm</span></code></a></p></td>
+<td><p>Form for creating and updating an external conflict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm" title="seshat.apps.crisisdb.forms.External_conflict_sideForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">External_conflict_sideForm</span></code></a></p></td>
+<td><p>Side form for creating and updating an external conflict.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Famine_eventForm" title="seshat.apps.crisisdb.forms.Famine_eventForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Famine_eventForm</span></code></a></p></td>
+<td><p>Form for creating and updating a famine event.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm" title="seshat.apps.crisisdb.forms.Gdp_per_capitaForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gdp_per_capitaForm</span></code></a></p></td>
+<td><p>Form for creating and updating a GDP per capita.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm" title="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gross_grain_shared_per_agricultural_populationForm</span></code></a></p></td>
+<td><p>Form for creating and updating a gross grain shared per agricultural population.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm" title="seshat.apps.crisisdb.forms.Human_sacrificeForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Human_sacrificeForm</span></code></a></p></td>
+<td><p>Form for creating and updating a human sacrifice.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Internal_conflictForm" title="seshat.apps.crisisdb.forms.Internal_conflictForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Internal_conflictForm</span></code></a></p></td>
+<td><p>Form for creating and updating an internal conflict.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Locust_eventForm" title="seshat.apps.crisisdb.forms.Locust_eventForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Locust_eventForm</span></code></a></p></td>
+<td><p>Form for creating and updating a locust event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Military_expenseForm" title="seshat.apps.crisisdb.forms.Military_expenseForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Military_expenseForm</span></code></a></p></td>
+<td><p>Form for creating and updating a military expense.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm" title="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Net_grain_shared_per_agricultural_populationForm</span></code></a></p></td>
+<td><p>Form for creating and updating a net grain shared per agricultural population.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Power_transitionForm" title="seshat.apps.crisisdb.forms.Power_transitionForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Power_transitionForm</span></code></a></p></td>
+<td><p>Form for creating and updating a power transition.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Silver_inflowForm" title="seshat.apps.crisisdb.forms.Silver_inflowForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Silver_inflowForm</span></code></a></p></td>
+<td><p>Form for creating and updating a silver inflow.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Silver_stockForm" title="seshat.apps.crisisdb.forms.Silver_stockForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Silver_stockForm</span></code></a></p></td>
+<td><p>Form for creating and updating a silver stock.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm" title="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Socioeconomic_turmoil_eventForm</span></code></a></p></td>
+<td><p>Form for creating and updating a socioeconomic turmoil event.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.SurplusForm" title="seshat.apps.crisisdb.forms.SurplusForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SurplusForm</span></code></a></p></td>
+<td><p>Form for creating and updating a surplus.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Total_populationForm" title="seshat.apps.crisisdb.forms.Total_populationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Total_populationForm</span></code></a></p></td>
+<td><p>Form for creating and updating a total population.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Us_locationForm" title="seshat.apps.crisisdb.forms.Us_locationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Us_locationForm</span></code></a></p></td>
+<td><p>Form for creating and updating a US location.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Us_violenceForm" title="seshat.apps.crisisdb.forms.Us_violenceForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Us_violenceForm</span></code></a></p></td>
+<td><p>Form for creating and updating a US violence.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Us_violence_data_sourceForm" title="seshat.apps.crisisdb.forms.Us_violence_data_sourceForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Us_violence_data_sourceForm</span></code></a></p></td>
+<td><p>Form for creating and updating a US violence data source.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.crisisdb.forms.Us_violence_subtypeForm" title="seshat.apps.crisisdb.forms.Us_violence_subtypeForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Us_violence_subtypeForm</span></code></a></p></td>
+<td><p>Form for creating and updating a US violence subtype.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Agricultural_populationForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating an agricultural population.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Agricultural_populationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Arable_landForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating an arable land.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_landForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_landForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Arable_land_per_farmerForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating an arable land per farmer.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Arable_land_per_farmerForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Crisis_consequenceForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a crisis consequence.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crisis_consequenceForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Crop_failure_eventForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a crop failure event.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Crop_failure_eventForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Disease_outbreakForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a disease outbreak.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Disease_outbreakForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Drought_eventForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a drought event.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Drought_eventForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Drought_eventForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">External_conflictForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating an external conflict.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflictForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflictForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">External_conflict_sideForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Side form for creating and updating an external conflict.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.External_conflict_sideForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Famine_eventForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a famine event.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Famine_eventForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Famine_eventForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Gdp_per_capitaForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a GDP per capita.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gdp_per_capitaForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Gross_grain_shared_per_agricultural_populationForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a gross grain shared per agricultural population.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Gross_grain_shared_per_agricultural_populationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Human_sacrificeForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a human sacrifice.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Human_sacrificeForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Internal_conflictForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating an internal conflict.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Internal_conflictForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Locust_eventForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a locust event.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Locust_eventForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Locust_eventForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Military_expenseForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a military expense.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Military_expenseForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Military_expenseForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Net_grain_shared_per_agricultural_populationForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a net grain shared per agricultural population.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Net_grain_shared_per_agricultural_populationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Power_transitionForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a power transition.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Power_transitionForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Power_transitionForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Silver_inflowForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a silver inflow.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_inflowForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Silver_stockForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a silver stock.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Silver_stockForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Silver_stockForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Socioeconomic_turmoil_eventForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a socioeconomic turmoil event.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Socioeconomic_turmoil_eventForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">SurplusForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a surplus.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.SurplusForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.SurplusForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Total_populationForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a total population.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Total_populationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Total_populationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_locationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Us_locationForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_locationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a US location.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_locationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_locationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_locationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'__all__'</span></em><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_locationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_locationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_locationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violenceForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Us_violenceForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violenceForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a US violence.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violenceForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violenceForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violenceForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['violence_date',</span> <span class="pre">'violence_type',</span> <span class="pre">'violence_subtype',</span> <span class="pre">'fatalities',</span> <span class="pre">'location',</span> <span class="pre">'url_address',...</span></em><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violenceForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violenceForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violenceForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violenceForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violenceForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_data_sourceForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Us_violence_data_sourceForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_data_sourceForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a US violence data source.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'__all__'</span></em><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_data_sourceForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_subtypeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">Us_violence_subtypeForm</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_subtypeForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<p>Form for creating and updating a US violence subtype.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'__all__'</span></em><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.Us_violence_subtypeForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.commonfields">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">commonfields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['polity',</span> <span class="pre">'year_from',</span> <span class="pre">'year_to',</span> <span class="pre">'description',</span> <span class="pre">'tag',</span> <span class="pre">'is_disputed',</span> <span class="pre">'is_uncertain',...</span></em><a class="headerlink" href="#seshat.apps.crisisdb.forms.commonfields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.commonlabels">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">commonlabels</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.commonlabels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.crisisdb.forms.commonwidgets">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.crisisdb.forms.</span></span><span class="sig-name descname"><span class="pre">commonwidgets</span></span><a class="headerlink" href="#seshat.apps.crisisdb.forms.commonwidgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../custom_vars/index.html" class="btn btn-neutral float-left" title="seshat.apps.crisisdb.custom_vars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../models/index.html" class="btn btn-neutral float-right" title="seshat.apps.crisisdb.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

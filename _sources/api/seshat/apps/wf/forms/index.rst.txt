@@ -1,0 +1,1406 @@
+seshat.apps.wf.forms
+====================
+
+.. py:module:: seshat.apps.wf.forms
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.wf.forms.commonfields
+   seshat.apps.wf.forms.commonlabels
+   seshat.apps.wf.forms.commonwidgets
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.wf.forms.AtlatlForm
+   seshat.apps.wf.forms.Battle_axeForm
+   seshat.apps.wf.forms.BreastplateForm
+   seshat.apps.wf.forms.BronzeForm
+   seshat.apps.wf.forms.CamelForm
+   seshat.apps.wf.forms.ChainmailForm
+   seshat.apps.wf.forms.Complex_fortificationForm
+   seshat.apps.wf.forms.Composite_bowForm
+   seshat.apps.wf.forms.CopperForm
+   seshat.apps.wf.forms.CrossbowForm
+   seshat.apps.wf.forms.DaggerForm
+   seshat.apps.wf.forms.DitchForm
+   seshat.apps.wf.forms.DogForm
+   seshat.apps.wf.forms.DonkeyForm
+   seshat.apps.wf.forms.Earth_rampartForm
+   seshat.apps.wf.forms.ElephantForm
+   seshat.apps.wf.forms.Fortified_campForm
+   seshat.apps.wf.forms.Gunpowder_siege_artilleryForm
+   seshat.apps.wf.forms.Handheld_firearmForm
+   seshat.apps.wf.forms.HelmetForm
+   seshat.apps.wf.forms.HorseForm
+   seshat.apps.wf.forms.IronForm
+   seshat.apps.wf.forms.JavelinForm
+   seshat.apps.wf.forms.Laminar_armorForm
+   seshat.apps.wf.forms.Leather_clothForm
+   seshat.apps.wf.forms.Limb_protectionForm
+   seshat.apps.wf.forms.Long_wallForm
+   seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm
+   seshat.apps.wf.forms.MoatForm
+   seshat.apps.wf.forms.Modern_fortificationForm
+   seshat.apps.wf.forms.Plate_armorForm
+   seshat.apps.wf.forms.PolearmForm
+   seshat.apps.wf.forms.Scaled_armorForm
+   seshat.apps.wf.forms.Self_bowForm
+   seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm
+   seshat.apps.wf.forms.ShieldForm
+   seshat.apps.wf.forms.SlingForm
+   seshat.apps.wf.forms.Sling_siege_engineForm
+   seshat.apps.wf.forms.Small_vessels_canoes_etcForm
+   seshat.apps.wf.forms.SpearForm
+   seshat.apps.wf.forms.Specialized_military_vesselForm
+   seshat.apps.wf.forms.SteelForm
+   seshat.apps.wf.forms.Stone_walls_mortaredForm
+   seshat.apps.wf.forms.Stone_walls_non_mortaredForm
+   seshat.apps.wf.forms.SwordForm
+   seshat.apps.wf.forms.Tension_siege_engineForm
+   seshat.apps.wf.forms.War_clubForm
+   seshat.apps.wf.forms.Wood_bark_etcForm
+   seshat.apps.wf.forms.Wooden_palisadeForm
+
+
+Module Contents
+---------------
+
+.. py:class:: AtlatlForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Battle_axeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: BreastplateForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: BronzeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CamelForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ChainmailForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Complex_fortificationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Composite_bowForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CopperForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CrossbowForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: DaggerForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: DitchForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: DogForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: DonkeyForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Earth_rampartForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ElephantForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Fortified_campForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gunpowder_siege_artilleryForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Handheld_firearmForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: HelmetForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: HorseForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: IronForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: JavelinForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Laminar_armorForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Leather_clothForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Limb_protectionForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Long_wallForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Merchant_ships_pressed_into_serviceForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: MoatForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Modern_fortificationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Plate_armorForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: PolearmForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Scaled_armorForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Self_bowForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Settlements_in_a_defensive_positionForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ShieldForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: SlingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Sling_siege_engineForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Small_vessels_canoes_etcForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: SpearForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Specialized_military_vesselForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: SteelForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Stone_walls_mortaredForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Stone_walls_non_mortaredForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: SwordForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Tension_siege_engineForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: War_clubForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Wood_bark_etcForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Wooden_palisadeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:data:: commonfields
+   :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+.. py:data:: commonlabels
+
+.. py:data:: commonwidgets
+

@@ -1,0 +1,32 @@
+seshat.apps.general.apps
+========================
+
+.. py:module:: seshat.apps.general.apps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.general.apps.GeneralConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: GeneralConfig
+
+   Bases: :py:obj:`django.apps.AppConfig`
+
+
+   .. py:attribute:: default_auto_field
+      :value: 'django.db.models.BigAutoField'
+
+
+
+   .. py:attribute:: name
+      :value: 'seshat.apps.general'
+
+
+

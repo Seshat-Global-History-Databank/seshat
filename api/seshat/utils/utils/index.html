@@ -1,0 +1,589 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.utils.utils &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../_static/jquery.js"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+      <script src="../../../../_static/doctools.js"></script>
+      <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="seshat.asgi" href="../../asgi/index.html" />
+    <link rel="prev" title="seshat.utils" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../apps/index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.utils</a></li>
+      <li class="breadcrumb-item active">seshat.utils.utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/api/seshat/utils/utils/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.utils.utils">
+<span id="seshat-utils-utils"></span><h1>seshat.utils.utils<a class="headerlink" href="#module-seshat.utils.utils" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.vars_dic_for_utils" title="seshat.utils.utils.vars_dic_for_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vars_dic_for_utils</span></code></a></p></td>
+<td><p>vars_dic_for_utils is a dictionary that contains the definitions of all the variables in the database. It is used to generate the models and views for the variables. It is a dictionary of dictionaries, where the key is the name of the variable and the value is a dictionary that contains the following keys:</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.adder" title="seshat.utils.utils.adder"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adder</span></code></a>(a, b)</p></td>
+<td><p>Adds two numbers together.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.dic_of_all_vars" title="seshat.utils.utils.dic_of_all_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dic_of_all_vars</span></code></a>()</p></td>
+<td><p>Returns a dictionary of all variables in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.dic_of_all_vars_in_sections" title="seshat.utils.utils.dic_of_all_vars_in_sections"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dic_of_all_vars_in_sections</span></code></a>()</p></td>
+<td><p>Returns a dictionary of all variables in the database. This dictionary is</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.dic_of_all_vars_with_varhier" title="seshat.utils.utils.dic_of_all_vars_with_varhier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dic_of_all_vars_with_varhier</span></code></a>()</p></td>
+<td><p>Returns a dictionary of all variables in the database. This dictionary is</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_crisis_cases_data_for_a_polity" title="seshat.utils.utils.get_all_crisis_cases_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_crisis_cases_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;crisisdb&quot; app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_data_for_a_polity" title="seshat.utils.utils.get_all_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_data_for_a_polity</span></code></a>(polity_id, db_name)</p></td>
+<td><p>Gets all data for a given polity ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_general_data_for_a_polity" title="seshat.utils.utils.get_all_general_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_general_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;general&quot; app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_general_data_for_a_polity_old" title="seshat.utils.utils.get_all_general_data_for_a_polity_old"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_general_data_for_a_polity_old</span></code></a>(polity_id)</p></td>
+<td><p>Gets all general data for a given polity ID.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_power_transitions_data_for_a_polity" title="seshat.utils.utils.get_all_power_transitions_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_power_transitions_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;rt&quot; app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_rt_data_for_a_polity" title="seshat.utils.utils.get_all_rt_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_rt_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;rt&quot; app.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_sc_data_for_a_polity" title="seshat.utils.utils.get_all_sc_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_sc_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;sc&quot; app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_wf_data_for_a_polity" title="seshat.utils.utils.get_all_wf_data_for_a_polity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_wf_data_for_a_polity</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;wf&quot; app.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.get_all_wf_data_for_a_polity_old" title="seshat.utils.utils.get_all_wf_data_for_a_polity_old"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_all_wf_data_for_a_polity_old</span></code></a>(polity_id)</p></td>
+<td><p>Gets all data for a given polity ID from the &quot;wf&quot; app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.give_polity_app_data" title="seshat.utils.utils.give_polity_app_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">give_polity_app_data</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.list_of_all_Polities" title="seshat.utils.utils.list_of_all_Polities"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_of_all_Polities</span></code></a>()</p></td>
+<td><p>Returns a list of all polities in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.polity_detail_data_collector" title="seshat.utils.utils.polity_detail_data_collector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">polity_detail_data_collector</span></code></a>(polity_id)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.qing_vars_links_creator" title="seshat.utils.utils.qing_vars_links_creator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qing_vars_links_creator</span></code></a>(vars_dic_for_here)</p></td>
+<td><p>Creates a dictionary of all variables in the database. This dictionary is</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.section_dic_extractor" title="seshat.utils.utils.section_dic_extractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">section_dic_extractor</span></code></a>()</p></td>
+<td><p>Extracts a dictionary of all sections in the database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.utils.utils.subsection_dic_extractor" title="seshat.utils.utils.subsection_dic_extractor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subsection_dic_extractor</span></code></a>()</p></td>
+<td><p>Extracts a dictionary of all subsections in the database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.utils.utils.test_for_varhier_dic" title="seshat.utils.utils.test_for_varhier_dic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">test_for_varhier_dic</span></code></a>()</p></td>
+<td><p>Extracts a dictionary of all variables in the database. This dictionary is</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.adder">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">adder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.adder" title="Permalink to this definition"></a></dt>
+<dd><p>Adds two numbers together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>int</em>) – The first number to be added.</p></li>
+<li><p><strong>b</strong> (<em>int</em>) – The second number to be added.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sum of the two numbers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.dic_of_all_vars">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">dic_of_all_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.dic_of_all_vars" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a dictionary of all variables in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.dic_of_all_vars_in_sections">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">dic_of_all_vars_in_sections</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.dic_of_all_vars_in_sections" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a dictionary of all variables in the database. This dictionary is
+structured in a way that it can be used to generate a hierarchical
+representation of the variables.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function does not seem to be used in the current version of the
+application.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.dic_of_all_vars_with_varhier">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">dic_of_all_vars_with_varhier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.dic_of_all_vars_with_varhier" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a dictionary of all variables in the database. This dictionary is
+structured in a way that it can be used to generate a hierarchical
+representation of the variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_crisis_cases_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_crisis_cases_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_crisis_cases_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “crisisdb” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all data for the polity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p></li>
+<li><p><strong>db_name</strong> (<em>str</em>) – The name of the database.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all data for the polity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_general_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_general_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_general_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “general” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_general_data_for_a_polity_old">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_general_data_for_a_polity_old</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_general_data_for_a_polity_old" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all general data for a given polity ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Private<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is not used in the current version of the application.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all general data for the polity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_power_transitions_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_power_transitions_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_power_transitions_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “rt” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all data for the polity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_rt_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_rt_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_rt_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “rt” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_sc_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_sc_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_sc_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “sc” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_wf_data_for_a_polity">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_wf_data_for_a_polity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_wf_data_for_a_polity" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “wf” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.get_all_wf_data_for_a_polity_old">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_all_wf_data_for_a_polity_old</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.get_all_wf_data_for_a_polity_old" title="Permalink to this definition"></a></dt>
+<dd><p>Gets all data for a given polity ID from the “wf” app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Private<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is not used in the current version of the application.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polity_id</strong> (<em>int</em>) – The ID of the polity.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all data for the polity.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.give_polity_app_data">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">give_polity_app_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.give_polity_app_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.list_of_all_Polities">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">list_of_all_Polities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.list_of_all_Polities" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a list of all polities in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of all polity names.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.polity_detail_data_collector">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">polity_detail_data_collector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polity_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.polity_detail_data_collector" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.qing_vars_links_creator">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">qing_vars_links_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vars_dic_for_here</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.qing_vars_links_creator" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a dictionary of all variables in the database. This dictionary is
+structured in a way that it can be used to generate a hierarchical
+representation of the variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vars_dic_for_here</strong> (<em>dict</em>) – A dictionary of all variables.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of all variables.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.section_dic_extractor">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">section_dic_extractor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.section_dic_extractor" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts a dictionary of all sections in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all sections.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.subsection_dic_extractor">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">subsection_dic_extractor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.subsection_dic_extractor" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts a dictionary of all subsections in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all subsections.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.utils.utils.test_for_varhier_dic">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">test_for_varhier_dic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#seshat.utils.utils.test_for_varhier_dic" title="Permalink to this definition"></a></dt>
+<dd><p>Extracts a dictionary of all variables in the database. This dictionary is
+structured in a way that it can be used to generate a hierarchical
+representation of the variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of all variables.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.utils.utils.vars_dic_for_utils">
+<span class="sig-prename descclassname"><span class="pre">seshat.utils.utils.</span></span><span class="sig-name descname"><span class="pre">vars_dic_for_utils</span></span><a class="headerlink" href="#seshat.utils.utils.vars_dic_for_utils" title="Permalink to this definition"></a></dt>
+<dd><p>vars_dic_for_utils is a dictionary that contains the definitions of all the variables in the database. It is used to generate the models and views for the variables. It is a dictionary of dictionaries, where the key is the name of the variable and the value is a dictionary that contains the following keys:
+- notes: A description of the variable.
+- main_desc: The main description of the variable.
+- main_desc_source: The source of the main description.
+- cols: The number of columns in the variable.
+- section: The section of the variable.
+- subsection: The subsection of the variable.
+- null_meaning: The meaning of a null value in the variable.
+- col1: A dictionary that contains the definition of the first column of the variable. It contains the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>dtype: The data type of the column.</p></li>
+<li><p>varname: The name of the column.</p></li>
+<li><p>var_exp: The explanation of the column.</p></li>
+<li><p>var_exp_source: The source of the explanation.</p></li>
+<li><p>units: The units of the column.</p></li>
+<li><p>min: The minimum value of the column.</p></li>
+<li><p>max: The maximum value of the column.</p></li>
+<li><p>scale: The scale of the column.</p></li>
+<li><p>decimal_places: The number of decimal places in the column.</p></li>
+<li><p>max_digits: The maximum number of digits in the column.</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>col2: A dictionary that contains the definition of the second column of the variable. It contains the same keys as col1.</p></li>
+<li><p>col3: A dictionary that contains the definition of the third column of the variable. It contains the same keys as col1.</p></li>
+<li><p>col4: A dictionary that contains the definition of the fourth column of the variable. It contains the same keys as col1.</p></li>
+<li><p>col5: A dictionary that contains the definition of the fifth column of the variable. It contains the same keys as col1.</p></li>
+<li><p>col6: A dictionary that contains the definition of the sixth column of the variable. It contains the same keys as col1.</p></li>
+</ul>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="seshat.utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../asgi/index.html" class="btn btn-neutral float-right" title="seshat.asgi" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

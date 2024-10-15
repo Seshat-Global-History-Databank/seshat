@@ -1,0 +1,1186 @@
+seshat.apps.seshat_api.filters.sc
+=================================
+
+.. py:module:: seshat.apps.seshat_api.filters.sc
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.seshat_api.filters.sc.AdministrativeLevelFilter
+   seshat.apps.seshat_api.filters.sc.AreaMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.ArticleFilter
+   seshat.apps.seshat_api.filters.sc.BridgeFilter
+   seshat.apps.seshat_api.filters.sc.BurialSiteFilter
+   seshat.apps.seshat_api.filters.sc.CalendarFilter
+   seshat.apps.seshat_api.filters.sc.CanalFilter
+   seshat.apps.seshat_api.filters.sc.CeremonialSiteFilter
+   seshat.apps.seshat_api.filters.sc.CommunalBuildingFilter
+   seshat.apps.seshat_api.filters.sc.CourierFilter
+   seshat.apps.seshat_api.filters.sc.CourtFilter
+   seshat.apps.seshat_api.filters.sc.DebtAndCreditStructureFilter
+   seshat.apps.seshat_api.filters.sc.DrinkingWaterSupplySystemFilter
+   seshat.apps.seshat_api.filters.sc.EnclosureFilter
+   seshat.apps.seshat_api.filters.sc.EntertainmentBuildingFilter
+   seshat.apps.seshat_api.filters.sc.ExaminationSystemFilter
+   seshat.apps.seshat_api.filters.sc.FastestIndividualCommunicationFilter
+   seshat.apps.seshat_api.filters.sc.FictionFilter
+   seshat.apps.seshat_api.filters.sc.FoodStorageSiteFilter
+   seshat.apps.seshat_api.filters.sc.ForeignCoinFilter
+   seshat.apps.seshat_api.filters.sc.FormalLegalCodeFilter
+   seshat.apps.seshat_api.filters.sc.FullTimeBureaucratFilter
+   seshat.apps.seshat_api.filters.sc.GeneralPostalServiceFilter
+   seshat.apps.seshat_api.filters.sc.GeometricalMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.HistoryFilter
+   seshat.apps.seshat_api.filters.sc.IndigenousCoinFilter
+   seshat.apps.seshat_api.filters.sc.IrrigationSystemFilter
+   seshat.apps.seshat_api.filters.sc.JudgeFilter
+   seshat.apps.seshat_api.filters.sc.KnowledgeOrInformationBuildingFilter
+   seshat.apps.seshat_api.filters.sc.LargestCommunicationDistanceFilter
+   seshat.apps.seshat_api.filters.sc.LengthMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.ListsTablesAndClassificationFilter
+   seshat.apps.seshat_api.filters.sc.MarketFilter
+   seshat.apps.seshat_api.filters.sc.MeritPromotionFilter
+   seshat.apps.seshat_api.filters.sc.MilitaryLevelFilter
+   seshat.apps.seshat_api.filters.sc.MinesOrQuarryFilter
+   seshat.apps.seshat_api.filters.sc.MnemonicDeviceFilter
+   seshat.apps.seshat_api.filters.sc.NonPhoneticWritingFilter
+   seshat.apps.seshat_api.filters.sc.NonwrittenRecordFilter
+   seshat.apps.seshat_api.filters.sc.OccupationalComplexityFilter
+   seshat.apps.seshat_api.filters.sc.OtherMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.OtherSpecialPurposeSiteFilter
+   seshat.apps.seshat_api.filters.sc.OtherUtilitarianPublicBuildingFilter
+   seshat.apps.seshat_api.filters.sc.PaperCurrencyFilter
+   seshat.apps.seshat_api.filters.sc.PhilosophyFilter
+   seshat.apps.seshat_api.filters.sc.PhoneticAlphabeticWritingFilter
+   seshat.apps.seshat_api.filters.sc.PolityPopulationFilter
+   seshat.apps.seshat_api.filters.sc.PolityTerritoryFilter
+   seshat.apps.seshat_api.filters.sc.PopulationOfTheLargestSettlementFilter
+   seshat.apps.seshat_api.filters.sc.PortFilter
+   seshat.apps.seshat_api.filters.sc.PostalStationFilter
+   seshat.apps.seshat_api.filters.sc.PracticalLiteratureFilter
+   seshat.apps.seshat_api.filters.sc.PreciousMetalFilter
+   seshat.apps.seshat_api.filters.sc.ProfessionalLawyerFilter
+   seshat.apps.seshat_api.filters.sc.ProfessionalMilitaryOfficerFilter
+   seshat.apps.seshat_api.filters.sc.ProfessionalPriesthoodFilter
+   seshat.apps.seshat_api.filters.sc.ProfessionalSoldierFilter
+   seshat.apps.seshat_api.filters.sc.RAFilter
+   seshat.apps.seshat_api.filters.sc.ReligiousLevelFilter
+   seshat.apps.seshat_api.filters.sc.ReligiousLiteratureFilter
+   seshat.apps.seshat_api.filters.sc.RoadFilter
+   seshat.apps.seshat_api.filters.sc.SacredTextFilter
+   seshat.apps.seshat_api.filters.sc.ScientificLiteratureFilter
+   seshat.apps.seshat_api.filters.sc.ScriptFilter
+   seshat.apps.seshat_api.filters.sc.SettlementHierarchyFilter
+   seshat.apps.seshat_api.filters.sc.SourceOfSupportFilter
+   seshat.apps.seshat_api.filters.sc.SpecialPurposeHouseFilter
+   seshat.apps.seshat_api.filters.sc.SpecialPurposeSiteFilter
+   seshat.apps.seshat_api.filters.sc.SpecializedGovernmentBuildingFilter
+   seshat.apps.seshat_api.filters.sc.StoreOfWealthFilter
+   seshat.apps.seshat_api.filters.sc.SymbolicBuildingFilter
+   seshat.apps.seshat_api.filters.sc.TimeMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.TokenFilter
+   seshat.apps.seshat_api.filters.sc.TradingEmporiaFilter
+   seshat.apps.seshat_api.filters.sc.UtilitarianPublicBuildingFilter
+   seshat.apps.seshat_api.filters.sc.VolumeMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.WeightMeasurementSystemFilter
+   seshat.apps.seshat_api.filters.sc.WrittenRecordFilter
+
+
+Module Contents
+---------------
+
+.. py:class:: AdministrativeLevelFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: AreaMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ArticleFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: BridgeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: BurialSiteFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CalendarFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CanalFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CeremonialSiteFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CommunalBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CourierFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: CourtFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DebtAndCreditStructureFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: DrinkingWaterSupplySystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: EnclosureFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: EntertainmentBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ExaminationSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FastestIndividualCommunicationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FictionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FoodStorageSiteFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ForeignCoinFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FormalLegalCodeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: FullTimeBureaucratFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: GeneralPostalServiceFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: GeometricalMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: HistoryFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: IndigenousCoinFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: IrrigationSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: JudgeFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: KnowledgeOrInformationBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LargestCommunicationDistanceFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: LengthMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ListsTablesAndClassificationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MarketFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MeritPromotionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MilitaryLevelFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MinesOrQuarryFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: MnemonicDeviceFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: NonPhoneticWritingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: NonwrittenRecordFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: OccupationalComplexityFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: OtherMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: OtherSpecialPurposeSiteFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: OtherUtilitarianPublicBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PaperCurrencyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PhilosophyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PhoneticAlphabeticWritingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityPopulationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityTerritoryFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PopulationOfTheLargestSettlementFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PortFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PostalStationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PracticalLiteratureFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PreciousMetalFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ProfessionalLawyerFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ProfessionalMilitaryOfficerFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ProfessionalPriesthoodFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ProfessionalSoldierFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: RAFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ReligiousLevelFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ReligiousLiteratureFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: RoadFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SacredTextFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ScientificLiteratureFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: ScriptFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SettlementHierarchyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SourceOfSupportFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SpecialPurposeHouseFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SpecialPurposeSiteFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SpecializedGovernmentBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: StoreOfWealthFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: SymbolicBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: TimeMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: TokenFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: TradingEmporiaFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: UtilitarianPublicBuildingFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: VolumeMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: WeightMeasurementSystemFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: WrittenRecordFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+

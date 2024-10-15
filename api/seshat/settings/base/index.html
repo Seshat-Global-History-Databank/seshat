@@ -1,0 +1,586 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.settings.base &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../_static/jquery.js"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+      <script src="../../../../_static/doctools.js"></script>
+      <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="seshat.settings.local" href="../local/index.html" />
+    <link rel="prev" title="seshat.settings" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../apps/index.html">seshat.apps</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.settings</a></li>
+      <li class="breadcrumb-item active">seshat.settings.base</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/api/seshat/settings/base/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.settings.base">
+<span id="seshat-settings-base"></span><h1>seshat.settings.base<a class="headerlink" href="#module-seshat.settings.base" title="Permalink to this heading"></a></h1>
+<p>The base settings for the Seshat project.</p>
+<p>They are used by the development and production environment settings,
+available in <a class="reference internal" href="../local/index.html"><span class="doc">seshat.settings.local</span></a> and
+<a class="reference internal" href="../production/index.html"><span class="doc">seshat.settings.production</span></a>.</p>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.ACCOUNT_AUTHENTICATION_METHOD" title="seshat.settings.base.ACCOUNT_AUTHENTICATION_METHOD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_AUTHENTICATION_METHOD</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.ACCOUNT_EMAIL_REQUIRED" title="seshat.settings.base.ACCOUNT_EMAIL_REQUIRED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_EMAIL_REQUIRED</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.ACCOUNT_LOGOUT_REDIRECT" title="seshat.settings.base.ACCOUNT_LOGOUT_REDIRECT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_LOGOUT_REDIRECT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.ACCOUNT_USERNAME_REQUIRED" title="seshat.settings.base.ACCOUNT_USERNAME_REQUIRED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_USERNAME_REQUIRED</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.ALLOWED_HOSTS" title="seshat.settings.base.ALLOWED_HOSTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ALLOWED_HOSTS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.AUTHENTICATION_BACKENDS" title="seshat.settings.base.AUTHENTICATION_BACKENDS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTHENTICATION_BACKENDS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.AUTH_PASSWORD_VALIDATORS" title="seshat.settings.base.AUTH_PASSWORD_VALIDATORS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_PASSWORD_VALIDATORS</span></code></a></p></td>
+<td><p>AUTH_PASSWORD_VALIDATORS defines the validators that are used to check the strength of passwords.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.BASE_DIR" title="seshat.settings.base.BASE_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BASE_DIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.CESIUM_ION_ACCESS_TOKEN" title="seshat.settings.base.CESIUM_ION_ACCESS_TOKEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CESIUM_ION_ACCESS_TOKEN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.CORS_ALLOWED_ORIGINS" title="seshat.settings.base.CORS_ALLOWED_ORIGINS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORS_ALLOWED_ORIGINS</span></code></a></p></td>
+<td><p>CORS_ALLOWED_ORIGINS defines the allowed origins for Cross-Origin Resource Sharing (CORS).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.CSRF_TRUSTED_ORIGINS" title="seshat.settings.base.CSRF_TRUSTED_ORIGINS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CSRF_TRUSTED_ORIGINS</span></code></a></p></td>
+<td><p>CSRF_TRUSTED_ORIGINS defines the trusted origins for Cross-Site Request Forgery (CSRF) protection.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.DATABASES" title="seshat.settings.base.DATABASES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DATABASES</span></code></a></p></td>
+<td><p>Database settings for local development.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.DEBUG" title="seshat.settings.base.DEBUG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEBUG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.DEFAULT_AUTO_FIELD" title="seshat.settings.base.DEFAULT_AUTO_FIELD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEFAULT_AUTO_FIELD</span></code></a></p></td>
+<td><p>DEFAULT_AUTO_FIELD is set to <cite>django.db.models.BigAutoField</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.EMAIL_BACKEND" title="seshat.settings.base.EMAIL_BACKEND"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMAIL_BACKEND</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.EMAIL_FROM_USER" title="seshat.settings.base.EMAIL_FROM_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EMAIL_FROM_USER</span></code></a></p></td>
+<td><p>The email address from which the emails will be sent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.GDAL_LIBRARY_PATH" title="seshat.settings.base.GDAL_LIBRARY_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GDAL_LIBRARY_PATH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.GEOGRAPHIC_DB" title="seshat.settings.base.GEOGRAPHIC_DB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GEOGRAPHIC_DB</span></code></a></p></td>
+<td><p>GEOGRAPHIC_DB is set to True to enable the geographic database.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.INSTALLED_APPS" title="seshat.settings.base.INSTALLED_APPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INSTALLED_APPS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.INTERNAL_IPS" title="seshat.settings.base.INTERNAL_IPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">INTERNAL_IPS</span></code></a></p></td>
+<td><p>INTERNAL_IPS defines the list of IP addresses that are allowed to visit the debug toolbar.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.LANGUAGE_CODE" title="seshat.settings.base.LANGUAGE_CODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LANGUAGE_CODE</span></code></a></p></td>
+<td><p>LANGUAGE_CODE is set to en-us by default.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.LOCALE_PATHS" title="seshat.settings.base.LOCALE_PATHS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOCALE_PATHS</span></code></a></p></td>
+<td><p>LOCALE_PATHS defines the directories in which Django will search for translation files.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.LOGIN_REDIRECT_URL" title="seshat.settings.base.LOGIN_REDIRECT_URL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LOGIN_REDIRECT_URL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.MEDIA_ROOT" title="seshat.settings.base.MEDIA_ROOT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MEDIA_ROOT</span></code></a></p></td>
+<td><p>The absolute path to the directory where uploaded files will be saved.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.MEDIA_URL" title="seshat.settings.base.MEDIA_URL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MEDIA_URL</span></code></a></p></td>
+<td><p>The URL to use when referring to media files located in the <cite>media</cite> directory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.MESSAGE_TAGS" title="seshat.settings.base.MESSAGE_TAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MESSAGE_TAGS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.MIDDLEWARE" title="seshat.settings.base.MIDDLEWARE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIDDLEWARE</span></code></a></p></td>
+<td><p>MIDDLEWARE defines the list of middleware classes that Django will use.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.MY_CURRENT_SERVER" title="seshat.settings.base.MY_CURRENT_SERVER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MY_CURRENT_SERVER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.RECAPTCHA_PUBLIC_KEY" title="seshat.settings.base.RECAPTCHA_PUBLIC_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RECAPTCHA_PUBLIC_KEY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.REST_FRAMEWORK" title="seshat.settings.base.REST_FRAMEWORK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REST_FRAMEWORK</span></code></a></p></td>
+<td><p>REST_FRAMEWORK defines the default settings for the Django REST framework.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.ROOT_URLCONF" title="seshat.settings.base.ROOT_URLCONF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ROOT_URLCONF</span></code></a></p></td>
+<td><p>ROOT_URLCONF is set to the URL configuration for the Seshat project.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.SECRET_KEY" title="seshat.settings.base.SECRET_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECRET_KEY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.SECURE_CROSS_ORIGIN_OPENER_POLICY" title="seshat.settings.base.SECURE_CROSS_ORIGIN_OPENER_POLICY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SECURE_CROSS_ORIGIN_OPENER_POLICY</span></code></a></p></td>
+<td><p>SECURE_CROSS_ORIGIN_OPENER_POLICY is set to None to disable the Cross-Origin Opener Policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.SESHAT_ENVIRONMENT" title="seshat.settings.base.SESHAT_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SESHAT_ENVIRONMENT</span></code></a></p></td>
+<td><p>The environment in which the Seshat application is running.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.SITE_ID" title="seshat.settings.base.SITE_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SITE_ID</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.SOCIALACCOUNT_PROVIDERS" title="seshat.settings.base.SOCIALACCOUNT_PROVIDERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SOCIALACCOUNT_PROVIDERS</span></code></a></p></td>
+<td><p>SOCIALACCOUNT_PROVIDERS defines the social account providers for the Django all-auth package.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.STATICFILES_DIRS" title="seshat.settings.base.STATICFILES_DIRS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STATICFILES_DIRS</span></code></a></p></td>
+<td><p>Defines the directories in which Django will search for additional static files.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id0" title="seshat.settings.base.STATICFILES_STORAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STATICFILES_STORAGE</span></code></a></p></td>
+<td><p>The static files storage is set to the Django static files storage for testing environments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="seshat.settings.base.STATICFILES_STORAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STATICFILES_STORAGE</span></code></a></p></td>
+<td><p>The static files storage is set to the Django static files storage for testing environments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.STATIC_ROOT" title="seshat.settings.base.STATIC_ROOT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STATIC_ROOT</span></code></a></p></td>
+<td><p>The absolute path to the directory where <cite>collectstatic</cite> will collect static files for deployment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.STATIC_URL" title="seshat.settings.base.STATIC_URL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STATIC_URL</span></code></a></p></td>
+<td><p>The URL to use when referring to static files located in the <cite>static</cite> directory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.TEMPLATES" title="seshat.settings.base.TEMPLATES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TEMPLATES</span></code></a></p></td>
+<td><p>TEMPLATES defines the list of engines that Django can use to render templates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.TIME_ZONE" title="seshat.settings.base.TIME_ZONE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TIME_ZONE</span></code></a></p></td>
+<td><p>TIME_ZONE is set to UTC by default.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.USE_I18N" title="seshat.settings.base.USE_I18N"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USE_I18N</span></code></a></p></td>
+<td><p>USE_I18N is set to True to enable internationalization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.USE_L10N" title="seshat.settings.base.USE_L10N"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USE_L10N</span></code></a></p></td>
+<td><p>USE_L10N is set to True to enable localization.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.USE_TZ" title="seshat.settings.base.USE_TZ"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USE_TZ</span></code></a></p></td>
+<td><p>USE_TZ is set to True to enable time zone support.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.settings.base.WSGI_APPLICATION" title="seshat.settings.base.WSGI_APPLICATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WSGI_APPLICATION</span></code></a></p></td>
+<td><p>WSGI_APPLICATION is set to the WSGI application for the Seshat project.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.settings.base.local_env_path" title="seshat.settings.base.local_env_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">local_env_path</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ACCOUNT_AUTHENTICATION_METHOD">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ACCOUNT_AUTHENTICATION_METHOD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'email'</span></em><a class="headerlink" href="#seshat.settings.base.ACCOUNT_AUTHENTICATION_METHOD" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ACCOUNT_EMAIL_REQUIRED">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ACCOUNT_EMAIL_REQUIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.settings.base.ACCOUNT_EMAIL_REQUIRED" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ACCOUNT_LOGOUT_REDIRECT">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ACCOUNT_LOGOUT_REDIRECT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'seshat-index'</span></em><a class="headerlink" href="#seshat.settings.base.ACCOUNT_LOGOUT_REDIRECT" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ACCOUNT_USERNAME_REQUIRED">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ACCOUNT_USERNAME_REQUIRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#seshat.settings.base.ACCOUNT_USERNAME_REQUIRED" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ALLOWED_HOSTS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ALLOWED_HOSTS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['seshatdb.herokuapp.com',</span> <span class="pre">'127.0.0.1',</span> <span class="pre">'majidbenam.com',</span> <span class="pre">'www.majidbenam.com',</span> <span class="pre">'https://majidbenam.com']</span></em><a class="headerlink" href="#seshat.settings.base.ALLOWED_HOSTS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.AUTHENTICATION_BACKENDS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">AUTHENTICATION_BACKENDS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['django.contrib.auth.backends.ModelBackend',</span> <span class="pre">'allauth.account.auth_backends.AuthenticationBackend']</span></em><a class="headerlink" href="#seshat.settings.base.AUTHENTICATION_BACKENDS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.AUTH_PASSWORD_VALIDATORS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">AUTH_PASSWORD_VALIDATORS</span></span><a class="headerlink" href="#seshat.settings.base.AUTH_PASSWORD_VALIDATORS" title="Permalink to this definition"></a></dt>
+<dd><p>AUTH_PASSWORD_VALIDATORS defines the validators that are used to check the strength of passwords.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.BASE_DIR">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">BASE_DIR</span></span><a class="headerlink" href="#seshat.settings.base.BASE_DIR" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.CESIUM_ION_ACCESS_TOKEN">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">CESIUM_ION_ACCESS_TOKEN</span></span><a class="headerlink" href="#seshat.settings.base.CESIUM_ION_ACCESS_TOKEN" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.CORS_ALLOWED_ORIGINS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">CORS_ALLOWED_ORIGINS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['http://localhost:3000',</span> <span class="pre">'http://127.0.0.1:3000']</span></em><a class="headerlink" href="#seshat.settings.base.CORS_ALLOWED_ORIGINS" title="Permalink to this definition"></a></dt>
+<dd><p>CORS_ALLOWED_ORIGINS defines the allowed origins for Cross-Origin Resource Sharing (CORS).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.CSRF_TRUSTED_ORIGINS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">CSRF_TRUSTED_ORIGINS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['https://majidbenam.com',</span> <span class="pre">'http://*.majidbenam.com',</span> <span class="pre">'http://majidbenam.com',...</span></em><a class="headerlink" href="#seshat.settings.base.CSRF_TRUSTED_ORIGINS" title="Permalink to this definition"></a></dt>
+<dd><p>CSRF_TRUSTED_ORIGINS defines the trusted origins for Cross-Site Request Forgery (CSRF) protection.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.DATABASES">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">DATABASES</span></span><a class="headerlink" href="#seshat.settings.base.DATABASES" title="Permalink to this definition"></a></dt>
+<dd><p>Database settings for local development.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.DEBUG">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">DEBUG</span></span><a class="headerlink" href="#seshat.settings.base.DEBUG" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.DEFAULT_AUTO_FIELD">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_AUTO_FIELD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'django.db.models.BigAutoField'</span></em><a class="headerlink" href="#seshat.settings.base.DEFAULT_AUTO_FIELD" title="Permalink to this definition"></a></dt>
+<dd><p>DEFAULT_AUTO_FIELD is set to <cite>django.db.models.BigAutoField</cite>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.EMAIL_BACKEND">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">EMAIL_BACKEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'django.core.mail.backends.smtp.EmailBackend'</span></em><a class="headerlink" href="#seshat.settings.base.EMAIL_BACKEND" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.EMAIL_FROM_USER">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">EMAIL_FROM_USER</span></span><a class="headerlink" href="#seshat.settings.base.EMAIL_FROM_USER" title="Permalink to this definition"></a></dt>
+<dd><p>The email address from which the emails will be sent.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.GDAL_LIBRARY_PATH">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">GDAL_LIBRARY_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/opt/homebrew/opt/gdal/lib/libgdal.dylib'</span></em><a class="headerlink" href="#seshat.settings.base.GDAL_LIBRARY_PATH" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.GEOGRAPHIC_DB">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">GEOGRAPHIC_DB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.settings.base.GEOGRAPHIC_DB" title="Permalink to this definition"></a></dt>
+<dd><p>GEOGRAPHIC_DB is set to True to enable the geographic database.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.INSTALLED_APPS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">INSTALLED_APPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['seshat.apps.accounts',</span> <span class="pre">'django.contrib.admin',</span> <span class="pre">'django.contrib.auth',...</span></em><a class="headerlink" href="#seshat.settings.base.INSTALLED_APPS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.INTERNAL_IPS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">INTERNAL_IPS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['127.0.0.1']</span></em><a class="headerlink" href="#seshat.settings.base.INTERNAL_IPS" title="Permalink to this definition"></a></dt>
+<dd><p>INTERNAL_IPS defines the list of IP addresses that are allowed to visit the debug toolbar.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.LANGUAGE_CODE">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">LANGUAGE_CODE</span></span><a class="headerlink" href="#seshat.settings.base.LANGUAGE_CODE" title="Permalink to this definition"></a></dt>
+<dd><p>LANGUAGE_CODE is set to en-us by default.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.LOCALE_PATHS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">LOCALE_PATHS</span></span><a class="headerlink" href="#seshat.settings.base.LOCALE_PATHS" title="Permalink to this definition"></a></dt>
+<dd><p>LOCALE_PATHS defines the directories in which Django will search for translation files.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.LOGIN_REDIRECT_URL">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">LOGIN_REDIRECT_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'seshat-index'</span></em><a class="headerlink" href="#seshat.settings.base.LOGIN_REDIRECT_URL" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.MEDIA_ROOT">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">MEDIA_ROOT</span></span><a class="headerlink" href="#seshat.settings.base.MEDIA_ROOT" title="Permalink to this definition"></a></dt>
+<dd><p>The absolute path to the directory where uploaded files will be saved.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.MEDIA_URL">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">MEDIA_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/media/'</span></em><a class="headerlink" href="#seshat.settings.base.MEDIA_URL" title="Permalink to this definition"></a></dt>
+<dd><p>The URL to use when referring to media files located in the <cite>media</cite> directory.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.MESSAGE_TAGS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">MESSAGE_TAGS</span></span><a class="headerlink" href="#seshat.settings.base.MESSAGE_TAGS" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.MIDDLEWARE">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">MIDDLEWARE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['django.middleware.security.SecurityMiddleware',...</span></em><a class="headerlink" href="#seshat.settings.base.MIDDLEWARE" title="Permalink to this definition"></a></dt>
+<dd><p>MIDDLEWARE defines the list of middleware classes that Django will use.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.MY_CURRENT_SERVER">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">MY_CURRENT_SERVER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'http://127.0.0.1:8000'</span></em><a class="headerlink" href="#seshat.settings.base.MY_CURRENT_SERVER" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.RECAPTCHA_PUBLIC_KEY">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">RECAPTCHA_PUBLIC_KEY</span></span><a class="headerlink" href="#seshat.settings.base.RECAPTCHA_PUBLIC_KEY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.REST_FRAMEWORK">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">REST_FRAMEWORK</span></span><a class="headerlink" href="#seshat.settings.base.REST_FRAMEWORK" title="Permalink to this definition"></a></dt>
+<dd><p>REST_FRAMEWORK defines the default settings for the Django REST framework.</p>
+<p>The default pagination class is set to <cite>PageNumberPagination</cite> with a page size
+of 1000.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.ROOT_URLCONF">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">ROOT_URLCONF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'seshat.urls'</span></em><a class="headerlink" href="#seshat.settings.base.ROOT_URLCONF" title="Permalink to this definition"></a></dt>
+<dd><p>ROOT_URLCONF is set to the URL configuration for the Seshat project.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.SECRET_KEY">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">SECRET_KEY</span></span><a class="headerlink" href="#seshat.settings.base.SECRET_KEY" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.SECURE_CROSS_ORIGIN_OPENER_POLICY">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">SECURE_CROSS_ORIGIN_OPENER_POLICY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#seshat.settings.base.SECURE_CROSS_ORIGIN_OPENER_POLICY" title="Permalink to this definition"></a></dt>
+<dd><p>SECURE_CROSS_ORIGIN_OPENER_POLICY is set to None to disable the Cross-Origin Opener Policy.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.SESHAT_ENVIRONMENT">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">SESHAT_ENVIRONMENT</span></span><a class="headerlink" href="#seshat.settings.base.SESHAT_ENVIRONMENT" title="Permalink to this definition"></a></dt>
+<dd><p>The environment in which the Seshat application is running.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The value is set to <cite>local</cite> by default. This value can be changed in the
+environment variable SESHAT_ENVIRONMENT.</p>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.SITE_ID">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">SITE_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#seshat.settings.base.SITE_ID" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.SOCIALACCOUNT_PROVIDERS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">SOCIALACCOUNT_PROVIDERS</span></span><a class="headerlink" href="#seshat.settings.base.SOCIALACCOUNT_PROVIDERS" title="Permalink to this definition"></a></dt>
+<dd><p>SOCIALACCOUNT_PROVIDERS defines the social account providers for the Django all-auth package.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.STATICFILES_DIRS">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">STATICFILES_DIRS</span></span><a class="headerlink" href="#seshat.settings.base.STATICFILES_DIRS" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the directories in which Django will search for additional static files.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.STATICFILES_STORAGE">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">STATICFILES_STORAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'whitenoise.storage.CompressedManifestStaticFilesStorage'</span></em><a class="headerlink" href="#seshat.settings.base.STATICFILES_STORAGE" title="Permalink to this definition"></a></dt>
+<dd><p>The static files storage is set to the whitenoise storage, which is a compressed manifest static files storage.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">STATICFILES_STORAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'django.contrib.staticfiles.storage.StaticFilesStorage'</span></em><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>The static files storage is set to the Django static files storage for testing environments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.STATIC_ROOT">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">STATIC_ROOT</span></span><a class="headerlink" href="#seshat.settings.base.STATIC_ROOT" title="Permalink to this definition"></a></dt>
+<dd><p>The absolute path to the directory where <cite>collectstatic</cite> will collect static files for deployment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The value set here is the <cite>static</cite> directory in the base directory of the project.</p>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.STATIC_URL">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">STATIC_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'static/'</span></em><a class="headerlink" href="#seshat.settings.base.STATIC_URL" title="Permalink to this definition"></a></dt>
+<dd><p>The URL to use when referring to static files located in the <cite>static</cite> directory.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.TEMPLATES">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">TEMPLATES</span></span><a class="headerlink" href="#seshat.settings.base.TEMPLATES" title="Permalink to this definition"></a></dt>
+<dd><p>TEMPLATES defines the list of engines that Django can use to render templates.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.TIME_ZONE">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">TIME_ZONE</span></span><a class="headerlink" href="#seshat.settings.base.TIME_ZONE" title="Permalink to this definition"></a></dt>
+<dd><p>TIME_ZONE is set to UTC by default.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.USE_I18N">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">USE_I18N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.settings.base.USE_I18N" title="Permalink to this definition"></a></dt>
+<dd><p>USE_I18N is set to True to enable internationalization.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.USE_L10N">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">USE_L10N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.settings.base.USE_L10N" title="Permalink to this definition"></a></dt>
+<dd><p>USE_L10N is set to True to enable localization.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.USE_TZ">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">USE_TZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#seshat.settings.base.USE_TZ" title="Permalink to this definition"></a></dt>
+<dd><p>USE_TZ is set to True to enable time zone support.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.WSGI_APPLICATION">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">WSGI_APPLICATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'seshat.wsgi.application'</span></em><a class="headerlink" href="#seshat.settings.base.WSGI_APPLICATION" title="Permalink to this definition"></a></dt>
+<dd><p>WSGI_APPLICATION is set to the WSGI application for the Seshat project.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.settings.base.local_env_path">
+<span class="sig-prename descclassname"><span class="pre">seshat.settings.base.</span></span><span class="sig-name descname"><span class="pre">local_env_path</span></span><a class="headerlink" href="#seshat.settings.base.local_env_path" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="seshat.settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../local/index.html" class="btn btn-neutral float-right" title="seshat.settings.local" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
