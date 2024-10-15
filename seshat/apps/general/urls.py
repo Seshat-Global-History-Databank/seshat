@@ -3,10 +3,15 @@ from django.urls import path
 from . import views
 from .specific_views import downloads
 
+from ..generic_views import VariableView
+
+APP_LABEL = "general"
+
+
 urlpatterns = [
     path(
         "generalvars/",
-        views.GeneralVariablesView.as_view(),
+        VariableView.as_view(app_label=APP_LABEL),
         name="generalvars",
     ),
     path(

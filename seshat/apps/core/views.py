@@ -53,7 +53,7 @@ from ..utils import (
     get_all_data,
     get_api_results,
     get_models,
-    get_us_states_geojson,
+    load_us_states_geojson,
 )
 
 from .forms import (
@@ -1281,9 +1281,7 @@ class PolityListView(SuccessMessageMixin, ListView):
                             0,
                         ]
 
-        all_polities_g_sc_wf, freq_dic = get_polity_app_data(
-            Polity, return_all=True
-        )
+        all_polities_g_sc_wf, freq_dic = get_polity_app_data(return_all=True)
         freq_dic["d"] = 0
 
         for polity in polities:
@@ -1327,22 +1325,9 @@ class PolityListView(SuccessMessageMixin, ListView):
                 pass
 
             # Pow Trans Data
-            try:
-                power_transitions = Power_transition.objects.filter(
-                    polity_id=polity.id
-                )
-
-                minima, maxima = [], []
-                for power_transition in power_transitions:
-                    if power_transition.year_from is not None:
-                        minima.append(power_transition.year_from)
-
-                    if power_transition.year_to is not None:
-                        maxima.append(power_transition.year_to)
-
-                all_durations["pt"] = [min(minima), max(maxima)]
-            except:  # noqa: E722  TODO: Don't use bare except
-                pass
+            all_durations["pt"] = Power_transition.objects.filter(
+                polity_id=polity.id
+            ).infer_duration()
 
             polity.all_durations = all_durations
             if (
@@ -1435,7 +1420,7 @@ class PolityCommentedListView(
         )
 
         contain_dic = get_polity_app_data(
-            Polity, return_freq=False, return_contain=True
+            return_freq=False, return_contain=True
         )
 
         for polity in polities:
@@ -1480,15 +1465,19 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             return get_object_or_404(Polity, pk=self.kwargs["pk"])
 
         if "new_name" in self.kwargs:
+            new_name = self.kwargs["new_name"]
+
             # Attempt to get the object by new_name, handle multiple objects returned
             try:
-                return Polity.objects.get(new_name=self.kwargs["new_name"])
+                return Polity.objects.get(new_name=new_name)
             except Polity.MultipleObjectsReturned:
                 # Handle the case of multiple objects with the same new_name
-                raise Http404("Multiple objects with the same new_name")
+                raise Http404(
+                    f"Multiple objects with the same name: {new_name}"
+                )
             except Polity.DoesNotExist:
                 # Handle the case where no object with the given new_name is found
-                raise Http404("No Polity matches the given new_name")
+                raise Http404(f"No Polity matches the given name: {new_name}")
 
         return None
 
@@ -1507,14 +1496,14 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         all_data = get_data_for_polity(
-            self.object.pk,
+            self.object,
             "crisisdb",
             ["Arable_land", "Agricultural_population", "Human_sacrifice"],
         )
-        _, all_general_data = get_all_data("general", self.object.pk)
-        _, all_sc_data = get_all_data("sc", self.object.pk)
-        _, all_wf_data = get_all_data("wf", self.object.pk)
-        _, all_rt_data = get_all_data("rt", self.object.pk)
+        _, all_general_data = get_all_data("general", self.object)
+        _, all_sc_data = get_all_data("sc", self.object)
+        _, all_wf_data = get_all_data("wf", self.object)
+        _, all_rt_data = get_all_data("rt", self.object)
 
         context = dict(
             context,
@@ -1534,36 +1523,26 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             },
         )
 
-        try:
-            research_assistants = Polity_research_assistant.objects.filter(
-                polity_id=self.object.pk
-            )
-            research_assistant_ids = research_assistants.values_list(
-                "polity_ra_id", flat=True
-            )
+        research_assistants = Polity_research_assistant.objects.filter(
+            polity=self.object
+        )
+        research_assistant_ids = research_assistants.values_list(
+            "polity_ra_id", flat=True
+        )
 
-            experts = Seshat_Expert.objects.filter(
+        all_research_assistants = [
+            f"{name[0]} {name[1]}"
+            for name in Seshat_Expert.objects.filter(
                 id__in=research_assistant_ids
-            )
-            all_research_assistants = [
-                f"{expert.user.first_name} {expert.user.last_name}"
-                for expert in experts
-            ]
+            ).values_list("user__first_name", "user__last_name")
+        ]
 
-            context = dict(
-                context,
-                **{
-                    "all_Ras": ", ".join(all_research_assistants),
-                },
-            )
-
-        except:  # noqa: E722  TODO: Don't use bare except
-            context = dict(
-                context,
-                **{
-                    "all_Ras": "",
-                },
-            )
+        context = dict(
+            context,
+            **{
+                "all_Ras": ", ".join(all_research_assistants),
+            },
+        )
 
         # Get the related data
         all_durations = {
@@ -1575,9 +1554,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
 
         # Pol_dur object
         try:
-            polity_duration = Polity_duration.objects.get(
-                polity_id=self.object.pk
-            )
+            polity_duration = Polity_duration.objects.get(polity=self.object)
 
             all_durations["gv"] = [
                 polity_duration.polity_year_from,
@@ -1587,22 +1564,9 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
             pass
 
         # Pow Trans Data
-        try:
-            power_transitions = Power_transition.objects.filter(
-                polity_id=self.object.pk
-            )
-
-            minima, maxima = [], []
-            for power_transition in power_transitions:
-                if power_transition.year_from is not None:
-                    minima += [power_transition.year_from]
-
-                if power_transition.year_to is not None:
-                    maxima += [power_transition.year_to]
-
-            all_durations["pt"] = [min(minima), max(maxima)]
-        except Power_transition.DoesNotExist:
-            pass
+        all_durations["pt"] = Power_transition.objects.filter(
+            polity=self.object
+        ).infer_duration()
 
         if all(
             [all_durations["intr"], all_durations["gv"], all_durations["pt"]]
@@ -1668,9 +1632,7 @@ class PolityDetailView(SuccessMessageMixin, DetailView):
 
             context["nga_pol_rel"][time_delta] = nga_list
 
-        _filter = Q(polity_id=self.object.pk) | Q(
-            other_polity_id=self.object.pk
-        )
+        _filter = Q(polity=self.object) | Q(other_polity=self.object)
         preceding_data, succeeding_data = [], []
         for preceding_entity in Polity_preceding_entity.objects.filter(
             _filter
@@ -1991,7 +1953,7 @@ class WhoWeAreView(TemplateView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
 
-        context = dict(context, **{"json_data": get_us_states_geojson()})
+        context = dict(context, **{"json_data": load_us_states_geojson()})
 
         return context
 
@@ -2768,7 +2730,7 @@ def polity_filter_options_view(request):
     # Filter the options based on the search text
     options = Polity.objects.filter(
         name__icontains=request.GET.get("search_text", "")
-    )
+    )  # TODO: change to Polity.objects.search(search_term, limit=None, order_by=False, limit=False, limited_search=True)
 
     return JsonResponse({"options": options.values("id", "name")})
 
@@ -3512,19 +3474,10 @@ class SearchSuggestionsView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         search_term = self.request.GET.get("search", "")
-        _filter = (
-            Q(name__icontains=search_term)
-            | Q(long_name__icontains=search_term)
-            | Q(new_name__icontains=search_term)
-        )
 
         context = dict(
             context,
-            **{
-                "polities": Polity.objects.filter(_filter).order_by(
-                    "start_year"
-                )[:8]
-            },
+            **{"polities": Polity.objects.search_names(search_term)},
         )
 
         return context
@@ -3536,12 +3489,12 @@ class SearchRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         search_term = self.request.GET.get("search", "")
 
-        polity = Polity.objects.filter(name__icontains=search_term).first()
+        polities = Polity.objects.search_names(search_term)
 
-        if not polity:
+        if not polities:
             return reverse("index")
 
         return reverse(
             self.pattern_name,
-            kwargs={"pk": polity.pk},
+            kwargs={"pk": polities.first().pk},
         )

@@ -2,7 +2,6 @@ __all__ = [
     "POLITY_TAG_CHOICES",
     "WORLD_REGION_CHOICES",
     "CERTAINTY",
-    "TAGS",
     "APS",
     "AP",
     "NFY",
@@ -28,11 +27,6 @@ from ..constants import (
     POLITY_LANGUAGE_CHOICES,
 )
 
-TAGS = (
-    ("TRS", "Confident"),
-    ("SSP", "Suspected"),
-    ("IFR", "Inferred"),
-)
 
 APS = "A;P*"
 AP = "A;P"

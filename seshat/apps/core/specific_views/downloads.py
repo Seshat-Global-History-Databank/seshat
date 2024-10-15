@@ -127,9 +127,7 @@ def download_csv_all_polities_view(request):
         ]
     )
 
-    coded_value_data = get_polity_app_data(
-        Polity, return_freq=False, return_contain=True
-    )
+    coded_value_data = get_polity_app_data(return_freq=False, return_contain=True)
 
     for obj in Polity.objects.all():
         if obj.home_seshat_region:

@@ -10,12 +10,12 @@ from django.urls import reverse
 
 from ..accounts.models import Seshat_Expert
 from ..utils import get_color, get_date, deprecated, ATTRS_HTML
-from ..constants import NO_DATA, ZOTERO
+from ..constants import NO_DATA, ZOTERO, TAGS
+from ..generic_mixins import MixinQuerySet
 
 from .constants import (
     POLITY_TAG_CHOICES,
     WORLD_REGION_CHOICES,
-    TAGS,
 )
 from .mixins import ZoteroMixIn
 
@@ -226,6 +226,43 @@ class Nga(models.Model):
         return self.name
 
 
+class PolityQuerySet(models.QuerySet):
+    def search_names(self, search_term, order_by="start_year", limit=8, limited_search=False):
+        """
+        Searches the queryset for a search term.
+
+        Args:
+            search_term (str): The search term.
+            order_by (str): The field to order the queryset by.
+            limit (int): The number of objects to return.
+            limited_search (bool): Whether to limit the search to the name field.
+
+        """
+        # Define the filter
+        _filter = (
+            Q(name__icontains=search_term)
+            | Q(long_name__icontains=search_term)
+            | Q(new_name__icontains=search_term)
+        )
+
+        if limited_search:
+            _filter = Q(name__icontains=search_term)
+
+        # Filter the queryset
+        objects = self.filter(_filter)
+
+        # Order the queryset
+        if order_by:
+            objects = objects.order_by(order_by)
+
+        # Limit the queryset
+        if limit:
+            objects = objects[:limit]
+
+        # Return the queryset
+        return objects
+
+
 class Polity(models.Model):
     """
     Model representing a polity.
@@ -278,6 +315,8 @@ class Polity(models.Model):
         auto_now_add=True, blank=True, null=True
     )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    objects = PolityQuerySet.as_manager()
 
     class Meta:
         """
@@ -630,6 +669,21 @@ class Reference(models.Model):
         ordering = ["-created_date", "title"]
 
 
+class CitationQuerySet(models.QuerySet):
+    def as_json(self, limit=5000):
+        """
+        # TODO: docstring
+        """
+        data = {}
+        for ix, (k, v) in enumerate(Citation.objects.all().in_bulk().items()):
+            if ix > limit:
+                continue
+
+            data[str(k)] = str(v)
+
+        return {"data": data}
+
+
 class Citation(ZoteroMixIn, models.Model):
     """
     Model representing a specific citation.
@@ -652,6 +706,8 @@ class Citation(ZoteroMixIn, models.Model):
         auto_now_add=True, blank=True, null=True
     )
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    objects = CitationQuerySet.as_manager()
 
     def get_title(self) -> str:
         """
@@ -1181,6 +1237,8 @@ class SeshatCommon(models.Model):
         null=True,
         blank=True,
     )
+
+    objects = MixinQuerySet.as_manager()
 
     class Meta:
         """

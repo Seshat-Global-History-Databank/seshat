@@ -445,7 +445,7 @@ class Polity_degree_of_centralization(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,
             }
         }
-        null_value = "The value is not available."
+        null_value = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_degree_of_centralization"
@@ -599,7 +599,7 @@ class Polity_utm_zone(SeshatCommon, GeneralMixIn):
         description = "The UTM Zone of a polity."  # noqa: E501   TODO: This was set to "The capital of a polity." -- I updated it. OK?  pylint: disable=C0301
         description_source = None
         inner_variables = {
-            "capital": {
+            "utm_zone": {  # noqa: E501  TODO: This was set to "capital" as inner var name, I changed it to utm_zone
                 "min": None,
                 "max": None,
                 "scale": None,
@@ -610,7 +610,7 @@ class Polity_utm_zone(SeshatCommon, GeneralMixIn):
                 "null_meaning": NO_DATA.wiki,  # noqa: E501   TODO: This comes from value provided in seshat.apps.general.views.Polity_utm_zoneCreateView.get_context_data. OK?  pylint: disable=C0301
             }
         }
-        null_value = "The value is not available."
+        null_value = NO_DATA.no_value
         potential_cols = []
 
     _clean_name = "polity_utm_zone"

@@ -31,10 +31,7 @@ from ..general.models import (
     Polity_language,
     Polity_linguistic_family,
 )
-from ..core.models import (
-    Polity,
-    Capital
-)
+from ..core.models import Polity, Capital
 from .models import (
     Citation,
     Reference,
@@ -45,7 +42,7 @@ from .models import (
 from .constants import APP_MAP, CATEGORICAL_VARIABLES, WORLD_MAP_INITIAL_POLITY
 
 
-def get_data_for_polity(polity_id, app_name, models=None):
+def get_data_for_polity(polity, app_name, models=None):
     """
     Get all data for a given polity ID from a given app.
 
@@ -73,7 +70,7 @@ def get_data_for_polity(polity_id, app_name, models=None):
     all_models = [model.model_class() for model in app_content_types]
 
     return {
-        model.__name__: model.objects.filter(polity=polity_id)
+        model.__name__: model.objects.filter(polity=polity)
         for model in all_models
     }
 
@@ -97,9 +94,7 @@ def get_model_data(model, polity_id, filter_for_other_polity=False):
         _filter = Q(polity__pk=polity_id)
 
     key = model.__name__.lower()
-    dic = {
-        key: model.objects.filter(_filter)
-    }
+    dic = {key: model.objects.filter(_filter)}
 
     if not dic[key]:
         return {}
@@ -108,7 +103,7 @@ def get_model_data(model, polity_id, filter_for_other_polity=False):
 
 
 def get_polity_app_data(
-    polity_model, return_all=False, return_freq=True, return_contain=True
+    return_all=False, return_freq=True, return_contain=True
 ):
     """
     Gets all data for a given polity model.
@@ -124,7 +119,7 @@ def get_polity_app_data(
 
     apps = ["general", "sc", "wf", "rt"]
 
-    polity_ids = polity_model.objects.all().values_list("id", flat=True)
+    polity_ids = Polity.objects.all().values_list("id", flat=True)
 
     polity_id_per_app = {
         app: list(
@@ -537,6 +532,7 @@ def get_provinces(selected_base_map_gadm="province"):
 
 # TODO: add to seshat.apps.core.views
 
+
 def get_polity_shape_content(
     displayed_year="all",
     seshat_id="all",
@@ -744,7 +740,7 @@ def assign_variables_to_shapes(shapes, app_map):
 
                         variables[app_name_long][var_name] = {
                             "formatted": variable_formatted,
-                            "full_name": variable_full_name
+                            "full_name": variable_full_name,
                         }
 
         # Store the variables in the cache for 1 hour

@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -10,24 +10,19 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     View,
+    TemplateView,
 )
-
-import csv
 
 from ..accounts.models import Seshat_Expert
 from ..core.models import (
     Citation,
     SeshatComment,
     SeshatCommentPart,
-    Polity,
 )
 from ..general.mixins import PolityIdMixin
 from ..constants import (
+    NO_DATA,
     POLITY_NGA_NAME,
-)
-from ..utils import (
-    get_date,
-    get_api_results,
 )
 
 from .forms import (
@@ -89,13 +84,21 @@ from .models import (
     Us_violence,
 )
 from .constants import (
-    ALL_VARS_IN_SECTIONS,
-    ALL_VARS_WITH_HIERARCHY,
-    TAGS_DIC,
     NO_SECTION_DICT,
     QING_VARS,
 )
 from .utils import expand_context_from_variable_hierarchy
+
+
+class QingVarsView(TemplateView):
+    template_name = "crisisdb/qing-vars.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context = dict(context, **{"my_dict": QING_VARS})
+
+        return context
 
 
 class CitationsDropdownView(PermissionRequiredMixin, View):
@@ -115,14 +118,7 @@ class CitationsDropdownView(PermissionRequiredMixin, View):
         Returns:
             JsonResponse: JSON response with all citations for dropdown
         """
-        # Get dropdown data here
-        data = [
-            {"id": item.id, "name": str(item)}
-            for item in Citation.objects.all()[:5000]
-        ]
-
-        # Return dropdown template as JSON response
-        return JsonResponse({"data": data})
+        return JsonResponse(Citation.objects.as_json(limit=5000))
 
 
 class Crisis_consequenceCreateView(
@@ -211,7 +207,9 @@ class Crisis_consequenceUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#crisis_case_var"
 
@@ -265,7 +263,9 @@ class Crisis_consequenceCreateHeavyView(PermissionRequiredMixin, CreateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#crisis_case_var"
 
@@ -329,7 +329,9 @@ class Crisis_consequenceUpdateHeavyView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#crisis_case_var"
 
@@ -457,7 +459,7 @@ class Crisis_consequenceListView(PermissionRequiredMixin, ListView):
                 "var_main_desc_source": "",
                 "var_section": "frffrr",
                 "var_subsection": "frtgtz",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "crisis_consequence": {
                         "min": None,
@@ -529,6 +531,8 @@ class Crisis_consequenceListAllView(PermissionRequiredMixin, ListView):
         Returns:
             dict: Context data for the view
         """
+        print("get_context_data for Crisis_consequenceListAllView")
+
         context = super().get_context_data(**kwargs)
 
         context = dict(
@@ -587,8 +591,10 @@ class Power_transitionCreateView(
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
-        
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
+
         return f"{url}#power_transition_var"
 
     def get_absolute_url(self) -> str:
@@ -648,7 +654,9 @@ class Power_transitionUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#power_transition_var"
 
@@ -702,7 +710,9 @@ class Power_transitionCreateHeavyView(PermissionRequiredMixin, CreateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#power_transition_var"
 
@@ -766,7 +776,9 @@ class Power_transitionUpdateHeavyView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#power_transition_var"
 
@@ -883,7 +895,7 @@ class Power_transitionListView(PermissionRequiredMixin, ListView):
                 "var_main_desc_source": "",
                 "var_section": "frffrr",
                 "var_subsection": "frtgtz",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "power_transition": {
                         "min": None,
@@ -1048,7 +1060,9 @@ class Human_sacrificeCreateView(
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#hs_var"
 
@@ -1117,7 +1131,9 @@ class Human_sacrificeUpdateView(PermissionRequiredMixin, UpdateView):
         Returns:
             str: URL to redirect to
         """
-        url = reverse("polity-detail-main", kwargs={"pk": self.object.polity.id})
+        url = reverse(
+            "polity-detail-main", kwargs={"pk": self.object.polity.id}
+        )
 
         return f"{url}#hs_var"
 
@@ -1469,7 +1485,7 @@ class External_conflictListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Conflict Variables",
                 "var_subsection": "External Conflicts Subsection",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "conflict_name": {
                         "min": None,
@@ -1626,7 +1642,7 @@ class Internal_conflictListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Conflict Variables",
                 "var_subsection": "Internal Conflicts Subsection",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "conflict": {
                         "min": None,
@@ -1816,7 +1832,7 @@ class External_conflict_sideListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Conflict Variables",
                 "var_subsection": "External Conflicts Subsection",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "conflict_id": {
                         "min": None,
@@ -2008,7 +2024,7 @@ class Agricultural_populationListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "agricultural_population": {
                         "min": 0,
@@ -2167,7 +2183,7 @@ class Arable_landListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "arable_land": {
                         "min": None,
@@ -2335,7 +2351,7 @@ class Arable_land_per_farmerListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "arable_land_per_farmer": {
                         "min": None,
@@ -2509,7 +2525,7 @@ class Gross_grain_shared_per_agricultural_populationListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "gross_grain_shared_per_agricultural_population": {
                         "min": None,
@@ -2682,7 +2698,7 @@ class Net_grain_shared_per_agricultural_populationListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "net_grain_shared_per_agricultural_population": {
                         "min": None,
@@ -2844,7 +2860,7 @@ class SurplusListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "surplus": {
                         "min": None,
@@ -3006,7 +3022,7 @@ class Military_expenseListView(ListView):
                 "var_main_desc_source": "https://en.wikipedia.org/wiki/Disease_outbreak",
                 "var_section": "Economy Variables",
                 "var_subsection": "State Finances",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "conflict": {
                         "min": None,
@@ -3177,7 +3193,7 @@ class Silver_inflowListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "State Finances",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "silver_inflow": {
                         "min": None,
@@ -3339,7 +3355,7 @@ class Silver_stockListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Economy Variables",
                 "var_subsection": "State Finances",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "silver_stock": {
                         "min": None,
@@ -3504,7 +3520,7 @@ class Total_populationListView(ListView):
                 "var_main_desc_source": "",
                 "var_section": "Social Complexity Variables",
                 "var_subsection": "Social Scale",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "total_population": {
                         "min": 0,
@@ -3669,7 +3685,7 @@ class Gdp_per_capitaListView(ListView):
                 "var_main_desc_source": "https://www.thebalance.com/gdp-per-capita-formula-u-s-compared-to-highest-and-lowest-3305848",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Economy Variables",
                 "var_subsection": "Productivity",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "gdp_per_capita": {
                         "min": None,
@@ -3834,7 +3850,7 @@ class Drought_eventListView(ListView):
                 "var_main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "drought_event": {
                         "min": 0,
@@ -3996,7 +4012,7 @@ class Locust_eventListView(ListView):
                 "var_main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "locust_event": {
                         "min": 0,
@@ -4166,7 +4182,7 @@ class Socioeconomic_turmoil_eventListView(ListView):
                 "var_main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "socioeconomic_turmoil_event": {
                         "min": 0,
@@ -4331,7 +4347,7 @@ class Crop_failure_eventListView(ListView):
                 "var_main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "crop_failure_event": {
                         "min": 0,
@@ -4495,7 +4511,7 @@ class Famine_eventListView(ListView):
                 "var_main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt",  # noqa: E501 pylint: disable=C0301
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "famine_event": {
                         "min": 0,
@@ -4657,7 +4673,7 @@ class Disease_outbreakListView(ListView):
                 "var_main_desc_source": "https://en.wikipedia.org/wiki/Disease_outbreak",
                 "var_section": "Well Being",
                 "var_subsection": "Biological Well-Being",
-                "var_null_meaning": "The value is not available.",
+                "var_null_meaning": NO_DATA.no_value,
                 "inner_vars": {
                     "longitude": {
                         "min": -180,
@@ -4756,147 +4772,6 @@ class Disease_outbreakDetailView(DetailView):
 
     model = Disease_outbreak
     template_name = "crisisdb/disease_outbreak/disease_outbreak_detail.html"
-
-
-# TODO: rewrite as a class-based view (RedirectView)
-def qing_vars_view(request):
-    """
-    View for listing all Qing Variables.
-
-    Note:
-        This is a temporary view for testing the Qing variables.
-
-        The temporary function for creating the my_sections_dic dic:
-        test_for_varhier_dic inside utils and the qing_vars_links_creator()
-        inside utils.py.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        dict: Context data for the view
-    """
-    context = {"my_dict": QING_VARS}
-
-    return render(request, "crisisdb/qing-vars.html", context=context)
-
-
-# TODO: rewrite as a class-based view (RedirectView)
-def playground(request):
-    """
-    View for the playground.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        dict: Context data for the view
-    """
-    context = {
-        "allpols": [pol.name for pol in Polity.objects.all()],
-        "all_var_hiers": ALL_VARS_WITH_HIERARCHY,
-        "crisi": ALL_VARS_IN_SECTIONS,
-    }
-
-    return render(request, "crisisdb/playground.html", context=context)
-
-
-# TODO: rewrite as a class-based view (RedirectView)
-def playgrounddownload_view(request):
-    """
-    Download the data from the playground.
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: HTTP response with CSV file
-    """
-    # Read the data from the previous from
-    # Make sure you collect all the data from seshat_api
-    # Sort it out and spit it out
-    # Small task: download what we have on seshat_api
-    checked_pols = request.POST.getlist("selected_pols")
-
-    checked_vars = request.POST.getlist("selected_vars")
-
-    new_checked_vars = [
-        "crisisdb_" + item.lower() + "_related" for item in checked_vars
-    ]
-
-    checked_separator = request.POST.get("SeparatorRadioOptions")
-
-    if checked_separator == "comma":
-        checked_sep = ","
-    elif checked_separator == "bar":
-        checked_sep = "|"
-    else:
-        # Bad selection of Separator
-        pass
-
-    all_my_data = get_api_results()
-
-    # Create a response object with CSV content type
-    final_response = HttpResponse(content_type="text/csv")
-    date = get_date()
-    filename = f"CrisisDB_data_{request.user}_{date}.csv"
-    final_response["Content-Disposition"] = (
-        f'attachment; filename="{filename}"'
-    )
-
-    writer = csv.writer(final_response, delimiter=checked_sep)
-
-    # The top row is the same as Equinox, so no need to read data from user
-    # input for that
-    writer.writerow(
-        [
-            "polity",
-            "variable_name",
-            "variable_sub_name",
-            "value",
-            "year_from",
-            "year_to",
-            "certainty",
-            "references",
-            "notes",
-        ]
-    )
-
-    for polity_with_everything in all_my_data:
-        if polity_with_everything["name"] not in checked_pols:
-            continue
-        else:
-            for variable in new_checked_vars:
-                if variable not in polity_with_everything.keys():
-                    continue
-                else:
-                    # We can get into a list of dictionaries
-                    for var_instance in polity_with_everything[variable]:
-                        all_inner_keys = var_instance.keys()
-                        all_used_keys = []
-                        for active_key in all_inner_keys:
-                            if (
-                                active_key
-                                not in ["year_from", "year_to", "tag"]
-                                and active_key not in all_used_keys
-                            ):
-                                an_equinox_row = []
-                                an_equinox_row.append(
-                                    polity_with_everything["name"]
-                                )
-                                an_equinox_row.append(variable[:-8])
-                                an_equinox_row.append(active_key)
-                                an_equinox_row.append(var_instance[active_key])
-                                all_used_keys.append(active_key)
-                                an_equinox_row.append(
-                                    var_instance["year_from"]
-                                )
-                                an_equinox_row.append(var_instance["year_to"])
-                                full_tag = TAGS_DIC[var_instance["tag"]]
-                                an_equinox_row.append(full_tag)
-                                writer.writerow(an_equinox_row)
-
-    return final_response
 
 
 class UsLocationListView(ListView):
@@ -5056,15 +4931,15 @@ class UsViolenceListView(ListView):
         return queryset
 
 
-class UsViolenceListViewPaginated(ListView):
-    """
-    View for listing all Us_violence instances with pagination (100 per page).
-    """
+# class UsViolenceListViewPaginated(ListView):
+#     """
+#     View for listing all Us_violence instances with pagination (100 per page).
+#     """
 
-    model = Us_violence
-    template_name = "crisisdb/us_violence/list_paginated.html"
-    context_object_name = "us_violences"
-    paginate_by = 100
+#     model = Us_violence
+#     template_name = "crisisdb/us_violence/list_paginated.html"
+#     context_object_name = "us_violences"
+#     paginate_by = 100
 
 
 class UsViolenceCreateView(PermissionRequiredMixin, CreateView):
@@ -5079,7 +4954,7 @@ class UsViolenceCreateView(PermissionRequiredMixin, CreateView):
     form_class = Us_violenceForm
     template_name = "crisisdb/us_violence/create.html"
     permission_required = "core.add_capital"
-    success_url = reverse_lazy("us_violence_paginated")
+    success_url = reverse_lazy("us_violence_list_all")
 
 
 class UsViolenceUpdateView(PermissionRequiredMixin, UpdateView):
@@ -5094,4 +4969,4 @@ class UsViolenceUpdateView(PermissionRequiredMixin, UpdateView):
     form_class = Us_violenceForm
     template_name = "crisisdb/us_violence/update.html"
     permission_required = "core.add_capital"
-    success_url = reverse_lazy("us_violence_paginated")
+    success_url = reverse_lazy("us_violence_list_all")

@@ -3,18 +3,26 @@ from django.urls import path, re_path
 from . import views
 from .specific_views import downloads
 
+# TODO: In the following url pattern, these views are not currently used anywhere in the
+# codebase:
+#    - codebook
+#    - codebook-new
+#    - no_zotero_refs_list_view
+#    - reference_update_modal
+#    - references_download_view
+#    - polity-detail-new-name
+#    - search_suggestions
+#    - signupfollowup_view
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("methods/", views.MethodsView.as_view(), name="methods"),
     path("whoweare/", views.WhoWeAreView.as_view(), name="whoweare"),
-    path(
-        "codebook/", views.CodebookView.as_view(), name="codebook"
-    ),  # noqa: E501  TODO: The "codebook" view is not used anywhere in the codebase
+    path("codebook/", views.CodebookView.as_view(), name="codebook"),
     path(
         "code_book_new_1/",
         views.CodebookNewView.as_view(),
         name="codebook-new",
-    ),  # noqa: E501  TODO: The "codebook-new" view is not used anywhere in the codebase
+    ),
     path(
         "downloads_page/", views.DownloadsView.as_view(), name="downloads-old"
     ),
@@ -70,7 +78,7 @@ urlpatterns = [
     ),
     path(
         "core/references/<int:pk>",
-        views.ReferenceDetailView.as_view(),  # noqa: E501  TODO: The reference-detail is not used anywhere in the codebase
+        views.ReferenceDetailView.as_view(),
         name="reference-detail",
     ),
     path(
@@ -80,22 +88,22 @@ urlpatterns = [
     ),
     path(
         "core/references/<int:pk>/delete/",
-        views.ReferenceDeleteView.as_view(),  # noqa: E501  TODO: The no_zotero_refs_list_view is not used anywhere in the codebase
+        views.ReferenceDeleteView.as_view(),
         name="reference-delete",
     ),
     path(
         "core/references/no_zotero_refs_list/",
-        views.no_zotero_refs_list_view,  # noqa: E501  TODO: The no_zotero_refs_list_view is not used anywhere in the codebase
+        views.no_zotero_refs_list_view,
         name="no_zotero_refs_list",
     ),
     path(
         "core/references/<int:pk>/updatemodal/",
-        views.reference_update_modal_view,  # noqa: E501  TODO: The reference_update_modal_view is not used anywhere in the codebase
+        views.reference_update_modal_view,
         name="reference_update_modal",
     ),
     path(
         "referencesdownload/",
-        downloads.referencesdownload_view,  # noqa: E501  TODO: The references_download_view is not used anywhere in the codebase
+        downloads.referencesdownload_view,
         name="references_download_view",
     ),
     path(
@@ -121,7 +129,7 @@ urlpatterns = [
     ),
     re_path(
         r"^core/polity/(?P<new_name>[\w-]+)/$",
-        views.PolityDetailView.as_view(),  # noqa: E501  TODO: The polity-detail-new-name is not used anywhere in the codebase
+        views.PolityDetailView.as_view(),
         name="polity-detail-new-name",
     ),
     path(
@@ -166,12 +174,12 @@ urlpatterns = [
     path(
         "search_suggestions/",
         views.SearchSuggestionsView.as_view(),
-        name="search_suggestions",  # noqa: E501  TODO: The search_suggestions_view is not used anywhere in the codebase
+        name="search_suggestions",
     ),
     path("signup/", views.signup_traditional_view, name="signup"),
     path(
         "signup_followup/", views.signupfollowup_view, name="signup-followup"
-    ),  # noqa: E501  TODO: The signupfollowup_view is not used anywhere in the codebase
+    ),
     path(
         "account_activation_sent/",
         views.account_activation_sent_view,

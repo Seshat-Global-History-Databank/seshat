@@ -4,14 +4,11 @@ from django.db import models
 from django.utils.safestring import mark_safe
 
 from ..core.models import SeshatCommon, Polity
-from ..constants import SECTIONS, SUBSECTIONS, ICONS, NO_DATA
-from ..utils import (
-    _wrap_in_warning,
-    get_model_instance_name,
-    validate_time_range,
-)
-
-from .constants import (
+from ..constants import (
+    SECTIONS,
+    SUBSECTIONS,
+    ICONS,
+    NO_DATA,
     ATTENTION_TAGS_CHOICES,
     CRISIS_DEFS_EXAMPLES,
     CRISISDB_CHOICES,
@@ -26,6 +23,12 @@ from .constants import (
     US_STATE_CHOICES,
     VIOLENCE_TYPE_CHOICES,
 )
+from ..utils import (
+    _wrap_in_warning,
+    get_model_instance_name,
+    validate_time_range,
+)
+
 from .mixins import CrisisDBMixin
 
 
@@ -80,7 +83,9 @@ class Us_location(models.Model):
         components = []
 
         if self.us_state:
-            components.append(f"<b>{self.get_us_state_display()} ({self.us_state})</b>")
+            components.append(
+                f"<b>{self.get_us_state_display()} ({self.us_state})</b>"
+            )
 
         if self.city and self.county:
             components.extend([self.city, self.county])
@@ -215,7 +220,9 @@ class Us_violence(models.Model):
         return self.source_details.replace('"', "'")
 
     def show_violence_subtypes(self):
-        return ", ".join(str(subtype) for subtype in self.violence_subtype.all())
+        return ", ".join(
+            str(subtype) for subtype in self.violence_subtype.all()
+        )
 
     def show_short_data_sources(self):
         return ", ".join(
@@ -420,6 +427,22 @@ class Crisis_consequence(SeshatCommon, CrisisDBMixin):
         return get_model_instance_name(self)
 
 
+class PowerTransitionQuerySet(models.QuerySet):
+    def infer_duration(self):
+        """
+        # TODO
+        """
+        minimum = (
+            self.aggregate(models.Min("year_from"))["year_from__min"] or 0
+        )
+        maximum = (
+            self.aggregate(models.Max("year_from"))["year_from__max"] or 0
+        )
+
+        # Return the list
+        return [minimum, maximum]
+
+
 class Power_transition(SeshatCommon, CrisisDBMixin):
     """
     Model representing a power transition.
@@ -457,6 +480,8 @@ class Power_transition(SeshatCommon, CrisisDBMixin):
     external_interference = models.CharField(
         max_length=5, choices=CRISISDB_CHOICES, blank=True, null=True
     )
+
+    objects = PowerTransitionQuerySet.as_manager()
 
     _reverse = "power_transition-detail"
     _clean_name = "power_transition"
@@ -509,11 +534,7 @@ class Power_transition(SeshatCommon, CrisisDBMixin):
         """
         if not self.polity:
             string = _wrap_in_warning("There is no selected Polity!")
-            raise ValidationError(
-                {
-                    "polity": mark_safe(string)
-                }
-            )
+            raise ValidationError({"polity": mark_safe(string)})
 
         return True
 
@@ -577,7 +598,9 @@ class Power_transition(SeshatCommon, CrisisDBMixin):
             field_value = getattr(self, field_name)
 
             if field_value and field_value == value:
-                columns[field_name] = POWER_TRANSITIONS_DEFS_EXAMPLES[field_name]
+                columns[field_name] = POWER_TRANSITIONS_DEFS_EXAMPLES[
+                    field_name
+                ]
 
         if columns:
             return columns
@@ -995,7 +1018,9 @@ class Arable_land_per_farmer(SeshatCommon, CrisisDBMixin):
         }
 
 
-class Gross_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin):
+class Gross_grain_shared_per_agricultural_population(
+    SeshatCommon, CrisisDBMixin
+):
     """
     Model representing a gross grain shared per agricultural population.
     """
@@ -1044,7 +1069,9 @@ class Gross_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin
         }
 
 
-class Net_grain_shared_per_agricultural_population(SeshatCommon, CrisisDBMixin):
+class Net_grain_shared_per_agricultural_population(
+    SeshatCommon, CrisisDBMixin
+):
     """
     Model representing a net grain shared per agricultural population.
     """
@@ -1167,7 +1194,9 @@ class Military_expense(SeshatCommon, CrisisDBMixin):
         subsection = SUBSECTIONS.crisisdb.StateFinances
         variable = "Military Expense"
         notes = "Not sure about Section and Subsection."
-        description = "Main Descriptions for the Variable military_expense are missing!"
+        description = (
+            "Main Descriptions for the Variable military_expense are missing!"
+        )
         description_source = (
             "Main Descriptions for the Variable military_expense are missing!"
         )
@@ -1464,7 +1493,9 @@ class Socioeconomic_turmoil_event(SeshatCommon, CrisisDBMixin):
     Model representing a socioeconomic turmoil event.
     """
 
-    name = models.CharField(max_length=100, default="Socioeconomic_turmoil_event")
+    name = models.CharField(
+        max_length=100, default="Socioeconomic_turmoil_event"
+    )
     socioeconomic_turmoil_event = models.IntegerField(blank=True, null=True)
 
     _reverse = "socioeconomic_turmoil_event-detail"
@@ -1486,8 +1517,12 @@ class Socioeconomic_turmoil_event(SeshatCommon, CrisisDBMixin):
         section = SECTIONS.wb
         subsection = SUBSECTIONS.crisisdb.BiologicalWellbeing
         variable = "Socioeconomic Turmoil Event"
-        notes = "Notes for the Variable socioeconomic_turmoil_event are missing!"
-        description = "number of geographic sites indicating socioeconomic turmoil"
+        notes = (
+            "Notes for the Variable socioeconomic_turmoil_event are missing!"
+        )
+        description = (
+            "number of geographic sites indicating socioeconomic turmoil"
+        )
         description_source = (
             "number of geographic sites indicating socioeconomic turmoil"
         )
@@ -1534,7 +1569,9 @@ class Crop_failure_event(SeshatCommon, CrisisDBMixin):
         variable = "Crop Failure Event"
         notes = "Notes for the Variable crop_failure_event are missing!"
         description = "number of geographic sites indicating crop failure"
-        description_source = "number of geographic sites indicating crop failure"
+        description_source = (
+            "number of geographic sites indicating crop failure"
+        )
         null_meaning = NO_DATA.no_value
         inner_variables = {
             "crop_failure_event": {

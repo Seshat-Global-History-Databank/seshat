@@ -59,29 +59,28 @@ from .models import (
 )
 from .constants import VARIABLE_DEFINITIONS
 
-from ..generic_views import GenericMultipleDownloadView, VariableView, ProblematicDataView
+from ..generic_views import (
+    GenericMultipleDownloadView,
+    VariableView,
+    ProblematicDataView,
+)
 from ..constants import SUBSECTIONS
 
 APP_LABEL = "rt"
 
 urlpatterns = [
-    path("rtvars/", VariableView.as_view(
-        app_label=APP_LABEL,
-        template_name="rt/rtvars.html",
-    ), name="rtvars"),
+    path("rtvars/", VariableView.as_view(app_label=APP_LABEL), name="rtvars"),
     path(
         "problematic_rt_data_table/",
         ProblematicDataView.as_view(
-            app_label=APP_LABEL,
-            template_name="rt/problematic_rt_data_table.html",
+            app_label=APP_LABEL
         ),
         name="problematic_rt_data_table",
     ),
     path(
         "download-csv-rt-all/",
         GenericMultipleDownloadView.as_view(
-            app_label=APP_LABEL,
-            prefix="religion_tolerance_data_"
+            app_label=APP_LABEL, prefix="religion_tolerance_data_"
         ),
         name="download_csv_all_rt",
     ),
@@ -288,7 +287,14 @@ model_form_pairs = [
 
 
 # Create URL patterns dynamically for each model-class pair
-for model_class, form_class, var_name, myvar, section, subsection in model_form_pairs:
+for (
+    model_class,
+    form_class,
+    var_name,
+    myvar,
+    section,
+    subsection,
+) in model_form_pairs:
     my_exp = VARIABLE_DEFINITIONS[myvar.lower().capitalize()]
 
     urlpatterns += [
@@ -378,5 +384,5 @@ for model_class, form_class, var_name, myvar, section, subsection in model_form_
                 redirect=f"{var_name}s_all",
             ),
             name=f"{var_name}-delete",
-        )
+        ),
     ]

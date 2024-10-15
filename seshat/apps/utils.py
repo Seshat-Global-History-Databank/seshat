@@ -783,34 +783,34 @@ def has_add_capital_permission(user):
     return user.has_perm("core.add_capital")
 
 
-def _query(m, polity_id):
+def _query(m, polity):
     """
     Get query for model. Private helper function.
 
     Args:
         m: The model.
-        polity_id: The ID of the polity.
+        polity: The polity.
 
     Returns:
         QuerySet: The query set for the model.
     """
     if hasattr(m, "other_polity"):
-        _filter = Q(polity=polity_id) | Q(other_polity=polity_id)
+        _filter = Q(polity=polity) | Q(other_polity=polity)
     else:
-        _filter = Q(polity=polity_id)
+        _filter = Q(polity=polity)
 
     queryset = m.model_class().objects.filter(_filter)
 
     return queryset
 
 
-def get_all_data(app_label, polity_id, exclude=None):
+def get_all_data(app_label, polity, exclude=None):
     """
     Get all data for the given polity ID.
 
     Args:
         app_label: The label of the app.
-        polity_id: The ID of the polity.
+        polity: The polity.
         exclude: A list of models to exclude.
 
     Returns:
@@ -856,12 +856,18 @@ def get_all_data(app_label, polity_id, exclude=None):
         model__in=exclude_names
     )
 
+    def try_catch(m):
+        try:
+            return m.model_class().objects.for_polity(polity)
+        except AttributeError:
+            print(m, "failed")
+
     model_data = [
         (
             get_subsection(m.model_class),
             get_subsubsection(m.model_class),
             m.model_class().__name__,
-            _query(m, polity_id),
+            try_catch(m),
         )
         for m in cts
     ]
@@ -974,7 +980,7 @@ def deprecated(func):
     return new_func
 
 
-def get_us_states_geojson():
+def load_us_states_geojson():
     try:
         with open(US_STATES_GEOJSON_PATH, "r") as json_file:
             data = json.load(json_file)

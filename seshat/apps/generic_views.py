@@ -6,16 +6,25 @@ import time
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, path
 from django.views.generic import (
     CreateView,
-    # DetailView,
+    DetailView,
     UpdateView,
     View,
     TemplateView,
+    ListView,
+    RedirectView,
 )
 
-from .constants import ABSENT_PRESENT_STRING_LIST, CSV_DELIMITER, NO_DATA
+from .constants import (
+    ABSENT_PRESENT_STRING_LIST,
+    CORRECT_YEAR,
+    CSV_DELIMITER,
+    NO_DATA,
+    POLITY_NGA_NAME,
+    SUBSECTIONS,
+)
 from .core.forms import SeshatCommentPartForm2
 from .utils import (
     get_date,
@@ -23,7 +32,16 @@ from .utils import (
     get_models,
     get_variable_context,
     get_problematic_data_context,
+    write_csv,
 )
+
+
+def get_seshat_template(model_class, suffix=""):
+    _meta = model_class._meta
+
+    return (
+        f"{_meta.app_label}/{_meta.model_name}/{_meta.model_name}{suffix}.html"
+    )
 
 
 def get_rowdicts(model_class, var_name, force_from_to=False):
@@ -493,7 +511,6 @@ class GenericCreateView(PermissionRequiredMixin, CreateView):
         template=None,
         **initkwargs,
     ):
-        print("GenericCreateView.as_view called.")
         initkwargs = {
             "form_class": form_class,
             "var_name": var_name,
@@ -980,8 +997,8 @@ class GenericMultipleDownloadView(PermissionRequiredMixin, View):
 
 
 class VariableView(TemplateView):
-    template_name = None
     app_label = None
+    template_name = "core/vars.html"
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
@@ -1008,16 +1025,25 @@ class VariableView(TemplateView):
         """
         initkwargs = {
             "app_label": app_label,
-            "template_name": template_name,
         }
 
+        if template_name:
+            initkwargs["template_name"] = template_name
+
         return super().as_view(**initkwargs)
+
+    def get_template_names(self) -> list:
+        # names = super().get_template_names()
+        names = []
+        names.append(
+            f"{self.app_label}/{self.app_label}vars.html"  # ex. wf/wfvars.html
+        )
+        return names
 
 
 class ProblematicDataView(PermissionRequiredMixin, TemplateView):
     permission_required = "core.view_capital"
 
-    template_name = None
     app_label = None
 
     def get_context_data(self, **kwargs) -> dict:
@@ -1034,7 +1060,6 @@ class ProblematicDataView(PermissionRequiredMixin, TemplateView):
     def as_view(
         cls,
         app_label=None,
-        template_name=None,
         **initkwargs,
     ):
         """
@@ -1045,7 +1070,325 @@ class ProblematicDataView(PermissionRequiredMixin, TemplateView):
         """
         initkwargs = {
             "app_label": app_label,
+        }
+
+        return super().as_view(**initkwargs)
+
+    def get_template_names(self) -> list:
+        # names = super().get_template_names()
+        names = []
+        names.append(
+            f"{self.app_label}/problematic_{self.app_label}_data_table.html"  # noqa: E501  ex. rt/problematic_rt_data_table.html
+        )
+        return names
+
+
+class VariableDetailView(DetailView):
+    model = None
+    template_name = None
+
+    def get_template_names(self) -> list:
+        names = super().get_template_names()
+        names.append(get_seshat_template(self.object, suffix="_detail"))
+        return names
+
+    @classmethod
+    def as_view(
+        cls,
+        model_class=None,
+        template_name=None,
+        **initkwargs,
+    ):
+        """
+        # TODO: docstring
+
+        Returns:
+            A callable view.
+        """
+        if not model_class:
+            raise RuntimeError("model must be defined for VariableDetailView.")
+
+        initkwargs = {
+            "model": model_class,
             "template_name": template_name,
         }
 
         return super().as_view(**initkwargs)
+
+
+class VariableListView(ListView):
+    model = None
+    template_name = None
+    paginate_by = 10
+    reverse_url = None
+
+    def get_absolute_url(self) -> str:
+        return reverse(self.reverse_url)
+
+    def get_context_data(self, **kwargs):
+        print("get_context_data for VariableListView")
+        context = super().get_context_data(**kwargs)
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": getattr(
+                    self.model.Code, "potential_cols", []
+                ),
+            },
+        )
+
+        return context
+
+    def get_template_names(self) -> list:
+        names = super().get_template_names()
+        names.append(get_seshat_template(self.model, suffix="_list"))
+
+        return names
+
+    @classmethod
+    def as_view(
+        cls,
+        model_class=None,
+        template_name=None,
+        reverse_url=None,
+        paginate_by=10,
+        **initkwargs,
+    ):
+        """
+        # TODO: docstring
+
+        Returns:
+            A callable view.
+        """
+        if not model_class:
+            raise RuntimeError(
+                "model_class must be defined for VariableListView."
+            )
+
+        initkwargs = {
+            "model": model_class,
+            "reverse_url": reverse_url,
+            "paginate_by": paginate_by,
+        }
+
+        if template_name is not None:
+            initkwargs["template_name"] = template_name
+
+        return super().as_view(**initkwargs)
+
+
+class DownloadVariableView(View):
+    model_class = None
+    prefix = None
+
+    def get(self, request):
+        response = write_csv(self.model_class, prefix=self.prefix)
+        return response
+
+    @classmethod
+    def as_view(
+        cls,
+        model_class=None,
+        prefix=None,
+        **initkwargs,
+    ):
+        """
+        # TODO: docstring
+
+        Returns:
+            A callable view.
+        """
+        if not model_class:
+            raise RuntimeError(
+                "model_class must be defined for DownloadVariableView."
+            )
+
+        initkwargs = {
+            "model": model_class,
+            "prefix": prefix,
+        }
+
+        return super().as_view(**initkwargs)
+
+
+class VariablePolityListView(PermissionRequiredMixin, ListView):
+    model = None
+    template_name = None
+    reverse_url = None
+    permission_required = ""
+
+    def get_absolute_url(self) -> str:
+        return reverse(self.reverse_url)
+
+    def get_context_data(self, **kwargs):
+        print("get_context_data for VariablePolityListView")
+        context = super().get_context_data(**kwargs)
+
+        context = dict(
+            context,
+            **{
+                "myvar": self.model.Code.variable,
+                "var_main_desc": self.model.Code.description,
+                "var_main_desc_source": self.model.Code.description_source,
+                "var_section": self.model.Code.section,
+                "var_subsection": self.model.Code.subsection,
+                "inner_vars": self.model.Code.inner_variables,
+                "potential_cols": getattr(
+                    self.model.Code, "potential_cols", []
+                ),
+                "orderby": self.request.GET.get("orderby", "year_from"),
+            },
+        )
+
+        return context
+
+    def get_template_names(self) -> list:
+        names = super().get_template_names()
+        names.append(get_seshat_template(self.model, suffix="_list_all"))
+
+        return names
+
+    @classmethod
+    def as_view(
+        cls,
+        model_class=None,
+        template_name=None,
+        reverse_url=None,
+        **initkwargs,
+    ):
+        """
+        # TODO: docstring
+
+        Returns:
+            A callable view.
+        """
+        if not model_class:
+            raise RuntimeError("model must be defined for VariableDetailView.")
+
+        initkwargs = {
+            "model": model_class,
+            "reverse_url": reverse_url,
+        }
+
+        if template_name is not None:
+            initkwargs["template_name"] = template_name
+
+        return super().as_view(**initkwargs)
+
+    def get_queryset(self):
+        order = self.request.GET.get("orderby", "home_nga")
+        order2 = self.request.GET.get("orderby2", "year")
+
+        return (
+            self.model.objects.all()
+            .annotate(
+                home_nga=POLITY_NGA_NAME,
+                year=CORRECT_YEAR,
+            )
+            .order_by(order, order2)
+        )
+
+
+def get_url_pattern(
+    categories=[], model_form_pairs=[], views=None, app_label="", prefix=""
+):
+    urlpatterns = []
+
+    for category in categories:
+        slug = category.lower().replace(" ", "_")
+        nospaces = category.replace(" ", "")
+
+        urlpatterns += [
+            path(
+                f"download_csv_{slug}/",
+                GenericMultipleDownloadView.as_view(
+                    app_label=app_label,
+                    subsection=SUBSECTIONS.wf[nospaces],
+                    prefix=f"{prefix}{slug}_",
+                ),
+                name=f"download_csv_{slug}",
+            )
+        ]
+
+    for model, form, name in model_form_pairs:
+        if "us_" in model.__name__.lower():
+            view_model = f"Us{model.__name__[3].upper()}{model.__name__[4:]}"
+            if "_sub" in view_model:
+                view_model = view_model.replace("_sub", "Sub")
+            if "_data_source" in view_model:
+                view_model = view_model.replace("_data_source", "DataSource")
+        else:
+            view_model = model.__name__
+
+        views_dict = {
+            "create": getattr(views, f"{view_model}CreateView"),
+            "update": getattr(views, f"{view_model}UpdateView"),
+        }
+
+        pluralname = f"{name}s"
+        name_all = f"{pluralname}_all"
+
+        # Set specific pagination by Crisis_consequence model
+        paginate_by = 100 if model.__name__ == "Crisis_consequence" else 10
+
+        urlpatterns += [
+            path(
+                f"{name}/create/",
+                views_dict["create"].as_view(),
+                name=f"{name}-create",
+            ),
+            path(
+                f"{name}/<int:pk>",
+                VariableDetailView.as_view(model_class=model),
+                name=f"{name}-detail",
+            ),
+            path(
+                f"{name}/<int:pk>/update/",
+                views_dict["update"].as_view(),
+                name=f"{name}-update",
+            ),
+            path(
+                f"{name}/<int:pk>/delete/",
+                GenericDeleteView.as_view(
+                    model_class=model, var_name=name, redirect=name_all
+                ),
+                name=f"{name}-delete",
+            ),
+            path(
+                f"{name}download",
+                GenericDownloadView.as_view(model_class=model, prefix=prefix),
+                name=f"{name}-download",
+            ),
+            path(
+                f"{name}metadownload",
+                GenericMetaDownloadView.as_view(
+                    model_class=model, prefix=prefix
+                ),
+                name=f"{name}-metadownload",
+            ),
+            path(
+                f"{pluralname}/",
+                VariableListView.as_view(
+                    model_class=model,
+                    reverse_url=pluralname,
+                    paginate_by=paginate_by,
+                ),
+                name=pluralname,
+            ),
+            path(
+                f"{name_all}/",
+                VariablePolityListView.as_view(
+                    model_class=model, reverse_url=name_all
+                ),
+                name=name_all,
+            ),
+        ]
+
+    return urlpatterns

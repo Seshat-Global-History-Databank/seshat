@@ -3,8 +3,10 @@ __all__ = [
     "expand_context_from_variable_hierarchy",
 ]
 
+from django.contrib.contenttypes.models import ContentType
+
 from ..constants import ICONS, NO_DATA
-from ..core.models import Variablehierarchy
+from ..core.models import Variablehierarchy, Polity
 
 
 def return_citations(cls):
@@ -85,14 +87,62 @@ def expand_context_from_variable_hierarchy(
         variable_hierarchy = None
 
     if variable_hierarchy:
-        context = dict(context, **{
-            "myvar": variable_hierarchy.name,
-            "my_exp": variable_hierarchy.explanation,
-        })
+        context = dict(
+            context,
+            **{
+                "myvar": variable_hierarchy.name,
+                "my_exp": variable_hierarchy.explanation,
+            },
+        )
     else:
-        context = dict(context, **{
-            "myvar": variable_name,
-            "my_exp": NO_DATA.explanation,
-        })
+        context = dict(
+            context,
+            **{
+                "myvar": variable_name,
+                "my_exp": NO_DATA.explanation,
+            },
+        )
 
     return context
+
+
+def get_vars_with_hierarchy(
+    models=[
+        "agricultural_population",
+        "arable_land",
+        "arable_land_per_farmer",
+        "gross_grain_shared_per_agricultural_population",
+        "net_grain_shared_per_agricultural_population",
+        "surplus",
+        "gdp_per_capita",
+        "military_expense",
+        "silver_inflow",
+        "silver_stock",
+        "total_population",
+        "drought_event",
+        "locust_event",
+        "socioeconomic_turmoil_event",
+        "crop_failure_event",
+        "famine_event",
+        "disease_outbreak",
+    ]
+):
+    model_classes = [
+        ct.model_class() for ct in ContentType.objects.filter(model__in=models)
+    ]
+    organised = {model.Code.section: {} for model in model_classes}
+
+    for section in organised.keys():
+        organised[section] = sorted(
+            [
+                ct.model
+                for ct in ContentType.objects.filter(model__in=models)
+                if ct.model_class().Code.section == section
+            ]
+        )
+
+    return organised
+
+
+def get_all_polity_names():
+    return Polity.objects.values_list("name", flat=True).distinct()

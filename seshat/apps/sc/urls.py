@@ -1,5 +1,7 @@
 from django.urls import path
 
+from ..constants import SUBSECTIONS
+
 from .forms import (
     Communal_buildingForm,
     Utilitarian_public_buildingForm,
@@ -60,7 +62,6 @@ from .models import (
     Largest_communication_distance,
     Fastest_individual_communication,
 )
-from .constants import SC_VAR_DEFS
 
 from . import views
 from .specific_views import downloads
@@ -69,16 +70,17 @@ from ..generic_views import (
     GenericConfirmDeleteView,
     GenericCreateView,
     GenericDeleteView,
-    GenericDetailView,
+    # GenericDetailView,
     GenericDownloadView,
     GenericListView,
     GenericMetaDownloadView,
-    GenericUpdateView,
+    # GenericUpdateView,
     GenericMultipleDownloadView,
     VariableView,
     ProblematicDataView
 )
 
+PREFIX = "social_complexity_"
 
 model_form_pairs = [
     (
@@ -302,10 +304,7 @@ model_form_pairs = [
 APP_LABEL = "sc"
 
 urlpatterns = [
-    path("scvars/", VariableView.as_view(
-        app_label=APP_LABEL,
-        template_name="sc/scvars.html"
-    ), name="scvars"),
+    path("scvars/", VariableView.as_view(app_label=APP_LABEL), name="scvars"),
     path(
         "problematic_sc_data_table/",
         ProblematicDataView.as_view(
@@ -324,51 +323,87 @@ urlpatterns = [
         # downloads.download_csv_all_sc,
         name="download_csv_all_sc",
     ),
-    path(
-        "download_csv_social_scale/",
-        downloads.download_csv_social_scale,
-        name="download_csv_social_scale",
-    ),
-    path(
-        "download_csv_professions/",
-        downloads.download_csv_professions,
-        name="download_csv_professions",
-    ),
-    path(
-        "download_csv_bureaucracy_characteristics/",
-        downloads.download_csv_bureaucracy_characteristics,
-        name="download_csv_bureaucracy_characteristics",
-    ),
-    path(
-        "download_csv_hierarchical_complexity/",
-        downloads.download_csv_hierarchical_complexity,
-        name="download_csv_hierarchical_complexity",
-    ),
-    path(
-        "download_csv_law/",
-        downloads.download_csv_law,
-        name="download_csv_law",
-    ),
-    path(
-        "download_csv_specialized_buildings_polity_owned/",
-        downloads.download_csv_specialized_buildings_polity_owned,
-        name="download_csv_specialized_buildings_polity_owned",
-    ),
-    path(
-        "download_csv_transport_infrastructure/",
-        downloads.download_csv_transport_infrastructure,
-        name="download_csv_transport_infrastructure",
-    ),
-    path(
-        "download_csv_special_purpose_sites/",
-        downloads.download_csv_special_purpose_sites,
-        name="download_csv_special_purpose_sites",
-    ),
-    path(
-        "download_csv_information/",
-        downloads.download_csv_information,
-        name="download_csv_information",
-    ),
+]
+
+categories = [
+    "Social Scale",
+    "Professions",
+    "Bureaucracy Characteristics",
+    "Hierarchical Complexity",
+    "Law",
+    "Specialized Buildings: polity owned",
+    "Transport Infrastructure",
+    "Special-Purpose Sites",
+    "Information",
+]
+
+for category in categories:
+    if "polity owned" in category:
+        category = category.strip(": polity owned")
+
+    urlified = category.lower().replace("-", "").replace(":", "").replace(" ", "_")
+    nospaces = category.replace("-", "").replace(" ", "")
+
+    urlpatterns += [
+        path(
+            f"download_csv_{urlified}/",
+            GenericMultipleDownloadView.as_view(
+                app_label=APP_LABEL,
+                subsection=SUBSECTIONS.sc[nospaces],
+                prefix=f"{PREFIX}{urlified}_",
+            ),
+            name=f"download_csv_{urlified}",
+        )
+    ]  # TODO: replace with util function that is now made: get_url_pattern
+
+
+#     path(
+#         "download_csv_social_scale/",
+#         downloads.download_csv_social_scale,
+#         name="download_csv_social_scale",
+#     ),
+#     path(
+#         "download_csv_professions/",
+#         downloads.download_csv_professions,
+#         name="download_csv_professions",
+#     ),
+#     path(
+#         "download_csv_bureaucracy_characteristics/",
+#         downloads.download_csv_bureaucracy_characteristics,
+#         name="download_csv_bureaucracy_characteristics",
+#     ),
+#     path(
+#         "download_csv_hierarchical_complexity/",
+#         downloads.download_csv_hierarchical_complexity,
+#         name="download_csv_hierarchical_complexity",
+#     ),
+#     path(
+#         "download_csv_law/",
+#         downloads.download_csv_law,
+#         name="download_csv_law",
+#     ),
+#     path(
+#         "download_csv_specialized_buildings_polity_owned/",
+#         downloads.download_csv_specialized_buildings_polity_owned,
+#         name="download_csv_specialized_buildings_polity_owned",
+#     ),
+#     path(
+#         "download_csv_transport_infrastructure/",
+#         downloads.download_csv_transport_infrastructure,
+#         name="download_csv_transport_infrastructure",
+#     ),
+#     path(
+#         "download_csv_special_purpose_sites/",
+#         downloads.download_csv_special_purpose_sites,
+#         name="download_csv_special_purpose_sites",
+#     ),
+#     path(
+#         "download_csv_information/",
+#         downloads.download_csv_information,
+#         name="download_csv_information",
+#     ),
+
+urlpatterns += [
     path("ra/create/", views.RaCreateView.as_view(), name="ra-create"),
     path("ras/", views.RaListView.as_view(), name="ras"),
     path("ras_all/", views.RaListAllView.as_view(), name="ras_all"),
@@ -2290,7 +2325,7 @@ urlpatterns = [
 
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
-    my_exp = SC_VAR_DEFS[x_name]
+    my_exp = model_class.Code.description
 
     urlpatterns += [
         path(

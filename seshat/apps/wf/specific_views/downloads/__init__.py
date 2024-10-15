@@ -57,7 +57,7 @@ from ...models import (
     Chainmail,
 )
 
-from .constants import PREFIX
+PREFIX = "warfare_"
 
 
 __all__ = [

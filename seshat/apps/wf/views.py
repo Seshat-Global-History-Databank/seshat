@@ -12,6 +12,7 @@ from ..general.mixins import PolityIdMixin
 from ..constants import (
     ABSENT_PRESENT_STRING_LIST,
     CORRECT_YEAR,
+    NO_DATA,
     POLITY_NGA_NAME,
 )
 
@@ -148,7 +149,7 @@ class Long_wallCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence or height of long walls. (code absent as number zero on the long_wall_from / and for coding  'unknown', keep the long_wall_from and long_wall_to empty and only select the confidence etc.)"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "long_wall": {
                 "min": None,
@@ -350,7 +351,7 @@ class CopperCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of copper as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "copper": {
                 "min": None,
@@ -552,7 +553,7 @@ class BronzeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of bronze as a military technology used in warfare. Bronze is an alloy that includes copper, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses bronze in warfare and there is no mention of using copper then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "bronze": {
                 "min": None,
@@ -754,7 +755,7 @@ class IronCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of iron as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "iron": {
                 "min": None,
@@ -956,7 +957,7 @@ class SteelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of steel as a military technology used in warfare. Steel is an alloy that includes iron, so a polity that uses bronze in warfare is familiar with copper technology and probably uses it to at least a limited extent. Consequently, if a culture uses steel in warfare and there is no mention of using iron then 'inferred present' is probably best."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "steel": {
                 "min": None,
@@ -1158,7 +1159,7 @@ class JavelinCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of javelins as a military technology used in warfare. Includes thrown spears"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "javelin": {
                 "min": None,
@@ -1360,7 +1361,7 @@ class AtlatlCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of atlatl as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "atlatl": {
                 "min": None,
@@ -1562,7 +1563,7 @@ class SlingCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of slings as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "sling": {
                 "min": None,
@@ -1764,7 +1765,7 @@ class Self_bowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of self bow as a military technology used in warfare. This is a bow made from a single piece of wood (example: the English/Welsh longbow)"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "self_bow": {
                 "min": None,
@@ -1968,7 +1969,7 @@ class Composite_bowCreateView(
         context["my_exp"] = (
             "The absence or presence of composite bow as a military technology used in warfare. This is a bow made from several different materials, usually wood, horn, and sinew. Also known as laminated bow. Recurved bows should be coded here as well, because usually they are composite bows. When there is evidence for bows (or arrows) and no specific comment about how sophisticated the bows are then 'inferred present' for self bows and 'inferred absent' for composite bows is generally best (along with brief notes indicating that it is best to assume the less sophisticated rather than the more sophisticated technology is present)."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "composite_bow": {
                 "min": None,
@@ -2170,7 +2171,7 @@ class CrossbowCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of crossbow as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "crossbow": {
                 "min": None,
@@ -2374,7 +2375,7 @@ class Tension_siege_engineCreateView(
         context["my_exp"] = (
             "The absence or presence of tension siege engines as a military technology used in warfare. For example, catapult, onager"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "tension_siege_engine": {
                 "min": None,
@@ -2580,7 +2581,7 @@ class Sling_siege_engineCreateView(
         context["my_exp"] = (
             "The absence or presence of sling siege engines as a military technology used in warfare. E.g., trebuchet, innclude mangonels here"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "sling_siege_engine": {
                 "min": None,
@@ -2786,7 +2787,7 @@ class Gunpowder_siege_artilleryCreateView(
         context["my_exp"] = (
             "The absence or presence of gunpowder siege artillery as a military technology used in warfare. For example, cannon, mortars."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "gunpowder_siege_artillery": {
                 "min": None,
@@ -2998,7 +2999,7 @@ class Handheld_firearmCreateView(
         context["my_exp"] = (
             "The absence or presence of handheld firearms as a military technology used in warfare. E.g., muskets, pistols, and rifles"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "handheld_firearm": {
                 "min": None,
@@ -3200,7 +3201,7 @@ class War_clubCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of war clubs as a military technology used in warfare. Includes maces"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "war_club": {
                 "min": None,
@@ -3402,7 +3403,7 @@ class Battle_axeCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of battle axes as a military technology used in warfare. Axes designed for military use."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "battle_axe": {
                 "min": None,
@@ -3604,7 +3605,7 @@ class DaggerCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of daggers as a military technology used in warfare. Bladed weapons shorter than 50 cm. Includes knives. Material is not important (coded elsewhere), thus flint daggers should be coded as present."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "dagger": {
                 "min": None,
@@ -3810,7 +3811,7 @@ class SwordCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of swords as a military technology used in warfare. Bladed weapons longer than 50 cm. A machete is a sword (assuming the blade is probably longer than 50 cm). Material is not important (coded elsewhere), thus swords made from hard wood, or those edged with stones or bone should be coded as present."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "sword": {
                 "min": None,
@@ -4012,7 +4013,7 @@ class SpearCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of spears as a military technology used in warfare. Includes lances and pikes. A trident is a spear."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "spear": {
                 "min": None,
@@ -4214,7 +4215,7 @@ class PolearmCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of polearms as a military technology used in warfare. This category includes halberds, naginatas, and morning stars"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "polearm": {
                 "min": None,
@@ -4416,7 +4417,7 @@ class DogCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of dogs as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "dog": {
                 "min": None,
@@ -4618,7 +4619,7 @@ class DonkeyCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of donkeys as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "donkey": {
                 "min": None,
@@ -4820,7 +4821,7 @@ class HorseCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of horses as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "horse": {
                 "min": None,
@@ -5022,7 +5023,7 @@ class CamelCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of camels as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "camel": {
                 "min": None,
@@ -5224,7 +5225,7 @@ class ElephantCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of elephants as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "elephant": {
                 "min": None,
@@ -5428,7 +5429,7 @@ class Wood_bark_etcCreateView(
         context["my_exp"] = (
             "The absence or presence of wood, bark, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "wood_bark_etc": {
                 "min": None,
@@ -5632,7 +5633,7 @@ class Leather_clothCreateView(
         context["my_exp"] = (
             "The absence or presence of leather, cloth as a military technology used in warfare. For example, leather cuirass, quilted cotton armor"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "leather_cloth": {
                 "min": None,
@@ -5834,7 +5835,7 @@ class ShieldCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of shields as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "shield": {
                 "min": None,
@@ -6036,7 +6037,7 @@ class HelmetCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of helmets as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "helmet": {
                 "min": None,
@@ -6240,7 +6241,7 @@ class BreastplateCreateView(
         context["my_exp"] = (
             "The absence or presence of breastplates as a military technology used in warfare. Armor made from wood, horn, or bone can be very important (as in the spread of the Asian War Complex into North America). Leather and cotton (in the Americas) armor was also effective against arrows and warclubs. Breastplate refers to any form of torso protection (in fact, we might rename this variable 'torso protection' at a later date). In the vast majority of cases you will probably find that if a culture has wooden armor, leather armor, chainmail armor, or scaled armor that breastplate should be coded as present because this is the most common location for armor. However, in theory, it is possible to have armor that doesn't protect the torso (for example, a culture might use armor that protects the limbs only)."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "breastplate": {
                 "min": None,
@@ -6444,7 +6445,7 @@ class Limb_protectionCreateView(
         context["my_exp"] = (
             "The absence or presence of limb protection as a military technology used in warfare. E.g., greaves. Covering arms, or legs, or both."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "limb_protection": {
                 "min": None,
@@ -6648,7 +6649,7 @@ class Scaled_armorCreateView(
         context["my_exp"] = (
             "The absence or presence of scaled armor as a military technology used in warfare. Armor consisting of many individual small armor scales (plates) attached to a backing of cloth or leather. The scaled don't need to be metal (i.e. they could be particularly rigid bits of leather, horn, bone, etc)."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "scaled_armor": {
                 "min": None,
@@ -6852,7 +6853,7 @@ class Laminar_armorCreateView(
         context["my_exp"] = (
             "The absence or presence of laminar armor as a military technology used in warfare. (also known as banded mail, example: lorica segmentata). Armor that is made from horizontal overlapping rows or bands of sold armor plates."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "laminar_armor": {
                 "min": None,
@@ -7056,7 +7057,7 @@ class Plate_armorCreateView(
         context["my_exp"] = (
             "The absence or presence of plate armor as a military technology used in warfare. Armor made of iron or steel plates."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "plate_armor": {
                 "min": None,
@@ -7262,7 +7263,7 @@ class Small_vessels_canoes_etcCreateView(
         context["my_exp"] = (
             "The absence or presence of small vessels, canoes, etc. as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "small_vessels_canoes_etc": {
                 "min": None,
@@ -7474,7 +7475,7 @@ class Merchant_ships_pressed_into_serviceCreateView(
         context["my_exp"] = (
             "The absence or presence of merchant ships pressed into service as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "merchant_ships_pressed_into_service": {
                 "min": None,
@@ -7684,7 +7685,7 @@ class Specialized_military_vesselCreateView(
         context["my_exp"] = (
             "The absence or presence of specialized military vessels as a military technology used in warfare. (such as galleys and sailing ships)"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "specialized_military_vessel": {
                 "min": None,
@@ -7894,7 +7895,7 @@ class Settlements_in_a_defensive_positionCreateView(
         context["my_exp"] = (
             "The absence or presence of settlements in a defensive position as a military technology used in warfare. Settlements in a location that was clearly chosen for defensive reasons. E.g. on a hill top, peninsula."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "settlements_in_a_defensive_position": {
                 "min": None,
@@ -8102,7 +8103,7 @@ class Wooden_palisadeCreateView(
         context["my_exp"] = (
             "The absence or presence of wooden palisades as a military technology used in warfare."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "wooden_palisade": {
                 "min": None,
@@ -8306,7 +8307,7 @@ class Earth_rampartCreateView(
         context["my_exp"] = (
             "The absence or presence of earth ramparts as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "earth_rampart": {
                 "min": None,
@@ -8508,7 +8509,7 @@ class DitchCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of ditch as a military technology used in warfare. "
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "ditch": {
                 "min": None,
@@ -8710,7 +8711,7 @@ class MoatCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of moat as a military technology used in warfare. Differs from a ditch in that it has water"  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "moat": {
                 "min": None,
@@ -8916,7 +8917,7 @@ class Stone_walls_non_mortaredCreateView(
         context["my_exp"] = (
             "The absence or presence of stone walls (non-mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "stone_walls_non_mortared": {
                 "min": None,
@@ -9128,7 +9129,7 @@ class Stone_walls_mortaredCreateView(
         context["my_exp"] = (
             "The absence or presence of stone walls (mortared) as a military technology used in warfare. "  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "stone_walls_mortared": {
                 "min": None,
@@ -9334,7 +9335,7 @@ class Fortified_campCreateView(
         context["my_exp"] = (
             "The absence or presence of fortified camps as a military technology used in warfare. Camps made by armies on the move (e.g. on a campaign) that which could be constructed on a hill top or in the middle of a plain or desert, usually out of local materials."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "fortified_camp": {
                 "min": None,
@@ -9528,7 +9529,7 @@ class Complex_fortificationCreateView(
         context["my_exp"] = (
             "The absence or presence of complex fortifications as a military technology used in warfare. When there are two or more concentric walls. So simply a wall and a donjon, for example, is not enough."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "complex_fortification": {
                 "min": None,
@@ -9728,7 +9729,7 @@ class Modern_fortificationCreateView(
         context["my_exp"] = (
             "The absence or presence of modern fortifications as a military technology used in warfare. used after the introduction of gunpowder, e.g., trace italienne/starfort."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "modern_fortification": {
                 "min": None,
@@ -9922,7 +9923,7 @@ class ChainmailCreateView(PermissionRequiredMixin, PolityIdMixin, CreateView):
         context["my_exp"] = (
             "The absence or presence of chainmail as a military technology used in warfare. We’re using a broad definition of chainmail. Habergeon was the word used to describe the Chinese version and that would qualify as chainmail. Armor that is made of small metal rings linked together in a pattern to form a mesh."  # noqa: E501 pylint: disable=C0301
         )
-        context["var_null_meaning"] = "The value is not available."
+        context["var_null_meaning"] = NO_DATA.no_value
         context["inner_vars"] = {
             "chainmail": {
                 "min": None,

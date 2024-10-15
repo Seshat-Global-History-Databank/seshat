@@ -665,7 +665,7 @@ def crisis_consequence_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     meta_data_dic_inner_vars = {
         "crisis_consequence": {
@@ -808,7 +808,7 @@ def power_transition_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     meta_data_dic_inner_vars = {
         "power_transition": {
@@ -1012,7 +1012,7 @@ def external_conflict_meta_download_view(request):
         "main_desc_source": "Main Descriptions for the Variable external_conflict are missing!",  # noqa: E501 pylint: disable=C0301
         "section": "Conflict Variables",
         "subsection": "External Conflicts Subsection",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     meta_data_dic_inner_vars = {
         "conflict_name": {
@@ -1116,7 +1116,7 @@ def internal_conflict_meta_download_view(request):
         "main_desc_source": "Main Descriptions for the Variable internal_conflict are missing!",  # noqa: E501 pylint: disable=C0301
         "section": "Conflict Variables",
         "subsection": "Internal Conflicts Subsection",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     meta_data_dic_inner_vars = {
         "conflict": {
@@ -1247,7 +1247,7 @@ def external_conflict_side_meta_download_view(request):
         "main_desc_source": "Main Descriptions for the Variable external_conflict_side are missing!",  # noqa: E501 pylint: disable=C0301
         "section": "Conflict Variables",
         "subsection": "External Conflicts Subsection",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "conflict_id": {
@@ -1369,7 +1369,7 @@ def agricultural_population_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "agricultural_population": {
@@ -1463,7 +1463,7 @@ def arable_land_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "arable_land": {
@@ -1561,7 +1561,7 @@ def arable_land_per_farmer_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "arable_land_per_farmer": {
@@ -1660,7 +1660,7 @@ def gross_grain_shared_per_agricultural_population_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "gross_grain_shared_per_agricultural_population": {
@@ -1752,7 +1752,7 @@ def net_grain_shared_per_agricultural_population_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "net_grain_shared_per_agricultural_population": {
@@ -1846,7 +1846,7 @@ def surplus_meta_download_view(request):
         "main_desc_source": "No Explanations.",
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "surplus": {
@@ -1946,7 +1946,7 @@ def military_expense_meta_download_view(request):
         "main_desc_source": "Main Descriptions for the Variable military_expense are missing!",  # noqa: E501 pylint: disable=C0301
         "section": "Economy Variables",
         "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "conflict": {
@@ -2053,7 +2053,7 @@ def silver_inflow_meta_download_view(request):
         "main_desc_source": "Silver inflow in Millions of silver taels??",
         "section": "Economy Variables",
         "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "silver_inflow": {
@@ -2151,7 +2151,7 @@ def silver_stock_meta_download_view(request):
         "main_desc_source": "Silver stock in Millions of silver taels??",
         "section": "Economy Variables",
         "subsection": "State Finances",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "silver_stock": {
@@ -2249,7 +2249,7 @@ def total_population_meta_download_view(request):
         "main_desc_source": "Total population or simply population, of a given area is the total number of people in that area at a given time.",  # noqa: E501 pylint: disable=C0301
         "section": "Social Complexity Variables",
         "subsection": "Social Scale",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "total_population": {
@@ -2347,7 +2347,7 @@ def gdp_per_capita_meta_download_view(request):
         "main_desc_source": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.",  # noqa: E501 pylint: disable=C0301
         "section": "Economy Variables",
         "subsection": "Productivity",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "gdp_per_capita": {
@@ -2445,7 +2445,7 @@ def drought_event_meta_download_view(request):
         "main_desc_source": "number of geographic sites indicating drought",
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "drought_event": {
@@ -2543,7 +2543,7 @@ def locust_event_meta_download_view(request):
         "main_desc_source": "number of geographic sites indicating locusts",
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "locust_event": {
@@ -2641,7 +2641,7 @@ def socioeconomic_turmoil_event_meta_download_view(request):
         "main_desc_source": "number of geographic sites indicating socioeconomic turmoil",
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "socioeconomic_turmoil_event": {
@@ -2739,7 +2739,7 @@ def crop_failure_event_meta_download_view(request):
         "main_desc_source": "number of geographic sites indicating crop failure",
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "crop_failure_event": {
@@ -2837,7 +2837,7 @@ def famine_event_meta_download_view(request):
         "main_desc_source": "number of geographic sites indicating famine",
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "famine_event": {
@@ -2945,7 +2945,7 @@ def disease_outbreak_meta_download_view(request):
         "main_desc_source": "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season.",  # noqa: E501 pylint: disable=C0301
         "section": "Well Being",
         "subsection": "Biological Well-Being",
-        "null_meaning": "The value is not available.",
+        "null_meaning": NO_DATA.no_value,
     }
     my_meta_data_dic_inner_vars = {
         "longitude": {

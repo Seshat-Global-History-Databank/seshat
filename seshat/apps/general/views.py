@@ -6312,19 +6312,6 @@ class Polity_religious_traditionDetailView(DetailView):
     template_name = "general/polity_religious_tradition/polity_religious_tradition_detail.html"  # noqa: E501 pylint: disable=C0301
 
 
-# TODO: rewrite as a class-based view + move
-def generalvars_view(request):
-    context = get_variable_context(
-        app_name=APP_NAME,
-        exclude=[
-            "Polity_research_assistant",
-            "Polity_editor",
-            "Polity_expert",
-        ],
-    )
-    return render(request, "general/generalvars.html", context=context)
-
-
 class GeneralVariablesView(TemplateView):
     """
     View for displaying all general variables.

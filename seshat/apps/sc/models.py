@@ -720,6 +720,8 @@ class Military_level(SeshatCommon, SCMixIn):
         variable = "Military Level"
         notes = NO_DATA.note
         description = "Talking about Hierarchical Complexity, Military levels records the Military levels of a polity. Same principle as with Administrative levels. Start with the commander-in-chief coded as: level 1, and work down to the private. Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier)."  # noqa: E501 pylint: disable=C0301
+        description = """levels. Again, start with the commander-in-chief = level 1 and work down to the private.
+Even in primitive societies such as simple chiefdoms it is often possible to distinguish at least two levels – a commander and soldiers. A complex chiefdom would be coded three levels. The presence of warrior burials might be the basis for inferring the existence of a military organization. (The lowest military level is always the individual soldier).""",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = "NOTHING"
         inner_variables = {
             "military_level_from": {
@@ -3495,7 +3497,7 @@ class Communal_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Communal Building"
         notes = NO_DATA.note
-        description = ""
+        description = "This code distinguishes between settlements that consist of only private households (code 'absent') and settlements where there are communal buildings which could be used for a variety of uses (code 'present')."  # From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3548,7 +3550,7 @@ class Utilitarian_public_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Utilitarian Public Building"
         notes = NO_DATA.note
-        description = ""
+        description = "Typical examples include aqueducts, sewers, and granaries. In the narrative paragraph list all utilitarian buildings and give examples of the most impressive/costly/large ones."  # From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3599,7 +3601,7 @@ class Symbolic_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Symbolic Building"
         notes = NO_DATA.note
-        description = ""
+        description = "Non-utilitarian constructions that display symbols, or are themselves symbols of the community or polity (or a ruler as a symbol of the polity). Examples include Taj Mahal mausoleum, Trajan's Column, Ashoka's Pillars, Qin Shih Huang's Terracota Army, the Statue of Liberty. Has to be constructed by humans, so sacred groves or mountains are not symbolic buildings. A palace is also not a symbolic building, because it has other, utilitarian functions (houses the ruler)."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3650,7 +3652,7 @@ class Entertainment_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Entertainment Building"
         notes = NO_DATA.note
-        description = ""
+        description = "These include theaters, arenas, race tracks."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3703,7 +3705,7 @@ class Knowledge_or_information_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Knowledge or Information Building"
         notes = NO_DATA.note
-        description = ""
+        description = "These include astronomic observatories, libraries, and museums."
         description_source = ""
         inner_variables = {}
 
@@ -3756,7 +3758,7 @@ class Other_utilitarian_public_building(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Other Utilitarian Building"
         notes = NO_DATA.note
-        description = ""
+        description = "Other utilitarian public buildings..."  # From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3807,7 +3809,7 @@ class Special_purpose_site(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Special Purpose Site"
         notes = NO_DATA.note
-        description = ""
+        description = "Sites not associated with residential areas. This position is primarily useful for coding archaneologically known societies."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3858,7 +3860,7 @@ class Ceremonial_site(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Ceremonial Site"
         notes = NO_DATA.note
-        description = ""
+        description = "No Description"  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3909,7 +3911,7 @@ class Burial_site(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Burial Site"
         notes = NO_DATA.note
-        description = ""
+        description = "Dissociated from settlement, has monumental features."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -3960,7 +3962,7 @@ class Trading_emporia(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Trading Emporium"
         notes = NO_DATA.note
-        description = ""
+        description = "Trading settlements characterised by their peripheral locations, on the shore at the edge of a polity, a lack of infrastructure (typically those in Europe contained no churches) and often of a short-lived nature. They include isolated caravanserai along trade routes."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4011,7 +4013,7 @@ class Enclosure(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Enclosure"
         notes = NO_DATA.note
-        description = ""
+        description = "An 'enclosure' is clearly demarcated special-purpose area. It can be separated from surrounding land by earthworks (including banks or ditches), walls, or fencing. It may be as small as a few meters across, or encompass many hectares. It is non-residential, but could serve numerous purposes, both practical (animal pens) as well as religious and ceremonial."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4064,7 +4066,7 @@ class Length_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Length Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of length measurement systems. Measurement units are named in sources."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4115,7 +4117,7 @@ class Area_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Area Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of area measurement systems. Measurement units are named in sources."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4168,7 +4170,7 @@ class Volume_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Volume Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = 'Textual evidence of volume measurement systems. Measurement units are named in sources. Archaeological evidence includes finding containers of standard volume, etc. (use "inferred present" in such cases)'  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4221,7 +4223,7 @@ class Weight_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Weight Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of weight measurement systems. Measurement units are named in sources."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4272,7 +4274,7 @@ class Time_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Time Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of time measurement systems. Measurement units are named in sources. A natural unit such as 'day' doesn't qualify. Nor does a vague one like 'season'. Archaeological evidence is a clock (e.g., sundial)",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4324,7 +4326,7 @@ class Geometrical_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Geometrical Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of geometrical measurement systems. Measurement units are named in sources.  For example: degree.",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4375,7 +4377,7 @@ class Other_measurement_system(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Other Measurement System"
         notes = NO_DATA.note
-        description = ""
+        description = "Textual evidence of more advanced measurement systems: temperature, force, astronomical",  # noqa: E501 pylint: disable=C0301
         description_source = ""
         inner_variables = {}
 
@@ -4428,7 +4430,7 @@ class Debt_and_credit_structure(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Debt and Credit Structure"
         notes = NO_DATA.note
-        description = ""
+        description = "Commercial/market practices that take physical form, e.g. a contract on parchment (not just verbal agreements).",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4479,7 +4481,7 @@ class Store_of_wealth(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Store of Wealth"
         notes = NO_DATA.note
-        description = ""
+        description = "Example: hoard, chest for storing valuables, treasury room. Note for the future: perhaps should separate these into individual variables.",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4530,7 +4532,7 @@ class Source_of_support(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Source of Support"
         notes = NO_DATA.note
-        description = ""
+        description = "possible codes: state salary, governed population, land, none. 'State salary' can be paid either in currency or in kind (e.g., koku of rice). 'Governed population' means that the official directly collects tribute from the population (for example, the 'kormlenie' system in Medieval Russia). 'Land' is when the bureaucrats live off land supplied by the state. 'None' is when the state officials are not compensated (example: in the Republican and Principate Rome the magistrates were wealthy individuals who served without salary, motivated by prestige and social or career advancement).",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4581,7 +4583,7 @@ class Occupational_complexity(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Occupational Complexity"
         notes = NO_DATA.note
-        description = ""
+        description = "No Descriptions in the code book."  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4632,7 +4634,7 @@ class Special_purpose_house(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Special Purpose House"
         notes = NO_DATA.note
-        description = ""
+        description = "A normal house used in a distinctive or special manner. This code reflects differentiation between houses.",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4685,7 +4687,7 @@ class Other_special_purpose_site(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Other Special Purpose House"
         notes = NO_DATA.note
-        description = ""
+        description = "Other special-purpose sites."  # From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4741,7 +4743,8 @@ class Largest_communication_distance(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Largest Communication Distance"
         notes = NO_DATA.note
-        description = ""
+        description = """Distance in kilometers between the capital and the furthest provincial capital. Use the figure for the most direct land and/or sea route that was available.
+As an alternative for prehistoric communities, measure the distance between largest quasi-capital and furthest village within the quasi-polity.""",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 
@@ -4824,7 +4827,7 @@ class Fastest_individual_communication(SeshatCommon, SCMixIn):
         subsection = None
         variable = "Fastest Individual Communication"
         notes = NO_DATA.note
-        description = ""
+        description = "This is the fastest time (in days) an individual can travel from the capital city to the most outlying provincial capital (if one exists), usually keeping within the boundaries of the polity. This might be by ship, horse, horse relay, or on foot, or a combination.",  # noqa: E501 pylint: disable=C0301  From SC_VAR_DEFS
         description_source = ""
         inner_variables = {}
 

@@ -175,8 +175,8 @@ from ...models import (
     General_postal_service,
 )
 
-from .constants import PREFIX
 
+PREFIX = "social_complexity_"
 
 @permission_required("core.view_capital")
 def ra_download_view(request):
