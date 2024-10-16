@@ -84,7 +84,6 @@ from ._mixins import SeshatCommonFilter
 
 
 class RAFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> sc_ra [Seshat_Expert]
 
     class Meta:
         model = Ra

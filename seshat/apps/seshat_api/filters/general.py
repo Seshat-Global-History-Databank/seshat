@@ -21,7 +21,6 @@ from ..models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_expert,
     Polity_editor,
     Polity_religious_tradition,
 )
@@ -235,14 +234,6 @@ class PolityAlternateReligionFilter(
         fields = {
             "alternate_religion": ["exact", "icontains"],
         }
-
-
-class PolityExpertFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> expert
-
-    class Meta:
-        model = Polity_expert
-        fields = {}
 
 
 class PolityEditorFilter(SeshatCommonFilter, django_filters.FilterSet):

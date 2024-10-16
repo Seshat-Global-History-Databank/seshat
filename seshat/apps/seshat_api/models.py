@@ -74,7 +74,6 @@ from ..general.models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_expert,
     Polity_editor,
     Polity_religious_tradition,
 )
@@ -306,7 +305,6 @@ __all__ = [
     "Polity_alternate_religion_genus",
     "Polity_alternate_religion_family",
     "Polity_alternate_religion",
-    "Polity_expert",
     "Polity_editor",
     "Polity_religious_tradition",
     "Widespread_religion",

@@ -11,16 +11,10 @@ router = routers.DefaultRouter()
 
 from .views.accounts import (
     ProfileViewSet,
-    SeshatExpertViewSet,
     SeshatTaskViewSet,
 )
 
 router.register(r"account/profiles", ProfileViewSet, basename="profile")
-router.register(
-    r"account/seshat-experts",
-    SeshatExpertViewSet,
-    basename="seshat-expert",
-)
 router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="seshat-task")
 
 
@@ -287,7 +281,6 @@ from .views.general import (
     PolityAlternateReligionGenusViewSet,
     PolityAlternateReligionFamilyViewSet,
     PolityAlternateReligionViewSet,
-    PolityExpertViewSet,
     PolityEditorViewSet,
     PolityReligiousTraditionViewSet,
 )
@@ -391,9 +384,6 @@ router.register(
     r"general/polity-alternate-religions",
     PolityAlternateReligionViewSet,
     basename="polity-alternate-religion",
-)
-router.register(
-    r"general/polity-experts", PolityExpertViewSet, basename="polity-expert"
 )
 router.register(
     r"general/polity-editors", PolityEditorViewSet, basename="polity-editor"

@@ -31,7 +31,6 @@ from ..filters.general import (
     PolityAlternateReligionGenusFilter,
     PolityAlternateReligionFamilyFilter,
     PolityAlternateReligionFilter,
-    PolityExpertFilter,
     PolityEditorFilter,
     PolityReligiousTraditionFilter,
 )
@@ -59,7 +58,6 @@ from ..models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_expert,
     Polity_editor,
     Polity_religious_tradition,
 )
@@ -392,22 +390,6 @@ class PolityAlternateReligionViewSet(
     model = Polity_alternate_religion
     pagination_class = SeshatAPIPagination
     filterset_class = PolityAlternateReligionFilter
-
-
-class PolityExpertViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Polity Experts.
-    """
-
-    model = Polity_expert
-    pagination_class = SeshatAPIPagination
-    filterset_class = PolityExpertFilter
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
 
 
 class PolityEditorViewSet(
