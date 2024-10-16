@@ -11,7 +11,6 @@ from ..models import (
     Variablehierarchy,
     Reference,
     Citation,
-    ScpThroughCtn,
     Religion,
     Cliopatria,
     GADMShapefile,
