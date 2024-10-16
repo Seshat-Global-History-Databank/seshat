@@ -499,7 +499,6 @@ router.register(
 # Add views for "sc" app to the router
 
 from .views.sc import (
-    RAViewSet,
     PolityTerritoryViewSet,
     PolityPopulationViewSet,
     PopulationOfTheLargestSettlementViewSet,

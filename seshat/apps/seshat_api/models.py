@@ -94,8 +94,7 @@ from ..rt.models import (
     Soc_dis_rel_grp_occ_fun,
     Gov_press_conv_for_aga,
 )
-from ..sc.models import (
-    Ra,
+from ..sc.models import (    
     Polity_territory,
     Polity_population,
     Population_of_the_largest_settlement,

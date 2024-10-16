@@ -1,5 +1,4 @@
 from ..models import (
-    Ra,
     Polity_territory,
     Polity_population,
     Population_of_the_largest_settlement,
@@ -81,13 +80,6 @@ from ..models import (
 
 from django_filters import rest_framework as django_filters
 from ._mixins import SeshatCommonFilter
-
-
-class RAFilter(SeshatCommonFilter, django_filters.FilterSet):
-
-    class Meta:
-        model = Ra
-        fields = {}
 
 
 class PolityTerritoryFilter(SeshatCommonFilter, django_filters.FilterSet):
