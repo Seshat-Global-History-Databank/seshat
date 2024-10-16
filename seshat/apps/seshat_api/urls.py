@@ -265,7 +265,6 @@ router.register(
 # app: general
 
 from .views.general import (
-    PolityResearchAssistantViewSet,
     PolityOriginalNameViewSet,
     PolityAlternativeNameViewSet,
     PolityDurationViewSet,
@@ -293,11 +292,6 @@ from .views.general import (
     PolityReligiousTraditionViewSet,
 )
 
-router.register(
-    r"general/polity-research-assistants",
-    PolityResearchAssistantViewSet,
-    basename="polity-research-assistant",
-)
 router.register(
     r"general/polity-original-names",
     PolityOriginalNameViewSet,
@@ -625,9 +619,6 @@ from .views.sc import (
     FastestIndividualCommunicationViewSet,
 )
 
-router.register(
-    r"sc/research-assistants", RAViewSet, basename="research-assistant"
-)
 router.register(
     r"sc/polity-territories", PolityTerritoryViewSet, basename="polity-territory"
 )

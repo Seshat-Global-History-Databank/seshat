@@ -9,7 +9,6 @@ from ._mixins import (
 )
 
 from ..filters.general import (
-    PolityResearchAssistantFilter,
     PolityOriginalNameFilter,
     PolityAlternativeNameFilter,
     PolityDurationFilter,
@@ -38,7 +37,6 @@ from ..filters.general import (
 )
 
 from ..models import (
-    Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
     Polity_duration,
@@ -65,22 +63,6 @@ from ..models import (
     Polity_editor,
     Polity_religious_tradition,
 )
-
-
-class PolityResearchAssistantViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Polity Research Assistants.
-    """
-
-    model = Polity_research_assistant
-    pagination_class = SeshatAPIPagination
-    filterset_class = PolityResearchAssistantFilter
-
 
 class PolityOriginalNameViewSet(
     FilterBackends,

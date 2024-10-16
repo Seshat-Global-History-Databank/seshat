@@ -52,7 +52,6 @@ from ..crisisdb.models import (
     Disease_outbreak,
 )
 from ..general.models import (
-    Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
     Polity_duration,
@@ -285,7 +284,6 @@ __all__ = [
     "Crop_failure_event",
     "Famine_event",
     "Disease_outbreak",
-    "Polity_research_assistant",
     "Polity_original_name",
     "Polity_alternative_name",
     "Polity_duration",

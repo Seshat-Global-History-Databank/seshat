@@ -1,5 +1,4 @@
 from ..models import (
-    Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
     Polity_duration,
@@ -29,16 +28,6 @@ from ..models import (
 
 from django_filters import rest_framework as django_filters
 from ._mixins import SeshatCommonFilter
-
-
-class PolityResearchAssistantFilter(
-    SeshatCommonFilter, django_filters.FilterSet
-):
-    # <> polity_ra
-    class Meta:
-        model = Polity_research_assistant
-        fields = {}
-
 
 class PolityOriginalNameFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
