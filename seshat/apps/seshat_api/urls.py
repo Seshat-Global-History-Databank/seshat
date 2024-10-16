@@ -21,8 +21,6 @@ router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="seshat-tas
 # Register views for "core" app
 
 from .views.core import (
-    PrivateCommentsViewSet,
-    PrivateCommentsPartsViewSet,
     MacroRegionViewSet,
     RegionViewSet,
     NGAViewSet,
@@ -35,9 +33,6 @@ from .views.core import (
     VariableHierarchyViewSet,
     ReferenceViewSet,
     CitationViewSet,
-    SeshatCommentViewSet,
-    SeshatCommentPartViewSet,
-    ScpThroughCtnViewSet,
     ReligionViewSet,
     CliopatriaViewSet,
     GADMShapefileViewSet,
@@ -45,16 +40,6 @@ from .views.core import (
     GADMProvincesViewSet,
 )
 
-router.register(
-    r"core/private-comments",
-    PrivateCommentsViewSet,
-    basename="private-comment",
-)
-router.register(
-    r"core/private-comments-parts",
-    PrivateCommentsPartsViewSet,
-    basename="private-comment-part",
-)
 router.register(r"core/macro-regions", MacroRegionViewSet, basename="macro-region")
 router.register(r"core/regions", RegionViewSet, basename="region")
 router.register(r"core/ngas", NGAViewSet, basename="nga")
@@ -75,17 +60,6 @@ router.register(
 )
 router.register(r"core/references", ReferenceViewSet, basename="reference")
 router.register(r"core/citations", CitationViewSet, basename="citation")
-router.register(r"core/comments", SeshatCommentViewSet, basename="seshat-comment")
-router.register(
-    r"core/comment-parts",
-    SeshatCommentPartViewSet,
-    basename="seshat-comment-part",
-)
-router.register(
-    r"core/comment-parts-through-citations",
-    ScpThroughCtnViewSet,
-    basename="comment-part-through-citation",
-)
 #router.register(r"core/commons", SeshatCommonViewSet, basename="common")
 router.register(r"core/religions", ReligionViewSet, basename="religion")
 router.register(
@@ -281,7 +255,6 @@ from .views.general import (
     PolityAlternateReligionGenusViewSet,
     PolityAlternateReligionFamilyViewSet,
     PolityAlternateReligionViewSet,
-    PolityEditorViewSet,
     PolityReligiousTraditionViewSet,
 )
 
@@ -384,9 +357,6 @@ router.register(
     r"general/polity-alternate-religions",
     PolityAlternateReligionViewSet,
     basename="polity-alternate-religion",
-)
-router.register(
-    r"general/polity-editors", PolityEditorViewSet, basename="polity-editor"
 )
 router.register(
     r"general/polity-religious-traditions",

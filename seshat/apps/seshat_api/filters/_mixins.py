@@ -4,10 +4,6 @@ from django_filters import rest_framework as django_filters
 class SeshatCommonFilter:
     # <> polity
     # <>+ curator
-    # <> comment
-    # <> private_comment
-
-    # TODO: can we remove fields that are not intended for public view?
 
     polity_name_contains = django_filters.CharFilter(
         field_name="polity__name", lookup_expr="icontains"

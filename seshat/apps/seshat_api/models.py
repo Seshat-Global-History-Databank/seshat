@@ -1,6 +1,4 @@
 from ..core.models import (
-    SeshatPrivateComment,
-    SeshatPrivateCommentPart,
     Macro_region,
     Seshat_region,
     Nga,
@@ -13,8 +11,6 @@ from ..core.models import (
     Variablehierarchy,
     Reference,
     Citation,
-    SeshatComment,
-    SeshatCommentPart,
     ScpThroughCtn,
     Religion,
     Cliopatria,
@@ -74,7 +70,6 @@ from ..general.models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_editor,
     Polity_religious_tradition,
 )
 from ..rt.models import (
@@ -234,8 +229,6 @@ from ..wf.models import (
 
 
 __all__ = [
-    "SeshatPrivateComment",
-    "SeshatPrivateCommentPart",
     "Macro_region",
     "Seshat_region",
     "Nga",
@@ -248,8 +241,6 @@ __all__ = [
     "Variablehierarchy",
     "Reference",
     "Citation",
-    "SeshatComment",
-    "SeshatCommentPart",
     "ScpThroughCtn",
     "Religion",
     "Cliopatria",
@@ -305,7 +296,6 @@ __all__ = [
     "Polity_alternate_religion_genus",
     "Polity_alternate_religion_family",
     "Polity_alternate_religion",
-    "Polity_editor",
     "Polity_religious_tradition",
     "Widespread_religion",
     "Official_religion",
