@@ -6,18 +6,6 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-
-# Register viewsets for "account" app
-
-from .views.accounts import (
-    ProfileViewSet,
-    SeshatTaskViewSet,
-)
-
-router.register(r"account/profiles", ProfileViewSet, basename="profile")
-router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="seshat-task")
-
-
 # Register views for "core" app
 
 from .views.core import (
