@@ -1,5 +1,4 @@
 from ..models import (
-    Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
     Polity_duration,
@@ -22,23 +21,11 @@ from ..models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_expert,
-    Polity_editor,
     Polity_religious_tradition,
 )
 
 from django_filters import rest_framework as django_filters
 from ._mixins import SeshatCommonFilter
-
-
-class PolityResearchAssistantFilter(
-    SeshatCommonFilter, django_filters.FilterSet
-):
-    # <> polity_ra
-    class Meta:
-        model = Polity_research_assistant
-        fields = {}
-
 
 class PolityOriginalNameFilter(SeshatCommonFilter, django_filters.FilterSet):
     class Meta:
@@ -246,22 +233,6 @@ class PolityAlternateReligionFilter(
         fields = {
             "alternate_religion": ["exact", "icontains"],
         }
-
-
-class PolityExpertFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> expert
-
-    class Meta:
-        model = Polity_expert
-        fields = {}
-
-
-class PolityEditorFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> editor
-
-    class Meta:
-        model = Polity_editor
-        fields = {}
 
 
 class PolityReligiousTraditionFilter(

@@ -10,8 +10,6 @@ from ._mixins import (
     SeshatAPIRestrictedPagination
 )
 from ..filters.core import (
-    PrivateCommentFilter,
-    PrivateCommentsPartFilter,
     MacroRegionFilter,
     SeshatRegionFilter,
     NGAFilter,
@@ -24,9 +22,6 @@ from ..filters.core import (
     VariableHierarchyFilter,
     ReferenceFilter,
     CitationFilter,
-    SeshatCommentFilter,
-    SeshatCommentPartFilter,
-    ScpThroughCtnFilter,
     ReligionFilter,
     CliopatriaFilter,
     GADMShapefileFilter,
@@ -35,8 +30,6 @@ from ..filters.core import (
 )
 
 from ..models import (
-    SeshatPrivateComment,
-    SeshatPrivateCommentPart,
     Macro_region,
     Seshat_region,
     Nga,
@@ -49,47 +42,12 @@ from ..models import (
     Variablehierarchy,
     Reference,
     Citation,
-    SeshatComment,
-    SeshatCommentPart,
-    ScpThroughCtn,
     Religion,
     Cliopatria,
     GADMShapefile,
     GADMCountries,
     GADMProvinces,
 )
-
-
-class PrivateCommentsViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Private Comments.
-    """
-
-    model = SeshatPrivateComment
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = PrivateCommentFilter
-
-
-class PrivateCommentsPartsViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Private Comment Parts.
-    """
-
-    model = SeshatPrivateCommentPart
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = PrivateCommentsPartFilter
 
 
 class MacroRegionViewSet(
@@ -271,55 +229,6 @@ class CitationViewSet(
     model = Citation
     pagination_class = SeshatAPIPagination
     filterset_class = CitationFilter
-
-
-class SeshatCommentViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Comments.
-    """
-
-    model = SeshatComment
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = SeshatCommentFilter
-
-
-class SeshatCommentPartViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Comment Parts.
-    """
-
-    model = SeshatCommentPart
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = SeshatCommentPartFilter
-
-
-class ScpThroughCtnViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Comment Parts' relations to
-    Citations.
-    """
-
-    model = ScpThroughCtn
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = ScpThroughCtnFilter
 
 
 class ReligionViewSet(

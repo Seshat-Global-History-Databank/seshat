@@ -1,6 +1,4 @@
 from ..core.models import (
-    SeshatPrivateComment,
-    SeshatPrivateCommentPart,
     Macro_region,
     Seshat_region,
     Nga,
@@ -13,9 +11,6 @@ from ..core.models import (
     Variablehierarchy,
     Reference,
     Citation,
-    SeshatComment,
-    SeshatCommentPart,
-    ScpThroughCtn,
     Religion,
     Cliopatria,
     GADMShapefile,
@@ -52,7 +47,6 @@ from ..crisisdb.models import (
     Disease_outbreak,
 )
 from ..general.models import (
-    Polity_research_assistant,
     Polity_original_name,
     Polity_alternative_name,
     Polity_duration,
@@ -75,8 +69,6 @@ from ..general.models import (
     Polity_alternate_religion_genus,
     Polity_alternate_religion_family,
     Polity_alternate_religion,
-    Polity_expert,
-    Polity_editor,
     Polity_religious_tradition,
 )
 from ..rt.models import (
@@ -102,8 +94,7 @@ from ..rt.models import (
     Soc_dis_rel_grp_occ_fun,
     Gov_press_conv_for_aga,
 )
-from ..sc.models import (
-    Ra,
+from ..sc.models import (    
     Polity_territory,
     Polity_population,
     Population_of_the_largest_settlement,
@@ -236,8 +227,6 @@ from ..wf.models import (
 
 
 __all__ = [
-    "SeshatPrivateComment",
-    "SeshatPrivateCommentPart",
     "Macro_region",
     "Seshat_region",
     "Nga",
@@ -250,9 +239,6 @@ __all__ = [
     "Variablehierarchy",
     "Reference",
     "Citation",
-    "SeshatComment",
-    "SeshatCommentPart",
-    "ScpThroughCtn",
     "Religion",
     "Cliopatria",
     "GADMShapefile",
@@ -285,7 +271,6 @@ __all__ = [
     "Crop_failure_event",
     "Famine_event",
     "Disease_outbreak",
-    "Polity_research_assistant",
     "Polity_original_name",
     "Polity_alternative_name",
     "Polity_duration",
@@ -308,8 +293,6 @@ __all__ = [
     "Polity_alternate_religion_genus",
     "Polity_alternate_religion_family",
     "Polity_alternate_religion",
-    "Polity_expert",
-    "Polity_editor",
     "Polity_religious_tradition",
     "Widespread_religion",
     "Official_religion",

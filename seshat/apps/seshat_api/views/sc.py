@@ -10,7 +10,6 @@ from ._mixins import (
 )
 
 from ..filters.sc import (
-    RAFilter,
     PolityTerritoryFilter,
     PolityPopulationFilter,
     PopulationOfTheLargestSettlementFilter,
@@ -91,7 +90,6 @@ from ..filters.sc import (
 )
 
 from ..models import (
-    Ra,
     Polity_territory,
     Polity_population,
     Population_of_the_largest_settlement,
@@ -170,22 +168,6 @@ from ..models import (
     Largest_communication_distance,
     Fastest_individual_communication,
 )
-
-
-class RAViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing RAs.
-    """
-
-    model = Ra
-    pagination_class = SeshatAPIPagination
-    filterset_class = RAFilter
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
 
 
 class PolityTerritoryViewSet(

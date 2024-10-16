@@ -1,6 +1,4 @@
 from ..models import (
-    SeshatPrivateComment,
-    SeshatPrivateCommentPart,
     Macro_region,
     Seshat_region,
     Nga,
@@ -13,9 +11,6 @@ from ..models import (
     Variablehierarchy,
     Reference,
     Citation,
-    SeshatComment,
-    SeshatCommentPart,
-    ScpThroughCtn,
     Religion,
     Cliopatria,
     GADMShapefile,
@@ -23,26 +18,6 @@ from ..models import (
     GADMProvinces,
 )
 from django_filters import rest_framework as django_filters
-
-
-class PrivateCommentFilter(django_filters.FilterSet):
-    class Meta:
-        model = SeshatPrivateComment
-        fields = {"text": ["icontains"]}
-
-
-class PrivateCommentsPartFilter(django_filters.FilterSet):
-    # <> private_comment
-    # <> private_comment_owner
-    # <>+ private_comment_reader
-
-    class Meta:
-        model = SeshatPrivateCommentPart
-        fields = {
-            "private_comment_part_text": ["icontains"],
-            "created_date": ["range", "date__lte", "date__gte", "date__exact"],
-            "last_modified_date": ["range", "date__lte", "date__gte", "date__exact"],
-        }
 
 
 class MacroRegionFilter(django_filters.FilterSet):
@@ -238,39 +213,6 @@ class CitationFilter(django_filters.FilterSet):
             "created_date": ["range", "date__lte", "date__gte", "date__exact"],
             "modified_date": ["range", "date__lte", "date__gte", "date__exact"],
         }
-
-
-class SeshatCommentFilter(django_filters.FilterSet):
-    class Meta:
-        model = SeshatComment
-        fields = {"text": ["icontains"]}
-
-
-class SeshatCommentPartFilter(django_filters.FilterSet):
-    # <> comment
-    # <>+ comment_citations_plus
-    # <> comment_curator
-    # <> comment_citations
-    # TODO: this one shows sensitive information (comment_curator), so we don't want this in production
-
-    class Meta:
-        model = SeshatCommentPart
-        fields = {
-            "comment_part_text": ["icontains"],
-            "comment_order": ["exact", "lte", "gte"],
-            "citation_index": ["exact", "lte", "gte"],
-            "modified_date": ["range", "date__lte", "date__gte", "date__exact"],
-        }
-
-
-class ScpThroughCtnFilter(django_filters.FilterSet):
-    # <> seshatcommentpart
-    # <> citation
-    # TODO: this one shows sensitive information (comment_curator), so we don't want this in production
-
-    class Meta:
-        model = ScpThroughCtn
-        fields = {"parent_paragraphs": ["icontains"]}
 
 
 class ReligionFilter(django_filters.FilterSet):
