@@ -2,8 +2,6 @@ from django_filters import rest_framework as django_filters
 
 
 class SeshatCommonFilter:
-    # <> polity
-    # <>+ curator
 
     polity_name_contains = django_filters.CharFilter(
         field_name="polity__name", lookup_expr="icontains"
