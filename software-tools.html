@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software tools &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
+
+  
+      <script src="_static/jquery.js"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+      <script src="_static/doctools.js"></script>
+      <script src="_static/sphinx_highlight.js"></script>
+      <script src="_static/clipboard.min.js"></script>
+      <script src="_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="_static/tabs.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to update these docs" href="how-to-update-these-docs.html" />
+    <link rel="prev" title="Project resources: where to find them" href="resources.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Software tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#python-anaconda">Python &amp; Anaconda</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#git-github">Git &amp; GitHub</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Software tools</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/software-tools.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-tools">
+<h1>Software tools<a class="headerlink" href="#software-tools" title="Permalink to this heading"></a></h1>
+<p>This section of the documentation provides information on some of the commonly used software tools used in the Seshat project.</p>
+<p>If you are participating in a Seshat workshop, run these steps sequentially before the workshop to ensure you have the necessary tools installed on your computer.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This guide involves installation of command line software. It’s always a good idea to read the output of the commands you run to check for any warnings or additional steps you may need to take, which may not be documented here.</p>
+</div>
+<section id="python-anaconda">
+<h2>Python &amp; Anaconda<a class="headerlink" href="#python-anaconda" title="Permalink to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Mac/Linux</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Python is installed on your computer by default.</p></li>
+<li><p>Open Terminal and type the following to check the version of Python you have installed and which shell you are using:</p>
+<blockquote>
+<div><div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$SHELL</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make a note as to whether your shell is <cite>/bin/zsh</cite> or <cite>/bin/bash</cite> to know which instructions to follow bellow.</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>If you are not familiar with using the command line, you can find Terminal in the Applications folder on your Mac. Pin it to your dock for easy access.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>We recommend installing Homebrew, a useful package manager for macOS and Linux.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Check if Homebrew is already installed by typing the following in Terminal:</p></li>
+</ul>
+<div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>--version
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If not, follow the instructions on the <a class="reference external" href="https://brew.sh/">Homebrew</a> website to install it.</p></li>
+</ul>
+<div class="dropdown admonition">
+<p class="admonition-title">Note: A warning near the end of installation may ask you to add Homebrew to your PATH. In <cite>zsh</cite> it will look like this (<cite>bash</cite> shell instructions will differ):</p>
+<div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/Users/&lt;username&gt;/.zprofile
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(/opt/homebrew/bin/brew shellenv)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/Users/&lt;username&gt;/.zprofile
+<span class="nb">eval</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>/opt/homebrew/bin/brew<span class="w"> </span>shellenv<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Note: You may need to open a new Terminal window afterwards for brew to work.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Install Anaconda via Homebrew and add it to your PATH by typing:</p>
+<blockquote>
+<div><div class="dropdown admonition">
+<p class="admonition-title">If using <cite>zsh</cite> shell:</p>
+<blockquote>
+<div><div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>anaconda
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/usr/local/anaconda3/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/opt/homebrew/anaconda3/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.zshrc
+<span class="nb">source</span><span class="w"> </span>~/.zshrc
+conda<span class="w"> </span>init<span class="w"> </span>zsh
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">If using <cite>bash</cite> shell:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>--cask<span class="w"> </span>anaconda
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/usr/local/anaconda3/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bash_profile
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=/opt/homebrew/anaconda3/bin:$PATH&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bash_profile
+<span class="nb">source</span><span class="w"> </span>~/.bash_profile
+conda<span class="w"> </span>init<span class="w"> </span>bash
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Install Anaconda with this <a class="reference external" href="https://docs.anaconda.com/anaconda/install/windows/">guide</a>.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>To download the installer from the Anaconda website it will ask you to create an account.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Once installed, open the Anaconda command prompt and type the following to check the version of Python you have installed:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can find the Anaconda command prompt in the Start menu on your Windows computer. Pin it to your taskbar for easy access.</p>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div></div>
+</section>
+<section id="git-github">
+<h2>Git &amp; GitHub<a class="headerlink" href="#git-github" title="Permalink to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-1-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-1-1-0" name="1-0" role="tab" tabindex="0">Mac/Linux</button><button aria-controls="panel-1-1-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-1-1-1" name="1-1" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-1-1-0" class="sphinx-tabs-panel" id="panel-1-1-0" name="1-0" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Create an account on <a class="reference external" href="https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github">GitHub</a>.</p></li>
+<li><p>Check if Git is installed on your computer by opening Terminal and typing:</p>
+<blockquote>
+<div><div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>--version
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>If Git is not installed already, install Git via Homebrew by typing:</p>
+<blockquote>
+<div><div class="highlight-zsh notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>git
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<ul class="simple">
+<li><p>If you are not familiar with using the command line, you can find Terminal in the Applications folder on your Mac. Pin it to your dock for easy access.</p></li>
+<li><p>If Homebrew is not installed, refer to the Python &amp; Anaconda instructions above.</p></li>
+</ul>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div><div aria-labelledby="tab-1-1-1" class="sphinx-tabs-panel" hidden="true" id="panel-1-1-1" name="1-1" role="tabpanel" tabindex="0"><ol class="arabic">
+<li><p>Create an account on <a class="reference external" href="https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github">GitHub</a>.</p></li>
+<li><p>Check if Git is installed on your computer by opening the Anaconda command prompt and typing:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>--version
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>If Git is not installed already, install Git by typing:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>git
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<ul class="simple">
+<li><p>You can find the Anaconda command prompt in the Start menu on your Windows computer. Pin it to your taskbar for easy access.</p></li>
+<li><p>If Anaconda is not installed, refer to the Python &amp; Anaconda instructions above.</p></li>
+</ul>
+</div>
+</div></blockquote>
+</li>
+</ol>
+</div></div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="resources.html" class="btn btn-neutral float-left" title="Project resources: where to find them" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="how-to-update-these-docs.html" class="btn btn-neutral float-right" title="How to update these docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

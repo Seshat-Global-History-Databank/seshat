@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>custom_filters &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+
+  
+      <script src="../../_static/jquery.js"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+      <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/sphinx_highlight.js"></script>
+      <script src="../../_static/clipboard.min.js"></script>
+      <script src="../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Code of Conduct and Inclusivity" href="../../code-of-conduct.html" />
+    <link rel="prev" title="seshat.wsgi" href="../seshat/wsgi/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../seshat/index.html">seshat</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">custom_filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.beginswith"><code class="docutils literal notranslate"><span class="pre">beginswith()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.get_columns_with_value"><code class="docutils literal notranslate"><span class="pre">get_columns_with_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.get_columns_with_value_dic"><code class="docutils literal notranslate"><span class="pre">get_columns_with_value_dic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.get_item_from_dic"><code class="docutils literal notranslate"><span class="pre">get_item_from_dic()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.give_me_a_color"><code class="docutils literal notranslate"><span class="pre">give_me_a_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.make_references_look_nicer"><code class="docutils literal notranslate"><span class="pre">make_references_look_nicer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.min_max_years"><code class="docutils literal notranslate"><span class="pre">min_max_years()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.replace_underscore_and_capitalize"><code class="docutils literal notranslate"><span class="pre">replace_underscore_and_capitalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.unique_descriptions"><code class="docutils literal notranslate"><span class="pre">unique_descriptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.username_from_email"><code class="docutils literal notranslate"><span class="pre">username_from_email()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.zip_lists"><code class="docutils literal notranslate"><span class="pre">zip_lists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom_filters.register"><code class="docutils literal notranslate"><span class="pre">register</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">custom_filters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/custom_filters/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-custom_filters">
+<span id="custom-filters"></span><h1>custom_filters<a class="headerlink" href="#module-custom_filters" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.register" title="custom_filters.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.beginswith" title="custom_filters.beginswith"><code class="xref py py-obj docutils literal notranslate"><span class="pre">beginswith</span></code></a>(value, arg)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#custom_filters.get_columns_with_value" title="custom_filters.get_columns_with_value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_columns_with_value</span></code></a>(instance, value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.get_columns_with_value_dic" title="custom_filters.get_columns_with_value_dic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_columns_with_value_dic</span></code></a>(instance, value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#custom_filters.get_item_from_dic" title="custom_filters.get_item_from_dic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_item_from_dic</span></code></a>(dictionary, key)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.give_me_a_color" title="custom_filters.give_me_a_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">give_me_a_color</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#custom_filters.make_references_look_nicer" title="custom_filters.make_references_look_nicer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_references_look_nicer</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.min_max_years" title="custom_filters.min_max_years"><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_max_years</span></code></a>(values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#custom_filters.replace_underscore_and_capitalize" title="custom_filters.replace_underscore_and_capitalize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_underscore_and_capitalize</span></code></a>(value)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.unique_descriptions" title="custom_filters.unique_descriptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_descriptions</span></code></a>(values)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#custom_filters.username_from_email" title="custom_filters.username_from_email"><code class="xref py py-obj docutils literal notranslate"><span class="pre">username_from_email</span></code></a>(email)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#custom_filters.zip_lists" title="custom_filters.zip_lists"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zip_lists</span></code></a>(a, b)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.beginswith">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">beginswith</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.beginswith" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.get_columns_with_value">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">get_columns_with_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.get_columns_with_value" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.get_columns_with_value_dic">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">get_columns_with_value_dic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.get_columns_with_value_dic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.get_item_from_dic">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">get_item_from_dic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.get_item_from_dic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.give_me_a_color">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">give_me_a_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.give_me_a_color" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.make_references_look_nicer">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">make_references_look_nicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.make_references_look_nicer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.min_max_years">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">min_max_years</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.min_max_years" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.replace_underscore_and_capitalize">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">replace_underscore_and_capitalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.replace_underscore_and_capitalize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.unique_descriptions">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">unique_descriptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.unique_descriptions" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.username_from_email">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">username_from_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.username_from_email" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="custom_filters.zip_lists">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">zip_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#custom_filters.zip_lists" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="custom_filters.register">
+<span class="sig-prename descclassname"><span class="pre">custom_filters.</span></span><span class="sig-name descname"><span class="pre">register</span></span><a class="headerlink" href="#custom_filters.register" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../seshat/wsgi/index.html" class="btn btn-neutral float-left" title="seshat.wsgi" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../code-of-conduct.html" class="btn btn-neutral float-right" title="Code of Conduct and Inclusivity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

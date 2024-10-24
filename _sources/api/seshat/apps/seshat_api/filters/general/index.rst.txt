@@ -1,0 +1,406 @@
+seshat.apps.seshat_api.filters.general
+======================================
+
+.. py:module:: seshat.apps.seshat_api.filters.general
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter
+   seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter
+   seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter
+   seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter
+   seshat.apps.seshat_api.filters.general.PolityCapitalFilter
+   seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter
+   seshat.apps.seshat_api.filters.general.PolityDurationFilter
+   seshat.apps.seshat_api.filters.general.PolityEditorFilter
+   seshat.apps.seshat_api.filters.general.PolityExpertFilter
+   seshat.apps.seshat_api.filters.general.PolityLanguageFilter
+   seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter
+   seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter
+   seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter
+   seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter
+   seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter
+   seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter
+   seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter
+   seshat.apps.seshat_api.filters.general.PolityReligionFilter
+   seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter
+   seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter
+   seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter
+   seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter
+   seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter
+   seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter
+   seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter
+   seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter
+
+
+Module Contents
+---------------
+
+.. py:class:: PolityAlternateReligionFamilyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityAlternateReligionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityAlternateReligionGenusFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityAlternativeNameFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityCapitalFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityDegreeOfCentralizationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityDurationFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityEditorFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityExpertFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityLanguageFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityLanguageGenusFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityLinguisticFamilyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityOriginalNameFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityPeakYearsFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityPrecedingEntityFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityRelationshipToPrecedingEntityFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityReligionFamilyFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityReligionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityReligionGenusFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityReligiousTraditionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityResearchAssistantFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityScaleOfSupraculturalInteractionFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolitySucceedingEntityFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolitySupraculturalEntityFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolitySuprapolityRelationsFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: PolityUTMZoneFilter
+
+   Bases: :py:obj:`seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter`, :py:obj:`django_filters.rest_framework.FilterSet`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: model
+
+
+

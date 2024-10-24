@@ -1,0 +1,433 @@
+seshat.apps.seshat_api.views.core
+=================================
+
+.. py:module:: seshat.apps.seshat_api.views.core
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.seshat_api.views.core.CapitalViewSet
+   seshat.apps.seshat_api.views.core.CitationViewSet
+   seshat.apps.seshat_api.views.core.CliopatriaViewSet
+   seshat.apps.seshat_api.views.core.CountryViewSet
+   seshat.apps.seshat_api.views.core.GADMCountriesViewSet
+   seshat.apps.seshat_api.views.core.GADMProvincesViewSet
+   seshat.apps.seshat_api.views.core.GADMShapefileViewSet
+   seshat.apps.seshat_api.views.core.MacroRegionViewSet
+   seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet
+   seshat.apps.seshat_api.views.core.NGAViewSet
+   seshat.apps.seshat_api.views.core.PolityViewSet
+   seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet
+   seshat.apps.seshat_api.views.core.PrivateCommentsViewSet
+   seshat.apps.seshat_api.views.core.ReferenceViewSet
+   seshat.apps.seshat_api.views.core.RegionViewSet
+   seshat.apps.seshat_api.views.core.ReligionViewSet
+   seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet
+   seshat.apps.seshat_api.views.core.SectionViewSet
+   seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet
+   seshat.apps.seshat_api.views.core.SeshatCommentViewSet
+   seshat.apps.seshat_api.views.core.SubsectionViewSet
+   seshat.apps.seshat_api.views.core.VariableHierarchyViewSet
+
+
+Module Contents
+---------------
+
+.. py:class:: CapitalViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Capitals.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CitationViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Citations.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CliopatriaViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Cliopatria Shapefiles.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CountryViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Countries.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: GADMCountriesViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing GADM Countries.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: GADMProvincesViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing GADM Provinces.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: GADMShapefileViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing GADM Shapefiles.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: MacroRegionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Macro Regions.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: NGAPolityRelationsViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing NGA Polity Relations.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: NGAViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing NGAs, Natural Geographic Areas.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: PolityViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Polities.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: search_fields
+      :value: ['@long_name', '@new_name']
+
+
+
+.. py:class:: PrivateCommentsPartsViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Seshat Private Comment Parts.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: permissions_dict
+
+
+.. py:class:: PrivateCommentsViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Seshat Private Comments.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: permissions_dict
+
+
+.. py:class:: ReferenceViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing References.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: RegionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Regions.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ReligionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Religions.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ScpThroughCtnViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Seshat Comment Parts' relations to
+   Citations.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: permissions_dict
+
+
+.. py:class:: SectionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Sections.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SeshatCommentPartViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Seshat Comment Parts.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: permissions_dict
+
+
+.. py:class:: SeshatCommentViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Seshat Comments.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+   .. py:attribute:: permissions_dict
+
+
+.. py:class:: SubsectionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Subsections.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: VariableHierarchyViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Variable Hierarchies.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+

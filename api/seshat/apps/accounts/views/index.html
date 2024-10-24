@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.accounts.views &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.core" href="../../core/index.html" />
+    <link rel="prev" title="seshat.apps.accounts.urls" href="../urls/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.accounts</a></li>
+      <li class="breadcrumb-item active">seshat.apps.accounts.views</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/accounts/views/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.accounts.views">
+<span id="seshat-apps-accounts-views"></span><h1>seshat.apps.accounts.views<a class="headerlink" href="#module-seshat.apps.accounts.views" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.ProfileUpdate" title="seshat.apps.accounts.views.ProfileUpdate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProfileUpdate</span></code></a></p></td>
+<td><p>Generic class-based view for updating a user's profile.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.Seshat_taskCreate" title="seshat.apps.accounts.views.Seshat_taskCreate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Seshat_taskCreate</span></code></a></p></td>
+<td><p>Generic class-based view for creating a task.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.Seshat_taskDetailView" title="seshat.apps.accounts.views.Seshat_taskDetailView"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Seshat_taskDetailView</span></code></a></p></td>
+<td><p>Generic class-based detail view for a task.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.accounts" title="seshat.apps.accounts.views.accounts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accounts</span></code></a>(request)</p></td>
+<td><p>View function for the accounts page.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.accounts_new" title="seshat.apps.accounts.views.accounts_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">accounts_new</span></code></a>(request)</p></td>
+<td><p>View function for the accounts page.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.has_add_scp_prv_permission" title="seshat.apps.accounts.views.has_add_scp_prv_permission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_add_scp_prv_permission</span></code></a>(user)</p></td>
+<td><p>Function to check if a user has the 'core.add_seshatprivatecommentpart' permission.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.profile" title="seshat.apps.accounts.views.profile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">profile</span></code></a>(request)</p></td>
+<td><p>View function for displaying a user's profile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.accounts.views.signup" title="seshat.apps.accounts.views.signup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signup</span></code></a>(request)</p></td>
+<td><p>View function for signing up a new user.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">ProfileUpdate</span></span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.PermissionRequiredMixin</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.views.generic.edit.UpdateView</span></code></p>
+<p>Generic class-based view for updating a user’s profile.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.form_valid">
+<span class="sig-name descname"><span class="pre">form_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.form_valid" title="Permalink to this definition"></a></dt>
+<dd><p>Method for saving the form data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>form</strong> (<em>Form</em>) – The form object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponseRedirect</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.get_context_data">
+<span class="sig-name descname"><span class="pre">get_context_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.get_context_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get the context data of the view.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The context data of the view.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.context_object_name">
+<span class="sig-name descname"><span class="pre">context_object_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'user'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.context_object_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.form_class">
+<span class="sig-name descname"><span class="pre">form_class</span></span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.form_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.permission_required">
+<span class="sig-name descname"><span class="pre">permission_required</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'core.add_seshatprivatecommentpart'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.permission_required" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.queryset">
+<span class="sig-name descname"><span class="pre">queryset</span></span><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.queryset" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.ProfileUpdate.template_name">
+<span class="sig-name descname"><span class="pre">template_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'registration/profile_update.html'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.ProfileUpdate.template_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskCreate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">Seshat_taskCreate</span></span><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskCreate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.contrib.auth.mixins.PermissionRequiredMixin</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.views.generic.edit.CreateView</span></code></p>
+<p>Generic class-based view for creating a task.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskCreate.form_class">
+<span class="sig-name descname"><span class="pre">form_class</span></span><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskCreate.form_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskCreate.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskCreate.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskCreate.permission_required">
+<span class="sig-name descname"><span class="pre">permission_required</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'core.add_seshatprivatecommentpart'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskCreate.permission_required" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskCreate.template_name">
+<span class="sig-name descname"><span class="pre">template_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'registration/seshat_task/seshat_task_form.html'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskCreate.template_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskDetailView">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">Seshat_taskDetailView</span></span><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskDetailView" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.views.generic.DetailView</span></code></p>
+<p>Generic class-based detail view for a task.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskDetailView.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskDetailView.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.Seshat_taskDetailView.template_name">
+<span class="sig-name descname"><span class="pre">template_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'registration/seshat_task/seshat_task_detail.html'</span></em><a class="headerlink" href="#seshat.apps.accounts.views.Seshat_taskDetailView.template_name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.accounts">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">accounts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.accounts" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the accounts page.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: This seems like an unused function and it should be removed.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.accounts_new">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">accounts_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.accounts_new" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the accounts page.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: This seems like an unused function and it should be removed.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.has_add_scp_prv_permission">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">has_add_scp_prv_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.has_add_scp_prv_permission" title="Permalink to this definition"></a></dt>
+<dd><p>Function to check if a user has the ‘core.add_seshatprivatecommentpart’ permission.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO: Investigate whether this function doubles with the functionality
+of the ‘permission_required’ decorator.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> (<em>User</em>) – The user object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the user has the permission, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.profile">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.profile" title="Permalink to this definition"></a></dt>
+<dd><p>View function for displaying a user’s profile.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This view requires that the user be logged in.
+This view requires that the user have the ‘core.add_seshatprivatecommentpart’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.accounts.views.signup">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.accounts.views.</span></span><span class="sig-name descname"><span class="pre">signup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.accounts.views.signup" title="Permalink to this definition"></a></dt>
+<dd><p>View function for signing up a new user.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This view function handles both GET and POST requests.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../urls/index.html" class="btn btn-neutral float-left" title="seshat.apps.accounts.urls" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../core/index.html" class="btn btn-neutral float-right" title="seshat.apps.core" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

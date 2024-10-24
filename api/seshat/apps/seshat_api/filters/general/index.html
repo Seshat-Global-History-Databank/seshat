@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.seshat_api.filters.general &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../../_static/doctools.js"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="seshat.apps.seshat_api.filters.rt" href="../rt/index.html" />
+    <link rel="prev" title="seshat.apps.seshat_api.filters.crisisdb" href="../crisisdb/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps.seshat_api</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.seshat_api.filters</a></li>
+      <li class="breadcrumb-item active">seshat.apps.seshat_api.filters.general</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/api/seshat/apps/seshat_api/filters/general/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.seshat_api.filters.general">
+<span id="seshat-apps-seshat-api-filters-general"></span><h1>seshat.apps.seshat_api.filters.general<a class="headerlink" href="#module-seshat.apps.seshat_api.filters.general" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter" title="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityAlternateReligionFamilyFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter" title="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityAlternateReligionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter" title="seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityAlternateReligionGenusFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter" title="seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityAlternativeNameFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityCapitalFilter" title="seshat.apps.seshat_api.filters.general.PolityCapitalFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityCapitalFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter" title="seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityDegreeOfCentralizationFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityDurationFilter" title="seshat.apps.seshat_api.filters.general.PolityDurationFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityDurationFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityEditorFilter" title="seshat.apps.seshat_api.filters.general.PolityEditorFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityEditorFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityExpertFilter" title="seshat.apps.seshat_api.filters.general.PolityExpertFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityExpertFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityLanguageFilter" title="seshat.apps.seshat_api.filters.general.PolityLanguageFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityLanguageFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter" title="seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityLanguageGenusFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter" title="seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityLinguisticFamilyFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter" title="seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityOriginalNameFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter" title="seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityPeakYearsFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter" title="seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityPrecedingEntityFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter" title="seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityRelationshipToPrecedingEntityFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter" title="seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityReligionFamilyFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityReligionFilter" title="seshat.apps.seshat_api.filters.general.PolityReligionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityReligionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter" title="seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityReligionGenusFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter" title="seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityReligiousTraditionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter" title="seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityResearchAssistantFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter" title="seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityScaleOfSupraculturalInteractionFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter" title="seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolitySucceedingEntityFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter" title="seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolitySupraculturalEntityFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter" title="seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolitySuprapolityRelationsFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter" title="seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityUTMZoneFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityAlternateReligionFamilyFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFamilyFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityAlternateReligionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityAlternateReligionGenusFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternateReligionGenusFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityAlternativeNameFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityAlternativeNameFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityCapitalFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityCapitalFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityCapitalFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityCapitalFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityDegreeOfCentralizationFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDegreeOfCentralizationFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDurationFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityDurationFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDurationFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityDurationFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityEditorFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityEditorFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityEditorFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityEditorFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityExpertFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityExpertFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityExpertFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityExpertFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityLanguageFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityLanguageGenusFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLanguageGenusFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityLinguisticFamilyFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityLinguisticFamilyFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityOriginalNameFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityOriginalNameFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityPeakYearsFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPeakYearsFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityPrecedingEntityFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityPrecedingEntityFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityRelationshipToPrecedingEntityFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityRelationshipToPrecedingEntityFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityReligionFamilyFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFamilyFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityReligionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityReligionGenusFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligionGenusFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityReligiousTraditionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityReligiousTraditionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityResearchAssistantFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityResearchAssistantFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityScaleOfSupraculturalInteractionFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityScaleOfSupraculturalInteractionFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolitySucceedingEntityFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySucceedingEntityFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolitySupraculturalEntityFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySupraculturalEntityFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolitySuprapolityRelationsFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolitySuprapolityRelationsFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.filters.general.</span></span><span class="sig-name descname"><span class="pre">PolityUTMZoneFilter</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.filters._mixins.SeshatCommonFilter</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">django_filters.rest_framework.FilterSet</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.filters.general.PolityUTMZoneFilter.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../crisisdb/index.html" class="btn btn-neutral float-left" title="seshat.apps.seshat_api.filters.crisisdb" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../rt/index.html" class="btn btn-neutral float-right" title="seshat.apps.seshat_api.filters.rt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

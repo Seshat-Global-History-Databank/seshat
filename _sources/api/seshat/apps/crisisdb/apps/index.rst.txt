@@ -1,0 +1,32 @@
+seshat.apps.crisisdb.apps
+=========================
+
+.. py:module:: seshat.apps.crisisdb.apps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.crisisdb.apps.CrisisdbConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: CrisisdbConfig
+
+   Bases: :py:obj:`django.apps.AppConfig`
+
+
+   .. py:attribute:: default_auto_field
+      :value: 'django.db.models.BigAutoField'
+
+
+
+   .. py:attribute:: name
+      :value: 'seshat.apps.crisisdb'
+
+
+

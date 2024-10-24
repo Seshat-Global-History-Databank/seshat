@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up Seshat in a local Ubuntu environment &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/clipboard.min.js"></script>
+      <script src="../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/tabs.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Setting up Seshat in a local Windows environment" href="windows.html" />
+    <link rel="prev" title="Setting up Seshat in a local macOS environment" href="macos.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../schema.html">Database schema map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../websites.html">Websites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Setting up Seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Setting up Seshat in a local environment</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="macos.html">Setting up Seshat in a local macOS environment</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Setting up Seshat in a local Ubuntu environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="windows.html">Setting up Seshat in a local Windows environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="macos-ubuntu.html">Setting up a local Ubuntu environment on a Mac</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cloud/pulumi.html">MS Azure cloud setup with Pulumi (Alan Turing Institute)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cloud/CSH_manual.html">AWS cloud setup (Complexity Science Hub)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html">Cliopatria shape dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#gadm">GADM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#how-to-add-new-shape-datasets-to-the-maps">How to add new shape datasets to the maps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Seshat Databank Admin</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Setting up Seshat</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Setting up Seshat in a local environment</a></li>
+      <li class="breadcrumb-item active">Setting up Seshat in a local Ubuntu environment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/admin/setup/local/ubuntu.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-up-seshat-in-a-local-ubuntu-environment">
+<h1>Setting up Seshat in a local Ubuntu environment<a class="headerlink" href="#setting-up-seshat-in-a-local-ubuntu-environment" title="Permalink to this heading"></a></h1>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Local setup steps have been tested on an M1 Mac and on an Ubuntu VM running on the Mac. Instructions for setting up an Ubuntu VM on a Mac can be found <a class="reference internal" href="macos-ubuntu.html"><span class="doc">here</span></a>.</p>
+</div>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>Seshat requires the following software to be installed on your machine:</p>
+<ul class="simple">
+<li><p>Python 3</p></li>
+<li><p>PostgreSQL 16 with PostGIS</p></li>
+<li><p>GDAL</p></li>
+<li><p>GEOS</p></li>
+</ul>
+<div class="dropdown admonition">
+<p class="admonition-title">Installation instructions for prerequisites</p>
+<p><strong>Python 3</strong></p>
+<p>Ensure you have a working installation of Python 3. The application has been tested with Python <strong>3.8.13</strong>.</p>
+<p>If you don’t have Python installed, you can download it from the <a class="reference external" href="https://www.python.org/downloads/">official website</a>.</p>
+<p><strong>PostgreSQL and PostGIS</strong></p>
+<p>Ensure you have a working installation of PostgreSQL with PostGIS. The application has been tested with PostgreSQL <strong>16</strong>.</p>
+<p>If you don’t have PostgreSQL installed, you can follow the instructions below to install it on Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>gnupg2<span class="w"> </span>wget<span class="w"> </span>vim<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;echo &quot;deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main&quot; &gt; /etc/apt/sources.list.d/pgdg.list&#39;</span>
+$<span class="w"> </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://www.postgresql.org/media/keys/ACCC4CF8.asc<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/etc/apt/trusted.gpg.d/postgresql.gpg
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>postgresql-16<span class="w"> </span>postgresql-contrib-16<span class="w"> </span>postgresql-16-postgis-3<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>postgresql
+$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>postgresql
+</pre></div>
+</div>
+<p><strong>GDAL and GEOS</strong></p>
+<p>Ensure you have a working installation of GDAL and GEOS.</p>
+<p>If you don’t have GDAL and GEOS installed, you can follow the instructions below to install them on Ubuntu:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You may first want to check the latest available version of <code class="docutils literal notranslate"><span class="pre">libgeos</span></code> using</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>search<span class="w"> </span>libgeos
+</pre></div>
+</div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>gdal-bin<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>libgdal-dev<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libgeos++-dev<span class="w"> </span>libgeos3.10.2<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libgeos-c1v5<span class="w"> </span>libgeos-dev<span class="w"> </span>libgeos-doc<span class="w"> </span>-y
+</pre></div>
+</div>
+</div>
+</section>
+<section id="step-1-set-up-a-virtual-environment-for-the-project">
+<h2>Step 1: Set up a virtual environment for the project<a class="headerlink" href="#step-1-set-up-a-virtual-environment-for-the-project" title="Permalink to this heading"></a></h2>
+<p>You can use either Conda or Python’s built-in <code class="docutils literal notranslate"><span class="pre">venv</span></code> module to create a virtual environment for the project.</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Conda example</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">venv example</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>Create the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>seshat<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8.13
+</pre></div>
+</div>
+<p>Activate the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>seshat
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>Create the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3.8<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>seshat
+</pre></div>
+</div>
+<p>Activate the environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>seshat/bin/activate
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="step-2-clone-the-repo">
+<h2>Step 2: Clone the repo<a class="headerlink" href="#step-2-clone-the-repo" title="Permalink to this heading"></a></h2>
+<p>Using your Terminal, clone the repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Seshat-Global-History-Databank/seshat
+</pre></div>
+</div>
+</section>
+<section id="step-3-create-an-empty-database-and-add-the-postgis-extension">
+<h2>Step 3: Create an empty database and add the PostGIS extension<a class="headerlink" href="#step-3-create-an-empty-database-and-add-the-postgis-extension" title="Permalink to this heading"></a></h2>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Note that you’ll have to use <code class="docutils literal notranslate"><span class="pre">;</span></code> to end each SQL command. They will not work without this character.</p>
+</div>
+<p>In order to create a database, open <code class="docutils literal notranslate"><span class="pre">psql</span></code> in the terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+</pre></div>
+</div>
+<p>In the database, run the following SQL command to create a new database. Note that you should replace <code class="docutils literal notranslate"><span class="pre">&lt;seshat_db_name&gt;</span></code> with the name you want to give the database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="o">&lt;</span><span class="n">seshat_db_name</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Exit out of the <code class="docutils literal notranslate"><span class="pre">psql</span></code> program:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>\<span class="n">q</span>
+</pre></div>
+</div>
+<p>Then open the database using the name you just created in place of <code class="docutils literal notranslate"><span class="pre">&lt;seshat_db_name&gt;</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-d<span class="w"> </span>&lt;seshat_db_name&gt;
+</pre></div>
+</div>
+<p>Now, you can add the PostGIS extension to your database:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="n">postgis</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-configure-gdal-and-geos">
+<h2>Step 4: Configure GDAL and GEOS<a class="headerlink" href="#step-4-configure-gdal-and-geos" title="Permalink to this heading"></a></h2>
+<p>Open <a class="reference internal" href="../../../api/seshat/settings/base/index.html"><span class="doc">seshat/settings/base.py</span></a> and check (or update) the paths in the following variables, which should be to the paths to your local <code class="docutils literal notranslate"><span class="pre">gdal</span></code> and <code class="docutils literal notranslate"><span class="pre">geos</span></code> installations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GDAL_LIBRARY_PATH</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GEOS_LIBRARY_PATH</span></code></p></li>
+</ul>
+<p>Note: there are hardcoded paths in <code class="docutils literal notranslate"><span class="pre">base.py</span></code> for the Mac and Ubuntu instructions above included.</p>
+</section>
+<section id="step-5-install-the-python-packages">
+<h2>Step 5: Install the Python packages<a class="headerlink" href="#step-5-install-the-python-packages" title="Permalink to this heading"></a></h2>
+<p>Install the Python packages in your environment (some packages have these as dependencies).</p>
+<p>From the top level of the <code class="docutils literal notranslate"><span class="pre">seshat</span></code> directory, run the following commands to install the packages from the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file and the <code class="docutils literal notranslate"><span class="pre">django-geojson</span></code> package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;django-geojson [field]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-6-seshat-database-setup">
+<h2>Step 6: Seshat database setup<a class="headerlink" href="#step-6-seshat-database-setup" title="Permalink to this heading"></a></h2>
+<p>Restore Seshat database from dump file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/postgresql/16/main/pg_hba.conf
+</pre></div>
+</div>
+<p>On the line <code class="docutils literal notranslate"><span class="pre">local</span> <span class="pre">all</span> <span class="pre">postgres</span> <span class="pre">peer</span></code> change “peer” to “trust”</p>
+<p>You should now be able to reload postgres and populate the database with the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postgresql
+$<span class="w"> </span>sudo<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>&lt;seshat_db_name&gt;<span class="w"> </span>&lt;<span class="w"> </span>/path/to/file.dump
+</pre></div>
+</div>
+</section>
+<section id="step-7-secure-the-database">
+<h2>Step 7: Secure the database<a class="headerlink" href="#step-7-secure-the-database" title="Permalink to this heading"></a></h2>
+<p>Add a password to the database for security.</p>
+<p>Add a password for the superuser by logging in to the database with your superuser:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+</pre></div>
+</div>
+<p>Send the following SQL command to set the password for the superuser. Make sure to replace <code class="docutils literal notranslate"><span class="pre">&lt;db_password&gt;</span></code> with your desired password (and make sure to remember it):</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;&lt;db_password&gt;&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Locate <code class="docutils literal notranslate"><span class="pre">pg_hba.conf</span></code> if you don’t know where it is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;SHOW hba_file;&#39;</span>
+</pre></div>
+</div>
+<p>Update postgres to use md5 with <code class="docutils literal notranslate"><span class="pre">nano</span> <span class="pre">/path/to/pg_hba.conf</span></code></p>
+<img alt="../../../_images/pg_hba.conf.png" src="../../../_images/pg_hba.conf.png" />
+<p>Restart postgres:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>postgresql
+</pre></div>
+</div>
+</section>
+<section id="step-8-set-up-environment-variables-for-connecting-to-the-database">
+<h2>Step 8: Set up environment variables for connecting to the database<a class="headerlink" href="#step-8-set-up-environment-variables-for-connecting-to-the-database" title="Permalink to this heading"></a></h2>
+<p>Create a configuration file with your database info for Django. The presence of this file will ensure Django connects to your local database.</p>
+<p>Within the repo, create a file called <code class="docutils literal notranslate"><span class="pre">seshat/settings/.env</span></code> with the database connection variables.</p>
+<div class="dropdown admonition">
+<p class="admonition-title">Get a Cesium access token</p>
+<p>You will also need to generate an access token for Cesium in order for the globe to render on Seshat pages that include maps.</p>
+<p>Visit the <a class="reference external" href="https://ion.cesium.com/">Cesium website</a> and create an account.</p>
+<p>Once you have an account, navigate to the “Access Tokens” tab and create a new token.</p>
+<p>Add this token to the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file as shown below.</p>
+</div>
+<p>The file should look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">DB_NAME</span><span class="o">=&lt;</span><span class="n">seshat_db_name</span><span class="o">&gt;</span>
+<span class="n">DB_USER</span><span class="o">=</span><span class="n">postgres</span>
+<span class="n">DB_HOST</span><span class="o">=</span><span class="n">localhost</span>
+<span class="n">DB_PORT</span><span class="o">=</span><span class="mi">5432</span>
+<span class="n">DB_PASSWORD</span><span class="o">=&lt;</span><span class="n">db_password</span><span class="o">&gt;</span>
+<span class="n">CESIUM_ION_ACCESS</span><span class="o">=&lt;</span><span class="n">cesium_access_token</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-9-migrate-the-database">
+<h2>Step 9: Migrate the database<a class="headerlink" href="#step-9-migrate-the-database" title="Permalink to this heading"></a></h2>
+<p>Ensure that all Django database migrations have run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>migrate
+</pre></div>
+</div>
+</section>
+<section id="step-10-collect-static-files">
+<h2>Step 10: Collect static files<a class="headerlink" href="#step-10-collect-static-files" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+</pre></div>
+</div>
+</section>
+<section id="step-11-load-the-shape-data">
+<h2>Step 11: Load the shape data<a class="headerlink" href="#step-11-load-the-shape-data" title="Permalink to this heading"></a></h2>
+<p>If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions <a class="reference internal" href="../spatialdb.html"><span class="doc">here</span></a>.</p>
+</section>
+<section id="step-12-run-django">
+<h2>Step 12: Run Django<a class="headerlink" href="#step-12-run-django" title="Permalink to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>runserver
+</pre></div>
+</div>
+<p>If you have set up Seshat on a Multipass VM, you can access the Django server from your host machine by following these commands:</p>
+<p>First, check IP inside VM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ip<span class="w"> </span>addr<span class="w"> </span>show
+</pre></div>
+</div>
+<p>This will return a value like <code class="docutils literal notranslate"><span class="pre">192.168.64.3</span></code>. Note this IP address as you will need to insert it into the following commands.</p>
+<p>In the VM, you need to now ensure that the firewall is not blocking incoming connections on port 8000:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">8000</span>
+</pre></div>
+</div>
+<p>In a macOS Terminal, run the following command to forward the port, but replace <code class="docutils literal notranslate"><span class="pre">&lt;INSERT</span> <span class="pre">IP</span> <span class="pre">ADDRESS</span> <span class="pre">HERE&gt;</span></code> with the IP address you noted earlier:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>primary<span class="w"> </span>--<span class="w"> </span>sudo<span class="w"> </span>iptables<span class="w"> </span>-t<span class="w"> </span>nat<span class="w"> </span>-A<span class="w"> </span>PREROUTING<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">8000</span><span class="w"> </span>-j<span class="w"> </span>DNAT<span class="w"> </span>--to-destination<span class="w"> </span>&lt;INSERT<span class="w"> </span>IP<span class="w"> </span>ADDRESS<span class="w"> </span>HERE&gt;:8000
+</pre></div>
+</div>
+<p>Now, restart the VM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span>restart<span class="w"> </span>primary
+</pre></div>
+</div>
+<p>Log back into the VM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span>shell<span class="w"> </span>primary
+</pre></div>
+</div>
+<p>Finally, run the Django server but remember to first activate the virtual environment (see Step 1):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>manage.py<span class="w"> </span>runserver<span class="w"> </span><span class="m">0</span>.0.0.0:8000
+</pre></div>
+</div>
+<p>You should now be able to access the Django server from your host machine by going to <code class="docutils literal notranslate"><span class="pre">http://192.168.64.3:8000/</span></code> in a browser (where <code class="docutils literal notranslate"><span class="pre">192.168.64.3</span></code> may need to be replaced with the IP address you noted earlier).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="macos.html" class="btn btn-neutral float-left" title="Setting up Seshat in a local macOS environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="windows.html" class="btn btn-neutral float-right" title="Setting up Seshat in a local Windows environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

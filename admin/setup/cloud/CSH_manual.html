@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS cloud setup (Complexity Science Hub) &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/clipboard.min.js"></script>
+      <script src="../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Cliopatria shape dataset" href="../spatialdb.html" />
+    <link rel="prev" title="MS Azure cloud setup with Pulumi (Alan Turing Institute)" href="pulumi.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../schema.html">Database schema map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../websites.html">Websites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Setting up Seshat</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../local/index.html">Setting up Seshat in a local environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pulumi.html">MS Azure cloud setup with Pulumi (Alan Turing Institute)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AWS cloud setup (Complexity Science Hub)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-an-ubuntu-22-04-aws-ec2-instance"><strong>How To Set Up Django with Postgres, Nginx, and Gunicorn on an Ubuntu 22.04 (AWS EC2 Instance)</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-aws-ec2-instance-for-seshat-backup-server">Setting Up AWS EC2 Instance for Seshat Backup Server</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bringing-in-the-codebase">Bringing in the Codebase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configure-gdal-and-geos">Configure GDAL and GEOS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#preparing-the-database-arrival">Preparing the Database Arrival</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#merging-the-codebase-and-the-database">Merging the Codebase and the database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#load-the-shape-data">Load the shape data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-gunicorns-ability-to-serve-our-project">Testing Gunicorn’s ability to serve our Project</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-up-a-domain-and-ssl-certificate">Setting up a domain and SSL certificate</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html">Cliopatria shape dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#gadm">GADM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#how-to-add-new-shape-datasets-to-the-maps">How to add new shape datasets to the maps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Seshat Databank Admin</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Setting up Seshat</a></li>
+      <li class="breadcrumb-item active">AWS cloud setup (Complexity Science Hub)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/admin/setup/cloud/CSH_manual.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="aws-cloud-setup-complexity-science-hub">
+<h1>AWS cloud setup (Complexity Science Hub)<a class="headerlink" href="#aws-cloud-setup-complexity-science-hub" title="Permalink to this heading"></a></h1>
+<section id="how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-an-ubuntu-22-04-aws-ec2-instance">
+<h2><strong>How To Set Up Django with Postgres, Nginx, and Gunicorn on an Ubuntu 22.04 (AWS EC2 Instance)</strong><a class="headerlink" href="#how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-an-ubuntu-22-04-aws-ec2-instance" title="Permalink to this heading"></a></h2>
+<p><strong>Introduction:</strong></p>
+<p>Django, a robust web framework, accelerates the development of Python applications and websites. While the built-in development server is suitable for local testing, any production-related endeavors demand a more secure and potent web server. This tutorial guides you through the installation and configuration of essential components on Ubuntu 22.04 to bolster the support and seamless serving of Django applications. We will also be setting up a PostgreSQL database on the same server instead of using the default SQLite database. We will configure the Gunicorn application server to interface with our Django application. We will then set up Nginx to reverse proxy to Gunicorn, giving us access to its security and performance features to serve our apps.</p>
+<p><strong>Prerequisites and Goals</strong></p>
+<p>In order to complete this guide, we should have a fresh Ubuntu 22.04 server instance with a basic firewall. This can be any EC2 instance with Ubuntu 22.04 as the Operating System. We will be installing Django within a virtual environment on the above-mentioned server (or Virtual Machine). Installing Django into an environment specific to our project will allow our project and its requirements to be handled separately.</p>
+<p>Once we have both our Postgres database and Django application up and running on the same server, we will install and configure the Gunicorn application server. This will serve as an interface to our application, translating client requests from HTTP to Python calls that our Django application can process. We will then set up Nginx in front of Gunicorn to take advantage of its high performance connection handling mechanisms and its easy-to-implement security features.</p>
+<img alt="https://miro.medium.com/v2/resize:fit:1123/1*7sEmz1djskVKmye1MrQJrQ.jpeg" src="https://miro.medium.com/v2/resize:fit:1123/1*7sEmz1djskVKmye1MrQJrQ.jpeg" />
+</section>
+<section id="setting-up-aws-ec2-instance-for-seshat-backup-server">
+<h2>Setting Up AWS EC2 Instance for Seshat Backup Server<a class="headerlink" href="#setting-up-aws-ec2-instance-for-seshat-backup-server" title="Permalink to this heading"></a></h2>
+<p>In this tutorial, we work with an AWS EC2 instance as the server. Using the AWS Management Console or any preferred method, it is straightforward to create an EC2 instance. Please note that for optimal compatibility, we recommend using Ubuntu 22 as the operating system. How much processing power and memory to choose is totally optional for the purpose of this tutorial. As a hint, the website has been functional in the past two+ years on a t2.micro server.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Instance</p></td>
+<td><p>vCPU</p></td>
+<td><p>Memory (GiB)</p></td>
+</tr>
+<tr class="row-even"><td><p>t2.nano</p></td>
+<td><p>1</p></td>
+<td><p>0.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>t2.micro</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>t2.small</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>t2.medium</p></td>
+<td><p>2</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>t2.large</p></td>
+<td><p>2</p></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>t2.xlarge</p></td>
+<td><p>4</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-even"><td><p>t2.2xlarge</p></td>
+<td><p>8</p></td>
+<td><p>32</p></td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt><strong>Creation of AWS EC2 Instance:</strong></dt><dd><ul class="simple">
+<li><p>Navigate to the AWS Management Console and follow the straightforward instructions to create an EC2 instance.</p></li>
+<li><p>Ensure you choose a proper RSA key-pair during the setup process. Safely store the key-pair file on your local machine. In this tutorial, we refer to the key-pair file as <strong>seshat-backup-server-kp.pem</strong>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Operating System Compatibility:</strong></dt><dd><ul class="simple">
+<li><p>To avoid potential compatibility issues, it is recommended to use Ubuntu 22 as the operating system for your EC2 instance.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Status Check Verification:</strong></dt><dd><ul class="simple">
+<li><p>Monitor the EC2 dashboard until the “Status Checks” indicate a status of “2/2 checks passed.” This ensures that the EC2 instance has successfully passed both system and instance status checks.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Upon AWS EC2 instance creation, make sure you open the firewalls to <strong>inbound</strong> IPV4 and IPV6 traffic, as well as SSH, HTTP and HTTPS ports. This can easily be done through adding security group rules:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>IPv4</p></td>
+<td><p>All TCP</p></td>
+<td><p>TCP</p></td>
+<td><p>0 - 65535</p></td>
+<td><p>0.0.0.0/0</p></td>
+</tr>
+<tr class="row-even"><td><p>IPv6</p></td>
+<td><p>All TCP</p></td>
+<td><p>TCP</p></td>
+<td><p>0 - 65535</p></td>
+<td><p>::/0</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPv4</p></td>
+<td><p>HTTP</p></td>
+<td><p>TCP</p></td>
+<td><p>80</p></td>
+<td><p>0.0.0.0/0</p></td>
+</tr>
+<tr class="row-even"><td><p>IPv4</p></td>
+<td><p>HTTPS</p></td>
+<td><p>TCP</p></td>
+<td><p>443</p></td>
+<td><p>0.0.0.0/0</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPv4</p></td>
+<td><p>SSH</p></td>
+<td><p>TCP</p></td>
+<td><p>22</p></td>
+<td><p>0.0.0.0/0</p></td>
+</tr>
+</tbody>
+</table>
+<p>And the outbound rules:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>IPv4</p></td>
+<td><p>All traffic</p></td>
+<td><p>All</p></td>
+<td><p>All</p></td>
+<td><p>0.0.0.0/0</p></td>
+</tr>
+</tbody>
+</table>
+<p>By following these detailed instructions, you not only ensure a secure setup of your AWS EC2 instance but also pave the way for a hassle-free experience with the Seshat Backup Server.</p>
+<p>We need to keep track of two things from the AWS EC2 server:</p>
+<ul class="simple">
+<li><p><strong>the public ip address</strong>: 16.171.40.111</p></li>
+<li><p><strong>Public IPV4 DNS</strong>: ec2-16-171-40-111.eu-north-1.compute.amazonaws.com</p></li>
+</ul>
+<p>In the AWS EC2 dashboard, go to <strong>connect</strong> tab and select <strong>SSH client</strong>, you will see something like this that you can run locally to connect to the AWS EC2 instance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;seshat-backup-server-kp.pem&quot;</span><span class="w"> </span>ubuntu@ec2-16-171-40-111.eu-north-1.compute.amazonaws.com
+</pre></div>
+</div>
+<p>This is how you can connect to the server from your local machine from the folder where you have saved the file “seshat-backup-server-kp.pem”. You might need to add sudo before the command to make it work. Pretty straightforward. Also, say yes if asked whether you want to add the server address to the list of known hosts.</p>
+<p>After connecting to our AWS EC2 server via SSH, you will get a terminal command line that is the terminal of the AWS EC2 Instance you just created, it might look something like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ubuntu@ip-172-31-41-211:
+</pre></div>
+</div>
+<p>Go on and create a folder that will be dedicated to host everything related to the project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>seshatprojecthome
+<span class="nb">cd</span><span class="w"> </span>seshatprojecthome
+</pre></div>
+</div>
+<p>First things first, we need to get the latest packages from Ubuntu:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-venv<span class="w"> </span>python3-dev<span class="w"> </span>libpq-dev<span class="w"> </span>postgresql<span class="w"> </span>postgresql-contrib<span class="w"> </span>nginx<span class="w"> </span>curl
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gdal-bin
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libgdal-dev
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libgeos++-dev<span class="w"> </span>libgeos3.10.2
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libgeos-c1v5<span class="w"> </span>libgeos-dev<span class="w"> </span>libgeos-doc
+</pre></div>
+</div>
+</section>
+<section id="bringing-in-the-codebase">
+<h2>Bringing in the Codebase<a class="headerlink" href="#bringing-in-the-codebase" title="Permalink to this heading"></a></h2>
+<p>Make sure you know where the codebase lies on GitHub and from inside <strong>seshatprojecthome</strong> directory, do a git clone (if git is not installed on the server you might have to install it):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://Seshat-Global-History-Databank/seshat.git
+</pre></div>
+</div>
+<p>Among the files brought in via the <strong>git clone</strong> command, there is an important file called: requirements.txt, which includes all the more specific packages and libraries we need for our Django project to run properly. But before that, we need to start a virtual environment specific to the Django project and make sure that we install everything in there. We do so inside the seshatprojecthome directory, where the seshat folder also resides:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>seshatprojectenv
+</pre></div>
+</div>
+<p>Before installing our project’s Python requirements (requirements.txt), we will need to activate the virtual environment. We can do so by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>~/seshatprojecthome/seshatprojectenv/bin/activate
+</pre></div>
+</div>
+<p>The new prompt will look something like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>seshatprojectenv<span class="o">)</span>user@host:~/seshatprojecthome$
+</pre></div>
+</div>
+<p>With our virtual environment active, we install the packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>seshatprojectenv<span class="o">)</span><span class="w"> </span>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential
+<span class="o">(</span>seshatprojectenv<span class="o">)</span><span class="w"> </span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>/home/ubuntu/seshatprojecthome/seshat/requirements.txt
+<span class="o">(</span>seshatprojectenv<span class="o">)</span><span class="w"> </span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>django<span class="w"> </span>gunicorn<span class="w"> </span>psycopg2-binary
+<span class="o">(</span>seshatprojectenv<span class="o">)</span><span class="w"> </span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;django-geojson [field]&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We have such a thing in the running new backup requirements.txt, but it is probably not important:</p>
+<p>backports.zoneinfo==0.2.1;python_version&lt;”3.9”</p>
+<p>In any case, if you get an error like:</p>
+<p>× Building wheel for backports.zoneinfo (pyproject.toml) did not run successfully.</p>
+<p>Ignore it. It ‘s not gonna cause any problems.</p>
+<p>Make sure that psycopg and django-heroku are installed properly.</p>
+</div>
+</section>
+<section id="configure-gdal-and-geos">
+<h2>Configure GDAL and GEOS<a class="headerlink" href="#configure-gdal-and-geos" title="Permalink to this heading"></a></h2>
+<p>Open <a class="reference internal" href="../../../api/seshat/settings/base/index.html"><span class="doc">seshat/settings/base.py</span></a> and check (or update) the paths in the following variables, which should be to the paths to your local <code class="docutils literal notranslate"><span class="pre">gdal</span></code> and <code class="docutils literal notranslate"><span class="pre">geos</span></code> installations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GDAL_LIBRARY_PATH</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GEOS_LIBRARY_PATH</span></code></p></li>
+</ul>
+</section>
+<section id="preparing-the-database-arrival">
+<h2>Preparing the Database Arrival<a class="headerlink" href="#preparing-the-database-arrival" title="Permalink to this heading"></a></h2>
+<p>With codebase and its necessary packages taken care of, we start the database side of the job. We type the following command in the AWS EC2’s terminal to log into an interactive Postgres session (as the default user: postgres):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+</pre></div>
+</div>
+<p>If we did not have a database .dump file, we had to create one from scratch, but now we just need to use scp on our local machine to transfer the .dump file that we have saved locally to the AWS server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>scp<span class="w"> </span>-i<span class="w"> </span>/home/majid/dev/AWS/seshat-backup-server-kp.pem<span class="w"> </span>-r<span class="w"> </span>aws_pg_backups/backup_Jan_8.dump<span class="w"> </span>ubuntu@ec2-16-171-40-111.eu-north-1.compute.amazonaws.com:seshatprojecthome/
+</pre></div>
+</div>
+<p>We need to change the password for user postgres (the root user of our postges service):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ubuntu@ip-172-31-19-221:~$<span class="w"> </span>sudo<span class="w"> </span>su<span class="w"> </span>postgres
+postgres@ip-172-31-19-211:/home/ubuntu$<span class="w"> </span>psql
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># ALTER USER postgres password &#39;mypassword&#39;;</span>
+</pre></div>
+</div>
+<p>To quit psql and exit postgres user:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">postgres</span><span class="o">=</span><span class="c1">#\q</span>
+postgres@ip-172-31-19-211:/home/ubuntu$<span class="w"> </span><span class="nb">exit</span><span class="w"> </span><span class="c1"># or (CTRL + D)</span>
+</pre></div>
+</div>
+<p>Before we can fully get started with Postgres, we need to change the Postgres authentication settings in the AWS server. Go to the folder containing the postgres installation files and settings:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/etc/postgresql/14/main/
+</pre></div>
+</div>
+<p>There are two files in the above directory we need to change slightly. One is the pg_hba.conf file. Open the file using sudo vim:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>pg_hba.conf
+</pre></div>
+</div>
+<p>Inside pg_hba.conf, modify the following line and save the file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Database administrative login by Unix domain socket
+host    all             all             0.0.0.0/0             md5
+local   all             postgres                                md5
+</pre></div>
+</div>
+<p>The second file here is postgresql.conf. Open the file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>postgresql.conf
+</pre></div>
+</div>
+<p>and find the following line:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>listen_addresses=&#39;localhost&#39;
+</pre></div>
+</div>
+<p>Enable (uncomment) the above line and replace the <strong>‘localhost’</strong> with <strong>‘*’</strong>. Save the file.</p>
+<p>As we have changed some major settings, we need to restart the postgresql service in the AWS server terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>service<span class="w"> </span>postgresql<span class="w"> </span>restart
+</pre></div>
+</div>
+<p>We should then create an empty database (as user: <strong>postgres</strong>) before we connect it to the .dump file (which has already been transferred to the AWS server) and have a functional database serving our Django application. We do the following inside the AWS server terminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>createdb<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>seshat_pg_db
+</pre></div>
+</div>
+<p>And then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pg_restore<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>seshat_pg_db<span class="w"> </span>/home/ubuntu/seshatprojecthome/backup_Jan_8.dump
+</pre></div>
+</div>
+<p>The SQL database is now ready and can be accessed from the AWS server terminal. Make sure it is the case by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ubuntu@ip-172-31-19-221:~$<span class="w"> </span>sudo<span class="w"> </span>-i<span class="w"> </span>-u<span class="w"> </span>postgres
+postgres@ip-172-31-19-211:/home/ubuntu$<span class="w"> </span>psql
+<span class="se">\c</span><span class="w"> </span>seshat_pg_db
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># select id, name, new_name from core_polity;</span>
+</pre></div>
+</div>
+<p>Exit the database:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="se">\q</span>
+<span class="nb">exit</span><span class="w"> </span><span class="c1"># or (Ctrl+D)</span>
+</pre></div>
+</div>
+</section>
+<section id="merging-the-codebase-and-the-database">
+<h2>Merging the Codebase and the database<a class="headerlink" href="#merging-the-codebase-and-the-database" title="Permalink to this heading"></a></h2>
+<p>With both the codebase and the database housed on the same AWS server, we are ready to introduce them to each other and deploy the web server for everybody to see on the web. First we need to make sure that the main Django settings file (<strong>settings/base.py</strong>) gets the correct credentials to use the postgres database (<strong>seshat_pg_db</strong>) as its main database. Introduce the database to the Django settings/base.py:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>  <span class="s1">&#39;xx.xxx.xx.xxx&#39;</span><span class="p">,]</span>
+
+<span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s1">&#39;django.db.backends.postgresql&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;NAME&#39;</span><span class="p">:</span> <span class="s1">&#39;****&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;USER&#39;</span><span class="p">:</span> <span class="s1">&#39;******&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PASSWORD&#39;</span><span class="p">:</span> <span class="s1">&#39;*******&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;HOST&#39;</span><span class="p">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PORT&#39;</span><span class="p">:</span> <span class="s1">&#39;5432&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To create the .env file in the same directory as the manage.py file: (/home/ubuntu/seshatprojecthome/seshat), do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>.env
+</pre></div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Get a Cesium access token</p>
+<p>You will also need to generate an access token for Cesium in order for the globe to render on Seshat pages that include maps.</p>
+<p>Visit the <a class="reference external" href="https://ion.cesium.com/">Cesium website</a> and create an account.</p>
+<p>Once you have an account, navigate to the “Access Tokens” tab and create a new token.</p>
+<p>Add this token to the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file as shown below.</p>
+</div>
+<p>The content of the .env file should look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>DB_NAME = &quot;seshat_pg_db&quot;
+DB_USER = &quot;postgres&quot;
+DB_PASSWORD = &quot;mypassword&quot;  # the not mypassword one.
+DB_HOST = &quot;localhost&quot;
+DB_PORT = 5432
+
+SECRET_KEY = &#39;&lt;secret_key&gt;&#39;
+
+EMAIL_FROM_USER = &#39;seshatdb@gmail.com&#39;
+EMAIL_HOST = &#39;smtp.gmail.com&#39;
+EMAIL_HOST_USER = &#39;seshatdb@gmail.com&#39;
+EMAIL_HOST_PASSWORD = &#39;&lt;email_password&gt;&#39;
+
+GOOGLE_APP_CLIENT_ID = &#39;&lt;client_id&gt;&#39;
+GOOGLE_APP_SECRET_KEY = &#39;&lt;secret_key&gt;&#39;
+
+ZOTERO_API_KEY = &#39;&lt;api_key&gt;&#39;
+# For future use
+EMAIL_APP_PASS = &#39;&lt;email_password&gt;&#39;
+CESIUM_ION_ACCESS=&#39;&lt;cesium_access_token&gt;&#39;&#39;
+</pre></div>
+</div>
+<p>We now need to ask Django to bring all the static files of the project (CSS files, images, etc.) together. Inside the virtual environment and in the same path as manage.py:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>collectstatic
+</pre></div>
+</div>
+<p>Everything seems to be in place to test the server using Django local server:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>manage.py<span class="w"> </span>runserver<span class="w"> </span><span class="m">0</span>.0.0.0:8000
+</pre></div>
+</div>
+<p>Now you should be able to see the website through your browser on: <a class="reference external" href="http://PUBLIC_IP_OF_AWS_SERVER:8000">http://PUBLIC_IP_OF_AWS_SERVER:8000</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>make sure you use <strong>http</strong> and (<strong>not https</strong>), even if the browser automatically changes the url to the https version)</p>
+</div>
+<p>This is serving the website, but this way of serving the website is not reliable in production. So, lets go on.</p>
+</section>
+<section id="load-the-shape-data">
+<h2>Load the shape data<a class="headerlink" href="#load-the-shape-data" title="Permalink to this heading"></a></h2>
+<p>If the shape data tables are not yet populated in your copy of the Seshat core database and you have access to source data, populate one or more of them with the instructions <a class="reference internal" href="../spatialdb.html"><span class="doc">here</span></a>.</p>
+</section>
+<section id="testing-gunicorns-ability-to-serve-our-project">
+<h2>Testing Gunicorn’s ability to serve our Project<a class="headerlink" href="#testing-gunicorns-ability-to-serve-our-project" title="Permalink to this heading"></a></h2>
+<p>Gunicorn is usually installed as a Python package within the virtual environment, and its executable is available in the bin directory. The last thing you need to do before leaving your virtual environment is test Gunicorn to make sure that it can serve the Django application. You can do this by entering the project directory and using gunicorn to load the project’s WSGI module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/seshatprojecthome
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You might need to do (sudo ufw allow 8000) to open the 8000 port, if you have not taken care of the firewalls (security groups) properly.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gunicorn<span class="w"> </span>--bind<span class="w"> </span><span class="m">0</span>.0.0.0:8000<span class="w"> </span>seshat.wsgi
+</pre></div>
+</div>
+<p>You can go back and test the app again in your browser. Is it working? So far, so good.</p>
+<p>We are now finished configuring our Django application. We can back out of our virtual environment by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deactivate
+</pre></div>
+</div>
+<p>We have tested that Gunicorn can interact with our Django application, but we should now implement a more robust way of starting and stopping the application server. To accomplish this, we’ll make systemd service and socket files.</p>
+<p>Start by creating and opening a systemd socket file for Gunicorn with sudo privileges:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/systemd/system/gunicorn.socket
+</pre></div>
+</div>
+<p>Inside the <strong>gunicorn.socket</strong> file, write this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+</pre></div>
+</div>
+<p>Next, create and open a systemd service file for Gunicorn with sudo privileges in your text editor. The service filename should match the socket filename with the exception of the extension:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/systemd/system/gunicorn.service
+</pre></div>
+</div>
+<p>Inside the <strong>gunicorn.service</strong> file, write this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/seshatprojecthome/seshat
+ExecStart=/home/ubuntu/seshatprojecthome/seshatprojectenv/bin/gunicorn \
+                --access-logfile - \
+                --workers 3 \
+                --bind unix:/run/gunicorn.sock \
+                seshat.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+</pre></div>
+</div>
+<p>You can now start and enable the Gunicorn socket. This will create the socket file at <strong>/run/gunicorn.sock</strong> now and at boot. When a connection is made to that socket, systemd will automatically start the <strong>gunicorn.service</strong> to handle it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>gunicorn.socket
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>gunicorn.socket
+</pre></div>
+</div>
+<p>You can confirm that the operation was successful by checking for the status socket file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>gunicorn.socket
+</pre></div>
+</div>
+<p>Next, check for the existence of the gunicorn.sock (do not confuse it with gunicorn.socket) file within the /run directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>file<span class="w"> </span>/run/gunicorn.sock
+</pre></div>
+</div>
+<p>If there is any problem, check the Gunicorn socket’s logs by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>gunicorn.socket
+</pre></div>
+</div>
+<p><strong>Testing socket activation:</strong></p>
+<p>Currently, if you’ve only started the <strong>gunicorn.socket</strong> unit, the <strong>gunicorn.service</strong> will <strong>not</strong> be active yet since the socket has not yet received any connections.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>gunicorn
+</pre></div>
+</div>
+<p>To test the socket activation mechanism, you can send a connection to the socket through curl by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>--unix-socket<span class="w"> </span>/run/gunicorn.sock<span class="w"> </span>localhost
+</pre></div>
+</div>
+<p>You should receive the HTML output from your application in the terminal. This indicates that Gunicorn was started and was able to serve your Django application. You can verify that the Gunicorn service is now running by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>gunicorn
+</pre></div>
+</div>
+<p>If there are any issues, check them on:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>gunicorn
+</pre></div>
+</div>
+<p>If you make changes to the <strong>/etc/systemd/system/gunicorn.service</strong> file, you should reload the daemon to reread the service definition and restart the Gunicorn process by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>gunicorn
+</pre></div>
+</div>
+<p>Make sure you have no issues before continuing.</p>
+<p>—</p>
+<p><strong>Configure Nginx to Proxy Pass to Gunicorn</strong></p>
+<p>Now that Gunicorn is set up, you need to configure Nginx to pass traffic to the process. Start by creating and opening a new server block in Nginx’s sites-available directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/nginx/sites-available/seshat
+</pre></div>
+</div>
+<p>The content of the seshat file should look like this:</p>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+<span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">**xx.xxx.xxx.xx**</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">/favicon.ico</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kn">access_log</span><span class="w"> </span><span class="no">off</span><span class="p">;</span><span class="w"> </span><span class="kn">log_not_found</span><span class="w"> </span><span class="no">off</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">include</span><span class="w"> </span><span class="s">proxy_params</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://unix:/run/gunicorn.sock</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kn">location</span><span class="w"> </span><span class="s">/static/</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kn">autoindex</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<span class="w">        </span><span class="kn">alias</span><span class="w"> </span><span class="s">**/home/ubuntu/seshatprojecthome/seshat/seshat/staticfiles**/</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We are almost done. While here, we change the content of nginx config to make sure that it can access all the files in our project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/nginx/nginx.conf
+</pre></div>
+</div>
+<p>On the top of the file, the user should be changed from <strong>www-data</strong> to <strong>root</strong>:</p>
+<div class="highlight-nginx notranslate"><div class="highlight"><pre><span></span><span class="k">user</span><span class="w"> </span><span class="s">root</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Save and close the file when you are finished. Now, you can enable the seshat file and enable the website, by linking it to the sites-enabled directory. The purpose of creating a symbolic link is to enable or activate a specific site configuration. In Nginx, having the configuration file in the <strong>`sites-available`</strong> directory doesn’t automatically make it active. By creating a symbolic link to the <strong>`sites-enabled`</strong> directory, we effectively tell Nginx to consider this configuration file when it starts or reloads its configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/nginx/sites-available/seshat<span class="w"> </span>/etc/nginx/sites-enabled
+</pre></div>
+</div>
+<p>Test your Nginx configuration for syntax errors by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nginx<span class="w"> </span>-t
+</pre></div>
+</div>
+<p>If no errors are reported, go ahead and restart Nginx by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>nginx
+</pre></div>
+</div>
+<p>You should now be able to go to your server’s domain or IP address (without the :8000 or other ports at the end and with http instead of https) to view your fully functioning application.</p>
+</section>
+<section id="setting-up-a-domain-and-ssl-certificate">
+<h2>Setting up a domain and SSL certificate<a class="headerlink" href="#setting-up-a-domain-and-ssl-certificate" title="Permalink to this heading"></a></h2>
+<p><em>TODO: add instructions on how to set up a domain and SSL certificate for the server.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pulumi.html" class="btn btn-neutral float-left" title="MS Azure cloud setup with Pulumi (Alan Turing Institute)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../spatialdb.html" class="btn btn-neutral float-right" title="Cliopatria shape dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

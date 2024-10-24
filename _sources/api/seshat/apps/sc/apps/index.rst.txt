@@ -1,0 +1,32 @@
+seshat.apps.sc.apps
+===================
+
+.. py:module:: seshat.apps.sc.apps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.sc.apps.ScConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: ScConfig
+
+   Bases: :py:obj:`django.apps.AppConfig`
+
+
+   .. py:attribute:: default_auto_field
+      :value: 'django.db.models.BigAutoField'
+
+
+
+   .. py:attribute:: name
+      :value: 'seshat.apps.sc'
+
+
+

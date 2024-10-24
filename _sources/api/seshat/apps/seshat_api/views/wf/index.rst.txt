@@ -1,0 +1,898 @@
+seshat.apps.seshat_api.views.wf
+===============================
+
+.. py:module:: seshat.apps.seshat_api.views.wf
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.seshat_api.views.wf.AtlatlViewSet
+   seshat.apps.seshat_api.views.wf.BattleAxeViewSet
+   seshat.apps.seshat_api.views.wf.BreastplateViewSet
+   seshat.apps.seshat_api.views.wf.BronzeViewSet
+   seshat.apps.seshat_api.views.wf.CamelViewSet
+   seshat.apps.seshat_api.views.wf.ChainmailViewSet
+   seshat.apps.seshat_api.views.wf.ComplexFortificationViewSet
+   seshat.apps.seshat_api.views.wf.CompositeBowViewSet
+   seshat.apps.seshat_api.views.wf.CopperViewSet
+   seshat.apps.seshat_api.views.wf.CrossbowViewSet
+   seshat.apps.seshat_api.views.wf.DaggerViewSet
+   seshat.apps.seshat_api.views.wf.DitchViewSet
+   seshat.apps.seshat_api.views.wf.DogViewSet
+   seshat.apps.seshat_api.views.wf.DonkeyViewSet
+   seshat.apps.seshat_api.views.wf.EarthRampartViewSet
+   seshat.apps.seshat_api.views.wf.ElephantViewSet
+   seshat.apps.seshat_api.views.wf.FortifiedCampViewSet
+   seshat.apps.seshat_api.views.wf.GunpowderSiegeArtilleryViewSet
+   seshat.apps.seshat_api.views.wf.HandheldFirearmViewSet
+   seshat.apps.seshat_api.views.wf.HelmetViewSet
+   seshat.apps.seshat_api.views.wf.HorseViewSet
+   seshat.apps.seshat_api.views.wf.IronViewSet
+   seshat.apps.seshat_api.views.wf.JavelinViewSet
+   seshat.apps.seshat_api.views.wf.LaminarArmorViewSet
+   seshat.apps.seshat_api.views.wf.LeatherClothViewSet
+   seshat.apps.seshat_api.views.wf.LimbProtectionViewSet
+   seshat.apps.seshat_api.views.wf.LongWallViewSet
+   seshat.apps.seshat_api.views.wf.MerchantShipPressedIntoServiceViewSet
+   seshat.apps.seshat_api.views.wf.MoatViewSet
+   seshat.apps.seshat_api.views.wf.ModernFortificationViewSet
+   seshat.apps.seshat_api.views.wf.PlateArmorViewSet
+   seshat.apps.seshat_api.views.wf.PolearmViewSet
+   seshat.apps.seshat_api.views.wf.ScaledArmorViewSet
+   seshat.apps.seshat_api.views.wf.SelfBowViewSet
+   seshat.apps.seshat_api.views.wf.SettlementInADefensivePositionViewSet
+   seshat.apps.seshat_api.views.wf.ShieldViewSet
+   seshat.apps.seshat_api.views.wf.SlingSiegeEngineViewSet
+   seshat.apps.seshat_api.views.wf.SlingViewSet
+   seshat.apps.seshat_api.views.wf.SmallVesselsCanoesEtcViewSet
+   seshat.apps.seshat_api.views.wf.SpearViewSet
+   seshat.apps.seshat_api.views.wf.SpecializedMilitaryVesselViewSet
+   seshat.apps.seshat_api.views.wf.SteelViewSet
+   seshat.apps.seshat_api.views.wf.StoneWallsMortaredViewSet
+   seshat.apps.seshat_api.views.wf.StoneWallsNonMortaredViewSet
+   seshat.apps.seshat_api.views.wf.SwordViewSet
+   seshat.apps.seshat_api.views.wf.TensionSiegeEngineViewSet
+   seshat.apps.seshat_api.views.wf.WarClubViewSet
+   seshat.apps.seshat_api.views.wf.WoodBarkEtcViewSet
+   seshat.apps.seshat_api.views.wf.WoodenPalisadeViewSet
+
+
+Module Contents
+---------------
+
+.. py:class:: AtlatlViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Atlatls.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: BattleAxeViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Battle Axes.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: BreastplateViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Breastplates.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: BronzeViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Bronzes.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CamelViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Camels.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ChainmailViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Chainmails.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ComplexFortificationViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Complex Fortifications.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CompositeBowViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Composite Bows.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CopperViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Coppers.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: CrossbowViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Crossbows.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: DaggerViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Daggers.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: DitchViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Ditches.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: DogViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Dogs.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: DonkeyViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Donkeys.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: EarthRampartViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Earth Ramparts.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ElephantViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Elephants.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: FortifiedCampViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Fortified Camps.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: GunpowderSiegeArtilleryViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Gunpowder Siege Artilleries.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: HandheldFirearmViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Handheld Firearms.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: HelmetViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Helmets.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: HorseViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Horses.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: IronViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Irons.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: JavelinViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Javelins.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: LaminarArmorViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Laminar Armors.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: LeatherClothViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Leather Cloth.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: LimbProtectionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Limb Protections.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: LongWallViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Long Walls.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: MerchantShipPressedIntoServiceViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Merchant Ships Pressed Into Services.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: MoatViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Moats.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ModernFortificationViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Modern Fortifications.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: PlateArmorViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Plate Armors.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: PolearmViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Polearms.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ScaledArmorViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Scaled Armors.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SelfBowViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Self Bows.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SettlementInADefensivePositionViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Settlements in a Defensive Position.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: ShieldViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Shields.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SlingSiegeEngineViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Sling Siege Engines.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SlingViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Slings.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SmallVesselsCanoesEtcViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Small Vessels, Canoes, etc.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SpearViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Spears.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SpecializedMilitaryVesselViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Specialized Military Vessels.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SteelViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Steels.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: StoneWallsMortaredViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Stone Walls Mortared.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: StoneWallsNonMortaredViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Stone Walls Non Mortared.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: SwordViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Swords.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: TensionSiegeEngineViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Tension Siege Engines.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: WarClubViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing War Clubs.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: WoodBarkEtcViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Wood bark, etc.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+
+.. py:class:: WoodenPalisadeViewSet
+
+   Bases: :py:obj:`seshat.apps.seshat_api.views._mixins.FilterBackends`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer`, :py:obj:`seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth`, :py:obj:`rest_framework.viewsets.ModelViewSet`
+
+
+   A viewset for viewing and editing Wooden Palisades.
+
+
+   .. py:attribute:: filterset_class
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: pagination_class
+
+

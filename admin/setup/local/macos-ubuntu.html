@@ -1,0 +1,207 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up a local Ubuntu environment on a Mac &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../_static/jquery.js"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+      <script src="../../../_static/doctools.js"></script>
+      <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/clipboard.min.js"></script>
+      <script src="../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MS Azure cloud setup with Pulumi (Alan Turing Institute)" href="../cloud/pulumi.html" />
+    <link rel="prev" title="Setting up Seshat in a local Windows environment" href="windows.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Seshat Databank Admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../developers-guide.html">Developer’s Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../repo_structure.html">Seshat Github repo structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../django.html">Using Django in Seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../bulk_updates.html">Adding new datasets to the Seshat database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../backup.html">Database backups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../schema.html">Database schema map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../testing.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../websites.html">Websites</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Setting up Seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Setting up Seshat in a local environment</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="macos.html">Setting up Seshat in a local macOS environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ubuntu.html">Setting up Seshat in a local Ubuntu environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="windows.html">Setting up Seshat in a local Windows environment</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Setting up a local Ubuntu environment on a Mac</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cloud/pulumi.html">MS Azure cloud setup with Pulumi (Alan Turing Institute)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cloud/CSH_manual.html">AWS cloud setup (Complexity Science Hub)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html">Cliopatria shape dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#gadm">GADM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spatialdb.html#how-to-add-new-shape-datasets-to-the-maps">How to add new shape datasets to the maps</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Seshat Databank Admin</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Setting up Seshat</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Setting up Seshat in a local environment</a></li>
+      <li class="breadcrumb-item active">Setting up a local Ubuntu environment on a Mac</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/admin/setup/local/macos-ubuntu.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-up-a-local-ubuntu-environment-on-a-mac">
+<h1>Setting up a local Ubuntu environment on a Mac<a class="headerlink" href="#setting-up-a-local-ubuntu-environment-on-a-mac" title="Permalink to this heading"></a></h1>
+<p>In this guide, we will walk you through setting up a local Ubuntu environment on a Mac. This guide is intended for software engineers who are working on the Seshat project and need to set up a local development environment.</p>
+<p>We will use multipass to create a virtual machine running Ubuntu on your Mac. Multipass is a lightweight VM manager for Linux, Windows, and macOS. It’s designed for developers who need a fresh Ubuntu environment with a single command.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<p>You will need to have Homebrew installed on your Mac to install multipass. If you need to install Homebrew, you can find instructions on how to do so on <a class="reference external" href="https://brew.sh/">Homebrew’s website</a>.</p>
+</section>
+<section id="steps">
+<h2>Steps<a class="headerlink" href="#steps" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Install multipass with brew:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>multipass
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Note: the images used by Multipass don’t have a pre-installed graphical desktop</p></li>
+</ul>
+</li>
+<li><p>Create a VM (Ubuntu 22.04)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span>launch<span class="w"> </span><span class="m">22</span>.04
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This should create a VM called <cite>primary</cite> by default</p></li>
+</ul>
+</li>
+<li><p>Make sure the VM has enough resources:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span>stop<span class="w"> </span>primary
+$<span class="w"> </span>multipass<span class="w"> </span><span class="nb">set</span><span class="w"> </span>local.primary.cpus<span class="o">=</span><span class="m">4</span>
+$<span class="w"> </span>multipass<span class="w"> </span><span class="nb">set</span><span class="w"> </span>local.primary.disk<span class="o">=</span>60G
+$<span class="w"> </span>multipass<span class="w"> </span><span class="nb">set</span><span class="w"> </span>local.primary.memory<span class="o">=</span>8G
+$<span class="w"> </span>multipass<span class="w"> </span>start<span class="w"> </span>primary
+</pre></div>
+</div>
+</li>
+<li><p>Mount the dir containing the database dump to the VM:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>multipass<span class="w"> </span>mount<span class="w"> </span>/path/to/database_dumps/<span class="w"> </span>primary:database_dumps
+</pre></div>
+</div>
+</li>
+<li><p>Then log in to the VM with <cite>multipass shell</cite> and install pre-requisites:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+$<span class="w"> </span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>ppa:deadsnakes/ppa
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3.8<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3.8-venv<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>python3.8-dev<span class="w"> </span>-y
+$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>g++<span class="w"> </span>-y
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="windows.html" class="btn btn-neutral float-left" title="Setting up Seshat in a local Windows environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../cloud/pulumi.html" class="btn btn-neutral float-right" title="MS Azure cloud setup with Pulumi (Alan Turing Institute)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

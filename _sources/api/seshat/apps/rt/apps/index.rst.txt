@@ -1,0 +1,32 @@
+seshat.apps.rt.apps
+===================
+
+.. py:module:: seshat.apps.rt.apps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.rt.apps.RtConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: RtConfig
+
+   Bases: :py:obj:`django.apps.AppConfig`
+
+
+   .. py:attribute:: default_auto_field
+      :value: 'django.db.models.BigAutoField'
+
+
+
+   .. py:attribute:: name
+      :value: 'seshat.apps.rt'
+
+
+

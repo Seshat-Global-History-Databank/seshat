@@ -1,0 +1,2218 @@
+seshat.apps.sc.forms
+====================
+
+.. py:module:: seshat.apps.sc.forms
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.sc.forms.commonfields
+   seshat.apps.sc.forms.commonlabels
+   seshat.apps.sc.forms.commonwidgets
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.sc.forms.Administrative_levelForm
+   seshat.apps.sc.forms.Area_measurement_systemForm
+   seshat.apps.sc.forms.ArticleForm
+   seshat.apps.sc.forms.BridgeForm
+   seshat.apps.sc.forms.Burial_siteForm
+   seshat.apps.sc.forms.CalendarForm
+   seshat.apps.sc.forms.CanalForm
+   seshat.apps.sc.forms.Ceremonial_siteForm
+   seshat.apps.sc.forms.Communal_buildingForm
+   seshat.apps.sc.forms.CourierForm
+   seshat.apps.sc.forms.CourtForm
+   seshat.apps.sc.forms.Debt_and_credit_structureForm
+   seshat.apps.sc.forms.Drinking_water_supply_systemForm
+   seshat.apps.sc.forms.EnclosureForm
+   seshat.apps.sc.forms.Entertainment_buildingForm
+   seshat.apps.sc.forms.Examination_systemForm
+   seshat.apps.sc.forms.Fastest_individual_communicationForm
+   seshat.apps.sc.forms.FictionForm
+   seshat.apps.sc.forms.Food_storage_siteForm
+   seshat.apps.sc.forms.Foreign_coinForm
+   seshat.apps.sc.forms.Formal_legal_codeForm
+   seshat.apps.sc.forms.Full_time_bureaucratForm
+   seshat.apps.sc.forms.General_postal_serviceForm
+   seshat.apps.sc.forms.Geometrical_measurement_systemForm
+   seshat.apps.sc.forms.HistoryForm
+   seshat.apps.sc.forms.Indigenous_coinForm
+   seshat.apps.sc.forms.Irrigation_systemForm
+   seshat.apps.sc.forms.JudgeForm
+   seshat.apps.sc.forms.Knowledge_or_information_buildingForm
+   seshat.apps.sc.forms.Largest_communication_distanceForm
+   seshat.apps.sc.forms.Length_measurement_systemForm
+   seshat.apps.sc.forms.Lists_tables_and_classificationForm
+   seshat.apps.sc.forms.MarketForm
+   seshat.apps.sc.forms.Merit_promotionForm
+   seshat.apps.sc.forms.Military_levelForm
+   seshat.apps.sc.forms.Mines_or_quarryForm
+   seshat.apps.sc.forms.Mnemonic_deviceForm
+   seshat.apps.sc.forms.Non_phonetic_writingForm
+   seshat.apps.sc.forms.Nonwritten_recordForm
+   seshat.apps.sc.forms.Occupational_complexityForm
+   seshat.apps.sc.forms.Other_measurement_systemForm
+   seshat.apps.sc.forms.Other_special_purpose_siteForm
+   seshat.apps.sc.forms.Other_utilitarian_public_buildingForm
+   seshat.apps.sc.forms.Paper_currencyForm
+   seshat.apps.sc.forms.PhilosophyForm
+   seshat.apps.sc.forms.Phonetic_alphabetic_writingForm
+   seshat.apps.sc.forms.Polity_populationForm
+   seshat.apps.sc.forms.Polity_territoryForm
+   seshat.apps.sc.forms.Population_of_the_largest_settlementForm
+   seshat.apps.sc.forms.PortForm
+   seshat.apps.sc.forms.Postal_stationForm
+   seshat.apps.sc.forms.Practical_literatureForm
+   seshat.apps.sc.forms.Precious_metalForm
+   seshat.apps.sc.forms.Professional_lawyerForm
+   seshat.apps.sc.forms.Professional_military_officerForm
+   seshat.apps.sc.forms.Professional_priesthoodForm
+   seshat.apps.sc.forms.Professional_soldierForm
+   seshat.apps.sc.forms.RaForm
+   seshat.apps.sc.forms.Religious_levelForm
+   seshat.apps.sc.forms.Religious_literatureForm
+   seshat.apps.sc.forms.RoadForm
+   seshat.apps.sc.forms.Sacred_textForm
+   seshat.apps.sc.forms.Scientific_literatureForm
+   seshat.apps.sc.forms.ScriptForm
+   seshat.apps.sc.forms.Settlement_hierarchyForm
+   seshat.apps.sc.forms.Source_of_supportForm
+   seshat.apps.sc.forms.Special_purpose_houseForm
+   seshat.apps.sc.forms.Special_purpose_siteForm
+   seshat.apps.sc.forms.Specialized_government_buildingForm
+   seshat.apps.sc.forms.Store_of_wealthForm
+   seshat.apps.sc.forms.Symbolic_buildingForm
+   seshat.apps.sc.forms.Time_measurement_systemForm
+   seshat.apps.sc.forms.TokenForm
+   seshat.apps.sc.forms.Trading_emporiaForm
+   seshat.apps.sc.forms.Utilitarian_public_buildingForm
+   seshat.apps.sc.forms.Volume_measurement_systemForm
+   seshat.apps.sc.forms.Weight_measurement_systemForm
+   seshat.apps.sc.forms.Written_recordForm
+
+
+Module Contents
+---------------
+
+.. py:class:: Administrative_levelForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Area_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ArticleForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: BridgeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Burial_siteForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CalendarForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CanalForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Ceremonial_siteForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Communal_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CourierForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CourtForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Debt_and_credit_structureForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Drinking_water_supply_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: EnclosureForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Entertainment_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Examination_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Fastest_individual_communicationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: FictionForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Food_storage_siteForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Foreign_coinForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Formal_legal_codeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Full_time_bureaucratForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: General_postal_serviceForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Geometrical_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: HistoryForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Indigenous_coinForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Irrigation_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: JudgeForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Knowledge_or_information_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Largest_communication_distanceForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Length_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Lists_tables_and_classificationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: MarketForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Merit_promotionForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Military_levelForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Mines_or_quarryForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Mnemonic_deviceForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Non_phonetic_writingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Nonwritten_recordForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Occupational_complexityForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_special_purpose_siteForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_utilitarian_public_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Paper_currencyForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: PhilosophyForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Phonetic_alphabetic_writingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Polity_populationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Polity_territoryForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Population_of_the_largest_settlementForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: PortForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Postal_stationForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Practical_literatureForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Precious_metalForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_lawyerForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_military_officerForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_priesthoodForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_soldierForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: RaForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Religious_levelForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Religious_literatureForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: RoadForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Sacred_textForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Scientific_literatureForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ScriptForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Settlement_hierarchyForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Source_of_supportForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Special_purpose_houseForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Special_purpose_siteForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Specialized_government_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Store_of_wealthForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Symbolic_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Time_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: TokenForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Trading_emporiaForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Utilitarian_public_buildingForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Volume_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Weight_measurement_systemForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Written_recordForm
+
+   Bases: :py:obj:`django.forms.ModelForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:data:: commonfields
+   :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+.. py:data:: commonlabels
+
+.. py:data:: commonwidgets
+

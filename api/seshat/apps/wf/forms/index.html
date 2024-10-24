@@ -1,0 +1,2048 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.wf.forms &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.wf.models" href="../models/index.html" />
+    <link rel="prev" title="seshat.apps.wf.apps" href="../apps/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.wf</a></li>
+      <li class="breadcrumb-item active">seshat.apps.wf.forms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/wf/forms/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.wf.forms">
+<span id="seshat-apps-wf-forms"></span><h1>seshat.apps.wf.forms<a class="headerlink" href="#module-seshat.apps.wf.forms" title="Permalink to this heading"></a></h1>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.commonfields" title="seshat.apps.wf.forms.commonfields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonfields</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.commonlabels" title="seshat.apps.wf.forms.commonlabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonlabels</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.commonwidgets" title="seshat.apps.wf.forms.commonwidgets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">commonwidgets</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.AtlatlForm" title="seshat.apps.wf.forms.AtlatlForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AtlatlForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Battle_axeForm" title="seshat.apps.wf.forms.Battle_axeForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Battle_axeForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.BreastplateForm" title="seshat.apps.wf.forms.BreastplateForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BreastplateForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.BronzeForm" title="seshat.apps.wf.forms.BronzeForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BronzeForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.CamelForm" title="seshat.apps.wf.forms.CamelForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CamelForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.ChainmailForm" title="seshat.apps.wf.forms.ChainmailForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChainmailForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Complex_fortificationForm" title="seshat.apps.wf.forms.Complex_fortificationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Complex_fortificationForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Composite_bowForm" title="seshat.apps.wf.forms.Composite_bowForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Composite_bowForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.CopperForm" title="seshat.apps.wf.forms.CopperForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CopperForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.CrossbowForm" title="seshat.apps.wf.forms.CrossbowForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrossbowForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.DaggerForm" title="seshat.apps.wf.forms.DaggerForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DaggerForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.DitchForm" title="seshat.apps.wf.forms.DitchForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DitchForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.DogForm" title="seshat.apps.wf.forms.DogForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DogForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.DonkeyForm" title="seshat.apps.wf.forms.DonkeyForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DonkeyForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Earth_rampartForm" title="seshat.apps.wf.forms.Earth_rampartForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Earth_rampartForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.ElephantForm" title="seshat.apps.wf.forms.ElephantForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ElephantForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Fortified_campForm" title="seshat.apps.wf.forms.Fortified_campForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Fortified_campForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm" title="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Gunpowder_siege_artilleryForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Handheld_firearmForm" title="seshat.apps.wf.forms.Handheld_firearmForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Handheld_firearmForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.HelmetForm" title="seshat.apps.wf.forms.HelmetForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HelmetForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.HorseForm" title="seshat.apps.wf.forms.HorseForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HorseForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.IronForm" title="seshat.apps.wf.forms.IronForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IronForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.JavelinForm" title="seshat.apps.wf.forms.JavelinForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">JavelinForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Laminar_armorForm" title="seshat.apps.wf.forms.Laminar_armorForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Laminar_armorForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Leather_clothForm" title="seshat.apps.wf.forms.Leather_clothForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Leather_clothForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Limb_protectionForm" title="seshat.apps.wf.forms.Limb_protectionForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Limb_protectionForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Long_wallForm" title="seshat.apps.wf.forms.Long_wallForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Long_wallForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm" title="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Merchant_ships_pressed_into_serviceForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.MoatForm" title="seshat.apps.wf.forms.MoatForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MoatForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Modern_fortificationForm" title="seshat.apps.wf.forms.Modern_fortificationForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Modern_fortificationForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Plate_armorForm" title="seshat.apps.wf.forms.Plate_armorForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Plate_armorForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.PolearmForm" title="seshat.apps.wf.forms.PolearmForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolearmForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Scaled_armorForm" title="seshat.apps.wf.forms.Scaled_armorForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Scaled_armorForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Self_bowForm" title="seshat.apps.wf.forms.Self_bowForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Self_bowForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm" title="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Settlements_in_a_defensive_positionForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.ShieldForm" title="seshat.apps.wf.forms.ShieldForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ShieldForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.SlingForm" title="seshat.apps.wf.forms.SlingForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SlingForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Sling_siege_engineForm" title="seshat.apps.wf.forms.Sling_siege_engineForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sling_siege_engineForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm" title="seshat.apps.wf.forms.Small_vessels_canoes_etcForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Small_vessels_canoes_etcForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.SpearForm" title="seshat.apps.wf.forms.SpearForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpearForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Specialized_military_vesselForm" title="seshat.apps.wf.forms.Specialized_military_vesselForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Specialized_military_vesselForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.SteelForm" title="seshat.apps.wf.forms.SteelForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SteelForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm" title="seshat.apps.wf.forms.Stone_walls_mortaredForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stone_walls_mortaredForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm" title="seshat.apps.wf.forms.Stone_walls_non_mortaredForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Stone_walls_non_mortaredForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.SwordForm" title="seshat.apps.wf.forms.SwordForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SwordForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Tension_siege_engineForm" title="seshat.apps.wf.forms.Tension_siege_engineForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tension_siege_engineForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.War_clubForm" title="seshat.apps.wf.forms.War_clubForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">War_clubForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Wood_bark_etcForm" title="seshat.apps.wf.forms.Wood_bark_etcForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Wood_bark_etcForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.wf.forms.Wooden_palisadeForm" title="seshat.apps.wf.forms.Wooden_palisadeForm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Wooden_palisadeForm</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">AtlatlForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.AtlatlForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.AtlatlForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Battle_axeForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Battle_axeForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Battle_axeForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">BreastplateForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BreastplateForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BreastplateForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">BronzeForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.BronzeForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.BronzeForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">CamelForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CamelForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CamelForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">ChainmailForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ChainmailForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ChainmailForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Complex_fortificationForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Complex_fortificationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Complex_fortificationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Composite_bowForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Composite_bowForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Composite_bowForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">CopperForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CopperForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CopperForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">CrossbowForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.CrossbowForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.CrossbowForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">DaggerForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DaggerForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DaggerForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">DitchForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DitchForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DitchForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">DogForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DogForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DogForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">DonkeyForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.DonkeyForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.DonkeyForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Earth_rampartForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Earth_rampartForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Earth_rampartForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">ElephantForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ElephantForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ElephantForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Fortified_campForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Fortified_campForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Fortified_campForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Gunpowder_siege_artilleryForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Gunpowder_siege_artilleryForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Handheld_firearmForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Handheld_firearmForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Handheld_firearmForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">HelmetForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HelmetForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HelmetForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">HorseForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.HorseForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.HorseForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">IronForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.IronForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.IronForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">JavelinForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.JavelinForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.JavelinForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Laminar_armorForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Laminar_armorForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Laminar_armorForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Leather_clothForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Leather_clothForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Leather_clothForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Limb_protectionForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Limb_protectionForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Limb_protectionForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Long_wallForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Long_wallForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Long_wallForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Merchant_ships_pressed_into_serviceForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Merchant_ships_pressed_into_serviceForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">MoatForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.MoatForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.MoatForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Modern_fortificationForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Modern_fortificationForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Modern_fortificationForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Plate_armorForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Plate_armorForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Plate_armorForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">PolearmForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.PolearmForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.PolearmForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Scaled_armorForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Scaled_armorForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Scaled_armorForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Self_bowForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Self_bowForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Self_bowForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Settlements_in_a_defensive_positionForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Settlements_in_a_defensive_positionForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">ShieldForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.ShieldForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.ShieldForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">SlingForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SlingForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SlingForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Sling_siege_engineForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Sling_siege_engineForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Sling_siege_engineForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Small_vessels_canoes_etcForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Small_vessels_canoes_etcForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">SpearForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SpearForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SpearForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Specialized_military_vesselForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Specialized_military_vesselForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">SteelForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SteelForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SteelForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Stone_walls_mortaredForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_mortaredForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Stone_walls_non_mortaredForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Stone_walls_non_mortaredForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">SwordForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.SwordForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.SwordForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Tension_siege_engineForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Tension_siege_engineForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Tension_siege_engineForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">War_clubForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.War_clubForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.War_clubForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Wood_bark_etcForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wood_bark_etcForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wood_bark_etcForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">Wooden_palisadeForm</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">django.forms.ModelForm</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm.Meta">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm.Meta" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Noindex<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm.Meta.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm.Meta.fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm.Meta.labels">
+<span class="sig-name descname"><span class="pre">labels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm.Meta.labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm.Meta.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.Wooden_palisadeForm.Meta.widgets">
+<span class="sig-name descname"><span class="pre">widgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.Wooden_palisadeForm.Meta.widgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.commonfields">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">commonfields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['polity',</span> <span class="pre">'year_from',</span> <span class="pre">'year_to',</span> <span class="pre">'description',</span> <span class="pre">'tag',</span> <span class="pre">'is_disputed',</span> <span class="pre">'is_uncertain',...</span></em><a class="headerlink" href="#seshat.apps.wf.forms.commonfields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.commonlabels">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">commonlabels</span></span><a class="headerlink" href="#seshat.apps.wf.forms.commonlabels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="seshat.apps.wf.forms.commonwidgets">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.wf.forms.</span></span><span class="sig-name descname"><span class="pre">commonwidgets</span></span><a class="headerlink" href="#seshat.apps.wf.forms.commonwidgets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../apps/index.html" class="btn btn-neutral float-left" title="seshat.apps.wf.apps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../models/index.html" class="btn btn-neutral float-right" title="seshat.apps.wf.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

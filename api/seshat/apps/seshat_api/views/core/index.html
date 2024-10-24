@@ -1,0 +1,737 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.seshat_api.views.core &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../../_static/doctools.js"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="seshat.apps.seshat_api.views.crisisdb" href="../crisisdb/index.html" />
+    <link rel="prev" title="seshat.apps.seshat_api.views.accounts" href="../accounts/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps.seshat_api</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.seshat_api.views</a></li>
+      <li class="breadcrumb-item active">seshat.apps.seshat_api.views.core</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/api/seshat/apps/seshat_api/views/core/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.seshat_api.views.core">
+<span id="seshat-apps-seshat-api-views-core"></span><h1>seshat.apps.seshat_api.views.core<a class="headerlink" href="#module-seshat.apps.seshat_api.views.core" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.CapitalViewSet" title="seshat.apps.seshat_api.views.core.CapitalViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CapitalViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Capitals.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.CitationViewSet" title="seshat.apps.seshat_api.views.core.CitationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CitationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Citations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.CliopatriaViewSet" title="seshat.apps.seshat_api.views.core.CliopatriaViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CliopatriaViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Cliopatria Shapefiles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.CountryViewSet" title="seshat.apps.seshat_api.views.core.CountryViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CountryViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Countries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.GADMCountriesViewSet" title="seshat.apps.seshat_api.views.core.GADMCountriesViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMCountriesViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing GADM Countries.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.GADMProvincesViewSet" title="seshat.apps.seshat_api.views.core.GADMProvincesViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMProvincesViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing GADM Provinces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.GADMShapefileViewSet" title="seshat.apps.seshat_api.views.core.GADMShapefileViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GADMShapefileViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing GADM Shapefiles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.MacroRegionViewSet" title="seshat.apps.seshat_api.views.core.MacroRegionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MacroRegionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Macro Regions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet" title="seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NGAPolityRelationsViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing NGA Polity Relations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.NGAViewSet" title="seshat.apps.seshat_api.views.core.NGAViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NGAViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing NGAs, Natural Geographic Areas.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.PolityViewSet" title="seshat.apps.seshat_api.views.core.PolityViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolityViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Polities.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet" title="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrivateCommentsPartsViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Seshat Private Comment Parts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet" title="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PrivateCommentsViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Seshat Private Comments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.ReferenceViewSet" title="seshat.apps.seshat_api.views.core.ReferenceViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing References.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.RegionViewSet" title="seshat.apps.seshat_api.views.core.RegionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.ReligionViewSet" title="seshat.apps.seshat_api.views.core.ReligionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReligionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Religions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet" title="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ScpThroughCtnViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Seshat Comment Parts' relations to</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.SectionViewSet" title="seshat.apps.seshat_api.views.core.SectionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SectionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Sections.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet" title="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentPartViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Seshat Comment Parts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet" title="seshat.apps.seshat_api.views.core.SeshatCommentViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SeshatCommentViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Seshat Comments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.SubsectionViewSet" title="seshat.apps.seshat_api.views.core.SubsectionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsectionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Subsections.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.core.VariableHierarchyViewSet" title="seshat.apps.seshat_api.views.core.VariableHierarchyViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariableHierarchyViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Variable Hierarchies.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CapitalViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">CapitalViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CapitalViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Capitals.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CapitalViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CapitalViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CapitalViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CapitalViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CapitalViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CapitalViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CitationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">CitationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CitationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Citations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CitationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CitationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CitationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CitationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CitationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CitationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CliopatriaViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">CliopatriaViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CliopatriaViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Cliopatria Shapefiles.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CliopatriaViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CliopatriaViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CliopatriaViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CliopatriaViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CliopatriaViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CliopatriaViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CountryViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">CountryViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CountryViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Countries.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CountryViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CountryViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CountryViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CountryViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.CountryViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.CountryViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMCountriesViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">GADMCountriesViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMCountriesViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing GADM Countries.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMCountriesViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMCountriesViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMCountriesViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMCountriesViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMCountriesViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMCountriesViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMProvincesViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">GADMProvincesViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMProvincesViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing GADM Provinces.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMProvincesViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMProvincesViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMProvincesViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMProvincesViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMProvincesViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMProvincesViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMShapefileViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">GADMShapefileViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMShapefileViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing GADM Shapefiles.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMShapefileViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMShapefileViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMShapefileViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMShapefileViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.GADMShapefileViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.GADMShapefileViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.MacroRegionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">MacroRegionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.MacroRegionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Macro Regions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.MacroRegionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.MacroRegionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.MacroRegionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.MacroRegionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.MacroRegionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.MacroRegionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">NGAPolityRelationsViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing NGA Polity Relations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAPolityRelationsViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">NGAViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing NGAs, Natural Geographic Areas.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.NGAViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.NGAViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PolityViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">PolityViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PolityViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Polities.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PolityViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PolityViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PolityViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PolityViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PolityViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PolityViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PolityViewSet.search_fields">
+<span class="sig-name descname"><span class="pre">search_fields</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['&#64;long_name',</span> <span class="pre">'&#64;new_name']</span></em><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PolityViewSet.search_fields" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">PrivateCommentsPartsViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Seshat Private Comment Parts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.permissions_dict">
+<span class="sig-name descname"><span class="pre">permissions_dict</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsPartsViewSet.permissions_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">PrivateCommentsViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Seshat Private Comments.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.permissions_dict">
+<span class="sig-name descname"><span class="pre">permissions_dict</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.PrivateCommentsViewSet.permissions_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReferenceViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">ReferenceViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReferenceViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing References.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReferenceViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReferenceViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReferenceViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReferenceViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReferenceViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReferenceViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.RegionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">RegionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.RegionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Regions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.RegionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.RegionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.RegionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.RegionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.RegionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.RegionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReligionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">ReligionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReligionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Religions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReligionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReligionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReligionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReligionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ReligionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ReligionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">ScpThroughCtnViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Seshat Comment Parts’ relations to
+Citations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.permissions_dict">
+<span class="sig-name descname"><span class="pre">permissions_dict</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.ScpThroughCtnViewSet.permissions_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SectionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">SectionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SectionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Sections.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SectionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SectionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SectionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SectionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SectionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SectionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentPartViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Seshat Comment Parts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.permissions_dict">
+<span class="sig-name descname"><span class="pre">permissions_dict</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentPartViewSet.permissions_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">SeshatCommentViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Seshat Comments.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SeshatCommentViewSet.permissions_dict">
+<span class="sig-name descname"><span class="pre">permissions_dict</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SeshatCommentViewSet.permissions_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SubsectionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">SubsectionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SubsectionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Subsections.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SubsectionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SubsectionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SubsectionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SubsectionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.SubsectionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.SubsectionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.VariableHierarchyViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.core.</span></span><span class="sig-name descname"><span class="pre">VariableHierarchyViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.VariableHierarchyViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Variable Hierarchies.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.core.VariableHierarchyViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../accounts/index.html" class="btn btn-neutral float-left" title="seshat.apps.seshat_api.views.accounts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../crisisdb/index.html" class="btn btn-neutral float-right" title="seshat.apps.seshat_api.views.crisisdb" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

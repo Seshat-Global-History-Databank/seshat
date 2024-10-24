@@ -1,0 +1,831 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.seshat_api.views.crisisdb &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../../_static/jquery.js"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../../" id="documentation_options" src="../../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../../_static/doctools.js"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" />
+    <link rel="next" title="seshat.apps.seshat_api.views.general" href="../general/index.html" />
+    <link rel="prev" title="seshat.apps.seshat_api.views.core" href="../core/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps.seshat_api</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.seshat_api.views</a></li>
+      <li class="breadcrumb-item active">seshat.apps.seshat_api.views.crisisdb</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../../_sources/api/seshat/apps/seshat_api/views/crisisdb/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.seshat_api.views.crisisdb">
+<span id="seshat-apps-seshat-api-views-crisisdb"></span><h1>seshat.apps.seshat_api.views.crisisdb<a class="headerlink" href="#module-seshat.apps.seshat_api.views.crisisdb" title="Permalink to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet" title="seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AgriculturalPopulationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Agricultural Populations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet" title="seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArableLandPerFarmerViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Arable Land Per Farmers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet" title="seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArableLandViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Arable Lands.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet" title="seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrisisConsequenceViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Crisis Consequences.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet" title="seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CropFailureEventViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Crop Failure Events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet" title="seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiseaseOutbreakViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Disease Outbreaks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet" title="seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DroughtEventViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Drought Events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet" title="seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExternalConflictSideViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing External Conflict Sides.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet" title="seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ExternalConflictViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing External Conflicts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet" title="seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FamineEventViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Famine Events.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet" title="seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GDPPerCapitaViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing GDP Per Capitas.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet" title="seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GrossGrainSharedPerAgriculturalPopulationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Gross Grain Shared Per Agricultural Populations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet" title="seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HumanSacrificeViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Human Sacrifices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet" title="seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InternalConflictViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Internal Conflicts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet" title="seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LocustEventViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Locust Events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet" title="seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MilitaryExpenseViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Military Expenses.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet" title="seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NetGrainSharedPerAgriculturalPopulationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Net Grain Shared Per Agricultural Populations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet" title="seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerTransitionViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Power Transitions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet" title="seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SilverInflowViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Silver Inflows.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet" title="seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SilverStockViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Silver Stocks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet" title="seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SocioeconomicTurmoilEventViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Socioeconomic Turmoil Events.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.SurplusViewSet" title="seshat.apps.seshat_api.views.crisisdb.SurplusViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SurplusViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Surpluses.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet" title="seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TotalPopulationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing Total Populations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.USLocationViewSet" title="seshat.apps.seshat_api.views.crisisdb.USLocationViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USLocationViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing US Locations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet" title="seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USViolenceDataSourceViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing US Violence Data Sources.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet" title="seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USViolenceSubtypeViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing US Violence Subtypes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet" title="seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USViolenceViewSet</span></code></a></p></td>
+<td><p>A viewset for viewing and editing US Violence.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">AgriculturalPopulationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Agricultural Populations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.AgriculturalPopulationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">ArableLandPerFarmerViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Arable Land Per Farmers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandPerFarmerViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">ArableLandViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Arable Lands.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ArableLandViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">CrisisConsequenceViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Crisis Consequences.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CrisisConsequenceViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">CropFailureEventViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Crop Failure Events.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.CropFailureEventViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">DiseaseOutbreakViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Disease Outbreaks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DiseaseOutbreakViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">DroughtEventViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Drought Events.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.DroughtEventViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">ExternalConflictSideViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing External Conflict Sides.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictSideViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">ExternalConflictViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing External Conflicts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.ExternalConflictViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">FamineEventViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Famine Events.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.FamineEventViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">GDPPerCapitaViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing GDP Per Capitas.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GDPPerCapitaViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">GrossGrainSharedPerAgriculturalPopulationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Gross Grain Shared Per Agricultural Populations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.GrossGrainSharedPerAgriculturalPopulationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">HumanSacrificeViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Human Sacrifices.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.HumanSacrificeViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">InternalConflictViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Internal Conflicts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.InternalConflictViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">LocustEventViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Locust Events.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.LocustEventViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">MilitaryExpenseViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Military Expenses.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.MilitaryExpenseViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">NetGrainSharedPerAgriculturalPopulationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Net Grain Shared Per Agricultural Populations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.NetGrainSharedPerAgriculturalPopulationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">PowerTransitionViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Power Transitions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.PowerTransitionViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">SilverInflowViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Silver Inflows.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverInflowViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">SilverStockViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Silver Stocks.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SilverStockViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">SocioeconomicTurmoilEventViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Socioeconomic Turmoil Events.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SocioeconomicTurmoilEventViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SurplusViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">SurplusViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SurplusViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Surpluses.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.SurplusViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">TotalPopulationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing Total Populations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.TotalPopulationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USLocationViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">USLocationViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USLocationViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing US Locations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USLocationViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">USViolenceDataSourceViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing US Violence Data Sources.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceDataSourceViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">USViolenceSubtypeViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing US Violence Subtypes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceSubtypeViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">seshat.apps.seshat_api.views.crisisdb.</span></span><span class="sig-name descname"><span class="pre">USViolenceViewSet</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.FilterBackends</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPISerializer</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">seshat.apps.seshat_api.views._mixins.MixinSeshatAPIAuth</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">rest_framework.viewsets.ModelViewSet</span></code></p>
+<p>A viewset for viewing and editing US Violence.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.filterset_class">
+<span class="sig-name descname"><span class="pre">filterset_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.filterset_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.pagination_class">
+<span class="sig-name descname"><span class="pre">pagination_class</span></span><a class="headerlink" href="#seshat.apps.seshat_api.views.crisisdb.USViolenceViewSet.pagination_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../core/index.html" class="btn btn-neutral float-left" title="seshat.apps.seshat_api.views.core" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../general/index.html" class="btn btn-neutral float-right" title="seshat.apps.seshat_api.views.general" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

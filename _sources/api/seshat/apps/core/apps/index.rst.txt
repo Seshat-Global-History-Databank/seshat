@@ -1,0 +1,35 @@
+seshat.apps.core.apps
+=====================
+
+.. py:module:: seshat.apps.core.apps
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.apps.CoreConfig
+
+
+Module Contents
+---------------
+
+.. py:class:: CoreConfig
+
+   Bases: :py:obj:`django.apps.AppConfig`
+
+
+   .. py:method:: ready()
+
+
+   .. py:attribute:: default_auto_field
+      :value: 'django.db.models.BigAutoField'
+
+
+
+   .. py:attribute:: name
+      :value: 'seshat.apps.core'
+
+
+

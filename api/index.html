@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+
+  
+      <script src="../_static/jquery.js"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+      <script src="../_static/doctools.js"></script>
+      <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/clipboard.min.js"></script>
+      <script src="../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="seshat" href="seshat/index.html" />
+    <link rel="prev" title="How to update these docs" href="../how-to-update-these-docs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="seshat/index.html">seshat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading"></a></h1>
+<p>You can access (and download) the latest Seshat data from the website using the Seshat API (Application Programming Interface).</p>
+<p>The advantage of the API is that it allows you to access up-to-date Seshat data programmatically, allowing you to work with this data on your computer in a programming language such as Python.</p>
+<p>The best way to get started with loading data via the Seshat API is to use our Python package. See <a class="reference internal" href="../researcher/api.html#api-getting-started"><span class="std std-ref">Loading Seshat data in Python via the Seshat API</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The Seshat API is a RESTful API that allows you to query the Seshat database and retrieve data in JSON format.</p></li>
+<li><p>It is available on the Seshat website at <a class="reference external" href="https://seshat-db.com/api/">seshat-db.com/api</a>.</p></li>
+<li><p>Loading the API in your browser will show you the available endpoints and the data that can be retrieved from them.</p></li>
+<li><p>There is a filter option that allows you to specify the data you want to retrieve from the API.</p></li>
+</ul>
+</div>
+<p>The rest of this section og the documentation contains auto-generated API reference documentation.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="seshat/index.html">seshat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="seshat/apps/index.html">seshat.apps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/accounts/index.html">seshat.apps.accounts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/tests/index.html">seshat.apps.accounts.tests</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/accounts/tests/factories/index.html">seshat.apps.accounts.tests.factories</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/admin/index.html">seshat.apps.accounts.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/apps/index.html">seshat.apps.accounts.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/constants/index.html">seshat.apps.accounts.constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/custom_validators/index.html">seshat.apps.accounts.custom_validators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/forms/index.html">seshat.apps.accounts.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/models/index.html">seshat.apps.accounts.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/urls/index.html">seshat.apps.accounts.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/accounts/views/index.html">seshat.apps.accounts.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/core/index.html">seshat.apps.core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/management/index.html">seshat.apps.core.management</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/core/management/commands/index.html">seshat.apps.core.management.commands</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="seshat/apps/core/management/commands/populate_cliopatria/index.html">seshat.apps.core.management.commands.populate_cliopatria</a></li>
+<li class="toctree-l6"><a class="reference internal" href="seshat/apps/core/management/commands/populate_gadm/index.html">seshat.apps.core.management.commands.populate_gadm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/templatetags/index.html">seshat.apps.core.templatetags</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/core/templatetags/core_tags/index.html">seshat.apps.core.templatetags.core_tags</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/tests/index.html">seshat.apps.core.tests</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/core/tests/factories/index.html">seshat.apps.core.tests.factories</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/core/tests/tests/index.html">seshat.apps.core.tests.tests</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/admin/index.html">seshat.apps.core.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/apps/index.html">seshat.apps.core.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/constants/index.html">seshat.apps.core.constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/context_processors/index.html">seshat.apps.core.context_processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/custom_filters/index.html">seshat.apps.core.custom_filters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/forms/index.html">seshat.apps.core.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/manual_input_refs/index.html">seshat.apps.core.manual_input_refs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/middleware/index.html">seshat.apps.core.middleware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/models/index.html">seshat.apps.core.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/nlp_zotero_links/index.html">seshat.apps.core.nlp_zotero_links</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/signals/index.html">seshat.apps.core.signals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/tokens/index.html">seshat.apps.core.tokens</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/urls/index.html">seshat.apps.core.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/core/views/index.html">seshat.apps.core.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/crisisdb/index.html">seshat.apps.crisisdb</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/tests/index.html">seshat.apps.crisisdb.tests</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/crisisdb/tests/factories/index.html">seshat.apps.crisisdb.tests.factories</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/admin/index.html">seshat.apps.crisisdb.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/apps/index.html">seshat.apps.crisisdb.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/constants/index.html">seshat.apps.crisisdb.constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/custom_vars/index.html">seshat.apps.crisisdb.custom_vars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/forms/index.html">seshat.apps.crisisdb.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/models/index.html">seshat.apps.crisisdb.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/urls/index.html">seshat.apps.crisisdb.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/crisisdb/views/index.html">seshat.apps.crisisdb.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/general/index.html">seshat.apps.general</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/admin/index.html">seshat.apps.general.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/apps/index.html">seshat.apps.general.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/forms/index.html">seshat.apps.general.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/mixins/index.html">seshat.apps.general.mixins</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/models/index.html">seshat.apps.general.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/tests/index.html">seshat.apps.general.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/urls/index.html">seshat.apps.general.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/general/views/index.html">seshat.apps.general.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/rt/index.html">seshat.apps.rt</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/admin/index.html">seshat.apps.rt.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/apps/index.html">seshat.apps.rt.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/forms/index.html">seshat.apps.rt.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/models/index.html">seshat.apps.rt.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/tests/index.html">seshat.apps.rt.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/urls/index.html">seshat.apps.rt.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/var_defs/index.html">seshat.apps.rt.var_defs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/rt/views/index.html">seshat.apps.rt.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/sc/index.html">seshat.apps.sc</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/admin/index.html">seshat.apps.sc.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/apps/index.html">seshat.apps.sc.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/forms/index.html">seshat.apps.sc.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/models/index.html">seshat.apps.sc.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/tests/index.html">seshat.apps.sc.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/urls/index.html">seshat.apps.sc.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/var_defs/index.html">seshat.apps.sc.var_defs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/sc/views/index.html">seshat.apps.sc.views</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/seshat_api/index.html">seshat.apps.seshat_api</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/filters/index.html">seshat.apps.seshat_api.filters</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/core/index.html">seshat.apps.seshat_api.filters.core</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/crisisdb/index.html">seshat.apps.seshat_api.filters.crisisdb</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/general/index.html">seshat.apps.seshat_api.filters.general</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/rt/index.html">seshat.apps.seshat_api.filters.rt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/sc/index.html">seshat.apps.seshat_api.filters.sc</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/filters/wf/index.html">seshat.apps.seshat_api.filters.wf</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/views/index.html">seshat.apps.seshat_api.views</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/accounts/index.html">seshat.apps.seshat_api.views.accounts</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/core/index.html">seshat.apps.seshat_api.views.core</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/crisisdb/index.html">seshat.apps.seshat_api.views.crisisdb</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/general/index.html">seshat.apps.seshat_api.views.general</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/rt/index.html">seshat.apps.seshat_api.views.rt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/sc/index.html">seshat.apps.seshat_api.views.sc</a></li>
+<li class="toctree-l5"><a class="reference internal" href="seshat/apps/seshat_api/views/wf/index.html">seshat.apps.seshat_api.views.wf</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/admin/index.html">seshat.apps.seshat_api.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/apps/index.html">seshat.apps.seshat_api.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/models/index.html">seshat.apps.seshat_api.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/serializers/index.html">seshat.apps.seshat_api.serializers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/tests/index.html">seshat.apps.seshat_api.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/seshat_api/urls/index.html">seshat.apps.seshat_api.urls</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/apps/wf/index.html">seshat.apps.wf</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/admin/index.html">seshat.apps.wf.admin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/apps/index.html">seshat.apps.wf.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/forms/index.html">seshat.apps.wf.forms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/models/index.html">seshat.apps.wf.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/tests/index.html">seshat.apps.wf.tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/urls/index.html">seshat.apps.wf.urls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="seshat/apps/wf/views/index.html">seshat.apps.wf.views</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="seshat/settings/index.html">seshat.settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="seshat/settings/base/index.html">seshat.settings.base</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/settings/local/index.html">seshat.settings.local</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seshat/settings/production/index.html">seshat.settings.production</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="seshat/utils/index.html">seshat.utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="seshat/utils/utils/index.html">seshat.utils.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="seshat/asgi/index.html">seshat.asgi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seshat/urls/index.html">seshat.urls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seshat/wsgi/index.html">seshat.wsgi</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_filters/index.html">custom_filters</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../how-to-update-these-docs.html" class="btn btn-neutral float-left" title="How to update these docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="seshat/index.html" class="btn btn-neutral float-right" title="seshat" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

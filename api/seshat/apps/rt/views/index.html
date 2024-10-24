@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>seshat.apps.rt.views &mdash; Seshat 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+
+  
+      <script src="../../../../../_static/jquery.js"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+      <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+      <script src="../../../../../_static/doctools.js"></script>
+      <script src="../../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../../_static/clipboard.min.js"></script>
+      <script src="../../../../../_static/copybutton.js"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="seshat.apps.sc" href="../../sc/index.html" />
+    <link rel="prev" title="seshat.apps.rt.var_defs" href="../var_defs/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            Seshat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../admin/index.html">Seshat Databank Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../researcher/index.html">Researcher</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../expert/index.html">Seshat Expert</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../public_user/index.html">Public User</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../team.html">Team</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../resources.html">Project resources: where to find them</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../software-tools.html">Software tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../how-to-update-these-docs.html">How to update these docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">seshat</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html">seshat.apps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../settings/index.html">seshat.settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html">seshat.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../custom_filters/index.html">custom_filters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../code-of-conduct.html">Code of Conduct and Inclusivity</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Seshat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">seshat</a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">seshat.apps</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">seshat.apps.rt</a></li>
+      <li class="breadcrumb-item active">seshat.apps.rt.views</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/api/seshat/apps/rt/views/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-seshat.apps.rt.views">
+<span id="seshat-apps-rt-views"></span><h1>seshat.apps.rt.views<a class="headerlink" href="#module-seshat.apps.rt.views" title="Permalink to this heading"></a></h1>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.confirm_delete_view" title="seshat.apps.rt.views.confirm_delete_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confirm_delete_view</span></code></a>(request, model_class, pk, var_name)</p></td>
+<td><p>View function to confirm the deletion of an object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.delete_object_view" title="seshat.apps.rt.views.delete_object_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_object_view</span></code></a>(request, model_class, pk, var_name)</p></td>
+<td><p>View function to delete an object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.download_csv_all_rt" title="seshat.apps.rt.views.download_csv_all_rt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_csv_all_rt</span></code></a>(request)</p></td>
+<td><p>Download all data for all models in the RT app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.download_csv_government_restrictions" title="seshat.apps.rt.views.download_csv_government_restrictions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_csv_government_restrictions</span></code></a>(request)</p></td>
+<td><p>Download all data for the Government Restrictions model in the RT app.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.download_csv_religious_landscape" title="seshat.apps.rt.views.download_csv_religious_landscape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_csv_religious_landscape</span></code></a>(request)</p></td>
+<td><p>Download all data for the Religious Landscape model in the RT app.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.download_csv_societal_restrictions" title="seshat.apps.rt.views.download_csv_societal_restrictions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_csv_societal_restrictions</span></code></a>(request)</p></td>
+<td><p>Download all data for the Societal Restrictions model in the RT app.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.dynamic_create_view" title="seshat.apps.rt.views.dynamic_create_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_create_view</span></code></a>(request, form_class, x_name, ...)</p></td>
+<td><p>View function for the create page of a model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.dynamic_detail_view" title="seshat.apps.rt.views.dynamic_detail_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_detail_view</span></code></a>(request, pk, model_class, myvar, ...)</p></td>
+<td><p>View function for the detail page of a model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.dynamic_update_view" title="seshat.apps.rt.views.dynamic_update_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_update_view</span></code></a>(request, object_id, form_class, ...)</p></td>
+<td><p>View function for the update page of a model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.generic_download" title="seshat.apps.rt.views.generic_download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_download</span></code></a>(request, model_class, var_name)</p></td>
+<td><p>Download all data for a given model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.generic_list_view" title="seshat.apps.rt.views.generic_list_view"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_list_view</span></code></a>(request, model_class, var_name, ...)</p></td>
+<td><p>View function for the list page of a model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.generic_metadata_download" title="seshat.apps.rt.views.generic_metadata_download"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generic_metadata_download</span></code></a>(request, var_name, ...)</p></td>
+<td><p>Download metadata for a given model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.get_ref_options" title="seshat.apps.rt.views.get_ref_options"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_ref_options</span></code></a>(request)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.has_add_capital_permission" title="seshat.apps.rt.views.has_add_capital_permission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_add_capital_permission</span></code></a>(user)</p></td>
+<td><p>Check if the user has the 'core.add_capital' permission.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#seshat.apps.rt.views.rtvars" title="seshat.apps.rt.views.rtvars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rtvars</span></code></a>(request)</p></td>
+<td><p>View function for the RT variables page.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#seshat.apps.rt.views.show_problematic_rt_data_table" title="seshat.apps.rt.views.show_problematic_rt_data_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">show_problematic_rt_data_table</span></code></a>(request)</p></td>
+<td><p>View that shows a table of problematic data in the RT app.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.confirm_delete_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">confirm_delete_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.confirm_delete_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function to confirm the deletion of an object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>pk</strong> (<em>int</em>) – The primary key of the object.</p></li>
+<li><p><strong>var_name</strong> (<em>str</em>) – The variable name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered confirmation page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.delete_object_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">delete_object_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.delete_object_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function to delete an object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>pk</strong> (<em>int</em>) – The primary key of the object.</p></li>
+<li><p><strong>var_name</strong> (<em>str</em>) – The variable name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered confirmation page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.download_csv_all_rt">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">download_csv_all_rt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.download_csv_all_rt" title="Permalink to this definition"></a></dt>
+<dd><p>Download all data for all models in the RT app.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The access to this view is restricted to users with the ‘core.view_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.download_csv_government_restrictions">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">download_csv_government_restrictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.download_csv_government_restrictions" title="Permalink to this definition"></a></dt>
+<dd><p>Download all data for the Government Restrictions model in the RT app.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The access to this view is restricted to users with the ‘core.view_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.download_csv_religious_landscape">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">download_csv_religious_landscape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.download_csv_religious_landscape" title="Permalink to this definition"></a></dt>
+<dd><p>Download all data for the Religious Landscape model in the RT app.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The access to this view is restricted to users with the ‘core.view_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.download_csv_societal_restrictions">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">download_csv_societal_restrictions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.download_csv_societal_restrictions" title="Permalink to this definition"></a></dt>
+<dd><p>Download all data for the Societal Restrictions model in the RT app.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The access to this view is restricted to users with the ‘core.view_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.dynamic_create_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">dynamic_create_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">myvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">my_exp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_subsection</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.dynamic_create_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the create page of a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>form_class</strong> (<em>Form</em>) – The form class used to create the object.</p></li>
+<li><p><strong>x_name</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>myvar</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>my_exp</strong> (<em>str</em>) – The variable explanation.</p></li>
+<li><p><strong>var_section</strong> (<em>str</em>) – The section name.</p></li>
+<li><p><strong>var_subsection</strong> (<em>str</em>) – The subsection name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered create page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.dynamic_detail_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">dynamic_detail_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">myvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name_display</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.dynamic_detail_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the detail page of a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>pk</strong> (<em>int</em>) – The primary key of the object.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>myvar</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>var_name_display</strong> (<em>str</em>) – The variable name to display.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered detail page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.dynamic_update_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">dynamic_update_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">myvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">my_exp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_subsection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_url_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.dynamic_update_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the update page of a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>object_id</strong> (<em>int</em>) – The primary key of the object.</p></li>
+<li><p><strong>form_class</strong> (<em>Form</em>) – The form class used to update the object.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>x_name</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>myvar</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>my_exp</strong> (<em>str</em>) – The variable explanation.</p></li>
+<li><p><strong>var_section</strong> (<em>str</em>) – The section name.</p></li>
+<li><p><strong>var_subsection</strong> (<em>str</em>) – The subsection name.</p></li>
+<li><p><strong>delete_url_name</strong> (<em>str</em>) – The URL name for deleting the object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered update page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.generic_download">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">generic_download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.generic_download" title="Permalink to this definition"></a></dt>
+<dd><p>Download all data for a given model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>var_name</strong> (<em>str</em>) – The variable name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.generic_list_view">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">generic_list_view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_subsection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_main_desc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.generic_list_view" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the list page of a model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+The access to this view is restricted to users with the ‘core.add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>model_class</strong> (<em>Model</em>) – The model class of the object.</p></li>
+<li><p><strong>var_name</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>var_name_display</strong> (<em>str</em>) – The variable name to display.</p></li>
+<li><p><strong>var_section</strong> (<em>str</em>) – The section name.</p></li>
+<li><p><strong>var_subsection</strong> (<em>str</em>) – The subsection name.</p></li>
+<li><p><strong>var_main_desc</strong> (<em>str</em>) – The main description.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered list page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.generic_metadata_download">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">generic_metadata_download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_name_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_section</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_subsection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_main_desc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.generic_metadata_download" title="Permalink to this definition"></a></dt>
+<dd><p>Download metadata for a given model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function is a generic view function that can be used for any model.
+This view is only accessible to users with the ‘add_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p></li>
+<li><p><strong>var_name</strong> (<em>str</em>) – The variable name.</p></li>
+<li><p><strong>var_name_display</strong> (<em>str</em>) – The variable name to display.</p></li>
+<li><p><strong>var_section</strong> (<em>str</em>) – The section name.</p></li>
+<li><p><strong>var_subsection</strong> (<em>str</em>) – The subsection name.</p></li>
+<li><p><strong>var_main_desc</strong> (<em>str</em>) – The main description.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the CSV file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.get_ref_options">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">get_ref_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.get_ref_options" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.has_add_capital_permission">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">has_add_capital_permission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.has_add_capital_permission" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the user has the ‘core.add_capital’ permission.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>TODO This is built-in functionality in Django. You can use the built-in permission_required decorator instead.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user</strong> (<em>User</em>) – The user object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the user has the ‘core.add_capital’ permission, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.rtvars">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">rtvars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.rtvars" title="Permalink to this definition"></a></dt>
+<dd><p>View function for the RT variables page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered RT variables page.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="seshat.apps.rt.views.show_problematic_rt_data_table">
+<span class="sig-prename descclassname"><span class="pre">seshat.apps.rt.views.</span></span><span class="sig-name descname"><span class="pre">show_problematic_rt_data_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#seshat.apps.rt.views.show_problematic_rt_data_table" title="Permalink to this definition"></a></dt>
+<dd><p>View that shows a table of problematic data in the RT app.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The access to this view is restricted to users with the ‘core.view_capital’ permission.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>request</strong> (<em>HttpRequest</em>) – The request object used to generate this page.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The response object that contains the rendered problematic data table.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>HttpResponse</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../var_defs/index.html" class="btn btn-neutral float-left" title="seshat.apps.rt.var_defs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../sc/index.html" class="btn btn-neutral float-right" title="seshat.apps.sc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Seshat: Global History Databank.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
