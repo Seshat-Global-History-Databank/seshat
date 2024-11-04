@@ -8,11 +8,11 @@
 <span class="px-0 pt-1 pb-0 m-0" style="display:inline-block; vertical-align:top;line-height:normal; margin:0px !important;">
 
 
-{% if value.description %}
+{% if object.description %}
 <a class="p-0 m-0" 
 style="display:block; overflow: hidden;" 
 href="{% url key|lower|add:'-update' value.id %}">
-    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#6363634c">
+    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c">
         <i class=" fa-solid fa-pen-to-square"></i>
         <span> &nbsp;&nbsp;Edit coded value </span>
     </span>
@@ -20,10 +20,10 @@ href="{% url key|lower|add:'-update' value.id %}">
 {% else %}
 <a class="p-0 m-0" 
 style="display:block; overflow: hidden;" 
-href="{% url key|lower|add:'-updatenew' value.id %}">
+href="{% url key|lower|add:'-update' value.id %}">
     <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c">
         <i class=" fa-solid fa-pen-to-square"></i>
-        <span> &nbsp;&nbsp;Edit coded value {{value.description}}  </span>
+        <span> &nbsp;&nbsp;Edit coded value </span>
     </span>
 </a>  
 {% endif %}
@@ -31,16 +31,16 @@ href="{% url key|lower|add:'-updatenew' value.id %}">
 {% if not value.description %}
     {% if value.comment and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
         {% if value.comment.id == 1 or value.comment.inner_comments_related.all|length == 0 %}
-            {% with dynamic_url=value.clean_name|add:"-detail" %}
                 <a class="p-0 m-0" 
                 style="display:block; overflow: hidden;"
-                href="{% url dynamic_url value.id %}">
+                href="{% url 'create_subcomment_new' app_name=my_app_name model_name=value.clean_name instance_id=value.id %}">
                     <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
                         <i class="fa-solid fa-pen"></i>
-                        <span> &nbsp;&nbsp;Create Description</span>
+                        <span> &nbsp;&nbsp;Create Description (NEW)
+                        </span>
                     </span>
                 </a>
-            {% endwith %}
+
         {% else  %}
             <a class="p-0 m-0" 
             style="display:block; overflow: hidden;" 
@@ -48,25 +48,13 @@ href="{% url key|lower|add:'-updatenew' value.id %}">
                 <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
                     <i class="fa-solid fa-pen-to-square"></i>
                     <span>
-                        &nbsp;&nbsp;Edit Description
+                        &nbsp;&nbsp;Edit Description (NEW)
                     </span>
                 </span>
             </a>
         {% endif %}  
-    {% else  %}
-    {% with dynamic_url=value.clean_name|add:"-detail" %}
-        <a class="p-0 m-0" 
-        style="display:block; overflow: hidden;"
-        href="{% url dynamic_url value.id %}">
-            <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
-                <i class="fa-solid fa-pen"></i>
-                <span> &nbsp;&nbsp;Create Description X</span>
-            </span>
-        </a>
-    {% endwith %}
-
     {% endif %}   
-{% endif %}  
+    {% endif %}  
 
 
     {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
@@ -76,7 +64,7 @@ href="{% url key|lower|add:'-updatenew' value.id %}">
             href="{% url 'create_private_subcomment_new' app_name=my_app_name model_name=value.clean_name instance_id=value.id %}">
                 <span class="badge badge-jid badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c">
                     <i class="fa-regular fa-comment"></i>
-                    <span> &nbsp;&nbsp;Create Private Comment
+                    <span> &nbsp;&nbsp;Create Private Comment (NEW)
                     </span>
                 </span>
             </a>

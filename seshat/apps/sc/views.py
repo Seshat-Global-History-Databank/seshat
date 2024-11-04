@@ -45,6 +45,11 @@ from .models import Ra, Polity_territory, Polity_population, Population_of_the_l
 
 from .forms import RaForm, Polity_territoryForm, Polity_populationForm, Population_of_the_largest_settlementForm, Settlement_hierarchyForm, Administrative_levelForm, Religious_levelForm, Military_levelForm, Professional_military_officerForm, Professional_soldierForm, Professional_priesthoodForm, Full_time_bureaucratForm, Examination_systemForm, Merit_promotionForm, Specialized_government_buildingForm, Formal_legal_codeForm, JudgeForm, CourtForm, Professional_lawyerForm, Irrigation_systemForm, Drinking_water_supply_systemForm, MarketForm, Food_storage_siteForm, RoadForm, BridgeForm, CanalForm, PortForm, Mines_or_quarryForm, Mnemonic_deviceForm, Nonwritten_recordForm, Written_recordForm, ScriptForm, Non_phonetic_writingForm, Phonetic_alphabetic_writingForm, Lists_tables_and_classificationForm, CalendarForm, Sacred_textForm, Religious_literatureForm, Practical_literatureForm, HistoryForm, PhilosophyForm, Scientific_literatureForm, FictionForm, ArticleForm, TokenForm, Precious_metalForm, Foreign_coinForm, Indigenous_coinForm, Paper_currencyForm, CourierForm, Postal_stationForm, General_postal_serviceForm
 
+
+####################################
+def has_add_capital_permission(user):
+    return user.has_perm('core.add_capital')
+
 class RaCreate(PermissionRequiredMixin, CreateView):
     model = Ra
     form_class = RaForm
@@ -7655,12 +7660,14 @@ def has_add_capital_permission(user):
     return user.has_perm('core.add_capital')
 
 
-# Use the login_required, permission_required, and user_passes_test decorators
+###### NEW APPROACH ##############
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
+def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_section, var_subsection):
     # Retrieve the object for the given model class
+    #import time
+    #start_time = time.time()
     obj = get_object_or_404(model_class, pk=pk)
     form_inline_new = SeshatCommentPartForm2(request.POST)
 
@@ -7672,10 +7679,63 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
         'see_all_url': myvar+"s_all",
         'letsdo': 'Let us do it!!!',
         'form': form_inline_new,
-        'db_section': 'rt',
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+        'db_section': 'sc',
     }
+    #end_time = time.time()
+    #print('elapsed_time RT', end_time-start_time)
 
-    return render(request, 'sc/sc_detail.html', context)
+    return render(request, 'core/generic_templates/generic_detail.html', context)
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section, var_subsection):
+    x_name_1 = x_name
+    x_name_2 = None
+    x_name_3 = None
+    
+    if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to'
+
+    if request.method == 'POST':
+        my_form = form_class(request.POST)
+        
+        if my_form.is_valid():
+            new_object = my_form.save()
+            #return redirect('seshat-index') 
+            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
+    else:
+        polity_id_x = request.GET.get('polity_id_x')
+        my_form = form_class(initial= {'polity': polity_id_x,})
+
+    # Prepare the context for invalid form
+    context = {
+        'form': my_form,
+        'object': object,
+        "myvar": myvar,
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+        "my_exp": my_exp,
+    }
+    if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+        context.update({
+            'extra_var': my_form[x_name_with_from],
+            'extra_var2': my_form[x_name_with_to],
+        })
+    elif x_name in ['capital',]:
+        context.update({
+            'extra_var': my_form['polity_cap'], 
+        })
+    else:
+        context.update({
+            'extra_var': my_form[x_name],
+        })
+
+    return render(request, 'core/generic_templates/generic_create.html', context)
 
 
 
@@ -7683,54 +7743,75 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display):
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section, var_subsection):
+def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
     # Retrieve the object based on the object_id
+    my_object = model_class.objects.get(id=object_id)
+    
+    if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to'
 
-    if x_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        x_name_with_from = x_name + "_from"
-        x_name_with_to = x_name + "_to"
-    else:
-        x_name_with_from = x_name
-        x_name_with_to = None
-
-
+    # Handle POST request
     if request.method == 'POST':
-        # If the request method is POST, it means the form has been submitted
-        my_form = form_class(request.POST)
-        
+        my_form = form_class(request.POST, instance=my_object)
+
         if my_form.is_valid():
-            # Save the new object to the database
-            new_object = my_form.save()
-            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
-    else:
-        polity_id_x = request.GET.get('polity_id_x')
-        my_form = form_class(initial= {'polity': polity_id_x,})
-
-    # Define the context with the variables you want to pass to the template
-    if x_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+            my_form.save()
+            return redirect("polity-detail-main", pk=my_object.polity.id) 
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
         context = {
             'form': my_form,
-            'object': object,
-            'extra_var': my_form[x_name_with_from], 
-            'extra_var2': my_form[x_name_with_to], 
+            'object': my_object,
+            'delete_url': delete_url_name,
             "myvar": myvar,
-            "my_exp": my_exp,
             'var_section': var_section,
             'var_subsection': var_subsection,
-            }
-    else:
-        context = {
-            'form': my_form,
-            'object': object,
-            'extra_var': my_form[x_name], 
-            "myvar": myvar,
             "my_exp": my_exp,
-            'var_section': var_section,
-            'var_subsection': var_subsection,
         }
+        if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif x_name in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[x_name], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[x_name],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif x_name in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[x_name], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[x_name],
+            })
 
-    return render(request, 'sc/sc_create.html', context)
-
+    return render(request, 'core/generic_templates/generic_update_old.html', context)
 
 # Use the login_required, permission_required, and user_passes_test decorators
 @login_required
@@ -7739,62 +7820,82 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
 def dynamic_update_view(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
-
-
-    if x_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        x_name_with_from = x_name + "_from"
-        x_name_with_to = x_name + "_to"
-    else:
-        x_name_with_from = x_name
-        x_name_with_to = None
-
-    #return_url = f"{x_name}s_all"
+    
+    if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to'
+    # Handle POST request
     if request.method == 'POST':
-        # Bind the form to the POST data
         my_form = form_class(request.POST, instance=my_object)
-        
+
         if my_form.is_valid():
-            # Save the changes to the object
-            my_form.save()   
-            #return redirect(return_url) 
-            return redirect(f"{x_name}-detail", pk=my_object.id) 
-
-    else:
-        # Create an instance of the form and populate it with the object's data
-        my_form = form_class(instance=my_object)
-
-        # Define the context with the variables you want to pass to the template
-        if x_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-            context = {
-                'form': my_form,
-                'object': my_object,
-                'delete_url': delete_url_name,
-                'extra_var': my_form[x_name_with_from], 
-                'extra_var2': my_form[x_name_with_to], 
-                "myvar": myvar,
-                'var_section': var_section,
-                'var_subsection': var_subsection,
-                "my_exp": my_exp,
-            }
+            my_form.save()
+            return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif x_name in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[x_name], 
+            })
         else:
-            context = {
-                'form': my_form,
-                'object': my_object,
-                'delete_url': delete_url_name,
-                'extra_var': my_form[x_name], 
-                "myvar": myvar,
-                'var_section': var_section,
-                'var_subsection': var_subsection,
-                "my_exp": my_exp,
-            }
+            context.update({
+                'extra_var': my_form[x_name],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif x_name in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[x_name], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[x_name],
+            })
 
-    return render(request, 'sc/sc_update.html', context)
+    return render(request, 'core/generic_templates/generic_update.html', context)
 
 
 
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
-    # Retrieve a list of objects from the database (you can customize this query)
-    object_list = model_class.objects.all()
+    if var_name in ["widespread_religion",]:
+        object_list = model_class.objects.all().order_by('polity_id', 'order')
+    else:
+        object_list = model_class.objects.all()
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
     extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
@@ -7804,13 +7905,16 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
     if orderby and hasattr(model_class, orderby):
         object_list = object_list.order_by(orderby)
 
-    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        var_name_with_from = var_name + "_from"
-        var_exp_new = f'The range of "{var_name_display}" for a polity.'
-    else:
-        var_name_with_from = var_name
-        var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
+    var_name_with_from = var_name
+    var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
 
+    # if var_name in ["official_religion", "elites_religion",]:
+    #     ordering_tag_value = "coded_value_id"
+    # #     # ?orderby=formal_legal_code&orderby2=tag
+    # elif var_name in ["widespread_religion",]:
+    #     ordering_tag_value = "order"
+    # else:
+    #     ordering_tag_value = "coded_value"
 
     # Define any additional context variables you want to pass to the template
     context = {
@@ -7818,12 +7922,13 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
         'var_name': var_name,
         'create_url': f'{var_name}-create',
         'update_url': f'{var_name}-update',
+        'update_url_new': f'{var_name}-updatenew',
         'download_url': f'{var_name}-download',
         'pagination_url': f'{var_name}s',
         'metadownload_url':  f'{var_name}-metadownload',
         'list_all_url':  f'{var_name}s_all',
         'var_name_display': var_name_display,
-        'ordering_tag': f"?orderby={var_name_with_from}",
+        'ordering_tag': f"?orderby={var_name}",
         'var_section': var_section,
         'var_subsection': var_subsection,
         'var_main_desc': var_main_desc,
@@ -7848,9 +7953,55 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
             'choices': 'ABSENT_PRESENT_CHOICES', 
             'null_meaning': None}}
 
-    return render(request, 'sc/sc_list_all.html', context)
+    return render(request, 'core/generic_templates/generic_list_all.html', context)
 
 
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def confirm_delete_view(request, model_class, pk, var_name):
+    permission_required = 'core.add_capital'
+    
+    # Retrieve the object for the given model class
+    obj = get_object_or_404(model_class, pk=pk)
+
+    # Check if the user has the required permission
+    if not request.user.has_perm(permission_required):
+        return HttpResponseForbidden("You don't have permission to delete this object.")
+
+    template_name = "core/confirm_delete.html"
+    
+    context = {
+        'var_name': var_name,
+        'obj': obj,
+        'delete_object': f'{var_name}-delete',
+    }
+
+    return render(request, template_name, context)
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def delete_object_view(request, model_class, pk, var_name):
+    permission_required = 'core.add_capital'
+    # Retrieve the object for the given model class
+    obj = get_object_or_404(model_class, pk=pk)
+
+    if not request.user.has_perm(permission_required):
+        return HttpResponseForbidden("You don't have permission to delete this object.")
+    
+    # Delete the object
+    obj.delete()
+    
+    # Redirect to the success URL
+    success_url_name = f'{var_name}s_all'  # Adjust the success URL as needed
+    success_url = reverse(success_url_name)
+    
+    # Display a success message
+    messages.success(request, f"{var_name} has been deleted successfully.")
+    
+    return redirect(success_url)
 
 
 @login_required

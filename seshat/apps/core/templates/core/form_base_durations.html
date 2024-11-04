@@ -59,13 +59,95 @@
         margin: 0;
     }
 
-    .row {
-        --bs-gutter-x: 1.0rem;
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
     }
+    
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .tab a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
+    
+    .tab:hover {
+        background-color: #d1d1d1;
+    }
+    
+    .tab.active {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #4CAF50;
+    }
+
+    .tab.done {
+        background-color: #782823;
+        color: lightgray;
+        border-color: #782823;
+    }
+    
+    .tab.waiting {
+        color: gray;
+        border-color: darkgray;
+    }
+
+    .tab.active a {
+        color: white;
+    }
+    
+    .arrow {
+        font-size: 24px;
+        margin: 0 10px;
+        color: #4CAF50;
+    }
+    
+    .content {
+        text-align: center;
+        margin: 50px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+          
     
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
-<div class="container mt-3">
+<div class="container mt-1">
+    <div class="tab-container">
+        <div class="tab active" id="step1-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 1: Insert the data</span>
+        </div>
+        <div class="arrow">&#10132;</div>
+        <div class="tab waiting" id="step2-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description</span>
+        </div>
+        <div class="arrow">&#10132;</div>
+        <div class="tab waiting" id="step3-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+        </div>
+        
+    </div>
     <form action="" method="post" >
         {% csrf_token %}
         <legend>

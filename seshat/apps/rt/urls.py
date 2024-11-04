@@ -60,7 +60,19 @@ urlpatterns = [
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
-        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view, {
+        path(f'{x_name}/updatenew/<int:object_id>/', dynamic_update_view, {
+            'form_class': form_class,
+            'model_class': model_class,
+            'x_name': x_name,
+            'myvar': myvar,
+            'my_exp': rt_var_defs[myvar.lower().capitalize()],
+            'var_section': sec,
+            'var_subsection': subsec,
+            'delete_url_name': x_name + "-confirm-delete",
+        }, name=f'{x_name}-updatenew')
+    )
+    urlpatterns.append(
+        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view_old, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,
@@ -70,18 +82,6 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
             'var_subsection': subsec,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-update')
-    )
-    urlpatterns.append(
-        path(f'{x_name}/update_old/<int:object_id>/', dynamic_update_view_old, {
-            'form_class': form_class,
-            'model_class': model_class,
-            'x_name': x_name,
-            'myvar': myvar,
-            'my_exp': rt_var_defs[myvar.lower().capitalize()],
-            'var_section': sec,
-            'var_subsection': subsec,
-            'delete_url_name': x_name + "-confirm-delete",
-        }, name=f'{x_name}-update-old')
     )
     urlpatterns.append(
         path(f'{x_name}/create/', dynamic_create_view, {

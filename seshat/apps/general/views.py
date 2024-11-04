@@ -2,9 +2,9 @@
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier
 from django.db.models.base import Model
 # from django.http.response import HttpResponse
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.utils.safestring import mark_safe
 from django.views.generic.list import ListView
 
@@ -12,9 +12,9 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from django.http import HttpResponseRedirect, response, JsonResponse
 from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
 
+from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
 # from .mycodes import *
 from django.conf import settings
 
@@ -24,6 +24,8 @@ from django.db.models import Q
 from django.views import generic
 import csv
 import datetime
+
+from django.contrib import messages
 
 from django.core.paginator import Paginator
 
@@ -38,12 +40,19 @@ from django.apps import apps
 from django.core.mail import send_mail
 
 from .mixins import PolityIdMixin
+from .var_defs import swapped_dict
 
 
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
 
 
 from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
+
+
+
+# Define a custom test function to check for the 'core.add_capital' permission
+def has_add_capital_permission(user):
+    return user.has_perm('core.add_capital')
 
 class Polity_research_assistantCreate(PermissionRequiredMixin, CreateView):
     model = Polity_research_assistant
@@ -3943,3 +3952,518 @@ def send_test_email():
         ['benam@csh.ac.at'],  # Replace with recipient email(s)
         fail_silently=False,
     )
+
+
+
+###### NEW APPROACH ##############
+from seshat.apps.core.forms import  SeshatCommentPartForm2
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_section, var_subsection,):
+    # Retrieve the object for the given model class
+    #import time
+    #start_time = time.time()
+    obj = get_object_or_404(model_class, pk=pk)
+    form_inline_new = SeshatCommentPartForm2(request.POST)
+
+    context = {
+        'object': obj,
+        "myvar": myvar,
+        "var_name_display": var_name_display,
+        'create_new_url': myvar+"-create",
+        'see_all_url': myvar+"s_all",
+        'letsdo': 'Let us do it!!!',
+        'form': form_inline_new,
+        'db_section': 'general',
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+    }
+    #end_time = time.time()
+    #print('elapsed_time RT', end_time-start_time)
+
+    return render(request, 'core/generic_templates/generic_detail.html', context)
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection):
+    x_name_1 = x_name
+    x_name_2 = None
+    x_name_3 = None
+    
+    if coded_value == 'duration':
+        x_name_with_from = 'polity_year_from'
+        x_name_with_to = 'polity_year_to'
+    elif coded_value == 'peak_years':
+        x_name_with_from = 'peak_year_from'
+        x_name_with_to = 'peak_year_to'
+    elif coded_value == 'scale_of_supracultural_interaction':
+        x_name_with_from = 'scale_from'
+        x_name_with_to = 'scale_to'
+
+    if request.method == 'POST':
+        my_form = form_class(request.POST)
+        
+        if my_form.is_valid():
+            new_object = my_form.save()
+            #return redirect('seshat-index') 
+            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
+    else:
+        polity_id_x = request.GET.get('polity_id_x')
+        my_form = form_class(initial= {'polity': polity_id_x,})
+
+    # Prepare the context for invalid form
+    context = {
+        'form': my_form,
+        'object': object,
+        "myvar": myvar,
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+        "my_exp": my_exp,
+    }
+    if coded_value in ['preceding_entity']:
+        context.update({
+            'extra_var': my_form['other_polity'],
+            'extra_var2': my_form['merged_old_data'],
+            'extra_var3': my_form['relationship_to_preceding_entity'],
+        })
+    elif coded_value in ['suprapolity_relations']:
+        context.update({
+            'extra_var': my_form['supra_polity_relations'],
+            'extra_var2': my_form['other_polity'],
+
+        })
+    elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+        context.update({
+            'extra_var': my_form[x_name_with_from],
+            'extra_var2': my_form[x_name_with_to],
+        })
+    elif coded_value in ['capital',]:
+        context.update({
+            'extra_var': my_form['polity_cap'], 
+        })
+    else:
+        context.update({
+            'extra_var': my_form[coded_value],
+        })
+
+    return render(request, 'core/generic_templates/generic_create.html', context)
+
+
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, delete_url_name):
+    # Retrieve the object based on the object_id
+    my_object = model_class.objects.get(id=object_id)
+    
+    if coded_value == 'duration':
+        x_name_with_from = 'polity_year_from'
+        x_name_with_to = 'polity_year_to'
+    elif coded_value == 'peak_years':
+        x_name_with_from = 'peak_year_from'
+        x_name_with_to = 'peak_year_to'
+    elif coded_value == 'scale_of_supracultural_interaction':
+        x_name_with_from = 'scale_from'
+        x_name_with_to = 'scale_to'
+
+    # Handle POST request
+    if request.method == 'POST':
+        my_form = form_class(request.POST, instance=my_object)
+
+        if my_form.is_valid():
+            my_form.save()
+            return redirect("polity-detail-main", pk=my_object.polity.id) 
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if coded_value in ['preceding_entity']:
+            context.update({
+                'extra_var': my_form['other_polity'],
+                'extra_var2': my_form['merged_old_data'],
+                'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['suprapolity_relations']:
+            context.update({
+                'extra_var': my_form['supra_polity_relations'],
+                'extra_var2': my_form['other_polity'],
+
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[coded_value], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[coded_value],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if coded_value in ['preceding_entity']:
+            context.update({
+                'extra_var': my_form['other_polity'],
+                'extra_var2': my_form['merged_old_data'],
+                'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['suprapolity_relations']:
+            context.update({
+                'extra_var': my_form['supra_polity_relations'],
+                'extra_var2': my_form['other_polity'],
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[coded_value], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[coded_value],
+            })
+
+    return render(request, 'core/generic_templates/generic_update_old.html', context)
+
+# Use the login_required, permission_required, and user_passes_test decorators
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_update_view(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, delete_url_name):
+    # Retrieve the object based on the object_id
+    my_object = model_class.objects.get(id=object_id)
+    
+    if coded_value == 'duration':
+        x_name_with_from = 'polity_year_from'
+        x_name_with_to = 'polity_year_to'
+    elif coded_value == 'peak_years':
+        x_name_with_from = 'peak_year_from'
+        x_name_with_to = 'peak_year_to'
+    elif coded_value == 'scale_of_supracultural_interaction':
+        x_name_with_from = 'scale_from'
+        x_name_with_to = 'scale_to'
+
+
+    # Handle POST request
+    if request.method == 'POST':
+        my_form = form_class(request.POST, instance=my_object)
+
+        if my_form.is_valid():
+            my_form.save()
+            return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if coded_value in ['preceding_entity']:
+            context.update({
+                'extra_var': my_form['other_polity'],
+                'extra_var2': my_form['merged_old_data'],
+                'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['suprapolity_relations']:
+            context.update({
+                'extra_var': my_form['supra_polity_relations'],
+                'extra_var2': my_form['other_polity'],
+
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[coded_value], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[coded_value],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if coded_value in ['preceding_entity']:
+            context.update({
+                'extra_var': my_form['other_polity'],
+                'extra_var2': my_form['merged_old_data'],
+                'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['suprapolity_relations']:
+            context.update({
+                'extra_var': my_form['supra_polity_relations'],
+                'extra_var2': my_form['other_polity'],
+
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['capital',]:
+            context.update({
+                'extra_var': my_form['polity_cap'], 
+                'extra_var2': my_form[coded_value], 
+            })
+        else:
+            context.update({
+                'extra_var': my_form[coded_value],
+            })
+
+    return render(request, 'core/generic_templates/generic_update.html', context)
+
+
+
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, var_main_desc):
+    if var_name in ["widespread_religion",]:
+        object_list = model_class.objects.all().order_by('polity_id', 'order')
+    else:
+        object_list = model_class.objects.all()
+    #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+    if coded_value == "suprapolity_relations":
+        extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
+    else:
+        extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
+
+    orderby = request.GET.get('orderby', None)
+
+    # Apply sorting if orderby is provided and is a valid field name
+    if orderby and hasattr(model_class, orderby):
+        object_list = object_list.order_by(orderby)
+
+    var_name_with_from = var_name
+    var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
+
+    # if var_name in ["official_religion", "elites_religion",]:
+    #     ordering_tag_value = "coded_value_id"
+    # #     # ?orderby=formal_legal_code&orderby2=tag
+    # elif var_name in ["widespread_religion",]:
+    #     ordering_tag_value = "order"
+    # else:
+    #     ordering_tag_value = "coded_value"
+
+    # Define any additional context variables you want to pass to the template
+    context = {
+        'object_list': object_list,
+        'var_name': var_name,
+        'create_url': f'{var_name}-create',
+        'update_url': f'{var_name}-update',
+        'update_url_new': f'{var_name}-updatenew',
+        'download_url': f'{var_name}-download',
+        'pagination_url': f'{var_name}s',
+        'metadownload_url':  f'{var_name}-metadownload',
+        'list_all_url':  f'{var_name}s_all',
+        'var_name_display': var_name_display,
+        'ordering_tag': f"?orderby={coded_value}",
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+        'var_main_desc': var_main_desc,
+        'myvar': var_name_display,
+        'extra_var_dict': extra_var_dict,  # Add the dictionary to the context
+        #'extra_var': obj[var_name],
+
+        #'obj_var': my_form[x_name], 
+        #"myvar": myvar,
+        #"my_exp": my_exp,
+    }
+
+
+    context["inner_vars"] = {
+        var_name_display: {
+            'min': None,
+            'max': None,
+            'scale': None, 
+            'var_exp_source': None, 
+            'var_exp': var_exp_new,
+            'units': None, 
+            'choices': 'ABSENT_PRESENT_CHOICES', 
+            'null_meaning': None}}
+
+    return render(request, 'core/generic_templates/generic_list_all.html', context)
+
+
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def confirm_delete_view(request, model_class, pk, var_name):
+    permission_required = 'core.add_capital'
+    
+    # Retrieve the object for the given model class
+    obj = get_object_or_404(model_class, pk=pk)
+
+    # Check if the user has the required permission
+    if not request.user.has_perm(permission_required):
+        return HttpResponseForbidden("You don't have permission to delete this object.")
+
+    template_name = "core/confirm_delete.html"
+    
+    context = {
+        'var_name': var_name,
+        'obj': obj,
+        'delete_object': f'{var_name}-delete',
+    }
+
+    return render(request, template_name, context)
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def delete_object_view(request, model_class, pk, var_name):
+    permission_required = 'core.add_capital'
+    # Retrieve the object for the given model class
+    obj = get_object_or_404(model_class, pk=pk)
+
+    if not request.user.has_perm(permission_required):
+        return HttpResponseForbidden("You don't have permission to delete this object.")
+    
+    # Delete the object
+    obj.delete()
+    
+    # Redirect to the success URL
+    success_url_name = f'{var_name}s_all'  # Adjust the success URL as needed
+    success_url = reverse(success_url_name)
+    
+    # Display a success message
+    messages.success(request, f"{var_name} has been deleted successfully.")
+    
+    return redirect(success_url)
+
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def generic_download(request, model_class, var_name):
+    # Fetch all objects for the specified model
+    items = model_class.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    file_name = f"social_complexity_{var_name}_{current_datetime}.csv"
+
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+        var_name_with_from = var_name + "_from"
+        var_name_with_to = var_name + "_to"
+    else:
+        var_name_with_from = var_name
+        var_name_with_to = None
+
+    writer = csv.writer(response, delimiter='|')
+    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+        writer.writerow(['variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    var_name_with_from, var_name_with_to, 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    else:
+        writer.writerow(['variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    var_name, 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    for obj in items:
+        if obj.clean_name_spaced() == 'Polity Duration':
+            writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
+                        obj.polity_year_from, obj.polity_year_to, obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                        obj.expert_reviewed,])
+        elif obj.clean_name_spaced() == 'Polity Peak Years':
+            writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
+                        obj.peak_year_from, obj.peak_year_to, obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                        obj.expert_reviewed,])
+        else:
+            if obj.show_value() == "NO_VALUE_ON_WIKI" or obj.show_value() == "NO_VALID_VALUE":
+                continue
+            elif "O_VALUE_ON_WIKI" in str(obj.show_value()):
+                continue
+            else:
+                writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
+                        obj.show_value(), None,  obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                        obj.expert_reviewed,])
+
+
+        # if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+        #     dynamic_value_from = getattr(obj, var_name_with_from, '')
+        #     dynamic_value_to = getattr(obj, var_name_with_to, '')
+        #     writer.writerow([obj.name, obj.year_from, obj.year_to,
+        #                     obj.polity.long_name, obj.polity.new_name, obj.polity.name, dynamic_value_from, dynamic_value_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+        #                     obj.expert_reviewed, obj.drb_reviewed,])
+        # else:
+        #     dynamic_value = getattr(obj, var_name, '')
+        #     writer.writerow([obj.name, obj.year_from, obj.year_to,
+        #                     obj.polity.long_name, obj.polity.new_name, obj.polity.name, dynamic_value, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+        #                     obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
+@login_required
+@permission_required('core.add_capital', raise_exception=True)
+@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def generic_metadata_download(request, var_name, var_name_display, var_section, var_subsection, var_main_desc):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="metadata_{var_name}s.csv"'
+    
+    my_meta_data_dic = {'notes': 'No_Actual_note', 'main_desc': var_main_desc, 'main_desc_source': 'NOTHING', 'section': var_section, 'subsection': var_subsection}
+    my_meta_data_dic_inner_vars = {'general_postal_service': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': f'The {var_name_display} for a polity.', 'units': None, 'choices': 'ABSENT_PRESENT_CHOICES', 'null_meaning': None}}
+
+    writer = csv.writer(response, delimiter='|')
+    # bring in the meta data nedded
+    for k, v in my_meta_data_dic.items():
+        writer.writerow([k, v])
+
+    for k_in, v_in in my_meta_data_dic_inner_vars.items():
+        writer.writerow([k_in,])
+        for inner_key, inner_value in v_in.items():
+            if inner_value:
+                writer.writerow([inner_key, inner_value])
+
+    return response

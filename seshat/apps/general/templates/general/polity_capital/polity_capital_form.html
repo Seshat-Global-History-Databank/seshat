@@ -9,14 +9,11 @@
         Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
     </span>
 </div>
-
 <div class="col-md-4 mb-2">
     {{ form.capital|as_crispy_field }}
     <span class="text-secondary">
         This is the old coded value and should only be used as a hint (if it exists).
     </span>
 </div>
-
-
 {% endblock extra_vars %}
         

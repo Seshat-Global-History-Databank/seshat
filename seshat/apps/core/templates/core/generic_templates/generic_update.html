@@ -1,0 +1,47 @@
+{% extends "core/form_base_for_new_approach_upgrade.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_vars %}
+
+    {% if extra_var and extra_var2 and extra_var3 %}
+    <div class="col-md-4">
+        {{ extra_var|as_crispy_field }}
+    </div>
+    <div class="col-md-4">
+        {{ extra_var3|as_crispy_field }}
+    </div>
+    <div class="col-sm-4 pb-2">
+        {{ form.polity|as_crispy_field }}
+    </div>
+    <div class="col-md-6 pb-4">
+        {{ extra_var2|as_crispy_field }}
+    </div>
+    {% elif extra_var and extra_var2  %}
+        <div class="col-md-3">
+            {{ extra_var|as_crispy_field }}
+            {% if extra_var.name == 'polity_cap'  %}
+            <span class="text-secondary">
+                Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+            </span>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+            {{ extra_var2|as_crispy_field }}
+        </div>
+    {% else %}
+    <div class="col-md-6 pb-2">
+        {{ extra_var|as_crispy_field }}
+        {% if extra_var.name == 'polity_cap'  %}
+        <span class="text-secondary">
+            Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+        </span>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock extra_vars %}
+
+{% block delete_button %}
+    <!-- Render the delete button for the specified object ID -->
+    <a href="{% url delete_url object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete</a>
+{% endblock delete_button %}

@@ -844,6 +844,18 @@ class Polity_suprapolity_relations(SeshatCommon):
             return f"{self.get_supra_polity_relations_display()} [---]"
         else:
             return " - "
+        
+    def display_value_2(self):
+        if self.supra_polity_relations and self.other_polity and self.polity:
+            polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
+            other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
+            return mark_safe(f"<span> {self.get_supra_polity_relations_display()} </span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>")
+        elif self.supra_polity_relations == "none":
+            return self.get_supra_polity_relations_display()
+        elif self.supra_polity_relations:
+            return f"{self.get_supra_polity_relations_display()} [---]"
+        else:
+            return " - "
     
 
     def show_value(self):
@@ -1333,22 +1345,30 @@ class Polity_preceding_entity(SeshatCommon):
     #         return " - "
 
     def display_value(self):
-        if self.preceding_entity and self.other_polity and self.polity:
+        if self.relationship_to_preceding_entity and self.other_polity and self.polity:
             polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
             other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
-            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='badge bg-secondary text-white'>  {self.relationship_to_preceding_entity} &nbsp;&nbsp;<i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"
+            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='text-secondary fs-6'> &nbsp;<i class='fa-solid fa-right-long px-1'></i> {self.relationship_to_preceding_entity} &nbsp;<i class='fa-solid fa-right-long px-1'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"
+        elif self.other_polity and self.polity:
+            polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
+            other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
+            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='text-secondary fs-6'>  &nbsp;<i class='fa-solid fa-right-long'></i>&nbsp; </span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"        
         elif self.preceding_entity == "none":
             return self.preceding_entity
+        elif self.other_polity:
+            return f"{self.other_polity} [---]"
         elif self.preceding_entity:
-            return f"{self.preceding_entity} [---]"
+            return self.preceding_entity
         else:
             return " - "
         
     def show_value(self):
-        if self.preceding_entity and self.polity and self.other_polity:
-            return self.preceding_entity +f" [{self.other_polity.new_name}]" + ' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]" 
-        elif self.preceding_entity and self.polity:
-            return self.preceding_entity
+        if self.relationship_to_preceding_entity and self.polity and self.other_polity:
+            return self.relationship_to_preceding_entity + ": " + self.other_polity.long_name + f" [{self.other_polity.new_name}]" + ' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]" 
+        elif self.relationship_to_preceding_entity and self.polity:
+            return "NO_POLITY" +' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]"
+        elif self.relationship_to_preceding_entity:
+            return self.relationship_to_preceding_entity
         elif self.preceding_entity:
             return self.preceding_entity
         else:
@@ -1472,11 +1492,24 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon):
     def clean_name_spaced(self):
         return "Polity Scale of Supracultural Interaction"
     
-    def show_value(self):
+    def display_value(self):
         if self.scale_from and self.scale_to and self.scale_to == self.scale_from:
             return mark_safe(f"{self.scale_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
         elif self.scale_from and self.scale_to:
             return mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.scale_from:,} <span class='fw-light text-secondary'> to </span> {self.scale_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
+        elif self.scale_from:
+            return f"[{self.scale_from:,}"
+        elif self.scale_to:
+            return f"[{self.scale_to:,}"
+        else:
+            return " - "
+        
+    
+    def show_value(self):
+        if self.scale_from and self.scale_to and self.scale_to == self.scale_from:
+            return mark_safe(f"{self.scale_from:,}")
+        elif self.scale_from and self.scale_to:
+            return mark_safe(f"[{self.scale_from:,} to {self.scale_to:,}]")
         elif self.scale_from:
             return f"[{self.scale_from:,}"
         elif self.scale_to:

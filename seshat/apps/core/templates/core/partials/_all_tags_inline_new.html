@@ -1,6 +1,19 @@
 <td>
 
-<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="References: {{ object.display_citations }}">
+<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
+    {% if object.tag == 'DSP' %}
+Disputed is coded
+    {% elif  object.tag == 'SSP' %}
+The value is suspected (Expert Check Needed).
+    {% elif  object.tag == 'UNK' %}
+Unknown.
+    {% elif  object.tag == 'IFR' %}
+The coded value is inferred.
+    {% elif  object.tag == 'TRS' %}
+The value is backed up by sufficient evidence.
+    {% else  %}
+    No Descriptions
+    {% endif %}">
     {% if object.tag == "DSP" %}
     <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ object.get_tag_display }}</span>
     {% elif  object.tag == "SSP" %}
@@ -9,6 +22,8 @@
     <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ object.get_tag_display }}</span>
     {% elif  object.tag == "IFR" %}
     <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ object.get_tag_display }}</span>
+    {% elif  object.tag == "UND" %}
+    <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ object.get_tag_display }}</span>
     {% else  %}
         <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ object.get_tag_display }}</span>
     {% endif %}
@@ -17,7 +32,7 @@
     <!-- Disputred tag (Disputed/or Not etc.) -->
 {% if object.is_disputed %}
 
-<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Scholarly Disagreement (Disputed)">
+<a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="There is disagreement among scholars.">
     <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
 </a>
 
@@ -32,7 +47,7 @@
 
 <!-- Expert Checked Tag -->
 {% if object.expert_reviewed %}
-    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="By: {{ object.curators_list }}">
+    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert (or RA): {{ object.curators_list }}">
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
     </a>
 {% endif %}

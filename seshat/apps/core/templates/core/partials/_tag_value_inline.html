@@ -8,6 +8,8 @@
 <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ value.get_tag_display }}</span>
 {% elif  value.tag == "IFR" %}
 <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ value.get_tag_display }}</span>
+{% elif  value.tag == "UND" %}
+<span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ value.get_tag_display }}</span>
 {% else  %}
     <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ value.get_tag_display }}</span>
 {% endif %}

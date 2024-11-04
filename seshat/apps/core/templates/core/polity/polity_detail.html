@@ -14,6 +14,10 @@
         margin: 10px 0; /* Adjust the value as per your requirement */
         content: "";
     }
+    .bg-colorful:hover {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        color:black;
+      }
     .custom-left-border-shadowed {
         border-left: none; /* Adjust the border color and thickness as desired */
         box-shadow: 0 0 4px teal; 
@@ -50,16 +54,18 @@
 
     .highlighted-value-title {
         display: inline-block; 
-        border: 2px solid rgba(25, 135, 84, 0.5);
+        border: 1px solid rgba(78, 28, 23, 0.25);
         padding: 5px; 
         border-radius: 5px;
-        box-shadow: 0 0 4px rgba(25, 135, 84, 0.5); 
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
     }
 
     .highlighted-value {
         display: inline-block; 
-        border-bottom: 1px solid rgba(25, 135, 84, 0.5);
+        border-bottom: 1px solid rgba(78, 28, 23, 0.15);
         padding: 5px; 
         border-radius: 1px;
         background-color:#fffdf2; /* fffdf2   fefae6*/
@@ -292,13 +298,14 @@
                 <div class="col-md-12 row pb-3">
                     <div class="col-md-8">
                         <br>
-                            <span class="h5 fw-bold">Preceding:</span>
-                            {% if preceding_data %}
+                            <span class="h5 fw-bold">Preceding Entity:</span>                            
 
+                            {% if preceding_data %}
+                            <span class=" h6 text-secondary">Add one more <a class="fw-bold text-secondary text-decoration-underline" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</span>
                             {% for vv in preceding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
-                                    <span class="bg-light px-1 border border-dark rounded">
+                                    <span class="px-1 border border-dark rounded" style="background:#fefae6" >
 
                                     {% if  vv.other_polity.start_year == vv.other_polity.end_year %}
                                         {% if  vv.other_polity.start_year < 0 %}
@@ -337,20 +344,20 @@
                                 </div>
                             {% endif %}
                             {% endfor %}
-                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
+
                         {% else %}
                             <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
 
                         <br>
 
-                        <span class="h5 fw-bold">Succeeding:</span>
+                        <span class="h5 fw-bold">Succeeding Entity:</span>
                         {% if succeeding_data %}
-
+                        <span class="h6 text-secondary">Add one more <a class="fw-bold text-secondary text-decoration-underline" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</span>
                             {% for vv in succeeding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
-                                    <span class="bg-light px-1 border border-dark rounded">
+                                    <span class="px-1 border border-dark rounded" style="background:#fefae6">
 
                                     {% if  vv.polity.start_year == vv.polity.end_year %}
                                         {% if  vv.polity.start_year < 0 %}
@@ -389,7 +396,7 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
+
                         {% else %}
                         <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
@@ -591,7 +598,7 @@
                                             <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
                                             {% elif vv.show_value == "absent" %}
                                             <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                                            {% elif key == "Polity_suprapolity_relations" %}
+                                            {% elif key == "Polity_suprapolity_relations" or key == "Polity_scale_of_supracultural_interaction" %}
                                             <span class="h6 text-teal fw-bold">{{ vv.display_value }}</span> 
                                             {% elif key == "Polity_preceding_entity" %}
                                                 {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
@@ -1386,25 +1393,48 @@
                 {% if values %}
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
-                            <div class="col-md-9">
-                                <span class="h5 text-dark pt-0 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                            <div class="col-md-9 pb-1">
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
                                     {% if key == "Polity_suprapolity_relations" %}
-                                    <span class="ps-1 h5 fw-bold" >
+                                    <span class="h5 fw-bold" >
                                         <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.display_value }}
     
                                     </span>
+
+                                    {% elif key == "Polity_scale_of_supracultural_interaction" %}
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
+                                            {{ value.clean_name_spaced|slice:"7:" }}:            
+                                        </span>  <br>{{ value.display_value }}
+                                    </span>
+
+                                    {% elif key == "Polity_preceding_entity" %}
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
+                                            {{ value.clean_name_spaced|slice:"7:" }}:            
+                                        </span>  <br>{{ value.display_value }}
+                                    </span>
+
                                     {% else %}
-                                    <span class="ps-1 h5 fw-bold" >
+                                    
+                                    <span class="h5 fw-bold" >
                                         <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.show_value }}
     
                                     </span>
+
                                     {% endif %}
-    
+
+
+                                    {% if key == "Polity_preceding_entity" or key == "Polity_duration" or key == "Polity_peak_years" %}
+                                    &nbsp;
+                                    {% else %}
                                     {% include "core/partials/_year_block_value_inline.html" %}
+                                    {% endif %}
+
                                     <div style="display: block; padding: 0;">
                                         <div style="display: inline-flex; flex-direction: row;">
                                             {% include "core/partials/_tag_value_inline.html" %}
@@ -1420,7 +1450,7 @@
                                 {% endwith %}
                             </div>
                             <div class="col-md-3">
-                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b> <u>View all such values</u></b></a>
+                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b> <u>View all such records</u></b></a>
                             </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1434,18 +1464,11 @@
                                 {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
                                 <p class="fs-6 my-1 py-1" id="{{key}}"> 
-                                    <b>(New Approach):</b>  {{ value.comment }}    
-                                    <span>
+                                    <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>                                    <span>
                                         {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                         <a class="p-0 m-0" 
                                         style="display:block; overflow: hidden;" 
                                         href="{% url 'seshatcomment-update' value.comment.id %}">
-                                            <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                                <span >
-                                                    &nbsp;&nbsp;Edit Description (New Approach)
-                                                </span>
-                                            </span>
                                         </a>  
                                         {% endif %}
 
@@ -1496,8 +1519,8 @@
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
                             <div class="col-md-9">
-                                <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                    <span class="ps-1 h5 fw-bold" >
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                    <span class="h5 fw-bold" >
                                         <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced }}:            
                                         </span>  <br>{{ value.show_value }}
@@ -1519,7 +1542,7 @@
 
                             </div>
                             <div class="col-md-3">
-                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                             </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1531,18 +1554,12 @@
                             {% if value.comment %}
                                 {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}                                <div class="col-md-12 highlighted-value my-0 py-0">
                                     <p class="fs-6 my-1 py-1" id="{{key}}"> 
-                                        <b>(New Approach):</b>  {{ value.comment }}    
+                                        <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>
                                         <span>
                                             {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                             <a class="p-0 m-0" 
                                             style="display:block; overflow: hidden;" 
                                             href="{% url 'seshatcomment-update' value.comment.id %}">
-                                                <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                    <span >
-                                                        &nbsp;&nbsp;Edit Description (New Approach)
-                                                    </span>
-                                                </span>
                                             </a>  
                                             {% endif %}
                                         </span>       
@@ -1594,8 +1611,8 @@
                         <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                 {% for value in values %}
                                 <div class="col-md-9">
-                                    <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                        <span class="ps-1 h5 fw-bold" >
+                                    <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                        <span class="h5 fw-bold" >
                                             <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                 {{ value.clean_name_spaced }}:            
                                             </span>  <br>{{ value.show_value }}
@@ -1607,7 +1624,6 @@
                                                 {% include "core/partials/_disputed_value_inline.html" %}
                                                 {% include "core/partials/_uncertain_value_inline.html" %}
                                                 {% include "core/partials/_expert_checked_value_inline.html" %}
-                                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                                 </a> 
                                             </div>
                                         </div>
@@ -1619,7 +1635,7 @@
 
                                 </div>
                                 <div class="col-md-3">
-                                    <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                    <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                                 </div>
                                 {% if value.description %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1632,18 +1648,12 @@
                                     {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
                                         <p class="fs-6 my-1 py-1" id="{{key}}"> 
-                                            <b>(New Approach):</b>  {{ value.comment }}    
-                                            <span>
+                                            <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>                                           
+                                             <span>
                                                 {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                                 <a class="p-0 m-0" 
                                                 style="display:block; overflow: hidden;" 
                                                 href="{% url 'seshatcomment-update' value.comment.id %}">
-                                                    <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
-                                                        <i class="fa-solid fa-pen-to-square"></i>
-                                                        <span >
-                                                            &nbsp;&nbsp;Edit Description (New Approach)
-                                                        </span>
-                                                    </span>
                                                 </a>  
                                                 {% endif %}
                                             </span>       
@@ -1695,8 +1705,8 @@
                             <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                     {% for value in values %}
                                     <div class="col-md-10">
-                                        <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                            <span class="ps-1 h5 fw-bold" >
+                                        <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                            <span class="h5 fw-bold" >
                                                 <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                     {{ value.clean_name_spaced }}:            
                                                 </span>  <br>{{ value.show_value }}
@@ -1717,7 +1727,7 @@
 
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                        <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                                     </div>
                                     {% if value.description %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1730,18 +1740,12 @@
                                         {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
                                             <p class="fs-6 my-1 py-1" id="{{key}}"> 
-                                                <b>(New Approach):</b>  {{ value.comment }}    
-                                                <span>
+                                                <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>
+                                                    <span>
                                                     {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                                                     <a class="p-0 m-0" 
                                                     style="display:block; overflow: hidden;" 
                                                     href="{% url 'seshatcomment-update' value.comment.id %}">
-                                                        <span class="badge bg-teal text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; ">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                            <span >
-                                                                &nbsp;&nbsp;Edit Description (New Approach)
-                                                            </span>
-                                                        </span>
                                                     </a>  
                                                     {% endif %}
                                                 </span>       
@@ -1785,8 +1789,8 @@
 
                 {% for value in values %}
                 <div class="col-md-9">
-                    <span class="h5 text-dark pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                        <span class="ps-1 h5 fw-bold" >
+                    <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                        <span class="h5 fw-bold" >
                             <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                 Human Sacrifice:           
                             </span>  <br>{{ value.show_value }}
@@ -1802,7 +1806,7 @@
                         </div>
                     </span>
                     {% with my_app_name='crisisdb' %}
-                        {% include "core/partials/_abc.html" %}
+                        {% include "core/partials/_abc_x.html" %}
                     {% endwith %}
                 </div>
                 <div class="col-md-3">
@@ -1865,7 +1869,7 @@
                             {{ value.crisis_case_id }}:            
                         </span> 
                         <br>
-                    <span class="h5 fw-bold text-teal  pt-2 pb-0 pe-2 ps-1 mb-2 mt-1 highlighted-value-title">{{value.name}} 
+                    <span class="h5 fw-bold text-teal pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">{{value.name}} 
                         {% include "core/partials/_year_block_value_inline_cc.html" %}
                         <div>
                             <span class="fs-6 text-dark">
@@ -1913,7 +1917,7 @@
                         </div>
                     </span>
                     {% with my_app_name='crisisdb' %}
-                        {% include "core/partials/_abc.html" %}
+                        {% include "core/partials/_abc_x.html" %}
                     {% endwith %}
 
                     {% include "core/partials/_crisis_cases_inline.html" %}
@@ -1964,7 +1968,7 @@
                             </span>            
                         </span> 
                         <br>
-                        <span class="h5 fw-bold text-teal  pt-2 pb-0 pe-2 ps-1 mb-2 mt-1 highlighted-value-title">
+                        <span class="h5 fw-bold text-teal pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
                             <span class = "fw-bold text-danger" style="display:block;">
                                <span class="text-secondary fw-normal">Predecessor: </span> {{ value.predecessor }}
                             </span> 
@@ -1983,7 +1987,7 @@
                             </div>
                         </span>
                         {% with my_app_name='crisisdb' %}
-                            {% include "core/partials/_abc.html" %}
+                            {% include "core/partials/_abc_x.html" %}
                         {% endwith %}
 
                         {% include "core/partials/_power_transitions_inline.html" %}

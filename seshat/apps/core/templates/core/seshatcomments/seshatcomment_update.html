@@ -9,7 +9,16 @@
 
 {% block content %}
 <style>
-        
+    .bg-colorful:hover {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+    
+      }
+    
+      .bg-colorful-light {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.26),rgb(242, 199, 119, 0.26),rgb(151, 230, 151, 0.26));
+        border-radius: 10px;
+        color:#782823;
+      }
     
     .tab-container {
         display: flex;
@@ -17,6 +26,7 @@
         align-items: center;
         margin-top: 10px;
         margin-bottom: 20px;
+        font-size:small;
     }
     
     .tab {
@@ -24,40 +34,41 @@
         padding: 5px 10px;
         border: 2px solid #ccc;
         border-radius: 5px;
-        background-color: #e0e0e0;
         transition: background-color 0.3s ease;
-    }
-    
-    .tab a {
+      }
+      
+      .tab a {
         text-decoration: none;
         color: #000;
         font-weight: bold;
-    }
-    
-    .tab:hover {
+      }
+      
+      .tab:hover {
         background-color: #d1d1d1;
-    }
-    
-    .tab.active {
-        background-color: #4CAF50;
+      }
+      
+      .tab.active {
+        color: black;
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border-color: seagreen;
+      
+      }
+      
+      
+      .tab.done {
+        background-color: seagreen;
         color: white;
-        border-color: #4CAF50;
-    }
-
-    .tab.done {
-        background-color: #782823;
-        color: lightgray;
-        border-color: #782823;
-    }
-    
-    .tab.waiting {
-        color: gray;
-        border-color: darkgray;
-    }
-
-    .tab.active a {
+        border-color: seagreen;
+      }
+      
+      .tab.waiting {
+        color: gray !important;
+        border-color: gray;
+      }
+      .tab.active a {
         color: white;
-    }
+      }
+      
     
     .arrow {
         font-size: 24px;
@@ -86,36 +97,35 @@
 <div class="container table-responsive mt-1">
     <div class="tab-container">
         <div class="tab done" id="step1-tab">
-            <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data.</span>
+            <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data</span>
         </div>
         <div class="arrow">&#10132;</div>
         <div class="tab  done" id="step2-tab">
-            <span ><i class="fa-solid fa-circle-check"></i> Step 2: Add the first chunk of the description.</span>
+            <span ><i class="fa-solid fa-circle-check"></i> Step 2: Add the first chunk of the description</span>
         </div>
-        <div class="arrow">&#10132;</div>
+        <div class="arrow"  style="color:seagreen">&#10132;</div>
         <div class="tab active" id="step3-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description.</span>
+            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
         </div>
     </div>
 
-
-    <table class="table align-middle">
+    <div style="border: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
+    <table class="table table-borderless align-middle">
         <thead>        
-          <tr>
-            <th style="text-align: left;" scope="col">Variable</th>
-            <th style="text-align: left;" scope="col">Coded Value</th>
-            <th style="text-align: left;" scope="col">Polity</th>
-            <th style="text-align: center;" scope="col">Year Range</th>
-            <th scope="col" style="text-align: center">Certainty</th>
-    
+          <tr class="bg-colorful-light h6">
+            <th style="text-align: left;" class="h6" scope="col">Variable</th>
+            <th style="text-align: left;" class="h6" scope="col">Coded Value</th>
+            <th style="text-align: left;" class="h6" scope="col">Polity</th>
+            <th style="text-align: center;" class="h6" scope="col">Year(s)</th>
+            <th class="h6" scope="col" style="text-align: left">Tag(s)</th>
+            <th class="h6" scope="col" style="text-align: left">Update</th>
           </tr>
         </thead>
         <tbody>
             {% for my_inst in my_app_models %}
-
               <tr>
-                  <td style="text-align: left;">{{ my_inst.my_var_name }}</td>
-                  <td style="text-align: left;">{{ my_inst.my_value }}</td>
+                  <td  class="fw-bold"  style="text-align: left;">{{ my_inst.my_var_name }}</td>
+                  <td  class="fw-bold"   style="text-align: left;">{{ my_inst.my_value }}</td>
 
                   <td style="text-align: left;">
                     <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
@@ -148,33 +158,110 @@
                     {% endif %}
                                       
                   <!-- Tag tag (Disputed/Suspected etc.) -->
-                  {% if my_inst.tag == "DSP" %}
-                      <td style="text-align: center;"><span class="badge rounded-pill bg-danger">{{my_inst.my_tag }}</span></td>
-                  {% elif my_inst.tag == "SSP" %}
-                      <td style="text-align: center;"> <span class="badge rounded-pill bg-warning text-dark">{{my_inst.my_tag }}</span></td>
-                  {% elif my_inst.tag == "UNK" %}
-                      <td style="text-align: center;"><span class="badge rounded-pill bg-secondary">{{my_inst.my_tag }}</span></td>
-                  {% elif my_inst.tag == "IFR" %}
-                      <td style="text-align: center;"><span class="badge rounded-pill bg-primary">{{my_inst.my_tag }}</span></td>
-                  {% else  %}
-                      <td style="text-align: center;"><span class="badge rounded-pill bg-success">{{my_inst.my_tag }}</span></td>
-                  {% endif %}
+                  <td>
 
-    
-            </tr>
+                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
+                        {% if my_inst.tag == 'DSP' %}
+                    Disputed is coded
+                        {% elif  my_inst.tag == 'SSP' %}
+                    The value is suspected (Expert Check Needed).
+                        {% elif  my_inst.tag == 'UNK' %}
+                    Unknown.
+                        {% elif  my_inst.tag == 'IFR' %}
+                    The coded value is inferred.
+                        {% elif  my_inst.tag == 'TRS' %}
+                    The value is backed up by sufficient evidence.
+                        {% else  %}
+                        No Descriptions
+                        {% endif %}">
+                        {% if my_inst.tag == "DSP" %}
+                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ my_inst.my_tag }}</span>
+                        {% elif  my_inst.tag == "SSP" %}
+                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#d4507c;"> {{ my_inst.my_tag }}</span>
+                        {% elif  my_inst.tag == "UNK" %}
+                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ my_inst.my_tag }}</span>
+                        {% elif  my_inst.tag == "IFR" %}
+                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ my_inst.my_tag }}</span>
+                        {% elif  my_inst.tag == "UND" %}
+                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ my_inst.my_tag }}</span>
+                        {% else  %}
+                            <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ my_inst.my_tag }}</span>
+                        {% endif %}
+                        </a>
+                    
+                        <!-- Disputred tag (Disputed/or Not etc.) -->
+                    {% if my_inst.my_is_disputed %}
+                    
+                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="There is disagreement among scholars.">
+                        <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
+                    </a>
+                    
+                    {% endif %}
+                    
+                    <!-- Disputred tag (Disputed/or Not etc.) -->
+                    {% if my_inst.my_is_uncertain %}
+                    <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+                        <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+                    </a>
+                    {% endif %}
+                    
+                    <!-- Expert Checked Tag -->
+                    {% if my_inst.my_expert_reviewed %}
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert (or RA): {{ my_inst.curators_list }}">
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert {{my_inst.my_id}}</span>
+                        </a>
+                    {% endif %}
+                        
+                    </td>
+
+                    <td style="text-align: center;">
+                        {% if my_inst.my_var_name_underlined %}
+
+                            {% if my_inst.description %}
+                                {% with my_inst.my_var_name_underlined|add:"-update" as meat %}
+                                <div class="py-1">
+                                <a href="{% url meat my_inst.my_id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                </div>
+                                {% endwith %}
+
+                            {% else %}
+                            {% with my_inst.my_var_name_underlined|add:"-updatenew" as meat %}
+                            <div class="py-1">
+                            <a href="{% url meat my_inst.my_id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                            </div>
+                            {% endwith %}
+                            {% endif %}
+                        {% else %}
+                            -  
+                        {% endif %}
+
+                      </td>
+                      </tr>
+
+                      
             {% endfor %}
 
         </tbody>
       </table>
-      <div class="pt-3 fs-6 fw-bold">
-        Description:
-      </div>
-    <div class="border-start px-2 border-secondary border-4 fs-6">
-       
+    </div>
+
+
+
+
+    <div  style="border-bottom: 2px solid rgba(120, 40, 35, 0.311); border-left: 2px solid rgba(120, 40, 35, 0.311); border-right: 2px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
+        <table class="table table-borderless align-middle">
+            <thead>        
+              <tr style="color: #782823">
+                <th style="text-align: left;" class="h6" scope="col">Description* (Public):</th>
+              </tr>
+            </thead>
+            <tbody>
 
         {% autoescape off %}
-
+        <tr>
+            <td style="text-align: left;">
         {% for subcom in object.inner_comments_related.all %}
+
 
             <span>
                 <span class="jidtext_{{ forloop.counter }}">
@@ -220,20 +307,104 @@
 
 
         {% endfor %}
-
+        </td>
+    </tr>
         {% endautoescape %}
+    </tbody>
+    </table>
 
     </div>
+    <small class="text-secondary">* Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
 
-                <div class="col-md-12 pb-2">
-                <h5 class="pt-3">Notes:</h5>
+    <h6 class="mt-3">
+        Private Comments and Discussions on This Record:
+    </h6>
+    <div  style="border: 2px solid rgba(120, 40, 35, 0.311);  border-radius: 5px; overflow: hidden;">
 
-                <ul>
-                    <li class="text-secondary">Each description has several <u>subdescriptions</u></li>
-                    <li class="text-secondary">A subdescription is a combination of some text and its corresponding citation(s).</li>
-                    <li class="text-secondary">Use &lt;br&gt; in your text to indicate new paragraphs.</li>
-                </ul>
-                </div>
+        {% for my_inst in my_app_models %}
+            {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+
+            {% endif %}   
+
+
+            <table class="table table-borderless align-middle pt-5">
+                <thead>
+                    <tr class="bg-colorful-light">
+                            <th style="text-align: left;" class="col-md-8 h6" scope="col">Seshat Expert / Private Comment 
+                                <span>(Only visisble to Selected Seshat Experts/RAs)</span>
+                            </th>
+                              <th class="col-md-2 h6" scope="col" style="text-align: left"> Target Experts</th>
+                              <th class="col-md-2 h6" scope="col" style="text-align: right"> Created</th>
+
+                    </tr>
+                  </thead>
+                <tbody>
+
+        {% autoescape off %}
+
+        {% if my_inst.my_inner_private_comments_related %}
+            {% for subcom in my_inst.my_inner_private_comments_related.all %}
+                <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
+                    <div class="row">
+
+                    <td class="col-md-8 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
+                        <span class="badge text-dark   {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span>
+                        <span class="roboto-regular">
+                            {{ subcom.private_comment_part_text }}  
+                        </span>    
+                    </td>
+                    <td class="col-md-2" style="text-align: left">
+                        {% for an_expert in  subcom.private_comment_reader.all %}
+                        <span class="badge text-dark" style="background: {% if subcom.is_done %}lightgray{% else %} {{an_expert.id|give_me_a_color}}{% endif %};">{{an_expert}}</span>
+                        {% endfor %}
+                    </td>
+                    <td class="col-md-2" style="text-align: right">
+                        {% if subcom.created_date %}
+                            {{ subcom.created_date|naturaltime }}
+                        {% else %}
+                        <i class="fa-solid fa-minus text-danger"></i>
+                        {% endif %}
+                    </td>
+                    </div>
+                </tr>
+
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td class="col-md-8 text-secondary" scope="row" style="text-align: left;">
+            No Private Comments yet. 
+            </td>
+            <td class="col-md-2" style="text-align: left">
+                -
+            </td>
+            <td class="col-md-2" style="text-align: left">
+            -
+            </td>
+
+        </tr>
+        {% endif %}
+        <tr>
+        <td class="pt-3">
+            <a class="p-0 m-0"  
+            style="display:block;overflow: hidden;" 
+            href="{% url 'create_private_subcomment_new' app_name=my_inst.my_app_name model_name=my_inst.my_var_name_underlined instance_id=my_inst.my_id %}">
+
+                <span class="badge badge-jid badge-jid text-dark fs-6 p-2 bg-colorful" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c; border:1px solid #782823">
+                    <i class="fa-regular fa-comment"></i>
+                    <span> &nbsp;&nbsp;Add your Private Comment (NEW)
+                    </span>
+                </span>
+            </a>
+        </td>
+
+        </tr>
+
+        {% endautoescape %}
+            </tbody>
+        </table>
+
+        {% endfor %}
+    </div>
 </div>
 
 {% endif %}
@@ -260,10 +431,10 @@
                 const jidtext = document.querySelector(`.jidtext_${counter}`);
                 const jidtextref = document.querySelector(`.jidtextref_${counter}`);
                 if (jidtext) {
-                    jidtext.style.backgroundColor = 'lightgray';  
+                    jidtext.style.backgroundColor = 'blanchedalmond';  
                 }
                 if (jidtextref) {
-                    jidtextref.style.backgroundColor = 'lightgray';  
+                    jidtextref.style.backgroundColor = 'blanchedalmond';  
                 }
             });
     

@@ -69,6 +69,9 @@ from django.shortcuts import HttpResponse
 
 from django.views.generic import ListView
 
+
+
+
 @login_required
 @permission_required('core.add_seshatprivatecommentpart')
 def religion_create(request):
@@ -514,20 +517,43 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     except:
                         my_var_name = my_instance.name
 
+                    try:
+                        my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                    except:
+                        my_var_name_underlined = None
+                    try:
+                        my_inner_private_comments_related = my_instance.private_comment.inner_private_comments_related
+                    except:
+                        my_inner_private_comments_related = None
+
+                    my_id = my_instance.id
                     my_value = my_instance.show_value
                     my_year_from = my_instance.year_from
                     my_year_to = my_instance.year_to
                     my_tag = my_instance.get_tag_display()
+                    my_expert_reviewed = my_instance.expert_reviewed
+                    my_is_disputed = my_instance.is_disputed
+                    my_is_uncertain = my_instance.is_uncertain
+                    my_private_comment = my_instance.private_comment
+
 
 
                     abc.append({
+                        'my_id': my_id,
                         'my_polity': my_polity,
                         'my_value': my_value,
                         'my_year_from': my_year_from,
                         'my_year_to': my_year_to,
                         'my_tag': my_tag,
+                        'my_expert_reviewed': my_expert_reviewed,
+                        'my_is_disputed': my_is_disputed,
+                        'my_is_uncertain': my_is_uncertain,
+                        'my_var_name_underlined': my_var_name_underlined,
                         'my_var_name': my_var_name,
+                        'my_app_name': myapp,
                         'my_polity_id': my_polity_id,
+                        'my_private_comment': my_private_comment,
+                        'my_inner_private_comments_related': my_inner_private_comments_related,
                     })
 
         # for model_name in related_models:
@@ -764,6 +790,11 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
 # Function based NEW:
 @permission_required('core.add_capital')
 def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
+
+
+
+
+
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
         big_father = SeshatComment.objects.get(id=com_id)
@@ -858,12 +889,71 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
         form = SeshatCommentPartForm2()
         big_father = SeshatComment.objects.get(id=com_id)
 
+    #
+    my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
+    my_app_models = {name: apps.all_models[name] for name in my_apps}
+
+    #context['my_app_models'] = my_app_models
+    abc = []
+
+    for myapp, mymodels in my_app_models.items():
+        for mm, mymodel in mymodels.items():
+            if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=big_father):
+                my_instance = mymodel.objects.get(comment=big_father)
+                my_polity = my_instance.polity
+                my_polity_id = my_instance.polity.id
+                try:
+                    my_var_name = my_instance.clean_name_spaced()
+                except:
+                    my_var_name = my_instance.name
+
+                try:
+                    my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                except:
+                    my_var_name_underlined = None
+                try:
+                    my_inner_private_comments_related = my_instance.private_comment.inner_private_comments_related
+                except:
+                    my_inner_private_comments_related = None
+
+                my_id = my_instance.id
+                my_value = my_instance.show_value
+                my_year_from = my_instance.year_from
+                my_year_to = my_instance.year_to
+                my_tag = my_instance.get_tag_display()
+                my_expert_reviewed = my_instance.expert_reviewed
+                my_is_disputed = my_instance.is_disputed
+                my_is_uncertain = my_instance.is_uncertain
+                my_private_comment = my_instance.private_comment
+
+
+
+                abc.append({
+                    'my_id': my_id,
+                    'my_polity': my_polity,
+                    'my_value': my_value,
+                    'my_year_from': my_year_from,
+                    'my_year_to': my_year_to,
+                    'my_tag': my_tag,
+                    'my_expert_reviewed': my_expert_reviewed,
+                    'my_is_disputed': my_is_disputed,
+                    'my_is_uncertain': my_is_uncertain,
+                    'my_var_name_underlined': my_var_name_underlined,
+                    'my_var_name': my_var_name,
+                    'my_app_name': myapp,
+                    'my_polity_id': my_polity_id,
+                    'my_private_comment': my_private_comment,
+                    'my_inner_private_comments_related': my_inner_private_comments_related,
+                })
+
+
     context = {
         'form': form,
         'com_id': com_id,  # Include com_id in the context
         'subcom_order': subcom_order,  # Include subcom_order in the context
         'formset': init_data, 
         'parent_par': big_father, 
+        'my_abc': abc,
 
         #'comm_num': com_id,
         #'comm_part_display': comment_part,
@@ -2833,8 +2923,65 @@ def update_seshat_comment_part_view(request, pk):
     comment_part = SeshatCommentPart.objects.get(id=pk)
     parent_comment_id = comment_part.comment.id
     subcomment_order = comment_part.comment_order
-
     parent_comment_part = SeshatComment.objects.get(id=parent_comment_id)
+
+    #
+    my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
+    my_app_models = {name: apps.all_models[name] for name in my_apps}
+
+    #context['my_app_models'] = my_app_models
+    abc = []
+
+    for myapp, mymodels in my_app_models.items():
+        for mm, mymodel in mymodels.items():
+            if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=parent_comment_part):
+                my_instance = mymodel.objects.get(comment=parent_comment_part)
+                my_polity = my_instance.polity
+                my_polity_id = my_instance.polity.id
+                try:
+                    my_var_name = my_instance.clean_name_spaced()
+                except:
+                    my_var_name = my_instance.name
+
+                try:
+                    my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                except:
+                    my_var_name_underlined = None
+                try:
+                    my_inner_private_comments_related = my_instance.private_comment.inner_private_comments_related
+                except:
+                    my_inner_private_comments_related = None
+
+                my_id = my_instance.id
+                my_value = my_instance.show_value
+                my_year_from = my_instance.year_from
+                my_year_to = my_instance.year_to
+                my_tag = my_instance.get_tag_display()
+                my_expert_reviewed = my_instance.expert_reviewed
+                my_is_disputed = my_instance.is_disputed
+                my_is_uncertain = my_instance.is_uncertain
+                my_private_comment = my_instance.private_comment
+
+
+
+                abc.append({
+                    'my_id': my_id,
+                    'my_polity': my_polity,
+                    'my_value': my_value,
+                    'my_year_from': my_year_from,
+                    'my_year_to': my_year_to,
+                    'my_tag': my_tag,
+                    'my_expert_reviewed': my_expert_reviewed,
+                    'my_is_disputed': my_is_disputed,
+                    'my_is_uncertain': my_is_uncertain,
+                    'my_var_name_underlined': my_var_name_underlined,
+                    'my_var_name': my_var_name,
+                    'my_app_name': myapp,
+                    'my_polity_id': my_polity_id,
+                    'my_private_comment': my_private_comment,
+                    'my_inner_private_comments_related': my_inner_private_comments_related,
+                })
+
 
     init_data={}
     if request.method == 'POST':
@@ -3000,7 +3147,7 @@ def update_seshat_comment_part_view(request, pk):
 
 
     #print(formset)
-    return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part, 'parent_comment': parent_comment_part, 'subcom_order': subcomment_order,})
+    return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part, 'parent_comment': parent_comment_part, 'subcom_order': subcomment_order, 'my_abc': abc})
 
 
 #########################
@@ -3312,6 +3459,9 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                         my_year_from = my_instance.year_from
                         my_year_to = my_instance.year_to
                         my_tag = my_instance.get_tag_display()
+                        my_expert_reviewed = my_instance.expert_reviewed
+                        my_is_disputed = my_instance.is_disputed
+                        my_is_uncertain = my_instance.is_uncertain
 
 
                         abc.append({
@@ -3323,6 +3473,9 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                             'my_var_name': my_var_name,
                             'my_polity_id': my_polity_id,
                             'my_description': my_desc,
+                            'my_expert_reviewed': my_expert_reviewed,
+                            'my_is_disputed': my_is_disputed,
+                            'my_is_uncertain': my_is_uncertain,
                         })
             else:
                 for mm, mymodel in mymodels.items():
@@ -3465,4 +3618,6 @@ def xxyyzz(request, com_id):
         return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
 
     return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
+
+
 

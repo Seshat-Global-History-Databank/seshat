@@ -179,17 +179,19 @@
                 <div class="col-sm-6 pb-2">
                     {{ form.polity|as_crispy_field }}
                 </div>
+                {% if myvar != 'Polity Duration' and myvar != 'Polity Peak Years' %}
+
                 <div class="col-sm-3 pb-2">
                     {{ form.year_from|as_crispy_field }}
                   </div>
                   <div class="col-sm-3 pb-2">
                     {{ form.year_to|as_crispy_field }}
                   </div>
-                  <div class="col-sm-12" style="display:none">
-                    {{ form.description }}
-                  </div>
+                  {% endif %}
+
                   {% block extra_vars %}
                   {% endblock extra_vars %}
+
                   <div class="col-sm-3 mb-1">
                     {{ form.is_disputed|as_crispy_field }}
                     {{ form.is_uncertain|as_crispy_field }}
@@ -208,6 +210,8 @@
                                             bg-primary 
                                         {% elif radio.choice_label == 'Suspected' %}
                                             bg-warning text-dark 
+                                        {% elif radio.choice_label == 'Undecided' %}
+                                            bg-secondary 
                                         {% endif %}
                                     ">  
                                         {{ radio.choice_label }}
@@ -217,6 +221,9 @@
                         </div>
                     </fieldset>
                 </div>
+                <div class="col-sm-12">
+                    {{ form.description|as_crispy_field }}
+                  </div>
                 <div class="col-sm-12 row">
                     <div class="col-sm-6 mb-2 py-2 d-grid mx-auto">
                         <span class="fw-bold">* Please note: You will have the opportunity to add descriptions, including references, on the next page.</span>

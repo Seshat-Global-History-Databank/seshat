@@ -1,15 +1,15 @@
-{% extends "core/form_base_durations.html" %}
+{% extends "core/form_base_durations_create.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
 
 {% block extra_vars %}
     
-    <div class="col-md-6 mb-2">
+    <div class="col-md-3 mb-2">
         {{ form.polity_year_from|as_crispy_field }}
     </div>
                 
     
-<div class="col-md-6 mb-2">
+<div class="col-md-3 mb-2">
 {{ form.polity_year_to|as_crispy_field }}
 </div>
 {% endblock extra_vars %}

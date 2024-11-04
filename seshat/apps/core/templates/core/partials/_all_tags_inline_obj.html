@@ -1,6 +1,20 @@
 <td>
 
-    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="References: {{ obj.display_citations }}">
+    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
+    
+    {% if obj.tag == 'DSP' %}
+Disputed is coded
+    {% elif  obj.tag == 'SSP' %}
+The value is suspected (Expert Check Needed).
+    {% elif  obj.tag == 'UNK' %}
+Unknown.
+    {% elif  obj.tag == 'IFR' %}
+The coded value is inferred.
+    {% elif  obj.tag == 'TRS' %}
+The value is backed up by sufficient evidence.
+    {% else  %}
+    No Descriptions
+    {% endif %}">
         {% if obj.tag == "DSP" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "SSP" %}
@@ -9,6 +23,8 @@
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "IFR" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ obj.get_tag_display }}</span>
+        {% elif  obj.tag == "UND" %}
+        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ obj.get_tag_display }}</span>
         {% else  %}
             <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ obj.get_tag_display }}</span>
         {% endif %}

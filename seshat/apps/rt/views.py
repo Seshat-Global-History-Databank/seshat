@@ -209,11 +209,7 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
             'var_section': var_section,
             'var_subsection': var_subsection,
         }
-
-
-
-
-
+    
     # context = {
     #         'form': my_form,
     #         'object': object,
@@ -246,16 +242,53 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         x_name_3 = None
 
 
-    #return_url = f"{x_name}s_all"
+
+    # Handle POST request
     if request.method == 'POST':
-        # Bind the form to the POST data
         my_form = form_class(request.POST, instance=my_object)
-        
+
         if my_form.is_valid():
-            # Save the changes to the object
-            my_form.save()   
-            #return redirect(return_url) 
+            my_form.save()
             return redirect("polity-detail-main", pk=my_object.polity.id) 
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+
+        if x_name in ['widespread_religion',]:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form[x_name_1], 
+                'extra_var2': my_form[x_name_2], 
+                'extra_var3': my_form[x_name_3], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+        else:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form["coded_value"], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+
+    #return_url = f"{x_name}s_all"
+    # if request.method == 'POST':
+    #     # Bind the form to the POST data
+    #     my_form = form_class(request.POST, instance=my_object)
+        
+    #     if my_form.is_valid():
+    #         # Save the changes to the object
+    #         my_form.save()   
+    #         #return redirect(return_url) 
+    #         return redirect("polity-detail-main", pk=my_object.polity.id) 
 
     else:
         # Create an instance of the form and populate it with the object's data
@@ -311,73 +344,66 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
 
-    if x_name in ["widespread_religion",]:
-        x_name_1 = "order"
-        x_name_2 = "widespread_religion"
-        x_name_3 = "degree_of_prevalence"
-
+    # Set conditional variables for widespread_religion case
+    if x_name == "widespread_religion":
+        x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
     else:
-        x_name_1 = x_name
-        x_name_2 = None
-        x_name_3 = None
+        x_name_1, x_name_2, x_name_3 = x_name, None, None
 
-
-    #return_url = f"{x_name}s_all"
+    # Handle POST request
     if request.method == 'POST':
-        # Bind the form to the POST data
         my_form = form_class(request.POST, instance=my_object)
-        
+
         if my_form.is_valid():
-            # Save the changes to the object
-            my_form.save()   
-            #return redirect(return_url) 
-            return redirect(f"{x_name}-detail", pk=my_object.id) 
-
-    else:
-        # Create an instance of the form and populate it with the object's data
-        my_form = form_class(instance=my_object)
-
-        # Define the context with the variables you want to pass to the template
-        if x_name in ["widespread_religion",]:
-            context = {
-                'form': my_form,
-                'object': my_object,
-                'delete_url': delete_url_name,
-                'extra_var': my_form[x_name_1], 
-                'extra_var2': my_form[x_name_2], 
-                'extra_var3': my_form[x_name_3], 
-                "myvar": myvar,
-                'var_section': var_section,
-                'var_subsection': var_subsection,
-                "my_exp": my_exp,
-            }
+            my_form.save()
+            return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name == "widespread_religion":
+            context.update({
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
         else:
-            context = {
-                'form': my_form,
-                'object': my_object,
-                'delete_url': delete_url_name,
-                'extra_var': my_form["coded_value"], 
-                "myvar": myvar,
-                'var_section': var_section,
-                'var_subsection': var_subsection,
-                "my_exp": my_exp,
-            }
-
-
-
-
-        # context = {
-        #         'form': my_form,
-        #         'object': my_object,
-        #         'delete_url': delete_url_name,
-        #         'extra_var':  my_form['coded_value'],
-        #         "myvar": myvar,
-        #         'var_section': var_section,
-        #         'var_subsection': var_subsection,
-        #         "my_exp": my_exp,
-        #     }
+            context.update({
+                'extra_var': my_form['coded_value'],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name == "widespread_religion":
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        else:
+            context.update({
+                'extra_var': my_form['coded_value'],
+            })
 
     return render(request, 'rt/rt_update.html', context)
+
+
+
 
 
 @login_required
@@ -414,6 +440,7 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
         'var_name': var_name,
         'create_url': f'{var_name}-create',
         'update_url': f'{var_name}-update',
+        'update_url_new': f'{var_name}-updatenew',
         'download_url': f'{var_name}-download',
         'pagination_url': f'{var_name}s',
         'metadownload_url':  f'{var_name}-metadownload',

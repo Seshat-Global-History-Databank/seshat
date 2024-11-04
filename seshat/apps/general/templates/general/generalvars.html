@@ -62,8 +62,19 @@
       }
 
       .card-link:hover {
-        background-color: teal;
         border-radius: 4px;
+        text-decoration: underline;
+        text-decoration-color: #782823;
+        text-decoration-thickness: 1px;
+        color: orange !important; /* Change text color to orange */
+      }
+
+      .card-link:hover {
+        border-radius: 4px;
+        text-decoration: underline;
+        text-decoration-color: orange;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 5px; /* Adjust distance from the text */
       }
 
       .light-narrow-hr {
@@ -142,7 +153,7 @@
           <div class="col-md-12">
               <div class="row d-flex align-items-center mb-2 mt-4">
                   <div class="col-md-6 px-0 ">
-                    <h3 class="py-1 ps-0"><span class="badge rounded-pill bg-info text-dark">
+                    <h3 class="py-1 ps-0"><span class="badge rounded-pill text-dark" style="background: rgb(0, 157, 255, 0.4)">
                       {{sect}}
                     </span> 
                   </h3> 
@@ -166,9 +177,10 @@
         {% for v in vv %}
                 <div class="card col-md-6">
                     <div class="align-items-left card-text-spaced">
-                      <span class="fs-5 left-span fw-bold ps-2">
-                        <span class="text-secondary fs-6"> <span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span> 
-                            <a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">{{v.0|slice:"7:"}} </a> 
+                      <span class="fs-5 left-span fw-bold ps-2 card-link">
+                        <a href="{% url v.5 %}" class=text-dark " type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">
+                        <span class="text-secondary fs-6"><span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span> 
+                            &nbsp;{{v.0|slice:"7:"}} </a> 
 
                          
                                                       

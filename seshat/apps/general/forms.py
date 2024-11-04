@@ -160,7 +160,7 @@ class Polity_capitalForm(forms.ModelForm):
 
         
         widgets = dict(commonwidgets)
-        widgets['capital'] = forms.TextInput(attrs={'class': 'form-control  mb-3', 'readonly': "True" })
+        widgets['capital'] = forms.TextInput(attrs={'class': 'form-control  mb-1', 'readonly': "True" })
         widgets['polity_cap'] = forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity_cap', 'name': 'polity_cap'})    
 
         
@@ -269,6 +269,8 @@ class Polity_succeeding_entityForm(forms.ModelForm):
         fields = commonfields.copy()
         fields.append('succeeding_entity')
         labels = commonlabels
+
+        labels['polity'] = 'Polity'
         
         widgets = dict(commonwidgets)
         widgets['succeeding_entity'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })

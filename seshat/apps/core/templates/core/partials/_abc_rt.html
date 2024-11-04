@@ -5,11 +5,11 @@
 </style>
   
 {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-<span class="p-0 m-0" style="display:inline-block; vertical-align:top;">
+<span class="px-0 pt-1 pb-0 m-0" style="display:inline-block; vertical-align:top;line-height:normal; margin:0px !important;">
 
 <a class="p-0 m-0" 
 style="display:block; overflow: hidden;" 
-href="{% url key|lower|add:'-update-old' value.id %}">
+href="{% url key|lower|add:'-update' value.id %}">
     <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997; background-color:#d4330e4c">
         <i class=" fa-solid fa-pen-to-square"></i>
         <span> &nbsp;&nbsp;Edit coded value </span>
