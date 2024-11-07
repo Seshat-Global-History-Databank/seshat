@@ -518,7 +518,8 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         my_var_name = my_instance.name
 
                     try:
-                        my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                        my_var_name_underlined = my_instance.clean_name().lower().replace(" ", "_")
+
                     except:
                         my_var_name_underlined = None
                     try:
@@ -908,7 +909,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     my_var_name = my_instance.name
 
                 try:
-                    my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                    my_var_name_underlined = my_instance.clean_name().lower().replace(" ", "_")
                 except:
                     my_var_name_underlined = None
                 try:
@@ -2944,7 +2945,7 @@ def update_seshat_comment_part_view(request, pk):
                     my_var_name = my_instance.name
 
                 try:
-                    my_var_name_underlined = my_instance.clean_name_spaced().lower().replace(" ", "_")
+                    my_var_name_underlined = my_instance.clean_name().lower().replace(" ", "_")
                 except:
                     my_var_name_underlined = None
                 try:

@@ -154,7 +154,7 @@ def rtvars(request):
                 'Coded',
                 ]
 
-        elif model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp']:
+        elif model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp', 'soc_vio_freq_rel_grp']:
             var_type="TEXT+"
 
             for obj in queryset:
