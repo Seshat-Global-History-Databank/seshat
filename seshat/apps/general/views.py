@@ -14,6 +14,9 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
 
+from seshat.apps.accounts.models import Seshat_Expert
+
+
 from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
 # from .mycodes import *
 from django.conf import settings
@@ -3817,8 +3820,312 @@ def polity_religious_tradition_meta_download(request):
 #     return render(request, 'wf/wfvars.html', context=context)
 
         
+        
 
 def generalvars(request):
+
+    app_name = 'general'  # Replace with your app name
+    models_1 = apps.get_app_config(app_name).get_models()
+
+    unique_politys = set()
+    number_of_all_rows = 0
+    number_of_variables = 0
+    all_vars_grouped = {}
+
+    all_sect_download_links = {}
+
+    for model in models_1:
+        model_name = model.__name__
+        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert"]:
+            continue
+        s_value = str(model().subsection())
+        ss_value = str(model().sub_subsection())
+
+        better_name = "download_csv_" + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
+        all_sect_download_links[s_value] = better_name
+        if s_value not in all_vars_grouped:
+            all_vars_grouped[s_value] = {}
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+        else:
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+
+    models = apps.get_app_config(app_name).get_models()
+
+    for model in models:
+        model_name = model.__name__
+        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert"]:
+            continue
+
+
+        subsection_value = str(model().subsection())
+        sub_subsection_value = str(model().sub_subsection())
+        count = model.objects.count()
+        pols_count = Polity.objects.count()
+        number_of_all_rows += count
+        model_title = model_name.replace("_", " ").title()
+        model_create = model_name.lower() + "-create"
+        model_download = model_name.lower() + "-download"
+        model_metadownload = model_name.lower() + "-metadownload"
+        model_all = model_name.lower() + "s_all"
+        model_s = model_name.lower() + "s"
+
+        queryset = model.objects.all()
+        filtered_queryset_pres = 0
+        filtered_queryset_abs = 0
+        filtered_queryset_unk = 0
+        filtered_queryset_sus_unk = 0
+        filtered_queryset_unc = 0
+        filtered_queryset_trans = 0
+
+        politys = queryset.values_list('polity', flat=True).distinct()
+        unique_politys.update(politys)
+        polities_for_this_var = len(set(politys))
+
+
+        if model_name.lower() in ['polity_peak_years', 'polity_duration', 'polity_scale_of_supracultural_interaction', ]:
+            var_type= "RANGE"
+            
+            for obj in queryset:
+
+                if obj.show_value() == " - " and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == " - " and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == ' - ' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                0, #filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Range was coded',
+                ]
+        elif model_name.lower() in ['polity_original_name', 'polity_alternative_name', 'polity_utm_zone', 'polity_degree_of_centralization', 'polity_supracultural_entity', 
+            'polity_religion',
+            'polity_religion_genus',                       
+            'polity_religion_family',
+            'polity_alternate_religion',
+            'polity_religious_tradition',
+            'polity_alternate_religion_genus',                       
+            'polity_alternate_religion_family',
+            'polity_language',
+            'polity_language_genus',                       
+            'polity_linguistic_family'
+            ]:
+            var_type="TEXT+"
+
+            for obj in queryset:
+                if obj.show_value() == ' - ':
+                    filtered_queryset_abs +=1
+                elif obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        elif model_name.lower() == 'polity_suprapolity_relations':
+            var_type="TEXT+++"
+
+            for obj in queryset:
+                if obj.other_polity:
+                    filtered_queryset_pres +=1
+                elif obj.supra_polity_relations in ['none', 'None', ]:
+                    filtered_queryset_abs +=1
+                elif obj.supra_polity_relations and not obj.other_polity:
+                    filtered_queryset_trans +=1
+                elif obj.supra_polity_relations == 'unknown'  and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.supra_polity_relations == 'unknown'  and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        elif model_name.lower() == 'polity_capital':
+            var_type="TEXT+"
+
+            for obj in queryset:
+                if obj.polity_cap and obj.polity_cap.name not in ['None (Absent Capital)', 'none', 'None', 'Unknown']:
+                    filtered_queryset_pres +=1
+                elif obj.polity_cap and obj.polity_cap.name in ['None (Absent Capital)']:
+                    filtered_queryset_abs +=1
+                elif obj.polity_cap and obj.polity_cap.name == 'Unknown'  and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.polity_cap and obj.polity_cap.name == 'Unknown'  and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif not obj.polity_cap and obj.capital and obj.capital not in ["Unknown", "unknown", "NO_VALUE_ON_WIKI"]:
+                    filtered_queryset_trans +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif str(obj.show_value()) in ['none', 'None', 'None (Absent Capital)']:
+                    filtered_queryset_abs +=1
+                else:
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        else:
+            var_type="A/P/U/~"
+
+            for obj in queryset:
+                if obj.show_value() == 'present':
+                    filtered_queryset_pres +=1
+                if obj.show_value() == 'absent':
+                    filtered_queryset_abs +=1
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
+                    filtered_queryset_trans +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Present'
+                ]
+
+
+
+        if sub_subsection_value:
+            all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
+        else:
+            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
+
+
+    context = {}
+    context["all_vars_grouped"] = all_vars_grouped
+    context["all_sect_download_links"] = all_sect_download_links
+    context["all_polities"] = len(unique_politys)
+    context["number_of_all_rows"] = number_of_all_rows
+
+    context["number_of_variables"] = number_of_variables
+
+    return render(request, 'general/generalvars.html', context=context)
+
+
+
+
+
+
+def generalvarsold(request):
 
     app_name = 'general'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
@@ -4008,7 +4315,23 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         my_form = form_class(request.POST)
         
         if my_form.is_valid():
+            # print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
+            # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+
             new_object = my_form.save()
+
+
+            # Add the current user as a curator if they are an instance of Seshat_Expert
+            # logged_in_user = request.user
+
+            # try:
+            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+            # except:
+            #     seshat_expert_instance = None
+            # if seshat_expert_instance:
+            #     print("Alllllllloooooooooooooooo: ", logged_in_user)
+            #     new_object.curator.add(seshat_expert_instance)
+
             #return redirect('seshat-index') 
             return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
     else:
@@ -4023,6 +4346,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         'var_section': var_section,
         'var_subsection': var_subsection,
         "my_exp": my_exp,
+        #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
     }
     if coded_value in ['preceding_entity']:
         context.update({
@@ -4077,7 +4401,22 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         my_form = form_class(request.POST, instance=my_object)
 
         if my_form.is_valid():
-            my_form.save()
+            # print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
+            # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+
+            new_object = my_form.save()
+
+
+            # Add the current user as a curator if they are an instance of Seshat_Expert
+            # logged_in_user = request.user
+
+            # try:
+            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+            # except:
+            #     seshat_expert_instance = None
+            # if seshat_expert_instance:
+            #     print("Alllllllloooooooooooooooo: ", logged_in_user)
+            #     new_object.curator.add(seshat_expert_instance)
             return redirect("polity-detail-main", pk=my_object.polity.id) 
             #return redirect(f"{x_name}-detail", pk=my_object.id)
         
@@ -4090,6 +4429,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             'var_section': var_section,
             'var_subsection': var_subsection,
             "my_exp": my_exp,
+            #'expert_reviewed_by_me': my_form['expert_reviewed_by_me'],
         }
         if coded_value in ['preceding_entity']:
             context.update({
@@ -4128,6 +4468,8 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             'var_section': var_section,
             'var_subsection': var_subsection,
             "my_exp": my_exp,
+            #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
+
         }
         if coded_value in ['preceding_entity']:
             context.update({
@@ -4181,7 +4523,22 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         my_form = form_class(request.POST, instance=my_object)
 
         if my_form.is_valid():
-            my_form.save()
+            #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
+            #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+
+            new_object = my_form.save()
+
+
+            # Add the current user as a curator if they are an instance of Seshat_Expert
+            # logged_in_user = request.user
+
+            # try:
+            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+            # except:
+            #     seshat_expert_instance = None
+            # if seshat_expert_instance:
+            #     print("Alllllllloooooooooooooooo: ", logged_in_user)
+            #     new_object.curator.add(seshat_expert_instance)
             return redirect(f"{x_name}-detail", pk=my_object.id)
         
         # Prepare the context for invalid form
@@ -4193,6 +4550,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'var_section': var_section,
             'var_subsection': var_subsection,
             "my_exp": my_exp,
+            #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
+
         }
         if coded_value in ['preceding_entity']:
             context.update({
@@ -4231,6 +4590,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'var_section': var_section,
             'var_subsection': var_subsection,
             "my_exp": my_exp,
+            #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
+
         }
         if coded_value in ['preceding_entity']:
             context.update({
@@ -4275,6 +4636,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
     if coded_value == "suprapolity_relations":
         extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
+    elif coded_value == "preceding_entity":
+        extra_var_dict = {obj.id: obj.display_value() for obj in object_list}
     else:
         extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 

@@ -48,8 +48,7 @@ POLITY_CONSECUTIVE_ENTITY_CHOICES = (
 #('hostile', 'hostile'),
 #('disruption/continuity', 'disruption/continuity'),
 #('continuity/discontinuity', 'continuity/discontinuity'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
-('suspected unknown', 'suspected unknown'),
+('uncoded', 'uncoded'),
 ('vassalage', 'vassalage'),
 ('not applicable', 'not applicable'),
 ('unknown', 'unknown'),
@@ -95,8 +94,7 @@ POLITY_LANGUAGE_CHOICES = (
 ('Atanque', 'Atanque'),
 ('Shuar', 'Shuar'),
 ('Arabic', 'Arabic'),
-('suspected unknown', 'suspected unknown'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Demotic', 'Demotic'),
 ('Ancient Egyptian', 'Ancient Egyptian'),
 ('Late Egyptian', 'Late Egyptian'),
@@ -289,7 +287,7 @@ POLITY_LANGUAGE_CHOICES = (
 POLITY_LINGUISTIC_FAMILY_CHOICES = (
 ('Indo-European', 'Indo-European'),
 ('Sino-Tibetan', 'Sino-Tibetan'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Tungusic', 'Tungusic'),
 ('Altaic', 'Altaic'),
 ('Mongolic', 'Mongolic'),
@@ -309,7 +307,6 @@ POLITY_LINGUISTIC_FAMILY_CHOICES = (
 ('isolate language', 'isolate language'),
 ('West Semetic', 'West Semetic'),
 ('isolate', 'isolate'),
-('suspected unknown', 'suspected unknown'),
 ('language isolate', 'language isolate'),
 ('none', 'none'),
 ('Germanic', 'Germanic'),
@@ -348,10 +345,10 @@ POLITY_LINGUISTIC_FAMILY_CHOICES = (
 )
 
 POLITY_LANGUAGE_GENUS_CHOICES = (
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Afro-Asiatic', 'Afro-Asiatic'),
 ('Indo-European', 'Indo-European'),
-('suspected unknown', 'suspected unknown'),
+('unknown', 'unknown'),
 )
 
 POLITY_RELIGION_GENUS_CHOICES = (
@@ -404,7 +401,7 @@ POLITY_RELIGION_FAMILY_CHOICES = (
 ('Shang Religion', 'Shang Religion'),
 ('Atenism', 'Atenism'),
 ('Mahayana', 'Mahayana'),
-('suspected unknown', 'suspected unknown'),
+('unknown', 'unknown'),
 ('Japanese State Shinto', 'Japanese State Shinto'),
 ('Saiva Traditions', 'Saiva Traditions'),
 ('Sufi', 'Sufi'),
@@ -454,7 +451,7 @@ POLITY_RELIGION_CHOICES = (
 ('Twelver', 'Twelver'),
 ('Byzantine Orthodox', 'Byzantine Orthodox'),
 ('Bektasi', 'Bektasi'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Sunni', 'Sunni'),
 ('Roman Catholic', 'Roman Catholic'),
 )
@@ -474,8 +471,8 @@ POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
 #('hostile', 'hostile'),
 #('disruption/continuity', 'disruption/continuity'),
 #('continuity/discontinuity', 'continuity/discontinuity'),
-#('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
-#('suspected unknown', 'suspected unknown'),
+#('uncoded', 'uncoded'),
+#('unknown', 'unknown'),
 ('vassalage', 'vassalage'),
 #('not applicable', 'not applicable'),
 ('unknown', 'unknown'),
@@ -1366,7 +1363,7 @@ class Polity_preceding_entity(SeshatCommon):
         if self.relationship_to_preceding_entity and self.polity and self.other_polity:
             return self.relationship_to_preceding_entity + ": " + self.other_polity.long_name + f" [{self.other_polity.new_name}]" + ' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]" 
         elif self.relationship_to_preceding_entity and self.polity:
-            return "NO_POLITY" +' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]"
+            return "NO_POLITY" +' ---> ' + f"{self.polity.long_name} " + f" [{self.polity.new_name}]"
         elif self.relationship_to_preceding_entity:
             return self.relationship_to_preceding_entity
         elif self.preceding_entity:

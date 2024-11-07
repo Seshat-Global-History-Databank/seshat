@@ -114,8 +114,12 @@ class Long_wall(SeshatCommon):
             return mark_safe(f"{self.long_wall_from:,} <span class='fw-light fs-6 text-secondary'> km </span>")
         elif self.long_wall_from is not None and self.long_wall_to is not None:
             return mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.long_wall_from:,} <span class='fw-light text-secondary'> to </span> {self.long_wall_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km </span>")
-        elif self.long_wall_from == 0:
+        elif (self.long_wall_from == 0 or self.long_wall_to == 0) and self.tag == "SSP":
+            return "unknown"
+        elif (self.long_wall_from == 0 or self.long_wall_to == 0) and self.tag == "TRS":
             return "absent"
+        elif not self.long_wall_from and not self.long_wall_to and self.tag == "SSP":
+            return "unknown"
         elif self.long_wall_from is not None:
             return  mark_safe(f"{self.long_wall_from:,} <span class='fw-light fs-6 text-secondary'> km </span>")
         elif self.long_wall_to is not None:

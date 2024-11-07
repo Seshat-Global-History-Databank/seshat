@@ -23,7 +23,7 @@ style="display:block; overflow: hidden;"
 href="{% url key|lower|add:'-updatenew' value.id %}">
     <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c">
         <i class=" fa-solid fa-pen-to-square"></i>
-        <span> &nbsp;&nbsp;Edit coded value {{value.description}}  </span>
+        <span> &nbsp;&nbsp;Edit coded value</span>
     </span>
 </a>  
 {% endif %}
@@ -60,7 +60,7 @@ href="{% url key|lower|add:'-updatenew' value.id %}">
         href="{% url dynamic_url value.id %}">
             <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
                 <i class="fa-solid fa-pen"></i>
-                <span> &nbsp;&nbsp;Create Description X</span>
+                <span> &nbsp;&nbsp;Create Description</span>
             </span>
         </a>
     {% endwith %}

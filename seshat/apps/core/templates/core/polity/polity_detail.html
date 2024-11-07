@@ -143,8 +143,6 @@
 
     .off-vars {
         color:rgba(125, 125, 125, 0.734); 
-        background:rgba(252, 252, 252, 0.734); 
-        border:1px solid #a5bf892e;
     }
 
     .federicka-huge {
@@ -181,7 +179,14 @@
     a:hover .hover-text {
         width: auto; /* Set width to 'auto' to allow it to grow to fit the content */
     }
-    
+    .shadow-box {
+        /* Light gray shadow */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        /* Optional: Add a border if you like */
+        border: 1px solid #acd2cc; 
+        padding: 20px; /* Adjust as needed */
+        background-color: white; /* Optional */
+    }
 </style>
 
 <!-- showcase for index -->
@@ -576,55 +581,61 @@
                                 {% if values %}
                                 <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
                                     <div class="fs-6 pb-1">
-                                        <a class="h6" href="#{{key}}">
-                                            <i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                        </a> {{ values.0.clean_name_spaced|slice:"7:" }}:
-                                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                        <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                            {{ values.0.clean_name_spaced|slice:"7:" }}
                                         </a> 
+                                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                            <a class="h6" style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                            </a> 
+
                                         {% endif %}
 
                                     </div>
-                                    <table class="table mb-0 pb-0">
+
+                                    <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                                     {% for vv in values %}
                                     <tr>
-                                        <td>
-                                            {% if  vv.tag == 'IFR' %}
-                                            <span class="h6 text-secondary fw-bold">inferred</span> 
-                                            {% endif %}
-
-                                            {% if  vv.show_value == 'present' %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                            {% elif vv.show_value == "absent" %}
-                                            <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                                            {% elif key == "Polity_suprapolity_relations" or key == "Polity_scale_of_supracultural_interaction" %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.display_value }}</span> 
-                                            {% elif key == "Polity_preceding_entity" %}
-                                                {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
-                                                    <span class="h6 text-dark fw-bold">Succeeding: </span> 
-                                                    <span class="h6 text-teal fw-bold ps-2">
-                                                        <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
-                                                        </span> 
-                                                {% elif vv.polity and vv.other_polity and vv.polity.id == object.id %}
-                                                    <span class="h6 text-dark fw-bold">Preceding:&nbsp;&nbsp; </span> 
-                                                    <span class="h6 text-teal fw-bold ps-2">
-                                                        <a href="{% url 'polity-detail-main' vv.other_polity.id %}">{{ vv.other_polity }}</a>
-                                                        </span> 
-                                                {% else %}
-                                                    <span class="h6 text-dark fw-bold">UNCLEAR: </span> 
+                                        <td class="ps-2">
+                                            <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                                {% if  vv.tag == 'IFR' %}
+                                                <span class="h6 text-secondary fw-bold">inferred</span> 
                                                 {% endif %}
 
+                                                {% if vv.show_value == "absent" %}
+                                                <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                                {% elif key == "Polity_suprapolity_relations" or key == "Polity_scale_of_supracultural_interaction" %}
+                                                <span class="h6 text-dark fw-bold">{{ vv.display_value }}</span> 
+                                                {% elif key == "Polity_preceding_entity" %}
+                                                    {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
+                                                        <span class="h6 text-dark fw-bold">Succeeding: </span> 
+                                                        <span class="text-teal fw-bold ps-2">
+                                                            <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
+                                                            </span> 
+                                                    {% elif vv.polity and vv.other_polity and vv.polity.id == object.id %}
+                                                        <span class="h6 text-dark fw-bold">Preceding:&nbsp;&nbsp; </span> 
+                                                        <span class="text-teal fw-bold ps-1">
+                                                            <a class="fs-6" href="{% url 'polity-detail-main' vv.other_polity.id %}">{{ vv.other_polity }}</a>
+                                                            </span> 
+                                                    {% else %}
+                                                        <span class="h6 text-dark fw-bold">UNCLEAR: </span> 
+                                                    {% endif %}
 
+                                                    <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ vv.get_relationship_to_preceding_entity_display }}]</span>                     
+                        
+                                                {% else %}
+                                                <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                                {% endif %}
+                                            </a> 
 
-
-                                                <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ vv.get_relationship_to_preceding_entity_display }}]</span>                     
-                    
-                                            {% else %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                            {% endif %}
                                         </td>
-                                        <td class="text-end ps-4">
+
+                                        {% if vv.year_from == None and vv.year_to == None %}
+                                        <td>
+                                        </td>
+                
+                                        {% else %}
+                                        <td class="text-end ps-5" style="padding-top:5px;">
                                             <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                                 {% if vv.year_from == None %}
                                                     &nbsp;
@@ -666,22 +677,30 @@
                                                 {% endif %}
                                             </span>
                                         </td>
+                                        {% endif %}
+
                                     </tr>
+
                                     {% endfor %}
 
 
                                     </table>
-                                </span>
-                                {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                    <div class="fs-6"> {{ key|slice:"7:" }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                    </a></div>
-                                </span>
 
+                                </span>
                                 {% endif %}
                             {% endfor %}
-                            </div>
 
+                            {% for key, values in values_m.items %}
+                            {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                            <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                {{ key|slice:"7:"|replace_underscore_and_capitalize }} 
+                                    <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|slice:"7:"|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                    </a>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                            </div>
 
                     {% endif %}
                 {% endfor %}
@@ -734,28 +753,38 @@
                             {% if values %}
                             <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
                                 <div class="fs-6 pb-1"> 
-                                    <a class="h6" href="#{{key}}"><i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                    </a> {{values.0.clean_name_spaced}}: 
+                                    <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                        {{ values.0.clean_name_spaced}}
+                                    </a> 
                                     {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                    <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                    <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                     </a> 
                                     {% endif %}
                                 </div>
-                                <table class="table mb-0 pb-0">
+
+                                <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
                                 {% for vv in values %}
+
                                 <tr>
-                                    <td>{% if  vv.tag == 'IFR' %}
-                                        <span class="h6 text-secondary fw-bold">inferred</span> 
-                                        {% endif %}
-                                        {% if  vv.show_value == 'present' %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% elif vv.show_value == "absent" %}
-                                        <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                                        {% else %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% endif %}
+                                    <td class="ps-2">
+                                        <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                            {% if  vv.tag == 'IFR' %}
+                                            <span class="h6 text-secondary fw-bold">inferred</span> 
+                                            {% endif %}
+                                            {% if vv.show_value == "absent" %}
+                                            <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                            {% else %}
+                                            <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                            {% endif %}
+                                        </a> 
+
                                     </td>
-                                    <td class="text-end ps-4">
+                                    {% if vv.year_from == None and vv.year_to == None %}
+                                    <td>
+                                    </td>
+            
+                                    {% else %}
+                                    <td class="text-end ps-5" style="padding-top:5px;">
                                         <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                             {% if vv.year_from == None %}
                                                 &nbsp;
@@ -797,18 +826,30 @@
                                             {% endif %}
                                         </span>
                                     </td>
+                                    {% endif %}
+
                                 </tr>
+
                                 {% endfor %}
                             </table>
-                                    </span>
-                                    {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                    <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                        <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                        </a></div>
+
                                     </span>
                             {% endif %}
 
                             {% endfor %}
+
+                            {% for key, values in values_m.items %}
+                                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                    {{ key|replace_underscore_and_capitalize }} 
+                                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        </a>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+
+
                 </div>
                 {% endif %}
 
@@ -869,30 +910,38 @@
                             {% for key, values in values_m.items %}
                             {% if values %}
                             <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
-                                <div class="fs-6 pb-1"> <a class="h6" href="#{{key}}"> &nbsp;<i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                </a> {{values.0.clean_name_spaced}}:
+                                <div class="fs-6 pb-1"> 
+                                    <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                        {{ values.0.clean_name_spaced}}
+                                    </a> 
                                 {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                 </a> 
                                 {% endif %}
                             </div>
-                                <table class="table mb-0 pb-0">
+                                <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                                 {% for vv in values %}
                                 <tr>
-                                    <td>
+                                    <td class="ps-2">
+                                        <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                                         {% if  vv.tag == 'IFR' %}
                                         <span class="h6 text-secondary fw-bold">inferred</span> 
                                         {% endif %}
-                                        {% if  vv.show_value == 'present' %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% elif vv.show_value == "absent" %}
-                                        <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
+                                        {% if vv.show_value == "absent" %}
+                                        <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
                                         {% else %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
+                                        <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
                                         {% endif %}
+                                    </a> 
+
                                     </td>
-                                    <td class="text-end ps-4">
+                                    {% if vv.year_from == None and vv.year_to == None %}
+                                    <td>
+                                    </td>
+            
+                                    {% else %}
+                                    <td class="text-end ps-5" style="padding-top:5px;">
                                         <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                             {% if vv.year_from == None %}
                                                 &nbsp;
@@ -934,6 +983,7 @@
                                             {% endif %}
                                         </span>
                                     </td>
+                                    {% endif %}
                                 </tr>
 
                                 {% endfor %}
@@ -941,14 +991,20 @@
 
 
                                     </span>
-                                    {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                    <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                        <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                        </a></div>
-                                    </span>
                             {% endif %}
 
                             {% endfor %}
+
+                            {% for key, values in values_m.items %}
+                                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                    {{ key|replace_underscore_and_capitalize }} 
+                                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        </a>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
                 </div>
                 {% endif %}
 
@@ -1009,16 +1065,25 @@
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
-                    <div class="fs-6 pb-1"> <a class="h6" href="#{{key}}"> &nbsp;<i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                    </a> {{values.0.clean_name_spaced}}:&nbsp; </div>
-                    <table class="table mb-0 pb-0">
+                    <div class="fs-6 pb-1"> 
+                        <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                            {{ values.0.clean_name_spaced}}
+                        </a> 
+                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                        <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize_for_long_vars }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                        </a> 
+                        {% endif %}
+                    
+                    </div>
+
+                    <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                     {% for vv in values %}
                     <tr>
 
                         {% if values.0.clean_name_spaced == 'Widespread Religion' %}
                         <td>
-                            <span class="h6 text-secondary fw-bold ps-2 pe-5">{{ vv.get_order_display }}</span> 
+                            <span class="h6 text-secondary fw-bold ps-1 pe-5">{{ vv.get_order_display }}</span> 
                         </td>
                         <td>
                             <span class="h6 text-teal fw-bold">{{ vv.widespread_religion }}</span> 
@@ -1029,28 +1094,30 @@
 
                         </td>
 
+                        {% else %}
 
+                        <td class="ps-2">
+                            <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                {% if  vv.tag == 'IFR' %}
+                                <span class="h6 text-secondary fw-bold">inferred</span> 
+                                {% endif %}
+                                {% if vv.show_value == "absent" %}
+                                <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                {% else %}
+                                <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                {% endif %}
+                            </a> 
 
-
+                        </td>
+                        {% endif %}
+                        {% if vv.year_from == None and vv.year_to == None %}
+                        <td>
+                        </td>
 
                         {% else %}
 
-                        <td>
-                            {% if  vv.tag == 'IFR' %}
-                            <span class="h6 text-secondary fw-bold">inferred</span> 
-                            {% endif %}
-                            {% if  vv.show_value == 'present' %}
-                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                            {% elif vv.show_value == "absent" %}
-                            <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                            {% else %}
-                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                            {% endif %}
-                        </td>
-                        {% endif %}
-
-                        <td class="text-end ps-4">
-                            <span class="text-secondary fw-light fs-6" style="border-radius:5px">
+                        <td class="text-end ps-5" style="padding-top:5px;">
+                            <span class="text-secondary fs-6">
                                 {% if vv.year_from == None %}
                                     &nbsp;
                                 {% elif  vv.year_from == vv.year_to %}
@@ -1059,7 +1126,7 @@
                                     <span class="text-secondary fw-light fs-6">BCE</span> 
                                     {% else %}
                                     {{ vv.year_from }} 
-                                    <span class="text-secondary fw-light fs-6">CE</span>
+                                    <span class="text-secondary fw-light fs-6 ">CE</span>
                                     {% endif %}
                                 {% elif vv.year_to == None %}
                                     {% if  vv.year_from < 0 %}
@@ -1074,7 +1141,7 @@
                                 {% else %}
                                     {% if  vv.year_from < 0 and vv.year_to < 0 %}
                                     {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
+                                        <span class="text-secondary fw-light fs-6 pt-3">BCE</span> 
                                     <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
                                     {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
@@ -1091,22 +1158,28 @@
                                 {% endif %}
                             </span>
                         </td>
+                        {% endif %}
+
                     </tr>
 
                     {% endfor %}
                 </table>
                         </span>
-                        {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                        <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                            <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                            </a></div>
-                            <table class="table mb-0 pb-0">
 
-                            </table>
-                        </span>
                 {% endif %}
 
                 {% endfor %}
+
+                {% for key, values in values_m.items %}
+                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    {{ key|replace_underscore_and_capitalize_for_long_vars }} 
+                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize_for_long_vars }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                        </a>
+                </div>
+                {% endif %}
+            {% endfor %}
+
     </div>
     {% endif %}
 

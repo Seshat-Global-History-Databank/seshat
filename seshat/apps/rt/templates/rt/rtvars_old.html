@@ -110,29 +110,31 @@
       }
 
 </style>
-<div class="container mt-2">
+<div class="container">
     <div class="row">
       <div class="row mt-3">
         <div class="col-md-12">
             <div class="row d-flex align-items-center mb-2">
                 <div class="col-md-6 px-0">
-                  <h1 class="py-3 ps-0"><span class="badge rounded-pill bg-teal text-dark">Warfare variables (MilTech)</span> 
+                  <h1 class="py-3 ps-0"><span class="badge rounded-pill bg-teal text-dark">Religion Tolerance Variables</span> 
                   </h1>               
                  </div>
-                  <div class="col-md-3">    
-                    <a href='{% url "problematic_wf_data_table" %}' class="btn btn-outline-danger mx-1 my-2 float-end"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges</a>
-                </div>
-                <div class="col-md-3 px-0">    
-                    <a href='{% url "download_csv_all_wf" %}' class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a>
-                </div>
+                  <div class="col-md-6">    
 
+                    <a href='{% url "download_csv_all_rt" %}' class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a>
+                    <a href='{% url "problematic_rt_data_table" %}' class="btn btn-outline-danger mx-1 my-2 float-end"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges</a>
+                    {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+                      <a href='{% url "religion_list" %}' class="btn btn-outline-success mx-1 my-2 float-end">See all Religions</a>
+                      {% endif%}
+
+              </div>
 
             </div>
 
           </div>
         </div>
 
-        <h4>
+        <h5>
           <span class="h5 text-secondary">* We have coded a total of  
             <b class="h4 text-dark">
             {{number_of_all_rows|intcomma}}</b>
@@ -143,7 +145,14 @@
             <b class="h4 text-dark">
             {{all_polities}}</b>
             polities.</span>
-        </h4>
+        </h5>
+        <p class="mb-2" style="font-size:14px;">
+            * The "Religion Tolerance" dataset encompasses a wide range of variables, each offering valuable insights into the dynamics of religious coexistence, government policies, and societal attitudes. This comprehensive collection of variables allows for a multifaceted analysis of religion tolerance, shedding light on the complexities of interactions between governments, societies, and religious communities. 
+</p><p class="mt-0"  style="font-size:14px;">
+* Key variables include measures of syncretism, the prevalence of official and elite religions, and the frequency of violence, both governmental and societal, against religious groups. Additionally, the dataset explores government restrictions on religious practices, property ownership, and the circulation of religious literature. It delves into taxation based on religious adherence, governmental obligations for official recognition, and limitations on constructing religious buildings. The coding captures not only the presence or absence of certain conditions but also the actual religions associated with official status and elite favor. Furthermore, the prevalence of widespread religions, including the most widespread and up to the fourth most widespread, provides a nuanced understanding of religious landscapes.
+
+
+        </p>
         {% for sect, subsect in all_vars_grouped.items %}
         <div class="row">
           <div class="col-md-12">
@@ -164,9 +173,11 @@
             
                     {% endfor %}
                   </div>
+
               </div>
   
             </div>
+
           </div>
 
                
@@ -181,20 +192,12 @@
     </h5> 
       {% endif%}
         {% for v in vv %}
-        {% if v.0|length > 60 %}
-            <div class="card col-md-12">
-        {% elif v.0|length > 34 %}
-            <div class="card col-md-6">
-        {% elif v.0|length > 14 %}
-            <div class="card col-md-4">
-        {% else %}
-            <div class="card col-md-3">
-        {% endif %}
+                <div class="card col-md-12">
                     <div class="align-items-left card-text-spaced">
-                        <span class="fs-5 left-span fw-bold ps-2 card-link">
-                          <a href="{% url v.5 %}" class="text-dark" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">
-                              &nbsp;{{v.0}} <span class="text-secondary fs-6"><span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span></a>        
-                        </span>
+                      <span class="fs-5 left-span fw-bold ps-2 card-link">
+                        <a href="{% url v.5 %}" class="text-dark" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">
+                            &nbsp;{{v.0}} <span class="text-secondary fs-6"><span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span></a>        
+                      </span>
 
                       <span class="right-span fs-5">
                           <span><a href="{% url v.3 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Download All"> <i class="fa-solid fa-file-arrow-down"></i></a></span>

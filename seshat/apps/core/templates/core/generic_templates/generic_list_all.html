@@ -37,7 +37,10 @@ title="Click to Download all such coded records">
 
 {% block extra_vars_list %}
 <td colspan="1"  style="text-align: left; z-index:890; border-left: 2px solid gray;  border-right: 2px solid gray;">
+    {% autoescape off %}
     <span class="pt-3 fw-bold fw-normal">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
+    {% endautoescape %}
+
 </td>
 {% endblock extra_vars_list %}
 

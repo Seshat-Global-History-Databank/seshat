@@ -834,6 +834,14 @@ class SeshatCommon(models.Model):
         abstract = True
         ordering = ['polity']
 
+    def curators_list(self):
+        my_list = [f'{curator.user.full_name} ({curator.role})' for curator in self.curator.all()]
+        if my_list:
+            return ", ".join(my_list)
+        else:
+            return None
+
+
 
 # class Annual_wages(SeshatCommon):
 #     name = models.CharField(max_length=100, default="Annual_wages")

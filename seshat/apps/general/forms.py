@@ -41,6 +41,9 @@ commonwidgets = {
     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
 }
 
+# class ExpertReviewedForm(forms.ModelForm):
+#     expert_reviewed_by_me = forms.BooleanField(required=False, label="Expert Reviewed by Me")
+
 class Polity_research_assistantForm(forms.ModelForm):
     class Meta:
         model = Polity_research_assistant

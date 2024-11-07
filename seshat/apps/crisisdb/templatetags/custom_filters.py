@@ -1,6 +1,9 @@
 from django import template
 import re
 
+from seshat.apps.rt.var_defs import swapped_dict
+
+
 register = template.Library()
 
 
@@ -20,6 +23,17 @@ def get_columns_with_value_dic(instance, value):
 def replace_underscore_and_capitalize(value):
     value = value.replace('_', ' ')
     return value.title()
+
+
+@register.filter
+def replace_underscore_and_capitalize_for_long_vars(value):
+    if value in swapped_dict:
+        new_value = swapped_dict[value]
+        new_value = new_value.replace('_', ' ')
+        return new_value.title()
+    else:
+        value = value.replace('_', ' ')
+        return value.title()
 
 @register.filter
 def get_item_from_dic(dictionary, key):

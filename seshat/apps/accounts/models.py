@@ -40,6 +40,16 @@ class Profile(models.Model):
     def __str__(self):  # __unicode__ for Python 2
         return self.user.username
 
+@property
+def full_name(self):
+    if self.first_name and self.last_name:
+        return f"{self.first_name} {self.last_name}".strip()
+    elif self.first_name:
+        return f"{self.first_name}".strip()
+    else:
+        return f"{self.user_name}".strip()
+
+User.add_to_class("full_name", full_name)
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):

@@ -34,6 +34,7 @@ from requests.structures import CaseInsensitiveDict
 from django.apps import apps
 
 from django.contrib import messages
+from seshat.apps.core.forms import  SeshatCommentPartForm2
 
 #from easyaudit.models import CRUDEvent
 
@@ -7235,9 +7236,12 @@ def scvars(request):
         model_name = model.__name__
         if model_name == "Ra":
             continue
+
+
         subsection_value = str(model().subsection())
         sub_subsection_value = str(model().sub_subsection())
         count = model.objects.count()
+        pols_count = Polity.objects.count()
         number_of_all_rows += count
         model_title = model_name.replace("_", " ").title()
         model_create = model_name.lower() + "-create"
@@ -7247,11 +7251,136 @@ def scvars(request):
         model_s = model_name.lower() + "s"
 
         queryset = model.objects.all()
+        filtered_queryset_pres = 0
+        filtered_queryset_abs = 0
+        filtered_queryset_unk = 0
+        filtered_queryset_sus_unk = 0
+        filtered_queryset_unc = 0
+        filtered_queryset_trans = 0
+
         politys = queryset.values_list('polity', flat=True).distinct()
         unique_politys.update(politys)
-        number_of_variables += 1
+        polities_for_this_var = len(set(politys))
 
-        to_be_appended = [model_title, model_s, model_create, model_download, model_metadownload, model_all, count]
+
+        if model_name.lower() in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            var_type= "RANGE"
+            
+            for obj in queryset:
+
+                if obj.show_value() == " - " and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == " - " and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == ' - ' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                0, #filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Range was coded',
+                ]
+
+        elif model_name.lower() == 'source_of_support':
+            var_type="TEXT"
+
+            for obj in queryset:
+
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                0, #filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        else:
+            var_type="A/P/U/~"
+
+            for obj in queryset:
+                if obj.show_value() == 'present':
+                    filtered_queryset_pres +=1
+                if obj.show_value() == 'absent':
+                    filtered_queryset_abs +=1
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
+                    filtered_queryset_trans +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Present'
+                ]
+
+
 
         if sub_subsection_value:
             all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
@@ -7315,11 +7444,15 @@ def download_csv_all_sc(request):
         # Get all rows of data from the model
         items = model.objects.all()
 
-
         for obj in items:
-            writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+            if obj.polity:
+                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                          obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
                          obj.expert_reviewed, obj.drb_reviewed,])
+            else:
+                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            "no_name", "no_name", "no_name", obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
 
     return response
 
@@ -7354,305 +7487,92 @@ def download_csv_social_scale(request):
         if s_value == "Social Scale":
             items = model.objects.all()
             for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                if obj.polity:
+                    writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+                else:
+                    writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            "no_name", "no_name", "no_name", obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
+
+
+##########################
+
+
+
+def generate_csv_response(subsection_filter, file_suffix):
+    # Fetch all models in the "sc" app
+    app_name = 'sc'
+    app_models = apps.get_app_config(app_name).get_models()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type='text/csv')
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"social_complexity_{file_suffix}_{current_datetime}.csv"
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter='|')
+    
+    # Write the headers
+    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID', 'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    
+    # Iterate over each model and filter by subsection
+    for model in app_models:
+        if model.__name__ == "Ra":
+            continue
+        if str(model().subsection()) == subsection_filter:
+            items = model.objects.all()
+            for obj in items:
+                if obj.polity:
+                    writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+                else:
+                    writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            "no_name", "no_name", "no_name", obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
                             obj.expert_reviewed, obj.drb_reviewed,])
 
     return response
 
 @permission_required('core.view_capital')
 def download_csv_professions(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_professions_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Professions":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
+    return generate_csv_response('Professions', 'professions')
 
 @permission_required('core.view_capital')
 def download_csv_bureaucracy_characteristics(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_bureaucracy_characteristics_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Bureaucracy Characteristics":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
+    return generate_csv_response('Bureaucracy Characteristics', 'bureaucracy_characteristics')
 
 @permission_required('core.view_capital')
 def download_csv_hierarchical_complexity(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_hierarchical_complexity_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Hierarchical Complexity":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
-
-@permission_required('core.view_capital')
-def download_csv_law(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_law_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Law":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
-
-@permission_required('core.view_capital')
-def download_csv_specialized_buildings_polity_owned(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_specialized_buildings_polity_owned_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Specialized Buildings: polity owned":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
-
-@permission_required('core.view_capital')
-def download_csv_transport_infrastructure(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_transport_infrastructure_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Transport Infrastructure":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
-
-@permission_required('core.view_capital')
-def download_csv_special_purpose_sites(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
-
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    file_name = f"social_complexity_special_purpose_sites_{current_datetime}.csv"
-
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Special-purpose Sites":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
+    return generate_csv_response('Hierarchical Complexity', 'hierarchical_complexity')
 
 @permission_required('core.view_capital')
 def download_csv_information(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'sc'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+    return generate_csv_response('Information', 'information')
 
-    # Create a response object with CSV content type
-    response = HttpResponse(content_type='text/csv')
-    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+@permission_required('core.view_capital')
+def download_csv_law(request):
+    return generate_csv_response('Law', 'law')
+    
+@permission_required('core.view_capital')
+def download_csv_specialized_buildings_polity_owned(request):
+    return generate_csv_response('Specialized Buildings: polity owned', 'specialized_buildings_polity_owned')
+    
+@permission_required('core.view_capital')
+def download_csv_transport_infrastructure(request):
+    return generate_csv_response('Transport Infrastructure', 'transport_infrastructure')
 
-    file_name = f"social_complexity_information_{current_datetime}.csv"
+@permission_required('core.view_capital')
+def download_csv_special_purpose_sites(request):
+    return generate_csv_response('Special-purpose Sites', 'special_purpose_sites')
+    
+#########################
 
-    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
-
-    # Create a CSV writer
-    writer = csv.writer(response, delimiter='|')
-
-    # type the headers
-    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    # Iterate over each model
-    for model in app_models:
-        # Get all rows of data from the model
-        model_name = model.__name__
-        if model_name == "Ra":
-            continue
-        s_value = str(model().subsection())
-        if s_value == "Information":
-            items = model.objects.all()
-            for obj in items:
-                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
-                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                            obj.expert_reviewed, obj.drb_reviewed,])
-
-    return response
-
-
-
-
-
-from seshat.apps.core.forms import  SeshatCommentPartForm2
 
 
 # Define a custom test function to check for the 'core.add_capital' permission
@@ -8100,42 +8020,42 @@ def generic_metadata_download(request, var_name, var_name_display, var_section, 
 #     return render(request, template_name, {})
 
 
-def confirm_delete_view(request, model_class, pk, var_name):
-    permission_required = 'core.add_capital'
+# def confirm_delete_view(request, model_class, pk, var_name):
+#     permission_required = 'core.add_capital'
     
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
+#     # Retrieve the object for the given model class
+#     obj = get_object_or_404(model_class, pk=pk)
 
-    # Check if the user has the required permission
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
+#     # Check if the user has the required permission
+#     if not request.user.has_perm(permission_required):
+#         return HttpResponseForbidden("You don't have permission to delete this object.")
 
-    template_name = "core/confirm_delete.html"
+#     template_name = "core/confirm_delete.html"
     
-    context = {
-        'var_name': var_name,
-        'obj': obj,
-        'delete_object': f'{var_name}-delete',
-    }
+#     context = {
+#         'var_name': var_name,
+#         'obj': obj,
+#         'delete_object': f'{var_name}-delete',
+#     }
 
-    return render(request, template_name, context)
+#     return render(request, template_name, context)
 
-def delete_object_view(request, model_class, pk, var_name):
-    permission_required = 'core.add_capital'
-    # Retrieve the object for the given model class
-    obj = get_object_or_404(model_class, pk=pk)
+# def delete_object_view(request, model_class, pk, var_name):
+#     permission_required = 'core.add_capital'
+#     # Retrieve the object for the given model class
+#     obj = get_object_or_404(model_class, pk=pk)
 
-    if not request.user.has_perm(permission_required):
-        return HttpResponseForbidden("You don't have permission to delete this object.")
+#     if not request.user.has_perm(permission_required):
+#         return HttpResponseForbidden("You don't have permission to delete this object.")
     
-    # Delete the object
-    obj.delete()
+#     # Delete the object
+#     obj.delete()
     
-    # Redirect to the success URL
-    success_url_name = f'{var_name}s_all'  # Adjust the success URL as needed
-    success_url = reverse(success_url_name)
+#     # Redirect to the success URL
+#     success_url_name = f'{var_name}s_all'  # Adjust the success URL as needed
+#     success_url = reverse(success_url_name)
     
-    # Display a success message
-    messages.success(request, f"{var_name} has been deleted successfully.")
+#     # Display a success message
+#     messages.success(request, f"{var_name} has been deleted successfully.")
     
-    return redirect(success_url)
+#     return redirect(success_url)

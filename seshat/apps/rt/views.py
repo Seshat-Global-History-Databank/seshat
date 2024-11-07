@@ -58,6 +58,217 @@ def rtvars(request):
 
     for model in models_1:
         model_name = model.__name__
+        if model_name == "Ra":
+            continue
+        s_value = str(model().subsection())
+        ss_value = str(model().sub_subsection())
+
+        better_name = "download_csv_" + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
+        all_sect_download_links[s_value] = better_name
+        if s_value not in all_vars_grouped:
+            all_vars_grouped[s_value] = {}
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+        else:
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+
+    models = apps.get_app_config(app_name).get_models()
+
+    for model in models:
+        model_name = model.__name__
+        if model_name == "Ra":
+            continue
+
+
+        subsection_value = str(model().subsection())
+        sub_subsection_value = str(model().sub_subsection())
+        count = model.objects.count()
+        pols_count = Polity.objects.count()
+        number_of_all_rows += count
+        #model_title = model_name.replace("_", " ").title()
+        model_title = swapped_dict[model_name]
+        model_create = model_name.lower() + "-create"
+        model_download = model_name.lower() + "-download"
+        model_metadownload = model_name.lower() + "-metadownload"
+        model_all = model_name.lower() + "s_all"
+        model_s = model_name.lower() + "s"
+
+        queryset = model.objects.all()
+        filtered_queryset_pres = 0
+        filtered_queryset_abs = 0
+        filtered_queryset_unk = 0
+        filtered_queryset_sus_unk = 0
+        filtered_queryset_unc = 0
+        filtered_queryset_trans = 0
+
+        politys = queryset.values_list('polity', flat=True).distinct()
+        unique_politys.update(politys)
+        polities_for_this_var = len(set(politys))
+
+
+        if model_name.lower() in ['widespread_religion',]:
+            print("AFTER: \n" )
+            for polity in politys:
+                print(polity)
+
+
+        if model_name.lower() in ['long_wall', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
+            var_type= "RANGE"
+            
+            for obj in queryset:
+                if obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                if obj.show_value() == ' - ' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                0, #filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Coded',
+                ]
+
+        elif model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp']:
+            var_type="TEXT+"
+
+            for obj in queryset:
+                if obj.show_value() == 'never (absent)':
+                    filtered_queryset_abs +=1
+                elif obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        else:
+            var_type="A/P/U/~"
+
+            for obj in queryset:
+                if obj.show_value() == 'present':
+                    filtered_queryset_pres +=1
+                if obj.show_value() == 'absent':
+                    filtered_queryset_abs +=1
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
+                    filtered_queryset_trans +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Present'
+                ]
+
+
+
+        if sub_subsection_value:
+            all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
+        else:
+            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
+
+
+    context = {}
+    context["all_vars_grouped"] = all_vars_grouped
+    context["all_sect_download_links"] = all_sect_download_links
+    context["all_polities"] = len(unique_politys)
+    context["number_of_all_rows"] = number_of_all_rows
+
+    context["number_of_variables"] = number_of_variables
+
+    return render(request, 'rt/rtvars.html', context=context)
+
+
+
+
+def rtvarsold(request):
+
+    app_name = 'rt'  # Replace with your app name
+    models_1 = apps.get_app_config(app_name).get_models()
+
+    unique_politys = set()
+    number_of_all_rows = 0
+    number_of_variables = 0
+    all_vars_grouped = {}
+
+    all_sect_download_links = {}
+
+    for model in models_1:
+        model_name = model.__name__
         if model_name in ["RA",]:
             continue
         s_value = str(model().subsection())
@@ -87,7 +298,7 @@ def rtvars(request):
         sub_subsection_value = str(model().sub_subsection())
         count = model.objects.count()
         number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
+        #model_title = model_name.replace("_", " ").title()
         model_title = swapped_dict[model_name]
         model_create = model_name.lower() + "-create"
         model_download = model_name.lower() + "-download"
