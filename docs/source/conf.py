@@ -109,6 +109,9 @@ html_static_path = ["_static"]
 html_theme_options = {
     "use_download_button": True,
 }
+html_css_files = [
+    'custom.css',
+]
 
 # -- copybutton settings ----
 
