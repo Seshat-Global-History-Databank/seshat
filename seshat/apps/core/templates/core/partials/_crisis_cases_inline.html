@@ -11,13 +11,13 @@
                     {% with value|get_columns_with_value_dic:"P" as columns_dic %}
                         {% if columns_dic %}
                         <div class="row gx-1">
-                            <div class="col-sm-2 border border-success text-light bg-success d-flex align-items-center py-1" style="border-width: 2px !important; border-radius: 10px;">
+                            <div class="col-sm-2 border border-success text-success d-flex align-items-center py-1" style="border-width: 2px !important; border-radius: 10px;">
                                 <h6 class="m-auto">PRESENT</h6>
                             </div>
                             <div class="col-sm-10 py-1" style="text-align: left;">
                                 {% for column, value in columns_dic.items %}
-                                <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='{{ value }}'>
-                                    <span class="fs-6 my-1 fw-normal  fw-normal badge rounded-pill bg-success">{{ column|replace_underscore_and_capitalize }}</span>
+                                <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='present'>
+                                    <span class="fs-6 my-1 fw-normal text-success fw-normal badge rounded-pill" style="border:2px solid seagreen">{{ column|replace_underscore_and_capitalize }}</span>
                                 </span>
                                 {% endfor %}
                             </div>
@@ -28,14 +28,14 @@
                     {% with value|get_columns_with_value_dic:"IP" as columns_dic %}
                         {% if columns_dic %}
                         <div class="row gx-1">
-                            <div class="col-sm-2  border border-info bg-info text-dark d-flex align-items-center py-1" style="border-width: 2px !important; border-radius: 10px;">
+                            <div class="col-sm-2  d-flex align-items-center py-1" style="border:2px solid dodgerblue; border-radius: 10px; color:dodgerblue;">
                                 <h6 class="m-auto">INFERRED PRESENT
                                 </h6>
                             </div>
                             <div class="col-sm-10 py-1"  style="text-align: left;">
                                 {% for column, value in columns_dic.items %}
                                 <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='{{ value }}'>
-                                    <span class="fs-6 my-1 fw-normal  badge rounded-pill bg-info text-dark">{{ column|replace_underscore_and_capitalize }}</span>
+                                    <span class="fs-6 my-1 fw-normal  badge rounded-pill" style="border:2px solid dodgerblue; color:dodgerblue;">{{ column|replace_underscore_and_capitalize }}</span>
                                 </span>
                                 {% endfor %}
                             </div>
@@ -46,13 +46,13 @@
                     {% with value|get_columns_with_value_dic:"IA" as columns_dic %}
                     {% if columns_dic %}
                     <div class="row gx-1">
-                        <div class="col-sm-2 border border-secondary bg-secondary text-light d-flex align-items-center py-1"  style="border-width: 2px !important; border-radius: 10px;">
+                        <div class="col-sm-2 border border-secondary text-secondary d-flex align-items-center py-1"  style="border-width: 2px !important; border-radius: 10px;">
                             <h6 class="m-auto">INFERRED ABSENT</h6>
                         </div>
                         <div class="col-sm-10 py-1"  style="text-align: left;">
                             {% for column, value in columns_dic.items %}
                             <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='{{ value }}'>
-                                <span class="fs-6 my-1 fw-normal  badge rounded-pill bg-secondary text-light">{{ column|replace_underscore_and_capitalize }}</span>
+                                <span class="fs-6 my-1 fw-normal  badge rounded-pill border-secondary" style="border:2px solid darkgray; color:rgb(74, 74, 74)">{{ column|replace_underscore_and_capitalize }}</span>
                             </span>
                             {% endfor %}
                         </div>
@@ -63,13 +63,13 @@
                     {% with value|get_columns_with_value_dic:"A" as columns_dic %}
                     {% if columns_dic %}
                     <div class="row gx-1">
-                        <div class="col-sm-2 border text-light d-flex align-items-center py-1"  style="border-width: 2px !important; text-align: left; background-color:#495057;  border-color:#495057 !important; border-radius: 10px;">
+                        <div class="col-sm-2 border text-secondary d-flex align-items-center py-1"  style="border-width: 2px !important; text-align: left;  border-color:lightgray !important; border-radius: 10px;">
                             <h6 class="m-auto">ABSENT</h6>
                         </div>
-                        <div class="col-sm-10 py-1"  style=" text-align: left; border-color:#495057 !important;">
+                        <div class="col-sm-10 py-1"  style=" text-align: left; ">
                             {% for column, value in columns_dic.items %}
                             <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='{{ value }}'>
-                                <span class="fs-6 my-1 fw-normal  badge rounded-pill" style="background-color:#495057;">{{ column|replace_underscore_and_capitalize }}</span>
+                                <span class="fs-6 my-1 fw-normal text-secondary badge rounded-pill" style="border: 2px solid lightgray !important;">{{ column|replace_underscore_and_capitalize }}</span>
                             </span>
                             {% endfor %}
                         </div>
@@ -80,13 +80,13 @@
                     {% with value|get_columns_with_value_dic:"SU" as columns_dic %}
                     {% if columns_dic %}
                     <div class="row gx-1">
-                        <div class="col-sm-2 border border-warning bg-warning  d-flex align-items-center py-1"  style="border-width: 2px !important; border-radius: 10px;">
+                        <div class="col-sm-2 border border-warning d-flex align-items-center py-1"  style="border-width: 2px !important; border-radius: 10px; color:orange">
                             <h6 class="m-auto">SUSPECTED UNKNOWN</h6>
                         </div>
                         <div class="col-sm-10 py-1"  style="text-align: left;">
                             {% for column, value in columns_dic.items %}
                             <span type="button"  tabindex="0" data-bs-toggle="popover" title="{{ column|replace_underscore_and_capitalize }}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='{{ value }}'>
-                                <span class="fs-6 my-1 fw-normal  badge rounded-pill bg-warning text-dark">{{ column|replace_underscore_and_capitalize }}</span>
+                                <span class="fs-6 my-1 fw-normal badge rounded-pill" style="border: 2px solid orange !important; color:orange;">{{ column|replace_underscore_and_capitalize }}</span>
                             </span>
                             {% endfor %}
                         </div>

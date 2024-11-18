@@ -198,34 +198,34 @@
           Here is a legend to guide you in understanding the metadata more clearly:
         </h6>
         <span class="progress align-items-center py-0 m-0">
-          <span class="progress-bar bg-success-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities"> 
+          <span class="progress-bar bg-success-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
             <b class="text-dark">Present</b> 
         </span>
-        <span class="progress-bar bg-trans-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities"> 
+        <span class="progress-bar bg-trans-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
           <b class="text-white">Partially coded</b> 
       </span>
-            <span class="progress-bar bg-info-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities">
-              <b class="text-dark">Range was coded</b> 
+            <span class="progress-bar bg-info-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-dark">Range</b> 
           </span>
 
-          <span class="progress-bar bg-danger-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities"> 
+          <span class="progress-bar bg-danger-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
             <b class="text-dark">Absent</b> 
         </span>
 
-            <span class="progress-bar bg-warning-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities">
+            <span class="progress-bar bg-warning-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
               <b class="text-dark">Suspected Unknown</b> 
           </span>
 
-            <span class="progress-bar bg-unknown-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities">
+            <span class="progress-bar bg-unknown-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
               <b class="text-white">Unknown</b> 
           </span>
 
-          <span class="progress-bar bg-uncoded-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities"> 
+          <span class="progress-bar bg-uncoded-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
             <b class="text-dark">Uncoded</b> 
         </span>
 
-            <span class="progress-bar bg-secondary-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities">
-              <b class="text-dark">Blank Polities</b> 
+            <span class="progress-bar bg-secondary-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-dark">To Be Coded</b> 
           </span>
         </span>
         {% for sect, subsect in all_vars_grouped.items %}
@@ -300,9 +300,7 @@
               <span class="text-secondary fs-6">
                   &nbsp;{{ v.6|intcomma }}  <small class="text-secondary fw-light"> coded records </small>
               </span>
-              <span class="text-secondary fs-6">
-                <small class="text-secondary fw-light"> for </small> {{ v.7 }}  <small class="text-secondary fw-light"> polities &nbsp;&nbsp;</small>
-            </span>
+    
             </div>
 
               <div class="progress align-items-center py-0 m-0">
@@ -329,7 +327,7 @@
           </span>
 
 
-              <span class="progress-bar bg-secondary-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Blank: # {{v.15}} Polities">
+              <span class="progress-bar bg-secondary-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
           </span>
             </div>
 

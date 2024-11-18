@@ -713,7 +713,7 @@
                         General Variables
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -864,7 +864,7 @@
                         Social Complexity Variables
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -1019,7 +1019,7 @@
                         Warfare Variables (MilTech)
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -1194,7 +1194,7 @@
             Religion Tolerance
         </span>   
         <span class=" mt-3 fs-5">
-            Nothing coded yet.
+    Coding in Progress.
         </span>                 
     </span>
 </div>
@@ -1230,7 +1230,7 @@
                             Human Sacrifice
                         </span>   
                         <span class=" mt-3 fs-5">
-                            Nothing coded yet. 
+                    Coding in Progress. 
                             {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                             <span class="text-success">Add a new Human Sacrifice: </span>  <a class="h6" href="{% url 'human_sacrifice-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                             </a>
@@ -1326,7 +1326,7 @@
                         Crisis Consequences
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet. 
+                Coding in Progress. 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                         <span class="text-success">Add a new Crisis Consequence: </span>  <a class="h6" href="{% url 'crisis_consequence-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                         </a>
@@ -1372,7 +1372,7 @@
                         Power Transitions
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet. 
+                Coding in Progress. 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                         <span class="text-success">Add a Power Transition: </span>  <a class="h6" href="{% url 'power_transition-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                         </a>
@@ -1900,7 +1900,7 @@
                 {% endfor %} 
                </div>    
             {% else %}
-                <span class="text-secondary">- Nothing coded yet.</span>
+                <span class="text-secondary">Coding in Progress.</span>
             {% endif %}
     </div>
 
@@ -1930,31 +1930,28 @@
          
         <div class="py-2 custom-left-border-shakkdowed">
         {% if not all_crisis_cases_data %}
-        <span class="text-secondary">- Nothing coded yet.</span>
+        <span class="text-secondary">Coding in Progress.</span>
         {% endif %}
         {% for key, values in all_crisis_cases_data.items %}
         {% if values and 'core.view_capital' in user.get_all_permissions %}
             <div  id="{{key}}">
 
                     {% for value in values %}
-                        <span class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                            <i class="fa-solid fa-star fa-2xs"></i>
-                            {{ value.crisis_case_id }}:            
-                        </span> 
-                        <br>
-                    <span class="h5 fw-bold text-teal pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">{{value.name}} 
+                    <span class="h5 fw-bold text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">{{value.name}} 
                         {% include "core/partials/_year_block_value_inline_cc.html" %}
                         <div>
+                            <span class="text-secondary fw-light"> {{ value.crisis_case_id }}</span>
+<br>
                             <span class="fs-6 text-dark">
-                                {% if value.polity %}
-                                Polities:
-                                    {% if value.polity.long_name %}
+                                {% if value.other_polity %}
+                                Other Polities:
+                                    {% if value.other_polity.long_name %}
                                     <span class="fs-5">
-                                        <a href="{% url 'polity-detail-main' value.polity.id %}">{{ value.polity.long_name }}</a>
+                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.long_name }}</a>
                                     </span>
                                     {% else %}
                                     <span class="text-secondary">
-                                        <a href="{% url 'polity-detail-main' value.polity.id %}">{{ value.polity.name }}</a>
+                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.name }}</a>
                                     </span>
                                     {% endif %}
                                     {% if value.other_polity.long_name %}
@@ -1970,8 +1967,6 @@
                                     </span>
                                     {% endif %}
                             
-                                {% else %}
-                                <span>-</span>
                                 {% endif%}
                             </span>
                         </div>
@@ -2026,7 +2021,7 @@
         <div class="py-2 custom-left-border-shadtowed my-3">
 
         {% if not all_power_transitions_data %}
-        <span class="text-secondary">- Nothing coded yet.</span>
+        <span class="text-secondary">Coding in Progress.</span>
         {% endif %}
 
 

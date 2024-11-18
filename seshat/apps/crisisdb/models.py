@@ -394,6 +394,9 @@ class Crisis_consequence(SeshatCommon):
     def clean_name(self):
         return "crisis_consequence"
     
+    def clean_name_spaced(self):
+        return "Crisis Consequence"
+    
     def get_columns_with_value(self, value):
         columns = []
         fields = ['decline', 'collapse', 'epidemic', 'downward_mobility', 'extermination', 'uprising', 'revolution', 'successful_revolution', 'civil_war', 'century_plus', 'fragmentation', 'capital', 'conquest', 'assassination', 'depose', 'constitution', 'labor', 'unfree_labor', 'suffrage', 'public_goods', 'religion']
@@ -486,6 +489,10 @@ class Power_transition(SeshatCommon):
 
     def clean_name(self):
         return "power_transition"
+    
+    def clean_name_spaced(self):
+        return "Power Transition"
+    
     
     def get_columns_with_value(self, value):
         columns = []

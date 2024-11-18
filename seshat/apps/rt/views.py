@@ -111,50 +111,7 @@ def rtvars(request):
         polities_for_this_var = len(set(politys))
 
 
-        if model_name.lower() in ['widespread_religion',]:
-            print("AFTER: \n" )
-            for polity in politys:
-                print(polity)
-
-
-        if model_name.lower() in ['long_wall', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication" ]:
-            var_type= "RANGE"
-            
-            for obj in queryset:
-                if obj.show_value() != ' - ':
-                    filtered_queryset_pres +=1
-                if obj.show_value() == "unknown" and obj.tag == "TRS":
-                    filtered_queryset_unk +=1
-                if obj.show_value() == "unknown" and obj.tag == "SSP":
-                    filtered_queryset_sus_unk +=1
-                if obj.show_value() == ' - ' or obj.tag == "UND":
-                    filtered_queryset_unc +=1
-
-            dif_count = pols_count - polities_for_this_var
-            number_of_variables += 1
-
-            to_be_appended = [
-                model_title, # v.0
-                model_s,
-                model_create,
-                model_download,
-                model_metadownload,
-                model_all,          # v.5
-                count,
-                polities_for_this_var,
-                var_type,
-                filtered_queryset_pres,
-                0, #filtered_queryset_abs,      # v.10
-                filtered_queryset_sus_unk,     
-                filtered_queryset_unk,
-                filtered_queryset_unc,       # v.13
-                pols_count,
-                dif_count,
-                0, #filtered_queryset_trans,
-                'Coded',
-                ]
-
-        elif model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp', 'soc_vio_freq_rel_grp']:
+        if model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp', 'soc_vio_freq_rel_grp']:
             var_type="TEXT+"
 
             for obj in queryset:
@@ -617,15 +574,19 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
 
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     else:
         object_list = model_class.objects.all()
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+
+    allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
+    if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+            object_list = object_list.filter(polity__new_name__in=allowed_polities)
+
+
     extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
     orderby = request.GET.get('orderby', None)
@@ -687,11 +648,14 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
 
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_download(request, model_class, var_name):
     items = model_class.objects.all()
+
+    allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
+    if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+        items = items.filter(polity__new_name__in=allowed_polities)
 
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")

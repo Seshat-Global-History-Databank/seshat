@@ -4,8 +4,14 @@
 
 
 {% block content %}
+<style>
+    table {
+        border-collapse: separate; /* Don't collapse */
+        border-spacing: 0;
+      }
+</style>
+
 <div class="container">
-    <h6 class="lead-2 text-secondary pt-2">List of all:</h6>
     {% if messages %}
     <ul class="messages mt-3">
         {% for message in messages %}
@@ -31,26 +37,38 @@
     <hr> 
     {% endif %}
     {% if object_list %}
-    <div class="row d-flex align-items-center mb-1">
-        <div class="col-md-6">
-            <h2 class="fw-bold">Capitals</h2>
-        </div>
-        <div class="col-md-6">      
-            <a href="{% url 'capital-create' %}" class="btn btn-outline-success mx-3 my-4 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Capitals</a>
-            <a href="{% url 'capital-download' %}" class="btn btn-outline-primary ms-auto my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
-        </div>
-    </div>
-    <div class="table-responsive pb-4">
-    <table id="table_id" class="table table-striped align-middle">
+    <div class="table-container mt-2">
+        <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important;">
         <thead>
-          <tr>
+
+            <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; border-bottom:1px solid #782823;  top: 55px; z-index:900;">Capitals 
+    <!-- Add Another Fact Button -->
+    <a href="{% url 'capital-create' %}" 
+    class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+    data-bs-toggle="tooltip" 
+    data-bs-placement="top" 
+    title="Click to add a new coded record">
+    <i class="fas fa-plus"></i>
+    </a>
+    
+    <!-- See All Such Facts Button -->
+    <a href="{% url 'capital-download' %}"
+    class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+    data-bs-toggle="tooltip" 
+    data-bs-placement="top" 
+    title="Click to Download all such coded records">
+    <i class="fas fa-download"></i>
+    </a>
+
+            </legend>
+            <thead> 
+            <tr  class="sticky-top"  style="background-color:#fffdf2; height:40px; top: 92px; z-index:900; border:1px solid #782823;">
+
             <th scope="col" class="text-secondary">#</th>
             <th>Name [Alternative Names]</th>
             <th>Polities</th>
             <th>Current Country</th>
-            <th style="text-align: center;"><i class="fa-solid fa-location-dot"></i></th>
-            <th>Longitude</th>
-            <th>Latitude</th>
+            <th style="text-align: center;"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</th>
             <th style="text-align: center;">Verified?</th>
             <th style="text-align: center;">Update?</th>
             <th style="text-align: center;"><i class="fa-solid fa-trash-can"></i></th>
@@ -70,7 +88,12 @@
 
 
                     {% for x in object.polity_caps.all %}
-                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.long_name}}' href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.new_name}}</a><br>
+                    {% if x.polity.long_name %}
+
+                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}' href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.long_name}}</a><br>
+                    {% else %}
+                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}' href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.new_name}}</a><br>                    
+                    {% endif %}
                     {% endfor %}
 
                 </td>
@@ -83,12 +106,13 @@
                 
 
                 {% if not object.url_on_the_map or object.url_on_the_map == "#" %}
-                <td class="text-secondary">No Links</td>
+                <td class="text-secondary" style="text-align: center;">-
                 {% else %}
-                <td style="text-align: center;"> <a href="{{ object.url_on_the_map }}" target="_blank"> <i class="fa-brands fa-google text-danger"></i> <i class="fa-solid fa-map-location-dot"></i></a></td>
+                <td style="text-align: center;"> <a href="{{ object.url_on_the_map }}" target="_blank"> 
+                    <img width="24" height="24" src="https://img.icons8.com/color/48/google-maps-new.png" alt="google-maps-new"/>
+           
                 {% endif %}
-                <td>{{ object.longitude }}</td>
-                <td>{{ object.latitude }}</td>
+                ({{ object.longitude|floatformat:2  }}, {{ object.latitude|floatformat:2 }})      </a></td>
                 {% if object.is_verified %}
                     <td class="text-success" style="text-align: center;"><i class="fas fa-check-circle"></i></td>
                 {% else %}

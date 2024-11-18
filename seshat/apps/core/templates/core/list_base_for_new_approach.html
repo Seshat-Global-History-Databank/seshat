@@ -71,7 +71,7 @@
 
 
 
-    <div class="table-container">
+    <div class="table-container pb-3">
         <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important;">
             <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; height:40px; border-bottom:1px solid #782823;  top: 55px; z-index:900;">{{myvar}}</legend>
             <thead> 
@@ -206,12 +206,15 @@
     </div>
 
     {% endif %}
-    </div>
-    <script>
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-          return new bootstrap.Popover(popoverTriggerEl)
-        })
-    </script>
-  {% endblock %}
+
+</div>
+
+<script>
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+</script>
+
+{% endblock %}
 

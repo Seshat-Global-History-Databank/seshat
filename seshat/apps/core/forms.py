@@ -260,11 +260,11 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
         widgets = {
             'private_comment': forms.NumberInput(
                 attrs={'class': 'form-control  mb-3 fw-bold', }),
-            'private_comment_part_text': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px',}),
+            'private_comment_part_text': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px', 'required': 'required'}),
             'private_comment_owner': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             'private_comment_reader': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'private_comment_readers[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),       
             }
-
+        
 
 class SeshatPrivateCommentForm(forms.ModelForm):
     class Meta:

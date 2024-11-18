@@ -21,14 +21,15 @@ body {
   border-bottom-right-radius: 10px !important;
   border-top-left-radius: 10px !important; 
   border-bottom-left-radius: 10px !important;
-
-
-
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
+.badge {
+    font-weight:500;
+    margin: 0px !important;
+}
   .gray-background {
     background-color: #fffdf2; /* Light gray color */
     border-radius: 10px;
@@ -42,6 +43,70 @@ body {
   .card-group {
     display: flex;
   }
+
+  .bg-info-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: dodgerblue;
+    border: 1px solid dodgerblue;   
+   }
+
+   .bg-danger-light {
+    background: lightpink;
+
+   }
+
+    .my_small_link:hover {
+      color:navajowhite;
+    }
+
+   .bg-success-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: teal;
+    border: 1px solid teal;   
+    }
+
+   .bg-warning-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: darkorange;
+    border: 1px solid goldenrod;   
+   }
+
+   .bg-uncoded-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: darkred;
+    border: 1px solid rosybrown;
+   }
+   
+   .bg-trans-light {
+    background: cadetblue;
+
+   }
+   
+   .custom-right-align {
+    margin-left: auto !important; /* Pushes the column to the right */
+    text-align: right !important; /* Aligns inner content to the right */
+}
+
+   .bg-unknown-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: hotpink;
+    border: 1px solid hotpink;
+    }
+
+   .bg-secondary-light {
+    background: #fffdf2;
+    color: lightcoral;
+    border: 1px solid lightcoral;
+
+
+   }
+
+   .bg-absent-light {
+    background: #fffdf2; /* rgb(134, 134, 134);*/
+    color: gray;
+    border: 1px solid lightgray;   
+
+   }
   
   .card-img-overlay {
     display: flex;
@@ -62,21 +127,21 @@ body {
 
 .card-text-spaced {
     font-size: 16px;
-    color: #782823;
+    color: gray;
     display: flex;
     padding-top: 5px;
     justify-content: space-between;
     }
 
 .left-span {
-        font-size: 16px;
-        color: #782823;
+        color: gray;
+        text-align: left;
+
     }
 
 .right-span {
         text-align: right;
         font-size: 16px;
-        color: #782823;
     }
 
     .center-span {
@@ -102,12 +167,28 @@ body {
         padding-bottom:1px;
     }
        
-
-    .small-knopf {
+    .small-knopf-title {
+        font-size: 10px;
         padding-left:3px;
         padding-right:3px;
         padding-top:3px;
         padding-bottom:1px;
+        margin:0px;
+        vertical-align:middle !important;
+        border: 1px solid lightgray;
+
+    }
+
+    .small-knopf {
+        font-size: 12px;
+        padding-left:3px;
+        padding-right:3px;
+        padding-top:1px;
+        padding-bottom:1px;
+        margin:0px;
+        padding-bottom:0px;
+        line-height:1rem;
+
     }
 
     .federicka-huge {
@@ -115,54 +196,93 @@ body {
         font-size: 72px;
     }
 
+    .federicka-big {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 48px;
+    }
+
+    .progress-title {
+        display:flex;
+        flex-direction: row;
+        height: 1.5rem !important;
+        font-size: 0.95rem !important;
+        background: #fffdf2;
+        padding: 0px;
+        margin: 0px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+  
+    }
+
+    .progress {
+        height: 1.5rem !important;
+        font-size: 1.0rem !important;
+        background: #fffdf2;
+        padding: 0px;
+        margin: 0px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+  
+    }
+  
+    .progress-bar-fixed {
+        width: auto;
+        font-size: 0.85rem !important;
+
+        padding-bottom:2px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top:2px;
+        margin: 0px;
+    }
+  
         
 </style>
 <div style="background-image: linear-gradient(to bottom, #782823, rgb(151, 230, 151, 0.216),  #fffdf2); text-align: center; "> 
-    <h3  class="pt-5" style="font-size:50px; color: #782823;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.5);">
-    Welcome to
-
-</h3>
 <h1  class="pt-4 federicka-huge" style="font-size:72px; color: #782823; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.5);">
     Seshat:  Global History Databank
 
 </h1>
-<h5 style="color: #782923b6;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.24);">
+<h5 style="color: #782923b6;">
     &check;  the most current and comprehensive body of knowledge about human history
 
 </h5>
-<h5 style="color: #782923b6;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.24);">
+<h5 style="color: #782923b6;">
     &check; collects what is currently known about the social and political organization of human societies over time
 
 </h5>
-<h5 style="color: #782923b6;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.24);">
+<h5 style="color: #782923b6;">
     &check;  offers the means to study the past through well-established scientific techniques
 
 </h5>
-<h5 class="pb-4" style="color: #782923b6;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.24);">
+<h5 class="pb-4" style="color: #782923b6;">
     &check;  founded in 2011 and thriving ever since
 
 </h5>
 </div>
 
-<div class="container pe-3">
+<div class="container">
 
-    <div class="bg-colorful-light p-2">
+    <div class="p-2">
         <div class="col-md-3">
-            <h1 class="px-3 pt-3 pb-3 bg-colorful fw-bold" style="text-align: left; color: #782823;   border-radius: 10px;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);
+            <h1 class="px-3 pt-3 pb-3 bg-colorful federicka-big" style="text-align: left; color: #782823;   border-radius: 10px;  
             ">Objects</h1>
         </div>
 
 <div class="row py-4">
     <div class="col-md-4">
-        <div class="gray-background">      </div>
         <div class="px-2">
-          <h1 class="card-title  fw-bold" style="color:darkcyan; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+          <h1 class="card-title federicka-big" style="color:darkcyan; text-align: center; ">
             <a href="{% url 'polities-light'  %}">  
                 {{sr_data.0}}            </a>
            
           </h1>
-          <hr class="bg-colorful p-1 m-0">
-          <h1 class="card-text pt-1 pb-2 m-0 fw-bold" style="font-size:40px; color: #782823; text-align: center;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+          <hr class="bg-colorful p-0 m-0">
+          <h1 class="card-text pt-1 pb-2 m-0 federicka-big" style="font-size:40px; color: #782823; text-align: center;  ">
             <a href="{% url 'polities-light'  %}">  
                 Seshat Regions
             </a>
@@ -174,7 +294,7 @@ body {
                     <b> 
                         <span class="card-text-spaced">
                             <span class="left-span">
-                                <i class="fa-solid fa-star fa-xs"></i>
+                                
                                 <a href="{% url 'polities'  %}#{{an_example.name}}_{{an_example.mac_region}}">                                
                                     {% if an_example.name %}
                                     {{an_example.name}}
@@ -191,9 +311,9 @@ body {
                 </p>
                 {% endfor %}
                 <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                    <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                    <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                         <a href="{% url 'polities'  %}">  
-                           <u><b>{{sr_data.0|add:-8}}</b></u>  more...
+                           <u><b>{{sr_data.0|add:-8}}</b></u>  more ...
                         </a>
                     </span>
                     <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -208,18 +328,17 @@ body {
         </div>
       </div>
     <div class="col-md-8">
-        <div class="gray-background">      </div>
 
         <div class="px-2">
 
-            <h1 class="card-title fw-bold" style="color:rgba(1, 81, 81, 0.806); text-align: center;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+            <h1 class="card-title federicka-big" style="color:rgba(1, 81, 81, 0.806); text-align: center;  ">
                 <a href="{% url 'polities'  %}">  
                 {{pols_data.0}}
             </a>
         </h1>     
-            <hr class="bg-colorful p-1 m-0">
+            <hr class="bg-colorful p-0 m-0">
      
-          <h1 class="card-text pt-1 pb-2 m-0 fw-bold" style="font-size:40px; color: #782823; text-align: center;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+          <h1 class="card-text pt-1 pb-2 m-0 federicka-big" style="font-size:40px; color: #782823; text-align: center;  ">
             <a href="{% url 'polities'  %}">  
                 Polities</a>
           </h1>
@@ -231,7 +350,7 @@ body {
                     <b> 
                         <span class="card-text-spaced">
                             <span class="left-span">
-                                <i class="fa-solid fa-star fa-xs"></i>
+                                
                             <a href="{% url 'polity-detail-main'  an_example.id %}">                           
                                 {% if an_example.long_name %}
                                 {{an_example.long_name}}
@@ -248,9 +367,8 @@ body {
                             <span class="text-dark px-2 fw-light fs-6 right-span">
                                         
                                 {% if an_example.start_year == None %}
-                                <a type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
+
                                     <span><i class="fa-solid fa-clock fs-6 text-secondary"></i> </span>
-                                </a>
                                 {% elif an_example.start_year == an_example.end_year %}
                                     {% if an_example.start_year < 0 %}
                                     {{an_example.start_year|abs }} 
@@ -273,17 +391,17 @@ body {
                                     {% if an_example.start_year < 0 and an_example.end_year < 0 %}
                                     {{an_example.start_year|abs }} 
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.end_year|abs }}         
+                                    <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.end_year|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
                                     {% elif an_example.start_year < 0 and an_example.end_year >= 0 %}
                                     {{an_example.start_year|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
-                                 <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.end_year }}         
+                                 <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.end_year }}         
                                         <span class="text-secondary fw-light fs-6">CE</span> 
                                     {% else %}
                                     {{an_example.start_year }} 
                                         <span class="text-secondary fw-light fs-6">CE</span>
-                                  <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.end_year }}         
+                                  <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.end_year }}         
                                         <span class="text-secondary fw-light fs-6">CE</span> 
                                     {% endif %}
                                 {% endif %}
@@ -294,10 +412,10 @@ body {
                 {% endfor %}
 
                 <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                    <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                    <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                         
                         <a href="{% url 'polities'  %}">  
-                           <u><b>{{pols_data.0|add:-8}}</b></u>  more...
+                           <u><b>{{pols_data.0|add:-8}}</b></u>  more ...
                         </a>
                     </span>
                     <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -318,49 +436,37 @@ body {
 
   </div>
 </div>
-<div class="bg-colorful-light p-2 mt-4">
+<div class="mt-4">
 
 
     <div class="col-md-3">
-        <h1 class="px-3 pt-3 pb-3 bg-colorful fw-bold" style="text-align: left; color: #782823;   border-radius: 10px;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);
+        <h1 class="px-3 pt-3 pb-3 bg-colorful federicka-big" style="text-align: left; color: #782823;   border-radius: 10px;  
         ">Seshat</h1>
     </div>
 
 
     <div class="row py-4">
         <div class="col-md-5">
-            <div class="gray-background">      </div>
             <div class="px-2">
-                <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
-                    <a href="{% url 'generalvars' %}">General Variables</a>  
-                    <div class="center-aligned-line">
-                        <hr class="bg-colorful p-0 m-0" style="width: 100%;">
-                      </div>            
-                </h1>
+                <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: left; ">
+                    <a href="{% url 'generalvars' %}">General Variables</a>         
+                </span>
+                <hr class="bg-colorful p-0 m-0" style="width: 100%;">
 
                 <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="left-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                        <a href="{% url 'generalvars' %}" class="fs-1 fw-bold">
+                    <span class="left-span py-0">
+                        <a href="{% url 'generalvars' %}" class="fw-bold">
                             {{general_data.1}}
                         </a>
-                        <p class="p-0 m-0">
                             variables
-                        </p>
                     </span>
-                    <span class="center-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                        <h6 style="color:rgba(0, 139, 139, 0.489); text-align: center;">
-                           <span class="pb-5">in categories: </span> <span class="pt-5" style="color:rgba(0, 139, 139, 0.837);">Identity and Location, Temporal Bounds, Language, Religion, Supra-cultural relations</span> 
-                          </h6>
-                    </span> 
-                    <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                            <a href="{% url 'generalvars' %}" class="fs-1 fw-bold"> {{general_data.0}}</a> 
-                            <p class="p-0 m-0">
-                                datapoints
-                            </p>   
+                    <span class="right-span py-0">
+                            <a href="{% url 'generalvars' %}" class="fw-bold"> {{general_data.0}}</a> 
+                                records
                     </span>
 
                 </span>
+
 
               <div class="row">
                 <div class="col-md-12">
@@ -369,7 +475,6 @@ body {
                         <b> 
                             <span class="card-text-spaced">
                                 <span class="left-span">
-                                    <i class="fa-solid fa-star fa-xs"></i>
                                     <a href="{% url an_example.1  %}">                                
                                         {{an_example.0}}
                                     </a>
@@ -381,9 +486,9 @@ body {
                     </p>
                     {% endfor %}
                     <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                        <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                        <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                             <a href="{% url 'generalvars'  %}">  
-                               <u><b>{{general_data.1|add:-8}}</b></u>  more...
+                               <u><b>{{general_data.1|add:-8}}</b></u>  more ...
                             </a>
                         </span>
                         <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -405,36 +510,25 @@ body {
             <div class="gray-background">      </div>
     
             <div class="px-2">
-                <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
-                    <a href="{% url 'scvars' %}">Social Complexity Variables</a>
-                    <div class="center-aligned-line">
-                        <hr class="bg-colorful p-0 m-0" style="width: 100%;">
-                      </div>             
-                </h1>
+                <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: left; ">
+                    <a href="{% url 'scvars' %}">Social Complexity Variables</a>          
+                </span>
+                <hr class="bg-colorful p-0 m-0" style="width: 100%;">
 
                 <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="left-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                        <a href="{% url 'scvars' %}" class="fs-1 fw-bold">
+                    <span class="left-span py-0">
+                        <a href="{% url 'scvars' %}" class="fw-bold">
                             {{sc_data.1}}
                         </a>
-                        <p class="p-0 m-0">
                             variables
-                        </p>
                     </span>
-                    <span class="center-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                        <h6 style="color:rgba(0, 139, 139, 0.489); text-align: center;">
-                           <span class="pb-5">in categories: </span> <span class="pt-5" style="color:rgba(0, 139, 139, 0.837);">Social Scale, Hierarchical Complexity, Professions, Bureaucracy Characteristics, Law, Specialized Buildings: polity owned, Transport Infrastructure, Special-purpose Sites, Information</span> 
-                          </h6>
-                    </span> 
-                    <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                            <a href="{% url 'scvars' %}" class="fs-1 fw-bold"> {{sc_data.0}}</a> 
-                            <p class="p-0 m-0">
-                                datapoints
-                            </p>   
+                    <span class="right-span py-0">
+                            <a href="{% url 'scvars' %}" class="fw-bold"> {{sc_data.0}}</a> 
+                                records
                     </span>
 
                 </span>
+
 
               <div class="row">
                 <div class="col-md-12">
@@ -444,7 +538,7 @@ body {
                         <b> 
                             <span class="card-text-spaced">
                                 <span class="left-span">
-                                    <i class="fa-solid fa-star fa-xs"></i>
+                                    
                                     <a href="{% url an_example.1  %}">                                
                                         {{an_example.0}}
                                     </a>
@@ -455,9 +549,9 @@ body {
                     </p>
                     {% endfor %}
                     <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                        <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                        <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                             <a href="{% url 'scvars'  %}">  
-                               <u><b>{{sc_data.1|add:-8}}</b></u>  more...
+                               <u><b>{{sc_data.1|add:-8}}</b></u>  more ...
                             </a>
                         </span>
                         <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -477,33 +571,22 @@ body {
             <div class="gray-background">      </div>
     
             <div class="px-2">
-                <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+                <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: center; ">
                     <a href="{% url 'wfvars' %}">Warfare Variables</a>
-                    <div class="center-aligned-line">
-                        <hr class="bg-colorful p-0 m-0" style="width: 100%;">
-                      </div>             
-                </h1>
+          
+                </span>
+                <hr class="bg-colorful p-0 m-0" style="width: 100%;">
 
                 <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="left-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                        <a href="{% url 'wfvars' %}" class="fs-1 fw-bold">
+                    <span class="left-span py-0">
+                        <a href="{% url 'wfvars' %}" class="fw-bold">
                             {{wf_data.1}}
                         </a>
-                        <p class="p-0 m-0">
                             variables
-                        </p>
                     </span>
-                    <span class="center-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                        <h6 style="color:rgba(0, 139, 139, 0.489); text-align: center;">
-                           <span class="pb-5">in categories: </span> <span class="pt-5" style="color:rgba(0, 139, 139, 0.837);">              Fortifications, Military use of Metals, Projectiles, Handheld weapons, Animals used in warfare, Armor, Naval technology</span> 
-                          </h6>
-                    </span> 
-                    <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                            <a href="{% url 'wfvars' %}" class="fs-1 fw-bold"> {{wf_data.0}}</a> 
-                            <p class="p-0 m-0">
-                                datapoints
-                            </p>   
+                    <span class="right-span py-0">
+                            <a href="{% url 'wfvars' %}" class="fw-bold"> {{wf_data.0}}</a> 
+                                records
                     </span>
 
                 </span>
@@ -516,7 +599,7 @@ body {
                         <b> 
                             <span class="card-text-spaced">
                                 <span class="left-span">
-                                    <i class="fa-solid fa-star fa-xs"></i>
+                                    
                                     <a href="{% url an_example.1  %}">                                
                                         {{an_example.0}}
                                     </a>
@@ -527,9 +610,9 @@ body {
                     </p>
                     {% endfor %}
                     <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                        <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                        <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                             <a href="{% url 'wfvars'  %}">  
-                               <u><b>{{wf_data.1|add:-8}}</b></u>  more...
+                               <u><b>{{wf_data.1|add:-8}}</b></u>  more ...
                             </a>
                         </span>
                         <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -553,25 +636,18 @@ body {
             <div class="gray-background">      </div>
     
             <div class="px-2">
-                <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+                <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: center; ">
                     <a href="{% url 'human_sacrifices_all' %}">Human Sacrifice</a>
-                    <div class="center-aligned-line">
-                        <hr class="bg-colorful p-0 m-0" style="width: 100%;">
-                      </div>             
-                </h1>
+         
+                </span>
+                <hr class="bg-colorful p-0 m-0" style="width: 100%;">
 
                 <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="center-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                        <h6 style="color:rgba(0, 139, 139, 0.837); text-align: center;">
-                           <span class="pb-5"></span> <span class="pt-5" style="color:rgba(0, 139, 139, 0.837);">The deliberate and ritualized killing of a person to please or placate supernatural entities (including gods, spirits, and ancestors) or gain other supernatural benefits.  </span> 
-                          </h6>
-                    </span> 
-                    <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                            <a href="{% url 'human_sacrifices_all' %}" class="fs-1 fw-bold"> {{hs_data.0}}</a> 
-                            <p class="p-0 m-0">
-                                datapoints
-                            </p>   
+                    <span class="left-span py-0">
+                    </span>
+                    <span class="right-span py-0">
+                            <a href="{% url 'human_sacrifices_all' %}" class="fw-bold"> {{hs_data.0}}</a> 
+                                records
                     </span>
 
                 </span>
@@ -579,19 +655,25 @@ body {
               <div class="row">
                 <div class="col-md-12">
                     {% for an_example in eight_hss %}
-                    <p class="card-text p-0 m-0" style="font-size:18px; color: #782923cf;">
+                    <p class="card-text p-0 m-0" style="font-size:18px;">
                       <b> 
                     <span class="card-text-spaced">
                       <span class="left-span">     
-                          <i class="fa-solid fa-star fa-xs"></i>
-                          <span class = "text-teal">
-                            <span class="text-dark">was </span>{{ an_example.get_human_sacrifice_display }}<span class="text-dark">:</span>
+                        <a href="{% url 'polity-detail-main'  an_example.polity.id %}#crisis_case_var">  
+                            {{an_example.polity.long_name}}:
+                            </a>
+          
+                          <span class = "text-dark">
+                            {{ an_example.get_human_sacrifice_display }}
                           </span> 
-                            <span >
+                        </span>
+
+                          <span class="right-span">
+
+                            <span clas="text-secondary">
                               {% if an_example.year_from == None %}
-                              <a type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
+
                                   <span> - </span>
-                              </a>
                               {% elif  an_example.year_from == an_example.year_to %}
                                   {% if  an_example.year_from < 0 %}
                                   {{ an_example.year_from|abs }} 
@@ -621,33 +703,27 @@ body {
                                   
                                       <span class="text-secondary fw-light fs-6">BCE</span> 
                               
-                                  <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to|abs }}         
+                                  <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to|abs }}         
                                       <span class="text-secondary fw-light fs-6">BCE</span> 
                                   {% elif  an_example.year_from < 0 and an_example.year_to >= 0 %}
                                   {{ an_example.year_from|abs }}         
                                       <span class="text-secondary fw-light fs-6">BCE</span> 
-                               <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
+                               <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to }}         
                                       <span class="text-secondary fw-light fs-6">CE</span> 
                               
                                   {% else %}
                                   {{ an_example.year_from }} 
                                       <span class="text-secondary fw-light fs-6">CE</span>
-                                <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
+                                <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to }}         
                                       <span class="text-secondary fw-light fs-6">CE</span> 
                               
                                   {% endif %}
                           
                               {% endif %}
                           </span>
+                        </span>
 
-                      </span>
-                      <span class="right-span fw-normal">   
-                        in
-                          <a href="{% url 'polity-detail-main'  an_example.polity.id %}#crisis_case_var">  
-                          <b>{{an_example.polity.long_name}}</b>  
-                          </a>
-        
-                      </span>
+       
                 
         
                   </span>
@@ -656,10 +732,10 @@ body {
                     {% endfor %}
         
                     <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                      <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                      <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                           
                           <a href="{% url 'human_sacrifices_all'  %}">  
-                             <u><b>{{hs_data.0|add:-8}}</b></u>  more...
+                             <u><b>{{hs_data.0|add:-8}}</b></u>  more ...
                           </a>
                       </span>
                       <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -678,89 +754,48 @@ body {
         </div>
     </div>
 
-    <div class="bg-colorful-light p-2 mt-4">
+    <div class="mt-4">
 
         <div class="row">
 
           <div class="col-md-3">
-            <h1 class="px-3 pt-3 pb-3 bg-colorful fw-bold" style="text-align: left; color: #782823;   border-radius: 10px;  text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);
+            <h1 class="px-3 pt-3 pb-3 bg-colorful federicka-big" style="text-align: left; color: #782823;   border-radius: 10px;  
             ">CrisisDB</h1>
         </div>
     
   
       <div class="row py-4">
           <div class="col-md-12">
-              <div class="gray-background">      </div>
       
               <div class="px-2">
 
-                <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+                <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: left; ">
                     <a href="{% url 'power_transitions_all' %}"> Power Transitions</a>
-                    <div class="center-aligned-line">
-                        <hr class="bg-colorful p-2 m-0" style="width: 100%;">
-                      </div>             
-                </h1>
-
-                <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="left-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                        <h6 class="fw-bold" style="color:rgba(0, 139, 139, 0.837); text-align: left; line-height: 1.75;">
-                            <span class="badge bg-secondary" style="vertical-align: top;">&nbsp;</span> absent&nbsp;&nbsp; 
-                            <span class="badge bg-success" style="vertical-align: top;">&nbsp;</span> present&nbsp;&nbsp; <span class="badge bg-dark" style="vertical-align: top;">&nbsp;</span> inferred absent&nbsp;&nbsp; 
-                            <span class="badge bg-primary" style="vertical-align: top;">&nbsp;</span> inferred present&nbsp;&nbsp; <span class="badge bg-warning" style="vertical-align: top;">&nbsp;</span> suspected unknown&nbsp;&nbsp; <span class="fw-normal text-dark"></span>
-                            <span class="badge bg-danger" style="vertical-align: top;">&nbsp;</span> unknown <span class="fw-normal text-dark"> are coded for:</span> <br>  
-                            
-
-                          </h6>
-                          <div class="row">
-                            <div class="col-md-3">
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >OT</span> Overturn
-                            </div>
-                            <div class="col-md-3">                            
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >PA</span> Predecessor Assassination</div>
-
-                            <div class="col-md-3">                             
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >IE</span> Intra-Elite</div>
-                            <div class="col-md-3">
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >MR</span> Military Revolt
-                            </div>
-                            <div class="col-md-3">
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >PU</span> Popular Uprising
-                            </div>
-                            <div class="col-md-3">
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >SR</span> Separatist Rebellion
-                            </div>
-                            <div class="col-md-3">                             
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >EV</span> External Invasion
-                            </div>
-                            <div class="col-md-3">
-                                <span class="badge bg-light text-dark border border-dark medium-knopf" >EF</span> External Inteference
-                            </div>
-                        </div>
-                    </span> 
-                    <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                            <a href="{% url 'power_transitions_all' %}" class="fs-1 fw-bold"> {{pt_data.0}}</a> 
-                            <p class="p-0 m-0">
-                                transitions
-                            </p>   
-                    </span>
-
+                        <hr class="bg-colorful p-0 m-0" style="width: 100%;">
                 </span>
+
+                    <div class="px-0 pb-2 m-0" style="width: 100%;">
+                        <span class="px-1 text-secondary">
+                            Overturn&nbsp;/
+                            Intra-Elite&nbsp;/
+                            Military&nbsp;Revolt&nbsp;/
+                            Popular&nbsp;Uprising&nbsp;/
+                            Separatist&nbsp;Rebellion&nbsp;/
+                            External&nbsp;Invasion&nbsp;/
+                            External&nbsp;Interference&nbsp;/
+                            Predecessor&nbsp;Assassination&nbsp;
+                        </span>
+                    </div>
+                    
+
                 <div class="row">
-                  <div class="col-md-12 pt-2">
 
                       {% for an_example in eight_pts %}
-                      <p class="card-text px-0 pt-0 pb-1 m-0 border-bottom" style="font-size:18px; color: #782923cf;">
-                        <b> 
-                      <span class="card-text-spaced">
-                        <span class="left-span">     
-                            <i class="fa-solid fa-star fa-xs"></i>
-                    
-                              <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-6" style="background: linear-gradient(to right, #f8bdb26a, #faf0b668)">
+                        <div class="col-md-6 py-2">
+                            <span class="badge text-dark text-start px-1 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb26a, #fffdf2); width:100%;">
                                 {% if an_example.year_from == None %}
-                                <a type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
+       
                                     <span> - </span>
-                                </a>
                             
                             
                                     
@@ -796,167 +831,171 @@ body {
                                     
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
                                 
-                                    <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to|abs }}         
+                                   <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i>  {{ an_example.year_to|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
                                 
                                     {% elif  an_example.year_from < 0 and an_example.year_to >= 0 %}
                                     {{ an_example.year_from|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
-                                 <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
+                                <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i>  {{ an_example.year_to }}         
                                         <span class="text-secondary fw-light fs-6">CE</span> 
                                 
                                     {% else %}
                                     {{ an_example.year_from }} 
                                         <span class="text-secondary fw-light fs-6">CE</span>
-                                  <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
+                                 <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i>  {{ an_example.year_to }}         
                                         <span class="text-secondary fw-light fs-6">CE</span> 
                                 
                                     {% endif %}
                             
                                 {% endif %}
 
+                            <a href="{% url 'polity-detail-main'  an_example.polity.id %}#power_transition_var" class="fw-bold" style="font-size:14px;">  
+                                ({{an_example.polity.long_name}})
+                                </a>
                             </span>
-                            in
-                            <a href="{% url 'polity-detail-main'  an_example.polity.id %}#power_transition_var">  
-                            {{an_example.polity.long_name}}:
-                            </a>
-                            <span class = "fw-bold text-danger">
+
+                            <br>
+                            <span class = "text-dark fw-bold">
                                 {{ an_example.predecessor }}
                             </span> 
-                            <span class="text-dark">
+                            <span class="text-secondary">
                                 <i class="fa-solid fa-arrow-right-long fa-sm"></i> 
                             </span> 
-                            <span class = "fw-bold text-teal">
+                            <span class = "text-dark fw-bold">
                                 {{ an_example.successor }}
                             </span>
-                        </span>
+
+                           
+
+<br>
 
                         <span class="right-span fw-normal">   
                             {% if  an_example.overturn == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">OV</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Overturn</span> 
                             {% elif  an_example.overturn == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">OV</span> 
-                            {% elif  an_example.overturn == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">OV</span> 
-                            {% elif  an_example.overturn == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">OV</span> 
-                            {% elif  an_example.overturn == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">OV</span> 
-                            {% elif  an_example.overturn == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">OV</span>
-                            {% endif %}
-
-                            {% if  an_example.predecessor_assassination == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">PA</span> 
-                            {% elif  an_example.predecessor_assassination == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">PA</span> 
-                            {% elif  an_example.predecessor_assassination == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">PA</span> 
-                            {% elif  an_example.predecessor_assassination == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">PA</span> 
-                            {% elif  an_example.predecessor_assassination == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">PA</span> 
-                            {% elif  an_example.predecessor_assassination == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">PA</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Overturn</span> 
+                            {% elif  an_example.overturn == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">OT</span> 
+                            {% elif  an_example.overturn == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">OT</span> 
+                            {% elif  an_example.overturn == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">OT</span> 
+                            {% elif  an_example.overturn == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">OT</span>
                             {% endif %}
 
                             {% if  an_example.intra_elite == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">IE</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Intra-Elite</span> 
                             {% elif  an_example.intra_elite == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">IE</span> 
-                            {% elif  an_example.intra_elite == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">IE</span> 
-                            {% elif  an_example.intra_elite == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">IE</span> 
-                            {% elif  an_example.intra_elite == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">IE</span> 
-                            {% elif  an_example.intra_elite == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">IE</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Intra-Elite</span> 
+                            {% elif  an_example.intra_elite == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">IE</span> 
+                            {% elif  an_example.intra_elite == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">IE</span> 
+                            {% elif  an_example.intra_elite == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">IE</span> 
+                            {% elif  an_example.intra_elite == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">IE</span>
                             {% endif %}
 
                             {% if  an_example.military_revolt == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">MR</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Military Revolt</span> 
                             {% elif  an_example.military_revolt == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">MR</span> 
-                            {% elif  an_example.military_revolt == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">MR</span> 
-                            {% elif  an_example.military_revolt == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">MR</span> 
-                            {% elif  an_example.military_revolt == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">MR</span> 
-                            {% elif  an_example.military_revolt == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">MR</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Military Revolt</span> 
+                            {% elif  an_example.military_revolt == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">MR</span> 
+                            {% elif  an_example.military_revolt == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">MR</span> 
+                            {% elif  an_example.military_revolt == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">MR</span> 
+                            {% elif  an_example.military_revolt == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">MR</span>
                             {% endif %}
             
                             {% if  an_example.popular_uprising == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">PU</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Popular Uprising</span> 
                             {% elif  an_example.popular_uprising == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">PU</span> 
-                            {% elif  an_example.popular_uprising == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">PU</span> 
-                            {% elif  an_example.popular_uprising == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">PU</span> 
-                            {% elif  an_example.popular_uprising == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">PU</span> 
-                            {% elif  an_example.popular_uprising == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">PU</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Popular Uprising</span> 
+                            {% elif  an_example.popular_uprising == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">PU</span> 
+                            {% elif  an_example.popular_uprising == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">PU</span> 
+                            {% elif  an_example.popular_uprising == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">PU</span> 
+                            {% elif  an_example.popular_uprising == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">PU</span>
                             {% endif %}
 
                             {% if  an_example.separatist_rebellion == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">SR</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Separatist Rebellion</span> 
                             {% elif  an_example.separatist_rebellion == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">SR</span> 
-                            {% elif  an_example.separatist_rebellion == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">SR</span> 
-                            {% elif  an_example.separatist_rebellion == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">SR</span> 
-                            {% elif  an_example.separatist_rebellion == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">SR</span> 
-                            {% elif  an_example.separatist_rebellion == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">SR</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Separatist Rebellion</span> 
+                            {% elif  an_example.separatist_rebellion == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">SR</span> 
+                            {% elif  an_example.separatist_rebellion == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">SR</span> 
+                            {% elif  an_example.separatist_rebellion == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">SR</span> 
+                            {% elif  an_example.separatist_rebellion == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">SR</span>
                             {% endif %}
 
                             {% if  an_example.external_invasion == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">EV</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Invasion</span> 
                             {% elif  an_example.external_invasion == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">EV</span> 
-                            {% elif  an_example.external_invasion == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">EV</span> 
-                            {% elif  an_example.external_invasion == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">EV</span> 
-                            {% elif  an_example.external_invasion == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">EV</span> 
-                            {% elif  an_example.external_invasion == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">EV</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Invasion</span> 
+                            {% elif  an_example.external_invasion == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">EV</span> 
+                            {% elif  an_example.external_invasion == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">EV</span> 
+                            {% elif  an_example.external_invasion == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">EV</span> 
+                            {% elif  an_example.external_invasion == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">EV</span>
                             {% endif %}
 
                             {% if  an_example.external_interference == "P" %}
-                            <span class="badge border border-dark bg-success medium-knopf">EF</span> 
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Inteference</span> 
                             {% elif  an_example.external_interference == "IP" %}
-                            <span class="badge border border-dark bg-primary medium-knopf">EF</span> 
-                            {% elif  an_example.external_interference == "A" %}
-                            <span class="badge border border-dark bg-secondary medium-knopf">EF</span> 
-                            {% elif  an_example.external_interference == "IA" %}
-                            <span class="badge border border-dark bg-dark text-light medium-knopf">EF</span> 
-                            {% elif  an_example.external_interference == "U" %}
-                            <span class="badge border border-dark bg-danger medium-knopf">EF</span> 
-                            {% elif  an_example.external_interference == "SU" %}
-                            <span class="badge border border-dark bg-warning text-dark medium-knopf">EF</span>
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Inteference</span> 
+                            {% elif  an_example.external_interference == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">EI</span> 
+                            {% elif  an_example.external_interference == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">EI</span> 
+                            {% elif  an_example.external_interference == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">EI</span> 
+                            {% elif  an_example.external_interference == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">EI</span>
+                            {% endif %}
+
+
+                            {% if  an_example.predecessor_assassination == "P" %}
+                            <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Predecessor Assassination</span> 
+                            {% elif  an_example.predecessor_assassination == "IP" %}
+                            <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Predecessor Assassination</span> 
+                            {% elif  an_example.predecessor_assassination == "AA" %}
+                            <span class="badge bg-absent-light small-knopf">PA</span> 
+                            {% elif  an_example.predecessor_assassination == "IAA" %}
+                            <span class="badge bg-secondary-light small-knopf">PA</span> 
+                            {% elif  an_example.predecessor_assassination == "UU" %}
+                            <span class="badge bg-unknown-light small-knopf">PA</span> 
+                            {% elif  an_example.predecessor_assassination == "SUU" %}
+                            <span class="badge bg-warning-light small-knopf">PA</span>
                             {% endif %}
     
                         </span>
-                  
 
-                    </span>
-                          </b>
-                      </p>
+                    </div>
+
+
                       {% endfor %}
 
                       <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                        <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                        <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                             
                             <a href="{% url 'power_transitions_all'  %}">  
-                               <u><b>{{pt_data.0|add:-8}}</b></u>  more...
+                               <u><b>{{pt_data.0|add:-8}}</b></u>  more ...
                             </a>
                         </span>
                         <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -975,511 +1014,424 @@ body {
 
 <!-- Crisis cAses -->
             <div class="col-md-12">
-                <div class="gray-background">      </div>
         
                 <div class="px-2">
   
-                  <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+                  <span class="card-text pt-1 federicka-big" style="font-size:42px; color: #782823; text-align: left; ">
                       <a href="{% url 'crisis_consequences_all' %}"> Crisis Consequences</a>
-                      <div class="center-aligned-line">
-                          <hr class="bg-colorful p-2 m-0" style="width: 100%;">
-                        </div>             
-                  </h1>
-  
-                  <span class="card-text-spaced px-0 py-0 m-0">
-                    <span class="left-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        <h6 class="lead-2 lh-base  pt-2"> <i class="fa-solid fa-caret-right"></i> Crisis periods are defined as periods of turmoil within a polity duration. We measure this turmoil by: 
-                            <ol class="text-secondary" type="a">
-                                <li>tracking known destabilizing events such as major revolts, civil violence, and institutional reform; and </li>
-                                <li>following established scholarship which identifies such crisis periods </li>
-                            </ol>
-                        </h6>
-                      </span>
+                          <hr class="bg-colorful p-0 m-0" style="width: 100%;">
+                  </span>
 
 
+                  <div class="px-0 pb-2 m-0" style="width: 100%;">
+                    <span class="px-1 text-secondary">         
+Population&nbsp;Decline&nbsp;/
+Population&nbsp;Collapse&nbsp;/
+Elite&nbsp;Downward&nbsp;Mobility&nbsp;/
+Elite&nbsp;Extermination&nbsp;/
+Uprising&nbsp;/
+Revolution&nbsp;/
+Successful&nbsp;Revolution&nbsp;/
+Civil&nbsp;War&nbsp;/
+Lasted&nbsp;>&nbsp;a&nbsp;Century&nbsp;/
+Capital&nbsp;Loss&nbsp;/
+External&nbsp;Conquest&nbsp;/
+Ruler&nbsp;Assassination&nbsp;/
+Ruler&nbsp;Depose&nbsp;/
+Constitution&nbsp;Change&nbsp;/
+Labor&nbsp;Change&nbsp;/
+Unfree&nbsp;Labor&nbsp;Change&nbsp;/
+Suffrage&nbsp;/
+Public&nbsp;Goods&nbsp;Change&nbsp;/
+Religion&nbsp;Change&nbsp;
 
-                      <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                        <a href="{% url 'crisis_consequences_all' %}" class="fs-1 fw-bold"> {{cc_data.0}}</a> 
-                        <p class="p-0 m-0">
-                          cases
-
-                        </p>   
-                </span>
-
-
-                    </span>
-
-                  <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                    <span class="left-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-
-                        <h6 class="fw-bold" style="color:rgba(0, 139, 139, 0.837); text-align: left; line-height: 1.75;">
-                            <span class="badge bg-secondary" style="vertical-align: top;">&nbsp;</span> absent&nbsp;&nbsp; 
-                           <span class="badge bg-success" style="vertical-align: top;">&nbsp;</span> present&nbsp;&nbsp; <span class="badge bg-dark" style="vertical-align: top;">&nbsp;</span> inferred absent&nbsp;&nbsp; 
-                           <span class="badge bg-primary" style="vertical-align: top;">&nbsp;</span> inferred present&nbsp;&nbsp; <span class="badge bg-warning" style="vertical-align: top;">&nbsp;</span> suspected unknown&nbsp;&nbsp; <span class="fw-normal text-dark"></span>
-                           <span class="badge bg-danger" style="vertical-align: top;">&nbsp;</span> unknown <span class="fw-normal text-dark"> are coded for:</span> <br>  
-                                  
-                          
-                         </h6>     
-                         <div class="row">
-                           <div class="col-md-3 py-0">
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >PD</span> Population Decline
-                           </div>
-                           <div class="col-md-3 py-0">                            
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >PC</span> Population Collapse</div>
-
-                           <div class="col-md-3 py-0">                             
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >EP</span> Epidemic</div>
-                           <div class="col-md-3 py-0">
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >DM</span> Elite Downward Mobility
-                           </div>
-                           <div class="col-md-3 py-0">
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >EX</span> Elite Extermination
-                           </div>
-                           <div class="col-md-3 py-0">
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >UP</span> Uprising
-                           </div>
-                           <div class="col-md-3 py-0">                             
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >RV</span> Revolution
-                           </div>
-                           <div class="col-md-3 py-0">
-                               <span class="badge bg-light text-dark border border-dark small-knopf" >SR</span> Successful Revolution
-                           </div>
-                           <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >CW</span> Civil War
-                         </div>
-                         <div class="col-md-3 py-0">                            
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >C+</span> Lasted a Century +
-                         </div>
-
-                         <div class="col-md-3 py-0">                             
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >FR</span> Fragmentation</div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >CL</span>
-                              Capital Loss
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >EC</span> External Conquest
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >RA</span> Ruler Assassination
-                         </div>
-                         <div class="col-md-3 py-0">                             
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >RD</span> 
-                             Ruler Depose
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >CC</span> Constitution Change
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >LC</span>
-                             Labor Change
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >UL</span> Unfree Labor Change
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >SF</span> Suffrage
-                         </div>
-                         <div class="col-md-3 py-0">                             
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >PG</span> 
-                             Public Goods Change
-                         </div>
-                         <div class="col-md-3 py-0">
-                             <span class="badge bg-light text-dark border border-dark small-knopf" >RC</span> Religion Change
-                         </div>
-                       </div>
                    </span> 
  
   
-                  </span>
+                  </div>
+
+
                   <div class="row">
-                    <div class="col-md-12 pt-2">
   
                         {% for an_example in eight_ccs %}
-                        <p class="card-text px-0 pt-0 pb-1 m-0 border-bottom" style="font-size:18px; color: #782923cf;">
-                          <b> 
-                        <span class="card-text-spaced">
-                          <span class="left-span">     
-                              <i class="fa-solid fa-star fa-xs"></i>
-                      
-                                <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-6" style="background: linear-gradient(to right, #f8bdb26a, #faf0b668)">
-                                  {% if an_example.year_from == None %}
-                                  <a type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
-                                      <span> - </span>
-                                  </a>
-                              
-                              
-                                      
-                                  {% elif  an_example.year_from == an_example.year_to %}
-                                      {% if  an_example.year_from < 0 %}
-                                      {{ an_example.year_from|abs }} 
-                                      
-                                      <span class="text-secondary fw-light fs-6">BCE</span> 
-                                  
-                                      {% else %}
-                                      {{ an_example.year_from }} 
-                                  
-                                      <span class="text-secondary fw-light fs-6">CE</span>
-                              
-                                      {% endif %}
-                                  {% elif an_example.year_to == None %}
-                                      {% if  an_example.year_from < 0 %}
-                                      {{ an_example.year_from|abs }} 
-                                      
-                                          <span class="text-secondary fw-light fs-6">BCE</span>
-                                  
-                                      {% else %}
-                                      {{ an_example.year_from }} 
-                                      
-                                          <span class="text-secondary fw-light fs-6">CE</span>
-                                  
-                                      {% endif %}
-                                  {% elif an_example.year_to == None and  an_example.year_from == None %}
-                                      <i class="fa-solid fa-minus"></i> 
-                                  {% else %}
-                                      {% if  an_example.year_from < 0 and an_example.year_to < 0 %}
-                                      {{ an_example.year_from|abs }} 
-                                      
-                                          <span class="text-secondary fw-light fs-6">BCE</span> 
-                                  
-                                      <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to|abs }}         
-                                          <span class="text-secondary fw-light fs-6">BCE</span> 
-                                  
-                                      {% elif  an_example.year_from < 0 and an_example.year_to >= 0 %}
-                                      {{ an_example.year_from|abs }}         
-                                          <span class="text-secondary fw-light fs-6">BCE</span> 
-                                   <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
-                                          <span class="text-secondary fw-light fs-6">CE</span> 
-                                  
-                                      {% else %}
-                                      {{ an_example.year_from }} 
-                                          <span class="text-secondary fw-light fs-6">CE</span>
-                                    <i class="fas fa-long-arrow-alt-right"></i> {{ an_example.year_to }}         
-                                          <span class="text-secondary fw-light fs-6">CE</span> 
-                                  
-                                      {% endif %}
-                              
-                                  {% endif %}
+
+<div class="col-md-6 py-2">
+    <span  class="badge text-dark text-start px-1 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb26a, #fffdf2);  width:100%;">
+        {% if an_example.year_from == None %}
+
+            <span> - </span>
+    
+    
+            
+        {% elif  an_example.year_from == an_example.year_to %}
+            {% if  an_example.year_from < 0 %}
+            {{ an_example.year_from|abs }} 
+            
+            <span class="text-secondary fw-light fs-6">BCE</span> 
+        
+            {% else %}
+            {{ an_example.year_from }} 
+        
+            <span class="text-secondary fw-light fs-6">CE</span>
+    
+            {% endif %}
+        {% elif an_example.year_to == None %}
+            {% if  an_example.year_from < 0 %}
+            {{ an_example.year_from|abs }} 
+            
+                <span class="text-secondary fw-light fs-6">BCE</span>
+        
+            {% else %}
+            {{ an_example.year_from }} 
+            
+                <span class="text-secondary fw-light fs-6">CE</span>
+        
+            {% endif %}
+        {% elif an_example.year_to == None and  an_example.year_from == None %}
+            <i class="fa-solid fa-minus"></i> 
+        {% else %}
+            {% if  an_example.year_from < 0 and an_example.year_to < 0 %}
+            {{ an_example.year_from|abs }} 
+            
+                <span class="text-secondary fw-light fs-6">BCE</span> 
+        
+            <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to|abs }}         
+                <span class="text-secondary fw-light fs-6">BCE</span> 
+        
+            {% elif  an_example.year_from < 0 and an_example.year_to >= 0 %}
+            {{ an_example.year_from|abs }}         
+                <span class="text-secondary fw-light fs-6">BCE</span> 
+         <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to }}         
+                <span class="text-secondary fw-light fs-6">CE</span> 
+        
+            {% else %}
+            {{ an_example.year_from }} 
+                <span class="text-secondary fw-light fs-6">CE</span>
+          <i class="fa-solid fa-arrow-right-long text-secondary fa-sm"></i> {{ an_example.year_to }}         
+                <span class="text-secondary fw-light fs-6">CE</span> 
+        
+            {% endif %}
+    
+        {% endif %}
+        <a href="{% url 'polity-detail-main'  an_example.polity.id %}#crisis_case_var" class="fw-bold" style="font-size:14px;">  
+            ({{an_example.polity.long_name}})
+            </a> 
+
+    </span>
+<br>
+
+<span class = "fw-bold text-dark">
+    {{ an_example.name }}
+</span> 
+<br>
+    <span class="right-span fw-normal">   
+        {% if  an_example.decline == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  data-bs-trigger="focus"  title="present">Population Decline</span> 
+        {% elif  an_example.decline == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="inferred present">Population Decline</span> 
+        {% elif  an_example.decline == "AA" %}
+        <span class="badge bg-absent-light small-knopf">PD</span> 
+        {% elif  an_example.decline == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">PD</span> 
+        {% elif  an_example.decline == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">PD</span> 
+        {% elif  an_example.decline == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">PD</span>
+        {% endif %}
+
+        {% if  an_example.collapse == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Population Collapse</span> 
+        {% elif  an_example.collapse == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Population Collapse</span> 
+        {% elif  an_example.collapse == "AA" %}
+        <span class="badge bg-absent-light small-knopf">PC</span> 
+        {% elif  an_example.collapse == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">PC</span> 
+        {% elif  an_example.collapse == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">PC</span> 
+        {% elif  an_example.collapse == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">PC</span>
+        {% endif %}
+
+        {% if  an_example.epidemic == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Epidemic</span> 
+        {% elif  an_example.epidemic == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Epidemic</span> 
+        {% elif  an_example.epidemic == "AA" %}
+        <span class="badge bg-absent-light small-knopf">EP</span> 
+        {% elif  an_example.epidemic == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">EP</span> 
+        {% elif  an_example.epidemic == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">EP</span> 
+        {% elif  an_example.epidemic == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">EP</span>
+        {% endif %}
+
+        {% if  an_example.downward_mobility == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Elite Downward Mobility</span> 
+        {% elif  an_example.downward_mobility == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Elite Downward Mobility</span> 
+        {% elif  an_example.downward_mobility == "AA" %}
+        <span class="badge bg-absent-light small-knopf">DM</span> 
+        {% elif  an_example.downward_mobility == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">DM</span> 
+        {% elif  an_example.downward_mobility == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">DM</span> 
+        {% elif  an_example.downward_mobility == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">DM</span>
+        {% endif %}
+
+        {% if  an_example.extermination == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Elite Extermination</span> 
+        {% elif  an_example.extermination == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Elite Extermination</span> 
+        {% elif  an_example.extermination == "AA" %}
+        <span class="badge bg-absent-light small-knopf">EX</span> 
+        {% elif  an_example.extermination == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">EX</span> 
+        {% elif  an_example.extermination == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">EX</span> 
+        {% elif  an_example.extermination == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">EX</span>
+        {% endif %}
+
+        {% if  an_example.uprising == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Uprising</span> 
+        {% elif  an_example.uprising == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Uprising</span> 
+        {% elif  an_example.uprising == "AA" %}
+        <span class="badge bg-absent-light small-knopf">UP</span> 
+        {% elif  an_example.uprising == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">UP</span> 
+        {% elif  an_example.uprising == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">UP</span> 
+        {% elif  an_example.uprising == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">UP</span>
+        {% endif %}
+
+        {% if  an_example.revolution == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Revolution</span> 
+        {% elif  an_example.revolution == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Revolution</span> 
+        {% elif  an_example.revolution == "AA" %}
+        <span class="badge bg-absent-light small-knopf">RV</span> 
+        {% elif  an_example.revolution == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">RV</span> 
+        {% elif  an_example.revolution == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">RV</span> 
+        {% elif  an_example.revolution == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">RV</span>
+        {% endif %}
+
+        {% if  an_example.successful_revolution == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Successful Revolution</span> 
+        {% elif  an_example.successful_revolution == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Successful Revolution</span> 
+        {% elif  an_example.successful_revolution == "AA" %}
+        <span class="badge bg-absent-light small-knopf">SR</span> 
+        {% elif  an_example.successful_revolution == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">SR</span> 
+        {% elif  an_example.successful_revolution == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">SR</span> 
+        {% elif  an_example.successful_revolution == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">SR</span>
+        {% endif %}
+
+        {% if  an_example.civil_war == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Civil War</span> 
+        {% elif  an_example.civil_war == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Civil War</span> 
+        {% elif  an_example.civil_war == "AA" %}
+        <span class="badge bg-absent-light small-knopf">CW</span> 
+        {% elif  an_example.civil_war == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">CW</span> 
+        {% elif  an_example.civil_war == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">CW</span> 
+        {% elif  an_example.civil_war == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">CW</span>
+        {% endif %}
+
+        {% if  an_example.century_plus == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Lasted > a Century</span> 
+        {% elif  an_example.century_plus == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Lasted > a Century</span> 
+        {% elif  an_example.century_plus == "AA" %}
+        <span class="badge bg-absent-light small-knopf">C+</span> 
+        {% elif  an_example.century_plus == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">C+</span> 
+        {% elif  an_example.century_plus == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">C+</span> 
+        {% elif  an_example.century_plus == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">C+</span>
+        {% endif %}
+
+        {% if  an_example.fragmentation == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Fragmentation</span> 
+        {% elif  an_example.fragmentation == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Fragmentation</span> 
+        {% elif  an_example.fragmentation == "AA" %}
+        <span class="badge bg-absent-light small-knopf">FR</span> 
+        {% elif  an_example.fragmentation == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">FR</span> 
+        {% elif  an_example.fragmentation == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">FR</span> 
+        {% elif  an_example.fragmentation == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">FR</span>
+        {% endif %}
+
+        {% if  an_example.capital == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Capital Loss</span> 
+        {% elif  an_example.capital == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Capital Loss</span> 
+        {% elif  an_example.capital == "AA" %}
+        <span class="badge bg-absent-light small-knopf">CL</span> 
+        {% elif  an_example.capital == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">CL</span> 
+        {% elif  an_example.capital == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">CL</span> 
+        {% elif  an_example.capital == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">CL</span>
+        {% endif %}
+
+        {% if  an_example.conquest == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Conquest</span> 
+        {% elif  an_example.conquest == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Conquest</span> 
+        {% elif  an_example.conquest == "AA" %}
+        <span class="badge bg-absent-light small-knopf">EC</span> 
+        {% elif  an_example.conquest == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">EC</span> 
+        {% elif  an_example.conquest == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">EC</span> 
+        {% elif  an_example.conquest == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">EC</span>
+        {% endif %}
+
+        {% if  an_example.assassination == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Ruler Assassination</span> 
+        {% elif  an_example.assassination == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Ruler Assassination</span> 
+        {% elif  an_example.assassination == "AA" %}
+        <span class="badge bg-absent-light small-knopf">RA</span> 
+        {% elif  an_example.assassination == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">RA</span> 
+        {% elif  an_example.assassination == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">RA</span> 
+        {% elif  an_example.assassination == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">RA</span>
+        {% endif %}
+
+        {% if  an_example.depose == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Ruler Depose</span> 
+        {% elif  an_example.depose == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Ruler Depose</span> 
+        {% elif  an_example.depose == "AA" %}
+        <span class="badge bg-absent-light small-knopf">RD</span> 
+        {% elif  an_example.depose == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">RD</span> 
+        {% elif  an_example.depose == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">RD</span> 
+        {% elif  an_example.depose == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">RD</span>
+        {% endif %}
+
+        {% if  an_example.constitution == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Constitution Change</span> 
+        {% elif  an_example.constitution == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Constitution Change</span> 
+        {% elif  an_example.constitution == "AA" %}
+        <span class="badge bg-absent-light small-knopf">CC</span> 
+        {% elif  an_example.constitution == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">CC</span> 
+        {% elif  an_example.constitution == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">CC</span> 
+        {% elif  an_example.constitution == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">CC</span>
+        {% endif %}
+
+        {% if  an_example.labor == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Labor Change</span> 
+        {% elif  an_example.labor == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Labor Change</span> 
+        {% elif  an_example.labor == "AA" %}
+        <span class="badge bg-absent-light small-knopf">LC</span> 
+        {% elif  an_example.labor == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">LC</span> 
+        {% elif  an_example.labor == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">LC</span> 
+        {% elif  an_example.labor == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">LC</span>
+        {% endif %}
+
+        {% if  an_example.unfree_labor == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Unfree Labor Change</span> 
+        {% elif  an_example.unfree_labor == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Unfree Labor Change</span> 
+        {% elif  an_example.unfree_labor == "AA" %}
+        <span class="badge bg-absent-light small-knopf">UL</span> 
+        {% elif  an_example.unfree_labor == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">UL</span> 
+        {% elif  an_example.unfree_labor == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">UL</span> 
+        {% elif  an_example.unfree_labor == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">UL</span>
+        {% endif %}
+
+        {% if  an_example.suffrage == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Suffrage</span> 
+        {% elif  an_example.suffrage == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Suffrage</span> 
+        {% elif  an_example.suffrage == "AA" %}
+        <span class="badge bg-absent-light small-knopf">SF</span> 
+        {% elif  an_example.suffrage == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">SF</span> 
+        {% elif  an_example.suffrage == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">SF</span> 
+        {% elif  an_example.suffrage == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">SF</span>
+        {% endif %}
+
+        {% if  an_example.public_goods == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Public Goods Change</span> 
+        {% elif  an_example.public_goods == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Public Goods Change</span> 
+        {% elif  an_example.public_goods == "AA" %}
+        <span class="badge bg-absent-light small-knopf">PG</span> 
+        {% elif  an_example.public_goods == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">PG</span> 
+        {% elif  an_example.public_goods == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">PG</span> 
+        {% elif  an_example.public_goods == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">PG</span>
+        {% endif %}
+    
+        {% if  an_example.religion == "P" %}
+        <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Religion Change</span> 
+        {% elif  an_example.religion == "IP" %}
+        <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Religion Change</span> 
+        {% elif  an_example.religion == "AA" %}
+        <span class="badge bg-absent-light small-knopf">RC</span> 
+        {% elif  an_example.religion == "IAA" %}
+        <span class="badge bg-secondary-light small-knopf">RC</span> 
+        {% elif  an_example.religion == "UU" %}
+        <span class="badge bg-unknown-light small-knopf">RC</span> 
+        {% elif  an_example.religion == "SUU" %}
+        <span class="badge bg-warning-light small-knopf">RC</span>
+        {% endif %}
+    
+
+    </span>
+
+  </div>
+                     
   
-                              </span>
-                              in
-                              <a href="{% url 'polity-detail-main'  an_example.polity.id %}#crisis_case_var">  
-                              {{an_example.polity.long_name}}:
-                              </a>
-                              <span class = "fw-bold text-danger">
-                                {{ an_example.name }}:
-                            </span> 
-                          </span>
-  
-                          <span class="right-span fw-normal">   
-                              {% if  an_example.decline == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">PD</span> 
-                              {% elif  an_example.decline == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">PD</span> 
-                              {% elif  an_example.decline == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">PD</span> 
-                              {% elif  an_example.decline == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">PD</span> 
-                              {% elif  an_example.decline == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">PD</span> 
-                              {% elif  an_example.decline == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">PD</span>
-                              {% endif %}
-  
-                              {% if  an_example.collapse == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">PC</span> 
-                              {% elif  an_example.collapse == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">PC</span> 
-                              {% elif  an_example.collapse == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">PC</span> 
-                              {% elif  an_example.collapse == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">PC</span> 
-                              {% elif  an_example.collapse == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">PC</span> 
-                              {% elif  an_example.collapse == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">PC</span>
-                              {% endif %}
-
-                              {% if  an_example.epidemic == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">EP</span> 
-                              {% elif  an_example.epidemic == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">EP</span> 
-                              {% elif  an_example.epidemic == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">EP</span> 
-                              {% elif  an_example.epidemic == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">EP</span> 
-                              {% elif  an_example.epidemic == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">EP</span> 
-                              {% elif  an_example.epidemic == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">EP</span>
-                              {% endif %}
-
-                              {% if  an_example.downward_mobility == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">DM</span> 
-                              {% elif  an_example.downward_mobility == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">DM</span> 
-                              {% elif  an_example.downward_mobility == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">DM</span> 
-                              {% elif  an_example.downward_mobility == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">DM</span> 
-                              {% elif  an_example.downward_mobility == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">DM</span> 
-                              {% elif  an_example.downward_mobility == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">DM</span>
-                              {% endif %}
-
-                              {% if  an_example.extermination == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">EX</span> 
-                              {% elif  an_example.extermination == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">EX</span> 
-                              {% elif  an_example.extermination == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">EX</span> 
-                              {% elif  an_example.extermination == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">EX</span> 
-                              {% elif  an_example.extermination == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">EX</span> 
-                              {% elif  an_example.extermination == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">EX</span>
-                              {% endif %}
-
-                              {% if  an_example.uprising == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">UP</span> 
-                              {% elif  an_example.uprising == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">UP</span> 
-                              {% elif  an_example.uprising == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">UP</span> 
-                              {% elif  an_example.uprising == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">UP</span> 
-                              {% elif  an_example.uprising == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">UP</span> 
-                              {% elif  an_example.uprising == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">UP</span>
-                              {% endif %}
-
-                              {% if  an_example.revolution == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">RV</span> 
-                              {% elif  an_example.revolution == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">RV</span> 
-                              {% elif  an_example.revolution == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">RV</span> 
-                              {% elif  an_example.revolution == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">RV</span> 
-                              {% elif  an_example.revolution == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">RV</span> 
-                              {% elif  an_example.revolution == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">RV</span>
-                              {% endif %}
-
-                              {% if  an_example.successful_revolution == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">SR</span> 
-                              {% elif  an_example.successful_revolution == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">SR</span> 
-                              {% elif  an_example.successful_revolution == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">SR</span> 
-                              {% elif  an_example.successful_revolution == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">SR</span> 
-                              {% elif  an_example.successful_revolution == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">SR</span> 
-                              {% elif  an_example.successful_revolution == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">SR</span>
-                              {% endif %}
-
-                              {% if  an_example.civil_war == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">CW</span> 
-                              {% elif  an_example.civil_war == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">CW</span> 
-                              {% elif  an_example.civil_war == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">CW</span> 
-                              {% elif  an_example.civil_war == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">CW</span> 
-                              {% elif  an_example.civil_war == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">CW</span> 
-                              {% elif  an_example.civil_war == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">CW</span>
-                              {% endif %}
-
-                              {% if  an_example.century_plus == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">C+</span> 
-                              {% elif  an_example.century_plus == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">C+</span> 
-                              {% elif  an_example.century_plus == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">C+</span> 
-                              {% elif  an_example.century_plus == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">C+</span> 
-                              {% elif  an_example.century_plus == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">C+</span> 
-                              {% elif  an_example.century_plus == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">C+</span>
-                              {% endif %}
-
-                              {% if  an_example.fragmentation == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">FR</span> 
-                              {% elif  an_example.fragmentation == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">FR</span> 
-                              {% elif  an_example.fragmentation == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">FR</span> 
-                              {% elif  an_example.fragmentation == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">FR</span> 
-                              {% elif  an_example.fragmentation == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">FR</span> 
-                              {% elif  an_example.fragmentation == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">FR</span>
-                              {% endif %}
-
-                              {% if  an_example.capital == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">CL</span> 
-                              {% elif  an_example.capital == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">CL</span> 
-                              {% elif  an_example.capital == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">CL</span> 
-                              {% elif  an_example.capital == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">CL</span> 
-                              {% elif  an_example.capital == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">CL</span> 
-                              {% elif  an_example.capital == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">CL</span>
-                              {% endif %}
-
-                              {% if  an_example.conquest == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">EC</span> 
-                              {% elif  an_example.conquest == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">EC</span> 
-                              {% elif  an_example.conquest == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">EC</span> 
-                              {% elif  an_example.conquest == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">EC</span> 
-                              {% elif  an_example.conquest == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">EC</span> 
-                              {% elif  an_example.conquest == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">EC</span>
-                              {% endif %}
-
-                              {% if  an_example.assassination == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">RA</span> 
-                              {% elif  an_example.assassination == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">RA</span> 
-                              {% elif  an_example.assassination == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">RA</span> 
-                              {% elif  an_example.assassination == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">RA</span> 
-                              {% elif  an_example.assassination == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">RA</span> 
-                              {% elif  an_example.assassination == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">RA</span>
-                              {% endif %}
-
-                              {% if  an_example.depose == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">RD</span> 
-                              {% elif  an_example.depose == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">RD</span> 
-                              {% elif  an_example.depose == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">RD</span> 
-                              {% elif  an_example.depose == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">RD</span> 
-                              {% elif  an_example.depose == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">RD</span> 
-                              {% elif  an_example.depose == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">RD</span>
-                              {% endif %}
-
-                              {% if  an_example.constitution == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">CC</span> 
-                              {% elif  an_example.constitution == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">CC</span> 
-                              {% elif  an_example.constitution == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">CC</span> 
-                              {% elif  an_example.constitution == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">CC</span> 
-                              {% elif  an_example.constitution == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">CC</span> 
-                              {% elif  an_example.constitution == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">CC</span>
-                              {% endif %}
-
-                              {% if  an_example.labor == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">LC</span> 
-                              {% elif  an_example.labor == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">LC</span> 
-                              {% elif  an_example.labor == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">LC</span> 
-                              {% elif  an_example.labor == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">LC</span> 
-                              {% elif  an_example.labor == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">LC</span> 
-                              {% elif  an_example.labor == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">LC</span>
-                              {% endif %}
-
-                              {% if  an_example.unfree_labor == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">UL</span> 
-                              {% elif  an_example.unfree_labor == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">UL</span> 
-                              {% elif  an_example.unfree_labor == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">UL</span> 
-                              {% elif  an_example.unfree_labor == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">UL</span> 
-                              {% elif  an_example.unfree_labor == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">UL</span> 
-                              {% elif  an_example.unfree_labor == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">UL</span>
-                              {% endif %}
-
-                              {% if  an_example.suffrage == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">SF</span> 
-                              {% elif  an_example.suffrage == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">SF</span> 
-                              {% elif  an_example.suffrage == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">SF</span> 
-                              {% elif  an_example.suffrage == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">SF</span> 
-                              {% elif  an_example.suffrage == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">SF</span> 
-                              {% elif  an_example.suffrage == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">SF</span>
-                              {% endif %}
-
-                              {% if  an_example.public_goods == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">PG</span> 
-                              {% elif  an_example.public_goods == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">PG</span> 
-                              {% elif  an_example.public_goods == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">PG</span> 
-                              {% elif  an_example.public_goods == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">PG</span> 
-                              {% elif  an_example.public_goods == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">PG</span> 
-                              {% elif  an_example.public_goods == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">PG</span>
-                              {% endif %}
-                          
-                              {% if  an_example.religion == "P" %}
-                              <span class="badge border border-dark bg-success small-knopf">RC</span> 
-                              {% elif  an_example.religion == "IP" %}
-                              <span class="badge border border-dark bg-primary small-knopf">RC</span> 
-                              {% elif  an_example.religion == "A" %}
-                              <span class="badge border border-dark bg-secondary small-knopf">RC</span> 
-                              {% elif  an_example.religion == "IA" %}
-                              <span class="badge border border-dark bg-dark text-light small-knopf">RC</span> 
-                              {% elif  an_example.religion == "U" %}
-                              <span class="badge border border-dark bg-danger small-knopf">RC</span> 
-                              {% elif  an_example.religion == "SU" %}
-                              <span class="badge border border-dark bg-warning text-dark small-knopf">RC</span>
-                              {% endif %}
-                          
-      
-                          </span>
-                    
-  
-                      </span>
-                            </b>
-                        </p>
                         {% endfor %}
   
                         <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                          <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                          <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                               
                               <a href="{% url 'crisis_consequences_all'  %}">  
-                                 <u><b>{{cc_data.0|add:-8}}</b></u>  more...
+                                 <u><b>{{cc_data.0|add:-8}}</b></u>  more ...
                               </a>
                           </span>
                           <span classs="right-span pt-0" style="text-align: right; justify-content:baseline">             
@@ -1490,8 +1442,6 @@ body {
     
                     </div>
                   </div>
-    
-    
         
                 </div>
               </div>
@@ -1505,26 +1455,24 @@ body {
         
                 <div class="px-2">
 
-                    <h1 class="card-text pt-1 pb-2 fw-bold" style="font-size:42px; color: #782823; text-align: center; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);">
+                    <span class="card-text pt-3 federicka-big" style="font-size:42px; color: #782823; text-align: left; ">
                         <a href="{% url 'us_violence_paginated' %}"> &#127482;&#127480; US Political Violence Database</a>
-                        <div class="center-aligned-line">
-                            <hr class="bg-colorful p-2 m-0" style="width: 100%;">
-                          </div>             
-                    </h1>
+                            <hr class="bg-colorful p-0 m-0" style="width: 100%;">
+                    </span>
     
                     <span class="card-text-spaced px-0 pb-2 py-0 m-0">
-                        <span class="left-span pt-1 px-1" style="color:rgba(0, 139, 139, 0.837);">
-                            
-                            <h6 class="fw-bold" style="color:rgba(0, 139, 139, 0.837); text-align: left; line-height: 1.75;">
-                                &check; coded for Date, Type, Subtype(s), Location(s), Fatalities, etc
-                              </h6>
-                        </span> 
-                        <span class="right-span px-2 py-0" style="border:2px solid #78292341; border-radius: 15px; text-shadow: 2px 2px 4px rgba(9, 71, 45, 0.261);  box-shadow: 4px 4px 4px rgba(9, 71, 45, 0.523);">
-                                <a href="{% url 'us_violence_paginated' %}" class="fs-1 fw-bold"> {{us_data.0}}</a> 
-                                <p class="p-0 m-0">
-                                    cases
-                                </p>   
-                        </span>
+
+                        <div class="px-0 pb-2 m-0" style="width: 100%;">
+                            <span class="px-1 text-secondary">
+        
+                                  
+                                Date / Violence Type / Violence Subtype(s) / Location(s) / Fatalities / Narrative / Source(s)
+        
+                           </span> 
+         
+          
+                          </div>
+    
     
                     </span>
     
@@ -1536,9 +1484,9 @@ body {
                           <b> 
                         <span class="card-text-spaced">
                           <span class="left-span">     
-                              <i class="fa-solid fa-star fa-xs"></i>
+                              
                       
-                                <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-6" style="background: linear-gradient(to right, #f8bdb26a, #faf0b668)">
+                                <span class="badge text-dark px-2 py-1 fw-light fs-6" style="background: linear-gradient(to right, #f8bdb26a, #faf0b668);">
                                   {% if an_example.violence_date == None %}
                                     No Date Provided
                                   {% else %}
@@ -1546,16 +1494,20 @@ body {
                                   {% endif %}
   
                               </span>
-                              <span class = "fw-bold text-danger">
-                                 {{ an_example.violence_type }} ({{an_example.show_violence_subtypes}})
+                              <span class = "fw-bold text-dark">
+                                 {{ an_example.violence_type|title }} 
+                                 {% if an_example.show_violence_subtypes %}
+                                 ({{an_example.show_violence_subtypes}})
+                                 {% endif %}
+
                               </span> 
-                              <span class = "text-teal">
+                              <span class = "text-dark fw-normal">
                                     in                               
                                   {% autoescape off %}
-                                  <b>{{an_example.show_locations}}</b>:
+                                  <span class="fw-light">{{an_example.show_locations}}</span>:
                                   {% endautoescape %}
                               </span>
-                              <span class="text-dark">
+                              <span class="text-secondary">
                                 {{ an_example.fatalities }}
                                 {% if an_example.fatalities == 1 %}
                                 was
@@ -1566,12 +1518,14 @@ body {
                             </span> 
                           </span>
                           <span class="right-span fw-normal">   
-                              Source(s):
                               {% autoescape off %}
 
                                 {%if an_example.url_address %}
-            &nbsp;<a href="{{an_example.url_address}}" target="_blank"><i class="fa-solid fa-up-right-from-square"></i>  <b>{{an_example.show_short_data_sources}}</b>  </a>
-          {% endif %}
+            &nbsp;<a href="{{an_example.url_address}}" target="_blank"><i class="fa-solid fa-up-right-from-square"></i>  {{an_example.show_short_data_sources}}  </a>
+            {% else%}
+            - 
+          
+            {% endif %}
                              
                               {% endautoescape %}
 
@@ -1583,10 +1537,10 @@ body {
                         </p>
                         {% endfor %}
                         <p class="card-text-spaced" style="font-size:16px; color: #782823;"> 
-                            <span  class="left-span pt-0 px-3" style="font-size:16px; color: #782823;"> and 
+                            <span  class="left-span pt-0 px-1" style="font-size:16px; color: #782823;"> and 
                                 
                                 <a href="{% url 'us_violence_paginated'  %}">  
-                                   <u><b>{{us_data.0|add:-8}}</b></u>  more...
+                                   <u><b>{{us_data.0|add:-8}}</b></u>  more ...
                                 </a>
                             </span>
                         </p>

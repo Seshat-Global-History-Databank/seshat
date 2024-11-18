@@ -7808,9 +7808,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
 
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
@@ -7924,9 +7922,7 @@ def delete_object_view(request, model_class, pk, var_name):
     return redirect(success_url)
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_download(request, model_class, var_name):
     # Fetch all objects for the specified model
     items = model_class.objects.all()
@@ -7967,9 +7963,7 @@ def generic_download(request, model_class, var_name):
 
     return response
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_metadata_download(request, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="metadata_{var_name}s.csv"'

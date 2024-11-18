@@ -3836,7 +3836,7 @@ def generalvars(request):
 
     for model in models_1:
         model_name = model.__name__
-        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert"]:
+        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert", "Polity_relationship_to_preceding_entity",  "Polity_succeeding_entity"]:
             continue
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
@@ -3859,7 +3859,7 @@ def generalvars(request):
 
     for model in models:
         model_name = model.__name__
-        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert"]:
+        if model_name in ["Polity_research_assistant", "Polity_editor", "Polity_expert",  "Polity_relationship_to_preceding_entity", "Polity_succeeding_entity"]:
             continue
 
 
@@ -3976,7 +3976,7 @@ def generalvars(request):
                 ]
 
         elif model_name.lower() == 'polity_suprapolity_relations':
-            var_type="TEXT+++"
+            var_type="TEXT+"
 
             for obj in queryset:
                 if obj.other_polity:
@@ -4015,6 +4015,50 @@ def generalvars(request):
                 filtered_queryset_trans,
                 'Properly Coded',
                 ]
+            
+        elif model_name.lower() == 'polity_preceding_entity':
+            var_type="TEXT+"
+
+            for obj in queryset:
+                if obj.other_polity and obj.relationship_to_preceding_entity:
+                    filtered_queryset_pres +=1
+
+
+                elif obj.relationship_to_preceding_entity == 'unknown'  and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.relationship_to_preceding_entity == 'unknown'  and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.other_polity or obj.merged_old_data or obj.relationship_to_preceding_entity:
+                    filtered_queryset_trans +=1
+                elif obj.show_value() == ' - ' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                else:
+                    print(obj.id, " ", obj.show_value())
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
 
         elif model_name.lower() == 'polity_capital':
             var_type="TEXT+"
@@ -4625,9 +4669,6 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, var_main_desc):
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
@@ -4746,9 +4787,6 @@ def delete_object_view(request, model_class, pk, var_name):
     return redirect(success_url)
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
 def generic_download(request, model_class, var_name):
     # Fetch all objects for the specified model
     items = model_class.objects.all()
@@ -4808,9 +4846,7 @@ def generic_download(request, model_class, var_name):
 
     return response
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_metadata_download(request, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="metadata_{var_name}s.csv"'

@@ -1083,7 +1083,7 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
     if request.method == 'POST':
         form = SeshatPrivateCommentPartForm(request.POST)
         oopsi = request.POST.getlist('selected_items')
-        print("ooopsiiiiiiiiiiiiiiii,", oopsi)
+        #print("ooopsiiiiiiiiiiiiiiii,", oopsi)
         big_father = SeshatPrivateComment.objects.get(id=private_com_id)
 
         if form.is_valid():
@@ -3619,6 +3619,5 @@ def xxyyzz(request, com_id):
         return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
 
     return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
-
 
 
