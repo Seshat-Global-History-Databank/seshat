@@ -24,6 +24,36 @@ Follow the example of the existing bios, adding the following sections:
 Bios
 ----
 
+
+Majid Benam
+~~~~~~~~~~~~
+
+**Who am I?**
+
+I am a **Software Engineer and Web Developer** at the Complexity Science Hub in Vienna, Austria, working on the Seshat project since **January 2021**.
+
+**What can I help with?**
+
+- Seshat Website & Database
+
+    - Maintain and improve the `Seshat website <https://seshat-db.com>`_ and its codebase.
+    - Assist with account creation, sign-in, and login issues.
+    - Manage data entry and data extraction processes.
+
+- Technical Expertise
+
+    - Software engineering and data science skills.
+    - Design and optimization of database architectures and data structures.
+    - Integration of new datasets into the Seshat database.
+
+- Support & Admin Role
+
+    - Troubleshoot website issues or outages.
+    - Serve as a **Seshat Admin** with administrative privileges.
+
+Feel free to reach out if you need assistance. Email: `benam@csh.ac.at`
+
+
 Ed Chalstrey
 ~~~~~~~~~~~~
 
