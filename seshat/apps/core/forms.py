@@ -19,7 +19,13 @@ from django_recaptcha.fields import ReCaptchaField
 #from .models import Religion
 
 class ReligionForm(forms.ModelForm):
+    """
+    Form for adding or updating a new religion in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Religion
         fields = ['religion_name',]
 
@@ -29,7 +35,13 @@ class ReligionForm(forms.ModelForm):
 
 
 class ReferenceForm(forms.ModelForm):
+    """
+    Form for adding or updating a new reference in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Reference
         fields = ('title', 'year', 'creator', 'zotero_link', 'long_name')
         labels = {
@@ -54,8 +66,13 @@ class ReferenceForm(forms.ModelForm):
 
 
 class CitationForm(forms.ModelForm):
-
+    """
+    Form for adding or updating a new citation in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Citation
         fields = ('ref', 'page_from', 'page_to', )
         labels = {
@@ -71,6 +88,15 @@ class CitationForm(forms.ModelForm):
             attrs={'class': 'form-control  mb-3 fw-bold', })
         }
     def clean(self):
+        """
+        Check if the citation is a duplicate.
+
+        Returns:
+            dict: The cleaned data.
+
+        Raises:
+            ValidationError: If the citation is a duplicate.
+        """
         cleaned_data = super(CitationForm, self).clean()
         cleaned_page_from = cleaned_data.get("page_from")
         cleaned_page_to = cleaned_data.get("page_to")
@@ -87,7 +113,13 @@ class CitationForm(forms.ModelForm):
 
 
 class PolityForm(forms.ModelForm):
+    """
+    Form for adding or updating a new polity in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity
         fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag' , 'shapefile_name', 'private_comment','general_description')
         labels = {
@@ -98,7 +130,7 @@ class PolityForm(forms.ModelForm):
         'end_year': 'End Year',
         'home_seshat_region': 'Home Seshat Region',
         'polity_tag': 'Polity Tag',
-        'shapefile_name': 'Shapefile name',
+        'shapefile_name': 'Shapefile ID',
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
 
@@ -117,13 +149,19 @@ class PolityForm(forms.ModelForm):
             'home_seshat_region': forms.Select(attrs={'class': 'form-control  js-example-basic-single form-select mb-3',}),
             'polity_tag': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             'shapefile_name': forms.TextInput(attrs={'class': 'form-control mb-3', }),
-            'private_comment': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 100px', 'placeholder':'Add a private comment that will only be visible to Seshat experts and RAs.'}),
+            'private_comment': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 100px', 'placeholder':'Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity border shapes. Enter the ID of the relevant shape in the box above (found by clicking on the map).'}),
             'general_description': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 265px', 'placeholder':'Add a general description (optional)'}),
 
         }
 
 class PolityUpdateForm(forms.ModelForm):
+    """
+    Form for adding or updating an existing polity in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity
         fields = ('name', 'new_name', 'long_name', 'start_year', 'end_year','home_seshat_region', 'polity_tag', 'shapefile_name',  'private_comment','general_description')
         labels = {
@@ -133,7 +171,7 @@ class PolityUpdateForm(forms.ModelForm):
         'start_year': 'Start Year',
         'end_year': 'End Year',
         'home_seshat_region': 'Home Seshat Region',
-        'shapefile_name': 'Shapefile name',
+        'shapefile_name': 'Shapefile ID',
         'polity_tag': 'Polity Tag',
         'private_comment': 'Private Comment (optional)',
         'general_description': 'General Description of the Polity',
@@ -153,14 +191,20 @@ class PolityUpdateForm(forms.ModelForm):
             'home_seshat_region': forms.Select(attrs={'class': 'form-control  js-example-basic-single form-select mb-3',}),
             'polity_tag': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             'shapefile_name': forms.TextInput(attrs={'class': 'form-control mb-3', }),
-            'private_comment': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 100px', 'placeholder':'Add a private comment that will only be visible to seshat experts and RAs.'}),
+            'private_comment': forms.Textarea(attrs={'class': 'form-control', 'style': 'height: 100px', 'placeholder':'Add a private comment that will only be visible to Seshat experts and RAs.\nUse this box to request edits to the polity border shapes. Enter the ID of the relevant shape in the box above (found by clicking on the map).'}),
             'general_description': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 265px', 'placeholder':'Add a general description (optional)'}),
 
         }
 
         
 class NgaForm(forms.ModelForm):
+    """
+    Form for adding or updating a new NGA in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Nga
         fields = ('name', 'world_region', 'subregion', 'fao_country')
         labels = {
@@ -181,7 +225,13 @@ class NgaForm(forms.ModelForm):
 
 
 class CapitalForm(forms.ModelForm):
+    """
+    Form for adding or updating a new capital in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Capital
         fields = ('name', 'latitude', 'longitude', 'current_country', 'alternative_names','is_verified', 'url_on_the_map', 'note')
         labels = {
@@ -214,7 +264,13 @@ class CapitalForm(forms.ModelForm):
 
 
 class SeshatCommentForm(forms.ModelForm):
+    """
+    Form for adding or updating a new comment in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = SeshatComment
         fields = ('text',)
         labels = {
@@ -225,7 +281,13 @@ class SeshatCommentForm(forms.ModelForm):
         }
 
 class SeshatCommentPartForm(forms.ModelForm):
+    """
+    Form for adding or updating a new comment part in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = SeshatCommentPart
         fields = ('comment', 'comment_part_text', 'comment_citations', 'comment_order', 'comment_curator')
         labels = {
@@ -247,7 +309,13 @@ class SeshatCommentPartForm(forms.ModelForm):
 
 
 class SeshatPrivateCommentPartForm(forms.ModelForm):
+    """
+    Form for adding or updating a new private comment part in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = SeshatPrivateCommentPart
         fields = ('private_comment', 'private_comment_part_text', 'private_comment_owner', 'private_comment_reader')
         labels = {
@@ -267,7 +335,13 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
         
 
 class SeshatPrivateCommentForm(forms.ModelForm):
+    """
+    Form for adding or updating a new private comment in the database.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = SeshatPrivateComment
         fields = ('text',)
         labels = {
@@ -278,6 +352,9 @@ class SeshatPrivateCommentForm(forms.ModelForm):
         }
 
 class ReferenceWithPageForm(forms.Form):
+    """
+    Form for adding or updating a new reference with page numbers in the database.
+    """
     ref = forms.ModelChoiceField(
         queryset=Reference.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-select mb-1 js-example-basic-single', 'text':'ref',}),
@@ -308,7 +385,20 @@ class ReferenceWithPageForm(forms.Form):
         self.helper.add_input(Submit('submit', 'Submit'))
 
 class BaseReferenceFormSet(BaseFormSet):
+    """
+    Base formset for adding or updating multiple references to a comment.
+    """
     def add_fields(self, form, index):
+        """
+        Add fields to the form.
+
+        Args:
+            form (Form): The form to add fields to.
+            index (int): The index of the form.
+
+        Returns:
+            None
+        """
         super().add_fields(form, index)
         form.fields['ref'].widget.attrs['class'] = 'form-control form-select mb-1 p-1 js-example-basic-single'
         form.fields['page_from'].widget.attrs['class'] = 'form-control mb-1 p-1'
@@ -389,6 +479,9 @@ class SignUpForm(UserCreationForm):
         return email
 
     class Meta:
+        """
+        :noindex:
+        """
         model = User
         fields = ('username', 'first_name', 'last_name',
                   'email', 'password1', 'password2', 'captcha')
@@ -443,6 +536,9 @@ class VariablehierarchyFormNew(forms.Form):
         label=" Verified?", required=False, widget=forms.CheckboxInput(attrs={'type': 'checkbox', 'class': 'form-control form-check-input align-middle'}))
     
     class Meta:
+        """
+        :noindex:
+        """
         unique_together = ("variable_name", "section_name", "subsection_name")
 
 # VarHierFormSet = formset_factory(VariablehierarchyForm, extra=10)

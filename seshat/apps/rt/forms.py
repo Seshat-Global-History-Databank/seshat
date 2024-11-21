@@ -53,7 +53,13 @@ commonwidgets = {
 #         widgets['sc_ra'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 class Widespread_religionForm(forms.ModelForm):
+    """
+    Form for creating and updating the Widespread_religion model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Widespread_religion
         fields = commonfields.copy()
         fields.append('order')
@@ -71,7 +77,13 @@ class Widespread_religionForm(forms.ModelForm):
         widgets['degree_of_prevalence'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 class Official_religionForm(forms.ModelForm):
+    """
+    Form for creating and updating creating and updating the Official_religion model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Official_religion
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -82,7 +94,13 @@ class Official_religionForm(forms.ModelForm):
         
 
 class Elites_religionForm(forms.ModelForm):
+    """
+    Form for creating and updating the Elites_religion model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Elites_religion
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -93,7 +111,13 @@ class Elites_religionForm(forms.ModelForm):
         
 ##########################################
 class Theo_sync_dif_relForm(forms.ModelForm):
+    """
+    Form for creating and updating the Theo_sync_dif_rel model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Theo_sync_dif_rel
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -104,7 +128,13 @@ class Theo_sync_dif_relForm(forms.ModelForm):
         
 
 class Sync_rel_pra_ind_beliForm(forms.ModelForm):
+    """
+    Form for creating and updating the Sync_rel_pra_ind_beli model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Sync_rel_pra_ind_beli
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -115,7 +145,13 @@ class Sync_rel_pra_ind_beliForm(forms.ModelForm):
         
 
 class Religious_fragmentationForm(forms.ModelForm):
+    """
+    Form for creating and updating the Religious_fragmentation model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Religious_fragmentation
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -126,7 +162,13 @@ class Religious_fragmentationForm(forms.ModelForm):
         
 
 class Gov_vio_freq_rel_grpForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_vio_freq_rel_grp model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_vio_freq_rel_grp
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -137,7 +179,13 @@ class Gov_vio_freq_rel_grpForm(forms.ModelForm):
         
 
 class Gov_res_pub_worForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_pub_wor model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_pub_wor
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -148,7 +196,13 @@ class Gov_res_pub_worForm(forms.ModelForm):
         
 
 class Gov_res_pub_prosForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_pub_pros model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_pub_pros
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -159,7 +213,13 @@ class Gov_res_pub_prosForm(forms.ModelForm):
         
 
 class Gov_res_convForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_conv model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_conv
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -170,7 +230,13 @@ class Gov_res_convForm(forms.ModelForm):
         
 
 class Gov_press_convForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_press_conv model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_press_conv
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -181,7 +247,13 @@ class Gov_press_convForm(forms.ModelForm):
         
 
 class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_prop_own_for_rel_grp model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_prop_own_for_rel_grp
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -192,7 +264,13 @@ class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
         
 
 class Tax_rel_adh_act_insForm(forms.ModelForm):
+    """
+    Form for creating and updating the Tax_rel_adh_act_ins model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Tax_rel_adh_act_ins
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -203,7 +281,13 @@ class Tax_rel_adh_act_insForm(forms.ModelForm):
         
 
 class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_obl_rel_grp_ofc_reco model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_obl_rel_grp_ofc_reco
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -214,7 +298,13 @@ class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
         
 
 class Gov_res_cons_rel_builForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_cons_rel_buil model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_cons_rel_buil
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -225,7 +315,13 @@ class Gov_res_cons_rel_builForm(forms.ModelForm):
         
 
 class Gov_res_rel_eduForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_rel_edu model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_rel_edu
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -236,7 +332,13 @@ class Gov_res_rel_eduForm(forms.ModelForm):
         
 
 class Gov_res_cir_rel_litForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_res_cir_rel_lit model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_res_cir_rel_lit
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -247,7 +349,13 @@ class Gov_res_cir_rel_litForm(forms.ModelForm):
         
 
 class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_dis_rel_grp_occ_fun model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_dis_rel_grp_occ_fun
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -258,7 +366,13 @@ class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
         
 
 class Soc_vio_freq_rel_grpForm(forms.ModelForm):
+    """
+    Form for creating and updating the Soc_vio_freq_rel_grp model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Soc_vio_freq_rel_grp
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -269,7 +383,13 @@ class Soc_vio_freq_rel_grpForm(forms.ModelForm):
         
 
 class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
+    """
+    Form for creating and updating the Soc_dis_rel_grp_occ_fun model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Soc_dis_rel_grp_occ_fun
         fields = commonfields.copy()
         fields.append('coded_value')
@@ -280,7 +400,13 @@ class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
         
 
 class Gov_press_conv_for_agaForm(forms.ModelForm):
+    """
+    Form for creating and updating the Gov_press_conv_for_aga model.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gov_press_conv_for_aga
         fields = commonfields.copy()
         fields.append('coded_value')

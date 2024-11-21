@@ -1,3 +1,9 @@
+import sys
+import importlib
+import random
+import numpy as np
+
+from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -12,14 +18,16 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormMixin
-from django.db import IntegrityError
-from django.db.models import Prefetch, F, Value, Q, Count
+from django.db import IntegrityError, connection
+from django.db.models import Prefetch, F, Value, Q, Min, Max, Count
 from django.db.models.functions import Replace
 
 from django.views.decorators.http import require_GET
@@ -53,12 +61,11 @@ from django.urls import reverse, reverse_lazy
 
 from django.contrib.messages.views import SuccessMessageMixin
 
-from ..general.models import Polity_research_assistant, Polity_duration
+from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
 
 from ..crisisdb.models import Power_transition
 
-
-from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
+from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
@@ -67,6 +74,9 @@ from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic
 
 from django.shortcuts import HttpResponse
 
+from math import floor, ceil
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.db.models.functions import AsGeoJSON
 from django.views.generic import ListView
 
 
@@ -75,6 +85,18 @@ from django.views.generic import ListView
 @login_required
 @permission_required('core.add_seshatprivatecommentpart')
 def religion_create(request):
+    """
+    Create a new religion.
+
+    Note:
+        This view is only accessible to users with the 'add_seshatprivatecommentpart' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     if request.method == 'POST':
         form = ReligionForm(request.POST)
         if form.is_valid():
@@ -87,6 +109,19 @@ def religion_create(request):
 @login_required
 @permission_required('core.add_seshatprivatecommentpart')
 def religion_update(request, pk):
+    """
+    Update an existing religion.
+
+    Note:
+        This view is only accessible to users with the 'add_seshatprivatecommentpart' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+        pk (int): The primary key of the religion.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     religion = get_object_or_404(Religion, pk=pk)
     if request.method == 'POST':
         form = ReligionForm(request.POST, instance=religion)
@@ -98,6 +133,9 @@ def religion_update(request, pk):
     return render(request, 'core/religion_update.html', {'form': form})
 
 class ReligionListView(ListView):
+    """
+    List all religions.
+    """
     model = Religion
     template_name = 'core/religion_list.html'
     context_object_name = 'religions'
@@ -108,10 +146,27 @@ class ReligionListView(ListView):
 
 ######
 def is_ajax(request):
+    """
+    Return True if the request is an AJAX request, False otherwise.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        bool: True if the request is an AJAX request, False otherwise.
+    """
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
-
 def ajax_test(request):
+    """
+    Test if the request is an AJAX request.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     if is_ajax(request=request):
         message = "This is ajax"
     else:
@@ -123,12 +178,43 @@ from django.forms import formset_factory, modelformset_factory, inlineformset_fa
 
 
 def index(request):
+    """
+    Returns a simple "Hello World" response.
+
+    Note:
+        This is a simple view to test the server. It is not part of the
+        application.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     return HttpResponse('<h1>Hello World.</h1>')
 
 def four_o_four(request):
+    """
+    Return a 404 error page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     return render(request, 'core/not_found_404.html')
 
 def seshatindex2(request):
+    """
+    Return the Seshat landing page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     context = {
         'insta': "Instabilities All Over the Place..",
         'trans': "Transitions All Over the Place",
@@ -138,6 +224,15 @@ def seshatindex2(request):
     return render(request, 'core/seshat-index.html', context=context)
 
 def seshatmethods(request):
+    """
+    Return the Seshat "Methods" page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     context = {
         'insta': "Instabilities All Over the Place..",
         'trans': "Transitions All Over the Place",
@@ -147,6 +242,15 @@ def seshatmethods(request):
     return render(request, 'core/seshat-methods.html', context=context)
 
 def seshatwhoweare(request):
+    """
+    Return the Seshat "Who We are" page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     #json_url_inners = "https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_040_00_500k.json"
     #json_url_outline = "https://eric.clst.org/assets/wiki/uploads/Stuff/gz_2010_us_outline_500k.json"
     json_file_path = "/home/majid/dev/seshat/seshat/seshat/apps/core/static/geojson/us_states_geojson.json"
@@ -186,12 +290,30 @@ def seshatwhoweare(request):
         return render(request, 'core/seshat-whoweare.html', context=context)
 
 def seshatolddownloads(request):
+    """
+    Return the Seshat "Downloads" page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     context = {
         'insta': "Instabilities All Over the Place..",
     }
     return render(request, 'core/old_downloads.html', context=context)
 
 def seshatcodebookold(request):
+    """
+    Return the Seshat "Codebook" page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     context = {
         'insta': "Instabilities All Over the Place..",
     }
@@ -210,20 +332,44 @@ def seshatcodebooknew1(request):
 #     return render(request, 'core/new_codebook_2.html', context=context)
 
 def seshatacknowledgements(request):
+    """
+    Return the Seshat "Acknowledgements" page.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     context = {
         'insta': "Instabilities All Over the Place..",
     }
     return render(request, 'core/seshat-acknowledgements.html', context=context)
 
 class ReferenceListView(generic.ListView):
+    """
+    List all references.
+    """
     model = Reference
     template_name = "core/references/reference_list.html"
     paginate_by = 100
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('references')
 
     def get_queryset(self):
+        """
+        Get the queryset of references.
+
+        Returns:
+            QuerySet: The queryset of references.
+        """
         queryset = Reference.objects.exclude(creator='MAJIDBENAM').all()
         return queryset
     
@@ -236,14 +382,29 @@ class ReferenceListView(generic.ListView):
 
 
 class NlpReferenceListView(generic.ListView):
+    """
+    List all NLP references.
+    """
     model = Reference
     template_name = "core/references/nlp_reference_list.html"
     paginate_by = 50
 
     def get_absolute_url(self):
+        """
+        Return the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('nlp-references')
 
     def get_queryset(self):
+        """
+        Return the queryset of NLP references.
+
+        Returns:
+            QuerySet: The queryset of NLP references.
+        """
         # Import the list of Zotero links inside the method
         from .nlp_zotero_links import NLP_ZOTERO_LINKS_TO_FILTER
 
@@ -276,6 +437,15 @@ class NlpReferenceListView(generic.ListView):
 
 # references without a Zotero link:
 def no_zotero_refs_list(request):
+    """
+    List all references without a Zotero link.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     selected_no_zotero_refs = Reference.objects.filter(zotero_link__startswith='NOZOTERO_')
     #all_refs = Reference.objects.all()
     #selected_no_zotero_refs = []
@@ -298,6 +468,17 @@ def no_zotero_refs_list(request):
     return render (request, 'core/references/reference_list_nozotero.html', context)
 
 def reference_update_modal(request, pk):
+    """
+    Update a reference using a modal or a standalone page depending on the
+    request.
+
+    Args:
+        request (HttpRequest): The request object.
+        pk (int): The primary key of the reference.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     # Either render only the modal content, or a full standalone page
     if is_ajax(request=request):
         template_name = 'core/references/reference_update_modal.html'
@@ -326,15 +507,35 @@ def reference_update_modal(request, pk):
 
 
 class ReferenceCreate(PermissionRequiredMixin, CreateView):
+    """
+    Create a new reference.
+    """
     model = Reference
     form_class = ReferenceForm
     template_name = "core/references/reference_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('reference-create')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["mysection"] = "xyz"
         context["mysubsection"] = "abc"
@@ -345,19 +546,51 @@ class ReferenceCreate(PermissionRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
 
 
 class ReferenceUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    Update a reference.
+    """
     model = Reference
     form_class = ReferenceForm
     template_name = "core/references/reference_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["mysection"] = "Fiscal Heeeelath"
         context["mysubsection"] = "No Subsection Proeeeevided"
@@ -366,6 +599,9 @@ class ReferenceUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class ReferenceDelete(PermissionRequiredMixin, DeleteView):
+    """
+    Delete a reference.
+    """
     model = Reference
     success_url = reverse_lazy('references')
     template_name = "core/delete_general.html"
@@ -373,6 +609,9 @@ class ReferenceDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ReferenceDetailView(generic.DetailView):
+    """
+    Display the details of a reference.
+    """
     model = Reference
     template_name = "core/references/reference_detail.html"
 
@@ -380,6 +619,18 @@ class ReferenceDetailView(generic.DetailView):
 
 @permission_required('core.view_capital')
 def references_download(request):
+    """
+    Download all references as a CSV file.
+
+    Note:
+        This view is only accessible to users with the 'view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     items = Reference.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -396,14 +647,26 @@ def references_download(request):
 
 # Citations
 class CitationListView(generic.ListView):
+    """
+    List all citations.
+    """
     model = Citation
     template_name = "core/references/citation_list.html"
     paginate_by = 20
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('citations')
 
 class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    """
+    Create a new citation.
+    """
     model = Citation
     form_class = CitationForm
     template_name = "core/references/citation_form.html"
@@ -411,14 +674,40 @@ class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     success_message = "Yoohoooo..."
 
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         context = self.get_context_data(form=form)
         context.update({"my_message": "Soemthign went wrong"})
         return self.render_to_response(context)
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('citation-create')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["mysection"] = "xyz"
         context["mysubsection"] = "abc"
@@ -429,6 +718,15 @@ class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     # def form_invalid(self, form):
@@ -436,6 +734,9 @@ class CitationCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class CitationUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update a citation.
+    """
     model = Citation
     form_class = CitationForm
     template_name = "core/references/citation_update.html"
@@ -443,11 +744,31 @@ class CitationUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     success_message = "Yoohoooo..."
 
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         context = self.get_context_data(form=form)
         context.update({"my_message": "Soemthign went wrong"})
         return self.render_to_response(context)
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         context["mysection"] = "Fiscal Helath"
         context["mysubsection"] = "No Subsection Provided"
@@ -456,6 +777,9 @@ class CitationUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
 class CitationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    Delete a citation.
+    """
     model = Citation
     success_url = reverse_lazy('citations')
     template_name = "core/delete_general.html"
@@ -463,42 +787,94 @@ class CitationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CitationDetailView(generic.DetailView):
+    """
+    Display the details of a citation.
+    """
     model = Citation
     template_name = "core/references/citation_detail.html"
 
 # SeshatComment
 class SeshatCommentListView(generic.ListView):
+    """
+    List all comments.
+    """
     model = SeshatComment
     template_name = "core/seshatcomments/seshatcomment_list.html"
     paginate_by = 20
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcomments')
 
 class SeshatCommentCreate(PermissionRequiredMixin, CreateView):
+    """
+    Create a new comment.
+    """
     model = SeshatComment
     form_class = SeshatCommentForm
     template_name = "core/seshatcomments/seshatcomment_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcomment-create')
 
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
 
 
 class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    Update a comment.
+    """
     model = SeshatComment
     form_class = SeshatCommentForm
     template_name = "core/seshatcomments/seshatcomment_update.html"
     permission_required = 'core.add_capital'
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
         my_app_models = {name: apps.all_models[name] for name in my_apps}
@@ -588,6 +964,9 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
     #     return context
 
 class SeshatCommentDelete(PermissionRequiredMixin, DeleteView):
+    """
+    Delete a comment.
+    """
     model = SeshatComment
     success_url = reverse_lazy('seshatcomments')
     template_name = "core/delete_general.html"
@@ -595,60 +974,146 @@ class SeshatCommentDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SeshatCommentDetailView(generic.DetailView):
+    """
+    Display the details of a comment.
+    """
     model = SeshatComment
     template_name = "core/seshatcomments/seshatcomment_detail.html"
 
 
 # SeshatCommentPart
 class SeshatCommentPartListView(generic.ListView):
+    """
+    List all comment parts.
+    """
     model = SeshatCommentPart
     template_name = "core/seshatcomments/seshatcommentpart_list.html"
     paginate_by = 20
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcommentparts')
 
 # SeshatCommentPart
 class SeshatCommentPartListView3(generic.ListView):
+    """
+    List all comment parts.
+    """
     model = SeshatCommentPart
     template_name = "core/seshatcomments/seshatcommentpart_list3.html"
     paginate_by = 20
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcommentparts3')
     
 class SeshatCommentPartCreate(PermissionRequiredMixin, CreateView):
+    """
+    Create a new comment part.
+    """
     model = SeshatCommentPart
     form_class = SeshatCommentPartForm
     template_name = "core/seshatcomments/seshatcommentpart_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcommentpart-create')
 
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
 
 class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
+    """
+    Create a new comment part.
+    """
     model = SeshatCommentPart
     form_class = SeshatCommentPartForm
     template_name = "core/seshatcomments/seshatcommentpart_form_prefilled.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatcommentpart-create2')
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
@@ -667,21 +1132,59 @@ class SeshatCommentPartCreate2(PermissionRequiredMixin, CreateView):
     
 
 class SeshatPrivateCommentPartCreate2(PermissionRequiredMixin, CreateView):
+    """
+    Create a new private comment part.
+    """
     model = SeshatPrivateCommentPart
     form_class = SeshatPrivateCommentPartForm
     template_name = "core/seshatcomments/seshatprivatecommentpart_form_prefilled.html"
     permission_required = 'core.add_seshatprivatecommentpart'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('seshatprivatecommentpart-create2')
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
     
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
@@ -702,6 +1205,21 @@ class SeshatPrivateCommentPartCreate2(PermissionRequiredMixin, CreateView):
 # Function based:
 @permission_required('core.add_capital')
 def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order):
+    """
+    Create a new comment part.
+
+    Note:
+        This function is not used in the current implementation.
+        This view is only accessible to users with the 'add_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+        com_id (int): The primary key of the comment.
+        subcom_order (int): The order of the comment part.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
         big_father = SeshatComment.objects.get(id=com_id)
@@ -791,11 +1309,20 @@ def seshat_comment_part_create_from_null_view_OLD(request, com_id, subcom_order)
 # Function based NEW:
 @permission_required('core.add_capital')
 def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
+    """
+    Create a new comment part.
 
+    Note:
+        This view is only accessible to users with the 'add_capital' permission.
 
+    Args:
+        request (HttpRequest): The request object.
+        com_id (int): The primary key of the comment.
+        subcom_order (int): The order of the comment part.
 
-
-
+    Returns:
+        HttpResponse: The response object.
+    """
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
         big_father = SeshatComment.objects.get(id=com_id)
@@ -1080,6 +1607,19 @@ def seshat_comment_part_create_from_null_view_inline(request, app_name, model_na
 # Function based NEW:
 @permission_required('core.add_seshatprivatecommentpart')
 def seshat_private_comment_part_create_from_null_view(request, private_com_id):
+    """
+    Create a new private comment part.
+
+    Note:
+        This view is only accessible to users with the 'add_seshatprivatecommentpart' permission.
+
+    Args:
+        request (HttpRequest): The request object.
+        private_com_id (int): The primary key of the private comment.
+
+    Returns:
+        HttpResponse: The response object.
+    """
     if request.method == 'POST':
         form = SeshatPrivateCommentPartForm(request.POST)
         oopsi = request.POST.getlist('selected_items')
@@ -1121,6 +1661,9 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
     # return render(request, 'core/seshatcomments/seshatcommentpart_update2.html', {'form': form, 'formset': init_data, 'comm_num':pk, 'comm_part_display': comment_part})
 
 class SeshatCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update a comment part.
+    """
     model = SeshatCommentPart
     form_class = SeshatCommentPartForm
     template_name = "core/seshatcomments/seshatcommentpart_update.html"
@@ -1129,6 +1672,17 @@ class SeshatCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, Upda
 
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
@@ -1145,6 +1699,9 @@ class SeshatCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, Upda
         return context
     
 class SeshatPrivateCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update a private comment part.
+    """
     model = SeshatPrivateCommentPart
     form_class = SeshatPrivateCommentPartForm
     template_name = "core/seshatcomments/seshatprivatecommentpart_update2.html"
@@ -1153,6 +1710,17 @@ class SeshatPrivateCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixi
 
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         logged_in_user = self.request.user
         logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
@@ -1167,6 +1735,9 @@ class SeshatPrivateCommentPartUpdate(PermissionRequiredMixin, SuccessMessageMixi
 
 
 class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
+    """
+    Delete a comment part.
+    """
     model = SeshatCommentPart
     #success_url = reverse_lazy('seshatcommentparts')
     #success_url = reverse_lazy('seshatcommentparts')
@@ -1194,6 +1765,9 @@ class SeshatCommentPartDetailView(generic.DetailView):
 # POLITY
 
 class PolityCreate(PermissionRequiredMixin, CreateView):
+    """
+    Create a new Polity.
+    """
     model = Polity
     form_class = PolityForm
     template_name = "core/polity/polity_form.html"
@@ -1201,6 +1775,15 @@ class PolityCreate(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('polities')
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         # Custom validation to check if a Polity with the same new_name already exists
         new_name = form.cleaned_data['new_name']
         existing_polity = Polity.objects.filter(new_name=new_name)
@@ -1220,11 +1803,30 @@ class PolityCreate(PermissionRequiredMixin, CreateView):
 
 
 class PolityUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update a Polity.
+    """
     model = Polity
     form_class = PolityUpdateForm
     template_name = "core/polity/polity_form.html"
     permission_required = 'core.add_capital'
     success_message = "You successfully updated the Polity."
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.object.pk
+        return context
     
     def get_success_url(self):
         return reverse_lazy('polity-detail-main', kwargs={'pk': self.object.pk})
@@ -1272,6 +1874,12 @@ class PolityUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class PolityListView_old(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+
+    Note:
+        This class is not used in the current implementation.
+    """
     model = Polity
     template_name = "core/polity/polity_list.html"
     permission_required = 'core.add_capital'
@@ -1279,9 +1887,26 @@ class PolityListView_old(PermissionRequiredMixin, SuccessMessageMixin, generic.L
     #paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         all_ngas = Nga.objects.all()
         all_pols = Polity.objects.all().order_by('start_year')
@@ -1329,15 +1954,38 @@ class PolityListView_old(PermissionRequiredMixin, SuccessMessageMixin, generic.L
         return context
 
 class PolityListView1(SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+
+    Note:
+        This class is not used in the current implementation.
+    """
     model = Polity
     template_name = "core/polity/polity_list.html"
 
     #paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         all_ngas = Nga.objects.all()
         all_pols = Polity.objects.all().order_by('start_year')
@@ -1395,15 +2043,38 @@ class PolityListView1(SuccessMessageMixin, generic.ListView):
     
 
 class PolityListViewX(SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+
+    Note:
+        This class is not used in the current implementation.
+    """
     model = Polity
     template_name = "core/polity/polity_list.html"
 
     #paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         all_ngas = Nga.objects.all()
         all_pols = Polity.objects.all().order_by('start_year')
@@ -1529,13 +2200,33 @@ class PolityListViewX(SuccessMessageMixin, generic.ListView):
         return context
     
 class PolityListViewLight(SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+    """
     model = Polity
     template_name = "core/polity/polity_list_light.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities-light')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         #import time
         #start_time = time.time()
@@ -1596,13 +2287,33 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
         return context
 
 class PolityListView(SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+    """
     model = Polity
     template_name = "core/polity/polity_list.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         #import time
         #start_time = time.time()
@@ -1745,15 +2456,35 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
     
 
 class PolityListViewCommented(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
+    """
+    List all polities with comments.
+    """
     model = Polity
     template_name = "core/polity/polity_list_commented.html"
     permission_required = 'core.add_seshatprivatecommentpart'
 
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polities')
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
 
         #all_pols = Polity.objects.filter(private_comment__isnull=False).order_by('start_year')
@@ -1779,10 +2510,26 @@ class PolityListViewCommented(PermissionRequiredMixin, SuccessMessageMixin, gene
 
 
 class PolityDetailView(SuccessMessageMixin, generic.DetailView):
+    """
+    Show details of a polity.
+    """
     model = Polity
     template_name = "core/polity/polity_detail.html"
 
     def get_object(self, queryset=None):
+        """
+        Get the object of the view.
+
+        Args:
+            queryset: The queryset to use.
+
+        Returns:
+            Polity: The object of the view.
+
+        Raises:
+            Http404: If no polity matches the given name.
+            Http404: If multiple polities are found with the same name.
+        """
         if 'pk' in self.kwargs:
             return get_object_or_404(Polity, pk=self.kwargs['pk'])
         elif 'new_name' in self.kwargs:
@@ -1801,7 +2548,19 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             return None
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
         try:
             context["all_data"] = get_all_data_for_a_polity(self.object.pk, "crisisdb") 
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
@@ -1961,6 +2720,9 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
 # NGA
 
 class NgaCreate(PermissionRequiredMixin, CreateView):
+    """
+    Create a new NGA.
+    """
     model = Nga
     form_class = NgaForm
     template_name = "core/nga/nga_form.html"
@@ -1968,13 +2730,34 @@ class NgaCreate(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('ngas')
 
     def form_valid(self, form):
+        """
+        Validate the form.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        """
+        Handle invalid form data.
+
+        Args:
+            form (Form): The form object.
+
+        Returns:
+            HttpResponse: The response object.
+        """
         return HttpResponseRedirect(reverse('seshat-index'))
 
 
 class NgaUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update an NGA.
+    """
     model = Nga
     form_class = NgaForm
     template_name = "core/nga/nga_update.html"
@@ -1984,11 +2767,17 @@ class NgaUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class NgaListView(generic.ListView):
+    """
+    List all NGAs.
+    """
     model = Nga
     template_name = "core/nga/nga_list.html"
     #paginate_by = 10
 
 class NgaDetailView(generic.DetailView):
+    """
+    Show details of an NGA.
+    """
     model = Nga
     template_name = "core/nga/nga_detail.html"
 
@@ -1996,6 +2785,9 @@ class NgaDetailView(generic.DetailView):
 # Capital
 
 class CapitalCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    """
+    Create a new Capital.
+    """
     model = Capital
     form_class = CapitalForm
     template_name = "core/capital/capital_form_create.html"
@@ -2011,6 +2803,9 @@ class CapitalCreate(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 
 class CapitalUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    """
+    Update a Capital.
+    """
     model = Capital
     form_class = CapitalForm
     template_name = "core/capital/capital_form.html"
@@ -2020,15 +2815,27 @@ class CapitalUpdate(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
 
 class CapitalListView(generic.ListView):
+    """
+    List all Capitals.
+    """
     model = Capital
     template_name = "core/capital/capital_list.html"
     #paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('capitals')
     
 
 class CapitalDelete(PermissionRequiredMixin, DeleteView):
+    """
+    Delete a Capital.
+    """
     model = Capital
     success_url = reverse_lazy('capitals')
     template_name = "core/delete_general.html"
@@ -2039,6 +2846,18 @@ class CapitalDelete(PermissionRequiredMixin, DeleteView):
 
 @permission_required('core.view_capital')
 def capital_download(request):
+    """
+    Download all Capitals as CSV.
+
+    Note:
+        This view is only accessible to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     items = Capital.objects.all()
 
     response = HttpResponse(content_type='text/csv')
@@ -2055,6 +2874,15 @@ def capital_download(request):
 
 
 def signup_traditional(request):
+    """
+    Handle user signup.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -2091,11 +2919,31 @@ def signup_traditional(request):
 
 
 def signupfollowup(request):
+    """
+    Handle user signup follow-up.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     print(settings.EMAIL_HOST_USER)
     return render(request, 'core/signup-followup.html')
 
 
 def activate(request, uidb64, token):
+    """
+    Activate user account.
+
+    Args:
+        request: The request object.
+        uidb64: The user ID encoded in base64.
+        token: The token.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         #uid = str(urlsafe_base64_decode(uidb64))
@@ -2117,21 +2965,43 @@ def activate(request, uidb64, token):
 
 # Discussion Room
 def discussion_room(request):
+    """
+    Render the discussion room page.
+    """
     return render(request, 'core/discussion_room.html')
 
 # NLP Room 1
 def nlp_datapoints(request):
+    """
+    Render the NLP data points page.
+    """
     return render(request, 'core/nlp_datapoints.html')
 
 # NLP Room 2
 def nlp_datapoints_2(request):
+    """
+    Render the NLP data points page.
+    """
     return render(request, 'core/nlp_datapoints_2.html')
 
 def account_activation_sent(request):
+    """
+    Render the account activation sent page.
+    """
     return render(request, 'core/account_activation_sent.html')
 
 
 def variablehierarchysetting(request):
+    """
+    Handle variable hierarchy setting. This is a view for the admin to set the
+    variable hierarchy.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     my_vars = dic_of_all_vars()
     my_vars_keys = list(my_vars.keys())
     my_vars_good_keys = []
@@ -2266,6 +3136,15 @@ def variablehierarchysetting(request):
 
 ###############
 def do_zotero(results):
+    """
+    Process the results from the Zotero API.
+
+    Args:
+        results: The results from the Zotero API.
+
+    Returns:
+        list: A list of dictionaries containing the processed data.
+    """
     import re
     mother_ref_dic = []
     for i, item in enumerate(results):
@@ -2427,6 +3306,15 @@ def do_zotero(results):
     return mother_ref_dic
 
 def do_zotero_manually(results):
+    """
+    Process the results from the Zotero API.
+
+    Args:
+        results: The results from the Zotero API.
+
+    Returns:
+        list: A list of dictionaries containing the processed data.
+    """
     mother_ref_dic = []
     for i, item in enumerate(results):
 
@@ -2463,7 +3351,13 @@ def do_zotero_manually(results):
 
 def update_citations_from_inside_zotero_update():
     """
-    this function gets all the references and build a citation for them
+    This function takes all the references and build a citation for them.
+
+    Args:
+        None
+
+    Returns:
+        None
     """
     from datetime import datetime
     all_refs = Reference.objects.all()
@@ -2478,6 +3372,16 @@ def update_citations_from_inside_zotero_update():
 
 
 def synczoteromanually(request):
+    """
+    This function is used to manually input the references from the Zotero data
+    available in the manual_input_refs.py file into the database.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     print("Hallo Zotero Manually")
     from .manual_input_refs import manual_input_refs 
 
@@ -2488,6 +3392,15 @@ def synczoteromanually(request):
     return render (request, 'core/references/synczotero.html', context)
 
 def synczotero(request):
+    """
+    This function is used to sync the Zotero data with the database.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     print("Hallo Zotero")
 
     from pyzotero import zotero
@@ -2507,6 +3420,18 @@ def synczotero(request):
     return render (request, 'core/references/synczotero.html', context)
 
 def synczotero100(request):
+    """
+    This function is used to sync the Zotero data with the database.
+
+    Note:
+        This function syncs only 100 references.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     print("Hallo Zotero")
 
     from pyzotero import zotero
@@ -2550,7 +3475,13 @@ def synczotero100(request):
 
 def update_citations(request):
     """
-    this function gets all the references and build a citation for them
+    This function takes all the references and build a citation for them.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
     """
     all_refs = Reference.objects.all()
     for ref in all_refs:
@@ -2562,6 +3493,19 @@ def update_citations(request):
 
 @require_GET
 def polity_filter_options_view(request):
+    """
+    This view returns the options for the polity filter.
+
+    Note:
+        The view is decorated with the `require_GET` decorator to ensure that
+        only GET requests are allowed.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        JsonResponse: The JSON response.
+    """
     search_text = request.GET.get('search_text', '')
 
     # Filter the options based on the search text
@@ -2574,6 +3518,16 @@ def polity_filter_options_view(request):
 
 
 def download_oldcsv(request, file_name):
+    """
+    Download a CSV file.
+
+    Args:
+        request: The request object.
+        file_name (str): The name of the file to download.
+
+    Returns:
+        FileResponse: The file response.
+    """
     file_path = os.path.join(settings.STATIC_ROOT, 'csvfiles', file_name)
     response = FileResponse(open(file_path, 'rb'))
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
@@ -2582,6 +3536,15 @@ def download_oldcsv(request, file_name):
 
 
 def seshatindex(request):
+    """
+    Render the Seshat landing page.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     app_names = ['general','sc', 'wf', 'crisisdb']  # Replace with your app name
     context = {
         'pols_data': [],
@@ -2719,6 +3682,16 @@ def seshatindex(request):
 
 
 def get_polity_data_single(polity_id):
+    """
+    Get the data for a single polity. The returned data includes the number of
+    records for each app (general, sc, wf, hs, cc, pt).
+
+    Args:
+        polity_id: The ID of the polity.
+
+    Returns:
+        dict: The data for the polity.
+    """
     from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
     from django.apps import apps
 
@@ -2755,6 +3728,18 @@ def get_polity_data_single(polity_id):
 
 @permission_required('core.view_capital')
 def download_csv_all_polities(request):
+    """
+    Download a CSV file containing all polities.
+
+    Note:
+        This view is restricted to users with the 'view_capital' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     # Create a response object with CSV content type
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -2788,6 +3773,18 @@ def download_csv_all_polities(request):
 
 
 def get_or_create_citation(reference, page_from, page_to):
+    """
+    Get or create a Citation instance. If a matching citation already exists, it
+    is returned; otherwise, a new one is created.
+
+    Args:
+        reference (Reference): The reference.
+        page_from (int): The starting page number.
+        page_to (int): The ending page number.
+
+    Returns:
+        Citation: The Citation instance.
+    """
     # Check if a matching citation already exists
     existing_citation = Citation.objects.filter(
         ref=reference,
@@ -2808,6 +3805,19 @@ from .forms import SeshatCommentPartForm, SeshatCommentForm2
 from .models import SeshatCommentPart, Citation
 
 def seshatcommentpart_create_view_old(request):
+    """
+    Create a new SeshatCommentPart instance.
+
+    Note:
+        The old view of the SeshatCommentPart creation is not currently used in
+        the application.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
         if form.is_valid():
@@ -2850,6 +3860,15 @@ from django.shortcuts import render, redirect
 from .models import SeshatCommentPart, Citation, SeshatComment
 
 def seshatcommentpart_create_view(request):
+    """
+    Create a new SeshatCommentPart instance.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
         if form.is_valid():
@@ -2918,9 +3937,655 @@ def seshatcommentpart_create_view(request):
 
     return render(request, 'core/seshatcomments/seshatcommentpart_create.html', {'form': form})
 
+
+def get_provinces(selected_base_map_gadm='province'):
+    """
+    Get all the province or country shapes for the map base layer.
+
+    Args:
+        selected_base_map_gadm (str): The selected base map GADM level.
+
+    Returns:
+        list: A list of dictionaries containing the province or country shapes.
+    """
+
+    # Use the appropriate Django ORM query based on the selected baseMapGADM value
+    if selected_base_map_gadm == 'country':
+        rows = GADMCountries.objects.values_list('geom', 'COUNTRY')
+        provinces = [
+            {
+                'aggregated_geometry': GEOSGeometry(geom).geojson,
+                'country': country
+            }
+            for geom, country in rows if geom is not None
+        ]
+    elif selected_base_map_gadm == 'province':
+        rows = GADMProvinces.objects.values_list('geom', 'COUNTRY', 'NAME_1', 'ENGTYPE_1')
+        provinces = [
+            {
+                'aggregated_geometry': GEOSGeometry(geom).geojson,
+                'country': country,
+                'province': name,
+                'province_type': engtype
+            }
+            for geom, country, name, engtype in rows if geom is not None
+        ]
+
+    return provinces
+
+def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=80, override_earliest_year=None, override_latest_year=None, geometries=True):
+    """
+    This function returns the polity shapes and other content for the map.
+    Only one of displayed_year or seshat_id should be set; not both.
+
+    Note:
+        seshat_id in Cliopatria is new_name in Polity.
+
+    Args:
+        displayed_year (str): The year to display the polities for. "all" will return all polities. Any given year will return polities that were active in that year.
+        seshat_id (str): The seshat_id of the polity to display. If a value is provided, only the shapes for that polity being returned.
+
+    Returns:
+        dict: The content for the polity shapes.
+    """
+
+    if displayed_year != "all" and seshat_id != "all":
+        raise ValueError("Only one of displayed_year or seshat_id should be set not both.")
+
+    if displayed_year != "all":
+        rows = Cliopatria.objects.filter(polity_start_year__lte=displayed_year, polity_end_year__gte=displayed_year)
+    elif seshat_id != "all":
+        # Note: this query assumes that some polities have multiple seshat_ids separated by a semicolon, but none are included inside a different longer seshat_id
+        rows = Cliopatria.objects.filter(seshat_id__contains=seshat_id)
+    else:
+        rows = Cliopatria.objects.all()
+
+    if geometries:
+        # Convert 'geom' to GeoJSON in the database query
+        rows = rows.annotate(geom_json=AsGeoJSON('geom'))
+        # Filter the rows to return
+        rows = rows.values('id', 'seshat_id', 'name', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'geom_json', 'components', 'member_of', 'wikipedia_name') 
+    else:
+        rows = rows.values('id', 'seshat_id', 'name', 'start_year', 'end_year', 'polity_start_year', 'polity_end_year', 'colour', 'area', 'components', 'member_of', 'wikipedia_name')
+    shapes = list(rows)
+
+    seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id']]
+
+    polities = Polity.objects.filter(new_name__in=seshat_ids).values('new_name', 'id', 'long_name')
+
+    polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in polities]
+
+    seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in polity_info}
+
+    if 'migrate' not in sys.argv:
+        result = Cliopatria.objects.aggregate(
+            min_year=Min('polity_start_year'), 
+            max_year=Max('polity_end_year')
+        )
+        earliest_year = result['min_year']
+        latest_year = result['max_year']
+        initial_displayed_year = earliest_year
+    else:
+        earliest_year, latest_year = 2024, 2024  # These are not used in the web app, but are set to avoid errors when running migrations
+        initial_displayed_year = -3400
+
+    # Overrides can be set to restrict the years shown on the map
+    if override_earliest_year is not None:
+        earliest_year = override_earliest_year
+    if override_latest_year is not None:
+        latest_year = override_latest_year
+
+    if displayed_year == "all":
+        displayed_year = initial_displayed_year 
+
+    if seshat_id != "all":  # Used in the polity pages
+        earliest_year = min([shape['start_year'] for shape in shapes])
+        displayed_year = earliest_year
+        latest_year = max([shape['end_year'] for shape in shapes])
+
+    # Get the years for the tick marks on the year slider
+    tick_years = [round(year) for year in np.linspace(earliest_year, latest_year, num=tick_number)]
+
+    content = {
+        'shapes': shapes,
+        'earliest_year': earliest_year,
+        'display_year': displayed_year,
+        'tick_years': json.dumps(tick_years),
+        'latest_year': latest_year,
+        'seshat_id_page_id': seshat_id_page_id
+    }
+    if hasattr(settings, 'CESIUM_ION_ACCESS_TOKEN'):
+        content['CESIUM_ION_ACCESS_TOKEN'] = settings.CESIUM_ION_ACCESS_TOKEN  # This is used in the template to access Cesium Ion
+
+    return content
+
+def get_all_polity_capitals():
+    """
+    Get capital cities for polities that have them.
+
+    Returns:
+        dict: A dictionary containing the capital cities for polities.
+    """
+    from seshat.apps.core.templatetags.core_tags import get_polity_capitals
+
+    # Try to get the capitals from the cache
+    all_capitals_info = cache.get('all_capitals_info')
+
+    if all_capitals_info is None:
+        all_capitals_info = {}
+        for polity in Polity.objects.all():
+            caps = get_polity_capitals(polity.id)
+
+            if caps:
+                # Set the start and end years to be the same as the polity where missing
+                modified_caps = caps
+                i = 0
+                for capital_info in caps:
+                    if capital_info['year_from'] == None:
+                        modified_caps[i]['year_from'] = polity.start_year
+                    if capital_info['year_to'] == None:
+                        modified_caps[i]['year_to'] = polity.end_year
+                    i+=1
+                all_capitals_info[polity.new_name] = modified_caps
+        # Store the capitals in the cache for 1 hour
+        cache.set('all_capitals_info', all_capitals_info, 3600)
+
+    return all_capitals_info
+
+def assign_variables_to_shapes(shapes, app_map):
+    """
+    Assign the absent/present variables to the shapes.
+
+    Args:
+        shapes (list): The shapes to assign the variables to.
+        app_map (dict): A dictionary mapping app names to their long names.
+
+    Returns:
+        tuple: A tuple containing the shapes and the variables.
+    """
+    from seshat.apps.sc.models import ABSENT_PRESENT_CHOICES  # These should be the same in the other apps
+    # Try to get the variables from the cache
+    variables = cache.get('variables')
+    if variables is None:
+        variables = {}
+        for app_name, app_name_long in app_map.items():
+            module = apps.get_app_config(app_name)
+            variables[app_name_long] = {}
+            models = list(module.get_models())
+            for model in models:
+                fields = list(model._meta.get_fields())
+                for field in fields:
+                    if hasattr(field, 'choices') and field.choices == ABSENT_PRESENT_CHOICES:
+                        # Get the variable name and formatted name
+                        if field.name == 'coded_value':  # Use the class name lower case for rt models where coded_value is used
+                            var_name = model.__name__.lower()
+                            var_long = getattr(model._meta, 'verbose_name_plural', model.__name__.lower())
+                            if var_name == var_long:
+                                variable_formatted = var_name.capitalize().replace('_', ' ')
+                            else:
+                                variable_formatted = var_long
+                        else:  # Use the field name for other models
+                            var_name = field.name
+                            variable_formatted = field.name.capitalize().replace('_', ' ')
+                        variables[app_name_long][var_name] = {}
+                        variables[app_name_long][var_name]['formatted'] = variable_formatted
+                        # Get the variable subsection and subsubsection if they exist
+                        variable_full_name = variable_formatted
+                        instance = model()
+                        if hasattr(instance, 'subsubsection'):
+                            variable_full_name = instance.subsubsection() + ': ' + variable_full_name
+                        if hasattr(instance, 'subsection'):
+                            variable_full_name = instance.subsection() + ': ' + variable_full_name 
+                        variables[app_name_long][var_name]['full_name'] = variable_full_name
+
+        # Store the variables in the cache for 1 hour
+        cache.set('variables', variables, 3600)
+
+    for app_name, app_name_long in app_map.items():
+
+        app_variables_list = list(variables[app_name_long].keys())
+        module_path = 'seshat.apps.' + app_name + '.models'
+        module = __import__(module_path, fromlist=[variable.capitalize() for variable in app_variables_list])
+        variable_classes = {variable: getattr(module, variable.capitalize()) for variable in app_variables_list}
+
+        seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id'] != 'none']
+        polities = {polity.new_name: polity for polity in Polity.objects.filter(new_name__in=seshat_ids)}
+
+        for variable, class_ in variable_classes.items():
+            variable_formatted = variables[app_name_long][variable]['formatted']
+            variable_objs = {obj.polity_id: obj for obj in class_.objects.filter(polity_id__in=polities.values())}
+
+            all_variable_objs = {}
+            for obj in class_.objects.filter(polity_id__in=polities.values()):
+                try:
+                    variable_value = getattr(obj, variable)
+                except AttributeError:  # For rt models where coded_value is used
+                    variable_value = getattr(obj, 'coded_value')
+                if obj.polity_id not in all_variable_objs:
+                    all_variable_objs[obj.polity_id] = {}
+                all_variable_objs[obj.polity_id][variable_value] = [obj.year_from, obj.year_to]
+
+            for shape in shapes:
+                shape[variable_formatted] = 'uncoded'  # Default value
+                polity = polities.get(shape['seshat_id'])
+                if polity:
+                    variable_obj = variable_objs.get(polity.id)
+                    try:
+                        variable_obj_dict = all_variable_objs[polity.id]
+                    except KeyError:
+                        pass
+                    if variable_obj:
+                        try:
+                            shape[variable_formatted] = getattr(variable_obj, variable)  # absent/present choice         
+                            shape[variable_formatted + '_dict'] = variable_obj_dict
+                        except AttributeError:  # For rt models where coded_value is used
+                            shape[variable_formatted] = getattr(variable_obj, 'coded_value')
+                            shape[variable_formatted + '_dict'] = variable_obj_dict
+                else:
+                    shape[variable_formatted] = 'no seshat page'
+
+    return shapes, variables
+
+def assign_categorical_variables_to_shapes(shapes, variables):
+    """
+    Assign the categorical variables to the shapes.
+
+    Note:
+        Currently only language and religion variables are implemented.
+
+    Args:
+        shapes (list): The shapes to assign the variables to.
+        variables (dict): The variables to assign to the shapes.
+
+    Returns:
+        tuple: A tuple containing the shapes and the variables.
+    """
+    # Add categorical variables to the variables dictionary
+    variables['General Variables'] = {
+        'polity_linguistic_family': {'formatted': 'linguistic_family', 'full_name': 'Linguistic Family'},
+        'polity_language_genus': {'formatted': 'language_genus', 'full_name': 'Language Genus'},
+        'polity_language': {'formatted': 'language', 'full_name': 'Language'},
+        'polity_religious_tradition': {'formatted': 'religious_tradition', 'full_name': 'Religious Tradition'},
+        'polity_religion_genus': {'formatted': 'religion_genus', 'full_name': 'Religion Genus'},
+        'polity_religion_family': {'formatted': 'religion_family', 'full_name': 'Religion Family'},
+        'polity_religion': {'formatted': 'religion', 'full_name': 'Religion'},
+        'polity_alternate_religion_genus': {'formatted': 'alternate_religion_genus', 'full_name': 'Alternate Religion Genus'},
+        'polity_alternate_religion_family': {'formatted': 'alternate_religion_family', 'full_name': 'Alternate Religion Family'},
+        'polity_alternate_religion': {'formatted': 'alternate_religion', 'full_name': 'Alternate Religion'},
+    }
+
+    # Fetch all polities and store them in a dictionary for quick access
+    polities = {polity.new_name: polity for polity in Polity.objects.all()}
+
+    # Fetch all linguistic families, language genuses, and languages and store them in dictionaries for quick access
+    linguistic_families = {}
+    for lf in Polity_linguistic_family.objects.all():
+        if lf.polity_id not in linguistic_families:
+            linguistic_families[lf.polity_id] = []
+        linguistic_families[lf.polity_id].append(lf)
+
+    language_genuses = {}
+    for lg in Polity_language_genus.objects.all():
+        if lg.polity_id not in language_genuses:
+            language_genuses[lg.polity_id] = []
+        language_genuses[lg.polity_id].append(lg)
+
+    languages = {}
+    for l in Polity_language.objects.all():
+        if l.polity_id not in languages:
+            languages[l.polity_id] = []
+        languages[l.polity_id].append(l)
+
+    religious_traditions = {}
+    for rt in Polity_religious_tradition.objects.all():
+        if rt.polity_id not in religious_traditions:
+            religious_traditions[rt.polity_id] = []
+        religious_traditions[rt.polity_id].append(rt)
+
+    religion_genuses = {}
+    for rg in Polity_religion_genus.objects.all():
+        if rg.polity_id not in religion_genuses:
+            religion_genuses[rg.polity_id] = []
+        religion_genuses[rg.polity_id].append(rg)
+
+    religion_families = {}
+    for rf in Polity_religion_family.objects.all():
+        if rf.polity_id not in religion_families:
+            religion_families[rf.polity_id] = []
+        religion_families[rf.polity_id].append(rf)
+
+    religions = {}
+    for r in Polity_religion.objects.all():
+        if r.polity_id not in religions:
+            religions[r.polity_id] = []
+        religions[r.polity_id].append(r)
+
+    alternate_religion_genuses = {}
+    for arg in Polity_alternate_religion_genus.objects.all():
+        if arg.polity_id not in alternate_religion_genuses:
+            alternate_religion_genuses[arg.polity_id] = []
+        alternate_religion_genuses[arg.polity_id].append(arg)
+
+    alternate_religion_families = {}
+    for arf in Polity_alternate_religion_family.objects.all():
+        if arf.polity_id not in alternate_religion_families:
+            alternate_religion_families[arf.polity_id] = []
+        alternate_religion_families[arf.polity_id].append(arf)
+
+    alternate_religions = {}
+    for ar in Polity_alternate_religion.objects.all():
+        if ar.polity_id not in alternate_religions:
+            alternate_religions[ar.polity_id] = []
+        alternate_religions[ar.polity_id].append(ar)
+
+    # Add language variable info to polity shapes
+    for shape in shapes:
+        shape['linguistic_family'] = []
+        shape['linguistic_family_dict'] = {}
+        shape['language_genus'] = []
+        shape['language_genus_dict'] = {}
+        shape['language'] = []
+        shape['language_dict'] = {}
+        shape['religious_tradition'] = []
+        shape['religious_tradition_dict'] = {}
+        shape['religion_genus'] = []
+        shape['religion_genus_dict'] = {}
+        shape['religion_family'] = []
+        shape['religion_family_dict'] = {}
+        shape['religion'] = []
+        shape['religion_dict'] = {}
+        shape['alternate_religion_genus'] = []
+        shape['alternate_religion_genus_dict'] = {}
+        shape['alternate_religion_family'] = []
+        shape['alternate_religion_family_dict'] = {}
+        shape['alternate_religion'] = []
+        shape['alternate_religion_dict'] = {}
+        if shape['seshat_id'] != 'none':  # Skip shapes with no seshat_id
+            polity = polities.get(shape['seshat_id'])
+            if polity:
+                # Get the variables for the polity
+                shape['linguistic_family'].extend([lf.linguistic_family for lf in linguistic_families.get(polity.id, [])])
+                shape['language_genus'].extend([lg.language_genus for lg in language_genuses.get(polity.id, [])])
+                shape['language'].extend([l.language for l in languages.get(polity.id, [])])
+                shape['religious_tradition'].extend([rt.religious_tradition for rt in religious_traditions.get(polity.id, [])])
+                shape['religion_genus'].extend([rg.religion_genus for rg in religion_genuses.get(polity.id, [])])
+                shape['religion_family'].extend([rf.religion_family for rf in religion_families.get(polity.id, [])])
+                shape['religion'].extend([r.religion for r in religions.get(polity.id, [])])
+                shape['alternate_religion_genus'].extend([arg.alternate_religion_genus for arg in alternate_religion_genuses.get(polity.id, [])])
+                shape['alternate_religion_family'].extend([arf.alternate_religion_family for arf in alternate_religion_families.get(polity.id, [])])
+                shape['alternate_religion'].extend([ar.alternate_religion for ar in alternate_religions.get(polity.id, [])])
+
+                # Get the years for the variables for the polity
+                shape['linguistic_family_dict'].update({lf.linguistic_family: [lf.year_from, lf.year_to] for lf in linguistic_families.get(polity.id, [])})
+                shape['language_genus_dict'].update({lg.language_genus: [lg.year_from, lg.year_to] for lg in language_genuses.get(polity.id, [])})
+                shape['language_dict'].update({l.language: [l.year_from, l.year_to] for l in languages.get(polity.id, [])})
+                shape['religious_tradition_dict'].update({rt.religious_tradition: [rt.year_from, rt.year_to] for rt in religious_traditions.get(polity.id, [])})
+                shape['religion_genus_dict'].update({rg.religion_genus: [rg.year_from, rg.year_to] for rg in religion_genuses.get(polity.id, [])})
+                shape['religion_family_dict'].update({rf.religion_family: [rf.year_from, rf.year_to] for rf in religion_families.get(polity.id, [])})
+                shape['religion_dict'].update({r.religion: [r.year_from, r.year_to] for r in religions.get(polity.id, [])})
+                shape['alternate_religion_genus_dict'].update({arg.alternate_religion_genus: [arg.year_from, arg.year_to] for arg in alternate_religion_genuses.get(polity.id, [])})
+                shape['alternate_religion_family_dict'].update({arf.alternate_religion_family: [arf.year_from, arf.year_to] for arf in alternate_religion_families.get(polity.id, [])})
+                shape['alternate_religion_dict'].update({ar.alternate_religion: [ar.year_from, ar.year_to] for ar in alternate_religions.get(polity.id, [])})
+
+        # If no linguistic family, language genus, or language was found, append 'Uncoded'
+        polity = polities.get(shape['seshat_id'])
+        if polity:
+            if not shape['linguistic_family']:
+                shape['linguistic_family'].append('Uncoded')
+            if not shape['language_genus']:
+                shape['language_genus'].append('Uncoded')
+            if not shape['language']:
+                shape['language'].append('Uncoded')
+            if not shape['religious_tradition']:
+                shape['religious_tradition'].append('Uncoded')
+            if not shape['religion_genus']:
+                shape['religion_genus'].append('Uncoded')
+            if not shape['religion_family']:
+                shape['religion_family'].append('Uncoded')
+            if not shape['religion']:
+                shape['religion'].append('Uncoded')
+            if not shape['alternate_religion_genus']:
+                shape['alternate_religion_genus'].append('Uncoded')
+            if not shape['alternate_religion_family']:
+                shape['alternate_religion_family'].append('Uncoded')
+            if not shape['alternate_religion']:
+                shape['alternate_religion'].append('Uncoded')
+        else:
+            if not shape['linguistic_family']:
+                shape['linguistic_family'].append('No Seshat page')
+            if not shape['language_genus']:
+                shape['language_genus'].append('No Seshat page')
+            if not shape['language']:
+                shape['language'].append('No Seshat page') 
+            if not shape['religious_tradition']:
+                shape['religious_tradition'].append('No Seshat page')
+            if not shape['religion_genus']:
+                shape['religion_genus'].append('No Seshat page')
+            if not shape['religion_family']:
+                shape['religion_family'].append('No Seshat page')
+            if not shape['religion']:
+                shape['religion'].append('No Seshat page')
+            if not shape['alternate_religion_genus']:
+                shape['alternate_religion_genus'].append('No Seshat page')
+            if not shape['alternate_religion_family']:
+                shape['alternate_religion_family'].append('No Seshat page')
+            if not shape['alternate_religion']:
+                shape['alternate_religion'].append('No Seshat page') 
+
+    return shapes, variables
+
+# Get all the variables used in the map view
+app_map = {
+    'sc': 'Social Complexity Variables',
+    'wf': 'Warfare Variables (Military Technologies)',
+    # 'rt': 'Religion Tolerance',     # TODO: Implemented but temporarily restricted. Uncomment when ready.
+    # 'general': 'General Variables', # TODO: Partially implmented and hardcoded in assign_categorical_variables_to_shapes.
+}
+
+# Get sorted lists of choices for each categorical variable
+if 'test' not in sys.argv:  # Skip this if running tests as it breaks GitHub actions
+    POLITY_RELIGIOUS_TRADITION_CHOICES = list(set(Polity_religious_tradition.objects.values_list('religious_tradition', flat=True).distinct()))
+else:
+    POLITY_RELIGIOUS_TRADITION_CHOICES = ['test', 'choices']
+categorical_variables = {
+    'linguistic_family': sorted([x[0] for x in POLITY_LINGUISTIC_FAMILY_CHOICES]),
+    'language_genus': sorted([x[0] for x in POLITY_LANGUAGE_GENUS_CHOICES]),
+    'language': sorted([x[0] for x in POLITY_LANGUAGE_CHOICES]),
+    'religious_tradition': sorted([x for x in POLITY_RELIGIOUS_TRADITION_CHOICES]),
+    'religion_genus': sorted([x[0] for x in POLITY_RELIGION_GENUS_CHOICES]),
+    'religion_family': sorted([x[0] for x in POLITY_RELIGION_FAMILY_CHOICES]),
+    'religion': sorted([x[0] for x in POLITY_RELIGION_CHOICES]),
+    'alternate_religion_genus': sorted([x[0] for x in POLITY_RELIGION_GENUS_CHOICES]),
+    'alternate_religion_family': sorted([x[0] for x in POLITY_RELIGION_FAMILY_CHOICES]),
+    'alternate_religion': sorted([x[0] for x in POLITY_RELIGION_CHOICES]),
+}
+
+def random_polity_shape(from_selection=True):
+    """
+    This function is used to get a pseudo-random polity for the map_view_initial and map_view_initial views to display.
+    It selects a polity with a large area and which has a seshat_id.
+
+    If from_selection is true, choose a polity from a pre-approved list.
+    TODO: if the loading time of map_view_initial becomes sufficiently fast, we could set from_selection to False.
+
+    Returns:
+        tuple: A tuple containing the start year and seshat_id.
+    """
+    if from_selection:  # These are polities where loading all the shapes for their start year is fast
+        selected_polities = [
+            'sy_umayyad_cal',
+            'it_roman_principate',
+            'de_empire_3',
+            'tr_east_roman_emp',
+            'ir_seleucid_emp',
+            'iq_abbasid_cal_1',
+            'ir_seljuk_sultanate',
+            'cn_five_dyn',
+            'fr_carolingian_emp_1',
+            'cn_tang_dyn_1',
+            'ir_sassanid_emp_2',
+        ]
+        # Select a random polity from the list
+        seshat_id = random.choice(selected_polities)
+        shape = Cliopatria.objects.filter(seshat_id=seshat_id).first()
+    else:
+        max_id = Cliopatria.objects.filter(seshat_id__isnull=False).aggregate(max_id=Max("id"))['max_id']
+        while True:
+            pk = random.randint(1, max_id)
+            shape = Cliopatria.objects.filter(seshat_id__isnull=False, id=pk).first()
+            if shape:
+                if shape.seshat_id and shape.area > 600000:  # Big empires only
+                    break
+    return shape.start_year, shape.seshat_id
+
+# World map default settings
+world_map_initial_displayed_year = 117
+world_map_initial_polity = 'it_roman_principate'
+
+import time
+
+def map_view_initial(request):
+    global world_map_initial_displayed_year, world_map_initial_polity
+    """
+    This view is used to display a map with polities plotted on it. The initial
+    view just loads a polity with a seshat_id picked at random and sets the
+    display year to that polity start year.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
+
+    # Check if 'year' parameter is different from the world_map_initial_displayed_year or not present then redirect
+    if 'year' in request.GET:
+        if request.GET['year'] != str(world_map_initial_displayed_year):
+            return redirect('{}?year={}'.format(request.path, world_map_initial_displayed_year))
+    else:
+        # Select a random polity for the initial view
+        if 'test' not in sys.argv:
+            world_map_initial_displayed_year, world_map_initial_polity = random_polity_shape()
+        return redirect('{}?year={}'.format(request.path, world_map_initial_displayed_year))
+
+    content = get_polity_shape_content(displayed_year=world_map_initial_displayed_year)
+
+    # Set default values for these which are set properly in the subsequent map views
+    content['categorical_variables'] = {}
+    content['variables'] = {}
+    content['all_capitals_info'] = {}
+
+    # Set the initial polity to highlight
+    content['world_map_initial_polity'] = world_map_initial_polity
+
+    # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
+    content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
+
+    return render(request,
+                  'core/world_map.html',
+                  content
+                  )
+
+def map_view_all(request):
+    """
+    This view is used to display a map with polities plotted on it. The view
+    loads all polities for the range of years.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        JsonResponse: The HTTP response with serialized JSON.
+    """
+
+    content = get_polity_shape_content()
+
+    # Set default values for these which are set properly in map_view_all_with_vars
+    content['variables'] = {}
+    content['categorical_variables'] = {}
+
+    # Load the capital cities for polities that have them
+    content['all_capitals_info'] = {}
+    # content['all_capitals_info'] = get_all_polity_capitals()  # This is currently disabled as it is not used in the frontend
+
+    # Set the initial polity to highlight
+    content['world_map_initial_polity'] = world_map_initial_polity
+
+    # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
+    content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
+
+    return JsonResponse(content)
+
+def map_view_all_with_vars(request):
+    """
+    This view is used to display a map with polities plotted on it. The view
+    loads all polities for the range of years with added variables for each polity shape.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        JsonResponse: The HTTP response with serialized JSON.
+    """
+
+    content = get_polity_shape_content(geometries=False)
+
+    # Add in the present/absent variables to view for the shapes
+    content['shapes'], content['variables'] = assign_variables_to_shapes(content['shapes'], app_map)
+
+    # Add in the categorical variables to view for the shapes
+    content['shapes'], content['variables'] = assign_categorical_variables_to_shapes(content['shapes'], content['variables'])
+
+    # Load the capital cities for polities that have them
+    content['all_capitals_info'] = {}
+    # content['all_capitals_info'] = get_all_polity_capitals()  # This is currently disabled as it is not used in the frontend
+    
+    # Add categorical variable choices to content for dropdown selection
+    content['categorical_variables'] = categorical_variables
+
+    # Set the initial polity to highlight
+    content['world_map_initial_polity'] = world_map_initial_polity
+
+    # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
+    content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
+
+    return JsonResponse(content)
+
+def provinces_and_countries_view(request):
+    """
+    This view is used to get the provinces and countries for the map.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        JsonResponse: The HTTP response with serialized JSON.
+    """
+    provinces = get_provinces()
+    countries = get_provinces(selected_base_map_gadm='country')
+
+    content = {
+        'provinces': provinces,
+        'countries': countries,
+    }
+
+    return JsonResponse(content)
 ######################
 
 def update_seshat_comment_part_view(request, pk):
+    """
+    View to update a SeshatCommentPart instance.
+
+    Note:
+        This view can handle POST and GET requests.
+
+    Args:
+        request: The request object.
+        pk: The primary key of the SeshatCommentPart instance.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     comment_part = SeshatCommentPart.objects.get(id=pk)
     parent_comment_id = comment_part.comment.id
     subcomment_order = comment_part.comment_order
@@ -3156,7 +4821,20 @@ def update_seshat_comment_part_view(request, pk):
 @login_required
 def create_a_comment_with_a_subcomment_new(request, app_name, model_name, instance_id):
     """
-    Create a comment and assign it to a model instance.
+    Create a Comment and assign it to a model instance.
+
+    Note:
+        This view has the login_required decorator to ensure that only
+        logged-in users can access it.
+
+    Args:
+        request: The request object.
+        app_name: The name of the app containing the model.
+        model_name: The name of the model.
+        instance_id: The id of the model instance.
+
+    Returns:
+        HttpResponse: The HTTP response.
     """
     # Get the model class dynamically using the provided model_name
     #model_class = globals()[model_name]
@@ -3347,7 +5025,19 @@ def create_a_comment_with_a_subcomment_newer(request, app_name, model_name, inst
 @permission_required('core.add_seshatprivatecommentpart')
 def create_a_private_comment_with_a_private_subcomment_new(request, app_name, model_name, instance_id):
     """
-    Create a Privatecomment and assign it to a model instance.
+    Create a PrivateComment and assign it to a model instance.
+
+    Note:
+        This view is only accessible to users with the 'add_seshatprivatecommentpart' permission.
+
+    Args:
+        request: The request object.
+        app_name: The name of the app containing the model.
+        model_name: The name of the model.
+        instance_id: The id of the model instance.
+
+    Returns:
+        HttpResponse: The HTTP response.
     """
     # Get the model class dynamically using the provided model_name
     #model_class = globals()[model_name]
@@ -3406,6 +5096,9 @@ def create_a_private_comment_with_a_private_subcomment_new(request, app_name, mo
     return redirect('seshatprivatecomment-update', pk=private_comment_instance.id)
 
 class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin):
+    """
+    View to update a SeshatPrivateComment instance.
+    """
     model = SeshatPrivateComment
     form_class = SeshatPrivateCommentForm
     template_name = "core/seshatcomments/seshatprivatecomment_update.html"
@@ -3413,6 +5106,18 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
 
 
     def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+
+        Args:
+            request: The request object.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            HttpResponse: The HTTP response.
+        """
         form = self.form()
         if form.is_valid():
             #print('hereeeeeeeeeeeee')
@@ -3427,7 +5132,15 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         
     def get_another_form(self, request, *args, **kwargs):
         """
-        Override this method to return the specific instance of another_form.
+        Return the data from another form in the SeshatPrivateCommentPartForm.
+
+        Args:
+            request: The request object.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            SeshatPrivateCommentPartForm: The form instance.
         """
         # Implement this method to return the specific instance of another_form
         # For example:
@@ -3436,6 +5149,17 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         return SeshatPrivateCommentPartForm(request.POST, request.another_form)
 
     def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
         context = super().get_context_data(**kwargs)
         my_apps=['core', 'rt', 'general', 'sc', 'wf', 'crisisdb']
         my_app_models = {name: apps.all_models[name] for name in my_apps}
@@ -3513,6 +5237,18 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
 
 #############################
 def seshatcomment_create_view(request):
+    """
+    View to create a SeshatComment instance.
+
+    Note:
+        This view can handle POST and GET requests.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     if request.method == 'POST':
         form = SeshatCommentForm2(request.POST)
         if form.is_valid():
@@ -3585,6 +5321,18 @@ def seshatcomment_create_view(request):
 
 
 def search_view(request):
+    """
+    View to search for a polity.
+
+    Note:
+        This view can handle GET requests.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     search_term = request.GET.get('search', '')
     if search_term:
         try:
@@ -3600,6 +5348,18 @@ def search_view(request):
     return redirect('seshat-index')  # Redirect to home or any other page if no search term is provided or no match is found
 
 def search_suggestions(request):
+    """
+    View to get search suggestions for a polity.
+
+    Note:
+        This view can handle GET requests.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The HTTP response.
+    """
     search_term = request.GET.get('search', '')
     polities = Polity.objects.filter(
         Q(name__icontains=search_term) | 
@@ -3621,3 +5381,5 @@ def xxyyzz(request, com_id):
     return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
 
 
+def cliopatria(request):
+    return render(request, 'core/cliopatria.html')

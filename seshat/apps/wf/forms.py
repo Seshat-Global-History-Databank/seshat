@@ -42,7 +42,13 @@ commonwidgets = {
 }
 
 class Long_wallForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Long_wall
         fields = commonfields.copy()
         fields.append('long_wall_from')
@@ -55,7 +61,13 @@ class Long_wallForm(forms.ModelForm):
 
 
 class CopperForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Copper
         fields = commonfields.copy()
         fields.append('copper')
@@ -66,7 +78,13 @@ class CopperForm(forms.ModelForm):
         
 
 class BronzeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Bronze
         fields = commonfields.copy()
         fields.append('bronze')
@@ -77,7 +95,13 @@ class BronzeForm(forms.ModelForm):
         
 
 class IronForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Iron
         fields = commonfields.copy()
         fields.append('iron')
@@ -88,7 +112,13 @@ class IronForm(forms.ModelForm):
         
 
 class SteelForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Steel
         fields = commonfields.copy()
         fields.append('steel')
@@ -99,7 +129,13 @@ class SteelForm(forms.ModelForm):
         
 
 class JavelinForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Javelin
         fields = commonfields.copy()
         fields.append('javelin')
@@ -110,7 +146,13 @@ class JavelinForm(forms.ModelForm):
         
 
 class AtlatlForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Atlatl
         fields = commonfields.copy()
         fields.append('atlatl')
@@ -121,7 +163,13 @@ class AtlatlForm(forms.ModelForm):
         
 
 class SlingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Sling
         fields = commonfields.copy()
         fields.append('sling')
@@ -132,7 +180,13 @@ class SlingForm(forms.ModelForm):
         
 
 class Self_bowForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Self_bow
         fields = commonfields.copy()
         fields.append('self_bow')
@@ -143,7 +197,13 @@ class Self_bowForm(forms.ModelForm):
         
 
 class Composite_bowForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Composite_bow
         fields = commonfields.copy()
         fields.append('composite_bow')
@@ -154,7 +214,13 @@ class Composite_bowForm(forms.ModelForm):
         
 
 class CrossbowForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Crossbow
         fields = commonfields.copy()
         fields.append('crossbow')
@@ -165,7 +231,13 @@ class CrossbowForm(forms.ModelForm):
         
 
 class Tension_siege_engineForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Tension_siege_engine
         fields = commonfields.copy()
         fields.append('tension_siege_engine')
@@ -176,7 +248,13 @@ class Tension_siege_engineForm(forms.ModelForm):
         
 
 class Sling_siege_engineForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Sling_siege_engine
         fields = commonfields.copy()
         fields.append('sling_siege_engine')
@@ -187,7 +265,13 @@ class Sling_siege_engineForm(forms.ModelForm):
         
 
 class Gunpowder_siege_artilleryForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gunpowder_siege_artillery
         fields = commonfields.copy()
         fields.append('gunpowder_siege_artillery')
@@ -198,7 +282,13 @@ class Gunpowder_siege_artilleryForm(forms.ModelForm):
         
 
 class Handheld_firearmForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Handheld_firearm
         fields = commonfields.copy()
         fields.append('handheld_firearm')
@@ -209,7 +299,13 @@ class Handheld_firearmForm(forms.ModelForm):
         
 
 class War_clubForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = War_club
         fields = commonfields.copy()
         fields.append('war_club')
@@ -220,7 +316,13 @@ class War_clubForm(forms.ModelForm):
         
 
 class Battle_axeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Battle_axe
         fields = commonfields.copy()
         fields.append('battle_axe')
@@ -231,7 +333,13 @@ class Battle_axeForm(forms.ModelForm):
         
 
 class DaggerForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Dagger
         fields = commonfields.copy()
         fields.append('dagger')
@@ -242,7 +350,13 @@ class DaggerForm(forms.ModelForm):
         
 
 class SwordForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Sword
         fields = commonfields.copy()
         fields.append('sword')
@@ -253,7 +367,13 @@ class SwordForm(forms.ModelForm):
         
 
 class SpearForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Spear
         fields = commonfields.copy()
         fields.append('spear')
@@ -264,7 +384,13 @@ class SpearForm(forms.ModelForm):
         
 
 class PolearmForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polearm
         fields = commonfields.copy()
         fields.append('polearm')
@@ -275,7 +401,13 @@ class PolearmForm(forms.ModelForm):
         
 
 class DogForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Dog
         fields = commonfields.copy()
         fields.append('dog')
@@ -286,7 +418,13 @@ class DogForm(forms.ModelForm):
         
 
 class DonkeyForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Donkey
         fields = commonfields.copy()
         fields.append('donkey')
@@ -297,7 +435,13 @@ class DonkeyForm(forms.ModelForm):
         
 
 class HorseForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Horse
         fields = commonfields.copy()
         fields.append('horse')
@@ -308,7 +452,13 @@ class HorseForm(forms.ModelForm):
         
 
 class CamelForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Camel
         fields = commonfields.copy()
         fields.append('camel')
@@ -319,7 +469,13 @@ class CamelForm(forms.ModelForm):
         
 
 class ElephantForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Elephant
         fields = commonfields.copy()
         fields.append('elephant')
@@ -330,7 +486,13 @@ class ElephantForm(forms.ModelForm):
         
 
 class Wood_bark_etcForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Wood_bark_etc
         fields = commonfields.copy()
         fields.append('wood_bark_etc')
@@ -341,7 +503,13 @@ class Wood_bark_etcForm(forms.ModelForm):
         
 
 class Leather_clothForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Leather_cloth
         fields = commonfields.copy()
         fields.append('leather_cloth')
@@ -352,7 +520,13 @@ class Leather_clothForm(forms.ModelForm):
         
 
 class ShieldForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Shield
         fields = commonfields.copy()
         fields.append('shield')
@@ -363,7 +537,13 @@ class ShieldForm(forms.ModelForm):
         
 
 class HelmetForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Helmet
         fields = commonfields.copy()
         fields.append('helmet')
@@ -374,7 +554,13 @@ class HelmetForm(forms.ModelForm):
         
 
 class BreastplateForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Breastplate
         fields = commonfields.copy()
         fields.append('breastplate')
@@ -385,7 +571,13 @@ class BreastplateForm(forms.ModelForm):
         
 
 class Limb_protectionForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Limb_protection
         fields = commonfields.copy()
         fields.append('limb_protection')
@@ -396,7 +588,13 @@ class Limb_protectionForm(forms.ModelForm):
         
 
 class Scaled_armorForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Scaled_armor
         fields = commonfields.copy()
         fields.append('scaled_armor')
@@ -407,7 +605,13 @@ class Scaled_armorForm(forms.ModelForm):
         
 
 class Laminar_armorForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Laminar_armor
         fields = commonfields.copy()
         fields.append('laminar_armor')
@@ -418,7 +622,13 @@ class Laminar_armorForm(forms.ModelForm):
         
 
 class Plate_armorForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Plate_armor
         fields = commonfields.copy()
         fields.append('plate_armor')
@@ -429,7 +639,13 @@ class Plate_armorForm(forms.ModelForm):
         
 
 class Small_vessels_canoes_etcForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Small_vessels_canoes_etc
         fields = commonfields.copy()
         fields.append('small_vessels_canoes_etc')
@@ -440,7 +656,13 @@ class Small_vessels_canoes_etcForm(forms.ModelForm):
         
 
 class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Merchant_ships_pressed_into_service
         fields = commonfields.copy()
         fields.append('merchant_ships_pressed_into_service')
@@ -451,7 +673,13 @@ class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
         
 
 class Specialized_military_vesselForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Specialized_military_vessel
         fields = commonfields.copy()
         fields.append('specialized_military_vessel')
@@ -462,7 +690,13 @@ class Specialized_military_vesselForm(forms.ModelForm):
         
 
 class Settlements_in_a_defensive_positionForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Settlements_in_a_defensive_position
         fields = commonfields.copy()
         fields.append('settlements_in_a_defensive_position')
@@ -473,7 +707,13 @@ class Settlements_in_a_defensive_positionForm(forms.ModelForm):
         
 
 class Wooden_palisadeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Wooden_palisade
         fields = commonfields.copy()
         fields.append('wooden_palisade')
@@ -484,7 +724,13 @@ class Wooden_palisadeForm(forms.ModelForm):
         
 
 class Earth_rampartForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Earth_rampart
         fields = commonfields.copy()
         fields.append('earth_rampart')
@@ -495,7 +741,13 @@ class Earth_rampartForm(forms.ModelForm):
         
 
 class DitchForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Ditch
         fields = commonfields.copy()
         fields.append('ditch')
@@ -506,7 +758,13 @@ class DitchForm(forms.ModelForm):
         
 
 class MoatForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Moat
         fields = commonfields.copy()
         fields.append('moat')
@@ -517,7 +775,13 @@ class MoatForm(forms.ModelForm):
         
 
 class Stone_walls_non_mortaredForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Stone_walls_non_mortared
         fields = commonfields.copy()
         fields.append('stone_walls_non_mortared')
@@ -528,7 +792,13 @@ class Stone_walls_non_mortaredForm(forms.ModelForm):
         
 
 class Stone_walls_mortaredForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Stone_walls_mortared
         fields = commonfields.copy()
         fields.append('stone_walls_mortared')
@@ -539,7 +809,13 @@ class Stone_walls_mortaredForm(forms.ModelForm):
         
 
 class Fortified_campForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Fortified_camp
         fields = commonfields.copy()
         fields.append('fortified_camp')
@@ -550,7 +826,13 @@ class Fortified_campForm(forms.ModelForm):
         
 
 class Complex_fortificationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Complex_fortification
         fields = commonfields.copy()
         fields.append('complex_fortification')
@@ -561,7 +843,13 @@ class Complex_fortificationForm(forms.ModelForm):
         
 
 class Modern_fortificationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Modern_fortification
         fields = commonfields.copy()
         fields.append('modern_fortification')
@@ -572,7 +860,13 @@ class Modern_fortificationForm(forms.ModelForm):
         
 
 class ChainmailForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Chainmail
         fields = commonfields.copy()
         fields.append('chainmail')

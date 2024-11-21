@@ -1,5 +1,4 @@
-"""
-WSGI config for seshat project.
+"""WSGI config for seshat project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

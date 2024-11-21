@@ -5,7 +5,18 @@ import re
 
 def validate_email_with_dots(value):
     """
-    Custom validator to reject email addresses with more than four dots in their domain part.
+    Custom validator to reject email addresses with more than four dots in
+    their domain part.
+
+    Args:
+        value (str): The email address to validate.
+
+    Returns:
+        None
+
+    Raises:
+        ValidationError: If the email address contains more than four dots in
+            the domain part.
     """
     # Split the email address into local and domain parts
     local_part, domain_part = value.split('@')
@@ -15,4 +26,3 @@ def validate_email_with_dots(value):
         raise ValidationError("Email address contains too many dots in the domain part.")
 
     # You can add more checks if needed
-

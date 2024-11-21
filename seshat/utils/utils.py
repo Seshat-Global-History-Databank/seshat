@@ -1,8 +1,9 @@
-from seshat.apps.core.models import Polity, Variablehierarchy
-from seshat.apps.crisisdb.models import *
+from seshat.apps.core.models import Polity, Variablehierarchy, Section, Subsection
+# from seshat.apps.crisisdb.models import *
 import django.apps
 import pprint
 from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
+# from seshat.apps.crisisdb.models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
 
 from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
@@ -19,14 +20,43 @@ vars_dic_for_utils = {
    "internal_conflict": {"notes": "This is a new model definition fror internal conflicts", "main_desc": "Main Descriptions for the Variable internal_conflict are missing!", "main_desc_source": "", "cols": 4, "section": "Conflict Variables", "subsection": "Internal Conflicts Subsection", "null_meaning": "The value is not available.", "col1": {"dtype": ["CharField", "TextInput"], "varname": "conflict", "var_exp": "The name of the conflict", "var_exp_source": None}, "col2": {"dtype": ["DecimalField", "NumberInput"], "varname": "expenditure", "var_exp": "The military expenses in millions silver taels.", "units": "millions silver taels", "min": None, "max": None, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}, "col3": {"dtype": ["CharField", "TextInput"], "varname": "leader", "var_exp": "The leader of the conflict", "var_exp_source": None}, "col4": {"dtype": ["IntegerField", "NumberInput"], "varname": "casualty", "var_exp": "The number of people who died in this conflict.", "units": "People", "min": None, "max": None, "scale": 1, "var_exp_source": None}}, "external_conflict_side": {"notes": "This is a new model definition fror External conflict sides", "main_desc": "Main Descriptions for the Variable external_conflict_side are missing!", "main_desc_source": "", "cols": 4, "section": "Conflict Variables", "subsection": "External Conflicts Subsection", "null_meaning": "The value is not available.", "col1": {"dtype": ["CharField", "TextInput"], "varname": "conflict", "var_exp": "The unique name of the conflict", "var_exp_source": None}, "col2": {"dtype": ["DecimalField", "NumberInput"], "varname": "expenditure", "var_exp": "The military expenses (from this side) in silver taels.", "units": "silver taels", "min": None, "max": None, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}, "col3": {"dtype": ["CharField", "TextInput"], "varname": "leader", "var_exp": "The leader of this side of conflict", "var_exp_source": None}, "col4": {"dtype": ["IntegerField", "NumberInput"], "varname": "casualty", "var_exp": "The number of people who died (from this side) in this conflict.", "units": "People", "min": None, "max": None, "scale": 1, "var_exp_source": None}},
    "agricultural_population": {"notes": "Notes for the Variable agricultural_population are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "agricultural_population", "var_exp": "No Explanations.", "units": "People", "min": 0, "max": None, "scale": 1000, "var_exp_source": None}}, "arable_land": {"notes": "Notes for the Variable arable_land are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "arable_land", "var_exp": "No Explanations.", "units": "mu?", "min": None, "max": None, "scale": 1000, "var_exp_source": None}}, "arable_land_per_farmer": {"notes": "Notes for the Variable arable_land_per_farmer are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "arable_land_per_farmer", "var_exp": "No Explanations.", "units": "mu?", "min": None, "max": None, "scale": 1, "var_exp_source": None}}, "gross_grain_shared_per_agricultural_population": {"notes": "Notes for the Variable gross_grain_shared_per_agricultural_population are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "gross_grain_shared_per_agricultural_population", "var_exp": "No Explanations.", "units": "(catties per capita)", "min": None, "max": None, "scale": 1, "var_exp_source": None}}, "net_grain_shared_per_agricultural_population": {"notes": "Notes for the Variable net_grain_shared_per_agricultural_population are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "net_grain_shared_per_agricultural_population", "var_exp": "No Explanations.", "units": "(catties per capita)", "min": None, "max": None, "scale": 1, "var_exp_source": None}}, "surplus": {"notes": "Notes for the Variable surplus are missing!", "main_desc": "No Explanations.", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "surplus", "var_exp": "No Explanations.", "units": "(catties per capita)", "min": None, "max": None, "scale": 1, "var_exp_source": None}}, "military_expense": {"notes": "Not sure about Section and Subsection.", "main_desc": "Main Descriptions for the Variable military_expense are missing!", "main_desc_source": "https://en.wikipedia.org/wiki/Disease_outbreak", "cols": 2, "section": "Economy Variables", "subsection": "State Finances", "null_meaning": "The value is not available.", "col1": {"dtype": ["CharField", "TextInput"], "varname": "conflict", "var_exp": "The name of the conflict", "var_exp_source": None}, "col2": {"dtype": ["DecimalField", "NumberInput"], "varname": "expenditure", "var_exp": "The military expenses in millions silver taels.", "units": "millions silver taels", "min": None, "max": None, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}}, "silver_inflow": {"notes": "Needs suoervision on the units and scale.", "main_desc": "Silver inflow in Millions of silver taels??", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "State Finances", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "silver_inflow", "var_exp": "Silver inflow in Millions of silver taels??", "units": "Millions of silver taels??", "min": None, "max": None, "scale": 1000000, "var_exp_source": None}}, "silver_stock": {"notes": "Needs suoervision on the units and scale.", "main_desc": "Silver stock in Millions of silver taels??", "main_desc_source": "", "cols": 1, "section": "Economy Variables", "subsection": "State Finances", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "silver_stock", "var_exp": "Silver stock in Millions of silver taels??", "units": "Millions of silver taels??", "min": None, "max": None, "scale": 1000000, "var_exp_source": None}}, "total_population": {"notes": "Note that the population values are scaled.", "main_desc": "Total population or simply population, of a given area is the total number of people in that area at a given time.", "main_desc_source": "", "cols": 1, "section": "Social Complexity Variables", "subsection": "Social Scale", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "total_population", "var_exp": "The total population of a country (or a polity).", "units": "People", "min": 0, "max": None, "scale": 1000, "var_exp_source": None}}, "gdp_per_capita": {"notes": "The exact year based on which the value of Dollar is taken into account is not clear.", "main_desc": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.", "main_desc_source": "https://www.thebalance.com/gdp-per-capita-formula-u-s-compared-to-highest-and-lowest-3305848", "cols": 1, "section": "Economy Variables", "subsection": "Productivity", "null_meaning": "The value is not available.", "col1": {
     "dtype": ["DecimalField", "NumberInput"], "varname": "gdp_per_capita", "var_exp": "The Gross Domestic Product per capita, or GDP per capita, is a measure of a country's economic output that accounts for its number of people. It divides the country's gross domestic product by its total population.", "units": "Dollars (in 2009?)", "min": None, "max": None, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": "https://www.thebalance.com/gdp-per-capita-formula-u-s-compared-to-highest-and-lowest-3305848"}}, "drought_event": {"notes": "Notes for the Variable drought_event are missing!", "main_desc": "number of geographic sites indicating drought", "main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt", "cols": 1, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "drought_event", "var_exp": "number of geographic sites indicating drought", "units": "Numbers", "min": 0, "max": None, "scale": 1, "var_exp_source": None}}, "locust_event": {"notes": "Notes for the Variable locust_event are missing!", "main_desc": "number of geographic sites indicating locusts", "main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt", "cols": 1, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "locust_event", "var_exp": "number of geographic sites indicating locusts", "units": "Numbers", "min": 0, "max": None, "scale": 1, "var_exp_source": None}}, "socioeconomic_turmoil_event": {"notes": "Notes for the Variable socioeconomic_turmoil_event are missing!", "main_desc": "number of geographic sites indicating socioeconomic turmoil", "main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt", "cols": 1, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "socioeconomic_turmoil_event", "var_exp": "number of geographic sites indicating socioeconomic turmoil", "units": "Numbers", "min": 0, "max": None, "scale": 1, "var_exp_source": None}}, "crop_failure_event": {"notes": "Notes for the Variable crop_failure_event are missing!", "main_desc": "number of geographic sites indicating crop failure", "main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt", "cols": 1, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "crop_failure_event", "var_exp": "number of geographic sites indicating crop failure", "units": "Numbers", "min": 0, "max": None, "scale": 1, "var_exp_source": None}}, "famine_event": {"notes": "Notes for the Variable famine_event are missing!", "main_desc": "number of geographic sites indicating famine", "main_desc_source": "https://www1.ncdc.noaa.gov/pub/data/paleo/historical/asia/china/reaches2020drought-category-sites.txt", "cols": 1, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": "The value is not available.", "col1": {"dtype": ["IntegerField", "NumberInput"], "varname": "famine_event", "var_exp": "number of geographic sites indicating famine", "units": "Numbers", "min": 0, "max": None, "scale": 1, "var_exp_source": None}}, "disease_outbreak": {"notes": "Notes for the Variable disease_outbreak are missing!", "main_desc": "A sudden increase in occurrences of a disease when cases are in excess of normal expectancy for the location or season.", "main_desc_source": "https://en.wikipedia.org/wiki/Disease_outbreak", "cols": 6, "section": "Well Being", "subsection": "Biological Well-Being", "null_meaning": 'The value is not available.', "col1": {"dtype": ["DecimalField", "NumberInput"], "varname": "longitude", "var_exp": "The longitude (in degrees) of the place where the disease was spread.", "units": "Degrees", "min": -180, "max": 180, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}, "col2": {"dtype": ["DecimalField", "NumberInput"], "varname": "latitude", "var_exp": "The latitude (in degrees) of the place where the disease was spread.", "units": "Degrees", "min": -180, "max": 180, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}, "col3": {"dtype": ["DecimalField", "NumberInput"], "varname": "elevation", "var_exp": "Elevation from mean sea level (in meters) of the place where the disease was spread.", "units": "Meters", "min": 0, "max": 5000, "scale": 1, "decimal_places": 15, "max_digits": 20, "var_exp_source": None}, "col4": {"dtype": ["CharField", "Select"], "varname": "sub_category", "var_exp": "The category of the disease.", "var_exp_source": None, "choices": ["Peculiar Epidemics", "Pestilence", "Miasm", "Pox", "Uncertain Pestilence", "Dysentery", "Malaria", "Influenza", "Cholera", "Diptheria", "Plague"]}, "col5": {"dtype": ["CharField", "Select"], "varname": "magnitude", "var_exp": "How heavy the disease was.", "var_exp_source": None, "choices": ["Uncertain", "Light", "Heavy", "No description", "Heavy- Multiple Times", "No Happening", "Moderate"]}, "col6": {"dtype": ["CharField", "Select"], "varname": "duration", "var_exp": "How long the disease lasted.", "var_exp_source": None, "choices": ["No description", "Over 90 Days", "Uncertain", "30-60 Days", "1-10 Days", "60-90 Days"]}}}
+"""
+vars_dic_for_utils is a dictionary that contains the definitions of all the variables in the database. It is used to generate the models and views for the variables. It is a dictionary of dictionaries, where the key is the name of the variable and the value is a dictionary that contains the following keys:
+- notes: A description of the variable.
+- main_desc: The main description of the variable.
+- main_desc_source: The source of the main description.
+- cols: The number of columns in the variable.
+- section: The section of the variable.
+- subsection: The subsection of the variable.
+- null_meaning: The meaning of a null value in the variable.
+- col1: A dictionary that contains the definition of the first column of the variable. It contains the following keys:
+    - dtype: The data type of the column.
+    - varname: The name of the column.
+    - var_exp: The explanation of the column.
+    - var_exp_source: The source of the explanation.
+    - units: The units of the column.
+    - min: The minimum value of the column.
+    - max: The maximum value of the column.
+    - scale: The scale of the column.
+    - decimal_places: The number of decimal places in the column.
+    - max_digits: The maximum number of digits in the column.
+- col2: A dictionary that contains the definition of the second column of the variable. It contains the same keys as col1.
+- col3: A dictionary that contains the definition of the third column of the variable. It contains the same keys as col1.
+- col4: A dictionary that contains the definition of the fourth column of the variable. It contains the same keys as col1.
+- col5: A dictionary that contains the definition of the fifth column of the variable. It contains the same keys as col1.
+- col6: A dictionary that contains the definition of the sixth column of the variable. It contains the same keys as col1.
+"""
 
 
 
 
 def list_of_all_Polities():
-    '''
-    returns all the polity names in the database.
-    '''
+    """
+    Returns a list of all polities in the database.
+
+    Returns:
+        list: A list of all polity names.
+    """
     all_pols = Polity.objects.all()
     pol_names = []
     for pol in all_pols:
@@ -34,7 +64,14 @@ def list_of_all_Polities():
 
     return(pol_names)
 
+
 def dic_of_all_vars():
+    """
+    Returns a dictionary of all variables in the database.
+
+    Returns:
+        dict: A dictionary of all variables.
+    """
     myvars = django.apps.apps.get_models()
     # my_vars = {
     #     'total_tax': 'Total Tax',
@@ -59,6 +96,14 @@ def dic_of_all_vars():
 
 
 def dic_of_all_vars_with_varhier():
+    """
+    Returns a dictionary of all variables in the database. This dictionary is
+    structured in a way that it can be used to generate a hierarchical
+    representation of the variables.
+
+    Returns:
+        dict: A dictionary of all variables.
+    """
     my_secs = {'Economy Variables': {'Productivity': ['agricultural_population',
    'arable_land',
    'arable_land_per_farmer',
@@ -79,6 +124,18 @@ def dic_of_all_vars_with_varhier():
 
 
 def dic_of_all_vars_in_sections():
+    """
+    Returns a dictionary of all variables in the database. This dictionary is
+    structured in a way that it can be used to generate a hierarchical
+    representation of the variables.
+
+    Note:
+        This function does not seem to be used in the current version of the
+        application.
+
+    Returns:
+        dict: A dictionary of all variables.
+    """
     my_vars = {
         'finances': {
             'total_tax': 'Total Tax',
@@ -94,26 +151,48 @@ def dic_of_all_vars_in_sections():
 
 
 def adder(a, b):
+    """
+    Adds two numbers together.
+
+    Args:
+        a (int): The first number to be added.
+        b (int): The second number to be added.
+
+    Returns:
+        int: The sum of the two numbers.
+    """
     print(a+b)
 
 
 def section_dic_extractor():
+    """
+    Extracts a dictionary of all sections in the database.
+
+    Returns:
+        dict: A dictionary of all sections.
+    """
     from seshat.apps.core.models import Section
     my_list = Section.objects.all()
     dic_to_be_returned = {}
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
-    
+
     print(dic_to_be_returned)
     return dic_to_be_returned
 
 def subsection_dic_extractor():
+    """
+    Extracts a dictionary of all subsections in the database.
+
+    Returns:
+        dict: A dictionary of all subsections.
+    """
     from seshat.apps.core.models import Subsection
     my_list = Subsection.objects.all()
     dic_to_be_returned = {}
     for item in list(my_list):
         dic_to_be_returned[item.name] = item.id
-    
+
     print(dic_to_be_returned)
     return dic_to_be_returned
 
@@ -152,6 +231,14 @@ def subsection_dic_extractor():
 
 # GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD Function
 def test_for_varhier_dic():
+    """
+    Extracts a dictionary of all variables in the database. This dictionary is
+    structured in a way that it can be used to generate a hierarchical
+    representation of the variables.
+
+    Returns:
+        dict: A dictionary of all variables.
+    """
     all_sections = Section.objects.all()
     all_subsections = Subsection.objects.all()
     all_varhiers = Variablehierarchy.objects.all()
@@ -186,6 +273,17 @@ def test_for_varhier_dic():
 # is to call this function from the shell, and feed it with the vars_dic on top of this page (which has to be a copy of the original vars_dic that we are using in generating models and virews and all)
 # I then copy and paste the output to the QingVars function in Views. Sounds weird.
 def qing_vars_links_creator(vars_dic_for_here):
+    """
+    Creates a dictionary of all variables in the database. This dictionary is
+    structured in a way that it can be used to generate a hierarchical
+    representation of the variables.
+
+    Args:
+        vars_dic_for_here (dict): A dictionary of all variables.
+
+    Returns:
+        dict: A dictionary of all variables.
+    """
     varhier_dic = {
         "Other_Sections": {
             "Other_Subsections":[]
@@ -207,6 +305,16 @@ def qing_vars_links_creator(vars_dic_for_here):
 
 
 def get_all_data_for_a_polity(polity_id, db_name):
+    """
+    Gets all data for a given polity ID.
+
+    Args:
+        polity_id (int): The ID of the polity.
+        db_name (str): The name of the database.
+
+    Returns:
+        dict: A dictionary of all data for the polity.
+    """
     #####
     all_vars = []
     a_huge_context_data_dic = {}
@@ -229,6 +337,20 @@ def get_all_data_for_a_polity(polity_id, db_name):
 
 
 def get_all_general_data_for_a_polity_old(polity_id):
+    """
+    Gets all general data for a given polity ID.
+
+    :private:
+
+    Note:
+        This function is not used in the current version of the application.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        dict: A dictionary of all general data for the polity.
+    """
     a_huge_context_data_dic = {}
     for ct in ContentType.objects.all():
         m = ct.model_class()
@@ -251,6 +373,15 @@ def get_all_general_data_for_a_polity_old(polity_id):
 
 
 def get_all_general_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "general" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
+    """
     app_name = 'general'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
     has_any_data = False
@@ -316,6 +447,15 @@ def get_all_general_data_for_a_polity(polity_id):
     return all_vars_grouped_g, has_any_data
 
 def get_all_sc_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "sc" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
+    """
     app_name = 'sc'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
     has_any_data = False
@@ -389,6 +529,15 @@ def get_all_sc_data_for_a_polity(polity_id):
 #     return False
 
 def get_all_wf_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "wf" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
+    """
     app_name = 'wf'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
 
@@ -445,6 +594,15 @@ def get_all_wf_data_for_a_polity(polity_id):
 
 
 def get_all_rt_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "rt" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
+    """
     app_name = 'rt'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
 
@@ -497,6 +655,20 @@ def get_all_rt_data_for_a_polity(polity_id):
 
 #####################################################
 def get_all_wf_data_for_a_polity_old(polity_id):
+    """
+    Gets all data for a given polity ID from the "wf" app.
+
+    :private:
+
+    Note:
+        This function is not used in the current version of the application.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        dict: A dictionary of all data for the polity.
+    """
     a_huge_context_data_dic = {}
     for ct in ContentType.objects.all():
         m = ct.model_class()
@@ -517,6 +689,15 @@ def get_all_wf_data_for_a_polity_old(polity_id):
 
 # get crsisi cocases data
 def get_all_crisis_cases_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "crisisdb" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        dict: A dictionary of all data for the polity.
+    """
     a_data_dic = {}
     #my_data = Crisis_consequence.objects.filter(polity = polity_id)
     my_data = Crisis_consequence.objects.filter(Q(polity=polity_id) | Q(other_polity=polity_id))
@@ -530,6 +711,15 @@ def get_all_crisis_cases_data_for_a_polity(polity_id):
 #     return Crisis_consequence.objects.filter(polity=polity_id).exists()
 
 def get_all_power_transitions_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "rt" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        dict: A dictionary of all data for the polity.
+    """
     a_data_dic = {}
     my_data = Power_transition.objects.filter(polity = polity_id)
     if my_data:
