@@ -38,12 +38,12 @@ To request a specific edit to the Cliopatria dataset, such as changing the shape
 
 1. Click the "Edit" button on the polity page of interest.
 
-    .. image:: ../img/edit_cliopatria.png
+    .. image:: img/edit_cliopatria.png
         :alt: Edit Cliopatria
 
 2. Fill out the edit page that opens and use the Private Comment box to explain in detail the change you would like. Note the ID of the shape you would like to change. If the change you are requesting is to multiple shapes, please list all the IDs. Click the "Submit for Review" button.
 
-    .. image:: ../img/edit_cliopatria_part_2.png
+    .. image:: img/edit_cliopatria_part_2.png
         :alt: Edit Cliopatria form
 
 3. This should open a private comment thread where you can discuss the edit with other researchers. See the `Discussing data edits via private comments <getting_started.rst#discussing-data-edits-via-private-comments>`_ section for more information. Assign the comment to the person who is best placed to review the edit, e.g. someone who works on Cliopatria (see the `team <../team.rst>`_ page for more information).
