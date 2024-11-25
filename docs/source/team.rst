@@ -87,6 +87,26 @@ Matilda Peruzzo
 
 **Administrative privileges:** Researcher
 
+Pieter Francois
+~~~~~~~~~~~~~~~
+
+**Who am I?**
+
+- Professor of Cultural Evolution, University of Oxford
+- Group Lead of AI & Digital Humanities for Resilient Societies, Alan Turing Institute
+- Founding and Executive Director of the Seshat Global History Databank
+
+**What can I help with?**
+
+- Governance of Seshat 
+- Engagement of historians with the Seshat Databank
+- Historical data
+- Setting up collaborations
+- Funding applications
+- Links with other projects
+- Use of Seshat Databank by the policy world
+
+**Administrative privileges:** Seshat admin
 
 Contact
 -------
