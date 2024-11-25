@@ -105,6 +105,7 @@ Pieter Francois
 - Funding applications
 - Links with other projects
 - Use of Seshat Databank by the policy world
+- Setting new data gathering, analysis, and publication plans
 
 **Administrative privileges:** Seshat admin
 
