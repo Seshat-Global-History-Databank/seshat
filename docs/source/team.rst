@@ -24,7 +24,7 @@ Follow the example of the existing bios, adding the following sections:
 Contact
 -------
 
-If you need to contact someone from the team, email them or use one of the communication channels listed below.
+If you need to contact a member of the team, email them or use one of the communication channels listed below.
 Some team members have also added a bio to this page explaining what they can help with and their administrative privileges for the Seshat website.
 
 .. list-table:: Team Members
