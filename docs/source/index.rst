@@ -27,6 +27,7 @@ Project Documentation
    expert/index
    public_user/index
    team
+   FAQs
    resources
    software-tools
    how-to-update-these-docs
