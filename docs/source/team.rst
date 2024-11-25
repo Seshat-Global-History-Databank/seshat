@@ -25,20 +25,62 @@ Contact
 -------
 
 If you need to contact someone from the team, email them or use one of the communication channels listed below.
+Some team members have also added a bio to this page explaining what they can help with and their administrative privileges for the Seshat website.
 
-- For emails of Complexity Science Hub staff, please refer to the `CSH staff page <https://www.csh.ac.at/people/>`_.
-- Alan Turing Institute staff emails are listed here:
-    - Ed Chalstrey: `echalstrey@turing.ac.uk`
-    - Pieter Francois: `pieter.francois@anthro.ox.ac.uk`
-    - Kalle Westerling: `kwesterling@turing.ac.uk`
-    - Matilda Peruzzo: `mperuzzo@turing.ac.uk`
-    - Enrico Cioni: `enrico.a.cioni@gmail.com`
+.. list-table:: Team Members
+   :header-rows: 1
+
+   * - Name
+     - Title
+     - Email
+   * - Daniel Hoyer
+     - Senior Research Associate
+     - `seshatghd@gmail.com`
+   * - Daniel Kondor
+     - Data Scientist
+     - `kondor@csh.ac.at`
+   * - Ed Chalstrey
+     - Research Data Scientist
+     - `echalstrey@turing.ac.uk`
+   * - Enrico Cioni
+     - Lead Research Assistant
+     - `enrico.a.cioni@gmail.com`
+   * - Jakob Hauser
+     - Research Assistant
+     - `jakob.e.hauser@protonmail.com`
+   * - Jakob Zsambok
+     - Research Assistant
+     - `jakob.zsa@gmail.com`
+   * - Jenny Reddish
+     - Lead Editor
+     - `reddish.jenny@gmail.com`
+   * - Jim Bennett
+     - Senior Data Scientist
+     - `bennett.jim@gmail.com`
+   * - Kalle Westerling
+     - Research Application Manager
+     - `kwesterling@turing.ac.uk`
+   * - Majid Benam
+     - Data Scientist
+     - `benam@csh.ac.at`
+   * - Matilda Peruzzo
+     - Postdoctoral Researcher
+     - `mperuzzo@turing.ac.uk`
+   * - Peter Turchin
+     - Chair of Board of Directors
+     - `turchin@cliotech.org`
+   * - Pieter Francois
+     - Executive Director
+     - `pieter.francois@anthro.ox.ac.uk`
+   * - Samantha Holder
+     - Lead Historical Researcher
+     - `samantha.louise.holder@gmail.com`
 
 Communication channels
 ----------------------
 
-- Complexity Science Hub: *TODO*
-- Alan Turing Institute: On the institute's Slack workspace, request to join the `#data-culture` and `#seshat-turing` channels.
+- Complexity Science Hub: e-mail
+- Alan Turing Institute: email or Slack. On the institute's Slack workspace, request to join the `#data-culture` and `#seshat-turing` channels.
 
 Bios
 ----
