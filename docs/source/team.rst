@@ -109,6 +109,20 @@ Pieter Francois
 
 **Administrative privileges:** Seshat admin
 
+Jenny Reddish
+~~~~~~~~~~~~~
+
+**Who am I?**
+
+- Lead Editor for Seshat
+- Working for the project since 2016
+
+**What can I help with?**
+
+- Questions about polities, definitions of variables etc.
+- Responding to errors you spot in Seshat data
+- Administrative privileges: Researcher
+
 Contact
 -------
 
