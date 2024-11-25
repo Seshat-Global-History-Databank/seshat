@@ -21,9 +21,27 @@ Follow the example of the existing bios, adding the following sections:
 .. note::
     Project roles that match the above access levels are defined `here <index.rst>`_.
 
+Contact
+-------
+
+If you need to contact someone from the team, email them or use one of the communication channels listed below.
+
+- For emails of Complexity Science Hub staff, please refer to the `CSH staff page <https://www.csh.ac.at/people/>`_.
+- Alan Turing Institute staff emails are listed here:
+    - Ed Chalstrey: `echalstrey@turing.ac.uk`
+    - Pieter Francois: `pieter.francois@anthro.ox.ac.uk`
+    - Kalle Westerling: `kwesterling@turing.ac.uk`
+    - Matilda Peruzzo: `mperuzzo@turing.ac.uk`
+    - Enrico Cioni: `enrico.a.cioni@gmail.com`
+
+Communication channels
+----------------------
+
+- Complexity Science Hub: *TODO*
+- Alan Turing Institute: On the institute's Slack workspace, request to join the `#data-culture` and `#seshat-turing` channels.
+
 Bios
 ----
-
 
 Majid Benam
 ~~~~~~~~~~~~
@@ -122,22 +140,3 @@ Jenny Reddish
 - Questions about polities, definitions of variables etc.
 - Responding to errors you spot in Seshat data
 - Administrative privileges: Researcher
-
-Contact
--------
-
-If you need to contact someone from the team, email them or use one of the communication channels listed below.
-
-- For emails of Complexity Science Hub staff, please refer to the `CSH staff page <https://www.csh.ac.at/people/>`_.
-- Alan Turing Institute staff emails are listed here:
-    - Ed Chalstrey: `echalstrey@turing.ac.uk`
-    - Pieter Francois: `pieter.francois@anthro.ox.ac.uk`
-    - Kalle Westerling: `kwesterling@turing.ac.uk`
-    - Matilda Peruzzo: `mperuzzo@turing.ac.uk`
-    - Enrico Cioni: `enrico.a.cioni@gmail.com`
-
-Communication channels
-----------------------
-
-- Complexity Science Hub: *TODO*
-- Alan Turing Institute: On the institute's Slack workspace, request to join the `#data-culture` and `#seshat-turing` channels.
