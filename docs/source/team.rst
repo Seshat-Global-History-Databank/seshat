@@ -85,6 +85,37 @@ Communication channels
 Bios
 ----
 
+Ed Chalstrey
+~~~~~~~~~~~~
+
+**Who am I?**
+
+- Research Software Engineer at the Alan Turing Institute
+- Working on the Seshat project from November 2023 until March 2025
+
+**What can I help with?**
+
+- Seshat website codebase, in particular the maps pages
+- Seshat API Python package
+- Cliopatria shape dataset
+- Software Engineering & Data Science skills
+
+**Administrative privileges:** Seshat Admin
+
+Jenny Reddish
+~~~~~~~~~~~~~
+
+**Who am I?**
+
+- Lead Editor for Seshat
+- Working for the project since 2016
+
+**What can I help with?**
+
+- Questions about polities, definitions of variables etc.
+- Responding to errors you spot in Seshat data
+- Administrative privileges: Researcher
+
 Majid Benam
 ~~~~~~~~~~~~
 
@@ -112,24 +143,6 @@ I am a **Software Engineer and Web Developer** at the Complexity Science Hub in 
     - Serve as a **Seshat Admin** with administrative privileges.
 
 Feel free to reach out if you need assistance. Email: `benam@csh.ac.at`
-
-
-Ed Chalstrey
-~~~~~~~~~~~~
-
-**Who am I?**
-
-- Research Software Engineer at the Alan Turing Institute
-- Working on the Seshat project from November 2023 until March 2025
-
-**What can I help with?**
-
-- Seshat website codebase, in particular the maps pages
-- Seshat API Python package
-- Cliopatria shape dataset
-- Software Engineering & Data Science skills
-
-**Administrative privileges:** Seshat Admin
 
 Matilda Peruzzo
 ~~~~~~~~~~~~~~~
@@ -168,17 +181,3 @@ Pieter Francois
 - Setting new data gathering, analysis, and publication plans
 
 **Administrative privileges:** Seshat admin
-
-Jenny Reddish
-~~~~~~~~~~~~~
-
-**Who am I?**
-
-- Lead Editor for Seshat
-- Working for the project since 2016
-
-**What can I help with?**
-
-- Questions about polities, definitions of variables etc.
-- Responding to errors you spot in Seshat data
-- Administrative privileges: Researcher
