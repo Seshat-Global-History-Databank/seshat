@@ -19,15 +19,5 @@ sphinx:
 # to build your documentation
 # See https://docs.readthedocs.io/en/stable/guides/reproducible-builds.html
 python:
-  install:
-    - requirements: docs/requirements.txt
-
-# Custom steps to match the GitHub Actions workflow
-build:
-  steps:
-    - name: "Upgrade pip"
-      run: pip install --upgrade pip
-    - name: "Install docs requirements"
-      run: pip install -r docs/requirements.txt
-    - name: "Run sphinx"
-      run: sphinx-build -b html docs/source docs/_build/
+   install:
+   - requirements: docs/requirements.txt
