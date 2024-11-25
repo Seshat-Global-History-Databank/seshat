@@ -28,7 +28,11 @@ Project Documentation
    :maxdepth: 2
 
    admin/index
-   researcher/index
+   getting_started
+   python_api
+   cliopatria
+   datasets
+   research_code
    expert/index
    public_user/index
    team
