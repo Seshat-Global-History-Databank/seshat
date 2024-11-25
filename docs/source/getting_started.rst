@@ -1,7 +1,7 @@
 Getting started with Seshat data
 =================================
 
-This section of the documentation provides information on how to get started with accessing Seshat data as a researcher, both through the Seshat website and the Seshat API, as well as the Cliopatria borders GeoJSON dataset.
+This section of the documentation provides information on how to get started with accessing Seshat data as a researcher, both through the Seshat website and the Seshat API.
 
 Creating a login on the Seshat website
 ---------------------------------------
