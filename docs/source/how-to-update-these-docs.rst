@@ -69,7 +69,7 @@ Once you have these pre-requisites, you can follow the steps below to update the
     
     - If adding new pages, ensure they are added to the "toctree" at the top of the `index.rst` file present in the same directory.
 
-5. [Optional] Build the documentation locally to check that your changes are rendering correctly.
+5. [Optional] Build the documentation locally to check that your changes are rendering correctly. Note: when opening a pull request in the last step you will be able to see a preview of the changes on GitHub anyway, but this could be quicker if you have a lot of changes to check.
     
     - Install the required dependencies for building the documentation. You may wish to use a virtual environment to avoid conflicts with other Python packages.
     
@@ -117,6 +117,11 @@ Once you have these pre-requisites, you can follow the steps below to update the
     - Set the base repository to `Seshat-Global-History-Databank/seshat` and the base branch to `dev`.
 
     - Click "Create pull request" and add a descriptive title and description to the pull request.
+
+    - The documentation will be built automatically and you will be able to see a preview of the changes on the pull request page. Click "Details".
+
+    .. image:: img/PR_docs_preview.png
+        :alt: Docs preview
 
     - A Seshat Databank Admin will review your changes and may request further changes before merging the pull request.
 
