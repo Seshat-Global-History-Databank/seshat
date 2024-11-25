@@ -27,7 +27,6 @@ Project Documentation
 .. toctree::
    :maxdepth: 2
 
-   admin/index
    getting_started
    python_api
    cliopatria
@@ -38,6 +37,7 @@ Project Documentation
    resources
    software-tools
    how-to-update-these-docs
+   admin/index
    api/index
    code-of-conduct
 
