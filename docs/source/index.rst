@@ -33,8 +33,6 @@ Project Documentation
    cliopatria
    datasets
    research_code
-   expert/index
-   public_user/index
    team
    FAQs
    resources
