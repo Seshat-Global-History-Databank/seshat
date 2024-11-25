@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "Issues regarding Seshat data"
+    url: "https://seshat-global-history-databank.github.io/"
+    about: "Please do not use GitHub issues to log issues or queries regarding historical data from the Seshat Global History Databank. Please follow the instructions in our project documentation for creating an account on the website for making, requesting and discussing data edits."
