@@ -41,4 +41,4 @@ Project Documentation
    admin/index
    api/index
    code-of-conduct
-
+   GitHub <https://github.com/orgs/Seshat-Global-History-Databank/repositories>
