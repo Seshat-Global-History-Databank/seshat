@@ -46,7 +46,7 @@ Discussing data edits via private comments
 
 In addition to editing the data directly, you can start a "private comment" discussion about a potential data edit, which other researchers can see and comment on.
 Users that lack sufficent permissions, and people not logged in, will not be able to see these comments.
-You can assign a specific person to the comment, if you know their particular expertise is needed. See the `team <../team.rst>`_ page for more information.
+You can assign a specific person to the comment, if you know their particular expertise is needed. See the `team <team.rst>`_ page for more information.
 
 To create a new private comment:
 
