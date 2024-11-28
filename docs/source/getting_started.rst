@@ -11,7 +11,7 @@ Creating an account on the Seshat website is the first step to accessing the Ses
 Follow the information on the screen to create your account.
 
 Ensure you are given the correct permissions for your account by contacting the Seshat team.
-See the `team <../team.rst>`_ page for more information.
+See the `team <team.rst>`_ page for more information.
 For most researchers on the project, this will involve being given the "Research Assistant" role permissions, which allows you to make and discuss data edits.
 
 .. warning::
