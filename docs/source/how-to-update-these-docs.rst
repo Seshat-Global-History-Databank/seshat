@@ -29,7 +29,7 @@ How to update these docs yourself
 
 In order to update these documentation pages, first you'll need to ensure you are set up with an account on GitHub and have Git, Python and Anaconda installed on your computer.
 
-If you lack any of these, follow the steps on the `Software tools <software-tools>`_ page to get set up.
+If you lack any of these, follow the steps on the `Software tools <software-tools.rst>`_ page to get set up.
 
 Once you have these pre-requisites, you can follow the steps below to update the documentation:
 
