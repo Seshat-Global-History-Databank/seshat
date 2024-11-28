@@ -629,7 +629,7 @@ function populateVariableDropdown(variables) {
     // Add the static option
     const staticOption = document.createElement('option');
     staticOption.value = 'polity';
-    staticOption.textContent = 'Polity';
+    staticOption.textContent = 'Political boundaries';
     chooseVariableDropdown.appendChild(staticOption);
 
     // Process 'General Variables' first
