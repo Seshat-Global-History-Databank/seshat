@@ -46,7 +46,7 @@ To request a specific edit to the Cliopatria dataset, such as changing the shape
     .. image:: img/edit_cliopatria_part_2.png
         :alt: Edit Cliopatria form
 
-3. This should open a private comment thread where you can discuss the edit with other researchers. See the `Discussing data edits via private comments <getting_started.rst#discussing-data-edits-via-private-comments>`_ section for more information. Assign the comment to the person who is best placed to review the edit, e.g. someone who works on Cliopatria (see the `team <../team.rst>`_ page for more information).
+3. This should open a private comment thread where you can discuss the edit with other researchers. See the `Discussing data edits via private comments <getting_started.rst#discussing-data-edits-via-private-comments>`_ section for more information. Assign the comment to the person who is best placed to review the edit, e.g. someone who works on Cliopatria (see the `team <team.rst>`_ page for more information).
 
 4. The reviewer will check the edit request and either make it or ask for more information via the comment thread.
 
