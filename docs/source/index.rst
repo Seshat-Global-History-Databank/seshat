@@ -19,6 +19,7 @@ These roles, which broadly match the access level of accounts on the Seshat webs
 Most of the documentation is relevant to **Researchers**, but there is also a section specifically for **Seshat Databank Admins**.
 
 **Seshat Experts** should review `Getting Started with Seshat data <getting_started.rst>`_.
+A list of experts is maintained `here <https://seshatdatabank.info/seshat-about-us/contributor-database>`_.
 **Public Users** will not find this documentation particularly useful, beyond `Creating a login on the Seshat website <getting_started.rst>`_.
 
 Project Documentation
