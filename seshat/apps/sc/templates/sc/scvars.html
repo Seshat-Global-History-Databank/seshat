@@ -1,13 +1,61 @@
 {% extends "core/seshat-base.html" %}
+{% load static %}
 {% load humanize %}
+{% load mathfilters %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <style>
-    .card {
-        background-color: #fefae6;
-        border-radius: 10px;
-      }
-      
+
+  .card {
+    background-color: #fffdf2;
+    border:none;
+  }
+  
+   .bg-info-light {
+    background: lightblue;
+
+   }
+
+   .bg-danger-light {
+    background: lightpink;
+
+   }
+
+    .my_small_link:hover {
+      color:navajowhite;
+    }
+
+   .bg-success-light {
+    background: darkseagreen;
+   }
+
+   .bg-warning-light {
+    background: khaki;
+
+   }
+
+
+   .bg-uncoded-light {
+    background: orange;
+
+   }
+   
+   .bg-trans-light {
+    background: cadetblue;
+
+   }
+   
+   
+
+   .bg-unknown-light {
+    background: plum;
+   }
+
+   .bg-secondary-light {
+    background: lightgrey;
+
+   }
       .card-title {
         margin-bottom: 10px;
         color: #555;
@@ -18,17 +66,6 @@
         margin-bottom: 10px;
       }
 
-      .custom-left-border-shadowed {
-        border-left: none; /* Adjust the border color and thickness as desired */
-        box-shadow: 0 0 2px teal; 
-        padding-right: 1px;
-        padding-top: 1px;
-        padding-bottom: 1px;
-        border-radius: 5px;
-        padding-left: 10px; /* Adjust the padding to create spacing between the border and content */
-        text-align: justify;
-    }
-      
       .card-text {
         margin-bottom: 20px;
       }
@@ -37,11 +74,21 @@
         display: inline-block;
         margin-right: 0px;
         margin-left: 0px;
-        padding: 8px 8px;
+        padding: 4px 4px;
         border: none;
         text-decoration: none;
         transition: background-color 0.3s;
       }
+
+
+      .card-link:hover {
+        border-radius: 0px;
+        text-decoration: underline;
+        text-decoration-color: black;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 5px; /* Adjust distance from the text */
+      }
+
       .card-body {
         padding: 4px;
         display: flex;
@@ -59,11 +106,6 @@
 
       .number-circle {
         color: #fefae6;
-      }
-
-      .card-link:hover {
-        background-color: teal;
-        border-radius: 4px;
       }
 
       .light-narrow-hr {
@@ -103,47 +145,95 @@
       }
 
 
+    .progress {
+      height: 1.25rem !important;
+      font-size: 0.65rem !important;
+      background: #fffdf2;
+      padding: 0px;
+      margin: 0px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+
+  }
+
+  .progress-bar {
+      display: flex; 
+      flex-direction: row;
+      padding: 0px;
+      margin: 0px;
+  }
+
+
 </style>
-<div class="container mt-2">
+<div class="container">
     <div class="row">
-      <div class="row mt-3">
-        <div class="col-md-12">
-            <div class="row d-flex align-items-center mb-2">
-                <div class="col-md-6 px-0">
-                  <h1 class="py-3 ps-0"><span class="badge rounded-pill bg-teal text-dark">Social Complexity Variables</span> 
-                  </h1>               
-                 </div>
-                  <div class="col-md-3">    
-                    <a href='{% url "problematic_sc_data_table" %}' class="btn btn-outline-danger mx-1 my-2 float-end"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges</a>
-                </div>
-                <div class="col-md-3 px-0">    
-                    <a href='{% url "download_csv_all_sc" %}' class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a>
-                </div>
+      <div class="mb-2 mt-4">
+        <span class="col-md-6 px-0">
+          <span class="h2 py-3 ps-0"><span class="text-dark">Social Complexity Variables</span> 
+          </span>               
+         </span>
+        <span ><a href="{% url 'download_csv_all_sc' %}" class="btn btn-outline-success mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a> </span>
+        <span ><a href="{% url 'problematic_sc_data_table' %}" class="btn btn-outline-danger mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges </a> </span>
 
 
-            </div>
+    </div>
 
-          </div>
-        </div>
-
-        <h4>
-          <span class="h5 text-secondary">* We have coded a total of  
-            <b class="h4 text-dark">
+        <h5>
+          <span class="h6 text-secondary">* We have coded a total of  
+            <b class="h5 text-dark">
             {{number_of_all_rows|intcomma}}</b>
             different values for 
-            <b class="h4 text-dark">
+            <b class="h5 text-dark">
             {{number_of_variables}}</b>
             variables in 
-            <b class="h4 text-dark">
+            <b class="h5 text-dark">
             {{all_polities}}</b>
             polities.</span>
-        </h4>
+        </h5>
+
+
+        <h6>
+          Here is a legend to guide you in understanding the metadata more clearly:
+        </h6>
+        <span class="progress align-items-center py-0 m-0">
+          <span class="progress-bar bg-success-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
+            <b class="text-dark">Present</b> 
+        </span>
+        <span class="progress-bar bg-trans-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
+          <b class="text-white">Partially coded</b> 
+      </span>
+            <span class="progress-bar bg-info-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-dark">Range</b> 
+          </span>
+
+          <span class="progress-bar bg-danger-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
+            <b class="text-dark">Absent</b> 
+        </span>
+
+            <span class="progress-bar bg-warning-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-dark">Suspected Unknown</b> 
+          </span>
+
+            <span class="progress-bar bg-unknown-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-white">Unknown</b> 
+          </span>
+
+          <span class="progress-bar bg-uncoded-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities"> 
+            <b class="text-dark">Uncoded</b> 
+        </span>
+
+            <span class="progress-bar bg-secondary-light" role="progressbar" style="width: 10%; height: 1.0rem !important; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+              <b class="text-dark">To Be Coded</b> 
+          </span>
+        </span>
         {% for sect, subsect in all_vars_grouped.items %}
         <div class="row">
           <div class="col-md-12">
               <div class="row d-flex align-items-center mb-2 mt-4">
                   <div class="col-md-6 px-0 ">
-                    <h3 class="py-1 ps-0"><span class="badge rounded-pill bg-info text-dark">
+                    <h3 class="py-1 ps-0"><span class="badge rounded-pill text-dark"  style="background: rgb(0, 157, 255, 0.4)">
                       {{sect}}
                     </span> 
                   </h3> 
@@ -153,7 +243,7 @@
                     {% for kkk, vvv in all_sect_download_links.items %}
                     {% if kkk == sect %}
             
-                    <span><a href="{% url vvv %}" class="btn btn-outline-secondary mx-1 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>{{sect}}</b> (.CSV) </a> </span>
+                    <span ><a href="{% url vvv %}" class="btn btn-outline-secondary btn-sm mx-1 float-end" style="padding: 2px 6px; font-size: 0.75rem;"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>{{sect}}</b> (.csv)</a> </span>
                     {% endif%}
             
                     {% endfor %}
@@ -174,32 +264,87 @@
       
     </h5> 
       {% endif%}
-        {% for v in vv %}
-                <div class="card col-md-6">
-                    <div class="align-items-left card-text-spaced">
-                      <span class="fs-5 left-span fw-bold ps-2">
-                        <span class="text-secondary fs-6"> <span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span> 
-                            <a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">{{v.0}} </a> 
 
-                         
-                                                      
-                      </span>
 
-                      <span class="right-span fs-5">
-                          <span><a href="{% url v.3 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Download All"> <i class="fa-solid fa-file-arrow-down"></i></a></span>
-                          <span><a href="{% url v.2 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Add New Values"><i class="fa fa-plus"></i></a></span>
-                          <span><a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All"> <i class="fa fa-eye"></i></a></span>
-                        </span>
-              
-                    </div>
-                  </div>
+
+          {% for v in vv %}
+
+        <div class="card col-md-4 mb-1" style="background:#fffdf2;">
+
+
+        <div class="d-flex align-items-center">
+          <!-- Fixed-width column -->
+          <!-- <div class="px-1 py-1 m-0" style="background:darkseagreen; flex-basis: 0 0 50px; max-width: 50px; ">
+              <div>
+                  <a class="my_small_link" href="{% url v.2 %}" style="display:block; padding-left:2px;" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Add New Values">
+                      <i class="fa fa-plus"></i>
+                  </a>
+                  <a class="my_small_link" href="{% url v.5 %}" style="display:block;" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="View All">
+                      <i class="fa fa-eye"></i>
+                  </a>
+                  <a class="my_small_link" href="{% url v.3 %}" style="display:block; padding-left:3px;" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="Download All">
+                      <i class="fa-solid fa-file-arrow-down"></i>
+                  </a>
+              </div>
+          </div> -->
+          <!-- Flexible column that takes remaining space -->
+          <div class="fs-6 fw-bold flex-grow-1" style="background:#fffdf2;  border-left: 3px solid #fffdf2; border-right: 3px solid #fffdf2;" >
+            <div class="d-flex justify-content-between align-items-center">
+              <a href="{% url v.5 %}" class="text-dark pb-2 card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="View All">
+                {{ v.0 }}
+              </a>
+              <small class="text-secondary fw-light">{{ v.8 }} &nbsp;&nbsp;</small>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+
+              <span class="text-secondary fs-6">
+                  &nbsp;{{ v.6|intcomma }}  <small class="text-secondary fw-light"> coded records </small>
+              </span>
+    
+            </div>
+
+              <div class="progress align-items-center py-0 m-0">
+                <span class="progress-bar {% if v.17 == 'Present' or v.17 == 'Properly Coded' %}bg-success-light{% else %}bg-info-light{% endif %} py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="{{v.17}}: # {{v.9}}">
+                   
+
+                  </span>
+                  <span class="progress-bar bg-danger-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Absent: # {{v.10}}">
+
+                </span>
+                <span class="progress-bar bg-warning-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Suspected Unknown: # {{v.11}}">
+
+              </span>
+              <span class="progress-bar bg-unknown-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Unknown: # {{v.12}}">
+
+
+              </span>
+
+
+                <span class="progress-bar bg-uncoded-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Uncoded: # {{v.13}}">
+            </span>
+
+              <span class="progress-bar bg-trans-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Transitional: # {{v.16}}">
+          </span>
+
+
+              <span class="progress-bar bg-secondary-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
+          </span>
+            </div>
+
+
+          </div>
+      </div>
+      
+      
+        </div>
           {% endfor %}
+
 
     {% endfor %}
 
 {% endfor %}
-</div>
-<hr>
 
+</div>
+<br>
 </div>
 {% endblock %}

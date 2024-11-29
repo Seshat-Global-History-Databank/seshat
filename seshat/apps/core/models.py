@@ -103,6 +103,7 @@ Tags = (
     ('TRS', 'Confident'),
     ('SSP', 'Suspected'),
     ('IFR', 'Inferred'),
+    ('UND', 'Undecided'),
 )
 
 APS = 'A;P*'
@@ -722,6 +723,8 @@ class Citation(models.Model):
 
         if self.ref and self.ref.zotero_link and "NOZOTERO_LINK" in self.ref.zotero_link:
             return f'(NOZOTERO: {shorter_name})'
+        if self.ref and self.ref.creator and self.ref.item_type and self.ref.creator == 'NO_CREATOR':
+            return f'{self.ref.item_type}_{shorter_name}'
         if self.ref and self.ref.creator:
             if self.page_from == None and self.page_to == None:
                 return '({0} {1}): {2}'.format(self.ref.creator, self.ref.year, shorter_title)
@@ -833,8 +836,19 @@ class Citation(models.Model):
         else:
             shorter_name = "BlaBla"
 
+        original_title = self.ref.title
+        if original_title and len(original_title) > 30:
+           shorter_title = original_title[0:30] + original_title[30:].split(" ")[0] + "..."
+        elif original_title:
+            shorter_title = original_title
+        else:
+            shorter_title = "BlaBla"
+
         if "NOZOTERO_LINK" in self.ref.zotero_link:
             return f'(NOZOTERO: {shorter_name})'
+        
+        if self.ref and self.ref.creator and self.ref.item_type and self.ref.creator == 'NO_CREATOR' and self.ref.title:
+            return f'[{self.ref.item_type}_{shorter_title}]'
 
         if self.page_from == None and self.page_to == None:
             return '[{0} {1}]'.format(self.ref.creator, self.ref.year)
@@ -1065,7 +1079,7 @@ class SeshatCommon(models.Model):
     Model representing a common Seshat model.
     """
     polity = models.ForeignKey(Polity, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
-                               related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+                               related_query_name="%(app_label)s_%(class)s", null=True,)
     name = models.CharField(
         max_length=200,)
     year_from = models.IntegerField(blank=True, null=True)
@@ -1098,6 +1112,14 @@ class SeshatCommon(models.Model):
         """
         abstract = True
         ordering = ['polity']
+
+    def curators_list(self):
+        my_list = [f'{curator.user.full_name} ({curator.role})' for curator in self.curator.all()]
+        if my_list:
+            return ", ".join(my_list)
+        else:
+            return None
+
 
 
 # class Annual_wages(SeshatCommon):

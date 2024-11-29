@@ -6,6 +6,17 @@
 {% block content %}
 
 <style>
+
+  .bg-colorful:hover {
+    background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+
+  }
+
+  .bg-colorful-light {
+    background-image: linear-gradient(to right, rgb(246, 127, 127, 0.26),rgb(242, 199, 119, 0.26),rgb(151, 230, 151, 0.26));
+    border-radius: 10px;
+    color:#782823;
+  }
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -15,33 +26,152 @@
 input[type="number"] {
     -moz-appearance: textfield; /* For Firefox */
 }
+
+.formset-item {
+  display: flex;
+}
+
+.citation-badge {
+  writing-mode: vertical-rl; /* Makes the text vertical */
+  margin-right: 5px; /* Adds space between the citation and the content */
+}
+
+.formset-content {
+  flex-grow: 1; /* Ensures that the content fills the rest of the space */
+  max-width: 100%;
+  white-space: nowrap;       /* Prevent the text from wrapping */
+  overflow: hidden;          /* Hide any text that overflows the container */
+  text-overflow: ellipsis;   /* Add ellipsis ("...") for overflowed text */
+}
+    
+.tab-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size:small;
+}
+
+.tab {
+  margin: 0 2px;
+  padding: 5px 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.tab a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.tab:hover {
+  background-color: #d1d1d1;
+}
+
+.tab.active {
+  color: black;
+  background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+  border-color: seagreen;
+
+}
+
+
+.tab.done {
+  background-color: seagreen;
+  color: white;
+  border-color: seagreen;
+}
+
+.tab.waiting {
+  color: gray !important;
+  border-color: gray;
+}
+.tab.active a {
+  color: white;
+}
+
+
+.arrow {
+  font-size: 24px;
+  margin: 0 10px;
+  color: #4CAF50;
+}
+
+.content {
+  text-align: center;
+  margin: 50px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 </style>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-8">
-        <h6 class="lead-2 text-success pt-3">You entered the following data for:</h6>
-      <h3 class="mb-4 mt-2">{{var_name_display}}  </h3>
+<div class="container mt-1">
+  <div class="tab-container">
+    <div class="tab done" id="step1-tab">
+        <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data</span>
     </div>
-    <div class="col-md-4"> 
+    <div class="arrow" style="color:seagreen">&#10132;</div>
+    <div class="tab active" id="step2-tab">
+        <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description</span>
+    </div>
+    <div class="arrow" style="color:gray">&#10132;</div>
+    <div class="tab waiting" id="step3-tab">
+      <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+    </div>
+</div>
+
+    <div class="row d-flex">
+      <div class="col-md-10">
+          <h6><span class="text-secondary">Section:</span>                {% if var_section %}
+            {{var_section}}
+            {% else %}
+            &nbsp;- 
+        {% endif %}
+            / 
+
+              {% if var_subsection %}
+              {{var_subsection}}
+              {% else %}
+                  &nbsp;- 
+              {% endif %}
+          </h6>
+          <h4><span class="text-secondary">Variable:</span> <span>{{ var_name_display }}</span></h4>
+      </div>
+      <div class="col-md-2"> 
         {% block addmore %}
         {% endblock addmore %}
 
-          <span class="col-md-4 align-right mt-1">
-              <a href="{% url 'synczotero100' %}" class="btn btn-outline-success pb-0 pt-1 mb-2 mt-1 float-end" id="syncBtn" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');">
-                  <b>Sync Refs with Zotero: <i class="fa-solid fa-arrows-rotate"></i> &nbsp; Last 100</b>
-              </a>
-              <span class="h6 text-secondary px-1"></span>
-          </span>
-      
+        <span class="col-md-4 align-right">
+          <a href="{% url 'synczotero100' %}" 
+             class="btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end" 
+             id="syncBtn" 
+             onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"
+             data-bs-toggle="tooltip" 
+             data-bs-placement="top" 
+             title="Sync references with Zotero (Last 100)">
+             <b>Z &nbsp;<i class="fa-solid fa-arrows-rotate"></i></b>
+          </a>
+          <span class="h6 text-secondary px-1"></span>
+      </span>
+
     </div>
+
+
   </div>
+
+  
   {% if messages %}
   <ul class="messages mt-3">
       {% for message in messages %}
       <div class="container-fluid p-0">
           <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-              <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
+              <i class="fa-solid fa-circle-info"></i>  <b>{{ message }}</b>. 
           </div>
       </div>
       {% endfor %}
@@ -53,22 +183,22 @@ input[type="number"] {
         </div>
       </div>
       {% endfor %}
-      <hr> 
       {% endif %}
   </ul>
-  <hr>
   {% endif %}
-  <table class="table align-middle table-bordered">
+  <div style="border: 2px solid rgba(120, 40, 35, 0.311); border-radius: 5px; overflow: hidden;">
+
+  <table class="table table-borderless align-middle" >
     <thead>        
-      <tr style="background:rgba(194, 243, 242, 0.511)">
+      <tr class="bg-colorful-light">
         {% block myheadings %}
         {% endblock myheadings %}
 
-        <th scope="col" style="text-align: left">Tags</th>
+        <th scope="col" style="text-align: left">Polity</th>
         <!-- headings for the newly added row come here -->
-        <th style="text-align: left;" scope="col">Polity</th>
-        <th scope="col" style="text-align: center" class="fw-bold">
-             Year(s)
+        <th style="text-align: center;" scope="col">Year(s)</th>
+        <th scope="col" style="text-align: left" class="fw-bold">
+            Tag(s)
         </th>
         <!-- extra headings -->
 
@@ -81,7 +211,6 @@ input[type="number"] {
             <div>
               {% block extracols %}
               {% endblock extracols %}
-             {% include "core/partials/_all_tags_inline_new.html" %}
               <td class="ps-1" style="text-align: left;">
                 {% if object.polity.long_name %}
                 <span class="fw-bold h5">
@@ -95,28 +224,38 @@ input[type="number"] {
               
               </td>
               {% include "core/partials/_years_block_new_object.html" %}
+              {% include "core/partials/_all_tags_inline_new.html" %}
+
               <!-- columns for extra vars come here -->
 
               <td style="text-align: center;">
+                {% if object.description %}
                 {% with object.clean_name|add:"-update" as meat %}
                 <div class="py-1">
                   <a href="{% url meat object.id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
                 </div>
                 {% endwith %}
+                {% else %}
+                {% with object.clean_name|add:"-updatenew" as meat %}
+                <div class="py-1">
+                  <a href="{% url meat object.id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                </div>
+                {% endwith %}
+                {% endif %}
+
 
               </td>
         </div>
         </tr>
     </tbody>
   </table>
+</div>
+
 
   <form method="post" action="{% url 'seshatcommentpart-create2-inline' app_name=db_section model_name=object.clean_name instance_id=object.id %}">
       {% csrf_token %}
       <div class="row">
         <div class="col-md-5">
-          <br>
-          <span class="fs-6 fw-bold text-dark">- Insert the <u>first</u>  subdescription text here*:</span>
-
           {{ form.comment_text.label_tag }} {{ form.comment_text }}
           {{ form.formset.management_form }}
           {{ form.management_form }}
@@ -129,48 +268,61 @@ input[type="number"] {
               {{ form.comment_order|as_crispy_field }}
          </div>
          <div class="col-md-12 pt-2 d-grid gap-2">
-          <input type="submit"  class="btn btn-outline-success btn-block mt-2 fs-5 fw-bold" value="Submit">
+          <input type="submit"  class="btn btn-outline-success btn-block mt-2 fs-5 fw-bold" value="Submit the First Chunk**">
          </div>
           </div>
+          <span class="text-secondary pt-0">** Please note that in this step, we insert only the initial portion of the description—specifically, the section from the beginning up to the first set of references (citations).            <br>
+            <br> <span class="text-dark">Example:</span> 
+            <br>  
+<span style="background:darkseagreen; color:black">One prominent theory, known as the Hydraulic Hypothesis, suggests that the management of large irrigation systems necessitated centralized bureaucratic governance, leading to the development of early states and complex hierarchies</span>  
+<b class="text-success">(Wittfogel, 1957)</b> . This idea has been widely debated; for example, the role of irrigation in state formation appears to be context-dependent, with evidence varying significantly across different regions <b class="text-success">(Smith, 2004)</b>.
+
+ Archaeological findings in Mesoamerica suggest that early city-states depended heavily on surplus-based economies, where elites could command labor and control resources <b class="text-success">(Carneiro, 1981)</b>.</span>
 
     </div>
         <div class="col-md-7">
           <div id="formset-container">
             {% autoescape off %}
               {% for form1 in form.formset %}
-                    <div class="formset-item">
-                        {{ form.id }} {# Include the form ID for proper formset rendering #}
-                      <div class="row">
-                        <div class="col-md-12 pt-4">
-                          <span class="badge fs-6" style="background: cadetblue;">Citation #{{ forloop.counter}}</span>                          
-                          <span class="float-end text-secondary"><i class="fa-solid fa-trash-can"></i>
-                            {{ form1.DELETE }} 
-                          </span>  
-                        </div>
-                        <div class="col-md-12 pb-1">
-                          <div id="div_id_refs-{{ forloop.counter0 }}-ref" class="control-group">
-                            <div class="controls">
-                              <select class="ref-dropdown form-control form-select mb-1 p-1 js-example-basic-single select2-hidden-accessible" text="ref" name="refs-{{ forloop.counter0 }}-ref" id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref" tabindex="-1" aria-hidden="true" style="width:100%; "  data-selected-value="{{ form1.ref.value }}">
-                                <option value="" selected data-select2-id="{{ forloop.counter0 }}">Reference ...</option>
 
-                              </select>
+                    <div class="formset-item d-flex align-items-start pt-4">
+                      <!-- Citation number on the left -->
+
+                      
+                      <!-- Content on the right -->
+                      <div class="formset-content flex-grow-1">
+                        <div class="row">
+
+                          <div class="col-md-12 pb-1">
+                            <div id="div_id_refs-{{ forloop.counter0 }}-ref" class="control-group">
+                              <div class="controls">
+                                <select class="ref-dropdown form-control form-select mb-1 p-1 js-example-basic-single select2-hidden-accessible"
+                                  text="ref" name="refs-{{ forloop.counter0 }}-ref"
+                                  id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref"
+                                  tabindex="-1" aria-hidden="true" style="width:100%; white-space:normal;" 
+                                  data-selected-value="{{ form1.ref.value }}">
+                                  <option value="" selected data-select2-id="{{ forloop.counter0 }}">Reference ...</option>
+                                </select>
+                              </div>
                             </div>
                           </div>
-
-                        </div>
-                        <div class="col-md-2">
+                          <div class="col-md-2">
                             {{ form1.page_from|as_crispy_field }}
-                        </div>
-                        <div class="col-md-2">
+                          </div>
+                          <div class="col-md-2">
                             {{ form1.page_to|as_crispy_field }}
+                          </div>
+                          <div class="col-md-8">
+                            {{ form1.parent_pars|as_crispy_field }}
+                          </div>
                         </div>
-
-                            <div colspan="4" class="col-md-8">
-                                {{ form1.parent_pars|as_crispy_field }}
-                            </div>
-                        </div>
-    
+                      </div>
+                      <span class="badge fs-6 citation-badge" style="background: cadetblue;">Citation &nbsp;{{ forloop.counter }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="fa-solid fa-trash-can" style="color:rgb(244, 176, 176)"></i>
+                        {{ form1.DELETE }} 
+                      </span>  
                     </div>
+                    
               {% endfor %}
               {% endautoescape %}
 
@@ -226,7 +378,7 @@ input[type="number"] {
   function DisplayProgressMessage(ctl, msg) {
     var originalText = $(ctl).html();
     $(ctl).data('original-text', originalText);
-    $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end disabled");
+    $(ctl).prop("class", "btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end disabled");
     $(ctl).html(msg);
 
     // Simulate the end of the syncing process
@@ -239,7 +391,7 @@ input[type="number"] {
 
   function RestoreOriginalMessage(ctl) {
     var originalText = $(ctl).data('original-text');
-    $(ctl).prop("class", "btn btn-outline-success pb-0 pt-1 mb-2 float-end");
+    $(ctl).prop("class", "btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end");
     $(ctl).html(originalText);
   }
 </script>

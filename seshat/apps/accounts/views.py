@@ -17,6 +17,9 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, authenticate
 
+from django.db.models import Q
+
+
 from ..core.models import SeshatPrivateComment, SeshatPrivateCommentPart
 
 
@@ -179,12 +182,22 @@ def profile(request):
         user_profile_id = request.user.profile.id
     my_user = Profile.objects.get(pk = user_profile_id)
     my_expert =  Seshat_Expert.objects.get(user_id=request.user.id)
-    print(f"my_profile_id: {user_profile_id}")
-    print(f"my_user_id: {request.user.id}")
+    #print(f"my_profile_id: {user_profile_id}")
+    #print(f"my_user_id: {request.user.id}")
 
-    all_my_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id)
+    all_done_private_comments = SeshatPrivateCommentPart.objects.filter(
+    (Q(private_comment_reader__id=my_expert.id) | Q(private_comment_owner__id=my_expert.id)) &
+    Q(is_done=True)
+    ).distinct().order_by('-last_modified_date')
+    
+    all_their_private_comments = SeshatPrivateCommentPart.objects.filter(
+    private_comment_reader__id=my_expert.id).exclude(is_done=True).order_by('-last_modified_date')
+
+    all_my_private_comments = SeshatPrivateCommentPart.objects.filter(
+    private_comment_owner__id=my_expert.id).exclude(is_done=True).order_by('-last_modified_date')
+ 
     #all_my_active_private_comments = SeshatPrivateCommentPart.objects.filter(private_comment_reader__id=my_expert.id).exclude(is_done=True)
-    print(f"my_expert_id: {my_expert.id}")
+    #print(f"my_expert_id: {my_expert.id}")
 
     # try:
     #     for ct in ContentType.objects.all():
@@ -215,13 +228,15 @@ def profile(request):
     #print(dir(my_user))
     #print(my_user_name.user_id)
     context = {
-        "facts_verified_by_user": all_my_private_comments,
+        "all_their_private_comments": all_their_private_comments,
+        "comments_written_by_user": all_my_private_comments,
+        "all_done_private_comments": all_done_private_comments,
         #"open_facts_for_user": all_my_active_private_comments,
         "all_facts": all_facts,
         'all_tasks_given': all_tasks_given
         }
 
-    print(my_user)
+    #print(my_user)
     return render(request, 'registration/profile.html', context=context)
 
 class Seshat_taskCreate(PermissionRequiredMixin, CreateView):

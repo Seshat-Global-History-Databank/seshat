@@ -1,0 +1,286 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+
+
+<style>
+    /* Style the dropdown */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px;
+    }
+
+    .select2-container .select2-results__option:hover {
+        background-color: #782823;
+        color: beige;
+      }
+
+
+      .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #782823;
+        color: beige;
+      }
+  
+    /* Style the dropdown arrow */
+    .select2-container .select2-selection__arrow {
+      height: 36px;
+      margin-top: 4px; /* Adjust the margin-top as needed */
+    }
+
+    .form-check-inline {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Center vertically */
+        margin-right: 10px; /* Add some spacing between radio buttons */
+    }
+    .form-check-label {
+        display: flex;
+        align-items: center;
+        margin-right: 15px; /* Add spacing between radio buttons */
+    }
+    
+    .form-check-label input[type="radio"] {
+        margin-right: 5px; /* Add spacing between radio circle and label */
+    }
+
+    /* Hide the up and down arrows */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"] {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .tab a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
+    
+    .tab:hover {
+        background-color: #d1d1d1;
+    }
+    
+    .tab.active {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #4CAF50;
+    }
+
+    .tab.done {
+        background-color: #782823;
+        color: lightgray;
+        border-color: #782823;
+    }
+    
+    .tab.waiting {
+        color: gray;
+        border-color: darkgray;
+    }
+
+    .tab.active a {
+        color: white;
+    }
+    
+    .arrow {
+        font-size: 24px;
+        margin: 0 10px;
+        color: #4CAF50;
+    }
+
+    
+    
+</style>
+<!-- form-row and form-group etc are removed in Bootstrap 5 -->
+<div class="container mt-1">
+
+
+    <div class="row d-flex mt-3">
+        <div class="col-md-4">
+            <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
+                {% if var_subsection %}
+                {{var_subsection}}
+                {% else %}
+                    &nbsp;- 
+                {% endif %}
+            </h6>
+            <h4><span >{{ myvar }}</span></h4>
+        </div>
+        <div class="col-md-8 border-dark">
+            {% autoescape off %}
+            <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
+            {% endautoescape %}
+
+        </div> 
+
+    </div> 
+
+    <form id="regForm" action="" method="post" >
+        {% csrf_token %}
+        <legend>
+
+        </legend>
+        {% if messages %}
+        <ul class="messages mt-3">
+            {% for message in messages %}
+            <div class="container-fluid p-0">
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                    <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
+                </div>
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <div class="container-fluid p-0">
+              <div class="text-danger" role="alert" >
+                <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
+              </div>
+            </div>
+            {% endfor %}
+            <hr> 
+            {% endif %}
+        </ul>
+        <hr class="bg-colorful">
+        {% endif %}
+        <div class="row pt-2 ps-2" style="background:rgba(255, 235, 205, 0.664);">
+            <div class="col-sm-12 row">
+                <div class="col-sm-6 pb-2">
+                    {{ form.polity|as_crispy_field }}
+                </div>
+                {% if myvar != 'Polity Duration' and myvar != 'Polity Peak Years' %}
+
+                <div class="col-sm-3 pb-2">
+                    {{ form.year_from|as_crispy_field }}
+                  </div>
+                  <div class="col-sm-3 pb-2">
+                    {{ form.year_to|as_crispy_field }}
+                  </div>
+                  {% endif %}
+
+                  {% block extra_vars %}
+                  {% endblock extra_vars %}
+
+                  <div class="col-sm-3 mb-1">
+                    {{ form.is_disputed|as_crispy_field }}
+                    {{ form.is_uncertain|as_crispy_field }}
+                    {{ form.expert_reviewed|as_crispy_field }}
+                </div>
+                <div class="col-sm-3 pe-0">
+                    <fieldset>
+                        <div class="form-check pb-4 justify-content-end">
+                            {% for radio in form.tag %}
+                                <label class="ps-4 pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
+                                    {{ radio.tag }}
+                                    <span class="badge rounded-pill px-3 py-1 border border-dark
+                                        {% if radio.choice_label == 'Confident' %}
+                                            bg-success
+                                        {% elif radio.choice_label == 'Inferred' %}
+                                            bg-primary 
+                                        {% elif radio.choice_label == 'Suspected' %}
+                                            bg-warning text-dark 
+                                        {% elif radio.choice_label == 'Undecided' %}
+                                            bg-secondary 
+                                        {% endif %}
+                                    ">  
+                                        {{ radio.choice_label }}
+                                    </span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-sm-12">
+                    {{ form.description|as_crispy_field }}
+                  </div>
+                <div class="col-sm-12 row">
+                    <div class="col-sm-6 mb-2 py-2 d-grid mx-auto">
+
+                    </div>
+                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
+                        {% block delete_button %}
+                        {% endblock delete_button %}
+                    </div>
+                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
+                        <button type="submit" class="btn btn-outline-success my-auto btn-block btn-lg">Submit for Review*</button>
+                    </div>
+                </div>
+            </div>
+
+
+                  <!-- Here come the extra vars -->
+
+        </div>
+
+        <div class="row">
+            {% if request.user.is_staff %}
+            <div class="col-md-4 py-3 ps-4">
+                <div class="mb-2">
+                    <i class="fas fa-user-check"></i> You are a Seshat Expert; you can enter a fact.
+                </div> 
+                <div  class="mb-2" style="display: none;">
+                    {{ form.finalized|as_crispy_field }}
+                </div>               
+            </div>
+            {% else %}
+            <div class="col-md-4 py-3 ps-4">
+                <input type="checkbox" id="seshatexpert" name="vehicle2" value="Car" onclick="return false">
+                <label for="seshatexpert"> You are not a Seshat Expert.</label>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div class="text-danger"><h3> {{ error }} </h3></div>
+            {% endfor %}
+        {% endfor %}
+        {% endif %} -->
+          </form>
+
+        {% block delete_option %}
+        {% endblock delete_option %}
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 with an empty dataset
+        $('.js-example-basic-single').select2();
+    });    
+
+</script>
+{% endblock %}

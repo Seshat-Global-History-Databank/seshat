@@ -1,0 +1,64 @@
+{% extends "core/list_base_for_new_approach.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+
+{% block download_button %}
+
+    <!-- Add Another Fact Button -->
+<a href="{% url create_url %}" 
+class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to add a new coded record">
+<i class="fas fa-plus"></i>
+</a>
+
+<!-- See All Such Facts Button -->
+<a href="{% url download_url %}" 
+class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to Download all such coded records">
+<i class="fas fa-download"></i>
+</a>
+{% endblock download_button %}
+
+
+{% block myheadings_list %}
+<th class = "fw-bold" style="text-align: left; white-space: nowrap;  border-left: 2px solid gray;  border-right: 2px solid gray; " scope="col">
+    <span> 
+    <a href="{% url list_all_url %}{{ordering_tag}}"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Coded Value
+</span>
+</th>
+{% endblock myheadings_list %}
+
+{% block extra_vars_list %}
+<td colspan="1"  style="text-align: left; z-index:890; border-left: 2px solid gray;  border-right: 2px solid gray;">
+    {% autoescape off %}
+    <span class="pt-3 fw-bold fw-normal">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
+    {% endautoescape %}
+
+</td>
+{% endblock extra_vars_list %}
+
+
+<!-- Update Button -->
+{% block update_button %}
+{% if obj.description and obj.description != 'None' %}
+    <td colspan="1" style="text-align: center;">
+        <small>
+            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i></a>
+        </small>
+    </td>
+{% else %}
+<td colspan="1" style="text-align: center;">
+    <small>
+        <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i></a>
+    </small>
+</td>
+{% endif %}
+
+{% endblock update_button %}

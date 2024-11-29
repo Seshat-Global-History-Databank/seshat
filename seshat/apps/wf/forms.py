@@ -74,7 +74,7 @@ class CopperForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['copper'] = forms.RadioSelect()
+        widgets['copper'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class BronzeForm(forms.ModelForm):
@@ -91,7 +91,7 @@ class BronzeForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['bronze'] = forms.RadioSelect()
+        widgets['bronze'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class IronForm(forms.ModelForm):
@@ -108,7 +108,7 @@ class IronForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['iron'] = forms.RadioSelect()
+        widgets['iron'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class SteelForm(forms.ModelForm):
@@ -125,7 +125,7 @@ class SteelForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['steel'] = forms.RadioSelect()
+        widgets['steel'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class JavelinForm(forms.ModelForm):
@@ -142,7 +142,7 @@ class JavelinForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['javelin'] = forms.RadioSelect()
+        widgets['javelin'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class AtlatlForm(forms.ModelForm):
@@ -159,7 +159,7 @@ class AtlatlForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['atlatl'] = forms.RadioSelect()
+        widgets['atlatl'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class SlingForm(forms.ModelForm):
@@ -176,7 +176,7 @@ class SlingForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['sling'] = forms.RadioSelect()
+        widgets['sling'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Self_bowForm(forms.ModelForm):
@@ -193,7 +193,7 @@ class Self_bowForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['self_bow'] = forms.RadioSelect()
+        widgets['self_bow'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Composite_bowForm(forms.ModelForm):
@@ -210,7 +210,7 @@ class Composite_bowForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['composite_bow'] = forms.RadioSelect()
+        widgets['composite_bow'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class CrossbowForm(forms.ModelForm):
@@ -227,7 +227,7 @@ class CrossbowForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['crossbow'] = forms.RadioSelect()
+        widgets['crossbow'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Tension_siege_engineForm(forms.ModelForm):
@@ -244,7 +244,7 @@ class Tension_siege_engineForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['tension_siege_engine'] = forms.RadioSelect()
+        widgets['tension_siege_engine'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Sling_siege_engineForm(forms.ModelForm):
@@ -261,7 +261,7 @@ class Sling_siege_engineForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['sling_siege_engine'] = forms.RadioSelect()
+        widgets['sling_siege_engine'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Gunpowder_siege_artilleryForm(forms.ModelForm):
@@ -278,7 +278,7 @@ class Gunpowder_siege_artilleryForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['gunpowder_siege_artillery'] = forms.RadioSelect()
+        widgets['gunpowder_siege_artillery'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Handheld_firearmForm(forms.ModelForm):
@@ -295,7 +295,7 @@ class Handheld_firearmForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['handheld_firearm'] = forms.RadioSelect()
+        widgets['handheld_firearm'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class War_clubForm(forms.ModelForm):
@@ -312,7 +312,7 @@ class War_clubForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['war_club'] = forms.RadioSelect()
+        widgets['war_club'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Battle_axeForm(forms.ModelForm):
@@ -329,7 +329,7 @@ class Battle_axeForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['battle_axe'] = forms.RadioSelect()
+        widgets['battle_axe'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class DaggerForm(forms.ModelForm):
@@ -346,7 +346,7 @@ class DaggerForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['dagger'] = forms.RadioSelect()
+        widgets['dagger'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class SwordForm(forms.ModelForm):
@@ -363,7 +363,7 @@ class SwordForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['sword'] = forms.RadioSelect()
+        widgets['sword'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class SpearForm(forms.ModelForm):
@@ -380,7 +380,7 @@ class SpearForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['spear'] = forms.RadioSelect()
+        widgets['spear'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class PolearmForm(forms.ModelForm):
@@ -397,7 +397,7 @@ class PolearmForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['polearm'] = forms.RadioSelect()
+        widgets['polearm'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class DogForm(forms.ModelForm):
@@ -414,7 +414,7 @@ class DogForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['dog'] = forms.RadioSelect()
+        widgets['dog'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class DonkeyForm(forms.ModelForm):
@@ -431,7 +431,7 @@ class DonkeyForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['donkey'] = forms.RadioSelect()
+        widgets['donkey'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class HorseForm(forms.ModelForm):
@@ -448,7 +448,7 @@ class HorseForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['horse'] = forms.RadioSelect()
+        widgets['horse'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class CamelForm(forms.ModelForm):
@@ -465,7 +465,7 @@ class CamelForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['camel'] = forms.RadioSelect()
+        widgets['camel'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class ElephantForm(forms.ModelForm):
@@ -482,7 +482,7 @@ class ElephantForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['elephant'] = forms.RadioSelect()
+        widgets['elephant'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Wood_bark_etcForm(forms.ModelForm):
@@ -499,7 +499,7 @@ class Wood_bark_etcForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['wood_bark_etc'] = forms.RadioSelect()
+        widgets['wood_bark_etc'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Leather_clothForm(forms.ModelForm):
@@ -516,7 +516,7 @@ class Leather_clothForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['leather_cloth'] = forms.RadioSelect()
+        widgets['leather_cloth'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class ShieldForm(forms.ModelForm):
@@ -533,7 +533,7 @@ class ShieldForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['shield'] = forms.RadioSelect()
+        widgets['shield'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class HelmetForm(forms.ModelForm):
@@ -550,7 +550,7 @@ class HelmetForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['helmet'] = forms.RadioSelect()
+        widgets['helmet'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class BreastplateForm(forms.ModelForm):
@@ -567,7 +567,7 @@ class BreastplateForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['breastplate'] = forms.RadioSelect()
+        widgets['breastplate'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Limb_protectionForm(forms.ModelForm):
@@ -584,7 +584,7 @@ class Limb_protectionForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['limb_protection'] = forms.RadioSelect()
+        widgets['limb_protection'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Scaled_armorForm(forms.ModelForm):
@@ -601,7 +601,7 @@ class Scaled_armorForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['scaled_armor'] = forms.RadioSelect()
+        widgets['scaled_armor'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Laminar_armorForm(forms.ModelForm):
@@ -618,7 +618,7 @@ class Laminar_armorForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['laminar_armor'] = forms.RadioSelect()
+        widgets['laminar_armor'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Plate_armorForm(forms.ModelForm):
@@ -635,7 +635,7 @@ class Plate_armorForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['plate_armor'] = forms.RadioSelect()
+        widgets['plate_armor'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Small_vessels_canoes_etcForm(forms.ModelForm):
@@ -652,7 +652,7 @@ class Small_vessels_canoes_etcForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['small_vessels_canoes_etc'] = forms.RadioSelect()
+        widgets['small_vessels_canoes_etc'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
@@ -669,7 +669,7 @@ class Merchant_ships_pressed_into_serviceForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['merchant_ships_pressed_into_service'] = forms.RadioSelect()
+        widgets['merchant_ships_pressed_into_service'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Specialized_military_vesselForm(forms.ModelForm):
@@ -686,7 +686,7 @@ class Specialized_military_vesselForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['specialized_military_vessel'] = forms.RadioSelect()
+        widgets['specialized_military_vessel'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Settlements_in_a_defensive_positionForm(forms.ModelForm):
@@ -703,7 +703,7 @@ class Settlements_in_a_defensive_positionForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['settlements_in_a_defensive_position'] = forms.RadioSelect()
+        widgets['settlements_in_a_defensive_position'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Wooden_palisadeForm(forms.ModelForm):
@@ -720,7 +720,7 @@ class Wooden_palisadeForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['wooden_palisade'] = forms.RadioSelect()
+        widgets['wooden_palisade'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Earth_rampartForm(forms.ModelForm):
@@ -737,7 +737,7 @@ class Earth_rampartForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['earth_rampart'] = forms.RadioSelect()
+        widgets['earth_rampart'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class DitchForm(forms.ModelForm):
@@ -754,7 +754,7 @@ class DitchForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['ditch'] = forms.RadioSelect()
+        widgets['ditch'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class MoatForm(forms.ModelForm):
@@ -771,7 +771,7 @@ class MoatForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['moat'] = forms.RadioSelect()
+        widgets['moat'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Stone_walls_non_mortaredForm(forms.ModelForm):
@@ -788,7 +788,7 @@ class Stone_walls_non_mortaredForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['stone_walls_non_mortared'] = forms.RadioSelect()
+        widgets['stone_walls_non_mortared'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Stone_walls_mortaredForm(forms.ModelForm):
@@ -805,7 +805,7 @@ class Stone_walls_mortaredForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['stone_walls_mortared'] = forms.RadioSelect()
+        widgets['stone_walls_mortared'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Fortified_campForm(forms.ModelForm):
@@ -822,7 +822,7 @@ class Fortified_campForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['fortified_camp'] = forms.RadioSelect()
+        widgets['fortified_camp'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Complex_fortificationForm(forms.ModelForm):
@@ -839,7 +839,7 @@ class Complex_fortificationForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['complex_fortification'] = forms.RadioSelect()
+        widgets['complex_fortification'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class Modern_fortificationForm(forms.ModelForm):
@@ -856,7 +856,7 @@ class Modern_fortificationForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['modern_fortification'] = forms.RadioSelect()
+        widgets['modern_fortification'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
 class ChainmailForm(forms.ModelForm):
@@ -873,5 +873,5 @@ class ChainmailForm(forms.ModelForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['chainmail'] = forms.RadioSelect()
+        widgets['chainmail'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         

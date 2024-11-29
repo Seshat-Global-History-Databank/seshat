@@ -508,6 +508,9 @@ class Crisis_consequence(SeshatCommon):
         """
         return "crisis_consequence"
     
+    def clean_name_spaced(self):
+        return "Crisis Consequence"
+    
     def get_columns_with_value(self, value):
         """
         Return the columns with a given value.
@@ -653,6 +656,10 @@ class Power_transition(SeshatCommon):
             str: The name of the model instance.
         """
         return "power_transition"
+    
+    def clean_name_spaced(self):
+        return "Power Transition"
+    
     
     def get_columns_with_value(self, value):
         """

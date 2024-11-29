@@ -35,22 +35,26 @@ POLITY_DEGREE_OF_CENTRALIZATION_CHOICES = (
 
 POLITY_CONSECUTIVE_ENTITY_CHOICES = (
 ('continuity', 'continuity'),
-('elite migration', 'elite migration'),
-('cultural assimilation', 'cultural assimilation'),
-('continuation', 'continuation'),
-('indigenous revolt', 'indigenous revolt'),
+('elite replacement', 'elite replacement'),
+#('elite migration', 'elite migration'),
+#('cultural assimilation', 'cultural assimilation'),
+#('continuation', 'continuation'),
+#('indigenous revolt', 'indigenous revolt'),
+('absorption', 'absorption'),
 ('replacement', 'replacement'),
-('population migration', 'population migration'),
-('hostile', 'hostile'),
-('disruption/continuity', 'disruption/continuity'),
-('continuity/discontinuity', 'continuity/discontinuity'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
-('suspected unknown', 'suspected unknown'),
+('population replacement', 'population replacement'),
+
+#('population migration', 'population migration'),
+#('hostile', 'hostile'),
+#('disruption/continuity', 'disruption/continuity'),
+#('continuity/discontinuity', 'continuity/discontinuity'),
+('uncoded', 'uncoded'),
 ('vassalage', 'vassalage'),
 ('not applicable', 'not applicable'),
 ('unknown', 'unknown'),
 ('economic displacement', 'economic displacement'),
 ('secession', 'secession'),
+('territorial consolidation', 'territorial consolidation'),
 )
 
 POLITY_SUPRAPOLITY_RELATIONS_CHOICES = (
@@ -90,8 +94,7 @@ POLITY_LANGUAGE_CHOICES = (
 ('Atanque', 'Atanque'),
 ('Shuar', 'Shuar'),
 ('Arabic', 'Arabic'),
-('suspected unknown', 'suspected unknown'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Demotic', 'Demotic'),
 ('Ancient Egyptian', 'Ancient Egyptian'),
 ('Late Egyptian', 'Late Egyptian'),
@@ -284,7 +287,7 @@ POLITY_LANGUAGE_CHOICES = (
 POLITY_LINGUISTIC_FAMILY_CHOICES = (
 ('Indo-European', 'Indo-European'),
 ('Sino-Tibetan', 'Sino-Tibetan'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Tungusic', 'Tungusic'),
 ('Altaic', 'Altaic'),
 ('Mongolic', 'Mongolic'),
@@ -304,7 +307,6 @@ POLITY_LINGUISTIC_FAMILY_CHOICES = (
 ('isolate language', 'isolate language'),
 ('West Semetic', 'West Semetic'),
 ('isolate', 'isolate'),
-('suspected unknown', 'suspected unknown'),
 ('language isolate', 'language isolate'),
 ('none', 'none'),
 ('Germanic', 'Germanic'),
@@ -343,10 +345,10 @@ POLITY_LINGUISTIC_FAMILY_CHOICES = (
 )
 
 POLITY_LANGUAGE_GENUS_CHOICES = (
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Afro-Asiatic', 'Afro-Asiatic'),
 ('Indo-European', 'Indo-European'),
-('suspected unknown', 'suspected unknown'),
+('unknown', 'unknown'),
 )
 
 POLITY_RELIGION_GENUS_CHOICES = (
@@ -399,7 +401,7 @@ POLITY_RELIGION_FAMILY_CHOICES = (
 ('Shang Religion', 'Shang Religion'),
 ('Atenism', 'Atenism'),
 ('Mahayana', 'Mahayana'),
-('suspected unknown', 'suspected unknown'),
+('unknown', 'unknown'),
 ('Japanese State Shinto', 'Japanese State Shinto'),
 ('Saiva Traditions', 'Saiva Traditions'),
 ('Sufi', 'Sufi'),
@@ -449,30 +451,36 @@ POLITY_RELIGION_CHOICES = (
 ('Twelver', 'Twelver'),
 ('Byzantine Orthodox', 'Byzantine Orthodox'),
 ('Bektasi', 'Bektasi'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
+('uncoded', 'uncoded'),
 ('Sunni', 'Sunni'),
 ('Roman Catholic', 'Roman Catholic'),
 )
 
 POLITY_RELATIONSHIP_TO_PRECEDING_ENTITY_CHOICES = (
 ('continuity', 'continuity'),
-('elite migration', 'elite migration'),
-('cultural assimilation', 'cultural assimilation'),
-('continuation', 'continuation'),
-('indigenous revolt', 'indigenous revolt'),
-('replacement', 'replacement'),
-('population migration', 'population migration'),
-('hostile', 'hostile'),
-('disruption/continuity', 'disruption/continuity'),
-('continuity/discontinuity', 'continuity/discontinuity'),
-('NO_VALUE_ON_WIKI', 'NO_VALUE_ON_WIKI'),
-('suspected unknown', 'suspected unknown'),
+('elite replacement', 'elite replacement'),
+('absorption', 'absorption'),
+
+#('elite migration', 'elite migration'),
+#('cultural assimilation', 'cultural assimilation'),
+#('continuation', 'continuation'),
+#('indigenous revolt', 'indigenous revolt'),
+#('replacement', 'replacement'),
+('population replacement', 'population replacement'),
+#('population migration', 'population migration'),
+#('hostile', 'hostile'),
+#('disruption/continuity', 'disruption/continuity'),
+#('continuity/discontinuity', 'continuity/discontinuity'),
+#('uncoded', 'uncoded'),
+#('unknown', 'unknown'),
 ('vassalage', 'vassalage'),
-('not applicable', 'not applicable'),
+#('not applicable', 'not applicable'),
 ('unknown', 'unknown'),
 ('economic displacement', 'economic displacement'),
 ('secession', 'secession'),
+('territorial consolidation', 'territorial consolidation'),
 )
+
 
 
 ########## TUPLE CHOICES THAT ARE THE SAME 
@@ -1470,7 +1478,19 @@ class Polity_suprapolity_relations(SeshatCommon):
             return f"{self.get_supra_polity_relations_display()} [---]"
         else:
             return " - "
-
+        
+    def display_value_2(self):
+        if self.supra_polity_relations and self.other_polity and self.polity:
+            polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
+            other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
+            return mark_safe(f"<span> {self.get_supra_polity_relations_display()} </span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>")
+        elif self.supra_polity_relations == "none":
+            return self.get_supra_polity_relations_display()
+        elif self.supra_polity_relations:
+            return f"{self.get_supra_polity_relations_display()} [---]"
+        else:
+            return " - "
+    
     def show_value(self):
         """
         Return the supra polity relations of the polity (if it exists on the
@@ -2874,14 +2894,20 @@ class Polity_preceding_entity(SeshatCommon):
         Returns:
             str: A string representation of the instance's other_polity/preceding entity relationship or a dash if the preceding entity does not exist on the instance.
         """
-        if self.preceding_entity and self.other_polity and self.polity:
+        if self.relationship_to_preceding_entity and self.other_polity and self.polity:
             polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
             other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
-            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='badge bg-secondary text-white'>  {self.relationship_to_preceding_entity} &nbsp;&nbsp;<i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"
+            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='text-secondary fs-6'> &nbsp;<i class='fa-solid fa-right-long px-1'></i> {self.relationship_to_preceding_entity} &nbsp;<i class='fa-solid fa-right-long px-1'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"
+        elif self.other_polity and self.polity:
+            polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
+            other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
+            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a> <span class='text-secondary fs-6'>  &nbsp;<i class='fa-solid fa-right-long'></i>&nbsp; </span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a>"        
         elif self.preceding_entity == "none":
             return self.preceding_entity
+        elif self.other_polity:
+            return f"{self.other_polity} [---]"
         elif self.preceding_entity:
-            return f"{self.preceding_entity} [---]"
+            return self.preceding_entity
         else:
             return " - "
 
@@ -2894,10 +2920,12 @@ class Polity_preceding_entity(SeshatCommon):
         Returns:
             str: A string representation of polity's preceding entity (or " - " if it does not exist on the instance).
         """
-        if self.preceding_entity and self.polity and self.other_polity:
-            return self.preceding_entity +f" [{self.other_polity.new_name}]" + ' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]" 
-        elif self.preceding_entity and self.polity:
-            return self.preceding_entity
+        if self.relationship_to_preceding_entity and self.polity and self.other_polity:
+            return self.relationship_to_preceding_entity + ": " + self.other_polity.long_name + f" [{self.other_polity.new_name}]" + ' ---> ' + self.polity.long_name + f" [{self.polity.new_name}]" 
+        elif self.relationship_to_preceding_entity and self.polity:
+            return "NO_POLITY" +' ---> ' + f"{self.polity.long_name} " + f" [{self.polity.new_name}]"
+        elif self.relationship_to_preceding_entity:
+            return self.relationship_to_preceding_entity
         elif self.preceding_entity:
             return self.preceding_entity
         else:
@@ -3287,7 +3315,7 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon):
         """
         return "Polity Scale of Supracultural Interaction"
     
-    def show_value(self):
+    def display_value(self):
         """
         Return the polity's scale of supracultural interaction (if it exists
         on the instance, otherwise return a dash).
@@ -3299,6 +3327,19 @@ class Polity_scale_of_supracultural_interaction(SeshatCommon):
             return mark_safe(f"{self.scale_from:,} <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
         elif self.scale_from and self.scale_to:
             return mark_safe(f"<span class='fw-light text-secondary'> [</span>{self.scale_from:,} <span class='fw-light text-secondary'> to </span> {self.scale_to:,}<span class='fw-light text-secondary'>] </span> <span class='fw-light fs-6 text-secondary'> km<sup>2</sup> </span>")
+        elif self.scale_from:
+            return f"[{self.scale_from:,}"
+        elif self.scale_to:
+            return f"[{self.scale_to:,}"
+        else:
+            return " - "
+        
+    
+    def show_value(self):
+        if self.scale_from and self.scale_to and self.scale_to == self.scale_from:
+            return mark_safe(f"{self.scale_from:,}")
+        elif self.scale_from and self.scale_to:
+            return mark_safe(f"[{self.scale_from:,} to {self.scale_to:,}]")
         elif self.scale_from:
             return f"[{self.scale_from:,}"
         elif self.scale_to:

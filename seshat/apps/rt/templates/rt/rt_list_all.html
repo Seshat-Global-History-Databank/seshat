@@ -4,37 +4,47 @@
 {% load humanize %}
 {% load custom_filters %}
 
-
 {% block download_button %}
-    <a href="{% url create_url %}" class="btn btn-outline-success  float-end mb-1"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
-    <a href="{% url download_url %}" class="btn btn-outline-primary   float-end mb-1"><i class="fas fa-download"></i> &nbsp; Download All</a>
-{% endblock download_button %}
 
-{% block metadownload_button %}
-    <a href="{% url metadownload_url %}" class="btn btn-primary ms-auto  float-end mb-1"><i class="fas fa-download"></i> &nbsp; Download MetaData</a>
-{% endblock metadownload_button %}
+    <!-- Add Another Fact Button -->
+<a href="{% url create_url %}" 
+class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to add a new coded record">
+<i class="fas fa-plus"></i>
+</a>
+
+<!-- See All Such Facts Button -->
+<a href="{% url download_url %}" 
+class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to Download all such coded records">
+<i class="fas fa-download"></i>
+</a>
+
+<!-- See All Such Facts Button -->
+<a href="{% url metadownload_url %}" 
+class="btn btn-primary btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to Download the Metadata">
+<i class="fas fa-download"></i>
+</a>
+{% endblock download_button %}
 
 
 {% block myheadings_list %}
-<th class = "fw-bold" style="text-align: left; white-space: nowrap;" scope="col"><span> 
+<th class = "fw-bold" style="text-align: left; white-space: nowrap; border-left: 2px solid gray;  border-right: 2px solid gray;" scope="col"><span> 
     <a href="{% url list_all_url %}{{ordering_tag}}"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Coded Value
 </span>
 </th>
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
-<td colspan="1" class="border border-1" style="text-align: left;">
-    <span class="pt-3 fw-bold {% if obj.tag == 'DSP' %}
-    text-danger
-    {% elif obj.tag == 'SSP' %}
-        text-darkorange
-    {% elif obj.tag == 'UNK' %}
-        text-secondary
-    {% elif obj.tag == 'IFR' %}
-        text-primary
-    {% else %}
-        text-success
-    {% endif %} fw-normal">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
+<td colspan="1" style="text-align: left; border-left: 2px solid gray;  border-right: 2px solid gray;">
+    <span class="pt-3 fw-bold">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
 </td>
 {% endblock extra_vars_list %}
 
@@ -43,7 +53,7 @@
 {% block update_button %}
     <td colspan="1" style="text-align: center;">
         <small>
-            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i></a>
+            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i></a>
         </small>
     </td>
 {% endblock update_button %}

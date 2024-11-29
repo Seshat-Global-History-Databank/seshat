@@ -3,9 +3,22 @@
 {% load humanize %}
 
 {% block addmore %}
-<a href="{% url create_new_url %}" class="btn btn-outline-success float-end pb-0 mt-1 ms-1 pt-1"> Add Another Fact
+<!-- Add Another Fact Button -->
+<a href="{% url create_new_url %}" 
+   class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+   data-bs-toggle="tooltip" 
+   data-bs-placement="top" 
+   title="Click to add a new coded value">
+   +
 </a>
-<a href="{% url see_all_url %}" class="btn btn-outline-primary ms-auto pb-0 pt-1 mt-1 ms-1 float-end">See All Such Facts
+
+<!-- See All Such Facts Button -->
+<a href="{% url see_all_url %}" 
+   class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+   data-bs-toggle="tooltip" 
+   data-bs-placement="top" 
+   title="Click to see all such coded values">
+   #
 </a>
 {% endblock addmore %}
 
@@ -17,16 +30,6 @@
 {% block extracols %}
 
 <td style="text-align: left;">
-<span class="h5 fw-bold {% if object.tag == 'DSP' %}
-text-danger
-{% elif object.tag == 'SSP' %}
-    text-darkorange
-{% elif object.tag == 'UNK' %}
-    text-secondary
-{% elif object.tag == 'IFR' %}
-    text-primary
-{% else %}
-    text-success
-{% endif %}">{{ object.show_value }}</span>
+<span class="h5 fw-bold">{{ object.show_value }}</span>
 </td>
 {% endblock extracols %}

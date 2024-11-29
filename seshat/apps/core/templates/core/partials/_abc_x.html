@@ -1,0 +1,110 @@
+<style>
+    .badge-jid:hover {
+      border: 1px solid #782823; /* Border appears on hover */
+    }
+  </style>
+    
+{% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+<span class="px-0 pt-1 pb-0 m-0" style="display:inline-block; vertical-align:top;line-height:normal; margin:0px !important;">
+
+
+{% if object.description %}
+<a class="p-0 m-0" 
+style="display:block; overflow: hidden;" 
+href="{% url key|lower|add:'-update' value.id %}">
+    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c">
+        <i class=" fa-solid fa-pen-to-square"></i>
+        <span> &nbsp;&nbsp;Edit coded value </span>
+    </span>
+</a>  
+{% else %}
+<a class="p-0 m-0" 
+style="display:block; overflow: hidden;" 
+href="{% url key|lower|add:'-update' value.id %}">
+    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c">
+        <i class=" fa-solid fa-pen-to-square"></i>
+        <span> &nbsp;&nbsp;Edit coded value </span>
+    </span>
+</a>  
+{% endif %}
+
+{% if not value.description %}
+    {% if value.comment and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+        {% if value.comment.id == 1 or value.comment.inner_comments_related.all|length == 0 %}
+                <a class="p-0 m-0" 
+                style="display:block; overflow: hidden;"
+                href="{% url 'create_subcomment_new' app_name=my_app_name model_name=value.clean_name instance_id=value.id %}">
+                    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
+                        <i class="fa-solid fa-pen"></i>
+                        <span> &nbsp;&nbsp;Create Description (NEW)
+                        </span>
+                    </span>
+                </a>
+
+        {% else  %}
+            <a class="p-0 m-0" 
+            style="display:block; overflow: hidden;" 
+            href="{% url 'seshatcomment-update' value.comment.id %}">
+                <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>
+                        &nbsp;&nbsp;Edit Description (NEW)
+                    </span>
+                </span>
+            </a>
+        {% endif %}  
+    {% endif %}   
+    {% endif %}  
+
+
+    {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+        {% if not value.private_comment or value.private_comment.id == 1 or value.private_comment.inner_private_comments_related.all|length == 0 %}
+            <a class="p-0 m-0"  
+            style="display:block;overflow: hidden;" 
+            href="{% url 'create_private_subcomment_new' app_name=my_app_name model_name=value.clean_name instance_id=value.id %}">
+                <span class="badge badge-jid badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c">
+                    <i class="fa-regular fa-comment"></i>
+                    <span> &nbsp;&nbsp;Create Private Comment (NEW)
+                    </span>
+                </span>
+            </a>
+        {% endif %}  
+    {% endif %}   
+
+    <a class="p-0 m-0"  
+    style="display:block;overflow: hidden;" 
+    href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}">
+    <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed4c">
+        <i class="fa-solid fa-plus"></i>
+            <span>
+            &nbsp;&nbsp; Add a new row of Data
+        </span>
+    </span>
+    </a> 
+
+</span>
+
+
+    {% if value.private_comment and 'core.add_seshatprivatecommentpart' in  user.get_all_permissions  %}
+
+        {% if value.private_comment.id == 1 or value.private_comment.inner_private_comments_related.all|length == 0 %}
+        {% else  %}
+        <span class="bg-warning p-0 m-0">
+        <div class="border border-2 border-secondary p-0 m-0 rounded" style="background-color:beige">
+            <div class="fw-bold ps-3 py-2 m-0 border-2 border-bottom border-secondary ">Private Comments <span class="text-secondary"> (Only visible to Selected Seshat Experts/RAs)</span></div>
+
+            <div class="p-2 mt-2">
+            {{value.private_comment}}
+            </div>
+            <div class="p-1 mb-1">
+                <a class="p-1 m-0 fs-6" href="{% url 'seshatprivatecomment-update' value.private_comment.id %}"><span class="badge badge-jid bg-warning text-dark"> <i class=" fa-solid fa-pen-to-square bg-warning text-dark"></i><span class="hover-text" style="vertical-align:bottom;">&nbsp;&nbsp;Add your Private Comment</span></span></a>
+            </div>
+
+        </div>
+    </span>
+
+        {% endif %}  
+    {% endif %}   
+
+
+{% endif %}

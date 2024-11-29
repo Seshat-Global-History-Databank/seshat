@@ -141,7 +141,9 @@
                                     {% elif radio.choice_label == 'Inferred' %}
                                         bg-primary 
                                     {% elif radio.choice_label == 'Suspected' %}
-                                        bg-warning text-dark 
+                                        bg-warning text-dark
+                                    {% elif radio.choice_label == 'Undecided' %}
+                                            bg-secondary 
                                     {% endif %}
                                 ">  
                                     {{ radio.choice_label }}

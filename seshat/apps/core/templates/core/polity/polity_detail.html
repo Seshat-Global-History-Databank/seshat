@@ -15,6 +15,10 @@
         margin: 10px 0; /* Adjust the value as per your requirement */
         content: "";
     }
+    .bg-colorful:hover {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        color:black;
+      }
     .custom-left-border-shadowed {
         border-left: none; /* Adjust the border color and thickness as desired */
         box-shadow: 0 0 4px teal; 
@@ -51,19 +55,20 @@
 
     .highlighted-value-title {
         display: inline-block; 
-        border: none; /* 1px solid #198754;*/ 
+        border: 1px solid rgba(78, 28, 23, 0.25);
         padding: 5px; 
         border-radius: 5px;
-        box-shadow: 0 0 4px rgba(25, 135, 84, 0.5); 
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
     }
 
     .highlighted-value {
         display: inline-block; 
-        border: none; /* 1px solid #198754;*/ 
+        border-bottom: 1px solid rgba(78, 28, 23, 0.15);
         padding: 5px; 
-        border-radius: 5px;
-        box-shadow: 0 0 2px rgba(25, 135, 84, 0.5); 
+        border-radius: 1px;
         background-color:#fffdf2; /* fffdf2   fefae6*/
     }
     .montserrat-font {
@@ -139,8 +144,6 @@
 
     .off-vars {
         color:rgba(125, 125, 125, 0.734); 
-        background:rgba(252, 252, 252, 0.734); 
-        border:1px solid #a5bf892e;
     }
 
     .federicka-huge {
@@ -177,7 +180,14 @@
     a:hover .hover-text {
         width: auto; /* Set width to 'auto' to allow it to grow to fit the content */
     }
-    
+    .shadow-box {
+        /* Light gray shadow */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        /* Optional: Add a border if you like */
+        border: 1px solid #acd2cc; 
+        padding: 20px; /* Adjust as needed */
+        background-color: white; /* Optional */
+    }
 </style>
 
 <!-- showcase for index -->
@@ -299,13 +309,14 @@
                 <div class="col-md-12 row pb-3">
                     <div class="col-md-8">
                         <br>
-                            <span class="h5 fw-bold">Preceding:</span>
-                            {% if preceding_data %}
+                            <span class="h5 fw-bold">Preceding Entity:</span>                            
 
+                            {% if preceding_data %}
+                            <span class=" h6 text-secondary">Add one more <a class="fw-bold text-secondary text-decoration-underline" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</span>
                             {% for vv in preceding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
-                                    <span class="bg-light px-1 border border-dark rounded">
+                                    <span class="px-1 border border-dark rounded" style="background:#fefae6" >
 
                                     {% if  vv.other_polity.start_year == vv.other_polity.end_year %}
                                         {% if  vv.other_polity.start_year < 0 %}
@@ -344,20 +355,20 @@
                                 </div>
                             {% endif %}
                             {% endfor %}
-                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
+
                         {% else %}
                             <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
 
                         <br>
 
-                        <span class="h5 fw-bold">Succeeding:</span>
+                        <span class="h5 fw-bold">Succeeding Entity:</span>
                         {% if succeeding_data %}
-
+                        <span class="h6 text-secondary">Add one more <a class="fw-bold text-secondary text-decoration-underline" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</span>
                             {% for vv in succeeding_data %}
                             {% if vv.polity and  vv.other_polity %}
                                 <div>
-                                    <span class="bg-light px-1 border border-dark rounded">
+                                    <span class="px-1 border border-dark rounded" style="background:#fefae6">
 
                                     {% if  vv.polity.start_year == vv.polity.end_year %}
                                         {% if  vv.polity.start_year < 0 %}
@@ -396,7 +407,7 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
-                            <div class="text-secondary">Add one more <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
+
                         {% else %}
                         <div>No Polity found. Add one <a class="fw-bold" href="{% url 'polity_preceding_entity-create' %}?other_polity_id_x={{object.id}}">here</a>.</div>
                         {% endif %}
@@ -576,55 +587,61 @@
                                 {% if values %}
                                 <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
                                     <div class="fs-6 pb-1">
-                                        <a class="h6" href="#{{key}}">
-                                            <i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                        </a> {{ values.0.clean_name_spaced|slice:"7:" }}:
-                                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                        <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                            {{ values.0.clean_name_spaced|slice:"7:" }}
                                         </a> 
+                                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                            <a class="h6" style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                            </a> 
+
                                         {% endif %}
 
                                     </div>
-                                    <table class="table mb-0 pb-0">
+
+                                    <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                                     {% for vv in values %}
                                     <tr>
-                                        <td>
-                                            {% if  vv.tag == 'IFR' %}
-                                            <span class="h6 text-secondary fw-bold">inferred</span> 
-                                            {% endif %}
-
-                                            {% if  vv.show_value == 'present' %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                            {% elif vv.show_value == "absent" %}
-                                            <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                                            {% elif key == "Polity_suprapolity_relations" %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.display_value }}</span> 
-                                            {% elif key == "Polity_preceding_entity" %}
-                                                {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
-                                                    <span class="h6 text-dark fw-bold">Succeeding: </span> 
-                                                    <span class="h6 text-teal fw-bold ps-2">
-                                                        <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
-                                                        </span> 
-                                                {% elif vv.polity and vv.other_polity and vv.polity.id == object.id %}
-                                                    <span class="h6 text-dark fw-bold">Preceding:&nbsp;&nbsp; </span> 
-                                                    <span class="h6 text-teal fw-bold ps-2">
-                                                        <a href="{% url 'polity-detail-main' vv.other_polity.id %}">{{ vv.other_polity }}</a>
-                                                        </span> 
-                                                {% else %}
-                                                    <span class="h6 text-dark fw-bold">UNCLEAR: </span> 
+                                        <td class="ps-2">
+                                            <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                                {% if  vv.tag == 'IFR' %}
+                                                <span class="h6 text-secondary fw-bold">inferred</span> 
                                                 {% endif %}
 
+                                                {% if vv.show_value == "absent" %}
+                                                <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                                {% elif key == "Polity_suprapolity_relations" or key == "Polity_scale_of_supracultural_interaction" %}
+                                                <span class="h6 text-dark fw-bold">{{ vv.display_value }}</span> 
+                                                {% elif key == "Polity_preceding_entity" %}
+                                                    {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
+                                                        <span class="h6 text-dark fw-bold">Succeeding: </span> 
+                                                        <span class="text-teal fw-bold ps-2">
+                                                            <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
+                                                            </span> 
+                                                    {% elif vv.polity and vv.other_polity and vv.polity.id == object.id %}
+                                                        <span class="h6 text-dark fw-bold">Preceding:&nbsp;&nbsp; </span> 
+                                                        <span class="text-teal fw-bold ps-1">
+                                                            <a class="fs-6" href="{% url 'polity-detail-main' vv.other_polity.id %}">{{ vv.other_polity }}</a>
+                                                            </span> 
+                                                    {% else %}
+                                                        <span class="h6 text-dark fw-bold">UNCLEAR: </span> 
+                                                    {% endif %}
 
+                                                    <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ vv.get_relationship_to_preceding_entity_display }}]</span>                     
+                        
+                                                {% else %}
+                                                <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                                {% endif %}
+                                            </a> 
 
-
-                                                <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ vv.get_relationship_to_preceding_entity_display }}]</span>                     
-                    
-                                            {% else %}
-                                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                            {% endif %}
                                         </td>
-                                        <td class="text-end ps-4">
+
+                                        {% if vv.year_from == None and vv.year_to == None %}
+                                        <td>
+                                        </td>
+                
+                                        {% else %}
+                                        <td class="text-end ps-5" style="padding-top:5px;">
                                             <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                                 {% if vv.year_from == None %}
                                                     &nbsp;
@@ -666,22 +683,30 @@
                                                 {% endif %}
                                             </span>
                                         </td>
+                                        {% endif %}
+
                                     </tr>
+
                                     {% endfor %}
 
 
                                     </table>
-                                </span>
-                                {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                    <div class="fs-6"> {{ key|slice:"7:" }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                    </a></div>
-                                </span>
 
+                                </span>
                                 {% endif %}
                             {% endfor %}
-                            </div>
 
+                            {% for key, values in values_m.items %}
+                            {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                            <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                {{ key|slice:"7:"|replace_underscore_and_capitalize }} 
+                                    <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|slice:"7:"|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                    </a>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                            </div>
 
                     {% endif %}
                 {% endfor %}
@@ -694,7 +719,7 @@
                         General Variables
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -734,28 +759,38 @@
                             {% if values %}
                             <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
                                 <div class="fs-6 pb-1"> 
-                                    <a class="h6" href="#{{key}}"><i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                    </a> {{values.0.clean_name_spaced}}: 
+                                    <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                        {{ values.0.clean_name_spaced}}
+                                    </a> 
                                     {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                    <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                    <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                     </a> 
                                     {% endif %}
                                 </div>
-                                <table class="table mb-0 pb-0">
+
+                                <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
                                 {% for vv in values %}
+
                                 <tr>
-                                    <td>{% if  vv.tag == 'IFR' %}
-                                        <span class="h6 text-secondary fw-bold">inferred</span> 
-                                        {% endif %}
-                                        {% if  vv.show_value == 'present' %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% elif vv.show_value == "absent" %}
-                                        <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                                        {% else %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% endif %}
+                                    <td class="ps-2">
+                                        <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                            {% if  vv.tag == 'IFR' %}
+                                            <span class="h6 text-secondary fw-bold">inferred</span> 
+                                            {% endif %}
+                                            {% if vv.show_value == "absent" %}
+                                            <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                            {% else %}
+                                            <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                            {% endif %}
+                                        </a> 
+
                                     </td>
-                                    <td class="text-end ps-4">
+                                    {% if vv.year_from == None and vv.year_to == None %}
+                                    <td>
+                                    </td>
+            
+                                    {% else %}
+                                    <td class="text-end ps-5" style="padding-top:5px;">
                                         <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                             {% if vv.year_from == None %}
                                                 &nbsp;
@@ -797,18 +832,30 @@
                                             {% endif %}
                                         </span>
                                     </td>
+                                    {% endif %}
+
                                 </tr>
+
                                 {% endfor %}
                             </table>
-                                    </span>
-                                    {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                    <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                        <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                        </a></div>
+
                                     </span>
                             {% endif %}
 
                             {% endfor %}
+
+                            {% for key, values in values_m.items %}
+                                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                    {{ key|replace_underscore_and_capitalize }} 
+                                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        </a>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+
+
                 </div>
                 {% endif %}
 
@@ -823,7 +870,7 @@
                         Social Complexity Variables
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -869,30 +916,38 @@
                             {% for key, values in values_m.items %}
                             {% if values %}
                             <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
-                                <div class="fs-6 pb-1"> <a class="h6" href="#{{key}}"> &nbsp;<i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                                </a> {{values.0.clean_name_spaced}}:
+                                <div class="fs-6 pb-1"> 
+                                    <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                        {{ values.0.clean_name_spaced}}
+                                    </a> 
                                 {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                 </a> 
                                 {% endif %}
                             </div>
-                                <table class="table mb-0 pb-0">
+                                <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                                 {% for vv in values %}
                                 <tr>
-                                    <td>
+                                    <td class="ps-2">
+                                        <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                                         {% if  vv.tag == 'IFR' %}
                                         <span class="h6 text-secondary fw-bold">inferred</span> 
                                         {% endif %}
-                                        {% if  vv.show_value == 'present' %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                                        {% elif vv.show_value == "absent" %}
-                                        <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
+                                        {% if vv.show_value == "absent" %}
+                                        <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
                                         {% else %}
-                                        <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
+                                        <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
                                         {% endif %}
+                                    </a> 
+
                                     </td>
-                                    <td class="text-end ps-4">
+                                    {% if vv.year_from == None and vv.year_to == None %}
+                                    <td>
+                                    </td>
+            
+                                    {% else %}
+                                    <td class="text-end ps-5" style="padding-top:5px;">
                                         <span class="text-secondary fw-light fs-6" style="border-radius:5px">
                                             {% if vv.year_from == None %}
                                                 &nbsp;
@@ -934,6 +989,7 @@
                                             {% endif %}
                                         </span>
                                     </td>
+                                    {% endif %}
                                 </tr>
 
                                 {% endfor %}
@@ -941,14 +997,20 @@
 
 
                                     </span>
-                                    {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                                    <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                                        <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                                        </a></div>
-                                    </span>
                             {% endif %}
 
                             {% endfor %}
+
+                            {% for key, values in values_m.items %}
+                                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                    {{ key|replace_underscore_and_capitalize }} 
+                                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                        </a>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
                 </div>
                 {% endif %}
 
@@ -963,7 +1025,7 @@
                         Warfare Variables (MilTech)
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet.
+                Coding in Progress.
                     </span>                 
                 </span>
             </div>
@@ -1009,16 +1071,25 @@
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
-                    <div class="fs-6 pb-1"> <a class="h6" href="#{{key}}"> &nbsp;<i class="fa-solid fa-circle-arrow-down fa-sm text-teal-light"></i>
-                    </a> {{values.0.clean_name_spaced}}:&nbsp; </div>
-                    <table class="table mb-0 pb-0">
+                    <div class="fs-6 pb-1"> 
+                        <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                            {{ values.0.clean_name_spaced}}
+                        </a> 
+                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                        <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize_for_long_vars }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                        </a> 
+                        {% endif %}
+                    
+                    </div>
+
+                    <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
 
                     {% for vv in values %}
                     <tr>
 
                         {% if values.0.clean_name_spaced == 'Widespread Religion' %}
                         <td>
-                            <span class="h6 text-secondary fw-bold ps-2 pe-5">{{ vv.get_order_display }}</span> 
+                            <span class="h6 text-secondary fw-bold ps-1 pe-5">{{ vv.get_order_display }}</span> 
                         </td>
                         <td>
                             <span class="h6 text-teal fw-bold">{{ vv.widespread_religion }}</span> 
@@ -1029,28 +1100,30 @@
 
                         </td>
 
+                        {% else %}
 
+                        <td class="ps-2">
+                            <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                {% if  vv.tag == 'IFR' %}
+                                <span class="h6 text-secondary fw-bold">inferred</span> 
+                                {% endif %}
+                                {% if vv.show_value == "absent" %}
+                                <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
+                                {% else %}
+                                <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
+                                {% endif %}
+                            </a> 
 
-
+                        </td>
+                        {% endif %}
+                        {% if vv.year_from == None and vv.year_to == None %}
+                        <td>
+                        </td>
 
                         {% else %}
 
-                        <td>
-                            {% if  vv.tag == 'IFR' %}
-                            <span class="h6 text-secondary fw-bold">inferred</span> 
-                            {% endif %}
-                            {% if  vv.show_value == 'present' %}
-                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                            {% elif vv.show_value == "absent" %}
-                            <span class="h6 text-danger fw-bold">{{ vv.show_value }}</span> 
-                            {% else %}
-                            <span class="h6 text-teal fw-bold">{{ vv.show_value }}</span> 
-                            {% endif %}
-                        </td>
-                        {% endif %}
-
-                        <td class="text-end ps-4">
-                            <span class="text-secondary fw-light fs-6" style="border-radius:5px">
+                        <td class="text-end ps-5" style="padding-top:5px;">
+                            <span class="text-secondary fs-6">
                                 {% if vv.year_from == None %}
                                     &nbsp;
                                 {% elif  vv.year_from == vv.year_to %}
@@ -1059,7 +1132,7 @@
                                     <span class="text-secondary fw-light fs-6">BCE</span> 
                                     {% else %}
                                     {{ vv.year_from }} 
-                                    <span class="text-secondary fw-light fs-6">CE</span>
+                                    <span class="text-secondary fw-light fs-6 ">CE</span>
                                     {% endif %}
                                 {% elif vv.year_to == None %}
                                     {% if  vv.year_from < 0 %}
@@ -1074,7 +1147,7 @@
                                 {% else %}
                                     {% if  vv.year_from < 0 and vv.year_to < 0 %}
                                     {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
+                                        <span class="text-secondary fw-light fs-6 pt-3">BCE</span> 
                                     <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
                                         <span class="text-secondary fw-light fs-6">BCE</span> 
                                     {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
@@ -1091,22 +1164,28 @@
                                 {% endif %}
                             </span>
                         </td>
+                        {% endif %}
+
                     </tr>
 
                     {% endfor %}
                 </table>
                         </span>
-                        {% elif user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                        <span class="badge mb-1 mt-0 mx-0 off-vars" style="text-align: left;">
-                            <div class="fs-6"> {{ key }} <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                            </a></div>
-                            <table class="table mb-0 pb-0">
 
-                            </table>
-                        </span>
                 {% endif %}
 
                 {% endfor %}
+
+                {% for key, values in values_m.items %}
+                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    {{ key|replace_underscore_and_capitalize_for_long_vars }} 
+                        <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize_for_long_vars }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                        </a>
+                </div>
+                {% endif %}
+            {% endfor %}
+
     </div>
     {% endif %}
 
@@ -1121,7 +1200,7 @@
             Religion Tolerance
         </span>   
         <span class=" mt-3 fs-5">
-            Nothing coded yet.
+    Coding in Progress.
         </span>                 
     </span>
 </div>
@@ -1157,7 +1236,7 @@
                             Human Sacrifice
                         </span>   
                         <span class=" mt-3 fs-5">
-                            Nothing coded yet. 
+                    Coding in Progress. 
                             {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                             <span class="text-success">Add a new Human Sacrifice: </span>  <a class="h6" href="{% url 'human_sacrifice-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                             </a>
@@ -1253,7 +1332,7 @@
                         Crisis Consequences
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet. 
+                Coding in Progress. 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                         <span class="text-success">Add a new Crisis Consequence: </span>  <a class="h6" href="{% url 'crisis_consequence-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                         </a>
@@ -1299,7 +1378,7 @@
                         Power Transitions
                     </span>   
                     <span class=" mt-3 fs-5">
-                        Nothing coded yet. 
+                Coding in Progress. 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                         <span class="text-success">Add a Power Transition: </span>  <a class="h6" href="{% url 'power_transition-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
                         </a>
@@ -1393,25 +1472,48 @@
                 {% if values %}
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
-                            <div class="col-md-9">
-                                <span class="h5 text-teal pt-0 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
+                            <div class="col-md-9 pb-1">
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
                                     {% if key == "Polity_suprapolity_relations" %}
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold  text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.display_value }}
     
                                     </span>
+
+                                    {% elif key == "Polity_scale_of_supracultural_interaction" %}
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
+                                            {{ value.clean_name_spaced|slice:"7:" }}:            
+                                        </span>  <br>{{ value.display_value }}
+                                    </span>
+
+                                    {% elif key == "Polity_preceding_entity" %}
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
+                                            {{ value.clean_name_spaced|slice:"7:" }}:            
+                                        </span>  <br>{{ value.display_value }}
+                                    </span>
+
                                     {% else %}
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced|slice:"7:" }}:            
                                         </span>  <br>{{ value.show_value }}
     
                                     </span>
+
                                     {% endif %}
-    
+
+
+                                    {% if key == "Polity_preceding_entity" or key == "Polity_duration" or key == "Polity_peak_years" %}
+                                    &nbsp;
+                                    {% else %}
                                     {% include "core/partials/_year_block_value_inline.html" %}
+                                    {% endif %}
+
                                     <div style="display: block; padding: 0;">
                                         <div style="display: inline-flex; flex-direction: row;">
                                             {% include "core/partials/_tag_value_inline.html" %}
@@ -1427,7 +1529,7 @@
                                 {% endwith %}
                             </div>
                             <div class="col-md-3">
-                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b> <u>View all such values</u></b></a>
+                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b> <u>View all such records</u></b></a>
                             </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1437,6 +1539,23 @@
 
                                 </div>
                             {% endif %}
+                            {% if value.comment %}
+                                {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
+                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                    <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>                                    <span>
+                                        {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                                        <a class="p-0 m-0" 
+                                        style="display:block; overflow: hidden;" 
+                                        href="{% url 'seshatcomment-update' value.comment.id %}">
+                                        </a>  
+                                        {% endif %}
+
+                                    </span>       
+                                 </p> 
+                            </div>
+                            {% endif %}
+                        {% endif %}
                             {% endfor %}
                     </div>
                     <br>
@@ -1479,9 +1598,9 @@
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
                             <div class="col-md-9">
-                                <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                    <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                        <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                    <span class="h5 fw-bold" >
+                                        <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                             {{ value.clean_name_spaced }}:            
                                         </span>  <br>{{ value.show_value }}
                                     </span>
@@ -1502,7 +1621,7 @@
 
                             </div>
                             <div class="col-md-3">
-                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                             </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1512,11 +1631,18 @@
                                 </div>
                             {% endif %}
                             {% if value.comment %}
-                                {% if value.comment_id > 1 %}
-                                <div class="col-md-12 highlighted-value my-0 py-0">
-                                    <p class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                                        (NEW APPROACH): {{ value.comment }}             
-                                    </p> 
+                                {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                    <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                        <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>
+                                        <span>
+                                            {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                                            <a class="p-0 m-0" 
+                                            style="display:block; overflow: hidden;" 
+                                            href="{% url 'seshatcomment-update' value.comment.id %}">
+                                            </a>  
+                                            {% endif %}
+                                        </span>       
+                                     </p> 
                                 </div>
                                 {% endif %}
                             {% endif %}
@@ -1564,9 +1690,9 @@
                         <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                 {% for value in values %}
                                 <div class="col-md-9">
-                                    <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                        <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                            <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                    <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                        <span class="h5 fw-bold" >
+                                            <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                 {{ value.clean_name_spaced }}:            
                                             </span>  <br>{{ value.show_value }}
                                         </span>
@@ -1577,7 +1703,6 @@
                                                 {% include "core/partials/_disputed_value_inline.html" %}
                                                 {% include "core/partials/_uncertain_value_inline.html" %}
                                                 {% include "core/partials/_expert_checked_value_inline.html" %}
-                                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                                 </a> 
                                             </div>
                                         </div>
@@ -1589,21 +1714,29 @@
 
                                 </div>
                                 <div class="col-md-3">
-                                    <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                    <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                                 </div>
                                 {% if value.description %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
-                                        <p class="fs-6 my-1 py-1">
+                                        <p class="fs-6 my-1 py-1" >
                                                 {{ value.description|make_references_look_nicer }}
                                         </p>
                                     </div>
                                 {% endif %}
                                 {% if value.comment %}
-                                    {% if value.comment_id > 1 %}
+                                    {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
-                                        <p class="pt-1 fs-5 pb-1 fw-bold bg-info" id="{{key}}"> 
-                                            (NEW APPROACH): {{ value.comment }}             
-                                        </p> 
+                                        <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                            <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>                                           
+                                             <span>
+                                                {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                                                <a class="p-0 m-0" 
+                                                style="display:block; overflow: hidden;" 
+                                                href="{% url 'seshatcomment-update' value.comment.id %}">
+                                                </a>  
+                                                {% endif %}
+                                            </span>       
+                                         </p> 
                                     </div>
                                     {% endif %}
                                 {% endif %}
@@ -1651,9 +1784,9 @@
                             <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                                     {% for value in values %}
                                     <div class="col-md-10">
-                                        <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                                            <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                                                <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                                        <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                            <span class="h5 fw-bold" >
+                                                <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                                     {{ value.clean_name_spaced }}:            
                                                 </span>  <br>{{ value.show_value }}
                                             </span>
@@ -1668,11 +1801,12 @@
                                             </div>
                                         </span>
                                         {% with my_app_name='rt' %}
-                                            {% include "core/partials/_abc.html" %}
+                                            {% include "core/partials/_abc_rt.html" %}
                                         {% endwith %}
+
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light"><b><u>View all such values</u></b></a>
+                                        <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                                     </div>
                                     {% if value.description %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1682,11 +1816,20 @@
                                         </div>
                                     {% endif %}
                                     {% if value.comment %}
-                                        {% if value.comment_id > 1 %}
+                                        {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
-                                            <p class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                                                (NEW APPROACH): {{ value.comment }}             
-                                            </p> 
+                                            <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                                <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>
+                                                    <span>
+                                                    {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                                                    <a class="p-0 m-0" 
+                                                    style="display:block; overflow: hidden;" 
+                                                    href="{% url 'seshatcomment-update' value.comment.id %}">
+                                                    </a>  
+                                                    {% endif %}
+                                                </span>       
+                                             </p> 
+
                                         </div>
                                         {% endif %}
                                     {% endif %}
@@ -1725,9 +1868,9 @@
 
                 {% for value in values %}
                 <div class="col-md-9">
-                    <span class="h5 text-teal pt-2 pb-0 pe-2 ps-1 mb-0 mt-1 highlighted-value-title">
-                        <span class="ps-1 h5 fw-bold" style="font-family: 'Delius', cursive;">
-                            <span class="py-2 fs-6 fw-bold text-secondary" style="font-family: 'Delius', cursive;" id="{{key}}"> 
+                    <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                        <span class="h5 fw-bold" >
+                            <span class="py-2 fs-6 fw-bold text-secondary"  id="{{key}}"> 
                                 Human Sacrifice:           
                             </span>  <br>{{ value.show_value }}
                         </span>
@@ -1742,7 +1885,7 @@
                         </div>
                     </span>
                     {% with my_app_name='crisisdb' %}
-                        {% include "core/partials/_abc.html" %}
+                        {% include "core/partials/_abc_x.html" %}
                     {% endwith %}
                 </div>
                 <div class="col-md-3">
@@ -1763,7 +1906,7 @@
                 {% endfor %} 
                </div>    
             {% else %}
-                <span class="text-secondary">- Nothing coded yet.</span>
+                <span class="text-secondary">Coding in Progress.</span>
             {% endif %}
     </div>
 
@@ -1793,31 +1936,28 @@
          
         <div class="py-2 custom-left-border-shakkdowed">
         {% if not all_crisis_cases_data %}
-        <span class="text-secondary">- Nothing coded yet.</span>
+        <span class="text-secondary">Coding in Progress.</span>
         {% endif %}
         {% for key, values in all_crisis_cases_data.items %}
         {% if values and 'core.view_capital' in user.get_all_permissions %}
             <div  id="{{key}}">
 
                     {% for value in values %}
-                        <span class="pt-1 fs-5 pb-1 fw-bold" id="{{key}}"> 
-                            <i class="fa-solid fa-star fa-2xs"></i>
-                            {{ value.crisis_case_id }}:            
-                        </span> 
-                        <br>
-                    <span class="h5 fw-bold text-teal  pt-2 pb-0 pe-2 ps-1 mb-2 mt-1 highlighted-value-title">{{value.name}} 
+                    <span class="h5 fw-bold text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">{{value.name}} 
                         {% include "core/partials/_year_block_value_inline_cc.html" %}
                         <div>
+                            <span class="text-secondary fw-light"> {{ value.crisis_case_id }}</span>
+<br>
                             <span class="fs-6 text-dark">
-                                {% if value.polity %}
-                                Polities:
-                                    {% if value.polity.long_name %}
+                                {% if value.other_polity %}
+                                Other Polities:
+                                    {% if value.other_polity.long_name %}
                                     <span class="fs-5">
-                                        <a href="{% url 'polity-detail-main' value.polity.id %}">{{ value.polity.long_name }}</a>
+                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.long_name }}</a>
                                     </span>
                                     {% else %}
                                     <span class="text-secondary">
-                                        <a href="{% url 'polity-detail-main' value.polity.id %}">{{ value.polity.name }}</a>
+                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.name }}</a>
                                     </span>
                                     {% endif %}
                                     {% if value.other_polity.long_name %}
@@ -1833,8 +1973,6 @@
                                     </span>
                                     {% endif %}
                             
-                                {% else %}
-                                <span>-</span>
                                 {% endif%}
                             </span>
                         </div>
@@ -1853,7 +1991,7 @@
                         </div>
                     </span>
                     {% with my_app_name='crisisdb' %}
-                        {% include "core/partials/_abc.html" %}
+                        {% include "core/partials/_abc_x.html" %}
                     {% endwith %}
 
                     {% include "core/partials/_crisis_cases_inline.html" %}
@@ -1889,7 +2027,7 @@
         <div class="py-2 custom-left-border-shadtowed my-3">
 
         {% if not all_power_transitions_data %}
-        <span class="text-secondary">- Nothing coded yet.</span>
+        <span class="text-secondary">Coding in Progress.</span>
         {% endif %}
 
 
@@ -1904,7 +2042,7 @@
                             </span>            
                         </span> 
                         <br>
-                        <span class="h5 fw-bold text-teal  pt-2 pb-0 pe-2 ps-1 mb-2 mt-1 highlighted-value-title">
+                        <span class="h5 fw-bold text-teal pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
                             <span class = "fw-bold text-danger" style="display:block;">
                                <span class="text-secondary fw-normal">Predecessor: </span> {{ value.predecessor }}
                             </span> 
@@ -1923,7 +2061,7 @@
                             </div>
                         </span>
                         {% with my_app_name='crisisdb' %}
-                            {% include "core/partials/_abc.html" %}
+                            {% include "core/partials/_abc_x.html" %}
                         {% endwith %}
 
                         {% include "core/partials/_power_transitions_inline.html" %}

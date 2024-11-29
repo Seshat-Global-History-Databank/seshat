@@ -59,38 +59,126 @@
         margin: 0;
     }
 
-    .row {
-        --bs-gutter-x: 1.0rem;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
     }
     
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size:small;
+    }
+    
+    .tab {
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .tab a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
+    
+    .tab:hover {
+        background-color: #d1d1d1;
+    }
+    
+    .tab.active {
+        color: black;
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border-color: seagreen;
+
+    }
+    
+
+    .tab.done {
+        background-color: seagreen;
+        color: white;
+        border-color: seagreen;
+    }
+    
+    .tab.waiting {
+        color: gray !important;
+        border-color: gray;
+    }
+    .tab.active a {
+        color: white;
+    }
+    
+    .arrow {
+        font-size: 24px;
+        margin: 0 10px;
+        color: #4CAF50;
+    }
+    
+    .content {
+        text-align: center;
+        margin: 50px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .mainform {
+        background:rgba(255, 235, 205, 0.464); 
+        border: 1px #782923 solid;
+        border-radius: 5px;
+    }
+    
+
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
-<div class="container mt-3">
-    <form action="" method="post" >
+<div class="container mt-1">
+    <div class="tab-container">
+        <div class="tab active" id="step1-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 1: Insert the data</span>
+        </div>
+        <div class="arrow" style="color:gray">&#10132;</div>
+        <div class="tab waiting" id="step2-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description</span>
+        </div>
+        <div class="arrow" style="color:gray">&#10132;</div>
+        <div class="tab waiting" id="step3-tab">
+            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+        </div>
+        
+    </div>
+
+    <div class="row d-flex">
+        <div class="col-md-4">
+            <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
+                {% if var_subsection %}
+                {{var_subsection}}
+                {% else %}
+                    &nbsp;- 
+                {% endif %}
+            </h6>
+            <h4><span >{{ myvar }}</span></h4>
+        </div>
+        <div class="col-md-8 border-dark">
+            {% autoescape off %}
+            <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
+            {% endautoescape %}
+
+        </div> 
+
+    </div> 
+
+    <form id="regForm" action="" method="post" >
         {% csrf_token %}
         <legend>
 
-            <div class="row d-flex">
-                <div class="col-md-4">
-                    <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
-                        {% if var_subsection %}
-                        {{var_subsection}}
-                        {% else %}
-                            &nbsp;- 
-                        {% endif %}
-                    </h6>
-                    <h6 class="lead-2 text-success pt-1">Enter data for:</h6>
-                    <h4><span >{{ myvar }}</span></h4>
-                </div>
-                <div class="col-md-8 border-dark">
-                    {% autoescape off %}
-                    <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
-                    {% endautoescape %}
-
-                </div> 
-
-            </div> 
-            <hr class="bg-colorful">
         </legend>
         {% if messages %}
         <ul class="messages mt-3">
@@ -114,28 +202,37 @@
         </ul>
         <hr class="bg-colorful">
         {% endif %}
-        <div class="row pt-2 ps-2" style="background:rgba(255, 235, 205, 0.664);">
+        <div class="row pt-2 ps-2 mainform">
             <div class="col-sm-12 row">
-                <div class="col-sm-6 pb-2">
-                    {{ form.polity|as_crispy_field }}
-                </div>
+                {% if myvar == 'Polity Preceding Entity' %}
+                {% else %}
+                    <div class="col-sm-6 pb-2">
+                        {{ form.polity|as_crispy_field }}
+                    </div>
+                {% endif %}
+
+                {% if myvar != 'Polity Duration' and myvar != 'Polity Peak Years' and myvar != 'Polity Preceding Entity' %}
+
                 <div class="col-sm-3 pb-2">
                     {{ form.year_from|as_crispy_field }}
                   </div>
                   <div class="col-sm-3 pb-2">
                     {{ form.year_to|as_crispy_field }}
                   </div>
+                  {% endif %}
+
+
                   <div class="col-sm-12" style="display:none">
                     {{ form.description }}
                   </div>
                   {% block extra_vars %}
                   {% endblock extra_vars %}
-                  <div class="col-sm-3 mb-1">
+                  <div class="col-sm-2 mb-1">
                     {{ form.is_disputed|as_crispy_field }}
                     {{ form.is_uncertain|as_crispy_field }}
                     {{ form.expert_reviewed|as_crispy_field }}
                 </div>
-                <div class="col-sm-3 pe-0">
+                <div class="col-sm-2 pe-0">
                     <fieldset>
                         <div class="form-check pb-4 justify-content-end">
                             {% for radio in form.tag %}
@@ -148,6 +245,8 @@
                                             bg-primary 
                                         {% elif radio.choice_label == 'Suspected' %}
                                             bg-warning text-dark 
+                                        {% elif radio.choice_label == 'Undecided' %}
+                                            bg-secondary 
                                         {% endif %}
                                     ">  
                                         {{ radio.choice_label }}
@@ -166,7 +265,7 @@
                         {% endblock delete_button %}
                     </div>
                     <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
-                        <button type="submit" class="btn btn-outline-success my-auto btn-block btn-lg">Submit for Review*</button>
+                        <button type="submit" class="btn btn-outline-success my-auto btn-block btn-lg">Submit</button>
                     </div>
                 </div>
             </div>
@@ -178,9 +277,10 @@
 
         <div class="row">
             {% if request.user.is_staff %}
-            <div class="col-md-4 py-3 ps-4">
+            <div class="col-md-12 py-3 ps-4">
                 <div class="mb-2">
-                    <i class="fas fa-user-check"></i> You are a Seshat Expert; you can enter a fact.
+                    <i class="fas fa-user-check"></i> 
+                    <b>{{user|capfirst}}</b>, You are a Seshat Expert; you can enter a new record or update an existing one.
                 </div> 
                 <div  class="mb-2" style="display: none;">
                     {{ form.finalized|as_crispy_field }}
@@ -204,11 +304,6 @@
         {% endif %} -->
           </form>
 
-        <div class="col-md-12">
-            <hr>
-            <h6>* Your entered data will soon be checked by a Seshat Expert.</h6>
-        </div>
-
         {% block delete_option %}
         {% endblock delete_option %}
 
@@ -219,5 +314,6 @@
         // Initialize Select2 with an empty dataset
         $('.js-example-basic-single').select2();
     });    
+
 </script>
 {% endblock %}

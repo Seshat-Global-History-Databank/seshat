@@ -66,6 +66,174 @@ def rtvars(request):
 
     for model in models_1:
         model_name = model.__name__
+        if model_name == "Ra":
+            continue
+        s_value = str(model().subsection())
+        ss_value = str(model().sub_subsection())
+
+        better_name = "download_csv_" + s_value.replace("-", "_").replace(" ", "_").replace(":", "").lower()
+        all_sect_download_links[s_value] = better_name
+        if s_value not in all_vars_grouped:
+            all_vars_grouped[s_value] = {}
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+        else:
+            if ss_value:
+                all_vars_grouped[s_value][ss_value] = []
+            else:
+                all_vars_grouped[s_value]["None"] = []
+
+    models = apps.get_app_config(app_name).get_models()
+
+    for model in models:
+        model_name = model.__name__
+        if model_name == "Ra":
+            continue
+
+
+        subsection_value = str(model().subsection())
+        sub_subsection_value = str(model().sub_subsection())
+        count = model.objects.count()
+        pols_count = Polity.objects.count()
+        number_of_all_rows += count
+        #model_title = model_name.replace("_", " ").title()
+        model_title = swapped_dict[model_name]
+        model_create = model_name.lower() + "-create"
+        model_download = model_name.lower() + "-download"
+        model_metadownload = model_name.lower() + "-metadownload"
+        model_all = model_name.lower() + "s_all"
+        model_s = model_name.lower() + "s"
+
+        queryset = model.objects.all()
+        filtered_queryset_pres = 0
+        filtered_queryset_abs = 0
+        filtered_queryset_unk = 0
+        filtered_queryset_sus_unk = 0
+        filtered_queryset_unc = 0
+        filtered_queryset_trans = 0
+
+        politys = queryset.values_list('polity', flat=True).distinct()
+        unique_politys.update(politys)
+        polities_for_this_var = len(set(politys))
+
+
+        if model_name.lower() in ['official_religion', 'widespread_religion', 'elites_religion', 'gov_vio_freq_rel_grp', 'soc_vio_freq_rel_grp']:
+            var_type="TEXT+"
+
+            for obj in queryset:
+                if obj.show_value() == 'never (absent)':
+                    filtered_queryset_abs +=1
+                elif obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                elif obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                elif obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                elif obj.show_value() != ' - ':
+                    filtered_queryset_pres +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                0, #filtered_queryset_trans,
+                'Properly Coded',
+                ]
+
+        else:
+            var_type="A/P/U/~"
+
+            for obj in queryset:
+                if obj.show_value() == 'present':
+                    filtered_queryset_pres +=1
+                if obj.show_value() == 'absent':
+                    filtered_queryset_abs +=1
+                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                    filtered_queryset_unk +=1
+                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                    filtered_queryset_sus_unk +=1
+                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                    filtered_queryset_unc +=1
+                if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
+                    filtered_queryset_trans +=1
+
+            dif_count = pols_count - polities_for_this_var
+            number_of_variables += 1
+
+            to_be_appended = [
+                model_title, # v.0
+                model_s,
+                model_create,
+                model_download,
+                model_metadownload,
+                model_all,          # v.5
+                count,
+                polities_for_this_var,
+                var_type,
+                filtered_queryset_pres,
+                filtered_queryset_abs,      # v.10
+                filtered_queryset_sus_unk,     
+                filtered_queryset_unk,
+                filtered_queryset_unc,       # v.13
+                pols_count,
+                dif_count,
+                filtered_queryset_trans,
+                'Present'
+                ]
+
+
+
+        if sub_subsection_value:
+            all_vars_grouped[subsection_value][sub_subsection_value].append(to_be_appended)
+        else:
+            all_vars_grouped[subsection_value]["None"].append(to_be_appended)
+
+
+    context = {}
+    context["all_vars_grouped"] = all_vars_grouped
+    context["all_sect_download_links"] = all_sect_download_links
+    context["all_polities"] = len(unique_politys)
+    context["number_of_all_rows"] = number_of_all_rows
+
+    context["number_of_variables"] = number_of_variables
+
+    return render(request, 'rt/rtvars.html', context=context)
+
+
+
+
+def rtvarsold(request):
+
+    app_name = 'rt'  # Replace with your app name
+    models_1 = apps.get_app_config(app_name).get_models()
+
+    unique_politys = set()
+    number_of_all_rows = 0
+    number_of_variables = 0
+    all_vars_grouped = {}
+
+    all_sect_download_links = {}
+
+    for model in models_1:
+        model_name = model.__name__
         if model_name in ["RA",]:
             continue
         s_value = str(model().subsection())
@@ -95,7 +263,7 @@ def rtvars(request):
         sub_subsection_value = str(model().sub_subsection())
         count = model.objects.count()
         number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
+        #model_title = model_name.replace("_", " ").title()
         model_title = swapped_dict[model_name]
         model_create = model_name.lower() + "-create"
         model_download = model_name.lower() + "-download"
@@ -263,11 +431,7 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
             'var_section': var_section,
             'var_subsection': var_subsection,
         }
-
-
-
-
-
+    
     # context = {
     #         'form': my_form,
     #         'object': object,
@@ -285,7 +449,7 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_update_view(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
+def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
     """
     View function for the update page of a model.
 
@@ -322,16 +486,53 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
         x_name_3 = None
 
 
-    #return_url = f"{x_name}s_all"
+
+    # Handle POST request
     if request.method == 'POST':
-        # Bind the form to the POST data
         my_form = form_class(request.POST, instance=my_object)
-        
+
         if my_form.is_valid():
-            # Save the changes to the object
-            my_form.save()   
-            #return redirect(return_url) 
-            return redirect(f"{x_name}-detail", pk=my_object.id) 
+            my_form.save()
+            return redirect("polity-detail-main", pk=my_object.polity.id) 
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+
+        if x_name in ['widespread_religion',]:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form[x_name_1], 
+                'extra_var2': my_form[x_name_2], 
+                'extra_var3': my_form[x_name_3], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+        else:
+            context = {
+                'form': my_form,
+                'object': my_object,
+                'delete_url': delete_url_name,
+                'extra_var': my_form["coded_value"], 
+                "myvar": myvar,
+                'var_section': var_section,
+                'var_subsection': var_subsection,
+                "my_exp": my_exp,
+            }
+
+    #return_url = f"{x_name}s_all"
+    # if request.method == 'POST':
+    #     # Bind the form to the POST data
+    #     my_form = form_class(request.POST, instance=my_object)
+        
+    #     if my_form.is_valid():
+    #         # Save the changes to the object
+    #         my_form.save()   
+    #         #return redirect(return_url) 
+    #         return redirect("polity-detail-main", pk=my_object.polity.id) 
 
     else:
         # Create an instance of the form and populate it with the object's data
@@ -377,12 +578,78 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, myv
         #         "my_exp": my_exp,
         #     }
 
-    return render(request, 'rt/rt_update.html', context)
+    return render(request, 'rt/rt_update_old.html', context)
 
-
+# Use the login_required, permission_required, and user_passes_test decorators
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
+def dynamic_update_view(request, object_id, form_class, model_class, x_name, myvar, my_exp, var_section, var_subsection, delete_url_name):
+    # Retrieve the object based on the object_id
+    my_object = model_class.objects.get(id=object_id)
+
+    # Set conditional variables for widespread_religion case
+    if x_name == "widespread_religion":
+        x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    else:
+        x_name_1, x_name_2, x_name_3 = x_name, None, None
+
+    # Handle POST request
+    if request.method == 'POST':
+        my_form = form_class(request.POST, instance=my_object)
+
+        if my_form.is_valid():
+            my_form.save()
+            return redirect(f"{x_name}-detail", pk=my_object.id)
+        
+        # Prepare the context for invalid form
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name == "widespread_religion":
+            context.update({
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        else:
+            context.update({
+                'extra_var': my_form['coded_value'],
+            })
+    else:
+        # Handle GET request (initial form load)
+        my_form = form_class(instance=my_object)
+        context = {
+            'form': my_form,
+            'object': my_object,
+            'delete_url': delete_url_name,
+            "myvar": myvar,
+            'var_section': var_section,
+            'var_subsection': var_subsection,
+            "my_exp": my_exp,
+        }
+        if x_name == "widespread_religion":
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        else:
+            context.update({
+                'extra_var': my_form['coded_value'],
+            })
+
+    return render(request, 'rt/rt_update.html', context)
+
+
+
+
+
 def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
     """
     View function for the list page of a model.
@@ -408,6 +675,13 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
     else:
         object_list = model_class.objects.all()
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+
+    allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
+    if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+            object_list = object_list.filter(polity__new_name__in=allowed_polities)
+
+
     extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
     orderby = request.GET.get('orderby', None)
@@ -433,6 +707,7 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
         'var_name': var_name,
         'create_url': f'{var_name}-create',
         'update_url': f'{var_name}-update',
+        'update_url_new': f'{var_name}-updatenew',
         'download_url': f'{var_name}-download',
         'pagination_url': f'{var_name}s',
         'metadownload_url':  f'{var_name}-metadownload',
@@ -468,9 +743,7 @@ def generic_list_view(request, model_class, var_name, var_name_display, var_sect
 
 
 
-@login_required
-@permission_required('core.add_capital', raise_exception=True)
-@user_passes_test(has_add_capital_permission, login_url='permission_denied')
+
 def generic_download(request, model_class, var_name):
     """
     Download all data for a given model.
@@ -488,6 +761,11 @@ def generic_download(request, model_class, var_name):
         HttpResponse: The response object that contains the CSV file.
     """
     items = model_class.objects.all()
+
+    allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
+    if not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+        items = items.filter(polity__new_name__in=allowed_polities)
 
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")

@@ -21,6 +21,28 @@
             </tr>
         </table>
     </div>
+        {% if messages %}
+        <ul class="messages mt-3">
+            {% for message in messages %}
+            <div class="container-fluid p-0">
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                    <i class="fa-solid fa-circle-info"></i>  <b>{{ message }}</b>
+                </div>
+            </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+            <div class="container-fluid p-0">
+              <div class="text-danger" role="alert" >
+                <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </ul>
+        {% endif %}
+
+
     {% if object_list %}
     <div class="table-responsive row">
         {% if is_paginated %}

@@ -6,7 +6,7 @@ from .forms import Widespread_religionForm, Official_religionForm, Elites_religi
 
 
 
-from .views import dynamic_create_view, dynamic_update_view, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
+from .views import dynamic_create_view, dynamic_update_view, dynamic_update_view_old, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
 
 from .var_defs import rt_var_defs
 
@@ -60,7 +60,19 @@ urlpatterns = [
 # Create URL patterns dynamically for each model-class pair: UPDATE
 for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
     urlpatterns.append(
-        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view, {
+        path(f'{x_name}/updatenew/<int:object_id>/', dynamic_update_view, {
+            'form_class': form_class,
+            'model_class': model_class,
+            'x_name': x_name,
+            'myvar': myvar,
+            'my_exp': rt_var_defs[myvar.lower().capitalize()],
+            'var_section': sec,
+            'var_subsection': subsec,
+            'delete_url_name': x_name + "-confirm-delete",
+        }, name=f'{x_name}-updatenew')
+    )
+    urlpatterns.append(
+        path(f'{x_name}/update/<int:object_id>/', dynamic_update_view_old, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,

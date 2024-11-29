@@ -3,14 +3,13 @@
 
 {% block content %}
 <style>
-    .card {
-        border: 1px solid teal; /* Adjust the border color and thickness as desired */
-        padding-top: 4px;        
-        padding-bottom: 4px;
-        background-color: #fefae6;
-        border-radius: 4px;
-      }
-      
+
+  .card {
+    background-color: #fefae6;
+    border-radius: 10px;
+  }
+  
+
       .card-title {
         margin-bottom: 10px;
         color: #555;
@@ -21,6 +20,16 @@
         margin-bottom: 10px;
       }
 
+      .custom-left-border-shadowed {
+        border-left: none; /* Adjust the border color and thickness as desired */
+        box-shadow: 0 0 2px teal; 
+        padding-right: 1px;
+        padding-top: 1px;
+        padding-bottom: 1px;
+        border-radius: 5px;
+        padding-left: 10px; /* Adjust the padding to create spacing between the border and content */
+        text-align: justify;
+    }
       
       .card-text {
         margin-bottom: 20px;
@@ -35,6 +44,16 @@
         text-decoration: none;
         transition: background-color 0.3s;
       }
+
+
+      .card-link:hover {
+        border-radius: 4px;
+        text-decoration: underline;
+        text-decoration-color: black;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 5px; /* Adjust distance from the text */
+      }
+
       .card-body {
         padding: 4px;
         display: flex;
@@ -54,11 +73,6 @@
         color: #fefae6;
       }
 
-      .card-link:hover {
-        background-color: teal;
-        border-radius: 4px;
-      }
-
       .light-narrow-hr {
         border: none;
         border-top: 1px solid #f0ecec;
@@ -66,25 +80,58 @@
         margin: 20px 0;
         width: 100%;
       }
+
+
+      .card-text-spaced {
+        font-size: 16px;
+        color: #782823;
+        display: flex;
+        padding-top: 5px;
+        justify-content: space-between;
+        }
+    
+    .left-span {
+            color: #782823;
+        }
+    
+    .right-span {
+            text-align: right;
+            color: #782823;
+        }
+    
+        .center-span {
+            text-align: center;
+            color: #782823;
+        }
+
+
+        .row {
+          --bs-gutter-x: 0;
+      }
+
 </style>
 <div class="container mt-2">
     <div class="row">
       <div class="row mt-3">
         <div class="col-md-12">
             <div class="row d-flex align-items-center mb-2">
-                <div class="col-md-6">
-                  <h1 class="py-3 ps-0"><span class="badge rounded-pill bg-teal text-dark">Warfare variables (MilTech):</span> 
-                  </h1>                </div>
+                <div class="col-md-6 px-0">
+                  <h1 class="py-3 ps-0"><span class="badge rounded-pill bg-teal text-dark">Warfare variables (MilTech)</span> 
+                  </h1>               
+                 </div>
                   <div class="col-md-3">    
-                    <a href='{% url "problematic_wf_data_table" %}' class="btn btn-outline-danger mx-1 my-2 float-end"> <i class="fa-solid fa-up-right-from-square fa-sm"></i> &nbsp;Inconsistent Warfare Vars </a>
+                    <a href='{% url "problematic_wf_data_table" %}' class="btn btn-outline-danger mx-1 my-2 float-end"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges</a>
                 </div>
-                <div class="col-md-3">    
+                <div class="col-md-3 px-0">    
                     <a href='{% url "download_csv_all_wf" %}' class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a>
                 </div>
+
+
             </div>
 
           </div>
         </div>
+
         <h4>
           <span class="h5 text-secondary">* We have coded a total of  
             <b class="h4 text-dark">
@@ -97,45 +144,73 @@
             {{all_polities}}</b>
             polities.</span>
         </h4>
-        <hr class="light-narrow-hr">
+        {% for sect, subsect in all_vars_grouped.items %}
+        <div class="row">
+          <div class="col-md-12">
+              <div class="row d-flex align-items-center mb-2 mt-4">
+                  <div class="col-md-6 px-0 ">
+                    <h3 class="py-1 ps-0"><span class="badge rounded-pill text-dark"  style="background: rgb(0, 157, 255, 0.4)">
+                      {{sect}}
+                    </span> 
+                  </h3> 
+                </div>
+                  <div class="col-md-6 px-0">   
 
-        <h2 class="display-6"> <span class="fs-2">&#x2694; </span> Military Technologies</h2>
-        <p class="fs-5">
-            A military technology should be coded 'present' if there is concrete evidence that it was used in warfare (e.g. metal in armor or weapons, spears used in warfare and not only in hunting, etc) and 'inferred present' if there is evidence that the polity used the technology (e.g. for hunting, as an ornamental or ceremonial item, in jewelry), but no concrete evidence that the metal was specifically used in warfare (explain in comment).
-        </p>
-    </div>
-    <div class="row">
+                    {% for kkk, vvv in all_sect_download_links.items %}
+                    {% if kkk == sect %}
+            
+                    <span><a href="{% url vvv %}" class="btn btn-outline-secondary mx-1 float-end"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>{{sect}}</b> (.CSV) </a> </span>
+                    {% endif%}
+            
+                    {% endfor %}
+                  </div>
+              </div>
+  
+            </div>
+          </div>
 
-        {% for k, v in my_counts.items %}
-                <div class="card col-md-2">
-                    <div class="card-body d-flex flex-column align-items-center">
-                      <h5 class="card-title mb-3">
-                        <span>
-                        {{v.0}}
+               
+      {% for ss, vv in subsect.items %}
+      {% if ss != "None" %}
+      <h5 class="pt-1 pb-1 ps-0 mt-1"><span class="badge rounded-pill bg-warning text-dark">
+        {{ss}} 
+      </span> 
+
+
+      
+    </h5> 
+      {% endif%}
+        {% for v in vv %}
+        {% if v.0|length > 60 %}
+            <div class="card col-md-12">
+        {% elif v.0|length > 34 %}
+            <div class="card col-md-6">
+        {% elif v.0|length > 14 %}
+            <div class="card col-md-4">
+        {% else %}
+            <div class="card col-md-3">
+        {% endif %}
+                    <div class="align-items-left card-text-spaced">
+                        <span class="fs-5 left-span fw-bold ps-2 card-link">
+                          <a href="{% url v.5 %}" class="text-dark" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All">
+                              &nbsp;{{v.0}} <span class="text-secondary fs-6"><span style="color:rgba(128, 128, 128, 0.573)">#</span> {{ v.6|intcomma }}</span></a>        
                         </span>
-                    </h5>
-                      
-                      <div class="flex-grow-1"></div>
-                      <h4 class="card-subtitle mb-2 text-muted">
-                        <span ><a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All"> {{ v.6|intcomma }}</a> </span>
 
-                                               
-                        </h4>
-                      <table>
-                        <tbody>
-                            <tr>
-                                <td><a href="{% url v.3 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Download All"> <i class="fa-solid fa-file-arrow-down"></i></a></td>
-                                <td><a href="{% url v.2 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Add New Values"><i class="fa fa-plus"></i></a></td>
-                                <td><a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All"> <i class="fa fa-eye"></i></a></td>
-                            </tr>
-                        </tbody>
-                      </table>
-                                          
+                      <span class="right-span fs-5">
+                          <span><a href="{% url v.3 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Download All"> <i class="fa-solid fa-file-arrow-down"></i></a></span>
+                          <span><a href="{% url v.2 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Add New Values"><i class="fa fa-plus"></i></a></span>
+                          <span><a href="{% url v.5 %}" class="card-link" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="View All"> <i class="fa fa-eye"></i></a></span>
+                        </span>
+              
                     </div>
                   </div>
-            {% endfor %}
-        <hr>           
-    </div>
-</div>
+          {% endfor %}
 
+    {% endfor %}
+
+{% endfor %}
+</div>
+<hr>
+
+</div>
 {% endblock %}

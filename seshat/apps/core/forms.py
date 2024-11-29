@@ -328,11 +328,11 @@ class SeshatPrivateCommentPartForm(forms.ModelForm):
         widgets = {
             'private_comment': forms.NumberInput(
                 attrs={'class': 'form-control  mb-3 fw-bold', }),
-            'private_comment_part_text': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px',}),
+            'private_comment_part_text': forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px', 'required': 'required'}),
             'private_comment_owner': forms.Select(attrs={'class': 'form-control form-select mb-3',}),
             'private_comment_reader': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'private_comment_readers[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),       
             }
-
+        
 
 class SeshatPrivateCommentForm(forms.ModelForm):
     """
@@ -370,7 +370,7 @@ class ReferenceWithPageForm(forms.Form):
     # )    
     page_from = forms.IntegerField(label='', required=False)
     page_to = forms.IntegerField(label='', required=False)
-    parent_pars = forms.CharField(widget=forms.Textarea(attrs={'style': 'height: 60px;', 'placeholder': 'Consulted Paragraphs (Private, for NLP project)' }),  label='', required=False) 
+    parent_pars = forms.CharField(widget=forms.Textarea(attrs={'style': 'height: 120px;', 'placeholder': 'Consulted Paragraphs (Private, for NLP project)' }),  label='', required=False) 
     #parent_pars = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 120px', 'placeholder':'Please copy and paste the paragraphs you consulted into this field for each reference.'})
 
 
@@ -420,7 +420,7 @@ ReferenceFormSet10 = forms.formset_factory(ReferenceWithPageForm, formset=BaseRe
 
 
 class SeshatCommentPartForm2(forms.Form):
-    comment_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control  mb-1 p-1', 'style': 'height: 300px', 'placeholder': 'SubDescription Text (Public)'}))
+    comment_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control  mb-1 p-1', 'style': 'height: 300px', 'placeholder': 'SubDescription Text (Public)*'}))
 
     formset = ReferenceFormSet2(prefix='refs')
     comment_order = forms.IntegerField(label='Do NOT Change This Number: ', required=False,)
@@ -555,7 +555,7 @@ class ReferenceWithPageForm_UPGRADE(forms.Form):
     )
     page_from = forms.IntegerField(label='', required=False)
     page_to = forms.IntegerField(label='', required=False)
-    parent_pars = forms.CharField(widget=forms.Textarea(attrs={'style': 'height: 140px;'}), label='Consulted Paragraphs (UPGRADED) (Private, for NLP project)', required=False)
+    parent_pars = forms.CharField(widget=forms.Textarea(attrs={'style': 'height: 240px;'}), label='Consulted Paragraphs (UPGRADED) (Private, for NLP project)', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

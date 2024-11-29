@@ -33,6 +33,23 @@
       height: 36px;
       margin-top: 4px; /* Adjust the margin-top as needed */
     }
+
+    .form-check-inline {
+      display: flex;
+      flex-direction: row;
+      align-items: center; /* Center vertically */
+      margin-right: 10px; /* Add some spacing between radio buttons */
+  }
+  .form-check-label {
+      display: flex;
+      align-items: center;
+      margin-right: 15px; /* Add spacing between radio buttons */
+  }
+  
+  .form-check-label input[type="radio"] {
+      margin-right: 5px; /* Add spacing between radio circle and label */
+  }
+
   </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-3">
@@ -85,20 +102,29 @@
                   <!-- Here come the extra vars -->
           {% block extra_vars %}
           {% endblock extra_vars %}
-          <div class="col-md-2 mb-2">
+          <div class="col-sm-3 pe-0">
             <fieldset>
-                <legend class="h6">{{form.tag.label}}</legend>
-                {% for radio in form.tag %}
-                <div class="form-check">
-                    <label for="{{ radio.id_for_label }}">
-                        <span class="radio">{{ radio.tag }}</span>
-                        {{ radio.choice_label }}
-                    </label>
+                <div class="form-check pb-4 justify-content-end">
+                    {% for radio in form.tag %}
+                        <label class="ps-4 pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
+                            {{ radio.tag }}
+                            <span class="badge rounded-pill px-3 py-1 border border-dark
+                                {% if radio.choice_label == 'Confident' %}
+                                    bg-success
+                                {% elif radio.choice_label == 'Inferred' %}
+                                    bg-primary 
+                                {% elif radio.choice_label == 'Suspected' %}
+                                    bg-warning text-dark 
+                                {% endif %}
+                            ">  
+                                {{ radio.choice_label }}
+                            </span>
+                        </label>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </fieldset>
-          </div>
-            <div class="col-md-2 mb-2">
+        </div>
+            <div class="col-md-3 mb-2">
                 {{ form.is_disputed|as_crispy_field }}
                 {{ form.is_uncertain|as_crispy_field }}
                 {{ form.expert_reviewed|as_crispy_field }}
