@@ -567,7 +567,10 @@ function clearSelection() {
 
 function selectAllCheckbox() {
     var selectAll = document.getElementById('selectAll').checked;
-    if (!selectAll) {
+    if (selectAll) {
+        document.getElementById('hideUnselected').disabled = true;
+    } else {
+        document.getElementById('hideUnselected').disabled = false;
         clearSelection();
     }
 };
