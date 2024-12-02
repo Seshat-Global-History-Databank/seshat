@@ -554,7 +554,7 @@ class ShapesTest(TestCase):
 
         # Test that the shapes have been updated with the variables
         self.assertEqual(result_shapes[0]['Judge'], 'present')
-        # self.assertEqual(result_shapes[0]['Judge_dict'], {'present': [2003, 2004]})  # TODO: unsure why this was commented out
+        self.assertEqual(result_shapes[0]['Judge_dict'], {'present': [2003, 2004]})
         self.assertEqual(result_shapes[0]['Copper'], 'present')
         # self.assertEqual(result_shapes[0]['Copper_dict'], {'present': [2003, 2004]})
 
