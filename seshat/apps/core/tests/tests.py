@@ -556,7 +556,7 @@ class ShapesTest(TestCase):
         self.assertEqual(result_shapes[0]['Judge'], 'present')
         self.assertEqual(result_shapes[0]['Judge_dict'], {'present': [2003, 2004]})
         self.assertEqual(result_shapes[0]['Copper'], 'present')
-        # self.assertEqual(result_shapes[0]['Copper_dict'], {'present': [2003, 2004]})
+        self.assertEqual(result_shapes[0]['Copper_dict'], {'present': [2003, 2004]})
 
         # TODO: These tests wer broken by PR #171 - see bug issue #187
         # self.assertEqual(result_shapes[0]['Government Restrictions on Public Proselytizings'], 'absent')
