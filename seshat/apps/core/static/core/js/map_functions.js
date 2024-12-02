@@ -556,6 +556,7 @@ function updateComponentLegend() {
 
 function clearSelection() {
     document.getElementById('selectAll').checked = false;
+    document.getElementById('hideUnselected').disabled = false;
     var popup = document.getElementById('popup');
     popup.innerHTML = '';
     popup.style.display = 'none';
