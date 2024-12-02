@@ -21,6 +21,7 @@ from seshat.apps.accounts.models import Seshat_Expert
 ########## Beginning of tuple choices for general Models
 ABSENT_PRESENT_CHOICES = (
 ('present', 'present'),
+('uncoded', 'uncoded'),
 ('absent', 'absent'),
 ('unknown', 'unknown'),
 ('A~P', 'Transitional (Absent -> Present)'),
