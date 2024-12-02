@@ -564,6 +564,13 @@ function clearSelection() {
     plotPolities();
 }
 
+function selectAllCheckbox() {
+    var selectAll = document.getElementById('selectAll').checked;
+    if (!selectAll) {
+        clearSelection();
+    }
+};
+
 function updateCategoricalVariableSelection(variable){
     var dropdown = document.getElementById('chooseCategoricalVariableSelection');
     dropdown.innerHTML = '';
