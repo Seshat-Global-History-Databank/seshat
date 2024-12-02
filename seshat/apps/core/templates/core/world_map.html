@@ -765,6 +765,12 @@
         function plotPolities() {  // This function is defined differently in the polity_map template
 
             var variable = document.getElementById('chooseVariable').value;
+
+            if (variable != 'polity') {
+                // Ensure hideUnselected is unchecked if the variable is not polity
+                document.getElementById('hideUnselected').checked = false;
+            }
+
             var selectedYear = document.getElementById('dateSlide').value;
             var opacity = document.getElementById('opacitySlide').value;
             var atLeastOnePolityHighlighted = false;
