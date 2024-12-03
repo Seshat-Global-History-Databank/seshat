@@ -23,6 +23,14 @@
         color: beige;
       }
 
+      .goodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border:2px solid seagreen;
+      }
+
+      .goodsubmit:hover{
+        font-weight: bold;
+      }
 
       .select2-container--default .select2-results__option--highlighted[aria-selected] {
         background-color: #782823;
@@ -65,7 +73,13 @@
         margin: 0;
         padding: 0;
     }
-    
+
+    .checkboxinput {
+        width: 20px;  /* Increase the width of the checkbox */
+        height: 20px; /* Increase the height of the checkbox */
+        cursor: pointer; /* Change the cursor to indicate interactivity */
+    }
+
     .tab-container {
         display: flex;
         justify-content: center;
@@ -132,15 +146,16 @@
 
     .mainform {
         background:rgba(255, 235, 205, 0.464); 
-        border: 1px #782923 solid;
+        border: 1px #78292366 solid;
         border-radius: 5px;
+        box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
     }
     
 
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-1">
-    <div class="tab-container">
+    <div class="tab-container" style="font-family: 'Roboto Mono', monospace;" >
         <div class="tab active" id="step1-tab">
             <span ><i class="fa-solid fa-circle"></i> Step 1: Insert the data</span>
         </div>
@@ -164,11 +179,18 @@
                     &nbsp;- 
                 {% endif %}
             </h6>
+            {% if myvar == 'Polity Preceding Entity' %}
+            <h4><span >Polity Succession</span></h4>
+
+            {% else %}
+
             <h4><span >{{ myvar }}</span></h4>
+            {% endif %}
+
         </div>
         <div class="col-md-8 border-dark">
             {% autoescape off %}
-            <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
+            <h6 class="lead-2 text-secondary" style="font-family: 'Roboto Mono', monospace;"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
             {% endautoescape %}
 
         </div> 
@@ -205,13 +227,16 @@
         <div class="row pt-2 ps-2 mainform">
             <div class="col-sm-12 row">
                 {% if myvar == 'Polity Preceding Entity' %}
-                {% else %}
-                    <div class="col-sm-6 pb-2">
-                        {{ form.polity|as_crispy_field }}
-                    </div>
-                {% endif %}
 
-                {% if myvar != 'Polity Duration' and myvar != 'Polity Peak Years' and myvar != 'Polity Preceding Entity' %}
+                {% elif myvar == 'Polity Duration' and myvar == 'Polity Peak Years' %}
+                <div class="col-sm-6 pb-2">
+                    {{ form.polity|as_crispy_field }}
+                </div>
+                {% else %}
+
+                <div class="col-sm-6 pb-2">
+                    {{ form.polity|as_crispy_field }}
+                </div>
 
                 <div class="col-sm-3 pb-2">
                     {{ form.year_from|as_crispy_field }}
@@ -257,16 +282,18 @@
                     </fieldset>
                 </div>
                 <div class="col-sm-12 row">
-                    <div class="col-sm-6 mb-2 py-2 d-grid mx-auto">
-                        <span class="fw-bold">* Please note: You will have the opportunity to add descriptions, including references, on the next page.</span>
+
+                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto">
+                        <button type="submit" name="action" value="redirect_one" class="btn btn-outline-secondary my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit without Description</button>
                     </div>
-                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
+                    <div class="col-sm-5 mb-2 pb-4 d-grid mx-auto ">
+                        <button type="submit" name="action" value="redirect_two" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">Submit and Continue to add Description</button>
+                    </div>
+                    <div class="col-sm-3 mb-2 pb-4 d-grid mx-auto">
                         {% block delete_button %}
                         {% endblock delete_button %}
                     </div>
-                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
-                        <button type="submit" class="btn btn-outline-success my-auto btn-block btn-lg">Submit</button>
-                    </div>
+
                 </div>
             </div>
 
@@ -275,19 +302,19 @@
 
         </div>
 
-        <div class="row">
+        <div>
             {% if request.user.is_staff %}
-            <div class="col-md-12 py-3 ps-4">
+            <div class="py-3 ps-1">
                 <div class="mb-2">
                     <i class="fas fa-user-check"></i> 
-                    <b>{{user|capfirst}}</b>, You are a Seshat Expert; you can enter a new record or update an existing one.
+                    <b>{{user|capfirst}}</b>, You have the needed permissions to enter a new record or update an existing one.
                 </div> 
                 <div  class="mb-2" style="display: none;">
                     {{ form.finalized|as_crispy_field }}
                 </div>               
             </div>
             {% else %}
-            <div class="col-md-4 py-3 ps-4">
+            <div class="py-3 ps-1">
                 <input type="checkbox" id="seshatexpert" name="vehicle2" value="Car" onclick="return false">
                 <label for="seshatexpert"> You are not a Seshat Expert.</label>
             </div>

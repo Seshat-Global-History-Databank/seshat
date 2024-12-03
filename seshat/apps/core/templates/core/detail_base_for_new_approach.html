@@ -61,6 +61,7 @@ input[type="number"] {
   transition: background-color 0.3s ease;
 }
 
+
 .tab a {
   text-decoration: none;
   color: #000;
@@ -186,7 +187,7 @@ input[type="number"] {
       {% endif %}
   </ul>
   {% endif %}
-  <div style="border: 2px solid rgba(120, 40, 35, 0.311); border-radius: 5px; overflow: hidden;">
+  <div style="border: 2px solid rgba(120, 40, 35, 0.311); border-radius: 5px; overflow: hidden;  box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);">
 
   <table class="table table-borderless align-middle" >
     <thead>        
@@ -259,7 +260,7 @@ input[type="number"] {
           {{ form.comment_text.label_tag }} {{ form.comment_text }}
           {{ form.formset.management_form }}
           {{ form.management_form }}
-          <div class="pt-0">
+          <div class="pt-0" >
             <span class="text-secondary pt-0">* Use &lt;br&gt;
                 for new paragraphs.</span>
         </div>
@@ -267,9 +268,16 @@ input[type="number"] {
             <div class="col-md-12"  style="display: none;">
               {{ form.comment_order|as_crispy_field }}
          </div>
-         <div class="col-md-12 pt-2 d-grid gap-2">
-          <input type="submit"  class="btn btn-outline-success btn-block mt-2 fs-5 fw-bold" value="Submit the First Chunk**">
-         </div>
+
+  
+
+          <div class="col-sm-8 mb-2 d-grido">
+            <button type="submit" name="action" value="redirect_one" class="btn btn-success my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit & Continue Adding Description</button>
+        </div>
+        <div class="col-sm-4 mb-2 d-grido">
+            <button type="submit" name="action" value="redirect_two" class="btn btn-outline-primary my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit (Done)</button>
+        </div>
+
           </div>
           <span class="text-secondary pt-0">** Please note that in this step, we insert only the initial portion of the description—specifically, the section from the beginning up to the first set of references (citations).            <br>
             <br> <span class="text-dark">Example:</span> 
@@ -281,11 +289,11 @@ input[type="number"] {
 
     </div>
         <div class="col-md-7">
-          <div id="formset-container">
+          <div id="formset-container" >
             {% autoescape off %}
               {% for form1 in form.formset %}
 
-                    <div class="formset-item d-flex align-items-start pt-4">
+                    <div class="formset-item d-flex align-items-start pt-4" >
                       <!-- Citation number on the left -->
 
                       
@@ -301,7 +309,7 @@ input[type="number"] {
                                   id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref"
                                   tabindex="-1" aria-hidden="true" style="width:100%; white-space:normal;" 
                                   data-selected-value="{{ form1.ref.value }}">
-                                  <option value="" selected data-select2-id="{{ forloop.counter0 }}">Reference ...</option>
+                                  <option value="" selected data-select2-id="{{ forloop.counter0 }}" >Reference ...</option>
                                 </select>
                               </div>
                             </div>
@@ -317,7 +325,7 @@ input[type="number"] {
                           </div>
                         </div>
                       </div>
-                      <span class="badge fs-6 citation-badge" style="background: cadetblue;">Citation &nbsp;{{ forloop.counter }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <span class="badge fs-6 citation-badge" style="background: cadetblue;  box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);">Citation &nbsp;{{ forloop.counter }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <i class="fa-solid fa-trash-can" style="color:rgb(244, 176, 176)"></i>
                         {{ form1.DELETE }} 
                       </span>  

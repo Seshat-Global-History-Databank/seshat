@@ -136,8 +136,13 @@
                     &nbsp;- 
                 {% endif %}
             </h6>
+            {% if myvar == 'Polity Preceding Entity' %}
+            <h4><span >Polity Succession</span></h4>
+
+            {% else %}
+
             <h4><span >{{ myvar }}</span></h4>
-        </div>
+            {% endif %}        </div>
         <div class="col-md-8 border-dark">
             {% autoescape off %}
             <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
@@ -176,11 +181,17 @@
         {% endif %}
         <div class="row pt-2 ps-2" style="background:rgba(255, 235, 205, 0.664);">
             <div class="col-sm-12 row">
+                {% if myvar == 'Polity Preceding Entity' %}
+
+                {% elif myvar != 'Polity Duration' and myvar != 'Polity Peak Years' %}
                 <div class="col-sm-6 pb-2">
                     {{ form.polity|as_crispy_field }}
                 </div>
-                {% if myvar != 'Polity Duration' and myvar != 'Polity Peak Years' %}
+                {% else %}
 
+                <div class="col-sm-6 pb-2">
+                    {{ form.polity|as_crispy_field }}
+                </div>
                 <div class="col-sm-3 pb-2">
                     {{ form.year_from|as_crispy_field }}
                   </div>

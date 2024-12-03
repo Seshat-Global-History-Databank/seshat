@@ -7715,7 +7715,11 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
 
             new_object = my_form.save()
-
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
 
             # Add the current user as a curator if they are an instance of Seshat_Expert
             # logged_in_user = request.user
