@@ -166,6 +166,23 @@ def return_beautiful_abs_pres(item):
 ########## Beginning of Function Definitions for CrisisDB Models
 
 def call_my_name(self):
+    """
+    This function is used to return the name of the model instance (in lieu of
+    the __str__ representation of the model instance).
+
+    Note:
+        The model instance must have the following attributes:
+        - name
+        - polity (and polity.name)
+        - year_from
+        - year_to
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        str: The name of the model instance.
+    """
     if self.year_from == self.year_to or ((not self.year_to) and self.year_from):
         return self.name + " [for " + self.polity.name + " in " + str(self.year_from) + "]"
     else:
@@ -173,10 +190,51 @@ def call_my_name(self):
 
 
 def return_citations(self):
+    """
+    This function is used to return the citations of the model instance
+    (returning the value used in the display_citations method of the model
+    instance).
+
+    Note:
+        The model instance must have the following attribute:
+        - citations
+
+        The model instance must have the following methods:
+        - zoteroer
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        str: The citations of the model instance, separated by comma.
+    """
     return '<br>'.join(['<a href="' + citation.zoteroer() + '">' + '<i class="fa-solid fa-book"></i> ' + citation.full_citation_display() + ' </a>' for citation in self.citations.all()])
 
 
 def clean_times(self):
+    """
+    This function is used to validate the year_from and year_to fields of the
+    model instance (called from each model's clean method).
+
+    Note:
+        The model instance must have the following attributes:
+        - year_from
+        - year_to
+        - polity (and polity.start_year and polity.end_year)
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        None
+
+    Raises:
+        ValidationError: If the year_from is greater than the year_to.
+        ValidationError: If the year_from is out of range.
+        ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+        ValidationError: If the year_to is later than the end year of the corresponding polity.
+        ValidationError: If the year_to is out of range.
+    """
     if (self.year_from and self.year_to) and self.year_from > self.year_to:
         raise ValidationError({
             'year_from':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> The start year is bigger than the end year!</span>'),
@@ -218,6 +276,9 @@ def has_a_polity(self):
 
 ################American Violence Models:
 class Us_location(models.Model):
+    """
+    Model representing a location in the US.
+    """
     city = models.CharField(max_length=300, null=True, blank=True)
     county = models.CharField(max_length=300, null=True, blank=True)
     special_place = models.CharField(max_length=300, null=True, blank=True)
@@ -225,6 +286,9 @@ class Us_location(models.Model):
     attention_tag =  models.CharField(max_length=30, choices=ATTENTION_TAGS_CHOICES, null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['us_state', '-city', '-county', '-special_place']
 
     # def show_state(self):
@@ -265,16 +329,25 @@ class Us_location(models.Model):
 
     
 class Us_violence_subtype(models.Model):
+    """
+    Model representing a subtype of violence in the US.
+    """
     name = models.CharField(max_length=80, null=True, blank=True)
     is_uncertain = models.BooleanField(default=False)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['name']
     
     def __str__(self) -> str:
         return f"{self.name}{' (?)' if self.is_uncertain else ''}"
     
 class Us_violence_data_source(models.Model):
+    """
+    Model representing a data source for violence in the US.
+    """
     name = models.CharField(max_length=300, null=True, blank=True)
     abbreviation = models.CharField(max_length=20, null=True, blank=True)
     url_address = models.URLField(max_length=500, null=True, blank=True)
@@ -282,6 +355,9 @@ class Us_violence_data_source(models.Model):
     attention_tag =  models.CharField(max_length=30, choices=ATTENTION_TAGS_CHOICES, null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['name']
     
     def __str__(self) -> str:
@@ -292,6 +368,9 @@ class Us_violence_data_source(models.Model):
     
     
 class Us_violence(models.Model):
+    """
+    Model representing a violence event in the US.
+    """
     violence_date = models.DateField(null=True, blank=True)
     violence_type = models.CharField(max_length=50, choices=VIOLENCE_TYPE_CHOICES, null=True, blank=True)
     violence_subtype = models.ManyToManyField(Us_violence_subtype, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
@@ -304,41 +383,43 @@ class Us_violence(models.Model):
     narrative = models.TextField(blank=True, null=True,)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['-violence_date', "-fatalities"]
 
     def show_locations(self):
         list_of_locations = list(self.location.all())
         location_str = " / ".join(str(location) for location in list_of_locations)
         return location_str
-    
 
     def show_narrative_without_quotes(self):
         if self.narrative:
             return self.narrative.replace('"', "'")
         else:
             return "No_Narrative"
-        
+
     def show_source_details_without_quotes(self):
         if self.source_details:
             return self.source_details.replace('"', "'")
         else:
             return "No_source_details"
-    
+
     # def show_states(self):
     #     list_of_locations = list(self.location.all())
     #     location_str = " / ".join(str(location.show_state()) for location in list_of_locations)
     #     return location_str
-    
+
     def show_violence_subtypes(self):
         list_of_subtypes = list(self.violence_subtype.all())
         subtype_str = ", ".join(str(subtype) for subtype in list_of_subtypes)
         return subtype_str
-    
+
     def show_short_data_sources(self):
         list_of_short_data_sources = list(self.short_data_source.all())
         short_data_source_str = ", ".join(str(short_data_source) for short_data_source in list_of_short_data_sources)
         return short_data_source_str
-    
+
     def __str__(self) -> str:
         list_of_locations = list(self.location.all())
         location_str = ": " + " and ".join(str(location) for location in list_of_locations)
@@ -350,6 +431,9 @@ class Us_violence(models.Model):
 
 # Beginning of Crisis Consequences Model
 class Crisis_consequence(SeshatCommon):
+    """
+    Model representing a crisis consequence.
+    """
     crisis_case_id = models.CharField(max_length=100)
     other_polity = models.ForeignKey(Polity, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related_other",
                                related_query_name="%(app_label)s_%(class)s_other", null=True, blank=True)
@@ -379,6 +463,9 @@ class Crisis_consequence(SeshatCommon):
 
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Crisis consequence'
         verbose_name_plural = 'Crisis consequences'
         ordering = ['year_from', 'year_to']
@@ -386,18 +473,57 @@ class Crisis_consequence(SeshatCommon):
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        
+        """
         clean_times_light(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "crisis_consequence"
     
     def clean_name_spaced(self):
         return "Crisis Consequence"
     
     def get_columns_with_value(self, value):
+        """
+        Return the columns with a given value.
+
+        :noindex:
+
+        Args:
+            value (str): The value to search for.
+
+        Returns:
+            list: A list of columns with the given value. If no columns have
+                the given value, the method returns None.
+        """
         columns = []
         fields = ['decline', 'collapse', 'epidemic', 'downward_mobility', 'extermination', 'uprising', 'revolution', 'successful_revolution', 'civil_war', 'century_plus', 'fragmentation', 'capital', 'conquest', 'assassination', 'depose', 'constitution', 'labor', 'unfree_labor', 'suffrage', 'public_goods', 'religion']
 
@@ -444,6 +570,14 @@ class Crisis_consequence(SeshatCommon):
         return return_beautiful_abs_pres(self.collapse)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('crisis_consequence-detail', args=[str(self.id)])
 
     def show_value(self):
@@ -456,6 +590,9 @@ class Crisis_consequence(SeshatCommon):
 
 
 class Power_transition(SeshatCommon):
+    """
+    Model representing a power transition.
+    """
     predecessor = models.CharField(max_length=200, blank=True, null=True)
     successor = models.CharField(max_length=200, blank=True,  null=True)
     reign_number_predecessor = models.IntegerField(blank=True, null=True)
@@ -474,6 +611,9 @@ class Power_transition(SeshatCommon):
     external_interference = models.CharField(max_length=5, choices=CRISIS_CONSEQUENCE_CHOICES, blank=True,null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'Power Transition'
         verbose_name_plural = 'Power Transitions'
         ordering = ['year_from', 'year_to']
@@ -481,13 +621,40 @@ class Power_transition(SeshatCommon):
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        
+        """
         clean_times_light(self)
         has_a_polity(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "power_transition"
     
     def clean_name_spaced(self):
@@ -495,6 +662,18 @@ class Power_transition(SeshatCommon):
     
     
     def get_columns_with_value(self, value):
+        """
+        Return the columns with a given value.
+
+        :noindex:
+
+        Args:
+            value (str): The value to search for.
+
+        Returns:
+            list: A list of columns with the given value. If no columns have
+                the given value, the method returns None.
+        """
         columns = []
         fields = ['contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', ]
 
@@ -532,6 +711,14 @@ class Power_transition(SeshatCommon):
             return nga_rel.nga_party.name
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('power_transition-detail', args=[str(self.id)])
 
     def show_value(self):
@@ -551,12 +738,18 @@ class Power_transition(SeshatCommon):
 ########## Beginning of class Definitions for CrisisDB Models
 
 class Human_sacrifice(SeshatCommon):
+    """
+    Model representing a human sacrifice.
+    """
     name = models.CharField(max_length=100, default="Human_sacrifice")
     human_sacrifice = models.CharField(max_length=500, choices=HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES)
 
 
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'human_sacrifice')
         verbose_name = 'Human_sacrifice'
         verbose_name_plural = 'Human_sacrifices'
@@ -564,12 +757,54 @@ class Human_sacrifice(SeshatCommon):
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
         return "human_sacrifice"
     
     def show_value(self):
@@ -583,6 +818,14 @@ class Human_sacrifice(SeshatCommon):
             return nga_rel.nga_party.name
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('human_sacrifice-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -590,22 +833,66 @@ class Human_sacrifice(SeshatCommon):
         
         
 class External_conflict(SeshatCommon):
+    """
+    Model representing an external conflict.
+    """
     name = models.CharField(max_length=100, default="External_conflict")
     conflict_name = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict_name')
         verbose_name = 'External_conflict'
         verbose_name_plural = 'External_conflicts'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('external_conflict-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -613,6 +900,9 @@ class External_conflict(SeshatCommon):
         
         
 class Internal_conflict(SeshatCommon):
+    """
+    Model representing an internal conflict.
+    """
     name = models.CharField(max_length=100, default="Internal_conflict")
     conflict = models.CharField(max_length=500, blank=True, null=True)
     expenditure = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
@@ -620,18 +910,59 @@ class Internal_conflict(SeshatCommon):
     casualty = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure', 'leader', 'casualty')
         verbose_name = 'Internal_conflict'
         verbose_name_plural = 'Internal_conflicts'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('internal_conflict-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -639,6 +970,9 @@ class Internal_conflict(SeshatCommon):
         
         
 class External_conflict_side(SeshatCommon):
+    """
+    Model representing an external conflict side.
+    """
     name = models.CharField(max_length=100, default="External_conflict_side")
     conflict_id = models.ForeignKey(External_conflict, on_delete=models.SET_NULL, null=True, related_name="External_conflicts")
     expenditure = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
@@ -646,18 +980,59 @@ class External_conflict_side(SeshatCommon):
     casualty = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict_id', 'expenditure', 'leader', 'casualty')
         verbose_name = 'External_conflict_side'
         verbose_name_plural = 'External_conflict_sides'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('external_conflict_side-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -665,22 +1040,66 @@ class External_conflict_side(SeshatCommon):
         
         
 class Agricultural_population(SeshatCommon):
+    """
+    Model representing an agricultural population.
+    """
     name = models.CharField(max_length=100, default="Agricultural_population")
     agricultural_population = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'agricultural_population')
         verbose_name = 'Agricultural_population'
         verbose_name_plural = 'Agricultural_populations'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('agricultural_population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -688,22 +1107,66 @@ class Agricultural_population(SeshatCommon):
         
         
 class Arable_land(SeshatCommon):
+    """
+    Model representing an arable land.
+    """
     name = models.CharField(max_length=100, default="Arable_land")
     arable_land = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'arable_land')
         verbose_name = 'Arable_land'
         verbose_name_plural = 'Arable_lands'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('arable_land-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -711,22 +1174,66 @@ class Arable_land(SeshatCommon):
         
         
 class Arable_land_per_farmer(SeshatCommon):
+    """
+    Model representing an arable land per farmer.
+    """
     name = models.CharField(max_length=100, default="Arable_land_per_farmer")
     arable_land_per_farmer = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'arable_land_per_farmer')
         verbose_name = 'Arable_land_per_farmer'
         verbose_name_plural = 'Arable_land_per_farmers'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('arable_land_per_farmer-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -734,22 +1241,66 @@ class Arable_land_per_farmer(SeshatCommon):
         
         
 class Gross_grain_shared_per_agricultural_population(SeshatCommon):
+    """
+    Model representing a gross grain shared per agricultural population.
+    """
     name = models.CharField(max_length=100, default="Gross_grain_shared_per_agricultural_population")
     gross_grain_shared_per_agricultural_population = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'gross_grain_shared_per_agricultural_population')
         verbose_name = 'Gross_grain_shared_per_agricultural_population'
         verbose_name_plural = 'Gross_grain_shared_per_agricultural_populations'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('gross_grain_shared_per_agricultural_population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -757,22 +1308,66 @@ class Gross_grain_shared_per_agricultural_population(SeshatCommon):
         
         
 class Net_grain_shared_per_agricultural_population(SeshatCommon):
+    """
+    Model representing a net grain shared per agricultural population.
+    """
     name = models.CharField(max_length=100, default="Net_grain_shared_per_agricultural_population")
     net_grain_shared_per_agricultural_population = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'net_grain_shared_per_agricultural_population')
         verbose_name = 'Net_grain_shared_per_agricultural_population'
         verbose_name_plural = 'Net_grain_shared_per_agricultural_populations'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('net_grain_shared_per_agricultural_population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -780,22 +1375,66 @@ class Net_grain_shared_per_agricultural_population(SeshatCommon):
         
         
 class Surplus(SeshatCommon):
+    """
+    Model representing a surplus.
+    """
     name = models.CharField(max_length=100, default="Surplus")
     surplus = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'surplus')
         verbose_name = 'Surplus'
         verbose_name_plural = 'Surplus'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('surplus-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -803,23 +1442,67 @@ class Surplus(SeshatCommon):
         
         
 class Military_expense(SeshatCommon):
+    """
+    Model representing a military expense.
+    """
     name = models.CharField(max_length=100, default="Military_expense")
     conflict = models.CharField(max_length=500, blank=True, null=True)
     expenditure = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'conflict', 'expenditure')
         verbose_name = 'Military_expense'
         verbose_name_plural = 'Military_expenses'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('military_expense-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -827,22 +1510,66 @@ class Military_expense(SeshatCommon):
         
         
 class Silver_inflow(SeshatCommon):
+    """
+    Model representing a silver inflow.
+    """
     name = models.CharField(max_length=100, default="Silver_inflow")
     silver_inflow = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'silver_inflow')
         verbose_name = 'Silver_inflow'
         verbose_name_plural = 'Silver_inflows'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('silver_inflow-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -850,22 +1577,66 @@ class Silver_inflow(SeshatCommon):
         
         
 class Silver_stock(SeshatCommon):
+    """
+    Model representing a silver stock.
+    """
     name = models.CharField(max_length=100, default="Silver_stock")
     silver_stock = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'silver_stock')
         verbose_name = 'Silver_stock'
         verbose_name_plural = 'Silver_stocks'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('silver_stock-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -873,22 +1644,66 @@ class Silver_stock(SeshatCommon):
         
         
 class Total_population(SeshatCommon):
+    """
+    Model representing a total population.
+    """
     name = models.CharField(max_length=100, default="Total_population")
     total_population = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'total_population')
         verbose_name = 'Total_population'
         verbose_name_plural = 'Total_populations'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('total_population-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -896,22 +1711,66 @@ class Total_population(SeshatCommon):
         
         
 class Gdp_per_capita(SeshatCommon):
+    """
+    Model representing a GDP value per capita.
+    """
     name = models.CharField(max_length=100, default="Gdp_per_capita")
-    gdp_per_capita = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
+    gdp_per_capita = models.DecimalField(max_digits=25, decimal_places=10, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'gdp_per_capita')
         verbose_name = 'Gdp_per_capita'
         verbose_name_plural = 'Gdp_per_capitas'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('gdp_per_capita-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -919,22 +1778,66 @@ class Gdp_per_capita(SeshatCommon):
         
         
 class Drought_event(SeshatCommon):
+    """
+    Model representing a drought event.
+    """
     name = models.CharField(max_length=100, default="Drought_event")
     drought_event = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'drought_event')
         verbose_name = 'Drought_event'
         verbose_name_plural = 'Drought_events'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('drought_event-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -942,22 +1845,66 @@ class Drought_event(SeshatCommon):
         
         
 class Locust_event(SeshatCommon):
+    """
+    Model representing a locust event.
+    """
     name = models.CharField(max_length=100, default="Locust_event")
     locust_event = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'locust_event')
         verbose_name = 'Locust_event'
         verbose_name_plural = 'Locust_events'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('locust_event-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -965,22 +1912,66 @@ class Locust_event(SeshatCommon):
         
         
 class Socioeconomic_turmoil_event(SeshatCommon):
+    """
+    Model representing a socioeconomic turmoil event.
+    """
     name = models.CharField(max_length=100, default="Socioeconomic_turmoil_event")
     socioeconomic_turmoil_event = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'socioeconomic_turmoil_event')
         verbose_name = 'Socioeconomic_turmoil_event'
         verbose_name_plural = 'Socioeconomic_turmoil_events'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('socioeconomic_turmoil_event-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -988,22 +1979,66 @@ class Socioeconomic_turmoil_event(SeshatCommon):
         
         
 class Crop_failure_event(SeshatCommon):
+    """
+    Model representing a crop failure event.
+    """
     name = models.CharField(max_length=100, default="Crop_failure_event")
     crop_failure_event = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'crop_failure_event')
         verbose_name = 'Crop_failure_event'
         verbose_name_plural = 'Crop_failure_events'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('crop_failure_event-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1011,22 +2046,66 @@ class Crop_failure_event(SeshatCommon):
         
         
 class Famine_event(SeshatCommon):
+    """
+    Model representing a famine event.
+    """
     name = models.CharField(max_length=100, default="Famine_event")
     famine_event = models.IntegerField(blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'famine_event')
         verbose_name = 'Famine_event'
         verbose_name_plural = 'Famine_events'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('famine_event-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
@@ -1034,6 +2113,9 @@ class Famine_event(SeshatCommon):
         
         
 class Disease_outbreak(SeshatCommon):
+    """
+    Model representing a disease outbreak.
+    """
     name = models.CharField(max_length=100, default="Disease_outbreak")
     longitude = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
     latitude = models.DecimalField(max_digits= 25, decimal_places = 10, blank=True, null=True)
@@ -1043,18 +2125,59 @@ class Disease_outbreak(SeshatCommon):
     duration = models.CharField(max_length=500, choices=DURATION_DISEASE_OUTBREAK_CHOICES)
 
     class Meta:
+        """
+        :noindex:
+        """
         # unique_together = ('polity', 'year_from', 'year_to', 'tag', 'longitude', 'latitude', 'elevation', 'sub_category', 'magnitude', 'duration')
         verbose_name = 'Disease_outbreak'
         verbose_name_plural = 'Disease_outbreaks'
 
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations(self)
 
     def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
         clean_times(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('disease_outbreak-detail', args=[str(self.id)])
 
     def __str__(self) -> str:

@@ -1,5 +1,4 @@
-"""
-ASGI config for seshat project.
+"""ASGI config for seshat project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

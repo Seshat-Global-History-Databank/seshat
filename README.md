@@ -4,3 +4,14 @@
 
 This repo contains the necessary Django Python code to host the [Seshat](http://seshat-db.com/) website and interact with the backend PostgreSQL database.
 
+## Documentation
+
+Project documentation can be accessed at https://seshat-global-history-databank.github.io/seshat/
+
+You can generate these docs locally with Python:
+
+```bash
+pip install -r docs/requirements.txt
+cd docs
+make html
+```

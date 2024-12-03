@@ -3,6 +3,7 @@
 {% load humanize %}
 {% load mathfilters %}
 {% load custom_filters %}
+{% load core_tags %}
 
 
 {% block content %}
@@ -192,24 +193,13 @@
 <!-- showcase for index -->
 
 <div class="container">
-    <div class="row mt-3">
+    <div class="row mt-1">
         <div class="col-md-12">
             <div class="row d-flex align-items-center mb-2">
                     <div class="col-md-9">
                         <span class="h6 text-dark" id="top_of_the_page">Home Region:&nbsp;</span> <span class="h3 text-dark federicka-medium">{{ object.home_seshat_region }}</span> 
                         <h1 class="h1 text-teal federicka-bigger"> {{ object.long_name }}</h1> 
-                    </div>
-                    <div class="col-md-3">   
-                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
- 
-                        <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger my-2 float-end"><i class="fa-regular fa-pen-to-square"></i></a> 
-                        <a class="my-2 float-end fs-6 btn btn-dark" href="{% url 'create_private_subcomment_new' app_name='core' model_name='polity' instance_id=object.id %}"><span class="text-warning fw-bold"> <i class=" fa-solid fa-plus"></i> Add a Private Comment (NEW) </span></a>
-                        {% endif %}
-
-                    </div>
-
-
-                    <div class="col-md-8 py-2">
+			 <div class="pb-1">
                         {% if object.general_description %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#" class="mx-0 px-0">    
@@ -262,26 +252,26 @@
                         <!-- tag -->
                         {% if object.polity_tag == 'POL_AFR_WEST' %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A NEW West African Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-1">New WA</span>    
+                        <span class="badge bg-secondary text-light p-1">New WA</span>
                     {% elif object.polity_tag == "POL_AFR_EAST" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A NEW East African Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-1">New EA</span> 
+                        <span class="badge bg-secondary text-light p-1">New EA</span>
                     {% elif object.polity_tag == "POL_AFR_SA" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A NEW Southern African Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-1">New SA</span> 
+                        <span class="badge bg-secondary text-light p-1">New SA</span>
                     {% elif object.polity_tag == "POL_SA_SI" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A NEW South East Indian Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-2">New SEA</span> 
+                        <span class="badge bg-secondary text-light p-2">New SEA</span>
                     {% elif object.polity_tag == "LEGACY" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="An Equinox 2020 Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light px-2 py-1 fs-6">EQ 2020</span> 
-                    </span> 
+                        <span class="badge bg-secondary text-light px-2 py-1 fs-6">EQ 2020</span>
+                    </span>
                     {% elif object.polity_tag == "CRISISDB_POLITIES" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A CrisisDB-specific Polity" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-1">CrisisDB</span> 
+                        <span class="badge bg-secondary text-light p-1">CrisisDB</span>
                     {% elif object.polity_tag == "OTHER_TAG" %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="Unknown Polity Category" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge bg-secondary text-light p-1">OTHER</span> 
+                        <span class="badge bg-secondary text-light p-1">OTHER</span>
                     {% endif %}
 
                     {% if object.new_name %}
@@ -293,11 +283,27 @@
 
 
                     {% else %}
-                    (<a href="{% url 'polity-detail-main' object.id %}"><b>{{ object.name }}</b></a>) 
-                    <span class="text-danger"><b>NEW_Polity_ID</b>  missing</span>  
+                    (<a href="{% url 'polity-detail-main' object.id %}"><b>{{ object.name }}</b></a>)
+                    <span class="text-danger"><b>NEW_Polity_ID</b>  missing</span>
                     <a href="{% url 'polity-update' object.id %}"><span class="badge bg-small bg-warning text-dark">update</span></a>
                     {% endif %}
                 </div>
+	</div>
+                    <div class="col-md-3">   
+                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+ 
+                        <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger my-2 float-end"><i class="fa-regular fa-pen-to-square"></i></a> 
+                        <a class="my-2 float-end fs-6 btn btn-secondary" href="{% url 'create_private_subcomment_new' app_name='core' model_name='polity' instance_id=object.id %}"><span class="text-warning-outline fw-bold"> <i class=" fa-solid fa-plus"></i> Add Private Comment</span></a>
+                        {% endif %}
+
+                    </div>
+
+                    <div id="polityMap">
+                        {% polity_map pk %}
+                        <br><p></p><br>
+                    </div>
+
+
             </div>
             <div>
                 <div class="col-md-12 row pb-3">
@@ -2198,6 +2204,12 @@
 </div>
 
 <script>
+
+    // Don't show map template if on mobile
+    if (window.innerWidth < 768) {
+      document.getElementById('polityMap').style.display = 'none';
+    }
+
     // Function to handle smooth scrolling to an element with offset
     function scrollToElementWithOffset(elementId, offset) {
       var targetElement = $(elementId);

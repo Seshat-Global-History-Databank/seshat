@@ -1,5 +1,6 @@
 {% extends "core/seshat-base.html" %}
 {% load crispy_forms_tags %}
+{% load core_tags %}
 
 {% block content %}
 <style>
@@ -127,6 +128,10 @@
               {{ form.general_description|as_crispy_field }}
             </div>
           </div>
+        </div>
+        
+        <div class="row">
+          {% polity_map pk %}
         </div>
 
         <div class="row">

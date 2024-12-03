@@ -1,7 +1,23 @@
 from .models import SeshatPrivateCommentPart, Polity
 from ..accounts.models import Seshat_Expert
 
+
 def notifications(request):
+    """
+    Handle the notifications logic for authenticated users and fetch necessary
+    data.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        dict: A dictionary containing:
+            - 'notifications_count' (int): The number of private comments for
+              the authenticated user.
+            - 'all_polities' (QuerySet): A queryset of all polities.
+            - 'search_term' (str): The search term submitted in the request,
+              if any.
+    """
     # Fetch the data you need
     #print("Halooooooooooooooooo")
     if request.user.is_authenticated:
@@ -26,4 +42,3 @@ def notifications(request):
         'all_polities': all_polities,
         'search_term': search_term,
     }
-

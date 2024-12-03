@@ -1,0 +1,10 @@
+name: seshat-dev
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Spin up the Seshat Django app on a dev server
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: azure-python

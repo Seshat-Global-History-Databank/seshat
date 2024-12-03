@@ -1,0 +1,62 @@
+name: "📚 Documentation Improvement"
+
+description: Suggest changes or improvements to the Seshat documentation.
+
+title: "📚 [Documentation] - <title>"
+
+labels: ["documentation"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Documentation Improvement Request
+
+        Thank you for taking the time to help improve our documentation! Please provide the details of your suggestion below.
+
+        ### Example
+
+        **Section of Documentation**: Installation Instructions
+
+        **Description of Improvement**: Add a troubleshooting guide for common installation issues on Windows.
+
+        **Benefits of Improvement**: Helps users resolve installation problems quickly, reducing frustration and support requests.
+
+        **Additional Context**: Based on frequent questions from users in the community forums.
+
+  - type: input
+    id: section
+    attributes:
+      label: Section of Documentation
+      description: Which section of the documentation does this improvement pertain to?
+      placeholder: "e.g., Installation Instructions, User Guide, API Reference"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of Improvement
+      description: Provide a detailed description of the improvement you are suggesting.
+      placeholder: "Describe the change or addition you would like to see."
+
+  - type: input
+    id: benefits
+    attributes:
+      label: Benefits of Improvement
+      description: Explain how this improvement will benefit users.
+      placeholder: "e.g., clearer instructions, easier navigation, more comprehensive coverage"
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add any other context or information related to this improvement request.
+      placeholder: "Include any relevant links, examples, or references."
+  - type: checkboxes
+    id: definition-of-done
+    attributes:
+      label: Definition of Done
+      description:
+        Please confirm the following are completed before this issue can be closed.
+      options:
+        - label: The documentation improvement has been developed on a branch.
+        - label: A pull request has been created for the new branch to be merged into the dev branch.

@@ -46,6 +46,11 @@ urlpatterns += [
 
 
 for model_class, x_name in model_form_pairs:
+     """
+     Programmatically create the following URL patterns for each model:
+     - /model_name/<int:pk>/confirm-delete
+     - /model_name/<int:pk>/delete/
+     """
      urlpatterns.append(
           path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
                'model_class': model_class,

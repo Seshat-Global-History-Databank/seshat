@@ -50,13 +50,26 @@ from .forms import Long_wallForm, CopperForm, BronzeForm, IronForm, SteelForm, J
 ##########################
 
 class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Long_wall
     form_class = Long_wallForm
     template_name = "wf/long_wall/long_wall_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('long_wall-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -71,6 +84,12 @@ class Long_wallCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Long_wallUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Long_wall
     form_class = Long_wallForm
     template_name = "wf/long_wall/long_wall_update.html"
@@ -86,6 +105,12 @@ class Long_wallUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Long_wallDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Long_wall
     success_url = reverse_lazy('long_walls')
     template_name = "core/delete_general.html"
@@ -93,11 +118,20 @@ class Long_wallDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Long_wallListView(generic.ListView):
+    """
+    
+    """
     model = Long_wall
     template_name = "wf/long_wall/long_wall_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('long_walls')
     
     def get_context_data(self, **kwargs):
@@ -114,10 +148,19 @@ class Long_wallListView(generic.ListView):
 
 
 class Long_wallListViewAll(generic.ListView):
+    """
+    
+    """
     model = Long_wall
     template_name = "wf/long_wall/long_wall_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('long_walls_all')
 
     def get_queryset(self):
@@ -152,6 +195,9 @@ class Long_wallListViewAll(generic.ListView):
         return context
         
 class Long_wallDetailView(generic.DetailView):
+    """
+    
+    """
     model = Long_wall
     template_name = "wf/long_wall/long_wall_detail.html"
 
@@ -218,13 +264,26 @@ def long_wall_meta_download(request):
 
 
 class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Copper
     form_class = CopperForm
     template_name = "wf/copper/copper_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('copper-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -239,6 +298,12 @@ class CopperCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CopperUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Copper
     form_class = CopperForm
     template_name = "wf/copper/copper_update.html"
@@ -253,6 +318,12 @@ class CopperUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class CopperDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Copper
     success_url = reverse_lazy('coppers')
     template_name = "core/delete_general.html"
@@ -260,11 +331,20 @@ class CopperDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CopperListView(generic.ListView):
+    """
+    
+    """
     model = Copper
     template_name = "wf/copper/copper_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('coppers')
     
     def get_context_data(self, **kwargs):
@@ -281,10 +361,19 @@ class CopperListView(generic.ListView):
 
 
 class CopperListViewAll(generic.ListView):
+    """
+    
+    """
     model = Copper
     template_name = "wf/copper/copper_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('coppers_all')
 
     def get_queryset(self):
@@ -319,6 +408,9 @@ class CopperListViewAll(generic.ListView):
         return context
         
 class CopperDetailView(generic.DetailView):
+    """
+    
+    """
     model = Copper
     template_name = "wf/copper/copper_detail.html"
 
@@ -366,13 +458,26 @@ def copper_meta_download(request):
         
 
 class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bronze
     form_class = BronzeForm
     template_name = "wf/bronze/bronze_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bronze-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -387,6 +492,12 @@ class BronzeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class BronzeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bronze
     form_class = BronzeForm
     template_name = "wf/bronze/bronze_update.html"
@@ -401,6 +512,12 @@ class BronzeUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class BronzeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Bronze
     success_url = reverse_lazy('bronzes')
     template_name = "core/delete_general.html"
@@ -408,11 +525,20 @@ class BronzeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class BronzeListView(generic.ListView):
+    """
+    
+    """
     model = Bronze
     template_name = "wf/bronze/bronze_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bronzes')
     
     def get_context_data(self, **kwargs):
@@ -429,10 +555,19 @@ class BronzeListView(generic.ListView):
 
 
 class BronzeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Bronze
     template_name = "wf/bronze/bronze_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('bronzes_all')
 
     def get_queryset(self):
@@ -467,6 +602,9 @@ class BronzeListViewAll(generic.ListView):
         return context
         
 class BronzeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Bronze
     template_name = "wf/bronze/bronze_detail.html"
 
@@ -514,13 +652,26 @@ def bronze_meta_download(request):
         
 
 class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Iron
     form_class = IronForm
     template_name = "wf/iron/iron_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('iron-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -535,6 +686,12 @@ class IronCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class IronUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Iron
     form_class = IronForm
     template_name = "wf/iron/iron_update.html"
@@ -549,6 +706,12 @@ class IronUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class IronDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Iron
     success_url = reverse_lazy('irons')
     template_name = "core/delete_general.html"
@@ -556,11 +719,20 @@ class IronDelete(PermissionRequiredMixin, DeleteView):
 
 
 class IronListView(generic.ListView):
+    """
+    
+    """
     model = Iron
     template_name = "wf/iron/iron_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('irons')
     
     def get_context_data(self, **kwargs):
@@ -577,10 +749,19 @@ class IronListView(generic.ListView):
 
 
 class IronListViewAll(generic.ListView):
+    """
+    
+    """
     model = Iron
     template_name = "wf/iron/iron_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('irons_all')
 
     def get_queryset(self):
@@ -615,6 +796,9 @@ class IronListViewAll(generic.ListView):
         return context
         
 class IronDetailView(generic.DetailView):
+    """
+    
+    """
     model = Iron
     template_name = "wf/iron/iron_detail.html"
 
@@ -662,13 +846,26 @@ def iron_meta_download(request):
         
 
 class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Steel
     form_class = SteelForm
     template_name = "wf/steel/steel_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('steel-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -683,6 +880,12 @@ class SteelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class SteelUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Steel
     form_class = SteelForm
     template_name = "wf/steel/steel_update.html"
@@ -697,6 +900,12 @@ class SteelUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class SteelDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Steel
     success_url = reverse_lazy('steels')
     template_name = "core/delete_general.html"
@@ -704,11 +913,20 @@ class SteelDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SteelListView(generic.ListView):
+    """
+    
+    """
     model = Steel
     template_name = "wf/steel/steel_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('steels')
     
     def get_context_data(self, **kwargs):
@@ -725,10 +943,19 @@ class SteelListView(generic.ListView):
 
 
 class SteelListViewAll(generic.ListView):
+    """
+    
+    """
     model = Steel
     template_name = "wf/steel/steel_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('steels_all')
 
     def get_queryset(self):
@@ -763,6 +990,9 @@ class SteelListViewAll(generic.ListView):
         return context
         
 class SteelDetailView(generic.DetailView):
+    """
+    
+    """
     model = Steel
     template_name = "wf/steel/steel_detail.html"
 
@@ -810,13 +1040,26 @@ def steel_meta_download(request):
         
 
 class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Javelin
     form_class = JavelinForm
     template_name = "wf/javelin/javelin_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('javelin-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -831,6 +1074,12 @@ class JavelinCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class JavelinUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Javelin
     form_class = JavelinForm
     template_name = "wf/javelin/javelin_update.html"
@@ -845,6 +1094,12 @@ class JavelinUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class JavelinDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Javelin
     success_url = reverse_lazy('javelins')
     template_name = "core/delete_general.html"
@@ -852,11 +1107,20 @@ class JavelinDelete(PermissionRequiredMixin, DeleteView):
 
 
 class JavelinListView(generic.ListView):
+    """
+    
+    """
     model = Javelin
     template_name = "wf/javelin/javelin_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('javelins')
     
     def get_context_data(self, **kwargs):
@@ -873,10 +1137,19 @@ class JavelinListView(generic.ListView):
 
 
 class JavelinListViewAll(generic.ListView):
+    """
+    
+    """
     model = Javelin
     template_name = "wf/javelin/javelin_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('javelins_all')
 
     def get_queryset(self):
@@ -911,6 +1184,9 @@ class JavelinListViewAll(generic.ListView):
         return context
         
 class JavelinDetailView(generic.DetailView):
+    """
+    
+    """
     model = Javelin
     template_name = "wf/javelin/javelin_detail.html"
 
@@ -958,13 +1234,26 @@ def javelin_meta_download(request):
         
 
 class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Atlatl
     form_class = AtlatlForm
     template_name = "wf/atlatl/atlatl_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('atlatl-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -979,6 +1268,12 @@ class AtlatlCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class AtlatlUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Atlatl
     form_class = AtlatlForm
     template_name = "wf/atlatl/atlatl_update.html"
@@ -993,6 +1288,12 @@ class AtlatlUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class AtlatlDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Atlatl
     success_url = reverse_lazy('atlatls')
     template_name = "core/delete_general.html"
@@ -1000,11 +1301,20 @@ class AtlatlDelete(PermissionRequiredMixin, DeleteView):
 
 
 class AtlatlListView(generic.ListView):
+    """
+    
+    """
     model = Atlatl
     template_name = "wf/atlatl/atlatl_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('atlatls')
     
     def get_context_data(self, **kwargs):
@@ -1021,10 +1331,19 @@ class AtlatlListView(generic.ListView):
 
 
 class AtlatlListViewAll(generic.ListView):
+    """
+    
+    """
     model = Atlatl
     template_name = "wf/atlatl/atlatl_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('atlatls_all')
 
     def get_queryset(self):
@@ -1059,6 +1378,9 @@ class AtlatlListViewAll(generic.ListView):
         return context
         
 class AtlatlDetailView(generic.DetailView):
+    """
+    
+    """
     model = Atlatl
     template_name = "wf/atlatl/atlatl_detail.html"
 
@@ -1106,13 +1428,26 @@ def atlatl_meta_download(request):
         
 
 class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling
     form_class = SlingForm
     template_name = "wf/sling/sling_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sling-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1127,6 +1462,12 @@ class SlingCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class SlingUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling
     form_class = SlingForm
     template_name = "wf/sling/sling_update.html"
@@ -1141,6 +1482,12 @@ class SlingUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class SlingDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling
     success_url = reverse_lazy('slings')
     template_name = "core/delete_general.html"
@@ -1148,11 +1495,20 @@ class SlingDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SlingListView(generic.ListView):
+    """
+    
+    """
     model = Sling
     template_name = "wf/sling/sling_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('slings')
     
     def get_context_data(self, **kwargs):
@@ -1169,10 +1525,19 @@ class SlingListView(generic.ListView):
 
 
 class SlingListViewAll(generic.ListView):
+    """
+    
+    """
     model = Sling
     template_name = "wf/sling/sling_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('slings_all')
 
     def get_queryset(self):
@@ -1207,6 +1572,9 @@ class SlingListViewAll(generic.ListView):
         return context
         
 class SlingDetailView(generic.DetailView):
+    """
+    
+    """
     model = Sling
     template_name = "wf/sling/sling_detail.html"
 
@@ -1254,13 +1622,26 @@ def sling_meta_download(request):
         
 
 class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Self_bow
     form_class = Self_bowForm
     template_name = "wf/self_bow/self_bow_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('self_bow-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1275,6 +1656,12 @@ class Self_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Self_bowUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Self_bow
     form_class = Self_bowForm
     template_name = "wf/self_bow/self_bow_update.html"
@@ -1289,6 +1676,12 @@ class Self_bowUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Self_bowDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Self_bow
     success_url = reverse_lazy('self_bows')
     template_name = "core/delete_general.html"
@@ -1296,11 +1689,20 @@ class Self_bowDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Self_bowListView(generic.ListView):
+    """
+    
+    """
     model = Self_bow
     template_name = "wf/self_bow/self_bow_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('self_bows')
     
     def get_context_data(self, **kwargs):
@@ -1317,10 +1719,19 @@ class Self_bowListView(generic.ListView):
 
 
 class Self_bowListViewAll(generic.ListView):
+    """
+    
+    """
     model = Self_bow
     template_name = "wf/self_bow/self_bow_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('self_bows_all')
 
     def get_queryset(self):
@@ -1355,6 +1766,9 @@ class Self_bowListViewAll(generic.ListView):
         return context
         
 class Self_bowDetailView(generic.DetailView):
+    """
+    
+    """
     model = Self_bow
     template_name = "wf/self_bow/self_bow_detail.html"
 
@@ -1402,13 +1816,26 @@ def self_bow_meta_download(request):
         
 
 class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Composite_bow
     form_class = Composite_bowForm
     template_name = "wf/composite_bow/composite_bow_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('composite_bow-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1423,6 +1850,12 @@ class Composite_bowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Composite_bowUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Composite_bow
     form_class = Composite_bowForm
     template_name = "wf/composite_bow/composite_bow_update.html"
@@ -1437,6 +1870,12 @@ class Composite_bowUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Composite_bowDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Composite_bow
     success_url = reverse_lazy('composite_bows')
     template_name = "core/delete_general.html"
@@ -1444,11 +1883,20 @@ class Composite_bowDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Composite_bowListView(generic.ListView):
+    """
+    
+    """
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('composite_bows')
     
     def get_context_data(self, **kwargs):
@@ -1465,10 +1913,19 @@ class Composite_bowListView(generic.ListView):
 
 
 class Composite_bowListViewAll(generic.ListView):
+    """
+    
+    """
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('composite_bows_all')
 
     def get_queryset(self):
@@ -1503,6 +1960,9 @@ class Composite_bowListViewAll(generic.ListView):
         return context
         
 class Composite_bowDetailView(generic.DetailView):
+    """
+    
+    """
     model = Composite_bow
     template_name = "wf/composite_bow/composite_bow_detail.html"
 
@@ -1550,13 +2010,26 @@ def composite_bow_meta_download(request):
         
 
 class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Crossbow
     form_class = CrossbowForm
     template_name = "wf/crossbow/crossbow_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('crossbow-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1571,6 +2044,12 @@ class CrossbowCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CrossbowUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Crossbow
     form_class = CrossbowForm
     template_name = "wf/crossbow/crossbow_update.html"
@@ -1585,6 +2064,12 @@ class CrossbowUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class CrossbowDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Crossbow
     success_url = reverse_lazy('crossbows')
     template_name = "core/delete_general.html"
@@ -1592,11 +2077,20 @@ class CrossbowDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CrossbowListView(generic.ListView):
+    """
+    
+    """
     model = Crossbow
     template_name = "wf/crossbow/crossbow_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('crossbows')
     
     def get_context_data(self, **kwargs):
@@ -1613,10 +2107,19 @@ class CrossbowListView(generic.ListView):
 
 
 class CrossbowListViewAll(generic.ListView):
+    """
+    
+    """
     model = Crossbow
     template_name = "wf/crossbow/crossbow_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('crossbows_all')
 
     def get_queryset(self):
@@ -1651,6 +2154,9 @@ class CrossbowListViewAll(generic.ListView):
         return context
         
 class CrossbowDetailView(generic.DetailView):
+    """
+    
+    """
     model = Crossbow
     template_name = "wf/crossbow/crossbow_detail.html"
 
@@ -1698,13 +2204,26 @@ def crossbow_meta_download(request):
         
 
 class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Tension_siege_engine
     form_class = Tension_siege_engineForm
     template_name = "wf/tension_siege_engine/tension_siege_engine_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('tension_siege_engine-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1719,6 +2238,12 @@ class Tension_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Tension_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Tension_siege_engine
     form_class = Tension_siege_engineForm
     template_name = "wf/tension_siege_engine/tension_siege_engine_update.html"
@@ -1733,6 +2258,12 @@ class Tension_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Tension_siege_engineDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Tension_siege_engine
     success_url = reverse_lazy('tension_siege_engines')
     template_name = "core/delete_general.html"
@@ -1740,11 +2271,20 @@ class Tension_siege_engineDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Tension_siege_engineListView(generic.ListView):
+    """
+    
+    """
     model = Tension_siege_engine
     template_name = "wf/tension_siege_engine/tension_siege_engine_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('tension_siege_engines')
     
     def get_context_data(self, **kwargs):
@@ -1761,10 +2301,19 @@ class Tension_siege_engineListView(generic.ListView):
 
 
 class Tension_siege_engineListViewAll(generic.ListView):
+    """
+    
+    """
     model = Tension_siege_engine
     template_name = "wf/tension_siege_engine/tension_siege_engine_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('tension_siege_engines_all')
 
     def get_queryset(self):
@@ -1799,6 +2348,9 @@ class Tension_siege_engineListViewAll(generic.ListView):
         return context
         
 class Tension_siege_engineDetailView(generic.DetailView):
+    """
+    
+    """
     model = Tension_siege_engine
     template_name = "wf/tension_siege_engine/tension_siege_engine_detail.html"
 
@@ -1846,13 +2398,26 @@ def tension_siege_engine_meta_download(request):
         
 
 class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling_siege_engine
     form_class = Sling_siege_engineForm
     template_name = "wf/sling_siege_engine/sling_siege_engine_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sling_siege_engine-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -1867,6 +2432,12 @@ class Sling_siege_engineCreate(PermissionRequiredMixin, PolityIdMixin, CreateVie
 
 
 class Sling_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling_siege_engine
     form_class = Sling_siege_engineForm
     template_name = "wf/sling_siege_engine/sling_siege_engine_update.html"
@@ -1881,6 +2452,12 @@ class Sling_siege_engineUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Sling_siege_engineDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sling_siege_engine
     success_url = reverse_lazy('sling_siege_engines')
     template_name = "core/delete_general.html"
@@ -1888,11 +2465,20 @@ class Sling_siege_engineDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Sling_siege_engineListView(generic.ListView):
+    """
+    
+    """
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sling_siege_engines')
     
     def get_context_data(self, **kwargs):
@@ -1909,10 +2495,19 @@ class Sling_siege_engineListView(generic.ListView):
 
 
 class Sling_siege_engineListViewAll(generic.ListView):
+    """
+    
+    """
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sling_siege_engines_all')
 
     def get_queryset(self):
@@ -1947,6 +2542,9 @@ class Sling_siege_engineListViewAll(generic.ListView):
         return context
         
 class Sling_siege_engineDetailView(generic.DetailView):
+    """
+    
+    """
     model = Sling_siege_engine
     template_name = "wf/sling_siege_engine/sling_siege_engine_detail.html"
 
@@ -1994,13 +2592,26 @@ def sling_siege_engine_meta_download(request):
         
 
 class Gunpowder_siege_artilleryCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Gunpowder_siege_artillery
     form_class = Gunpowder_siege_artilleryForm
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('gunpowder_siege_artillery-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2015,6 +2626,12 @@ class Gunpowder_siege_artilleryCreate(PermissionRequiredMixin, PolityIdMixin, Cr
 
 
 class Gunpowder_siege_artilleryUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Gunpowder_siege_artillery
     form_class = Gunpowder_siege_artilleryForm
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_update.html"
@@ -2029,6 +2646,12 @@ class Gunpowder_siege_artilleryUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Gunpowder_siege_artilleryDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Gunpowder_siege_artillery
     success_url = reverse_lazy('gunpowder_siege_artillerys')
     template_name = "core/delete_general.html"
@@ -2036,11 +2659,20 @@ class Gunpowder_siege_artilleryDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Gunpowder_siege_artilleryListView(generic.ListView):
+    """
+    
+    """
     model = Gunpowder_siege_artillery
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('gunpowder_siege_artillerys')
     
     def get_context_data(self, **kwargs):
@@ -2057,10 +2689,19 @@ class Gunpowder_siege_artilleryListView(generic.ListView):
 
 
 class Gunpowder_siege_artilleryListViewAll(generic.ListView):
+    """
+    
+    """
     model = Gunpowder_siege_artillery
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('gunpowder_siege_artillerys_all')
 
     def get_queryset(self):
@@ -2095,6 +2736,9 @@ class Gunpowder_siege_artilleryListViewAll(generic.ListView):
         return context
         
 class Gunpowder_siege_artilleryDetailView(generic.DetailView):
+    """
+    
+    """
     model = Gunpowder_siege_artillery
     template_name = "wf/gunpowder_siege_artillery/gunpowder_siege_artillery_detail.html"
 
@@ -2142,13 +2786,26 @@ def gunpowder_siege_artillery_meta_download(request):
         
 
 class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Handheld_firearm
     form_class = Handheld_firearmForm
     template_name = "wf/handheld_firearm/handheld_firearm_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('handheld_firearm-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2163,6 +2820,12 @@ class Handheld_firearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView)
 
 
 class Handheld_firearmUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Handheld_firearm
     form_class = Handheld_firearmForm
     template_name = "wf/handheld_firearm/handheld_firearm_update.html"
@@ -2177,6 +2840,12 @@ class Handheld_firearmUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Handheld_firearmDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Handheld_firearm
     success_url = reverse_lazy('handheld_firearms')
     template_name = "core/delete_general.html"
@@ -2184,11 +2853,20 @@ class Handheld_firearmDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Handheld_firearmListView(generic.ListView):
+    """
+    
+    """
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('handheld_firearms')
     
     def get_context_data(self, **kwargs):
@@ -2205,10 +2883,19 @@ class Handheld_firearmListView(generic.ListView):
 
 
 class Handheld_firearmListViewAll(generic.ListView):
+    """
+    
+    """
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('handheld_firearms_all')
 
     def get_queryset(self):
@@ -2243,6 +2930,9 @@ class Handheld_firearmListViewAll(generic.ListView):
         return context
         
 class Handheld_firearmDetailView(generic.DetailView):
+    """
+    
+    """
     model = Handheld_firearm
     template_name = "wf/handheld_firearm/handheld_firearm_detail.html"
 
@@ -2290,13 +2980,26 @@ def handheld_firearm_meta_download(request):
         
 
 class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = War_club
     form_class = War_clubForm
     template_name = "wf/war_club/war_club_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('war_club-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2311,6 +3014,12 @@ class War_clubCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class War_clubUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = War_club
     form_class = War_clubForm
     template_name = "wf/war_club/war_club_update.html"
@@ -2325,6 +3034,12 @@ class War_clubUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class War_clubDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = War_club
     success_url = reverse_lazy('war_clubs')
     template_name = "core/delete_general.html"
@@ -2332,11 +3047,20 @@ class War_clubDelete(PermissionRequiredMixin, DeleteView):
 
 
 class War_clubListView(generic.ListView):
+    """
+    
+    """
     model = War_club
     template_name = "wf/war_club/war_club_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('war_clubs')
     
     def get_context_data(self, **kwargs):
@@ -2353,10 +3077,19 @@ class War_clubListView(generic.ListView):
 
 
 class War_clubListViewAll(generic.ListView):
+    """
+    
+    """
     model = War_club
     template_name = "wf/war_club/war_club_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('war_clubs_all')
 
     def get_queryset(self):
@@ -2391,6 +3124,9 @@ class War_clubListViewAll(generic.ListView):
         return context
         
 class War_clubDetailView(generic.DetailView):
+    """
+    
+    """
     model = War_club
     template_name = "wf/war_club/war_club_detail.html"
 
@@ -2438,13 +3174,26 @@ def war_club_meta_download(request):
         
 
 class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Battle_axe
     form_class = Battle_axeForm
     template_name = "wf/battle_axe/battle_axe_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('battle_axe-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2459,6 +3208,12 @@ class Battle_axeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Battle_axeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Battle_axe
     form_class = Battle_axeForm
     template_name = "wf/battle_axe/battle_axe_update.html"
@@ -2473,6 +3228,12 @@ class Battle_axeUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Battle_axeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Battle_axe
     success_url = reverse_lazy('battle_axes')
     template_name = "core/delete_general.html"
@@ -2480,11 +3241,20 @@ class Battle_axeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Battle_axeListView(generic.ListView):
+    """
+    
+    """
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('battle_axes')
     
     def get_context_data(self, **kwargs):
@@ -2501,10 +3271,19 @@ class Battle_axeListView(generic.ListView):
 
 
 class Battle_axeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('battle_axes_all')
 
     def get_queryset(self):
@@ -2539,6 +3318,9 @@ class Battle_axeListViewAll(generic.ListView):
         return context
         
 class Battle_axeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Battle_axe
     template_name = "wf/battle_axe/battle_axe_detail.html"
 
@@ -2585,13 +3367,26 @@ def battle_axe_meta_download(request):
         
 
 class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dagger
     form_class = DaggerForm
     template_name = "wf/dagger/dagger_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('dagger-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2606,6 +3401,12 @@ class DaggerCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class DaggerUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dagger
     form_class = DaggerForm
     template_name = "wf/dagger/dagger_update.html"
@@ -2620,6 +3421,12 @@ class DaggerUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class DaggerDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dagger
     success_url = reverse_lazy('daggers')
     template_name = "core/delete_general.html"
@@ -2627,11 +3434,20 @@ class DaggerDelete(PermissionRequiredMixin, DeleteView):
 
 
 class DaggerListView(generic.ListView):
+    """
+    
+    """
     model = Dagger
     template_name = "wf/dagger/dagger_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('daggers')
     
     def get_context_data(self, **kwargs):
@@ -2648,10 +3464,19 @@ class DaggerListView(generic.ListView):
 
 
 class DaggerListViewAll(generic.ListView):
+    """
+    
+    """
     model = Dagger
     template_name = "wf/dagger/dagger_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('daggers_all')
 
     def get_queryset(self):
@@ -2686,6 +3511,9 @@ class DaggerListViewAll(generic.ListView):
         return context
         
 class DaggerDetailView(generic.DetailView):
+    """
+    
+    """
     model = Dagger
     template_name = "wf/dagger/dagger_detail.html"
 
@@ -2733,13 +3561,26 @@ def dagger_meta_download(request):
         
 
 class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sword
     form_class = SwordForm
     template_name = "wf/sword/sword_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('sword-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2754,6 +3595,12 @@ class SwordCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class SwordUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sword
     form_class = SwordForm
     template_name = "wf/sword/sword_update.html"
@@ -2768,6 +3615,12 @@ class SwordUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class SwordDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Sword
     success_url = reverse_lazy('swords')
     template_name = "core/delete_general.html"
@@ -2775,11 +3628,20 @@ class SwordDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SwordListView(generic.ListView):
+    """
+    
+    """
     model = Sword
     template_name = "wf/sword/sword_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('swords')
     
     def get_context_data(self, **kwargs):
@@ -2796,10 +3658,19 @@ class SwordListView(generic.ListView):
 
 
 class SwordListViewAll(generic.ListView):
+    """
+    
+    """
     model = Sword
     template_name = "wf/sword/sword_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('swords_all')
 
     def get_queryset(self):
@@ -2834,6 +3705,9 @@ class SwordListViewAll(generic.ListView):
         return context
         
 class SwordDetailView(generic.DetailView):
+    """
+    
+    """
     model = Sword
     template_name = "wf/sword/sword_detail.html"
 
@@ -2881,13 +3755,26 @@ def sword_meta_download(request):
         
 
 class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Spear
     form_class = SpearForm
     template_name = "wf/spear/spear_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('spear-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -2902,6 +3789,12 @@ class SpearCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class SpearUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Spear
     form_class = SpearForm
     template_name = "wf/spear/spear_update.html"
@@ -2916,6 +3809,12 @@ class SpearUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class SpearDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Spear
     success_url = reverse_lazy('spears')
     template_name = "core/delete_general.html"
@@ -2923,11 +3822,20 @@ class SpearDelete(PermissionRequiredMixin, DeleteView):
 
 
 class SpearListView(generic.ListView):
+    """
+    
+    """
     model = Spear
     template_name = "wf/spear/spear_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('spears')
     
     def get_context_data(self, **kwargs):
@@ -2944,10 +3852,19 @@ class SpearListView(generic.ListView):
 
 
 class SpearListViewAll(generic.ListView):
+    """
+    
+    """
     model = Spear
     template_name = "wf/spear/spear_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('spears_all')
 
     def get_queryset(self):
@@ -2982,6 +3899,9 @@ class SpearListViewAll(generic.ListView):
         return context
         
 class SpearDetailView(generic.DetailView):
+    """
+    
+    """
     model = Spear
     template_name = "wf/spear/spear_detail.html"
 
@@ -3029,13 +3949,26 @@ def spear_meta_download(request):
         
 
 class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polearm
     form_class = PolearmForm
     template_name = "wf/polearm/polearm_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polearm-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3050,6 +3983,12 @@ class PolearmCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class PolearmUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polearm
     form_class = PolearmForm
     template_name = "wf/polearm/polearm_update.html"
@@ -3064,6 +4003,12 @@ class PolearmUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class PolearmDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Polearm
     success_url = reverse_lazy('polearms')
     template_name = "core/delete_general.html"
@@ -3071,11 +4016,20 @@ class PolearmDelete(PermissionRequiredMixin, DeleteView):
 
 
 class PolearmListView(generic.ListView):
+    """
+    
+    """
     model = Polearm
     template_name = "wf/polearm/polearm_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polearms')
     
     def get_context_data(self, **kwargs):
@@ -3092,10 +4046,19 @@ class PolearmListView(generic.ListView):
 
 
 class PolearmListViewAll(generic.ListView):
+    """
+    
+    """
     model = Polearm
     template_name = "wf/polearm/polearm_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('polearms_all')
 
     def get_queryset(self):
@@ -3130,6 +4093,9 @@ class PolearmListViewAll(generic.ListView):
         return context
         
 class PolearmDetailView(generic.DetailView):
+    """
+    
+    """
     model = Polearm
     template_name = "wf/polearm/polearm_detail.html"
 
@@ -3177,13 +4143,26 @@ def polearm_meta_download(request):
         
 
 class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dog
     form_class = DogForm
     template_name = "wf/dog/dog_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('dog-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3198,6 +4177,12 @@ class DogCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class DogUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dog
     form_class = DogForm
     template_name = "wf/dog/dog_update.html"
@@ -3212,6 +4197,12 @@ class DogUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class DogDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Dog
     success_url = reverse_lazy('dogs')
     template_name = "core/delete_general.html"
@@ -3219,11 +4210,20 @@ class DogDelete(PermissionRequiredMixin, DeleteView):
 
 
 class DogListView(generic.ListView):
+    """
+    
+    """
     model = Dog
     template_name = "wf/dog/dog_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('dogs')
     
     def get_context_data(self, **kwargs):
@@ -3240,10 +4240,19 @@ class DogListView(generic.ListView):
 
 
 class DogListViewAll(generic.ListView):
+    """
+    
+    """
     model = Dog
     template_name = "wf/dog/dog_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('dogs_all')
 
     def get_queryset(self):
@@ -3278,6 +4287,9 @@ class DogListViewAll(generic.ListView):
         return context
         
 class DogDetailView(generic.DetailView):
+    """
+    
+    """
     model = Dog
     template_name = "wf/dog/dog_detail.html"
 
@@ -3325,13 +4337,26 @@ def dog_meta_download(request):
         
 
 class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Donkey
     form_class = DonkeyForm
     template_name = "wf/donkey/donkey_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('donkey-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3346,6 +4371,12 @@ class DonkeyCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class DonkeyUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Donkey
     form_class = DonkeyForm
     template_name = "wf/donkey/donkey_update.html"
@@ -3360,6 +4391,12 @@ class DonkeyUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class DonkeyDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Donkey
     success_url = reverse_lazy('donkeys')
     template_name = "core/delete_general.html"
@@ -3367,11 +4404,20 @@ class DonkeyDelete(PermissionRequiredMixin, DeleteView):
 
 
 class DonkeyListView(generic.ListView):
+    """
+    
+    """
     model = Donkey
     template_name = "wf/donkey/donkey_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('donkeys')
     
     def get_context_data(self, **kwargs):
@@ -3388,10 +4434,19 @@ class DonkeyListView(generic.ListView):
 
 
 class DonkeyListViewAll(generic.ListView):
+    """
+    
+    """
     model = Donkey
     template_name = "wf/donkey/donkey_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('donkeys_all')
 
     def get_queryset(self):
@@ -3426,6 +4481,9 @@ class DonkeyListViewAll(generic.ListView):
         return context
         
 class DonkeyDetailView(generic.DetailView):
+    """
+    
+    """
     model = Donkey
     template_name = "wf/donkey/donkey_detail.html"
 
@@ -3473,13 +4531,26 @@ def donkey_meta_download(request):
         
 
 class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Horse
     form_class = HorseForm
     template_name = "wf/horse/horse_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('horse-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3494,6 +4565,12 @@ class HorseCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class HorseUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Horse
     form_class = HorseForm
     template_name = "wf/horse/horse_update.html"
@@ -3508,6 +4585,12 @@ class HorseUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class HorseDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Horse
     success_url = reverse_lazy('horses')
     template_name = "core/delete_general.html"
@@ -3515,11 +4598,20 @@ class HorseDelete(PermissionRequiredMixin, DeleteView):
 
 
 class HorseListView(generic.ListView):
+    """
+    
+    """
     model = Horse
     template_name = "wf/horse/horse_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('horses')
     
     def get_context_data(self, **kwargs):
@@ -3536,10 +4628,19 @@ class HorseListView(generic.ListView):
 
 
 class HorseListViewAll(generic.ListView):
+    """
+    
+    """
     model = Horse
     template_name = "wf/horse/horse_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('horses_all')
 
     def get_queryset(self):
@@ -3574,6 +4675,9 @@ class HorseListViewAll(generic.ListView):
         return context
         
 class HorseDetailView(generic.DetailView):
+    """
+    
+    """
     model = Horse
     template_name = "wf/horse/horse_detail.html"
 
@@ -3621,13 +4725,26 @@ def horse_meta_download(request):
         
 
 class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Camel
     form_class = CamelForm
     template_name = "wf/camel/camel_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('camel-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3642,6 +4759,12 @@ class CamelCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class CamelUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Camel
     form_class = CamelForm
     template_name = "wf/camel/camel_update.html"
@@ -3656,6 +4779,12 @@ class CamelUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class CamelDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Camel
     success_url = reverse_lazy('camels')
     template_name = "core/delete_general.html"
@@ -3663,11 +4792,20 @@ class CamelDelete(PermissionRequiredMixin, DeleteView):
 
 
 class CamelListView(generic.ListView):
+    """
+    
+    """
     model = Camel
     template_name = "wf/camel/camel_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('camels')
     
     def get_context_data(self, **kwargs):
@@ -3684,10 +4822,19 @@ class CamelListView(generic.ListView):
 
 
 class CamelListViewAll(generic.ListView):
+    """
+    
+    """
     model = Camel
     template_name = "wf/camel/camel_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('camels_all')
 
     def get_queryset(self):
@@ -3722,6 +4869,9 @@ class CamelListViewAll(generic.ListView):
         return context
         
 class CamelDetailView(generic.DetailView):
+    """
+    
+    """
     model = Camel
     template_name = "wf/camel/camel_detail.html"
 
@@ -3769,13 +4919,26 @@ def camel_meta_download(request):
         
 
 class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Elephant
     form_class = ElephantForm
     template_name = "wf/elephant/elephant_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('elephant-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3790,6 +4953,12 @@ class ElephantCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class ElephantUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Elephant
     form_class = ElephantForm
     template_name = "wf/elephant/elephant_update.html"
@@ -3804,6 +4973,12 @@ class ElephantUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class ElephantDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Elephant
     success_url = reverse_lazy('elephants')
     template_name = "core/delete_general.html"
@@ -3811,11 +4986,20 @@ class ElephantDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ElephantListView(generic.ListView):
+    """
+    
+    """
     model = Elephant
     template_name = "wf/elephant/elephant_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('elephants')
     
     def get_context_data(self, **kwargs):
@@ -3832,10 +5016,19 @@ class ElephantListView(generic.ListView):
 
 
 class ElephantListViewAll(generic.ListView):
+    """
+    
+    """
     model = Elephant
     template_name = "wf/elephant/elephant_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('elephants_all')
 
     def get_queryset(self):
@@ -3870,6 +5063,9 @@ class ElephantListViewAll(generic.ListView):
         return context
         
 class ElephantDetailView(generic.DetailView):
+    """
+    
+    """
     model = Elephant
     template_name = "wf/elephant/elephant_detail.html"
 
@@ -3917,13 +5113,26 @@ def elephant_meta_download(request):
         
 
 class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wood_bark_etc
     form_class = Wood_bark_etcForm
     template_name = "wf/wood_bark_etc/wood_bark_etc_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wood_bark_etc-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -3938,6 +5147,12 @@ class Wood_bark_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Wood_bark_etcUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wood_bark_etc
     form_class = Wood_bark_etcForm
     template_name = "wf/wood_bark_etc/wood_bark_etc_update.html"
@@ -3952,6 +5167,12 @@ class Wood_bark_etcUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Wood_bark_etcDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wood_bark_etc
     success_url = reverse_lazy('wood_bark_etcs')
     template_name = "core/delete_general.html"
@@ -3959,11 +5180,20 @@ class Wood_bark_etcDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Wood_bark_etcListView(generic.ListView):
+    """
+    
+    """
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wood_bark_etcs')
     
     def get_context_data(self, **kwargs):
@@ -3980,10 +5210,19 @@ class Wood_bark_etcListView(generic.ListView):
 
 
 class Wood_bark_etcListViewAll(generic.ListView):
+    """
+    
+    """
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wood_bark_etcs_all')
 
     def get_queryset(self):
@@ -4018,6 +5257,9 @@ class Wood_bark_etcListViewAll(generic.ListView):
         return context
         
 class Wood_bark_etcDetailView(generic.DetailView):
+    """
+    
+    """
     model = Wood_bark_etc
     template_name = "wf/wood_bark_etc/wood_bark_etc_detail.html"
 
@@ -4065,13 +5307,26 @@ def wood_bark_etc_meta_download(request):
         
 
 class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Leather_cloth
     form_class = Leather_clothForm
     template_name = "wf/leather_cloth/leather_cloth_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('leather_cloth-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4086,6 +5341,12 @@ class Leather_clothCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Leather_clothUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Leather_cloth
     form_class = Leather_clothForm
     template_name = "wf/leather_cloth/leather_cloth_update.html"
@@ -4100,6 +5361,12 @@ class Leather_clothUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Leather_clothDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Leather_cloth
     success_url = reverse_lazy('leather_cloths')
     template_name = "core/delete_general.html"
@@ -4107,11 +5374,20 @@ class Leather_clothDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Leather_clothListView(generic.ListView):
+    """
+    
+    """
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('leather_cloths')
     
     def get_context_data(self, **kwargs):
@@ -4128,10 +5404,19 @@ class Leather_clothListView(generic.ListView):
 
 
 class Leather_clothListViewAll(generic.ListView):
+    """
+    
+    """
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('leather_cloths_all')
 
     def get_queryset(self):
@@ -4166,6 +5451,9 @@ class Leather_clothListViewAll(generic.ListView):
         return context
         
 class Leather_clothDetailView(generic.DetailView):
+    """
+    
+    """
     model = Leather_cloth
     template_name = "wf/leather_cloth/leather_cloth_detail.html"
 
@@ -4213,13 +5501,26 @@ def leather_cloth_meta_download(request):
         
 
 class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Shield
     form_class = ShieldForm
     template_name = "wf/shield/shield_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('shield-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4234,6 +5535,12 @@ class ShieldCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class ShieldUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Shield
     form_class = ShieldForm
     template_name = "wf/shield/shield_update.html"
@@ -4248,6 +5555,12 @@ class ShieldUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class ShieldDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Shield
     success_url = reverse_lazy('shields')
     template_name = "core/delete_general.html"
@@ -4255,11 +5568,20 @@ class ShieldDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ShieldListView(generic.ListView):
+    """
+    
+    """
     model = Shield
     template_name = "wf/shield/shield_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('shields')
     
     def get_context_data(self, **kwargs):
@@ -4276,10 +5598,19 @@ class ShieldListView(generic.ListView):
 
 
 class ShieldListViewAll(generic.ListView):
+    """
+    
+    """
     model = Shield
     template_name = "wf/shield/shield_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('shields_all')
 
     def get_queryset(self):
@@ -4314,6 +5645,9 @@ class ShieldListViewAll(generic.ListView):
         return context
         
 class ShieldDetailView(generic.DetailView):
+    """
+    
+    """
     model = Shield
     template_name = "wf/shield/shield_detail.html"
 
@@ -4361,13 +5695,26 @@ def shield_meta_download(request):
         
 
 class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Helmet
     form_class = HelmetForm
     template_name = "wf/helmet/helmet_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('helmet-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4382,6 +5729,12 @@ class HelmetCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class HelmetUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Helmet
     form_class = HelmetForm
     template_name = "wf/helmet/helmet_update.html"
@@ -4396,6 +5749,12 @@ class HelmetUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class HelmetDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Helmet
     success_url = reverse_lazy('helmets')
     template_name = "core/delete_general.html"
@@ -4403,11 +5762,20 @@ class HelmetDelete(PermissionRequiredMixin, DeleteView):
 
 
 class HelmetListView(generic.ListView):
+    """
+    
+    """
     model = Helmet
     template_name = "wf/helmet/helmet_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('helmets')
     
     def get_context_data(self, **kwargs):
@@ -4424,10 +5792,19 @@ class HelmetListView(generic.ListView):
 
 
 class HelmetListViewAll(generic.ListView):
+    """
+    
+    """
     model = Helmet
     template_name = "wf/helmet/helmet_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('helmets_all')
 
     def get_queryset(self):
@@ -4462,6 +5839,9 @@ class HelmetListViewAll(generic.ListView):
         return context
         
 class HelmetDetailView(generic.DetailView):
+    """
+    
+    """
     model = Helmet
     template_name = "wf/helmet/helmet_detail.html"
 
@@ -4509,13 +5889,26 @@ def helmet_meta_download(request):
         
 
 class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Breastplate
     form_class = BreastplateForm
     template_name = "wf/breastplate/breastplate_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('breastplate-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4530,6 +5923,12 @@ class BreastplateCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class BreastplateUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Breastplate
     form_class = BreastplateForm
     template_name = "wf/breastplate/breastplate_update.html"
@@ -4544,6 +5943,12 @@ class BreastplateUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class BreastplateDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Breastplate
     success_url = reverse_lazy('breastplates')
     template_name = "core/delete_general.html"
@@ -4551,11 +5956,20 @@ class BreastplateDelete(PermissionRequiredMixin, DeleteView):
 
 
 class BreastplateListView(generic.ListView):
+    """
+    
+    """
     model = Breastplate
     template_name = "wf/breastplate/breastplate_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('breastplates')
     
     def get_context_data(self, **kwargs):
@@ -4572,10 +5986,19 @@ class BreastplateListView(generic.ListView):
 
 
 class BreastplateListViewAll(generic.ListView):
+    """
+    
+    """
     model = Breastplate
     template_name = "wf/breastplate/breastplate_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('breastplates_all')
 
     def get_queryset(self):
@@ -4610,6 +6033,9 @@ class BreastplateListViewAll(generic.ListView):
         return context
         
 class BreastplateDetailView(generic.DetailView):
+    """
+    
+    """
     model = Breastplate
     template_name = "wf/breastplate/breastplate_detail.html"
 
@@ -4657,13 +6083,26 @@ def breastplate_meta_download(request):
         
 
 class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Limb_protection
     form_class = Limb_protectionForm
     template_name = "wf/limb_protection/limb_protection_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('limb_protection-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4678,6 +6117,12 @@ class Limb_protectionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Limb_protectionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Limb_protection
     form_class = Limb_protectionForm
     template_name = "wf/limb_protection/limb_protection_update.html"
@@ -4692,6 +6137,12 @@ class Limb_protectionUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Limb_protectionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Limb_protection
     success_url = reverse_lazy('limb_protections')
     template_name = "core/delete_general.html"
@@ -4699,11 +6150,20 @@ class Limb_protectionDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Limb_protectionListView(generic.ListView):
+    """
+    
+    """
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('limb_protections')
     
     def get_context_data(self, **kwargs):
@@ -4720,10 +6180,19 @@ class Limb_protectionListView(generic.ListView):
 
 
 class Limb_protectionListViewAll(generic.ListView):
+    """
+    
+    """
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('limb_protections_all')
 
     def get_queryset(self):
@@ -4758,6 +6227,9 @@ class Limb_protectionListViewAll(generic.ListView):
         return context
         
 class Limb_protectionDetailView(generic.DetailView):
+    """
+    
+    """
     model = Limb_protection
     template_name = "wf/limb_protection/limb_protection_detail.html"
 
@@ -4805,13 +6277,26 @@ def limb_protection_meta_download(request):
         
 
 class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scaled_armor
     form_class = Scaled_armorForm
     template_name = "wf/scaled_armor/scaled_armor_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scaled_armor-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4826,6 +6311,12 @@ class Scaled_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Scaled_armorUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scaled_armor
     form_class = Scaled_armorForm
     template_name = "wf/scaled_armor/scaled_armor_update.html"
@@ -4840,6 +6331,12 @@ class Scaled_armorUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Scaled_armorDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Scaled_armor
     success_url = reverse_lazy('scaled_armors')
     template_name = "core/delete_general.html"
@@ -4847,11 +6344,20 @@ class Scaled_armorDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Scaled_armorListView(generic.ListView):
+    """
+    
+    """
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scaled_armors')
     
     def get_context_data(self, **kwargs):
@@ -4868,10 +6374,19 @@ class Scaled_armorListView(generic.ListView):
 
 
 class Scaled_armorListViewAll(generic.ListView):
+    """
+    
+    """
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('scaled_armors_all')
 
     def get_queryset(self):
@@ -4906,6 +6421,9 @@ class Scaled_armorListViewAll(generic.ListView):
         return context
         
 class Scaled_armorDetailView(generic.DetailView):
+    """
+    
+    """
     model = Scaled_armor
     template_name = "wf/scaled_armor/scaled_armor_detail.html"
 
@@ -4953,13 +6471,26 @@ def scaled_armor_meta_download(request):
         
 
 class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Laminar_armor
     form_class = Laminar_armorForm
     template_name = "wf/laminar_armor/laminar_armor_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('laminar_armor-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -4974,6 +6505,12 @@ class Laminar_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Laminar_armorUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Laminar_armor
     form_class = Laminar_armorForm
     template_name = "wf/laminar_armor/laminar_armor_update.html"
@@ -4988,6 +6525,12 @@ class Laminar_armorUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Laminar_armorDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Laminar_armor
     success_url = reverse_lazy('laminar_armors')
     template_name = "core/delete_general.html"
@@ -4995,11 +6538,20 @@ class Laminar_armorDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Laminar_armorListView(generic.ListView):
+    """
+    
+    """
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('laminar_armors')
     
     def get_context_data(self, **kwargs):
@@ -5016,10 +6568,19 @@ class Laminar_armorListView(generic.ListView):
 
 
 class Laminar_armorListViewAll(generic.ListView):
+    """
+    
+    """
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('laminar_armors_all')
 
     def get_queryset(self):
@@ -5054,6 +6615,9 @@ class Laminar_armorListViewAll(generic.ListView):
         return context
         
 class Laminar_armorDetailView(generic.DetailView):
+    """
+    
+    """
     model = Laminar_armor
     template_name = "wf/laminar_armor/laminar_armor_detail.html"
 
@@ -5101,13 +6665,26 @@ def laminar_armor_meta_download(request):
         
 
 class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Plate_armor
     form_class = Plate_armorForm
     template_name = "wf/plate_armor/plate_armor_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('plate_armor-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5122,6 +6699,12 @@ class Plate_armorCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Plate_armorUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Plate_armor
     form_class = Plate_armorForm
     template_name = "wf/plate_armor/plate_armor_update.html"
@@ -5136,6 +6719,12 @@ class Plate_armorUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Plate_armorDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Plate_armor
     success_url = reverse_lazy('plate_armors')
     template_name = "core/delete_general.html"
@@ -5143,11 +6732,20 @@ class Plate_armorDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Plate_armorListView(generic.ListView):
+    """
+    
+    """
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('plate_armors')
     
     def get_context_data(self, **kwargs):
@@ -5164,10 +6762,19 @@ class Plate_armorListView(generic.ListView):
 
 
 class Plate_armorListViewAll(generic.ListView):
+    """
+    
+    """
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('plate_armors_all')
 
     def get_queryset(self):
@@ -5202,6 +6809,9 @@ class Plate_armorListViewAll(generic.ListView):
         return context
         
 class Plate_armorDetailView(generic.DetailView):
+    """
+    
+    """
     model = Plate_armor
     template_name = "wf/plate_armor/plate_armor_detail.html"
 
@@ -5249,13 +6859,26 @@ def plate_armor_meta_download(request):
         
 
 class Small_vessels_canoes_etcCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Small_vessels_canoes_etc
     form_class = Small_vessels_canoes_etcForm
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('small_vessels_canoes_etc-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5270,6 +6893,12 @@ class Small_vessels_canoes_etcCreate(PermissionRequiredMixin, PolityIdMixin, Cre
 
 
 class Small_vessels_canoes_etcUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Small_vessels_canoes_etc
     form_class = Small_vessels_canoes_etcForm
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_update.html"
@@ -5284,6 +6913,12 @@ class Small_vessels_canoes_etcUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Small_vessels_canoes_etcDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Small_vessels_canoes_etc
     success_url = reverse_lazy('small_vessels_canoes_etcs')
     template_name = "core/delete_general.html"
@@ -5291,11 +6926,20 @@ class Small_vessels_canoes_etcDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Small_vessels_canoes_etcListView(generic.ListView):
+    """
+    
+    """
     model = Small_vessels_canoes_etc
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('small_vessels_canoes_etcs')
     
     def get_context_data(self, **kwargs):
@@ -5312,10 +6956,19 @@ class Small_vessels_canoes_etcListView(generic.ListView):
 
 
 class Small_vessels_canoes_etcListViewAll(generic.ListView):
+    """
+    
+    """
     model = Small_vessels_canoes_etc
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('small_vessels_canoes_etcs_all')
 
     def get_queryset(self):
@@ -5350,6 +7003,9 @@ class Small_vessels_canoes_etcListViewAll(generic.ListView):
         return context
         
 class Small_vessels_canoes_etcDetailView(generic.DetailView):
+    """
+    
+    """
     model = Small_vessels_canoes_etc
     template_name = "wf/small_vessels_canoes_etc/small_vessels_canoes_etc_detail.html"
 
@@ -5397,13 +7053,26 @@ def small_vessels_canoes_etc_meta_download(request):
         
 
 class Merchant_ships_pressed_into_serviceCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merchant_ships_pressed_into_service
     form_class = Merchant_ships_pressed_into_serviceForm
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merchant_ships_pressed_into_service-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5418,6 +7087,12 @@ class Merchant_ships_pressed_into_serviceCreate(PermissionRequiredMixin, PolityI
 
 
 class Merchant_ships_pressed_into_serviceUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merchant_ships_pressed_into_service
     form_class = Merchant_ships_pressed_into_serviceForm
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_update.html"
@@ -5432,6 +7107,12 @@ class Merchant_ships_pressed_into_serviceUpdate(PermissionRequiredMixin, UpdateV
         return context
 
 class Merchant_ships_pressed_into_serviceDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Merchant_ships_pressed_into_service
     success_url = reverse_lazy('merchant_ships_pressed_into_services')
     template_name = "core/delete_general.html"
@@ -5439,11 +7120,20 @@ class Merchant_ships_pressed_into_serviceDelete(PermissionRequiredMixin, DeleteV
 
 
 class Merchant_ships_pressed_into_serviceListView(generic.ListView):
+    """
+    
+    """
     model = Merchant_ships_pressed_into_service
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merchant_ships_pressed_into_services')
     
     def get_context_data(self, **kwargs):
@@ -5460,10 +7150,19 @@ class Merchant_ships_pressed_into_serviceListView(generic.ListView):
 
 
 class Merchant_ships_pressed_into_serviceListViewAll(generic.ListView):
+    """
+    
+    """
     model = Merchant_ships_pressed_into_service
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('merchant_ships_pressed_into_services_all')
 
     def get_queryset(self):
@@ -5498,6 +7197,9 @@ class Merchant_ships_pressed_into_serviceListViewAll(generic.ListView):
         return context
         
 class Merchant_ships_pressed_into_serviceDetailView(generic.DetailView):
+    """
+    
+    """
     model = Merchant_ships_pressed_into_service
     template_name = "wf/merchant_ships_pressed_into_service/merchant_ships_pressed_into_service_detail.html"
 
@@ -5545,13 +7247,26 @@ def merchant_ships_pressed_into_service_meta_download(request):
         
 
 class Specialized_military_vesselCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_military_vessel
     form_class = Specialized_military_vesselForm
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_military_vessel-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5566,6 +7281,12 @@ class Specialized_military_vesselCreate(PermissionRequiredMixin, PolityIdMixin, 
 
 
 class Specialized_military_vesselUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_military_vessel
     form_class = Specialized_military_vesselForm
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_update.html"
@@ -5580,6 +7301,12 @@ class Specialized_military_vesselUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Specialized_military_vesselDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Specialized_military_vessel
     success_url = reverse_lazy('specialized_military_vessels')
     template_name = "core/delete_general.html"
@@ -5587,11 +7314,20 @@ class Specialized_military_vesselDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Specialized_military_vesselListView(generic.ListView):
+    """
+    
+    """
     model = Specialized_military_vessel
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_military_vessels')
     
     def get_context_data(self, **kwargs):
@@ -5608,10 +7344,19 @@ class Specialized_military_vesselListView(generic.ListView):
 
 
 class Specialized_military_vesselListViewAll(generic.ListView):
+    """
+    
+    """
     model = Specialized_military_vessel
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('specialized_military_vessels_all')
 
     def get_queryset(self):
@@ -5646,6 +7391,9 @@ class Specialized_military_vesselListViewAll(generic.ListView):
         return context
         
 class Specialized_military_vesselDetailView(generic.DetailView):
+    """
+    
+    """
     model = Specialized_military_vessel
     template_name = "wf/specialized_military_vessel/specialized_military_vessel_detail.html"
 
@@ -5693,13 +7441,26 @@ def specialized_military_vessel_meta_download(request):
         
 
 class Settlements_in_a_defensive_positionCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlements_in_a_defensive_position
     form_class = Settlements_in_a_defensive_positionForm
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlements_in_a_defensive_position-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5714,6 +7475,12 @@ class Settlements_in_a_defensive_positionCreate(PermissionRequiredMixin, PolityI
 
 
 class Settlements_in_a_defensive_positionUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlements_in_a_defensive_position
     form_class = Settlements_in_a_defensive_positionForm
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_update.html"
@@ -5728,6 +7495,12 @@ class Settlements_in_a_defensive_positionUpdate(PermissionRequiredMixin, UpdateV
         return context
 
 class Settlements_in_a_defensive_positionDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Settlements_in_a_defensive_position
     success_url = reverse_lazy('settlements_in_a_defensive_positions')
     template_name = "core/delete_general.html"
@@ -5735,11 +7508,20 @@ class Settlements_in_a_defensive_positionDelete(PermissionRequiredMixin, DeleteV
 
 
 class Settlements_in_a_defensive_positionListView(generic.ListView):
+    """
+    
+    """
     model = Settlements_in_a_defensive_position
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlements_in_a_defensive_positions')
     
     def get_context_data(self, **kwargs):
@@ -5756,10 +7538,19 @@ class Settlements_in_a_defensive_positionListView(generic.ListView):
 
 
 class Settlements_in_a_defensive_positionListViewAll(generic.ListView):
+    """
+    
+    """
     model = Settlements_in_a_defensive_position
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('settlements_in_a_defensive_positions_all')
 
     def get_queryset(self):
@@ -5794,6 +7585,9 @@ class Settlements_in_a_defensive_positionListViewAll(generic.ListView):
         return context
         
 class Settlements_in_a_defensive_positionDetailView(generic.DetailView):
+    """
+    
+    """
     model = Settlements_in_a_defensive_position
     template_name = "wf/settlements_in_a_defensive_position/settlements_in_a_defensive_position_detail.html"
 
@@ -5841,13 +7635,26 @@ def settlements_in_a_defensive_position_meta_download(request):
         
 
 class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wooden_palisade
     form_class = Wooden_palisadeForm
     template_name = "wf/wooden_palisade/wooden_palisade_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wooden_palisade-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -5862,6 +7669,12 @@ class Wooden_palisadeCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Wooden_palisadeUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wooden_palisade
     form_class = Wooden_palisadeForm
     template_name = "wf/wooden_palisade/wooden_palisade_update.html"
@@ -5876,6 +7689,12 @@ class Wooden_palisadeUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Wooden_palisadeDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Wooden_palisade
     success_url = reverse_lazy('wooden_palisades')
     template_name = "core/delete_general.html"
@@ -5883,11 +7702,20 @@ class Wooden_palisadeDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Wooden_palisadeListView(generic.ListView):
+    """
+    
+    """
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wooden_palisades')
     
     def get_context_data(self, **kwargs):
@@ -5904,10 +7732,19 @@ class Wooden_palisadeListView(generic.ListView):
 
 
 class Wooden_palisadeListViewAll(generic.ListView):
+    """
+    
+    """
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('wooden_palisades_all')
 
     def get_queryset(self):
@@ -5942,6 +7779,9 @@ class Wooden_palisadeListViewAll(generic.ListView):
         return context
         
 class Wooden_palisadeDetailView(generic.DetailView):
+    """
+    
+    """
     model = Wooden_palisade
     template_name = "wf/wooden_palisade/wooden_palisade_detail.html"
 
@@ -5989,13 +7829,26 @@ def wooden_palisade_meta_download(request):
         
 
 class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Earth_rampart
     form_class = Earth_rampartForm
     template_name = "wf/earth_rampart/earth_rampart_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('earth_rampart-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6010,6 +7863,12 @@ class Earth_rampartCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Earth_rampartUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Earth_rampart
     form_class = Earth_rampartForm
     template_name = "wf/earth_rampart/earth_rampart_update.html"
@@ -6024,6 +7883,12 @@ class Earth_rampartUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Earth_rampartDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Earth_rampart
     success_url = reverse_lazy('earth_ramparts')
     template_name = "core/delete_general.html"
@@ -6031,11 +7896,20 @@ class Earth_rampartDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Earth_rampartListView(generic.ListView):
+    """
+    
+    """
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('earth_ramparts')
     
     def get_context_data(self, **kwargs):
@@ -6052,10 +7926,19 @@ class Earth_rampartListView(generic.ListView):
 
 
 class Earth_rampartListViewAll(generic.ListView):
+    """
+    
+    """
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('earth_ramparts_all')
 
     def get_queryset(self):
@@ -6090,6 +7973,9 @@ class Earth_rampartListViewAll(generic.ListView):
         return context
         
 class Earth_rampartDetailView(generic.DetailView):
+    """
+    
+    """
     model = Earth_rampart
     template_name = "wf/earth_rampart/earth_rampart_detail.html"
 
@@ -6137,13 +8023,26 @@ def earth_rampart_meta_download(request):
         
 
 class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ditch
     form_class = DitchForm
     template_name = "wf/ditch/ditch_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ditch-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6158,6 +8057,12 @@ class DitchCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class DitchUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ditch
     form_class = DitchForm
     template_name = "wf/ditch/ditch_update.html"
@@ -6172,6 +8077,12 @@ class DitchUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class DitchDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Ditch
     success_url = reverse_lazy('ditchs')
     template_name = "core/delete_general.html"
@@ -6179,11 +8090,20 @@ class DitchDelete(PermissionRequiredMixin, DeleteView):
 
 
 class DitchListView(generic.ListView):
+    """
+    
+    """
     model = Ditch
     template_name = "wf/ditch/ditch_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ditchs')
     
     def get_context_data(self, **kwargs):
@@ -6200,10 +8120,19 @@ class DitchListView(generic.ListView):
 
 
 class DitchListViewAll(generic.ListView):
+    """
+    
+    """
     model = Ditch
     template_name = "wf/ditch/ditch_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('ditchs_all')
 
     def get_queryset(self):
@@ -6238,6 +8167,9 @@ class DitchListViewAll(generic.ListView):
         return context
         
 class DitchDetailView(generic.DetailView):
+    """
+    
+    """
     model = Ditch
     template_name = "wf/ditch/ditch_detail.html"
 
@@ -6285,13 +8217,26 @@ def ditch_meta_download(request):
         
 
 class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Moat
     form_class = MoatForm
     template_name = "wf/moat/moat_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('moat-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6306,6 +8251,12 @@ class MoatCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class MoatUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Moat
     form_class = MoatForm
     template_name = "wf/moat/moat_update.html"
@@ -6320,6 +8271,12 @@ class MoatUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class MoatDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Moat
     success_url = reverse_lazy('moats')
     template_name = "core/delete_general.html"
@@ -6327,11 +8284,20 @@ class MoatDelete(PermissionRequiredMixin, DeleteView):
 
 
 class MoatListView(generic.ListView):
+    """
+    
+    """
     model = Moat
     template_name = "wf/moat/moat_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('moats')
     
     def get_context_data(self, **kwargs):
@@ -6348,10 +8314,19 @@ class MoatListView(generic.ListView):
 
 
 class MoatListViewAll(generic.ListView):
+    """
+    
+    """
     model = Moat
     template_name = "wf/moat/moat_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('moats_all')
 
     def get_queryset(self):
@@ -6386,6 +8361,9 @@ class MoatListViewAll(generic.ListView):
         return context
         
 class MoatDetailView(generic.DetailView):
+    """
+    
+    """
     model = Moat
     template_name = "wf/moat/moat_detail.html"
 
@@ -6433,13 +8411,26 @@ def moat_meta_download(request):
         
 
 class Stone_walls_non_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_non_mortared
     form_class = Stone_walls_non_mortaredForm
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_non_mortared-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6454,6 +8445,12 @@ class Stone_walls_non_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, Cre
 
 
 class Stone_walls_non_mortaredUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_non_mortared
     form_class = Stone_walls_non_mortaredForm
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_update.html"
@@ -6468,6 +8465,12 @@ class Stone_walls_non_mortaredUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Stone_walls_non_mortaredDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_non_mortared
     success_url = reverse_lazy('stone_walls_non_mortareds')
     template_name = "core/delete_general.html"
@@ -6475,11 +8478,20 @@ class Stone_walls_non_mortaredDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Stone_walls_non_mortaredListView(generic.ListView):
+    """
+    
+    """
     model = Stone_walls_non_mortared
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_non_mortareds')
     
     def get_context_data(self, **kwargs):
@@ -6496,10 +8508,19 @@ class Stone_walls_non_mortaredListView(generic.ListView):
 
 
 class Stone_walls_non_mortaredListViewAll(generic.ListView):
+    """
+    
+    """
     model = Stone_walls_non_mortared
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_non_mortareds_all')
 
     def get_queryset(self):
@@ -6534,6 +8555,9 @@ class Stone_walls_non_mortaredListViewAll(generic.ListView):
         return context
         
 class Stone_walls_non_mortaredDetailView(generic.DetailView):
+    """
+    
+    """
     model = Stone_walls_non_mortared
     template_name = "wf/stone_walls_non_mortared/stone_walls_non_mortared_detail.html"
 
@@ -6581,13 +8605,26 @@ def stone_walls_non_mortared_meta_download(request):
         
 
 class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_mortared
     form_class = Stone_walls_mortaredForm
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_mortared-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6602,6 +8639,12 @@ class Stone_walls_mortaredCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Stone_walls_mortaredUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_mortared
     form_class = Stone_walls_mortaredForm
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_update.html"
@@ -6616,6 +8659,12 @@ class Stone_walls_mortaredUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Stone_walls_mortaredDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Stone_walls_mortared
     success_url = reverse_lazy('stone_walls_mortareds')
     template_name = "core/delete_general.html"
@@ -6623,11 +8672,20 @@ class Stone_walls_mortaredDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Stone_walls_mortaredListView(generic.ListView):
+    """
+    
+    """
     model = Stone_walls_mortared
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_mortareds')
     
     def get_context_data(self, **kwargs):
@@ -6644,10 +8702,19 @@ class Stone_walls_mortaredListView(generic.ListView):
 
 
 class Stone_walls_mortaredListViewAll(generic.ListView):
+    """
+    
+    """
     model = Stone_walls_mortared
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('stone_walls_mortareds_all')
 
     def get_queryset(self):
@@ -6682,6 +8749,9 @@ class Stone_walls_mortaredListViewAll(generic.ListView):
         return context
         
 class Stone_walls_mortaredDetailView(generic.DetailView):
+    """
+    
+    """
     model = Stone_walls_mortared
     template_name = "wf/stone_walls_mortared/stone_walls_mortared_detail.html"
 
@@ -6729,13 +8799,26 @@ def stone_walls_mortared_meta_download(request):
         
 
 class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Fortified_camp
     form_class = Fortified_campForm
     template_name = "wf/fortified_camp/fortified_camp_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fortified_camp-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6750,6 +8833,12 @@ class Fortified_campCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class Fortified_campUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Fortified_camp
     form_class = Fortified_campForm
     template_name = "wf/fortified_camp/fortified_camp_update.html"
@@ -6764,6 +8853,9 @@ class Fortified_campUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Fortified_campDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+    """
     model = Fortified_camp
     success_url = reverse_lazy('fortified_camps')
     template_name = "core/delete_general.html"
@@ -6771,11 +8863,20 @@ class Fortified_campDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Fortified_campListView(generic.ListView):
+    """
+    
+    """
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fortified_camps')
     
     def get_context_data(self, **kwargs):
@@ -6792,10 +8893,19 @@ class Fortified_campListView(generic.ListView):
 
 
 class Fortified_campListViewAll(generic.ListView):
+    """
+    
+    """
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('fortified_camps_all')
 
     def get_queryset(self):
@@ -6830,6 +8940,9 @@ class Fortified_campListViewAll(generic.ListView):
         return context
         
 class Fortified_campDetailView(generic.DetailView):
+    """
+    
+    """
     model = Fortified_camp
     template_name = "wf/fortified_camp/fortified_camp_detail.html"
 
@@ -6877,13 +8990,23 @@ def fortified_camp_meta_download(request):
         
 
 class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+    """
     model = Complex_fortification
     form_class = Complex_fortificationForm
     template_name = "wf/complex_fortification/complex_fortification_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('complex_fortification-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -6898,6 +9021,12 @@ class Complex_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, Create
 
 
 class Complex_fortificationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Complex_fortification
     form_class = Complex_fortificationForm
     template_name = "wf/complex_fortification/complex_fortification_update.html"
@@ -6912,6 +9041,9 @@ class Complex_fortificationUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Complex_fortificationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+    """
     model = Complex_fortification
     success_url = reverse_lazy('complex_fortifications')
     template_name = "core/delete_general.html"
@@ -6919,11 +9051,20 @@ class Complex_fortificationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Complex_fortificationListView(generic.ListView):
+    """
+    
+    """
     model = Complex_fortification
     template_name = "wf/complex_fortification/complex_fortification_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('complex_fortifications')
     
     def get_context_data(self, **kwargs):
@@ -6940,10 +9081,19 @@ class Complex_fortificationListView(generic.ListView):
 
 
 class Complex_fortificationListViewAll(generic.ListView):
+    """
+    
+    """
     model = Complex_fortification
     template_name = "wf/complex_fortification/complex_fortification_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('complex_fortifications_all')
 
     def get_queryset(self):
@@ -6978,6 +9128,9 @@ class Complex_fortificationListViewAll(generic.ListView):
         return context
         
 class Complex_fortificationDetailView(generic.DetailView):
+    """
+    
+    """
     model = Complex_fortification
     template_name = "wf/complex_fortification/complex_fortification_detail.html"
 
@@ -7025,13 +9178,23 @@ def complex_fortification_meta_download(request):
         
 
 class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+    """
     model = Modern_fortification
     form_class = Modern_fortificationForm
     template_name = "wf/modern_fortification/modern_fortification_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('modern_fortification-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -7046,6 +9209,12 @@ class Modern_fortificationCreate(PermissionRequiredMixin, PolityIdMixin, CreateV
 
 
 class Modern_fortificationUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Modern_fortification
     form_class = Modern_fortificationForm
     template_name = "wf/modern_fortification/modern_fortification_update.html"
@@ -7060,6 +9229,9 @@ class Modern_fortificationUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class Modern_fortificationDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+    """
     model = Modern_fortification
     success_url = reverse_lazy('modern_fortifications')
     template_name = "core/delete_general.html"
@@ -7067,11 +9239,20 @@ class Modern_fortificationDelete(PermissionRequiredMixin, DeleteView):
 
 
 class Modern_fortificationListView(generic.ListView):
+    """
+    
+    """
     model = Modern_fortification
     template_name = "wf/modern_fortification/modern_fortification_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('modern_fortifications')
     
     def get_context_data(self, **kwargs):
@@ -7088,10 +9269,19 @@ class Modern_fortificationListView(generic.ListView):
 
 
 class Modern_fortificationListViewAll(generic.ListView):
+    """
+    
+    """
     model = Modern_fortification
     template_name = "wf/modern_fortification/modern_fortification_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('modern_fortifications_all')
 
     def get_queryset(self):
@@ -7126,6 +9316,9 @@ class Modern_fortificationListViewAll(generic.ListView):
         return context
         
 class Modern_fortificationDetailView(generic.DetailView):
+    """
+    
+    """
     model = Modern_fortification
     template_name = "wf/modern_fortification/modern_fortification_detail.html"
 
@@ -7173,13 +9366,23 @@ def modern_fortification_meta_download(request):
         
 
 class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    
+    """
     model = Chainmail
     form_class = ChainmailForm
     template_name = "wf/chainmail/chainmail_form.html"
     permission_required = 'core.add_capital'
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('chainmail-create')
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # get the explanattion:
@@ -7194,6 +9397,12 @@ class ChainmailCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
 
 
 class ChainmailUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
     model = Chainmail
     form_class = ChainmailForm
     template_name = "wf/chainmail/chainmail_update.html"
@@ -7208,6 +9417,9 @@ class ChainmailUpdate(PermissionRequiredMixin, UpdateView):
         return context
 
 class ChainmailDelete(PermissionRequiredMixin, DeleteView):
+    """
+    
+    """
     model = Chainmail
     success_url = reverse_lazy('chainmails')
     template_name = "core/delete_general.html"
@@ -7215,11 +9427,20 @@ class ChainmailDelete(PermissionRequiredMixin, DeleteView):
 
 
 class ChainmailListView(generic.ListView):
+    """
+    
+    """
     model = Chainmail
     template_name = "wf/chainmail/chainmail_list.html"
     paginate_by = 10
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('chainmails')
     
     def get_context_data(self, **kwargs):
@@ -7236,10 +9457,19 @@ class ChainmailListView(generic.ListView):
 
 
 class ChainmailListViewAll(generic.ListView):
+    """
+    
+    """
     model = Chainmail
     template_name = "wf/chainmail/chainmail_list_all.html"
 
     def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
         return reverse('chainmails_all')
 
     def get_queryset(self):
@@ -7274,6 +9504,9 @@ class ChainmailListViewAll(generic.ListView):
         return context
         
 class ChainmailDetailView(generic.DetailView):
+    """
+    
+    """
     model = Chainmail
     template_name = "wf/chainmail/chainmail_detail.html"
 
@@ -7617,22 +9850,22 @@ def show_problematic_wf_data_table(request):
     return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
 
 
-@permission_required('core.view_capital')
-def show_problematic_wf_data_table(request):
-    # Fetch all models in the "socomp" app
-    app_name = 'wf'  # Replace with your app name
-    app_models = apps.get_app_config(app_name).get_models()
+# @permission_required('core.view_capital')
+# def show_problematic_wf_data_table(request):
+#     # Fetch all models in the "socomp" app
+#     app_name = 'wf'  # Replace with your app name
+#     app_models = apps.get_app_config(app_name).get_models()
 
-    # Collect data from all models
-    data = []
-    for model in app_models:
-        items = model.objects.all()
-        for obj in items:
-            if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
-                data.append(obj)
+#     # Collect data from all models
+#     data = []
+#     for model in app_models:
+#         items = model.objects.all()
+#         for obj in items:
+#             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
+#                 data.append(obj)
 
-    # Render the template with the data
-    return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
+#     # Render the template with the data
+#     return render(request, 'wf/problematic_wf_data_table.html', {'data': data})
 
 
 @permission_required('core.view_capital')

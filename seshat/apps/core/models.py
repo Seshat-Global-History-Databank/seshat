@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from django.db.models.fields.related import ManyToManyField
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
@@ -26,6 +26,15 @@ from django.contrib import messages
 from django.core.validators import URLValidator
 
 def give_me_a_color_for_expert(value):
+    """
+    Returns a color for a given expert.
+
+    Args:
+        value (int): The id of the expert.
+
+    Returns:
+        str: A color for the expert.
+    """
     light_colors = [
     '#e6b8af',
     '#f4cccc',
@@ -144,20 +153,56 @@ Certainty = (
 )
 
 def return_citations_for_comments(self):
+    """
+    This function is used to return the citations of the model instance
+    (returning the value used in the display_citations method of the model
+    instance).
+
+    Note:
+        The model instance must have the following attribute:
+        - citations
+
+        The model instance must have the following methods:
+        - zoteroer
+
+    Args:
+        self (model instance): The model instance.
+
+    Returns:
+        str: The citations of the model instance, separated by comma.
+    """
     if self.comment_citations.all():
         return ', '.join([' <a href="' + citation.zoteroer() + '">' + citation.citation_short_title + '</a>' for citation in self.comment_citations.all()])
     
 def return_number_of_citations_for_comments(self):
+    """
+    Returns the number of citations for a comment.
+
+    Returns:
+        int: The number of citations for a comment.
+    """
     if self.comment_citations.all():
         return len(self.comment_citations.all())
     return 0
     
 def return_citations_plus_for_comments(self):
+    """
+    Returns a string of all the citations for a comment.
+
+    Returns:
+        str: A string of all the citations for a comment.
+    """
     get_scp_tr = ScpThroughCtn.objects.filter(seshatcommentpart=self.id)
     if get_scp_tr:
         return ', '.join([' <a href="' + x.citation.zoteroer() + '">' + x.citation.citation_short_title + '</a>' for x in get_scp_tr])
     
 def return_number_of_citations_plus_for_comments(self):
+    """
+    Returns the number of citations for a comment.
+
+    Returns:
+        int: The number of citations for a comment.
+    """
     get_scp_tr = ScpThroughCtn.objects.filter(seshatcommentpart=self.id)
     if get_scp_tr:
         return len(get_scp_tr)
@@ -167,6 +212,9 @@ def return_number_of_citations_plus_for_comments(self):
         
 
 class SeshatPrivateComment(models.Model):
+    """
+    Model representing a private comment.
+    """
     text = models.TextField(blank=True, null=True,)
 
     def __str__(self) -> str:
@@ -188,9 +236,20 @@ class SeshatPrivateComment(models.Model):
         return f'{to_be_shown}'
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('seshatprivatecomments')
         
 class SeshatPrivateCommentPart(models.Model):
+    """
+    Model representing a part of a private comment.
+    """
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.SET_NULL, related_name="inner_private_comments_related",
                                related_query_name="inner_private_comments_related", null=True, blank=True)
     private_comment_part_text = models.TextField(blank=True, null=True,)
@@ -204,13 +263,23 @@ class SeshatPrivateCommentPart(models.Model):
     last_modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('seshatprivatecomment-update',  args=[str(self.private_comment.id)])
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ["created_date", "last_modified_date"]
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.private_comment_part_text:
             return self.private_comment_part_text
         else:
@@ -218,20 +287,32 @@ class SeshatPrivateCommentPart(models.Model):
         
 
 class Macro_region(models.Model):
+    """
+    Model representing a macro region.
+    """
     name = models.CharField(max_length=100)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['name',]
 
     def __str__(self):
         return self.name
 
 class Seshat_region(models.Model):
+    """
+    Model representing a Seshat region.
+    """
     name = models.CharField(max_length=100)
     mac_region = models.ForeignKey(Macro_region, on_delete=models.SET_NULL, null=True, blank=True, related_name="mac_region")
     subregions_list = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['mac_region__name', 'name']
 
     def __str__(self):
@@ -241,6 +322,9 @@ class Seshat_region(models.Model):
 
 
 class Nga(models.Model):
+    """
+    Model representing a NGA.
+    """
     name = models.CharField(max_length=100)
     subregion = models.CharField(max_length=100, blank=True, null=True)
     longitude = models.DecimalField(max_digits= 16, decimal_places = 12, blank=True, null=True)
@@ -251,18 +335,31 @@ class Nga(models.Model):
     world_region = models.CharField(max_length=100, choices=WORLD_REGION_CHOICES, default="Europe", null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['name']
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('ngas')
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         return self.name
 
 
 
 class Polity(models.Model):
+    """
+    Model representing a polity.
+    """
     name = models.CharField(max_length=100)
     start_year = models.IntegerField(blank=True, null=True)
     end_year = models.IntegerField(blank=True, null=True)
@@ -281,10 +378,26 @@ class Polity(models.Model):
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'polity'
         verbose_name_plural = 'polities'
+        unique_together = ("name",)
+        ordering = ['long_name']
 
     def clean(self):
+        """
+        Verifies a number of conditions on the start and end years of the polity.
+
+        Raises:
+            ValidationError: If the start year is greater than the end year.
+            ValidationError: If the end year is greater than the current year.
+            ValidationError: If the start year is greater than the current year.
+
+        Returns:
+            None
+        """
         current_year = date.today().year
         if self.start_year is not None and self.end_year is not None and self.start_year > self.end_year:
             raise ValidationError("Start year cannot be greater than end year.")
@@ -294,18 +407,16 @@ class Polity(models.Model):
             raise ValidationError("Start year cannot be greater than the current year")
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.long_name and self.new_name:
             return f"{self.long_name} ({self.new_name})"
         else:
             return self.name
-        
 
-    class Meta:
-        unique_together = ("name",)
-        ordering = ['long_name']
 
 class Capital(models.Model):
+    """
+    Model representing a capital.
+    """
     name = models.CharField(max_length=100)
     alternative_names =  models.CharField(max_length=300, blank=True, null=True)
     current_country = models.CharField(max_length=100, blank=True, null=True)
@@ -321,19 +432,33 @@ class Capital(models.Model):
         blank=True, null=True,)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('capitals')
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.name and self.alternative_names:
             return str(self.name) + " [" + str(self.alternative_names) + "]"
         return self.name
     class Meta:
-       #ordering = ['-year']
-       ordering = ['is_verified']
+        """
+        :noindex:
+        """
+
+        #ordering = ['-year']
+        ordering = ['is_verified']
 
     
 class Ngapolityrel(models.Model):
+    """
+    Model representing a relationship between a NGA and a polity.
+    """
     name = models.CharField(max_length=200, blank=True, null=True)
     polity_party = models.ForeignKey(Polity, on_delete=models.SET_NULL, null=True, related_name="polity_sides")
     nga_party = models.ForeignKey(Nga, on_delete=models.SET_NULL, null=True, related_name="nga_sides")
@@ -342,7 +467,6 @@ class Ngapolityrel(models.Model):
     is_home_nga = models.BooleanField(default=False, blank=True, null=True)
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.name:
             return self.name
         elif self.polity_party and self.nga_party:
@@ -351,43 +475,56 @@ class Ngapolityrel(models.Model):
             return str(self.id)
 
 class Country(models.Model):
+    """
+    Model representing a country.
+    """
     name = models.CharField(max_length=200)
     polity = models.ForeignKey(
         Polity, on_delete=models.SET_NULL, null=True, related_name="countries")
 
     class Meta:
+        """
+        :noindex:
+        """
         verbose_name = 'country'
         verbose_name_plural = 'countries'
+        unique_together = ("name",)
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         return self.name
-    
-    class Meta:
-        unique_together = ("name",)
 
 
 class Section(models.Model):
+    """
+    Model representing a section.
+    """
     name = models.CharField(max_length=200)
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         return self.name
 
     class Meta:
+        """
+        :noindex:
+        """
         unique_together = ("name",)
 
 
 class Subsection(models.Model):
+    """
+    Model representing a subsection.
+    """
     name = models.CharField(max_length=200)
     section = models.ForeignKey(
         Section, on_delete=models.SET_NULL, null=True, related_name="subsections")
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         return self.name
-    
+
     class Meta:
+        """
+        :noindex:
+        """
         unique_together = ("name", "section")
 
 
@@ -424,6 +561,9 @@ class Subsection(models.Model):
 
 
 class Variablehierarchy(models.Model):
+    """
+    Model representing a variable hierarchy.
+    """
     name = models.CharField(
         max_length=200)
     section = models.ForeignKey(
@@ -434,15 +574,19 @@ class Variablehierarchy(models.Model):
     explanation = models.TextField(blank=True, null=True,)
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         return self.name
 
     class Meta:
+        """
+        :noindex:
+        """
         unique_together = ("name", "section", "subsection")
 
 
 class Reference(models.Model):
-    """Model Representing a Reference"""
+    """
+    Model Representing a reference.
+    """
     title = models.CharField(max_length=500,)
     year = models.IntegerField(blank=True, null=True, )
     creator = models.CharField(max_length=500, )
@@ -454,7 +598,6 @@ class Reference(models.Model):
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         original_title = self.title
         if self.item_type:
             my_item = self.item_type
@@ -471,10 +614,16 @@ class Reference(models.Model):
 
 
 
-
     @property
     def reference_short_title(self):
-        """Second String for representing the Model Object"""
+        """
+        Returns a short title for the reference. If the title is longer than
+        60 characters, it is truncated. If the title is not provided, a default
+        title is returned.
+
+        Returns:
+            str: A short title for the reference.
+        """
 
         original_long_name = self.long_name
         if original_long_name and len(original_long_name) > 60:
@@ -492,17 +641,30 @@ class Reference(models.Model):
             return "NO_TITLES_PROVIDED"
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('references')
 
     class Meta:
-       #ordering = ['-year']
-       unique_together = ("zotero_link",)
-       ordering = ['-created_date', 'title']
-
+        """
+        :noindex:
+        """
+        # ordering = ['-year']
+        unique_together = ("zotero_link",)
+        ordering = ['-created_date', 'title']
 
 
 class Citation(models.Model):
-    """Model representing a specific citation."""
+    """
+    Model representing a specific citation.
+    """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
                           help_text="Unique Id for this particular citation")
     ref = models.ForeignKey(
@@ -518,6 +680,12 @@ class Citation(models.Model):
     #                    ("can_renew", "Can Renew A Book"),)
 
     def zoteroer(self):
+        """
+        Returns the Zotero link for the citation.
+
+        Returns:
+            str: The Zotero link for the citation.
+        """
         if self.ref.zotero_link and "NOZOTERO_LINK" not in self.ref.zotero_link:
             my_zotero_link = "https://www.zotero.org/groups/1051264/seshat_databank/items/" + \
                 str(self.ref.zotero_link)
@@ -531,7 +699,6 @@ class Citation(models.Model):
     #     return(str(self.page_to))
 
     def __str__(self) -> str:
-        """String for representing the Model Object"""
         if self.ref and self.ref.title:
             original_title = self.ref.title
         else:
@@ -548,12 +715,12 @@ class Citation(models.Model):
         else:
             original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
         if original_long_name and len(original_long_name) > 50:
-           shorter_name = original_long_name[0:50] + original_long_name[50:].split(" ")[0] + "..."
+            shorter_name = original_long_name[0:50] + original_long_name[50:].split(" ")[0] + "..."
         elif original_long_name:
-           shorter_name = original_long_name
+            shorter_name = original_long_name
         else:
             shorter_name = "BlaBla"
-        
+
         if self.ref and self.ref.zotero_link and "NOZOTERO_LINK" in self.ref.zotero_link:
             return f'(NOZOTERO: {shorter_name})'
         if self.ref and self.ref.creator and self.ref.item_type and self.ref.creator == 'NO_CREATOR':
@@ -574,11 +741,19 @@ class Citation(models.Model):
             print(self.id)
             print(self.modified_date)
 
-            
             return "BADBADREFERENCE"
-        
+
     def full_citation_display(self) -> str:
-        """String for representing the Model Object"""
+        """
+        Returns a string of the full citation. If the citation has a title, it
+        is included in the string. If the citation has a creator, it is
+        included in the string. If the citation has a year, it is included in
+        the string. If the citation has a page_from, it is included in the
+        string. If the citation has a page_to, it is included in the string.
+
+        Returns:
+            str: A string of the full citation.
+        """
         if self.ref and self.ref.title:
             original_title = self.ref.title
         else:
@@ -593,10 +768,10 @@ class Citation(models.Model):
         else:
             original_long_name = "REFERENCE_WITH_NO_LONG_NAME"
         if original_long_name:
-           shorter_name = original_long_name
+            shorter_name = original_long_name
         else:
             shorter_name = "BlaBla"
-        
+
         if self.ref and self.ref.zotero_link and "NOZOTERO_LINK" in self.ref.zotero_link:
             return f'(NOZOTERO: {shorter_name})'
         if self.ref and self.ref.creator:
@@ -615,13 +790,15 @@ class Citation(models.Model):
             print(self.id)
             print(self.modified_date)
 
-            
             return "BADBADREFERENCE"
-    
+
     class Meta:
-       #ordering = ['-year']
-       ordering = ['-modified_date']
-       constraints = [
+        """
+        :noindex:
+        """
+        #ordering = ['-year']
+        ordering = ['-modified_date']
+        constraints = [
         models.UniqueConstraint(
             name="No_PAGE_TO_AND_FROM",
             fields=("ref",),
@@ -637,16 +814,23 @@ class Citation(models.Model):
             fields=("ref", "page_to"),
             condition=Q(page_from__isnull=True)
         ),
-       ]
-       #unique_together = ["ref", "page_from", "page_to"]
-    
+        ]
+        #unique_together = ["ref", "page_from", "page_to"]
+
     @property
     def citation_short_title(self):
-        """Second String for representing the Model Object"""
+        """
+        Returns a short title for the citation. If the title is longer than
+        40 characters, it is truncated. If the title is not provided, a default
+        title is returned.
+
+        Returns:
+            str: A short title for the citation.
+        """
 
         original_long_name = self.ref.long_name
         if original_long_name and len(original_long_name) > 40:
-           shorter_name = original_long_name[0:40] + original_long_name[40:].split(" ")[0] + "..."
+            shorter_name = original_long_name[0:40] + original_long_name[40:].split(" ")[0] + "..."
         elif original_long_name:
             shorter_name = original_long_name
         else:
@@ -678,25 +862,54 @@ class Citation(models.Model):
             return '[{0} {1}]'.format(self.ref.creator, self.ref.year)
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('citations')
     
     def save(self, *args, **kwargs):
+        """
+        Saves the citation to the database.
+
+        Args:
+            *args: Additional arguments.
+            **kwargs: Additional keyword arguments.
+
+        Raises:
+            IntegrityError: If the citation cannot be saved to the database.
+
+        Returns:
+            None
+        """
         try:
             super(Citation, self).save(*args, **kwargs)
         except IntegrityError as e:
             print(e)
 
 class SeshatComment(models.Model):
+    """
+    Model representing a comment.
+    """
     text = models.TextField(blank=True, null=True,)
 
     def zoteroer(self):
+        """
+        Returns the Zotero link for the comment.
+
+        Returns:
+            str: The Zotero link for the comment.
+        """
         if self.ref.zotero_link and "NOZOTERO_LINK" not in self.ref.zotero_link:
             my_zotero_link = "https://www.zotero.org/groups/1051264/seshat_databank/items/" + \
                 str(self.ref.zotero_link)
         else:
             my_zotero_link = "#"
         return my_zotero_link
-    
 
     def __str__(self) -> str:
         all_comment_parts = self.inner_comments_related.all().order_by('comment_order')
@@ -734,10 +947,21 @@ class SeshatComment(models.Model):
         return f'{to_be_shown}'
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('seshatcomments')
 
 
 class SeshatCommentPart(models.Model):
+    """
+    Model representing a part of a comment.
+    """
     comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="inner_comments_related",
                                related_query_name="inner_comments_related", null=True, blank=True)
     comment_part_text = models.TextField(blank=True, null=True,)
@@ -752,17 +976,46 @@ class SeshatCommentPart(models.Model):
     citation_index = models.IntegerField(blank=True, null=True)
     modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
 
-    
     @property
     def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the
+            return_citations_for_comments function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
         return return_citations_for_comments(self)
-    
+
     @property
     def citations_count(self):
+        """
+        Returns the number of citations for a comment.
+
+        Returns:
+            int: The number of citations for a comment.
+        """
         return return_number_of_citations_for_comments(self)
     
     @property
     def display_citations_plus(self):
+        """
+        Returns a string of all the citations for a comment.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the
+            return_citations_for_comments function.
+
+        Returns:
+            str: A string of all the citations for a comment.
+        """
         if return_citations_plus_for_comments(self) and return_citations_for_comments(self):
             return return_citations_plus_for_comments(self) + return_citations_for_comments(self)
         elif return_citations_plus_for_comments(self):
@@ -772,17 +1025,33 @@ class SeshatCommentPart(models.Model):
     
     @property
     def citations_count_plus(self):
+        """
+        Returns the number of citations for a comment.
+
+        Returns:
+            int: The number of citations for a comment.
+        """
         return return_number_of_citations_plus_for_comments(self)
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('seshatcomment-update',  args=[str(self.comment.id)])
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['comment_order', "modified_date"]
         #ordering = ["modified_date"]
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.comment_part_text and self.display_citations_plus:
             return self.comment_part_text + ' ' + self.display_citations_plus
         elif self.comment_part_text and self.display_citations:
@@ -794,6 +1063,10 @@ class SeshatCommentPart(models.Model):
         
 
 class ScpThroughCtn(models.Model):
+    """
+    Model representing a through model for the many-to-many relationship between
+    a comment part and a citation.
+    """
     seshatcommentpart = models.ForeignKey(SeshatCommentPart, on_delete=models.CASCADE,  related_name="%(app_label)s_%(class)s_related",
                                related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     citation = models.ForeignKey(Citation, on_delete=models.CASCADE,  related_name="%(app_label)s_%(class)s_related",
@@ -802,6 +1075,9 @@ class ScpThroughCtn(models.Model):
 
 
 class SeshatCommon(models.Model):
+    """
+    Model representing a common Seshat model.
+    """
     polity = models.ForeignKey(Polity, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
                                related_query_name="%(app_label)s_%(class)s", null=True,)
     name = models.CharField(
@@ -831,6 +1107,9 @@ class SeshatCommon(models.Model):
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         abstract = True
         ordering = ['polity']
 
@@ -847,19 +1126,130 @@ class SeshatCommon(models.Model):
 #     job_category = models.CharField(choices=job_category_annual_wages_choices)
 #     job_description = models.CharField(
 #         choices=job_description_annual_wages_choices)
-
-
+        
 class Religion(models.Model):
+    """
+    Model representing a religion.
+    """
     name = models.CharField(max_length=100, default="Religion")
     religion_name = models.CharField(max_length=100, null=True, blank=True)
     religion_family = models.CharField(max_length=100, blank=True, null=True)
     religion_genus = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
+        """
+        :noindex:
+        """
         ordering = ['name']
 
     def __str__(self) -> str:
-        """string for epresenting the model obj in Admin Site"""
         if self.religion_name:
             return self.religion_name
         return self.name
+
+# Shapefile models
+
+class Cliopatria(models.Model):
+    """
+    Model representing Cliopatria polity borders dataset.
+    """
+    id = models.AutoField(primary_key=True)
+    geom = models.MultiPolygonField()
+    simplified_geom = models.MultiPolygonField(null=True)
+    name=models.CharField(max_length=100)
+    wikipedia_name=models.CharField(max_length=100, null=True)
+    seshat_id=models.CharField(max_length=100)
+    area=models.FloatField()
+    start_year=models.IntegerField()
+    end_year=models.IntegerField()
+    polity_start_year=models.IntegerField()
+    polity_end_year=models.IntegerField()
+    colour=models.CharField(max_length=7)
+    components=models.CharField(max_length=500, null=True)
+    member_of=models.CharField(max_length=500, null=True)
+
+    def __str__(self):
+        return "Name: %s" % self.name
+
+class GADMShapefile(models.Model):
+    """
+    
+    """
+    geom = models.MultiPolygonField()
+    UID=models.BigIntegerField()
+    GID_0=models.CharField(max_length=100, null=True)
+    NAME_0=models.CharField(max_length=100, null=True)
+    VARNAME_0=models.CharField(max_length=100, null=True)
+    GID_1=models.CharField(max_length=100, null=True)
+    NAME_1=models.CharField(max_length=100, null=True)
+    VARNAME_1=models.CharField(max_length=100, null=True)
+    NL_NAME_1=models.CharField(max_length=100, null=True)
+    ISO_1=models.CharField(max_length=100, null=True)
+    HASC_1=models.CharField(max_length=100, null=True)
+    CC_1=models.CharField(max_length=100, null=True)
+    TYPE_1=models.CharField(max_length=100, null=True)
+    ENGTYPE_1=models.CharField(max_length=100, null=True)
+    VALIDFR_1=models.CharField(max_length=100, null=True)
+    GID_2=models.CharField(max_length=100, null=True)
+    NAME_2=models.CharField(max_length=100, null=True)
+    VARNAME_2=models.CharField(max_length=100, null=True)
+    NL_NAME_2=models.CharField(max_length=100, null=True)
+    HASC_2=models.CharField(max_length=100, null=True)
+    CC_2=models.CharField(max_length=100, null=True)
+    TYPE_2=models.CharField(max_length=100, null=True)
+    ENGTYPE_2=models.CharField(max_length=100, null=True)
+    VALIDFR_2=models.CharField(max_length=100, null=True)
+    GID_3=models.CharField(max_length=100, null=True)
+    NAME_3=models.CharField(max_length=100, null=True)
+    VARNAME_3=models.CharField(max_length=100, null=True)
+    NL_NAME_3=models.CharField(max_length=100, null=True)
+    HASC_3=models.CharField(max_length=100, null=True)
+    CC_3=models.CharField(max_length=100, null=True)
+    TYPE_3=models.CharField(max_length=100, null=True)
+    ENGTYPE_3=models.CharField(max_length=100, null=True)
+    VALIDFR_3=models.CharField(max_length=100, null=True)
+    GID_4=models.CharField(max_length=100, null=True)
+    NAME_4=models.CharField(max_length=100, null=True)
+    VARNAME_4=models.CharField(max_length=100, null=True)
+    CC_4=models.CharField(max_length=100, null=True)
+    TYPE_4=models.CharField(max_length=100, null=True)
+    ENGTYPE_4=models.CharField(max_length=100, null=True)
+    VALIDFR_4=models.CharField(max_length=100, null=True)
+    GID_5=models.CharField(max_length=100, null=True)
+    NAME_5=models.CharField(max_length=100, null=True)
+    CC_5=models.CharField(max_length=100, null=True)
+    TYPE_5=models.CharField(max_length=100, null=True)
+    ENGTYPE_5=models.CharField(max_length=100, null=True)
+    GOVERNEDBY=models.CharField(max_length=100, null=True)
+    SOVEREIGN=models.CharField(max_length=100, null=True)
+    DISPUTEDBY=models.CharField(max_length=100, null=True)
+    REGION=models.CharField(max_length=100, null=True)
+    VARREGION=models.CharField(max_length=100, null=True)
+    COUNTRY=models.CharField(max_length=100, null=True)
+    CONTINENT=models.CharField(max_length=100, null=True)
+    SUBCONT=models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return "Name: %s" % self.name
+    
+class GADMCountries(models.Model):
+    """
+    Model representing a country (GADM).
+    """
+    geom = models.MultiPolygonField()
+    COUNTRY=models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return "Name: %s" % self.name
+    
+class GADMProvinces(models.Model):
+    """
+    Model representing a province (GADM).
+    """
+    geom = models.MultiPolygonField()
+    COUNTRY=models.CharField(max_length=100, null=True)
+    NAME_1=models.CharField(max_length=100, null=True)
+    ENGTYPE_1=models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return "Name: %s" % self.name

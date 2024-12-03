@@ -6,6 +6,18 @@ from django.db.models import F
 
 @receiver(post_save, sender=SeshatCommentPart)
 def update_subcomment_ordering(sender, instance, **kwargs):
+    """
+    A signal to update the ordering of subcomments when a new subcomment is
+    created or an existing subcomment is updated.
+
+    Args:
+        sender (SeshatCommentPart): The sender of the signal.
+        instance (SeshatCommentPart): The instance of the subcomment.
+        **kwargs: Arbitrary keyword arguments.
+
+    Returns:
+        None
+    """
     if not instance.pk:
         last_subcomment = instance.comment.inner_comments_related.last()
         instance.comment_order = last_subcomment.comment_order + 1 if last_subcomment else 0

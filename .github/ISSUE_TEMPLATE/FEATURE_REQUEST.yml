@@ -1,0 +1,53 @@
+name: "✨ Feature request"
+description: Suggest a new feature for the Seshat website.
+title: "✨ [Feature request] - <title>"
+labels: ["feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for contributing an idea for a new feature! Please fill out the details below to help us understand your vision for the new feature.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of Improvement
+      description: Provide a detailed description of the improvement you are suggesting.
+      placeholder: "Describe the change or addition you would like to see."
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Are there any other tasks that need to be completed first?
+      placeholder: |
+        - [ ] Dependency 1 (include issue link)
+        - [ ] Dependency 2 (include issue link)
+    validations:
+      required: false
+
+  - type: textarea
+    id: technical-notes
+    attributes:
+      label: Technical Notes
+      description:
+        Any technical notes, potential challenges, or architectural
+        considerations for implementation?
+      placeholder: |
+        - Note 1
+        - Note 2
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: definition-of-done
+    attributes:
+      label: Definition of Done
+      description:
+        Please confirm the following are completed before this issue can be closed.
+      options:
+        - label: The feature has been developed on a feature branch.
+        - label: The feature branch has been tested in the Staging website.
+        - label: A pull request has been created for the feature branch to be merged into the dev branch.

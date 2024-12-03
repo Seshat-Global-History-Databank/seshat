@@ -46,7 +46,13 @@ commonwidgets = {
 }
 
 class RaForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Ra
         fields = commonfields.copy()
         fields.append('sc_ra')
@@ -57,7 +63,13 @@ class RaForm(forms.ModelForm):
         
 
 class Polity_territoryForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_territory
         fields = commonfields.copy()
         fields.append('polity_territory_from')
@@ -70,7 +82,13 @@ class Polity_territoryForm(forms.ModelForm):
         
 
 class Polity_populationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Polity_population
         fields = commonfields.copy()
         fields.append('polity_population_from')
@@ -83,7 +101,13 @@ class Polity_populationForm(forms.ModelForm):
         
 
 class Population_of_the_largest_settlementForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Population_of_the_largest_settlement
         fields = commonfields.copy()
         fields.append('population_of_the_largest_settlement_from')
@@ -96,7 +120,13 @@ class Population_of_the_largest_settlementForm(forms.ModelForm):
         
 
 class Settlement_hierarchyForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Settlement_hierarchy
         fields = commonfields.copy()
         fields.append('settlement_hierarchy_from')
@@ -109,7 +139,13 @@ class Settlement_hierarchyForm(forms.ModelForm):
         
 
 class Administrative_levelForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Administrative_level
         fields = commonfields.copy()
         fields.append('administrative_level_from')
@@ -122,7 +158,13 @@ class Administrative_levelForm(forms.ModelForm):
         
 
 class Religious_levelForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Religious_level
         fields = commonfields.copy()
         fields.append('religious_level_from')
@@ -135,7 +177,13 @@ class Religious_levelForm(forms.ModelForm):
         
 
 class Military_levelForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Military_level
         fields = commonfields.copy()
         fields.append('military_level_from')
@@ -148,7 +196,13 @@ class Military_levelForm(forms.ModelForm):
         
 
 class Professional_military_officerForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Professional_military_officer
         fields = commonfields.copy()
         fields.append('professional_military_officer')
@@ -159,7 +213,13 @@ class Professional_military_officerForm(forms.ModelForm):
         
 
 class Professional_soldierForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Professional_soldier
         fields = commonfields.copy()
         fields.append('professional_soldier')
@@ -170,7 +230,13 @@ class Professional_soldierForm(forms.ModelForm):
         
 
 class Professional_priesthoodForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Professional_priesthood
         fields = commonfields.copy()
         fields.append('professional_priesthood')
@@ -181,7 +247,13 @@ class Professional_priesthoodForm(forms.ModelForm):
         
 
 class Full_time_bureaucratForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Full_time_bureaucrat
         fields = commonfields.copy()
         fields.append('full_time_bureaucrat')
@@ -192,7 +264,13 @@ class Full_time_bureaucratForm(forms.ModelForm):
         
 
 class Examination_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Examination_system
         fields = commonfields.copy()
         fields.append('examination_system')
@@ -203,7 +281,13 @@ class Examination_systemForm(forms.ModelForm):
         
 
 class Merit_promotionForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Merit_promotion
         fields = commonfields.copy()
         fields.append('merit_promotion')
@@ -214,7 +298,13 @@ class Merit_promotionForm(forms.ModelForm):
         
 
 class Specialized_government_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Specialized_government_building
         fields = commonfields.copy()
         fields.append('specialized_government_building')
@@ -225,7 +315,13 @@ class Specialized_government_buildingForm(forms.ModelForm):
         
 
 class Formal_legal_codeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Formal_legal_code
         fields = commonfields.copy()
         fields.append('formal_legal_code')
@@ -236,7 +332,13 @@ class Formal_legal_codeForm(forms.ModelForm):
         
 
 class JudgeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Judge
         fields = commonfields.copy()
         fields.append('judge')
@@ -247,7 +349,13 @@ class JudgeForm(forms.ModelForm):
         
 
 class CourtForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Court
         fields = commonfields.copy()
         fields.append('court')
@@ -258,7 +366,13 @@ class CourtForm(forms.ModelForm):
         
 
 class Professional_lawyerForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Professional_lawyer
         fields = commonfields.copy()
         fields.append('professional_lawyer')
@@ -269,7 +383,13 @@ class Professional_lawyerForm(forms.ModelForm):
         
 
 class Irrigation_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Irrigation_system
         fields = commonfields.copy()
         fields.append('irrigation_system')
@@ -280,7 +400,13 @@ class Irrigation_systemForm(forms.ModelForm):
         
 
 class Drinking_water_supply_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Drinking_water_supply_system
         fields = commonfields.copy()
         fields.append('drinking_water_supply_system')
@@ -291,7 +417,13 @@ class Drinking_water_supply_systemForm(forms.ModelForm):
         
 
 class MarketForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Market
         fields = commonfields.copy()
         fields.append('market')
@@ -302,7 +434,13 @@ class MarketForm(forms.ModelForm):
         
 
 class Food_storage_siteForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Food_storage_site
         fields = commonfields.copy()
         fields.append('food_storage_site')
@@ -313,7 +451,13 @@ class Food_storage_siteForm(forms.ModelForm):
         
 
 class RoadForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Road
         fields = commonfields.copy()
         fields.append('road')
@@ -324,7 +468,13 @@ class RoadForm(forms.ModelForm):
         
 
 class BridgeForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Bridge
         fields = commonfields.copy()
         fields.append('bridge')
@@ -335,7 +485,13 @@ class BridgeForm(forms.ModelForm):
         
 
 class CanalForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Canal
         fields = commonfields.copy()
         fields.append('canal')
@@ -346,7 +502,13 @@ class CanalForm(forms.ModelForm):
         
 
 class PortForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Port
         fields = commonfields.copy()
         fields.append('port')
@@ -357,7 +519,13 @@ class PortForm(forms.ModelForm):
         
 
 class Mines_or_quarryForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Mines_or_quarry
         fields = commonfields.copy()
         fields.append('mines_or_quarry')
@@ -368,7 +536,13 @@ class Mines_or_quarryForm(forms.ModelForm):
         
 
 class Mnemonic_deviceForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Mnemonic_device
         fields = commonfields.copy()
         fields.append('mnemonic_device')
@@ -379,7 +553,13 @@ class Mnemonic_deviceForm(forms.ModelForm):
         
 
 class Nonwritten_recordForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Nonwritten_record
         fields = commonfields.copy()
         fields.append('nonwritten_record')
@@ -390,7 +570,13 @@ class Nonwritten_recordForm(forms.ModelForm):
         
 
 class Written_recordForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Written_record
         fields = commonfields.copy()
         fields.append('written_record')
@@ -401,7 +587,13 @@ class Written_recordForm(forms.ModelForm):
         
 
 class ScriptForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Script
         fields = commonfields.copy()
         fields.append('script')
@@ -412,7 +604,13 @@ class ScriptForm(forms.ModelForm):
         
 
 class Non_phonetic_writingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Non_phonetic_writing
         fields = commonfields.copy()
         fields.append('non_phonetic_writing')
@@ -423,7 +621,13 @@ class Non_phonetic_writingForm(forms.ModelForm):
         
 
 class Phonetic_alphabetic_writingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Phonetic_alphabetic_writing
         fields = commonfields.copy()
         fields.append('phonetic_alphabetic_writing')
@@ -434,7 +638,13 @@ class Phonetic_alphabetic_writingForm(forms.ModelForm):
         
 
 class Lists_tables_and_classificationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Lists_tables_and_classification
         fields = commonfields.copy()
         fields.append('lists_tables_and_classification')
@@ -445,7 +655,13 @@ class Lists_tables_and_classificationForm(forms.ModelForm):
         
 
 class CalendarForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Calendar
         fields = commonfields.copy()
         fields.append('calendar')
@@ -456,7 +672,13 @@ class CalendarForm(forms.ModelForm):
         
 
 class Sacred_textForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Sacred_text
         fields = commonfields.copy()
         fields.append('sacred_text')
@@ -467,7 +689,13 @@ class Sacred_textForm(forms.ModelForm):
         
 
 class Religious_literatureForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Religious_literature
         fields = commonfields.copy()
         fields.append('religious_literature')
@@ -478,7 +706,13 @@ class Religious_literatureForm(forms.ModelForm):
         
 
 class Practical_literatureForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Practical_literature
         fields = commonfields.copy()
         fields.append('practical_literature')
@@ -489,7 +723,13 @@ class Practical_literatureForm(forms.ModelForm):
         
 
 class HistoryForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = History
         fields = commonfields.copy()
         fields.append('history')
@@ -500,7 +740,13 @@ class HistoryForm(forms.ModelForm):
         
 
 class PhilosophyForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Philosophy
         fields = commonfields.copy()
         fields.append('philosophy')
@@ -511,7 +757,13 @@ class PhilosophyForm(forms.ModelForm):
         
 
 class Scientific_literatureForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Scientific_literature
         fields = commonfields.copy()
         fields.append('scientific_literature')
@@ -522,7 +774,13 @@ class Scientific_literatureForm(forms.ModelForm):
         
 
 class FictionForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Fiction
         fields = commonfields.copy()
         fields.append('fiction')
@@ -533,7 +791,13 @@ class FictionForm(forms.ModelForm):
         
 
 class ArticleForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Article
         fields = commonfields.copy()
         fields.append('article')
@@ -544,7 +808,13 @@ class ArticleForm(forms.ModelForm):
         
 
 class TokenForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Token
         fields = commonfields.copy()
         fields.append('token')
@@ -555,7 +825,13 @@ class TokenForm(forms.ModelForm):
         
 
 class Precious_metalForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Precious_metal
         fields = commonfields.copy()
         fields.append('precious_metal')
@@ -566,7 +842,13 @@ class Precious_metalForm(forms.ModelForm):
         
 
 class Foreign_coinForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Foreign_coin
         fields = commonfields.copy()
         fields.append('foreign_coin')
@@ -577,7 +859,13 @@ class Foreign_coinForm(forms.ModelForm):
         
 
 class Indigenous_coinForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Indigenous_coin
         fields = commonfields.copy()
         fields.append('indigenous_coin')
@@ -588,7 +876,13 @@ class Indigenous_coinForm(forms.ModelForm):
         
 
 class Paper_currencyForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Paper_currency
         fields = commonfields.copy()
         fields.append('paper_currency')
@@ -599,7 +893,13 @@ class Paper_currencyForm(forms.ModelForm):
         
 
 class CourierForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Courier
         fields = commonfields.copy()
         fields.append('courier')
@@ -610,7 +910,13 @@ class CourierForm(forms.ModelForm):
         
 
 class Postal_stationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Postal_station
         fields = commonfields.copy()
         fields.append('postal_station')
@@ -621,7 +927,13 @@ class Postal_stationForm(forms.ModelForm):
         
 
 class General_postal_serviceForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = General_postal_service
         fields = commonfields.copy()
         fields.append('general_postal_service')
@@ -633,7 +945,13 @@ class General_postal_serviceForm(forms.ModelForm):
 
 # NEW SC vars
 class Communal_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Communal_building
         fields = commonfields.copy()
         fields.append('communal_building')
@@ -645,7 +963,13 @@ class Communal_buildingForm(forms.ModelForm):
         widgets['communal_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 class Utilitarian_public_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Utilitarian_public_building
         fields = commonfields.copy()
         fields.append('utilitarian_public_building')
@@ -657,7 +981,13 @@ class Utilitarian_public_buildingForm(forms.ModelForm):
         widgets['utilitarian_public_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 class Other_utilitarian_public_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Other_utilitarian_public_building
         fields = commonfields.copy()
         fields.append('other_utilitarian_public_building')
@@ -670,7 +1000,13 @@ class Other_utilitarian_public_buildingForm(forms.ModelForm):
 
 
 class Symbolic_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Symbolic_building
         fields = commonfields.copy()
         fields.append('symbolic_building')
@@ -683,7 +1019,13 @@ class Symbolic_buildingForm(forms.ModelForm):
 
 
 class Entertainment_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Entertainment_building
         fields = commonfields.copy()
         fields.append('entertainment_building')
@@ -696,7 +1038,13 @@ class Entertainment_buildingForm(forms.ModelForm):
 
 
 class Knowledge_or_information_buildingForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Knowledge_or_information_building
         fields = commonfields.copy()
         fields.append('knowledge_or_information_building')
@@ -709,7 +1057,13 @@ class Knowledge_or_information_buildingForm(forms.ModelForm):
 
 
 class Special_purpose_siteForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Special_purpose_site
         fields = commonfields.copy()
         fields.append('special_purpose_site')
@@ -722,7 +1076,13 @@ class Special_purpose_siteForm(forms.ModelForm):
 
 
 class Ceremonial_siteForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Ceremonial_site
         fields = commonfields.copy()
         fields.append('ceremonial_site')
@@ -735,7 +1095,13 @@ class Ceremonial_siteForm(forms.ModelForm):
 
 
 class Burial_siteForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Burial_site
         fields = commonfields.copy()
         fields.append('burial_site')
@@ -748,7 +1114,13 @@ class Burial_siteForm(forms.ModelForm):
 
 
 class Trading_emporiaForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Trading_emporia
         fields = commonfields.copy()
         fields.append('trading_emporia')
@@ -761,7 +1133,13 @@ class Trading_emporiaForm(forms.ModelForm):
 
 
 class EnclosureForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Enclosure
         fields = commonfields.copy()
         fields.append('enclosure')
@@ -774,7 +1152,13 @@ class EnclosureForm(forms.ModelForm):
 
 
 class Length_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Length_measurement_system
         fields = commonfields.copy()
         fields.append('length_measurement_system')
@@ -787,7 +1171,13 @@ class Length_measurement_systemForm(forms.ModelForm):
 
 
 class Area_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Area_measurement_system
         fields = commonfields.copy()
         fields.append('area_measurement_system')
@@ -800,7 +1190,13 @@ class Area_measurement_systemForm(forms.ModelForm):
 
 
 class Volume_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Volume_measurement_system
         fields = commonfields.copy()
         fields.append('volume_measurement_system')
@@ -813,7 +1209,13 @@ class Volume_measurement_systemForm(forms.ModelForm):
 
 
 class Weight_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Weight_measurement_system
         fields = commonfields.copy()
         fields.append('weight_measurement_system')
@@ -826,7 +1228,13 @@ class Weight_measurement_systemForm(forms.ModelForm):
 
 
 class Time_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Time_measurement_system
         fields = commonfields.copy()
         fields.append('time_measurement_system')
@@ -839,7 +1247,13 @@ class Time_measurement_systemForm(forms.ModelForm):
 
 
 class Geometrical_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Geometrical_measurement_system
         fields = commonfields.copy()
         fields.append('geometrical_measurement_system')
@@ -852,7 +1266,13 @@ class Geometrical_measurement_systemForm(forms.ModelForm):
 
 
 class Other_measurement_systemForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Other_measurement_system
         fields = commonfields.copy()
         fields.append('other_measurement_system')
@@ -865,7 +1285,13 @@ class Other_measurement_systemForm(forms.ModelForm):
 
 
 class Debt_and_credit_structureForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Debt_and_credit_structure
         fields = commonfields.copy()
         fields.append('debt_and_credit_structure')
@@ -878,7 +1304,13 @@ class Debt_and_credit_structureForm(forms.ModelForm):
 
 
 class Store_of_wealthForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Store_of_wealth
         fields = commonfields.copy()
         fields.append('store_of_wealth')
@@ -890,7 +1322,13 @@ class Store_of_wealthForm(forms.ModelForm):
         widgets['store_of_wealth'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 class Source_of_supportForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Source_of_support
         fields = commonfields.copy()
         fields.append('source_of_support')
@@ -904,7 +1342,13 @@ class Source_of_supportForm(forms.ModelForm):
 
 
 class Occupational_complexityForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Occupational_complexity
         fields = commonfields.copy()
         fields.append('occupational_complexity')
@@ -915,7 +1359,13 @@ class Occupational_complexityForm(forms.ModelForm):
         
 
 class Special_purpose_houseForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Special_purpose_house
         fields = commonfields.copy()
         fields.append('special_purpose_house')
@@ -926,7 +1376,13 @@ class Special_purpose_houseForm(forms.ModelForm):
         
 
 class Other_special_purpose_siteForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Other_special_purpose_site
         fields = commonfields.copy()
         fields.append('other_special_purpose_site')
@@ -938,7 +1394,13 @@ class Other_special_purpose_siteForm(forms.ModelForm):
 
 
 class Largest_communication_distanceForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Largest_communication_distance
         fields = commonfields.copy()
         fields.append('largest_communication_distance_from')
@@ -952,7 +1414,13 @@ class Largest_communication_distanceForm(forms.ModelForm):
 
 
 class Fastest_individual_communicationForm(forms.ModelForm):
+    """
+    
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Fastest_individual_communication
         fields = commonfields.copy()
         fields.append('fastest_individual_communication_from')

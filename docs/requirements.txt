@@ -1,0 +1,14 @@
+docstr-coverage
+myst-parser
+nbsphinx
+pandoc
+sphinx
+sphinx_togglebutton
+sphinx-autoapi
+sphinx-autoapi
+sphinx-book-theme
+sphinx-copybutton
+sphinx-tabs
+sphinx-togglebutton
+sphinxcontrib-napoleon
+sphinx-rtd-theme

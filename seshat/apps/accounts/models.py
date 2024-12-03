@@ -16,6 +16,9 @@ from datetime import datetime
 #     )
 
 class Profile(models.Model):
+    """
+    Model representing a user profile.
+    """
     SESHATADMIN = 1
     RA = 2
     SESHATEXPERT = 3
@@ -28,13 +31,21 @@ class Profile(models.Model):
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False, null=True, blank=True)
-    #avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
+    # avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
     bio = models.TextField( null=True, blank=True)
     location = models.CharField(max_length=30, blank=True)
     role = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, null=True, blank=True)
     
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('user-profile')
 
     def __str__(self):  # __unicode__ for Python 2
@@ -53,6 +64,9 @@ User.add_to_class("full_name", full_name)
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal handler for creating or updating a user profile.
+    """
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
@@ -61,6 +75,9 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 
 
 class Seshat_Expert(models.Model):
+    """
+    Model representing a Seshat Expert.
+    """
     SESHATADMIN = 'Seshat Admin'
     RA = 'RA'
     SESHATEXPERT = 'Seshat Expert'
@@ -80,6 +97,9 @@ class Seshat_Expert(models.Model):
             return self.user.username + " (" + self.role + ")"
 
 class Seshat_Task(models.Model):
+    """
+    Model representing a Seshat Task.
+    """
     giver = models.ForeignKey(Seshat_Expert, on_delete=models.CASCADE)
     taker = models.ManyToManyField(Seshat_Expert, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)ss", blank=True,)
     task_description = models.TextField( null=True, blank=True)
@@ -87,10 +107,24 @@ class Seshat_Task(models.Model):
 
 
     def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
         return reverse('seshat_task-detail', args=[str(self.id)])
-    
+
     @property
     def display_takers(self):
+        """
+        Returns a string of all takers of the task.
+
+        Returns:
+            str: A string of all takers of the task, joined with a HTML tag ("<br />").
+        """
         all_takers = []
         for taker in self.taker.all():
             all_takers.append(taker.__str__())
@@ -98,6 +132,12 @@ class Seshat_Task(models.Model):
 
     @property
     def clickable_url(self):
+        """
+        Returns a clickable URL.
+
+        Returns:
+            str: A string of a clickable URL.
+        """
         return f'<a href="{self.task_url}">{self.task_url}</a>'
 
     def __str__(self):  # __unicode__ for Python 2

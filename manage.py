@@ -2,11 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+from pathlib import Path
 
 def main():
     """Run administrative tasks."""
-    if os.path.exists(".env"):
+    local_env_path = str(Path.cwd()) + "/seshat/settings/.env"
+    if os.path.exists(local_env_path):
         os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                               'seshat.settings.local')
     else:

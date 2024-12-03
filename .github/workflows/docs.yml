@@ -1,0 +1,42 @@
+name: docs
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+permissions:
+    contents: write
+jobs:
+    docs:
+        runs-on: ubuntu-latest
+        concurrency:
+            group: docs
+            cancel-in-progress: true
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                python-version: 3.8.13
+            - name: "Upgrade pip"
+              run: pip install --upgrade pip
+            - name: "Install docs requirements"
+              run: pip install -r docs/requirements.txt
+            - name: "Run sphinx"
+              run: sphinx-build -b html docs/source docs/_build/
+            # Note that we're adding deployment for dev branch here.
+            # In the future, we may want to add a separate workflow for dev branch.
+            - name: "Deploy"
+              uses: peaceiris/actions-gh-pages@v3
+              if: ${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/docs' || github.ref == 'refs/heads/dev') }}
+              with:
+                publish_branch: gh-pages
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: docs/_build/
+                force_orphan: true

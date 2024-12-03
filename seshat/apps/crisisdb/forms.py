@@ -44,22 +44,46 @@ commonwidgets = {
 ############## American Violence
 
 class Us_locationForm(forms.ModelForm):
+    """
+    Form for creating and updating a US location.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Us_location
         fields = '__all__'
 
 class Us_violence_subtypeForm(forms.ModelForm):
+    """
+    Form for creating and updating a US violence subtype.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Us_violence_subtype
         fields = '__all__'
 
 class Us_violence_data_sourceForm(forms.ModelForm):
+    """
+    Form for creating and updating a US violence data source.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Us_violence_data_source
         fields = '__all__'
 
 class Us_violenceForm(forms.ModelForm):
+    """
+    Form for creating and updating a US violence.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Us_violence
         fields = ["violence_date", "violence_type", "violence_subtype", "fatalities", 
                   "location", "url_address", "short_data_source", "source_details", "narrative",]
@@ -77,7 +101,13 @@ class Us_violenceForm(forms.ModelForm):
 
 ###########################
 class Crisis_consequenceForm(forms.ModelForm):
+    """
+    Form for creating and updating a crisis consequence.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Crisis_consequence
         fields = commonfields.copy()
         fields.append('crisis_case_id')
@@ -172,7 +202,13 @@ class Crisis_consequenceForm(forms.ModelForm):
 ####################################
 
 class Power_transitionForm(forms.ModelForm):
+    """
+    Form for creating and updating a power transition.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Power_transition
         fields = commonfields.copy()
         fields.append('predecessor')
@@ -235,7 +271,13 @@ class Power_transitionForm(forms.ModelForm):
 
 
 class Human_sacrificeForm(forms.ModelForm):
+    """
+    Form for creating and updating a human sacrifice.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Human_sacrifice
         fields = commonfields.copy()
         fields.append('human_sacrifice')
@@ -261,7 +303,13 @@ class Human_sacrificeForm(forms.ModelForm):
         
 
 class External_conflictForm(forms.ModelForm):
+    """
+    Form for creating and updating an external conflict.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = External_conflict
         fields = commonfields.copy()
         fields.append('conflict_name')
@@ -272,7 +320,13 @@ class External_conflictForm(forms.ModelForm):
         
 
 class Internal_conflictForm(forms.ModelForm):
+    """
+    Form for creating and updating an internal conflict.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Internal_conflict
         fields = commonfields.copy()
         fields.append('conflict')
@@ -289,7 +343,13 @@ class Internal_conflictForm(forms.ModelForm):
         
 
 class External_conflict_sideForm(forms.ModelForm):
+    """
+    Side form for creating and updating an external conflict.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = External_conflict_side
         fields = commonfields.copy()
         fields.append('conflict_id')
@@ -306,7 +366,13 @@ class External_conflict_sideForm(forms.ModelForm):
         
 
 class Agricultural_populationForm(forms.ModelForm):
+    """
+    Form for creating and updating an agricultural population.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Agricultural_population
         fields = commonfields.copy()
         fields.append('agricultural_population')
@@ -317,7 +383,13 @@ class Agricultural_populationForm(forms.ModelForm):
         
 
 class Arable_landForm(forms.ModelForm):
+    """
+    Form for creating and updating an arable land.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Arable_land
         fields = commonfields.copy()
         fields.append('arable_land')
@@ -328,7 +400,13 @@ class Arable_landForm(forms.ModelForm):
         
 
 class Arable_land_per_farmerForm(forms.ModelForm):
+    """
+    Form for creating and updating an arable land per farmer.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Arable_land_per_farmer
         fields = commonfields.copy()
         fields.append('arable_land_per_farmer')
@@ -339,7 +417,13 @@ class Arable_land_per_farmerForm(forms.ModelForm):
         
 
 class Gross_grain_shared_per_agricultural_populationForm(forms.ModelForm):
+    """
+    Form for creating and updating a gross grain shared per agricultural population.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gross_grain_shared_per_agricultural_population
         fields = commonfields.copy()
         fields.append('gross_grain_shared_per_agricultural_population')
@@ -350,7 +434,13 @@ class Gross_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         
 
 class Net_grain_shared_per_agricultural_populationForm(forms.ModelForm):
+    """
+    Form for creating and updating a net grain shared per agricultural population.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Net_grain_shared_per_agricultural_population
         fields = commonfields.copy()
         fields.append('net_grain_shared_per_agricultural_population')
@@ -361,7 +451,13 @@ class Net_grain_shared_per_agricultural_populationForm(forms.ModelForm):
         
 
 class SurplusForm(forms.ModelForm):
+    """
+    Form for creating and updating a surplus.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Surplus
         fields = commonfields.copy()
         fields.append('surplus')
@@ -372,7 +468,13 @@ class SurplusForm(forms.ModelForm):
         
 
 class Military_expenseForm(forms.ModelForm):
+    """
+    Form for creating and updating a military expense.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Military_expense
         fields = commonfields.copy()
         fields.append('conflict')
@@ -385,7 +487,13 @@ class Military_expenseForm(forms.ModelForm):
         
 
 class Silver_inflowForm(forms.ModelForm):
+    """
+    Form for creating and updating a silver inflow.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Silver_inflow
         fields = commonfields.copy()
         fields.append('silver_inflow')
@@ -396,7 +504,13 @@ class Silver_inflowForm(forms.ModelForm):
         
 
 class Silver_stockForm(forms.ModelForm):
+    """
+    Form for creating and updating a silver stock.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Silver_stock
         fields = commonfields.copy()
         fields.append('silver_stock')
@@ -407,7 +521,13 @@ class Silver_stockForm(forms.ModelForm):
         
 
 class Total_populationForm(forms.ModelForm):
+    """
+    Form for creating and updating a total population.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Total_population
         fields = commonfields.copy()
         fields.append('total_population')
@@ -418,7 +538,13 @@ class Total_populationForm(forms.ModelForm):
         
 
 class Gdp_per_capitaForm(forms.ModelForm):
+    """
+    Form for creating and updating a GDP per capita.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Gdp_per_capita
         fields = commonfields.copy()
         fields.append('gdp_per_capita')
@@ -429,7 +555,13 @@ class Gdp_per_capitaForm(forms.ModelForm):
         
 
 class Drought_eventForm(forms.ModelForm):
+    """
+    Form for creating and updating a drought event.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Drought_event
         fields = commonfields.copy()
         fields.append('drought_event')
@@ -440,7 +572,13 @@ class Drought_eventForm(forms.ModelForm):
         
 
 class Locust_eventForm(forms.ModelForm):
+    """
+    Form for creating and updating a locust event.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Locust_event
         fields = commonfields.copy()
         fields.append('locust_event')
@@ -451,7 +589,13 @@ class Locust_eventForm(forms.ModelForm):
         
 
 class Socioeconomic_turmoil_eventForm(forms.ModelForm):
+    """
+    Form for creating and updating a socioeconomic turmoil event.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Socioeconomic_turmoil_event
         fields = commonfields.copy()
         fields.append('socioeconomic_turmoil_event')
@@ -462,7 +606,13 @@ class Socioeconomic_turmoil_eventForm(forms.ModelForm):
         
 
 class Crop_failure_eventForm(forms.ModelForm):
+    """
+    Form for creating and updating a crop failure event.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Crop_failure_event
         fields = commonfields.copy()
         fields.append('crop_failure_event')
@@ -473,7 +623,13 @@ class Crop_failure_eventForm(forms.ModelForm):
         
 
 class Famine_eventForm(forms.ModelForm):
+    """
+    Form for creating and updating a famine event.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Famine_event
         fields = commonfields.copy()
         fields.append('famine_event')
@@ -484,7 +640,13 @@ class Famine_eventForm(forms.ModelForm):
         
 
 class Disease_outbreakForm(forms.ModelForm):
+    """
+    Form for creating and updating a disease outbreak.
+    """
     class Meta:
+        """
+        :noindex:
+        """
         model = Disease_outbreak
         fields = commonfields.copy()
         fields.append('longitude')
@@ -502,4 +664,3 @@ class Disease_outbreakForm(forms.ModelForm):
         widgets['sub_category'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         widgets['magnitude'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         widgets['duration'] = forms.Select(attrs={'class': 'form-control  mb-3', })
-        
