@@ -53,7 +53,7 @@
 </style>
 
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
-<div class="container mt-3">
+<div class="container mt-2">
     <form action="" method="post">
         {% csrf_token %}
         <legend>
@@ -94,45 +94,23 @@
                     <hr>
                     {% endif %}
                     <div class="row d-flex align-items-center mb-2">
-                      <div class="col-md-9">
-                        <h6><span class="display-6">Power Transitions</span></h6>
+                      <div class="col-md-6">
+                        <h5>Power Transitions</h5>
                       </div>
-                      <div class="col-md-3">  
+                      <div class="col-md-6">  
                           {% if object.pk %}  
-                            <a href="{% url 'power_transition-update_heavy' object.pk  %}"  class="btn btn-outline-secondary mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> Edit Refs as well (Heavy)</a>
-                            <a href="{% url 'power_transitions_all' %}"  class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> &nbsp; See All Power Transitions</a>
+                            <a href="{% url 'power_transition-update_heavy' object.pk  %}"  class="btn btn-sm btn-outline-secondary mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> Edit Refs as well (Heavy)</a>
+                            <a href="{% url 'power_transitions_all' %}"  class="btn btn-sm btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> &nbsp; See All Power Transitions</a>
                             {% else %}
-                            <a href="{% url 'power_transition-create_heavy' %}"  class="btn btn-outline-secondary mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> Add Refs as well (Heavy)</a>
-                            <a href="{% url 'power_transitions_all' %}"  class="btn btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> &nbsp; See All Power Transitions</a>
+                            <a href="{% url 'power_transition-create_heavy' %}"  class="btn btn-sm btn-outline-secondary mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> Add Refs as well (Heavy)</a>
+                            <a href="{% url 'power_transitions_all' %}"  class="btn btn-sm btn-outline-success mx-1 my-2 float-end"> <i class="fa-solid fa-arrow-up-right-from-square"></i> &nbsp; See All Power Transitions</a>
                             {% endif %}
                         </div>
       
                   </div> 
                                 </div>
             </div> 
-            <div class="row d-flex align-items-center">
-                <div class="col-md-12">
-                    <div class="accordion accordion-flush" id="accordionContributors">
-                        <div class="accordion-item" style="background-color:#fffdf2;">
-                          <h2 class="accordion-header" id="headingOneCont">
-                            <button class="accordion-button collapsed px-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneCont" aria-expanded="false" aria-controls="collapseOneCont" style="background-color:#fffdf2;">
-                              <span class="text-success h5"><i class="fa-solid fa-chevron-right"></i> Defining Power Transitions <i class="fa-solid fa-circle-info"></i></span> 
-                            </button>
-                          </h2>
-                          <div id="collapseOneCont" class="accordion-collapse collapse" aria-labelledby="headingOneCont">
-                            <div class="accordion-body table-responsive p-0">
-                                <div class="contributors">
-                                   <span>No official Expalantion for this variable.</span> 
-                                </div>
-                            </div>
-                          </div>
-                        </div>
-        
-                      </div>
-                    
-                    
-                </div>
-            </div>  
+
      
         </legend>
         {% if messages %}
@@ -157,7 +135,7 @@
         </ul>
         <hr>
         {% endif %}
-        <h3 class="pb-2"> <span class="badge rounded-pill bg-warning text-dark"><i class="fa-solid fa-circle-plus"></i> {{mytitle}}</span></h3>
+
         <h6 class="lead-2 pb-2 text-secondary">{{mysubtitle}}</h6>
         <div class="row">
           <div class="row custom-left-border-shadowed">

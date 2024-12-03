@@ -29,15 +29,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config(
     "SECRET_KEY", default="django-insecure$seshat.settings.local")
 
-DEBUG = config("DEBUG", default=True, cast=bool)
+DEBUG = False
+# config("DEBUG", default=True, cast=bool)
 
-if DEBUG:
-    MY_CURRENT_SERVER = "http://127.0.0.1:8000"
-else:
-    MY_CURRENT_SERVER = "https://www.majidbenam.com"
+#if DEBUG:
+#MY_CURRENT_SERVER = "http://127.0.0.1:8000"
+#else:
+#MY_CURRENT_SERVER = "https://www.majidbenam.com"
 
 #ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv())
-ALLOWED_HOSTS = ['seshatdb.herokuapp.com', '127.0.0.1',
+ALLOWED_HOSTS = ['seshatdb.herokuapp.com', 'www.127.0.0.1',
                  'majidbenam.com', 'www.majidbenam.com', 'https://majidbenam.com']
 
 
@@ -186,6 +187,30 @@ TEMPLATES = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
 # ==============================================================================
 # DATABASES SETTINGS
 # ==============================================================================
@@ -232,7 +257,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-CSRF_TRUSTED_ORIGINS = ['https://majidbenam.com', 'http://*.majidbenam.com', 'http://majidbenam.com',
+CSRF_TRUSTED_ORIGINS = ['https://majidbenam.com', 'http://*.majidbenam.com', 'http://majidbenam.com', 
                         'https://seshatdb.herokuapp.com', 'http://seshatdb.herokuapp.com', 'https://*.majidbenam.com', ]  # the most important one is the last one.
 
 #USE_X_FORWARDED_HOST = True

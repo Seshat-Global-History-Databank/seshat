@@ -5,16 +5,17 @@
 {% block extra_vars %}
 
     {% if extra_var and extra_var2 and extra_var3 %}
+
     <div class="col-md-4">
         {{ extra_var|as_crispy_field }}
     </div>
     <div class="col-md-4">
         {{ extra_var3|as_crispy_field }}
     </div>
-    <div class="col-sm-4 pb-2">
+    <div class="col-md-4 pb-2">
         {{ form.polity|as_crispy_field }}
     </div>
-    <div class="col-md-4 pb-4">
+    <div class="col-md-6 pb-4">
         {{ extra_var2|as_crispy_field }}
     </div>
     {% elif extra_var and extra_var2  %}

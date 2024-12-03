@@ -7627,7 +7627,11 @@ def dynamic_create_view(request, form_class, x_name, myvar, my_exp, var_section,
         if my_form.is_valid():
             new_object = my_form.save()
             #return redirect('seshat-index') 
-            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
     else:
         polity_id_x = request.GET.get('polity_id_x')
         my_form = form_class(initial= {'polity': polity_id_x,})

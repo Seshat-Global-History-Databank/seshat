@@ -673,23 +673,23 @@ class Polity_duration(SeshatCommon):
     def show_value(self):
         if self.polity_year_from == self.polity_year_to:
             if self.polity_year_from < 0:
-                return f'{abs(self.polity_year_from):,}' + " BCE" 
+                return f'{abs(self.polity_year_from)}' + " BCE" 
             else:
-                return f'{abs(self.polity_year_from):,}' + " CE" 
+                return f'{abs(self.polity_year_from)}' + " CE" 
         elif self.polity_year_to == None:
             if self.polity_year_from < 0:
-                return f'{abs(self.polity_year_from):,}' + " BCE" 
+                return f'{abs(self.polity_year_from)}' + " BCE" 
             else:
-                return f'{abs(self.polity_year_from):,}' + " CE" 
+                return f'{abs(self.polity_year_from)}' + " CE" 
         elif self.polity_year_to == None and  self.polity_year_from == None:
             return " - " 
         else:
             if self.polity_year_from < 0 and self.polity_year_to < 0:
-                return "[" + f'{abs(self.polity_year_from):,}' + " BCE"  + " ➜ " + f'{abs(self.polity_year_to):,}' + " BCE"  + "]"
+                return "[" + f'{abs(self.polity_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.polity_year_to)}' + " BCE"  + "]"
             elif  self.polity_year_from < 0 and self.polity_year_to >= 0:
-                return "[" + f'{abs(self.polity_year_from):,}' + " BCE"  + " ➜ " + f'{abs(self.polity_year_to):,}' + " CE"  + "]"
+                return "[" + f'{abs(self.polity_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.polity_year_to)}' + " CE"  + "]"
             else:
-                return "[" + f'{abs(self.polity_year_from):,}' + " CE"  + " ➜ " + f'{abs(self.polity_year_to):,}' + " CE" + "]"
+                return "[" + f'{abs(self.polity_year_from)}' + " CE"  + " ➜ " + f'{abs(self.polity_year_to)}' + " CE" + "]"
             
     def subsection(self):
         return "Temporal Bounds"
@@ -729,23 +729,23 @@ class Polity_peak_years(SeshatCommon):
     def show_value(self):
         if self.peak_year_from == self.peak_year_to:
             if self.peak_year_from < 0:
-                return f'{abs(self.peak_year_from):,}' + " BCE" 
+                return f'{abs(self.peak_year_from)}' + " BCE" 
             else:
-                return f'{abs(self.peak_year_from):,}' + " CE" 
+                return f'{abs(self.peak_year_from)}' + " CE" 
         elif self.peak_year_to == None:
             if self.peak_year_from < 0:
-                return f'{abs(self.peak_year_from):,}' + " BCE" 
+                return f'{abs(self.peak_year_from)}' + " BCE" 
             else:
-                return f'{abs(self.peak_year_from):,}' + " CE" 
+                return f'{abs(self.peak_year_from)}' + " CE" 
         elif self.peak_year_to == None and  self.peak_year_from == None:
             return " - " 
         else:
             if self.peak_year_from < 0 and self.peak_year_to < 0:
-                return "[" + f'{abs(self.peak_year_from):,}' + " BCE"  + " ➜ " + f'{abs(self.peak_year_to):,}' + " BCE"  + "]"
+                return "[" + f'{abs(self.peak_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.peak_year_to)}' + " BCE"  + "]"
             elif  self.peak_year_from < 0 and self.peak_year_to >= 0:
-                return "[" + f'{abs(self.peak_year_from):,}' + " BCE"  + " ➜ " + f'{abs(self.peak_year_to):,}' + " CE"  + "]"
+                return "[" + f'{abs(self.peak_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.peak_year_to)}' + " CE"  + "]"
             else:
-                return "[" + f'{abs(self.peak_year_from):,}' + " CE"  + " ➜ " + f'{abs(self.peak_year_to):,}' + " CE" + "]"
+                return "[" + f'{abs(self.peak_year_from)}' + " CE"  + " ➜ " + f'{abs(self.peak_year_to)}' + " CE" + "]"
 
     def subsection(self):
         return "Temporal Bounds"

@@ -841,8 +841,6 @@ class SeshatCommon(models.Model):
         else:
             return None
 
-
-
 # class Annual_wages(SeshatCommon):
 #     name = models.CharField(max_length=100, default="Annual_wages")
 #     annual_wages = models.IntegerField(blank=True, null=True)
