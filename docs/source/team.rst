@@ -114,7 +114,8 @@ Jenny Reddish
 
 - Questions about polities, definitions of variables etc.
 - Responding to errors you spot in Seshat data
-- Administrative privileges: Researcher
+
+**Administrative privileges:** Researcher
 
 Majid Benam
 ~~~~~~~~~~~~
@@ -143,6 +144,8 @@ I am a **Software Engineer and Web Developer** at the Complexity Science Hub in 
     - Serve as a **Seshat Admin** with administrative privileges.
 
 Feel free to reach out if you need assistance. Email: `benam@csh.ac.at`
+
+**Administrative privileges:** Seshat admin
 
 Matilda Peruzzo
 ~~~~~~~~~~~~~~~
@@ -181,3 +184,23 @@ Pieter Francois
 - Setting new data gathering, analysis, and publication plans
 
 **Administrative privileges:** Seshat admin
+
+
+Peter Turchin
+~~~~~~~~~~~~~~~
+
+**Who am I?**
+
+- Chair, Board of Directors, the Seshat Global Databank
+- Project leader for Social Complexity and Collapse at the Complexity Science Hub in Vienna
+- More info at https://peterturchin.com/about/
+
+**What can I help with?**
+
+- Overall strategy of the Seshat Project
+- Collaborations with other research groups
+- Statistical analyses of the Seshat data
+- Building mechanism-based models to be tested with Seshat data
+
+**Administrative privileges:** Seshat admin
+
