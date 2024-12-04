@@ -255,10 +255,10 @@
         </div>
 
         <div class="row">
-            {% if request.user.is_staff %}
+            {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions%}
             <div class="col-md-4 py-3 ps-4">
                 <div class="mb-2">
-                    <i class="fas fa-user-check"></i> You are a Seshat Expert; you can enter a fact.
+                    <i class="fas fa-user-check"></i> You are a Seshat Researcher; you can insert a new Record to the Database.
                 </div> 
                 <div  class="mb-2" style="display: none;">
                     {{ form.finalized|as_crispy_field }}
@@ -267,7 +267,7 @@
             {% else %}
             <div class="col-md-4 py-3 ps-4">
                 <input type="checkbox" id="seshatexpert" name="vehicle2" value="Car" onclick="return false">
-                <label for="seshatexpert"> You are not a Seshat Expert.</label>
+                <label for="seshatexpert"> You are not an authorized Seshat Researcher.</label>
             </div>
             {% endif %}
 
