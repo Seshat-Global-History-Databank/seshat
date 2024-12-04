@@ -183,7 +183,7 @@
             <div class="col-sm-12 row">
                 {% if myvar == 'Polity Preceding Entity' %}
 
-                {% elif myvar != 'Polity Duration' and myvar != 'Polity Peak Years' %}
+                {% elif myvar == 'Polity Duration' and myvar == 'Polity Peak Years' %}
                 <div class="col-sm-6 pb-2">
                     {{ form.polity|as_crispy_field }}
                 </div>
