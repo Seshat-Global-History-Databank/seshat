@@ -83,7 +83,7 @@ class Seshat_Expert(models.Model):
     SESHATEXPERT = 'Seshat Expert'
     ROLE_CHOICES = (
         (SESHATADMIN, 'Seshat Admin'),
-        (RA, 'RA'),
+        (RA, 'Seshat Researcher'),
         (SESHATEXPERT, 'Seshat Expert'),
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
