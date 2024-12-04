@@ -199,7 +199,11 @@
                     <div class="col-md-9">
                         <span class="h6 text-dark" id="top_of_the_page">Home Region:&nbsp;</span> <span class="h3 text-dark federicka-medium">{{ object.home_seshat_region }}</span> 
                         <h1 class="h1 text-teal federicka-bigger"> {{ object.long_name }}</h1> 
+                        <h4>
+                            {% include "core/partials/_year_block_object.html" %}
+                        </h4>
 			 <div class="pb-1">
+
                         {% if object.general_description %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#" class="mx-0 px-0">    
@@ -297,6 +301,7 @@
                         {% endif %}
 
                     </div>
+
 
                     <div id="polityMap">
                         {% polity_map pk %}

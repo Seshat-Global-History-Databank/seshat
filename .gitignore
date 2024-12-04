@@ -166,14 +166,20 @@ todo.txt
 env/
 venv/
 venv_seshat/
+venv_seshat_2024/
 #seshat/settings/local.py
 seshat/settings/base_backup.py
+seshat/settings/base_majid.py
+seshat/settings/local_majid.py
 #seshat/settings/production.py
 seshat/settings/tests.py
+seshat/settings/.env
 seshat/settings.py
 ENV/
 env.bak/
 venv.bak/
+
+seshat/apps/core/templates/core/world_map_new.html
 # a random thing
 # Spyder project settings
 .spyderproject
