@@ -38,7 +38,7 @@ There is a second GitHub organisation at `github.com/seshatdb <https://github.co
 .. note::
 
     - For more information on the using Seshat website codbase, see the `Seshat Databank Admin <admin/index.rst>`_ pages.
-    - For more information on using the Seshat API python package and the Cliopatria dataset, see the `Researcher <researcher/index.rst>`_ pages.
+    - There are also pages on using the `Seshat API python package <python_api.rst>`_ and the `Cliopatria dataset <cliopatria.rst>`_.
 
 
 Data downloads & code

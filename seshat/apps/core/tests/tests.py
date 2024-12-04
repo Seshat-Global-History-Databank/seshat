@@ -5,6 +5,7 @@ from django.urls import reverse
 from ..models import Cliopatria, GADMShapefile, GADMCountries, GADMProvinces, Polity, Capital
 from ...general.models import Polity_capital, Polity_peak_years, Polity_language, Polity_religious_tradition
 from ...sc.models import Judge
+from ...wf.models import Copper
 from ...rt.models import Gov_res_pub_pros
 from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes
 from ..templatetags.core_tags import get_polity_capitals, polity_map
@@ -133,6 +134,13 @@ class ShapesTest(TestCase):
         Judge.objects.create(
             name='judge',
             judge='present',
+            year_from=2003,
+            year_to=2004,
+            polity_id=2
+        )
+        Copper.objects.create(
+            name='copper',
+            copper='present',
             year_from=2003,
             year_to=2004,
             polity_id=2
@@ -530,15 +538,23 @@ class ShapesTest(TestCase):
             'formatted': 'Judge',
             'full_name': 'Law: Judge'
         }
+        expected_result_variables_copper = {
+            'formatted': 'Copper',
+            'full_name': 'Military use of Metals: Copper'
+        }
         expected_result_variables_gov_res_pub_pros = {
             'formatted': 'Government Restrictions on Public Proselytizings',
             'full_name': 'Government Restrictions: Government Restrictions on Public Proselytizings'
         }
         self.assertEqual(result_variables['Social Complexity Variables']['judge'], expected_result_variables_judge)
+        self.assertEqual(result_variables['Warfare Variables (Military Technologies)']['copper'], expected_result_variables_copper)
         self.assertEqual(result_variables['Religion Tolerance']['gov_res_pub_pros'], expected_result_variables_gov_res_pub_pros)
+
         # Test that the shapes have been updated with the variables
         self.assertEqual(result_shapes[0]['Judge'], 'present')
         self.assertEqual(result_shapes[0]['Judge_dict'], {'present': [2003, 2004]})
+        self.assertEqual(result_shapes[0]['Copper'], 'present')
+        self.assertEqual(result_shapes[0]['Copper_dict'], {'present': [2003, 2004]})
         self.assertEqual(result_shapes[0]['Government Restrictions on Public Proselytizings'], 'absent')
         self.assertEqual(result_shapes[0]['Government Restrictions on Public Proselytizings_dict'], {'absent': [2002, 2003]})
 

@@ -4,8 +4,16 @@ name: test_code
 on:
   push:
     branches: [dev]
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+      - '.github/ISSUE_TEMPLATE/**'
   pull_request:
     branches: [dev]
+    paths-ignore:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+      - '.github/ISSUE_TEMPLATE/**'
 
 jobs:
   test_core:

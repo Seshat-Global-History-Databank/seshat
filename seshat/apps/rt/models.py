@@ -18,7 +18,6 @@ from seshat.apps.accounts.models import Seshat_Expert
 
 from seshat.apps.sc.models import ABSENT_PRESENT_CHOICES
 
-
 FREQUENCY_CHOICES = (
 ('never', 'never (absent)'),
 ('vr', 'very rarely'),

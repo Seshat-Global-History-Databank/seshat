@@ -12,7 +12,7 @@ The README file in the `examples` folder provides instructions on how to install
 
 .. tip::
 
-   You may want to start by reading the `Software tools <software-tools>`_ page to ensure you have Python and Git installed on your computer.
+   You may want to start by reading the `Software tools <software-tools.rst>`_ page to ensure you have Python and Git installed on your computer.
 
 
 .. note::
