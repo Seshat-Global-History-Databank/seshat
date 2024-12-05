@@ -563,6 +563,7 @@ function clearSelection() {
     shapesData.forEach(function (shape) {
         shape['weight'] = 0;
     });
+    document.getElementById('hideUnselected').checked = false;
     plotPolities();
 }
 
