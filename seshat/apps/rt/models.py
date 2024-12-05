@@ -16,16 +16,7 @@ from django.utils import translation
 from ..core.models import SeshatCommon, Certainty, Tags, Section, Subsection, Religion
 from seshat.apps.accounts.models import Seshat_Expert
 
-
-
-########## Beginning of tuple choices for general Models
-ABSENT_PRESENT_CHOICES = (
-('present', 'present'),
-('absent', 'absent'),
-('unknown', 'unknown'),
-('A~P', 'Transitional (Absent -> Present)'),
-('P~A', 'Transitional (Present -> Absent)'),
-)
+from seshat.apps.sc.models import ABSENT_PRESENT_CHOICES
 
 FREQUENCY_CHOICES = (
 ('never', 'never (absent)'),

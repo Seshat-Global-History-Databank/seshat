@@ -199,7 +199,11 @@
                     <div class="col-md-9">
                         <span class="h6 text-dark" id="top_of_the_page">Home Region:&nbsp;</span> <span class="h3 text-dark federicka-medium">{{ object.home_seshat_region }}</span> 
                         <h1 class="h1 text-teal federicka-bigger"> {{ object.long_name }}</h1> 
+                        <h4>
+                            {% include "core/partials/_year_block_object.html" %}
+                        </h4>
 			 <div class="pb-1">
+
                         {% if object.general_description %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#" class="mx-0 px-0">    
@@ -297,6 +301,7 @@
                         {% endif %}
 
                     </div>
+
 
                     <div id="polityMap">
                         {% polity_map pk %}
@@ -585,20 +590,45 @@
                             <div class="col-md-10 py-2" id="table_id_general">
                             {% for key, values in values_m.items %}
                                 {% if values %}
-                                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:
+                                {% if key == 'Polity_succeeding_entity' or key == 'Polity_relationship_to_preceding_entity' %}
+                                #999
+                                {% else %}
+                                #acd2cc62
+                                {% endif %}
+                               ;">
                                     <div class="fs-6 pb-1">
                                         <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                            {% if key == "Polity_preceding_entity" %}
+                                            Polity Succession
+                                            {% elif key == 'Polity_succeeding_entity' %}
+                                            Succeeding Entity
+                                            {% elif key == 'Polity_relationship_to_preceding_entity' %}
+                                            Relationship to preceding Eentity
+                                            {% else %}
                                             {{ values.0.clean_name_spaced|slice:"7:" }}
+                                            {% endif %}
                                         </a> 
                                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                        {% if key == "Polity_succeeding_entity" or key == "Polity_relationship_to_preceding_entity" %}
+                                        {% else %}
+
                                             <a class="h6" style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                             </a> 
+                                        {% endif %}
+
 
                                         {% endif %}
 
                                     </div>
 
-                                    <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
+                                    <table class="table mb-2 pb-2 
+                                {% if key == 'Polity_succeeding_entity' or key == 'Polity_relationship_to_preceding_entity' %}
+                                bg-secondary
+                                {% else %}
+                                shadow-box
+                                {% endif %}
+                                    " style="width: auto;">
 
                                     {% for vv in values %}
                                     <tr>
@@ -616,7 +646,7 @@
                                                     {% if vv.polity and vv.other_polity and vv.other_polity.id == object.id %}
                                                         <span class="h6 text-dark fw-bold">Succeeding: </span> 
                                                         <span class="text-teal fw-bold ps-2">
-                                                            <a href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
+                                                            <a class="fs-6" href="{% url 'polity-detail-main' vv.polity.id %}">{{ vv.polity }}</a>
                                                             </span> 
                                                     {% elif vv.polity and vv.other_polity and vv.polity.id == object.id %}
                                                         <span class="h6 text-dark fw-bold">Preceding:&nbsp;&nbsp; </span> 
@@ -1490,10 +1520,111 @@
                                     </span>
 
                                     {% elif key == "Polity_preceding_entity" %}
-                                    <span class="h5 fw-bold" >
+                                    <span class="h6 fw-bold" >
                                         <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
-                                            {{ value.clean_name_spaced|slice:"7:" }}:            
-                                        </span>  <br>{{ value.display_value }}
+
+                                            {% if value.other_polity.id == object.id %}
+                                            Succeeding Entity:    
+
+                                            {% else %}
+                                            Preceding Entity:    
+
+
+                                            {% endif %}
+
+
+                                        </span> 
+
+                                        {% if value.polity and  value.other_polity and value.polity.id == object.id %}
+                                            <div class="pt-2">
+                                                <span class="px-1 border border-dark rounded" style="background:#fefae6" >
+            
+                                                {% if  value.other_polity.start_year == value.other_polity.end_year %}
+                                                    {% if  value.other_polity.start_year < 0 %}
+                                                    {{ value.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> 
+                                                    {% else %}
+                                                    {{ value.other_polity.start_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+                                                {% elif value.other_polity.end_year == None %}
+                                                    {% if  value.other_polity.start_year < 0 %}
+                                                    {{ value.other_polity.start_year|abs }} <span class="text-secondary">BCE</span>
+                                                    {% else %}
+                                                    {{ value.other_polity.start_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+                                                {% elif value.other_polity.end_year == None and  value.other_polity.start_year == None %}
+                                                    <i class="fa-solid fa-minus"></i> 
+                                                {% else %}
+                                                    {% if  value.other_polity.start_year < 0 and value.other_polity.end_year < 0 %}
+                                                    {{ value.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.other_polity.end_year|abs }} <span class="text-secondary">BCE</span>
+                                                    {% elif  value.other_polity.start_year < 0 and value.other_polity.end_year >= 0 %}
+                                                    {{ value.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.other_polity.end_year }} <span class="text-secondary">CE</span>
+                                                    {% else %}
+                                                    {{ value.other_polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.other_polity.end_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </span>
+            
+                                                <span class="h5 text-teal fw-bold ps-2">
+                                                    <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity }}</a>
+            
+                                                </span>
+                                                <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ value.get_relationship_to_preceding_entity_display }}]&nbsp;&nbsp;</span>
+                                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                        {% elif value.polity and value.other_polity and value.other_polity.id == object.id %}
+                                            <div class="pt-2">
+                                                <span class="px-1 border border-dark rounded" style="background:#fefae6">
+            
+                                                {% if  value.polity.start_year == value.polity.end_year %}
+                                                    {% if  value.polity.start_year < 0 %}
+                                                    {{ value.polity.start_year|abs }} <span class="text-secondary">BCE</span> 
+                                                    {% else %}
+                                                    {{ value.polity.start_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+                                                {% elif value.polity.end_year == None %}
+                                                    {% if  value.polity.start_year < 0 %}
+                                                    {{ value.polity.start_year|abs }} <span class="text-secondary">BCE</span>
+                                                    {% else %}
+                                                    {{ value.polity.start_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+                                                {% elif value.polity.end_year == None and  value.polity.start_year == None %}
+                                                    <i class="fa-solid fa-minus"></i> 
+                                                {% else %}
+                                                    {% if  value.polity.start_year < 0 and value.polity.end_year < 0 %}
+                                                    {{ value.polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.polity.end_year|abs }} <span class="text-secondary">BCE</span>
+                                                    {% elif  value.polity.start_year < 0 and value.polity.end_year >= 0 %}
+                                                    {{ value.polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.polity.end_year }} <span class="text-secondary">CE</span>
+                                                    {% else %}
+                                                    {{ value.polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ value.polity.end_year }} <span class="text-secondary">CE</span>
+                                                    {% endif %}
+            
+                                                {% endif %}
+                                            </span>
+            
+                                                <span class="h5 text-teal fw-bold ps-2">
+                                                    <a href="{% url 'polity-detail-main' value.polity.id %}">{{ value.polity }}</a>
+                                                </span>
+                                                <span class="h6 text-secondary fw-normal">&nbsp;&nbsp; [{{ value.get_relationship_to_preceding_entity_display }}]&nbsp;&nbsp;</span>
+                                            </div>
+                                            {% else %}
+                                                <div class="pt-2">
+                                                    {{ value.merged_old_data }}   [{{ value.get_relationship_to_preceding_entity_display }}] &nbsp;&nbsp; <a class="fw-bold" href="{% url 'polity_preceding_entity-update' value.id %}">Update here</a>
+                                                </div>
+                                            {% endif %}
+            
+            
+
                                     </span>
 
                                     {% else %}
@@ -1524,9 +1655,14 @@
                                         </div>
                                     </div>
                                 </span>
-                                {% with my_app_name='general' %}
-                                    {% include "core/partials/_abc.html" %}
-                                {% endwith %}
+
+                                {% if key == "Polity_succeeding_entity" or key == "Polity_relationship_to_preceding_entity"  %}
+                                {% else %}
+                                    {% with my_app_name='general' %}
+                                        {% include "core/partials/_abc.html" %}
+                                    {% endwith %}                              
+                                {% endif %}
+
                             </div>
                             <div class="col-md-3">
                                 <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b> <u>View all such records</u></b></a>
@@ -1976,19 +2112,18 @@
                                 {% endif%}
                             </span>
                         </div>
+                        {% if value.is_first_100 == True %}
+
                         <div style="display: block; padding: 0;">
-                            <div style="display: inline-flex; flex-direction: row; padding: 0;">
-                                {% if value.is_first_100 == True %}
+                                <div style="display: inline-flex; flex-direction: row; padding: 0;">
+
                                     <a type="button" class="fs-6">
                                         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#744141; color:#e7baba;"> First 100</span>
                                     </a>
-                                {% endif %}
-                                {% include "core/partials/_tag_value_inline.html" %}
-                                {% include "core/partials/_disputed_value_inline.html" %}
-                                {% include "core/partials/_expert_checked_value_inline.html" %}
-               
-                            </div>
+                                </div>
                         </div>
+                        {% endif %}
+
                     </span>
                     {% with my_app_name='crisisdb' %}
                         {% include "core/partials/_abc_x.html" %}
@@ -2010,7 +2145,7 @@
 
     <!-- PT -->
 
-        <div class="row d-flex align-items-center justify-content-center pt-4">
+        <div class="row d-flex align-items-center justify-content-center pt-2">
             <div class="col-md-8">
                 <span class="pt-5 display-1" style="text-align: left; color:#017989;" >
                     <span class="h1 federicka-huge" id="power_transition_var"> Power Transitions</span>
@@ -2024,7 +2159,7 @@
         </div>
         {% autoescape off %}
 
-        <div class="py-2 custom-left-border-shadtowed my-3">
+        <div class="py-2 custom-left-border-shadtowed my-1">
 
         {% if not all_power_transitions_data %}
         <span class="text-secondary">Coding in Progress.</span>
@@ -2035,30 +2170,26 @@
         {% if values and 'core.view_capital' in user.get_all_permissions %}
             <div class="py-2"  id="{{key}}">
                     {% for value in values %}
-                        <span class="pt-2 fs-5 pb-1 fw-bold" id="power_transition_{{value.id}}"> 
-                            <i class="fa-solid fa-star fa-2xs"></i>
-                            <span class="h5">Power Transition in 
-                                <span class = "fw-bold text-teal">{{ value.polity }}:</span>
+                        <span class="fs-5 pb-1 fw-bold" id="power_transition_{{value.id}}"> 
+                            <span class="h6">Power Transition in 
+                                <span class = "fw-bold">{{ value.polity }}:</span>
                             </span>            
                         </span> 
                         <br>
                         <span class="h5 fw-bold text-teal pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
-                            <span class = "fw-bold text-danger" style="display:block;">
-                               <span class="text-secondary fw-normal">Predecessor: </span> {{ value.predecessor }}
+                            <span class = "fw-bold text-dark" style="display:block;">
+                               <span class="text-secondary fw-normal fs-6 ">Predecessor: </span> 
+                               <span class="fw-bold fs-5 text-secondary">{{ value.predecessor }} 
                             </span> 
-                            <span class = "fw-bold text-teal" style="display:block;">
-                                <span class="text-secondary fw-normal">Successor: </span>  {{ value.successor }}
+                            </span> 
+                            <span class="fw-bold text-dark" style="display:block;">
+                                <span class="text-secondary fw-normal fs-6">Successor: </span> 
+                                <span class="fw-bold fs-5 text-dark">{{ value.successor }} 
+                                </span> 
                             </span>
                             <span class = "fw-bold text-dark pt-2" style="display:block;">
                                 {% include "core/partials/_year_block_value_inline_pt.html" %}
                             </span>
-                            <div style="display: block; padding: 0;">
-                                <div style="display: inline-flex; flex-direction: row;">
-                                    {% include "core/partials/_tag_value_inline.html" %}
-                                    {% include "core/partials/_disputed_value_inline.html" %}
-                                    {% include "core/partials/_expert_checked_value_inline.html" %}
-                                </div>
-                            </div>
                         </span>
                         {% with my_app_name='crisisdb' %}
                             {% include "core/partials/_abc_x.html" %}

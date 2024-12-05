@@ -129,20 +129,30 @@
                      </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="{% url 'seshat-olddownloads' %}" class="nav-link active fw-bold" >Downloads </a>
+                    <a class="nav-link dropdown-toggle active fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Connect
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item fw-bold" href="{% url 'seshat-olddownloads' %}"><i class="fa-solid fa-download text-secondary"></i> &nbsp; Downloads</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item fw-bold" href="https://seshat-global-history-databank.github.io/seshat/"><i class="fa-regular fa-file-lines text-secondary"></i> &nbsp; Documentation</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item fw-bold" href="/api/"><i class="fa-solid fa-gear text-secondary"></i> &nbsp; API</a>
+                        </li>
+                        <li>
+                            <a  class="dropdown-item fw-bold" href="https://github.com/Seshat-Global-History-Databank/seshat"><i class="fa-brands fa-github text-secondary"></i> &nbsp; GitHub</a>
+                        </li>
+                     </ul>
                 </li>
+
+
                 <li class="nav-item">
                     <a href="{% url 'world_map' %}" class="nav-link active fw-bold">World Map</a>
                 </li>
-                <li class="nav-item">
-                    <a href="https://seshat-global-history-databank.github.io/seshat/" class="nav-link active fw-bold">Documentation</a>
-                </li>
-                <li class="nav-item"></li>
-                    <a href="/api/" class="nav-link active fw-bold">API</a>
-                </li>
-                <li class="nav-item"></li>
-                    <a href="https://github.com/Seshat-Global-History-Databank/seshat" class="nav-link active fw-bold">GitHub</a>
-                </li>
+
                 <li class="nav-item mx-5">
                     {% autoescape off %}
     
@@ -160,9 +170,6 @@
     
                 </li>
         </ul>
-        <script>
-            if (window.location.href.includes("seshat-db")) {
-                document.write(`
                     <ul class="navbar-nav ms-auto d-lg-inline-flex">
                         {% if user.is_authenticated %}
                         <li class="nav-item mx-1">
@@ -196,26 +203,12 @@
 
                     {% endif %}
                     </ul>
-                `);
-            }
 
-        </script>
 
         </div>
 
         
     </div>
-
-    <script>
-        if (!window.location.href.includes("seshat-db")) {
-            document.write(`
-            <div style="background-color: yellow; color: red; font-weight: bold; padding: 10px; border: 2px solid red; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 30%; height: auto; display: inline-block;">
-                <p style="display: inline;">Test website. Visit <a href="https://seshat-db.com/" target="_blank" rel="noopener noreferrer">seshat-db.com</a> to log in.</p>
-            </div>
-            `);
-        }
-
-    </script>
     
 </nav>
 
@@ -325,7 +318,5 @@
 
 
 </script>
-
-
 
 
