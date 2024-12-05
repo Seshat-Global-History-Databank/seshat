@@ -1410,7 +1410,16 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     if not created:
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
-            return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+            action = request.POST.get('action')
+
+            if action == 'redirect_one':
+                return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': subcom_order+1}))
+                # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
+                #return redirect('your_first_url_name')  # Replace with your actual URL
+            elif action == 'redirect_two':
+                #return redirect('your_second_url_name')  # Replace with yours
+                return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+            #return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
 
     else:
         init_data = ReferenceFormSet2(prefix='refs')
@@ -1587,7 +1596,15 @@ def seshat_comment_part_create_from_null_view_inline(request, app_name, model_na
                     if not created:
                         scp_through_ctn.parent_paragraphs = item[1]
                         scp_through_ctn.save()
-            return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+            # Check which button was clicked
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': 2}))
+                # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
+                #return redirect('your_first_url_name')  # Replace with your actual URL
+            elif action == 'redirect_two':
+                #return redirect('your_second_url_name')  # Replace with yours
+                return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
 
     else:
         init_data = ReferenceFormSet2(prefix='refs')

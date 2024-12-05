@@ -4,12 +4,7 @@
     <span class="text-dark fw-bold">
 
     {% if value.year_from == None %}
-    <a type="button" class="btn p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
-        <span><i class="fa-solid fa-clock fs-6 text-secondary"></i> </span>
-    </a>
 
-
-        
     {% elif  value.year_from == value.year_to %}
         {% if  value.year_from < 0 %}
         {{ value.year_from|abs }} 

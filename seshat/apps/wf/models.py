@@ -19,17 +19,6 @@ from seshat.apps.accounts.models import Seshat_Expert
 
 from seshat.apps.sc.models import ABSENT_PRESENT_CHOICES
 
-
-########## End of Model Imports
-
-########## Beginning of tuple choices for general Models
-
-########## TUPLE CHOICES THAT ARE THE SAME 
-
-########## END of tuple choices for general Models
-
-########## Beginning of Function Definitions for Social Complexity (Vars) Models
-
 def call_my_name(self):
     """
     This function is used to return the name of the model instance (in lieu of
