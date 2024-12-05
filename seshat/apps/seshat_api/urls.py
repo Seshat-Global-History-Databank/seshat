@@ -15,13 +15,13 @@ from .views.accounts import (
     SeshatTaskViewSet,
 )
 
-router.register(r"account/profiles", ProfileViewSet, basename="profile")
+router.register(r"account/profiles", ProfileViewSet, basename="api_profile")
 router.register(
     r"account/seshat-experts",
     SeshatExpertViewSet,
-    basename="seshat-expert",
+    basename="api_seshat-expert",
 )
-router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="seshat-task")
+router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="api_seshat-task")
 
 
 # Register views for "core" app
@@ -54,63 +54,63 @@ from .views.core import (
 router.register(
     r"core/private-comments",
     PrivateCommentsViewSet,
-    basename="private-comment",
+    basename="api_private-comment",
 )
 router.register(
     r"core/private-comments-parts",
     PrivateCommentsPartsViewSet,
-    basename="private-comment-part",
+    basename="api_private-comment-part",
 )
-router.register(r"core/macro-regions", MacroRegionViewSet, basename="macro-region")
-router.register(r"core/regions", RegionViewSet, basename="region")
-router.register(r"core/ngas", NGAViewSet, basename="nga")
-router.register(r"core/polities", PolityViewSet, basename="polity")
-router.register(r"core/capitals", CapitalViewSet, basename="capital")
+router.register(r"core/macro-regions", MacroRegionViewSet, basename="api_macro-region")
+router.register(r"core/regions", RegionViewSet, basename="api_region")
+router.register(r"core/ngas", NGAViewSet, basename="api_nga")
+router.register(r"core/polities", PolityViewSet, basename="api_polity")
+router.register(r"core/capitals", CapitalViewSet, basename="api_capital")
 router.register(
     r"core/nga-polity-relations",
     NGAPolityRelationsViewSet,
-    basename="nga-polity-relation",
+    basename="api_nga-polity-relation",
 )
-router.register(r"core/countries", CountryViewSet, basename="country")
-router.register(r"core/sections", SectionViewSet, basename="section")
-router.register(r"core/subsections", SubsectionViewSet, basename="subsection")
+router.register(r"core/countries", CountryViewSet, basename="api_country")
+router.register(r"core/sections", SectionViewSet, basename="api_section")
+router.register(r"core/subsections", SubsectionViewSet, basename="api_subsection")
 router.register(
     r"core/variable-hierarchies",
     VariableHierarchyViewSet,
-    basename="variable-hierarchy",
+    basename="api_variable-hierarchy",
 )
-router.register(r"core/references", ReferenceViewSet, basename="reference")
-router.register(r"core/citations", CitationViewSet, basename="citation")
-router.register(r"core/comments", SeshatCommentViewSet, basename="seshat-comment")
+router.register(r"core/references", ReferenceViewSet, basename="api_reference")
+router.register(r"core/citations", CitationViewSet, basename="api_citation")
+router.register(r"core/comments", SeshatCommentViewSet, basename="api_seshat-comment")
 router.register(
     r"core/comment-parts",
     SeshatCommentPartViewSet,
-    basename="seshat-comment-part",
+    basename="api_seshat-comment-part",
 )
 router.register(
     r"core/comment-parts-through-citations",
     ScpThroughCtnViewSet,
-    basename="comment-part-through-citation",
+    basename="api_comment-part-through-citation",
 )
-#router.register(r"core/commons", SeshatCommonViewSet, basename="common")
-router.register(r"core/religions", ReligionViewSet, basename="religion")
+#router.register(r"core/commons", SeshatCommonViewSet, basename="api_common")
+router.register(r"core/religions", ReligionViewSet, basename="api_religion")
 router.register(
     r"core/cliopatria-shapefiles",
     CliopatriaViewSet,
-    basename="cliopatria-shapefile",
+    basename="api_cliopatria-shapefile",
 )
 router.register(
     r"core/gadm-shapefiles",
     GADMShapefileViewSet,
-    basename="gadm-shapefile",
+    basename="api_gadm-shapefile",
 )
 router.register(
-    r"core/gadm-countries", GADMCountriesViewSet, basename="gadm-country"
+    r"core/gadm-countries", GADMCountriesViewSet, basename="api_gadm-country"
 )
 router.register(
     r"core/gadm-provinces",
     GADMProvincesViewSet,
-    basename="gadm-province",
+    basename="api_gadm-province",
 )
 
 
@@ -145,120 +145,120 @@ from .views.crisisdb import (
     DiseaseOutbreakViewSet,
 )
 
-router.register(r"crisisdb/us-locations", USLocationViewSet, basename="us-location")
+router.register(r"crisisdb/us-locations", USLocationViewSet, basename="api_us-location")
 router.register(
     r"crisisdb/us-violence-subtypes",
     USViolenceSubtypeViewSet,
-    basename="us-violence-subtype",
+    basename="api_us-violence-subtype",
 )
 router.register(
     r"crisisdb/us-violence-data-sources",
     USViolenceDataSourceViewSet,
-    basename="us-violence-data-source",
+    basename="api_us-violence-data-source",
 )
-router.register(r"crisisdb/us-violences", USViolenceViewSet, basename="us-violence")
+router.register(r"crisisdb/us-violences", USViolenceViewSet, basename="api_us-violence")
 router.register(
     r"crisisdb/crisis-consequences",
     CrisisConsequenceViewSet,
-    basename="crisis-consequence",
+    basename="api_crisis-consequence",
 )
 router.register(
     r"crisisdb/power-transitions",
     PowerTransitionViewSet,
-    basename="power-transition",
+    basename="api_power-transition",
 )
 
 router.register(
     r"crisisdb/human-sacrifices",
     HumanSacrificeViewSet,
-    basename="human-sacrifice",
+    basename="api_human-sacrifice",
 )
 router.register(
     r"crisisdb/external-conflicts",
     ExternalConflictViewSet,
-    basename="external-conflict",
+    basename="api_external-conflict",
 )
 router.register(
     r"crisisdb/external-conflict-sides",
     ExternalConflictSideViewSet,
-    basename="external-conflict-side",
+    basename="api_external-conflict-side",
 )
 router.register(
     r"crisisdb/agricultural-populations",
     AgriculturalPopulationViewSet,
-    basename="agricultural-population",
+    basename="api_agricultural-population",
 )
-router.register(r"crisisdb/arable-lands", ArableLandViewSet, basename="arable-land")
+router.register(r"crisisdb/arable-lands", ArableLandViewSet, basename="api_arable-land")
 router.register(
     r"crisisdb/arable-land-per-farmer",
     ArableLandPerFarmerViewSet,
-    basename="arable-land-per-farmer",
+    basename="api_arable-land-per-farmer",
 )
 router.register(
     r"crisisdb/gross-grain-shared-per-agricultural-populations",
     GrossGrainSharedPerAgriculturalPopulationViewSet,
-    basename="gross-grain-shared-per-agricultural-population",
+    basename="api_gross-grain-shared-per-agricultural-population",
 )
 router.register(
     r"crisisdb/net-grain-shared-per-agricultural-populations",
     NetGrainSharedPerAgriculturalPopulationViewSet,
-    basename="net-grain-shared-per-agricultural-population",
+    basename="api_net-grain-shared-per-agricultural-population",
 )
-router.register(r"crisisdb/surpluses", SurplusViewSet, basename="surplus")
+router.register(r"crisisdb/surpluses", SurplusViewSet, basename="api_surplus")
 router.register(
     r"crisisdb/military-expenses",
     MilitaryExpenseViewSet,
-    basename="military-expense",
+    basename="api_military-expense",
 )
 router.register(
     r"crisisdb/silver-inflows",
     SilverInflowViewSet,
-    basename="silver-inflow",
+    basename="api_silver-inflow",
 )
 router.register(
     r"crisisdb/silver-stocks",
     SilverStockViewSet,
-    basename="silver-stock",
+    basename="api_silver-stock",
 )
 router.register(
     r"crisisdb/total-populations",
     TotalPopulationViewSet,
-    basename="total-population",
+    basename="api_total-population",
 )
 router.register(
     r"crisisdb/gdp-per-capitas",
     GDPPerCapitaViewSet,
-    basename="gdp-per-capita",
+    basename="api_gdp-per-capita",
 )
 router.register(
     r"crisisdb/drought-events",
     DroughtEventViewSet,
-    basename="drought-event",
+    basename="api_drought-event",
 )
 router.register(
     r"crisisdb/locust-events",
     LocustEventViewSet,
-    basename="locust-event",
+    basename="api_locust-event",
 )
 router.register(
     r"crisisdb/socioeconomic-turmoil-events",
     SocioeconomicTurmoilEventViewSet,
-    basename="socioeconomic-turmoil-event",
+    basename="api_socioeconomic-turmoil-event",
 )
 router.register(
     r"crisisdb/crop-failure-events",
     CropFailureEventViewSet,
-    basename="crop-failure-event",
+    basename="api_crop-failure-event",
 )
 router.register(
     r"crisisdb/famine-events",
     FamineEventViewSet,
-    basename="famine-event",
+    basename="api_famine-event",
 )
 router.register(
     r"crisisdb/disease-outbreaks",
     DiseaseOutbreakViewSet,
-    basename="disease-outbreak",
+    basename="api_disease-outbreak",
 )
 
 
@@ -296,118 +296,118 @@ from .views.general import (
 router.register(
     r"general/polity-research-assistants",
     PolityResearchAssistantViewSet,
-    basename="polity-research-assistant",
+    basename="api_polity-research-assistant",
 )
 router.register(
     r"general/polity-original-names",
     PolityOriginalNameViewSet,
-    basename="polity-original-name",
+    basename="api_polity-original-name",
 )
 router.register(
     r"general/polity-alternative-names",
     PolityAlternativeNameViewSet,
-    basename="polity-alternative-name",
+    basename="api_polity-alternative-name",
 )
 router.register(
-    r"general/polity-durations", PolityDurationViewSet, basename="polity-duration"
+    r"general/polity-durations", PolityDurationViewSet, basename="api_polity-duration"
 )
 router.register(
-    r"general/polity-peak-years", PolityPeakYearsViewSet, basename="polity-peak-years"
+    r"general/polity-peak-years", PolityPeakYearsViewSet, basename="api_polity-peak-years"
 )
 router.register(
     r"general/polity-degree-of-centralizations",
     PolityDegreeOfCentralizationViewSet,
-    basename="polity-degree-of-centralization",
+    basename="api_polity-degree-of-centralization",
 )
 router.register(
     r"general/polity-suprapolities",
     PolitySuprapolityRelationsViewSet,
-    basename="polity-suprapolity",
+    basename="api_polity-suprapolity",
 )
 router.register(
     r"general/polity-utm-timezones",
     PolityUTMZoneViewSet,
-    basename="polity-utm-timezone",
+    basename="api_polity-utm-timezone",
 )
 router.register(
-    r"general/polity-capitals", PolityCapitalViewSet, basename="polity-capital"
+    r"general/polity-capitals", PolityCapitalViewSet, basename="api_polity-capital"
 )
 router.register(
-    r"general/polity-languages", PolityLanguageViewSet, basename="polity-language"
+    r"general/polity-languages", PolityLanguageViewSet, basename="api_polity-language"
 )
 router.register(
     r"general/polity-linguistic-families",
     PolityLinguisticFamilyViewSet,
-    basename="polity-linguistic-family",
+    basename="api_polity-linguistic-family",
 )
 router.register(
     r"general/polity-language-genuses",
     PolityLanguageGenusViewSet,
-    basename="polity-language-genus",
+    basename="api_polity-language-genus",
 )
 router.register(
     r"general/polity-religion-genuses",
     PolityReligionGenusViewSet,
-    basename="polity-religion-genus",
+    basename="api_polity-religion-genus",
 )
 router.register(
     r"general/polity-religion-families",
     PolityReligionFamilyViewSet,
-    basename="polity-religion-family",
+    basename="api_polity-religion-family",
 )
 router.register(
-    r"general/polity-religions", PolityReligionViewSet, basename="polity-religion"
+    r"general/polity-religions", PolityReligionViewSet, basename="api_polity-religion"
 )
 router.register(
     r"general/polity-relationship-to-preceding-entities",
     PolityRelationshipToPrecedingEntityViewSet,
-    basename="polity-relationship-to-preceding-entity",
+    basename="api_polity-relationship-to-preceding-entity",
 )
 router.register(
     r"general/polity-preceding-entities",
     PolityPrecedingEntityViewSet,
-    basename="polity-preceding-entity",
+    basename="api_polity-preceding-entity",
 )
 router.register(
     r"general/polity-succeeding-entities",
     PolitySucceedingEntityViewSet,
-    basename="polity-succeeding-entity",
+    basename="api_polity-succeeding-entity",
 )
 router.register(
     r"general/polity-supracultural-entities",
     PolitySupraculturalEntityViewSet,
-    basename="polity-supracultural-entity",
+    basename="api_polity-supracultural-entity",
 )
 router.register(
     r"general/polity-scale-of-supracultural-interactions",
     PolityScaleOfSupraculturalInteractionViewSet,
-    basename="polity-scale-of-supracultural-interaction",
+    basename="api_polity-scale-of-supracultural-interaction",
 )
 router.register(
     r"general/polity-alternate-religion-genuses",
     PolityAlternateReligionGenusViewSet,
-    basename="polity-alternate-religion-genus",
+    basename="api_polity-alternate-religion-genus",
 )
 router.register(
     r"general/polity-alternate-religion-families",
     PolityAlternateReligionFamilyViewSet,
-    basename="polity-alternate-religion-family",
+    basename="api_polity-alternate-religion-family",
 )
 router.register(
     r"general/polity-alternate-religions",
     PolityAlternateReligionViewSet,
-    basename="polity-alternate-religion",
+    basename="api_polity-alternate-religion",
 )
 router.register(
-    r"general/polity-experts", PolityExpertViewSet, basename="polity-expert"
+    r"general/polity-experts", PolityExpertViewSet, basename="api_polity-expert"
 )
 router.register(
-    r"general/polity-editors", PolityEditorViewSet, basename="polity-editor"
+    r"general/polity-editors", PolityEditorViewSet, basename="api_polity-editor"
 )
 router.register(
     r"general/polity-religious-traditions",
     PolityReligiousTraditionViewSet,
-    basename="polity-religious-tradition",
+    basename="api_polity-religious-tradition",
 )
 
 
@@ -440,105 +440,105 @@ from .views.rt import (
 router.register(
     r"rt/widespread-religions",
     WidespreadReligionViewSet,
-    basename="widespread-religion",
+    basename="api_widespread-religion",
 )
 router.register(
     r"rt/official-religions",
     OfficialReligionViewSet,
-    basename="official-religion",
+    basename="api_official-religion",
 )
 router.register(
-    r"rt/elites-religions", ElitesReligionViewSet, basename="elites-religion"
+    r"rt/elites-religions", ElitesReligionViewSet, basename="api_elites-religion"
 )
 router.register(
     r"rt/theological-syncretism-of-different-religions",
     TheoSyncDifRelViewSet,
-    basename="theological-syncretism-of-different-religions",
+    basename="api_theological-syncretism-of-different-religions",
 )
 router.register(
     r"rt/syncretism-of-religious-practices-at-the-level-of-individual-believers",
     SyncRelPraIndBeliViewSet,
-    basename="syncretism-of-religious-practices-at-the-level-of-individual-believers",
+    basename="api_syncretism-of-religious-practices-at-the-level-of-individual-believers",
 )
 router.register(
     r"rt/religious-fragmentations",
     ReligiousFragmentationViewSet,
-    basename="religious-fragmentation",
+    basename="api_religious-fragmentation",
 )
 router.register(
     r"rt/frequency-of-governmental-violence-against-religious-groups",
     GovVioFreqRelGrpViewSet,
-    basename="frequency-of-governmental-violence-against-religious-groups",
+    basename="api_frequency-of-governmental-violence-against-religious-groups",
 )
 router.register(
     r"rt/government-restrictions-on-public-worships",
     GovResPubWorViewSet,
-    basename="government-restrictions-on-public-worships",
+    basename="api_government-restrictions-on-public-worships",
 )
 router.register(
     r"rt/government-restrictions-on-public-proselytizings",
     GovResPubProsViewSet,
-    basename="government-restrictions-on-public-proselytizings",
+    basename="api_government-restrictions-on-public-proselytizings",
 )
 router.register(
     r"rt/government-restrictions-on-conversions",
     GovResConvViewSet,
-    basename="government-restrictions-on-conversions",
+    basename="api_government-restrictions-on-conversions",
 )
 router.register(
     r"rt/government-pressure-to-converts",
     GovPressConvViewSet,
-    basename="government-pressure-to-converts",
+    basename="api_government-pressure-to-converts",
 )
 router.register(
     r"rt/government-restrictions-on-property-ownership-for-adherents-of-and-religious-groups",
     GovResPropOwnForRelGrpViewSet,
-    basename="government-restrictions-on-property-ownership-for-adherents-of-and-religious-groups",
+    basename="api_government-restrictions-on-property-ownership-for-adherents-of-and-religious-groups",
 )
 router.register(
     r"rt/taxes-based-on-religious-adherence-or-on-religious-activities-and-institutions",
     TaxRelAdhActInsViewSet,
-    basename="taxes-based-on-religious-adherence-or-on-religious-activities-and-institutions",
+    basename="api_taxes-based-on-religious-adherence-or-on-religious-activities-and-institutions",
 )
 router.register(
     r"rt/governmental-obligations-for-religious-groups-to-apply-for-official-recognitions",
     GovOblRelGrpOfcRecoViewSet,
-    basename="governmental-obligations-for-religious-groups-to-apply-for-official-recognitions",
+    basename="api_governmental-obligations-for-religious-groups-to-apply-for-official-recognitions",
 )
 router.register(
     r"rt/government-restrictions-on-construction-of-religious-buildings",
     GovResConsRelBuilViewSet,
-    basename="government-restrictions-on-construction-of-religious-buildings",
+    basename="api_government-restrictions-on-construction-of-religious-buildings",
 )
 router.register(
     r"rt/government-restrictions-on-religious-educations",
     GovResRelEduViewSet,
-    basename="government-restrictions-on-religious-educations",
+    basename="api_government-restrictions-on-religious-educations",
 )
 router.register(
     r"rt/government-restrictions-on-circulation-of-religious-literatures",
     GovResCirRelLitViewSet,
-    basename="government-restrictions-on-circulation-of-religious-literatures",
+    basename="api_government-restrictions-on-circulation-of-religious-literatures",
 )
 router.register(
     r"rt/government-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
     GovDisRelGrpOccFunViewSet,
-    basename="government-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
+    basename="api_government-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
 )
 router.register(
     r"rt/frequency-of-societal-violence-against-religious-groups",
     SocVioFreqRelGrpViewSet,
-    basename="frequency-of-societal-violence-against-religious-groups",
+    basename="api_frequency-of-societal-violence-against-religious-groups",
 )
 router.register(
     r"rt/societal-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
     SocDisRelGrpOccFunViewSet,
-    basename="societal-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
+    basename="api_societal-discrimination-against-religious-groups-taking-up-certain-occupations-or-functions",
 )
 router.register(
     r"rt/societal-pressure-to-convert-or-against-conversions",
     GovPressConvForAgaViewSet,
-    basename="societal-pressure-to-convert-or-against-conversions",
+    basename="api_societal-pressure-to-convert-or-against-conversions",
 )
 
 
@@ -626,282 +626,282 @@ from .views.sc import (
 )
 
 router.register(
-    r"sc/research-assistants", RAViewSet, basename="research-assistant"
+    r"sc/research-assistants", RAViewSet, basename="api_research-assistant"
 )
 router.register(
-    r"sc/polity-territories", PolityTerritoryViewSet, basename="polity-territory"
+    r"sc/polity-territories", PolityTerritoryViewSet, basename="api_polity-territory"
 )
 router.register(
     r"sc/polity-populations",
     PolityPopulationViewSet,
-    basename="polity-population",
+    basename="api_polity-population",
 )
 router.register(
     r"sc/population-of-the-largest-settlements",
     PopulationOfTheLargestSettlementViewSet,
-    basename="population-of-the-largest-settlement",
+    basename="api_population-of-the-largest-settlement",
 )
 router.register(
     r"sc/settlement-hierarchies",
     SettlementHierarchyViewSet,
-    basename="settlement-hierarchy",
+    basename="api_settlement-hierarchy",
 )
 router.register(
     r"sc/administrative-levels",
     AdministrativeLevelViewSet,
-    basename="administrative-level",
+    basename="api_administrative-level",
 )
 router.register(
-    r"sc/religious-levels", ReligiousLevelViewSet, basename="religious-level"
+    r"sc/religious-levels", ReligiousLevelViewSet, basename="api_religious-level"
 )
 router.register(
-    r"sc/military-levels", MilitaryLevelViewSet, basename="military-level"
+    r"sc/military-levels", MilitaryLevelViewSet, basename="api_military-level"
 )
 router.register(
     r"sc/professional-military-officers",
     ProfessionalMilitaryOfficerViewSet,
-    basename="professional-military-officer",
+    basename="api_professional-military-officer",
 )
 router.register(
     r"sc/professional-soldiers",
     ProfessionalSoldierViewSet,
-    basename="professional-soldier",
+    basename="api_professional-soldier",
 )
 router.register(
     r"sc/professional-priesthoods",
     ProfessionalPriesthoodViewSet,
-    basename="professional-priesthood",
+    basename="api_professional-priesthood",
 )
 router.register(
     r"sc/full-time-bureaucrats",
     FullTimeBureaucratViewSet,
-    basename="full-time-bureaucrat",
+    basename="api_full-time-bureaucrat",
 )
 router.register(
     r"sc/examination-systems",
     ExaminationSystemViewSet,
-    basename="examination-system",
+    basename="api_examination-system",
 )
 router.register(
-    r"sc/merit-promotions", MeritPromotionViewSet, basename="merit-promotion"
+    r"sc/merit-promotions", MeritPromotionViewSet, basename="api_merit-promotion"
 )
 router.register(
     r"sc/specialized-government-buildings",
     SpecializedGovernmentBuildingViewSet,
-    basename="specialized-government-building",
+    basename="api_specialized-government-building",
 )
 router.register(
-    r"sc/formal-legal-codes", FormalLegalCodeViewSet, basename="formal-legal-code"
+    r"sc/formal-legal-codes", FormalLegalCodeViewSet, basename="api_formal-legal-code"
 )
-router.register(r"sc/judges", JudgeViewSet, basename="judge")
-router.register(r"sc/courts", CourtViewSet, basename="court")
+router.register(r"sc/judges", JudgeViewSet, basename="api_judge")
+router.register(r"sc/courts", CourtViewSet, basename="api_court")
 router.register(
     r"sc/professional-lawyers",
     ProfessionalLawyerViewSet,
-    basename="professional-lawyer",
+    basename="api_professional-lawyer",
 )
 router.register(
     r"sc/irrigation-systems",
     IrrigationSystemViewSet,
-    basename="irrigation-system",
+    basename="api_irrigation-system",
 )
 router.register(
     r"sc/drinking-water-supplies",
     DrinkingWaterSupplySystemViewSet,
-    basename="drinking-water-supply-system",
+    basename="api_drinking-water-supply-system",
 )
-router.register(r"sc/markets", MarketViewSet, basename="market")
+router.register(r"sc/markets", MarketViewSet, basename="api_market")
 router.register(
-    r"sc/food-storage-sites", FoodStorageSiteViewSet, basename="food-storage-site"
+    r"sc/food-storage-sites", FoodStorageSiteViewSet, basename="api_food-storage-site"
 )
-router.register(r"sc/roads", RoadViewSet, basename="road")
-router.register(r"sc/bridges", BridgeViewSet, basename="bridge")
-router.register(r"sc/canals", CanalViewSet, basename="canal")
-router.register(r"sc/ports", PortViewSet, basename="port")
+router.register(r"sc/roads", RoadViewSet, basename="api_road")
+router.register(r"sc/bridges", BridgeViewSet, basename="api_bridge")
+router.register(r"sc/canals", CanalViewSet, basename="api_canal")
+router.register(r"sc/ports", PortViewSet, basename="api_port")
 router.register(
-    r"sc/mines-or-quarries", MinesOrQuarryViewSet, basename="mines-or-quarry"
+    r"sc/mines-or-quarries", MinesOrQuarryViewSet, basename="api_mines-or-quarry"
 )
 router.register(
-    r"sc/mnemonic-devices", MnemonicDeviceViewSet, basename="mnemonic-device"
+    r"sc/mnemonic-devices", MnemonicDeviceViewSet, basename="api_mnemonic-device"
 )
 router.register(
     r"sc/nonwritten-records",
     NonwrittenRecordViewSet,
-    basename="nonwritten-record",
+    basename="api_nonwritten-record",
 )
 router.register(
-    r"sc/written-records", WrittenRecordViewSet, basename="written-record"
+    r"sc/written-records", WrittenRecordViewSet, basename="api_written-record"
 )
-router.register(r"sc/scripts", ScriptViewSet, basename="script")
+router.register(r"sc/scripts", ScriptViewSet, basename="api_script")
 router.register(
     r"sc/non-phonetic-writings",
     NonPhoneticWritingViewSet,
-    basename="non-phonetic-writing",
+    basename="api_non-phonetic-writing",
 )
 router.register(
     r"sc/phonetic-alphabetic-writings",
     PhoneticAlphabeticWritingViewSet,
-    basename="phonetic-alphabetic-writing",
+    basename="api_phonetic-alphabetic-writing",
 )
 router.register(
     r"sc/lists-tables-and-classifications",
     ListsTablesAndClassificationViewSet,
-    basename="lists-tables-and-classifications",
+    basename="api_lists-tables-and-classifications",
 )
-router.register(r"sc/calendars", CalendarViewSet, basename="calendar")
-router.register(r"sc/sacred-texts", SacredTextViewSet, basename="sacred-text")
+router.register(r"sc/calendars", CalendarViewSet, basename="api_calendar")
+router.register(r"sc/sacred-texts", SacredTextViewSet, basename="api_sacred-text")
 router.register(
     r"sc/religious-literatures",
     ReligiousLiteratureViewSet,
-    basename="religious-literature",
+    basename="api_religious-literature",
 )
 router.register(
     r"sc/practical-literatures",
     PracticalLiteratureViewSet,
-    basename="practical-literature",
+    basename="api_practical-literature",
 )
-router.register(r"sc/histories", HistoryViewSet, basename="history")
-router.register(r"sc/philosophies", PhilosophyViewSet, basename="philosophy")
+router.register(r"sc/histories", HistoryViewSet, basename="api_history")
+router.register(r"sc/philosophies", PhilosophyViewSet, basename="api_philosophy")
 router.register(
     r"sc/scientific-literatures",
     ScientificLiteratureViewSet,
-    basename="scientific-literature",
+    basename="api_scientific-literature",
 )
-router.register(r"sc/fictions", FictionViewSet, basename="fiction")
-router.register(r"sc/articles", ArticleViewSet, basename="article")
-router.register(r"sc/tokens", TokenViewSet, basename="token")
+router.register(r"sc/fictions", FictionViewSet, basename="api_fiction")
+router.register(r"sc/articles", ArticleViewSet, basename="api_article")
+router.register(r"sc/tokens", TokenViewSet, basename="api_token")
 router.register(
-    r"sc/precious-metals", PreciousMetalViewSet, basename="precious-metal"
+    r"sc/precious-metals", PreciousMetalViewSet, basename="api_precious-metal"
 )
-router.register(r"sc/foreign-coins", ForeignCoinViewSet, basename="foreign-coin")
+router.register(r"sc/foreign-coins", ForeignCoinViewSet, basename="api_foreign-coin")
 router.register(
-    r"sc/indigenous-coins", IndigenousCoinViewSet, basename="indigenous-coin"
+    r"sc/indigenous-coins", IndigenousCoinViewSet, basename="api_indigenous-coin"
 )
 router.register(
-    r"sc/paper-currencies", PaperCurrencyViewSet, basename="paper-currency"
+    r"sc/paper-currencies", PaperCurrencyViewSet, basename="api_paper-currency"
 )
-router.register(r"sc/couriers", CourierViewSet, basename="courier")
+router.register(r"sc/couriers", CourierViewSet, basename="api_courier")
 router.register(
-    r"sc/postal-stations", PostalStationViewSet, basename="postal-station"
+    r"sc/postal-stations", PostalStationViewSet, basename="api_postal-station"
 )
 router.register(
     r"sc/general-postal-services",
     GeneralPostalServiceViewSet,
-    basename="general-postal-service",
+    basename="api_general-postal-service",
 )
 router.register(
     r"sc/communal-buildings",
     CommunalBuildingViewSet,
-    basename="communal-building",
+    basename="api_communal-building",
 )
 router.register(
     r"sc/utilitarian-public-buildings",
     UtilitarianPublicBuildingViewSet,
-    basename="utilitarian-public-building",
+    basename="api_utilitarian-public-building",
 )
 router.register(
     r"sc/symbolic-buildings",
     SymbolicBuildingViewSet,
-    basename="symbolic-building",
+    basename="api_symbolic-building",
 )
 router.register(
     r"sc/entertainment-buildings",
     EntertainmentBuildingViewSet,
-    basename="entertainment-building",
+    basename="api_entertainment-building",
 )
 router.register(
     r"sc/knowledge-or-information-buildings",
     KnowledgeOrInformationBuildingViewSet,
-    basename="knowledge-or-information-building",
+    basename="api_knowledge-or-information-building",
 )
 router.register(
     r"sc/other-utilitarian-public-buildings",
     OtherUtilitarianPublicBuildingViewSet,
-    basename="other-utilitarian-public-building",
+    basename="api_other-utilitarian-public-building",
 )
 router.register(
     r"sc/special-purpose-sites",
     SpecialPurposeSiteViewSet,
-    basename="special-purpose-site",
+    basename="api_special-purpose-site",
 )
 router.register(
-    r"sc/ceremonial-sites", CeremonialSiteViewSet, basename="ceremonial-site"
+    r"sc/ceremonial-sites", CeremonialSiteViewSet, basename="api_ceremonial-site"
 )
-router.register(r"sc/burial-sites", BurialSiteViewSet, basename="burial-site")
+router.register(r"sc/burial-sites", BurialSiteViewSet, basename="api_burial-site")
 router.register(
-    r"sc/trading-emporia", TradingEmporiaViewSet, basename="trading-emporium"
+    r"sc/trading-emporia", TradingEmporiaViewSet, basename="api_trading-emporium"
 )
-router.register(r"sc/enclosures", EnclosureViewSet, basename="enclosure")
+router.register(r"sc/enclosures", EnclosureViewSet, basename="api_enclosure")
 router.register(
     r"sc/length-measurement-systems",
     LengthMeasurementSystemViewSet,
-    basename="length-measurement-system",
+    basename="api_length-measurement-system",
 )
 router.register(
     r"sc/area-measurement-systems",
     AreaMeasurementSystemViewSet,
-    basename="area-measurement-system",
+    basename="api_area-measurement-system",
 )
 router.register(
     r"sc/volume-measurement-systems",
     VolumeMeasurementSystemViewSet,
-    basename="volume-measurement-system",
+    basename="api_volume-measurement-system",
 )
 router.register(
     r"sc/weight-measurement-systems",
     WeightMeasurementSystemViewSet,
-    basename="weight-measurement-system",
+    basename="api_weight-measurement-system",
 )
 router.register(
     r"sc/time-measurement-systems",
     TimeMeasurementSystemViewSet,
-    basename="time-measurement-system",
+    basename="api_time-measurement-system",
 )
 router.register(
     r"sc/geometrical-measurement-systems",
     GeometricalMeasurementSystemViewSet,
-    basename="geometrical-measurement-system",
+    basename="api_geometrical-measurement-system",
 )
 router.register(
     r"sc/other-measurement-systems",
     OtherMeasurementSystemViewSet,
-    basename="other-measurement-system",
+    basename="api_other-measurement-system",
 )
 router.register(
     r"sc/debt-and-credit-structures",
     DebtAndCreditStructureViewSet,
-    basename="debt-and-credit-structure",
+    basename="api_debt-and-credit-structure",
 )
 router.register(
-    r"sc/stores-of-wealth", StoreOfWealthViewSet, basename="store-of-wealth"
+    r"sc/stores-of-wealth", StoreOfWealthViewSet, basename="api_store-of-wealth"
 )
 router.register(
-    r"sc/sources-of-support", SourceOfSupportViewSet, basename="source-of-support"
+    r"sc/sources-of-support", SourceOfSupportViewSet, basename="api_source-of-support"
 )
 router.register(
     r"sc/occupational-complexities",
     OccupationalComplexityViewSet,
-    basename="occupational-complexity",
+    basename="api_occupational-complexity",
 )
 router.register(
     r"sc/special-purpose-houses",
     SpecialPurposeHouseViewSet,
-    basename="special-purpose-house",
+    basename="api_special-purpose-house",
 )
 router.register(
     r"sc/other-special-purpose-sites",
     OtherSpecialPurposeSiteViewSet,
-    basename="other-special-purpose-site",
+    basename="api_other-special-purpose-site",
 )
 router.register(
     r"sc/largest-communication-distances",
     LargestCommunicationDistanceViewSet,
-    basename="largest-communication-distance",
+    basename="api_largest-communication-distance",
 )
 router.register(
     r"sc/fastest-individual-communications",
     FastestIndividualCommunicationViewSet,
-    basename="fastest-individual-communication",
+    basename="api_fastest-individual-communication",
 )
 
 
@@ -959,113 +959,113 @@ from .views.wf import (
     ChainmailViewSet,
 )
 
-router.register(r"wf/long-walls", LongWallViewSet, basename="long-wall")
-router.register(r"wf/coppers", CopperViewSet, basename="copper")
-router.register(r"wf/bronzes", BronzeViewSet, basename="bronze")
-router.register(r"wf/irons", IronViewSet, basename="iron")
-router.register(r"wf/steels", SteelViewSet, basename="steel")
-router.register(r"wf/javelins", JavelinViewSet, basename="javelin")
-router.register(r"wf/atlatls", AtlatlViewSet, basename="atlatl")
-router.register(r"wf/slings", SlingViewSet, basename="sling")
-router.register(r"wf/self-bows", SelfBowViewSet, basename="self-bow")
+router.register(r"wf/long-walls", LongWallViewSet, basename="api_long-wall")
+router.register(r"wf/coppers", CopperViewSet, basename="api_copper")
+router.register(r"wf/bronzes", BronzeViewSet, basename="api_bronze")
+router.register(r"wf/irons", IronViewSet, basename="api_iron")
+router.register(r"wf/steels", SteelViewSet, basename="api_steel")
+router.register(r"wf/javelins", JavelinViewSet, basename="api_javelin")
+router.register(r"wf/atlatls", AtlatlViewSet, basename="api_atlatl")
+router.register(r"wf/slings", SlingViewSet, basename="api_sling")
+router.register(r"wf/self-bows", SelfBowViewSet, basename="api_self-bow")
 router.register(
-    r"wf/composite-bows", CompositeBowViewSet, basename="composite-bow"
+    r"wf/composite-bows", CompositeBowViewSet, basename="api_composite-bow"
 )
-router.register(r"wf/crossbows", CrossbowViewSet, basename="crossbow")
+router.register(r"wf/crossbows", CrossbowViewSet, basename="api_crossbow")
 router.register(
     r"wf/tension-siege-engines",
     TensionSiegeEngineViewSet,
-    basename="tension-siege-engine",
+    basename="api_tension-siege-engine",
 )
 router.register(
     r"wf/sling-siege-engines",
     SlingSiegeEngineViewSet,
-    basename="sling-siege-engine",
+    basename="api_sling-siege-engine",
 )
 router.register(
     r"wf/gunpowder-siege-artilleries",
     GunpowderSiegeArtilleryViewSet,
-    basename="gunpowder-siege-artillery",
+    basename="api_gunpowder-siege-artillery",
 )
 router.register(
-    r"wf/handheld-firearms", HandheldFirearmViewSet, basename="handheld-firearm"
+    r"wf/handheld-firearms", HandheldFirearmViewSet, basename="api_handheld-firearm"
 )
-router.register(r"wf/war-clubs", WarClubViewSet, basename="war-club")
-router.register(r"wf/battle-axes", BattleAxeViewSet, basename="battle-axe")
-router.register(r"wf/daggers", DaggerViewSet, basename="dagger")
-router.register(r"wf/swords", SwordViewSet, basename="sword")
-router.register(r"wf/spears", SpearViewSet, basename="spear")
-router.register(r"wf/polearms", PolearmViewSet, basename="polearm")
-router.register(r"wf/dogs", DogViewSet, basename="dog")
-router.register(r"wf/donkeys", DonkeyViewSet, basename="donkey")
-router.register(r"wf/horses", HorseViewSet, basename="horse")
-router.register(r"wf/camels", CamelViewSet, basename="camel")
-router.register(r"wf/elephants", ElephantViewSet, basename="elephant")
-router.register(r"wf/wood-bark-etc", WoodBarkEtcViewSet, basename="wood-bark-etc")
-router.register(r"wf/leathers", LeatherClothViewSet, basename="leather-cloth")
-router.register(r"wf/shields", ShieldViewSet, basename="shield")
-router.register(r"wf/helmets", HelmetViewSet, basename="helmet")
-router.register(r"wf/breastplates", BreastplateViewSet, basename="breastplate")
+router.register(r"wf/war-clubs", WarClubViewSet, basename="api_war-club")
+router.register(r"wf/battle-axes", BattleAxeViewSet, basename="api_battle-axe")
+router.register(r"wf/daggers", DaggerViewSet, basename="api_dagger")
+router.register(r"wf/swords", SwordViewSet, basename="api_sword")
+router.register(r"wf/spears", SpearViewSet, basename="api_spear")
+router.register(r"wf/polearms", PolearmViewSet, basename="api_polearm")
+router.register(r"wf/dogs", DogViewSet, basename="api_dog")
+router.register(r"wf/donkeys", DonkeyViewSet, basename="api_donkey")
+router.register(r"wf/horses", HorseViewSet, basename="api_horse")
+router.register(r"wf/camels", CamelViewSet, basename="api_camel")
+router.register(r"wf/elephants", ElephantViewSet, basename="api_elephant")
+router.register(r"wf/wood-bark-etc", WoodBarkEtcViewSet, basename="api_wood-bark-etc")
+router.register(r"wf/leathers", LeatherClothViewSet, basename="api_leather-cloth")
+router.register(r"wf/shields", ShieldViewSet, basename="api_shield")
+router.register(r"wf/helmets", HelmetViewSet, basename="api_helmet")
+router.register(r"wf/breastplates", BreastplateViewSet, basename="api_breastplate")
 router.register(
-    r"wf/limb-protections", LimbProtectionViewSet, basename="limb-protection"
+    r"wf/limb-protections", LimbProtectionViewSet, basename="api_limb-protection"
 )
-router.register(r"wf/scaled-armors", ScaledArmorViewSet, basename="scaled-armor")
+router.register(r"wf/scaled-armors", ScaledArmorViewSet, basename="api_scaled-armor")
 router.register(
-    r"wf/laminar-armors", LaminarArmorViewSet, basename="laminar-armor"
+    r"wf/laminar-armors", LaminarArmorViewSet, basename="api_laminar-armor"
 )
-router.register(r"wf/plate-armors", PlateArmorViewSet, basename="plate-armor")
+router.register(r"wf/plate-armors", PlateArmorViewSet, basename="api_plate-armor")
 router.register(
     r"wf/small-vessel-canoe-etc",
     SmallVesselsCanoesEtcViewSet,
-    basename="small-vessel-canoe-etc",
+    basename="api_small-vessel-canoe-etc",
 )
 router.register(
     r"wf/merchant-ship-pressed-into-service",
     MerchantShipPressedIntoServiceViewSet,
-    basename="merchant-ship-pressed-into-service",
+    basename="api_merchant-ship-pressed-into-service",
 )
 router.register(
     r"wf/specialized-military-vessels",
     SpecializedMilitaryVesselViewSet,
-    basename="specialized-military-vessel",
+    basename="api_specialized-military-vessel",
 )
 router.register(
     r"wf/settlement-in-defensive-positions",
     SettlementInADefensivePositionViewSet,
-    basename="settlement-in-defensive-position",
+    basename="api_settlement-in-defensive-position",
 )
 router.register(
-    r"wf/wooden-palisades", WoodenPalisadeViewSet, basename="wooden-palisade"
+    r"wf/wooden-palisades", WoodenPalisadeViewSet, basename="api_wooden-palisade"
 )
 router.register(
-    r"wf/earth-ramparts", EarthRampartViewSet, basename="earth-rampart"
+    r"wf/earth-ramparts", EarthRampartViewSet, basename="api_earth-rampart"
 )
-router.register(r"wf/ditches", DitchViewSet, basename="ditch")
-router.register(r"wf/moats", MoatViewSet, basename="moat")
+router.register(r"wf/ditches", DitchViewSet, basename="api_ditch")
+router.register(r"wf/moats", MoatViewSet, basename="api_moat")
 router.register(
     r"wf/stone-walls-non-mortared",
     StoneWallsNonMortaredViewSet,
-    basename="stone-walls-non-mortared",
+    basename="api_stone-walls-non-mortared",
 )
 router.register(
     r"wf/stone-walls-mortared",
     StoneWallsMortaredViewSet,
-    basename="stone-walls-mortared",
+    basename="api_stone-walls-mortared",
 )
 router.register(
-    r"wf/fortified-camps", FortifiedCampViewSet, basename="fortified-camp"
+    r"wf/fortified-camps", FortifiedCampViewSet, basename="api_fortified-camp"
 )
 router.register(
     r"wf/complex-fortifications",
     ComplexFortificationViewSet,
-    basename="complex-fortification",
+    basename="api_complex-fortification",
 )
 router.register(
     r"wf/modern-fortifications",
     ModernFortificationViewSet,
-    basename="modern-fortification",
+    basename="api_modern-fortification",
 )
-router.register(r"wf/chainmails", ChainmailViewSet, basename="chainmail")
+router.register(r"wf/chainmails", ChainmailViewSet, basename="api_chainmail")
 
 
 # Register all the views with the router
