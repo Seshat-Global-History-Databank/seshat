@@ -15,7 +15,7 @@
       }
     
       .bg-colorful-light {
-        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.26),rgb(242, 199, 119, 0.26),rgb(151, 230, 151, 0.26));
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.22),rgb(242, 199, 119, 0.22),rgb(151, 230, 151, 0.22));
         border-radius: 10px;
         color:#782823;
       }
@@ -37,6 +37,20 @@
         transition: background-color 0.3s ease;
       }
       
+
+      .newinsert-trigger:hover {
+        color: skyblue;
+
+      }
+
+      .inner-link a {
+        color: var(--color-progressive, #36c);
+      }
+
+      a:hover {
+        text-decoration:underline;
+      }
+
       .tab a {
         text-decoration: none;
         color: #000;
@@ -109,26 +123,26 @@
         </div>
     </div>
 
-    <div style="border: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
+    <div style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
     <table class="table table-borderless align-middle">
         <thead>        
-          <tr class="bg-colorful-light h6">
+          <tr class="h6 text-secondary">
             <th style="text-align: left;" class="h6" scope="col">Variable</th>
             <th style="text-align: left;" class="h6" scope="col">Coded Value</th>
             <th style="text-align: left;" class="h6" scope="col">Polity</th>
             <th style="text-align: center;" class="h6" scope="col">Year(s)</th>
             <th class="h6" scope="col" style="text-align: left">Tag(s)</th>
-            <th class="h6" scope="col" style="text-align: left">Update</th>
+            <th class="h6" scope="col" style="text-align: center">Update</th>
           </tr>
         </thead>
         <tbody>
             {% for my_inst in my_app_models %}
-              <tr>
+              <tr class="bg-colorful-light h6">
                   <td  class="fw-bold"  style="text-align: left;">{{ my_inst.my_var_name }}</td>
                   <td  class="fw-bold"   style="text-align: left;">{{ my_inst.my_value }}</td>
 
                   <td style="text-align: left;">
-                    <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
+                    <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}" class="text-teal" >{{my_inst.my_polity}}</a></span>
                     
                     </td>
                     {% if my_inst.year_from == None %}
@@ -208,7 +222,7 @@
                     <!-- Expert Checked Tag -->
                     {% if my_inst.my_expert_reviewed %}
                         <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert (or RA): {{ my_inst.curators_list }}">
-                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert {{my_inst.my_id}}</span>
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
                         </a>
                     {% endif %}
                         
@@ -248,11 +262,13 @@
 
 
 
-    <div  style="border-bottom: 2px solid rgba(120, 40, 35, 0.311); border-left: 2px solid rgba(120, 40, 35, 0.311); border-right: 2px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
+    <div class="pt-2 pb-4" style=" border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
         <table class="table table-borderless align-middle">
             <thead>        
-              <tr style="color: #782823">
-                <th style="text-align: left;" class="h6" scope="col">Description* (Public):</th>
+              <tr>
+                <th style="text-align: left;" class="h6" scope="col">Description (Public):
+                    <small class="text-secondary float-end" >Note: Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -267,10 +283,8 @@
                 <span class="jidtext_{{ forloop.counter }}">
                     {% if forloop.counter0 == 0 %}
                         <span class="fw-bold rounded">
-                        <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:0 %}" data-counter="0"><i class="fa-regular fa-square-plus text-primary ms-1 "></i>
-                            <span class="hidden_jid_new_0" style="display:none">
-                                <span class="fw-bold text-primary"><u>&nbsp;Insert Text Here</u></span>
-                            </span>
+                        <a class="newinsert-trigger" style="color:steelblue;" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:0 %}" data-counter="0"><i class="fa-regular fa-square-plus ms-1 " title="Insert a New Subdescription Here"  ></i>
+
                         </a>
                          </span>
                          {{ subcom.comment_part_text }}
@@ -279,9 +293,9 @@
                     {{ subcom.comment_part_text }}
                     {% endif %}
                 </span>
-                <span  class="jidtextref_{{ forloop.counter }}">
+                <span class="jidtextref_{{ forloop.counter }} fs-6 inner-link" style="color:#2978ce !important;">
                     {% if subcom.display_citations_plus %}
-                        {{ subcom.display_citations_plus }}
+                     <span style="color:#2978ce !important;">  {{ subcom.display_citations_plus }} </span> 
                     {% else %}
                     <span class="text-danger">[No Refs]</span>
                     {% endif %}
@@ -289,16 +303,14 @@
                 <span>
                     <span class="ps-1">
                         {% if subcom.citations_count >= 10 %}
-                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" style="color:#ED820E"></i></a>
+                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" title="Edit this Subdescription"  style="color:lightcoral;"></i></a>
                     {% else %}
-                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" style="color:#ED820E"></i></a>
+                        <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" title="Edit this Subdescription" style="color:lightcoral;"></i></a>
                     {% endif %}
                     </span>
                     <span class="pe-1">
-                        <a class="newinsert-trigger" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-square-plus text-primary"></i>
-                            <span class="hidden_jid_new_{{ forloop.counter }}" style="display:none">
-                                <span class="fw-bold text-primary"><u>&nbsp;Insert Text Here</u></span>
-                            </span>
+                        <a class="newinsert-trigger" style="color:steelblue;" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-square-plus" title="Insert a New Subdescription Here"  ></i>
+                     
                         </a>
                     </span>
                 </span>
@@ -314,12 +326,10 @@
     </table>
 
     </div>
-    <small class="text-secondary">* Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
 
-    <h6 class="mt-3">
-        Private Comments and Discussions on This Record:
-    </h6>
-    <div  style="border: 2px solid rgba(120, 40, 35, 0.311);  border-radius: 5px; overflow: hidden;">
+
+
+    <div>
 
         {% for my_inst in my_app_models %}
             {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
@@ -329,13 +339,17 @@
 
             <table class="table table-borderless align-middle pt-5">
                 <thead>
-                    <tr class="bg-colorful-light">
-                            <th style="text-align: left;" class="col-md-8 h6" scope="col">Seshat Expert / Private Comment 
-                                <span>(Only visisble to Selected Seshat Experts/RAs)</span>
-                            </th>
-                              <th class="col-md-2 h6" scope="col" style="text-align: left"> Target Experts</th>
-                              <th class="col-md-2 h6" scope="col" style="text-align: right"> Created</th>
+                    <tr class="
+                    {% if my_inst.my_inner_private_comments_related %}
+                    text-secondary
+                    {% else %} text-secondary {% endif %} 
+                    " style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);">
+                    <th class="col-md-9 h6" scope="col" style="text-align: left">Private Comment 
 
+                                <small class="fw-normal">(Only visisble to Selected Seshat Experts/RAs)</small>
+                            </th>
+                              <th class="col-md-2 h6" scope="col" style="text-align: right"> Target Experts</th>
+         
                     </tr>
                   </thead>
                 <tbody>
@@ -344,42 +358,46 @@
 
         {% if my_inst.my_inner_private_comments_related %}
             {% for subcom in my_inst.my_inner_private_comments_related.all %}
-                <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
+                <tr class="py-1 bg-colorful-light {% if subcom.is_done %}bg-light text-secondary{% endif %}" style="border-bottom: 1px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; ">
                     <div class="row">
 
-                    <td class="col-md-8 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
-                        <span class="badge text-dark   {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span>
+                    <td class="col-md-9 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
+                        <span class="badge text-dark mb-1  {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span>
+                        <small class="text-secondary">
+                            {% if subcom.created_date %}
+                                {{ subcom.created_date|naturaltime }}
+                            {% else %}
+                            <i class="fa-solid fa-minus text-danger"></i>
+                            {% endif %}
+                        </small>
+                        <br>
+
                         <span class="roboto-regular">
                             {{ subcom.private_comment_part_text }}  
                         </span>    
                     </td>
-                    <td class="col-md-2" style="text-align: left">
+                    <td class="col-md-2 pe-2" style="text-align: right">
                         {% for an_expert in  subcom.private_comment_reader.all %}
                         <span class="badge text-dark" style="background: {% if subcom.is_done %}lightgray{% else %} {{an_expert.id|give_me_a_color}}{% endif %};">{{an_expert}}</span>
                         {% endfor %}
                     </td>
-                    <td class="col-md-2" style="text-align: right">
-                        {% if subcom.created_date %}
-                            {{ subcom.created_date|naturaltime }}
-                        {% else %}
-                        <i class="fa-solid fa-minus text-danger"></i>
-                        {% endif %}
-                    </td>
+    
                     </div>
                 </tr>
 
             {% endfor %}
         {% else %}
-        <tr>
-            <td class="col-md-8 text-secondary" scope="row" style="text-align: left;">
-            No Private Comments yet. 
+        <tr class="text-secondary">
+            <td class="col-md-2" style="text-align: left">
+                No Private Comments yet. 
+                </td>
+            <td class="col-md-8" scope="row" style="text-align: left;">
+           - 
             </td>
             <td class="col-md-2" style="text-align: left">
                 -
             </td>
-            <td class="col-md-2" style="text-align: right">
-            -
-            </td>
+
 
         </tr>
         {% endif %}
@@ -389,9 +407,9 @@
             style="display:block;overflow: hidden;" 
             href="{% url 'create_private_subcomment_new' app_name=my_inst.my_app_name model_name=my_inst.my_var_name_underlined instance_id=my_inst.my_id %}">
 
-                <span class="badge badge-jid badge-jid text-dark fs-6 p-2 bg-colorful" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c; border:1px solid #782823">
+                <span class="badge badge-jid badge-jid text-dark fs-6 p-2 bg-colorful" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c; border:1px solid #782823"> &nbsp;
                     <i class="fa-regular fa-comment"></i>
-                    <span> &nbsp;&nbsp;Add your Private Comment (NEW)
+                    <span> &nbsp;&nbsp; Add a Private Comment &nbsp;&nbsp;
                     </span>
                 </span>
             </a>
