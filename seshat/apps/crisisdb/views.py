@@ -1317,7 +1317,7 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
     Upon calling this function, I want to create a subcomment and assign it to a comment and then assign the comment to the model_name with id=hs_instance_id.
     """
     # Create a new comment instance and save it to the database
-    comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+    comment_instance = SeshatComment.objects.create(text='')
     user_logged_in = request.user
     
     # Get the Seshat_Expert instance associated with the user

@@ -1103,7 +1103,7 @@ class SeshatCommon(models.Model):
     drb_reviewed = models.BooleanField(null=True, blank=True, default=False)
     curator = models.ManyToManyField(Seshat_Expert,  related_name="%(app_label)s_%(class)s_related",
                                related_query_name="%(app_label)s_%(class)ss", blank=True,)
-    comment = models.ForeignKey(SeshatComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
 
     class Meta:

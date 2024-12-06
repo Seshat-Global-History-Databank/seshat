@@ -7927,6 +7927,16 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
 
             new_object = my_form.save()
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                # if the object has some description already
+                if new_object.comment:
+                    return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
+                else:
+                    return redirect(f"{x_name}-detail", pk=new_object.id) 
+                 # Replace 'success_url_name' with your success URL
 
 
             # Add the current user as a curator if they are an instance of Seshat_Expert
@@ -7939,7 +7949,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             # if seshat_expert_instance:
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
-            return redirect(f"{x_name}-detail", pk=my_object.id)
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
         
         # Prepare the context for invalid form
         context = {
