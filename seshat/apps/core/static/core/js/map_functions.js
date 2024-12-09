@@ -693,6 +693,6 @@ function toggleControlPanel() {
     } else {
         controlPanelContent.style.display = 'none';
         toggleButton.style.height = '100%';
-        toggleButton.innerHTML = '➡️';
+        toggleButton.innerHTML = '▼';
     }
 }
