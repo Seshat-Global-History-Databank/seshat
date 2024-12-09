@@ -350,19 +350,19 @@
             border-width: 8px;
         }
     }
-    .expandable-button {
+    .friendly-button {
         width: 40px;
         background-color: #fff;
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         transition: transform 0.3s ease;
     }
 
-    .expandable-button.collapsed {
+    .friendly-button.collapsed {
         transform: rotate(180deg);
     }
 
@@ -374,7 +374,7 @@
             {% block content %}
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;" id="controlPanel">
-                    <button style="height: 100%" class="expandable-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">▼</button>
+                    <button style="height: 100%" class="friendly-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">▼</button>
                     <div id="controlPanelContent" style="display: none;">
                         <fieldset>
                             <div id="loadingIndicator">
@@ -442,11 +442,11 @@
                                 onchange="playRateValue()">
                             <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
                             <div style="text-align: center;">
-                                <button id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                                <button id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                                <button id="playButton" type="button" onclick="playBack()">▶️</button>
-                                <button id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                                <button id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
+                                <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                                <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                                <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button>
+                                <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                                <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
                             </div>
                         </fieldset>
                         <div id="baseMapControls"
