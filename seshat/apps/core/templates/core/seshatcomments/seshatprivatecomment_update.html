@@ -203,7 +203,7 @@
                     
                     <!-- Expert Checked Tag -->
                     {% if my_inst.my_expert_reviewed %}
-                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert (or RA): {{ my_inst.curators_list }}">
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.curators_list }}">
                             <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert {{my_inst.my_id}}</span>
                         </a>
                     {% endif %}
@@ -252,7 +252,7 @@
             <thead>
                 <tr class="text-dark" >
                         <th class="col-md-9" scope="col" style="text-align: left">Private Comment 
-                            <span class="text-secondary">(Only visisble to Selected Seshat Experts/RAs)</span>
+                            <span class="text-secondary">(Only visible to Selected Seshat Experts/RAs)</span>
                         </th>
                           <th class="col-md-2" scope="col" style="text-align: right"> Target Experts</th>
 

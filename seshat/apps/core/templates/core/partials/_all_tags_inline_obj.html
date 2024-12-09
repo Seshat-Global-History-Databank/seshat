@@ -26,7 +26,7 @@ The value is backed up by sufficient evidence.
         {% elif  obj.tag == "UND" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ obj.get_tag_display }}</span>
         {% else  %}
-            <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ obj.get_tag_display }}</span>
+            <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#164e16;">{{ obj.get_tag_display }}</span>
         {% endif %}
         </a>
     
@@ -47,9 +47,9 @@ The value is backed up by sufficient evidence.
     {% endif %}
     
     <!-- Expert Checked Tag -->
-    {% if obj.expert_reviewed %}
-        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="By: {{ obj.curators_list }}">
-            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+    {% if obj.curators_list %}
+        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Reviewed By: {{ obj.curators_list }}">
+            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#12457b;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
         </a>
     {% endif %}
         
