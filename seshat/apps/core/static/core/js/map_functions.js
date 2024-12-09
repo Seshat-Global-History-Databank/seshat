@@ -684,17 +684,17 @@ function toggleTips() {
     }
 }
 
-function toggleControlPanel() {
-    var controlPanelContent = document.getElementById('controlPanelContent');
+function toggleSettings() {
+    var settings = document.getElementById('settings');
     var miniControlPanel = document.getElementById('miniControlPanel');
-    var toggleButton = document.getElementById('toggleControlPanelButton');
-    if (controlPanelContent.style.display === 'none') {
-        controlPanelContent.style.display = 'block';
+    var toggleButton = document.getElementById('toggleSettingsButton');
+    if (settings.style.display === 'none') {
+        settings.style.display = 'block';
         miniControlPanel.style.display = 'none';
         toggleButton.style.height = '10%';
         toggleButton.innerHTML = '▼';
     } else {
-        controlPanelContent.style.display = 'none';
+        settings.style.display = 'none';
         miniControlPanel.style.display = 'block';
         toggleButton.style.height = '10%';
         toggleButton.innerHTML = '⚙️';

@@ -402,7 +402,7 @@
             {% block content %}
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div id="worldMapControlPanel">
-                    <button style="height: 10%" class="friendly-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">⚙️</button><br><br>
+                    <button style="height: 10%" class="friendly-button" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
                     <div id="miniControlPanel">
                         <button class="friendly-button" id="startButtonMini" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
                         <button class="friendly-button" id="minusButtonMini" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
@@ -410,7 +410,7 @@
                         <button class="friendly-button" id="plusButtonMini" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
                         <button class="friendly-button" id="endButtonMini" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                     </div>
-                    <div id="controlPanelContent" style="display: none;">
+                    <div id="settings" style="display: none;">
                         <fieldset>
                             <div id="loadingIndicator">
                                 <div class="spinner"></div>
