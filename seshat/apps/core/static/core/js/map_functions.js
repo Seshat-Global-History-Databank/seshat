@@ -354,7 +354,6 @@ function updateLegend() {
         // Add a legend for highlighted polities
         if (addedPolities.length > 0) {
             var legendTitle = document.createElement('h3');
-            legendTitle.textContent = 'Selected Polities';
             legendDiv.appendChild(legendTitle);
             // Create a container for polity items
             var polityContainer = document.createElement('div');
