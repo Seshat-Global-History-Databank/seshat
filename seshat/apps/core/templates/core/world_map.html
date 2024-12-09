@@ -454,10 +454,10 @@
                                     ℹ️
                                 </div><br>
                                 <label for="baseMapOnly">Hide unselected</label>
-                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities()>
+                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
                                 <label for="baseMapOnly">Select all</label>
                                 <input type="checkbox" id="selectAll" name="selectAll"
-                                    onclick="plotPolities(); selectAllCheckbox()"><br>
+                                    onclick="plotPolities(); selectAllCheckbox()" checked><br>
                                 <div style="text-align: center;">
                                     <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button>
                                 </div><br>
