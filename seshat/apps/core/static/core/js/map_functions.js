@@ -691,6 +691,6 @@ function toggleControlPanel() {
         toggleButton.innerHTML = '▼';
     } else {
         controlPanelContent.style.display = 'none';
-        toggleButton.innerHTML = '▶️';
+        toggleButton.innerHTML = '➡️';
     }
 }
