@@ -675,28 +675,11 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function toggleTips() {
+function toggleSettings() {
     var dropdown = document.getElementById("tips");
     if (dropdown.style.display === "none" || dropdown.style.display === "") {
         dropdown.style.display = "block";
     } else {
         dropdown.style.display = "none";
-    }
-}
-
-function toggleSettings() {
-    var settings = document.getElementById('settings');
-    var miniControlPanel = document.getElementById('miniControlPanel');
-    var toggleButton = document.getElementById('toggleSettingsButton');
-    if (settings.style.display === 'none') {
-        settings.style.display = 'block';
-        miniControlPanel.style.display = 'none';
-        toggleButton.style.height = '10%';
-        toggleButton.innerHTML = '▼';
-    } else {
-        settings.style.display = 'none';
-        miniControlPanel.style.display = 'block';
-        toggleButton.style.height = '10%';
-        toggleButton.innerHTML = '⚙️';
     }
 }

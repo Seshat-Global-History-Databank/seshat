@@ -410,106 +410,6 @@
                         <button class="friendly-button" id="plusButtonMini" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
                         <button class="friendly-button" id="endButtonMini" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                     </div>
-                    <div id="settings" style="display: none;">
-                        <fieldset>
-                            <div id="loadingIndicator">
-                                <div class="spinner"></div>
-                            </div>
-                            <div style="display: none; text-align: center;" id="cliopatria-link">
-                                <p>
-                                    <a href="../cliopatria" target="_blank">🔹 Learn more about this dataset.</a>
-                                </p>
-                                <p>
-                                    <button class="transparent-button" onclick="toggleTips()">🔹 How to navigate this map.</button>
-                                </p>
-                            </div>
-                            <label for="chooseVariable">Variable: </label>
-                            <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();"
-                                style="width: 150px; text-overflow: ellipsis;" disabled>
-                                <option value="polity">Political boundaries</option>
-                            </select>
-                            <div class="variable-info-container">
-                                ℹ️
-                            </div>
-                            <div class="previouslySelectedVariable-container">
-                                <button id="previouslySelectedVariable" type="button"
-                                    onclick="previouslySelectedVariableButton()">🔄</button>
-                            </div><br>
-                            <fieldset id="chooseCategoricalVariableSelectionFieldset">
-                                <label for="chooseCategoricalVariableSelection"></label>
-                                <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
-                                    onchange="plotPolities()" style="width: 150px; text-overflow: ellipsis;">
-                                </select>
-                            </fieldset>
-                            <div id="variablesLoadingIndicator">
-                                <p>Loading Seshat variables...</p>
-                            </div>
-                            <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
-                                <label for="switchPolitiesComponents">Display:</label>
-                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                    <option value="polities">Full polities</option>
-                                    <option value="components">Polity components</option>
-                                </select>
-                                <div class="display-info-container">
-                                    ℹ️
-                                </div><br>
-                                <label for="baseMapOnly">Hide unselected</label>
-                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
-                                <label for="baseMapOnly">Select all</label>
-                                <input type="checkbox" id="selectAll" name="selectAll"
-                                    onclick="plotPolities(); selectAllCheckbox()" checked><br>
-                                <div style="text-align: center;">
-                                    <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button>
-                                </div><br>
-                            </fieldset>
-                            <label for="opacitySlide">Opacity:</label>
-                            <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
-                                class="slider" onchange="plotPolities()" style="width: 150px;"><br><br>
-                            <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
-                            <!-- <label for="showCapitals">Show capital cities</label>
-                            <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
-                            <label for="enterYear">Enter year:</label>
-                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;"
-                                onchange="storeYear()">
-                            <p>🗣️ <i>Hit enter to set year.</i></p>
-                            <label for="increment">Play rate (years/second):</label>
-                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;"
-                                onchange="playRateValue()">
-                            <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
-                            <div style="text-align: center;">
-                                <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                                <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                                <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button>
-                                <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                                <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
-                            </div>
-                        </fieldset>
-                        <div id="baseMapControls"
-                            style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
-                            <fieldset>
-                                <label for="baseMap">Choose base map:</label>
-                                <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
-                                    <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
-                                    <option value="cesium">Globe (Cesium)</option>
-                                    <option value="osm">Street Maps (OSM)</option>
-                                    <option value="carto">Basic unlabelled (CARTO)</option>
-                                    <option value="gadm" disabled>Clickable borders (GADM)</option>
-                                </select>
-                                <div id="baseMapCurrentLoadingIndicator">
-                                    <p>Loading current borders...</p>
-                                </div><br>
-                            </fieldset>
-                            <fieldset id="baseMapGADMFieldset">
-                                <label for="baseMapGADM">Current borders:</label>
-                                <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
-                                    <option value="country">Countries</option>
-                                    <option value="province">Provinces</option>
-                                </select><br>
-                                <label for="baseMapOnly">Base map only</label>
-                                <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                            </fieldset>
-                        </div>
-                    </div>
                 </div>
                 <div id="mapAndGlobe">
                     <div id="map">
@@ -519,7 +419,7 @@
                         <div class="helpcontainer">
                             <div id="help" class="p-1">
                                 <div id="tips" class="tips-content">
-                                    <button id="crossButton" onclick="toggleTips()">❌</button>
+                                    <button id="crossButton" onclick="toggleSettings()">❌</button>
                                     <p><b>🔹 Hover the mouse over polity shapes on the map to reveal information.</b></p>
                                     <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
                                     <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
@@ -528,6 +428,102 @@
                                     <p><b>🔹 Use the opacity slider to adjust the transparency of the polity shapes.</b></p>
                                     <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
                                     <p><b>🔹 Use the background map controls to switch between different base maps.</b></p>
+                                    <div>
+                                        <fieldset>
+                                            <div id="loadingIndicator">
+                                                <div class="spinner"></div>
+                                            </div>
+                                            <div style="display: none; text-align: center;" id="cliopatria-link">
+                                                <p>
+                                                    <a href="../cliopatria" target="_blank">🔹 Learn more about this dataset.</a>
+                                                </p>
+                                            </div>
+                                            <label for="chooseVariable">Variable: </label>
+                                            <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();"
+                                                style="width: 150px; text-overflow: ellipsis;" disabled>
+                                                <option value="polity">Political boundaries</option>
+                                            </select>
+                                            <div class="variable-info-container">
+                                                ℹ️
+                                            </div>
+                                            <div class="previouslySelectedVariable-container">
+                                                <button id="previouslySelectedVariable" type="button"
+                                                    onclick="previouslySelectedVariableButton()">🔄</button>
+                                            </div><br>
+                                            <fieldset id="chooseCategoricalVariableSelectionFieldset">
+                                                <label for="chooseCategoricalVariableSelection"></label>
+                                                <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
+                                                    onchange="plotPolities()" style="width: 150px; text-overflow: ellipsis;">
+                                                </select>
+                                            </fieldset>
+                                            <div id="variablesLoadingIndicator">
+                                                <p>Loading Seshat variables...</p>
+                                            </div>
+                                            <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
+                                                <label for="switchPolitiesComponents">Display:</label>
+                                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                                                    <option value="polities">Full polities</option>
+                                                    <option value="components">Polity components</option>
+                                                </select>
+                                                <div class="display-info-container">
+                                                    ℹ️
+                                                </div><br>
+                                                <label for="baseMapOnly">Hide unselected</label>
+                                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
+                                                <label for="baseMapOnly">Select all</label>
+                                                <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()"
+                                                    checked><br>
+                                                <div style="text-align: center;">
+                                                    <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button>
+                                                </div><br>
+                                            </fieldset>
+                                            <label for="opacitySlide">Opacity:</label>
+                                            <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
+                                                class="slider" onchange="plotPolities()" style="width: 150px;"><br><br>
+                                            <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
+                                            <!-- <label for="showCapitals">Show capital cities</label>
+                                                                                                        <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
+                                            <label for="enterYear">Enter year:</label>
+                                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;"
+                                                onchange="storeYear()">
+                                            <p>🗣️ <i>Hit enter to set year.</i></p>
+                                            <label for="increment">Play rate (years/second):</label>
+                                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
+                                            <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
+                                            <div style="text-align: center;">
+                                                <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                                                <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                                                <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button>
+                                                <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                                                <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
+                                            </div>
+                                        </fieldset>
+                                        <div id="baseMapControls"
+                                            style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
+                                            <fieldset>
+                                                <label for="baseMap">Choose base map:</label>
+                                                <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
+                                                    <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                                                    <option value="cesium">Globe (Cesium)</option>
+                                                    <option value="osm">Street Maps (OSM)</option>
+                                                    <option value="carto">Basic unlabelled (CARTO)</option>
+                                                    <option value="gadm" disabled>Clickable borders (GADM)</option>
+                                                </select>
+                                                <div id="baseMapCurrentLoadingIndicator">
+                                                    <p>Loading current borders...</p>
+                                                </div><br>
+                                            </fieldset>
+                                            <fieldset id="baseMapGADMFieldset">
+                                                <label for="baseMapGADM">Current borders:</label>
+                                                <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
+                                                    <option value="country">Countries</option>
+                                                    <option value="province">Provinces</option>
+                                                </select><br>
+                                                <label for="baseMapOnly">Base map only</label>
+                                                <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
+                                            </fieldset>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
