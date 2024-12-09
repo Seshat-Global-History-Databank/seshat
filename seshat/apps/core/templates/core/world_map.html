@@ -314,6 +314,22 @@
         overflow: hidden;
     }
 
+    #map {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        position: relative;
+    }
+
+    #globe {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        position: relative;
+        max-height: 85vh;
+        display: none
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
         #controlPanel {
@@ -349,7 +365,11 @@
             font-size: 60px;
         }
 
-        #map, #globe {
+        #map {
+            height: 60vh;
+        }
+
+        #globe {
             height: 60vh;
         }
 
@@ -486,7 +506,7 @@
                     </div>
                 </div>
                 <div style="position: relative; height: 85vh; width: 80%" id="mapAndGlobe">
-                    <div id="map" style="height: 100%; width: 100%; z-index: 0; position: relative;">
+                    <div id="map">
                         <div class="topleftcontainer">
                             <div id="popup" class="p-1"></div>
                         </div>
@@ -507,7 +527,7 @@
                         </div>
                         <h1 class="text-teal sliderDate" id="sliderDate"></h1>
                     </div>
-                    <div id="globe" style="height: 100%; width: 100%; z-index: 0; position: relative; max-height: 85vh; display: none">
+                    <div id="globe">
                         <h1 class="text-teal sliderDate" id="sliderDate2"></h1>
                         <div class="enterYearMobileContainer" id="enterYearMobileContainer" style="display: none; width: 100%; padding: 5px;">
                             <label for="enterYearMobile">Enter year:</label>
