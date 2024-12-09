@@ -682,3 +682,15 @@ function toggleTips() {
         dropdown.style.display = "none";
     }
 }
+
+function toggleControlPanel() {
+    var controlPanelContent = document.getElementById('controlPanelContent');
+    var toggleButton = document.getElementById('toggleControlPanelButton');
+    if (controlPanelContent.style.display === 'none') {
+        controlPanelContent.style.display = 'block';
+        toggleButton.innerHTML = '▼';
+    } else {
+        controlPanelContent.style.display = 'none';
+        toggleButton.innerHTML = '▶️';
+    }
+}
