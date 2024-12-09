@@ -685,14 +685,17 @@ function toggleTips() {
 
 function toggleControlPanel() {
     var controlPanelContent = document.getElementById('controlPanelContent');
+    var miniControlPanel = document.getElementById('miniControlPanel');
     var toggleButton = document.getElementById('toggleControlPanelButton');
     if (controlPanelContent.style.display === 'none') {
         controlPanelContent.style.display = 'block';
+        miniControlPanel.style.display = 'none';
         toggleButton.style.height = '10%';
         toggleButton.innerHTML = '▼';
     } else {
         controlPanelContent.style.display = 'none';
-        toggleButton.style.height = '100%';
+        miniControlPanel.style.display = 'block';
+        toggleButton.style.height = '10%';
         toggleButton.innerHTML = '▼';
     }
 }
