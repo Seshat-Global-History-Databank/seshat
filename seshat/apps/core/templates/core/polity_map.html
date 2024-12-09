@@ -263,7 +263,7 @@
 
                 var selectedYear = document.getElementById('dateSlide').value;
                 var opacity = document.getElementById('opacitySlide').value;
-                var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
+                var selectedMap = document.getElementById("baseMap").value;
 
                 // Remove all existing data sources from the viewer
                 viewer.dataSources.removeAll();

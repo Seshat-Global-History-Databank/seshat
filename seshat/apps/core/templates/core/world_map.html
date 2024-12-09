@@ -461,24 +461,14 @@
                         <div id="baseMapControls"
                             style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
                             <fieldset>
-                                <legend id="background-map-header" style="display: none">
-                                    <h1 class="text-teal federicka-big">Background map</h1>
-                                </legend>
-                                <label><input type="radio" name="baseMap" id="baseMapEsri" value="arcgis"
-                                        onclick="switchBaseMapWorldMap()">Satellite (<a
-                                        href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"
-                                        target="_blank">Esri World Imagery</a>)</label><br>
-                                <label><input type="radio" name="baseMap" id="baseMapCesium" value="cesium" onclick="switchBaseMap()"
-                                        checked>Globe (<a href="https://cesium.com/" target="_blank">Cesium</a>)</label><br>
-                                <label><input type="radio" name="baseMap" id="baseMapOSM" value="osm"
-                                        onclick="switchBaseMapWorldMap()">Steet Maps (<a href="https://www.openstreetmap.org/"
-                                        target="_blank">OSM</a>)</label><br>
-                                <label><input type="radio" name="baseMap" id="baseMapBasic" value="carto"
-                                        onclick="switchBaseMapWorldMap()">Basic unlabelled (<a href="https://carto.com/basemaps"
-                                        target="_blank">CARTO</a>)</label><br>
-                                <label><input type="radio" name="baseMap" id="baseMapCurrent" value="gadm"
-                                        onclick="switchBaseMapWorldMap()" disabled>Clickable borders (<a
-                                        href="https://gadm.org/maps.html" target="_blank">GADM</a>)</label>
+                                <label for="baseMap">Choose base map:</label>
+                                <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
+                                    <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                                    <option value="cesium">Globe (Cesium)</option>
+                                    <option value="osm">Street Maps (OSM)</option>
+                                    <option value="carto">Basic unlabelled (CARTO)</option>
+                                    <option value="gadm" disabled>Clickable borders (GADM)</option>
+                                </select>
                                 <div id="baseMapCurrentLoadingIndicator">
                                     <p>Loading current borders...</p>
                                 </div><br>
@@ -557,9 +547,9 @@
                 document.getElementById("globe").style.height = "90%";
                 document.getElementById("variableLegend").style.display = "none";
             } else {
-                // It might have made more sense to set Esri as default and change to Cesium on mobile, but...
+                // It might have made more sense to set Esri/arcgis as default and change to Cesium on mobile, but...
                 // the above if statement bizzarely won't let me update the sliderdiv *and* set document.getElementById("cesium").checked = true;
-                document.getElementById("baseMapEsri").checked = true;
+                document.getElementById("baseMap").value = "arcgis";
                 switchBaseMap();
             }
         });
@@ -726,7 +716,6 @@
                         allVariablesLoaded = true;
                         plotPolities();
                         document.getElementById('variablesLoadingIndicator').style.display = 'none';
-                        document.getElementById('background-map-header').style.display = 'block';
                         document.getElementById('cliopatria-link').style.display = 'block';
 
                         return fetch('/core/provinces_and_countries');
@@ -751,8 +740,7 @@
 
                         document.getElementById('baseMapCurrentLoadingIndicator').style.display = 'none';
                         document.getElementById('cliopatria-link').style.display = 'block';
-                        document.getElementById('baseMapCurrent').disabled = false;
-
+                        document.getElementById('baseMap').options[4].disabled = false;
                     });
             }
 
@@ -819,7 +807,7 @@
             var selectedYear = document.getElementById('dateSlide').value;
             var opacity = document.getElementById('opacitySlide').value;
             var atLeastOnePolityHighlighted = false;
-            var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
+            var selectedMap = document.getElementById('baseMap').value;
             var popup = document.getElementById('popup');
             var hideUnselected = document.getElementById('hideUnselected').checked;
             var selectAll = document.getElementById('selectAll').checked;

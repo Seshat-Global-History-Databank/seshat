@@ -214,7 +214,7 @@ function switchToBCE() {
 }
 
 function switchBaseMap() {
-    var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
+    var selectedMap = document.getElementById("baseMap").value;
     var base = document.getElementById("baseMapGADM").value
 
     if (selectedMap === 'cesium') {
@@ -437,7 +437,7 @@ function updateLegend() {
         }
     }
 
-    if (document.querySelector('input[name="baseMap"]:checked').value == 'gadm') {
+    if (document.getElementById("baseMap").value == 'gadm') {
         var legendItem = document.createElement('p');
 
         var colorBox = document.createElement('span');
