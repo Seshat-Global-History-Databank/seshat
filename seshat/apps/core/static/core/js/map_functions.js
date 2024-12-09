@@ -688,9 +688,11 @@ function toggleControlPanel() {
     var toggleButton = document.getElementById('toggleControlPanelButton');
     if (controlPanelContent.style.display === 'none') {
         controlPanelContent.style.display = 'block';
+        toggleButton.style.height = '10%';
         toggleButton.innerHTML = '▼';
     } else {
         controlPanelContent.style.display = 'none';
+        toggleButton.style.height = '100%';
         toggleButton.innerHTML = '➡️';
     }
 }

@@ -350,6 +350,22 @@
             border-width: 8px;
         }
     }
+    .expandable-button {
+        width: 40px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+    }
+
+    .expandable-button.collapsed {
+        transform: rotate(180deg);
+    }
+
 </style>
 <body style="background-color: #fffdf2;">
     <div class="wrapper">
@@ -358,7 +374,7 @@
             {% block content %}
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;" id="controlPanel">
-                    <button id="toggleControlPanelButton" onclick="toggleControlPanel()">➡️</button>
+                    <button style="height: 100%" class="expandable-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">➡️</button>
                     <div id="controlPanelContent" style="display: none;">
                         <fieldset>
                             <div id="loadingIndicator">
