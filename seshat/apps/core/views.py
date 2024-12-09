@@ -1772,7 +1772,6 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
 
         # Check if the father comment has any remaining comment parts
         if not father_comment.inner_comments_related.exists():
-            print("heeeeeeeeeeeeeeeeeeeere 2")
             father_comment.delete()
             # Redirect to 'seshat-index' if the father comment is deleted
             return redirect('seshat-index')
@@ -1780,29 +1779,6 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
         # Otherwise, redirect to the father comment's update page
         return redirect('seshatcomment-update', pk=father_comment.pk)
 
-    # def delete(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     father_comment = self.object.comment
-
-    #     print("heeeeeeeeeeeeeeeeeeeere 1")
-
-    #     # Delete the current comment part
-    #     response = super().delete(request, *args, **kwargs)
-
-    #     # Check if the father comment has any remaining comment parts
-    #     if not father_comment.inner_comments_related.exists():
-    #         print("heeeeeeeeeeeeeeeeeeeere 2")
-
-    #         # Delete the father comment if no parts remain
-    #         father_comment.delete()
-    #         # Redirect to 'seshat-index' if the father comment is deleted
-    #         return redirect('seshat-index')
-
-    #     # Otherwise, redirect to the father comment's update page
-    #     return redirect('seshatcomment-update', pk=father_comment.pk)
-    
-    # def get_success_url(self):
-    #     return redirect(reverse('seshatcomment-update', kwargs={'pk': self.object.comment.pk}))
     def get_success_url(self):
         return reverse_lazy('seshatcomment-update', kwargs={'pk': self.object.comment.pk})
 
