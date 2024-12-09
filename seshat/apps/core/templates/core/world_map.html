@@ -134,7 +134,7 @@
     .settings {
         display: flex;
         position: absolute;
-        top: 30%;
+        top: 5%;
         left: 30%;
         z-index: 1000;
     }
@@ -404,11 +404,11 @@
                 <div id="worldMapControlPanel">
                     <button style="height: 10%" class="friendly-button" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
                     <div id="miniControlPanel">
-                        <button class="friendly-button" id="startButtonMini" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                        <button class="friendly-button" id="minusButtonMini" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
-                        <button class="friendly-button" id="playButtonMini" type="button" onclick="playBack()">▶️</button><br><br>
-                        <button class="friendly-button" id="plusButtonMini" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                        <button class="friendly-button" id="endButtonMini" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                        <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
+                        <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                        <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
+                        <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
+                        <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                     </div>
                 </div>
                 <div id="mapAndGlobe">
@@ -488,13 +488,6 @@
                                             <label for="increment">Play rate (years/second):</label>
                                             <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
                                             <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
-                                            <div style="text-align: center;">
-                                                <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                                                <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                                                <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button>
-                                                <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                                                <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
-                                            </div>
                                         </fieldset>
                                         <div id="baseMapControls"
                                             style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
