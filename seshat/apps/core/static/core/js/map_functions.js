@@ -175,6 +175,7 @@ function playBack() {
                 stopPlay();
             }
         }, milliseconds); // Interval based on user input
+        document.getElementById('playButtonMini').innerHTML = '⏸';
         document.getElementById('playButton').innerHTML = '⏸';
     } else {
         stopPlay();
@@ -184,6 +185,7 @@ function playBack() {
 
 function stopPlay() {
     clearInterval(playInterval);
+    document.getElementById('playButtonMini').innerHTML = '▶️';
     document.getElementById('playButton').innerHTML = '▶️';
 };
 
