@@ -698,6 +698,6 @@ function toggleControlPanel() {
         controlPanelContent.style.display = 'none';
         miniControlPanel.style.display = 'block';
         toggleButton.style.height = '10%';
-        toggleButton.innerHTML = '▼';
+        toggleButton.innerHTML = '⚙️';
     }
 }
