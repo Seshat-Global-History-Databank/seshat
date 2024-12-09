@@ -222,7 +222,7 @@ hr.bg-fading {
 .friendly-button {
     width: 40px;
     background-color: rgba(255, 253, 242, 1);
-    border: 1px solid #ccc;
+    border: 0px;
     border-radius: 5px;
     cursor: pointer;
     display: inline-flex;
@@ -230,6 +230,8 @@ hr.bg-fading {
     justify-content: center;
     transition: transform 0.3s ease;
     padding: 5%;
+    font-size: 1.75em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add this line */
 }
 
 .friendly-button.collapsed {
