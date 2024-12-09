@@ -297,6 +297,15 @@
         border-color: #782823;
     }
 
+    #miniControlPanel {
+        height: 80%;
+        text-align: center;
+    }
+
+    #miniControlPanel button {
+        height: 20%;
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
         #controlPanel {
@@ -360,7 +369,7 @@
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;" id="controlPanel">
                     <button style="height: 10%" class="friendly-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">▼</button>
-                    <div id="miniControlPanel" style="display: block; text-align: center;">
+                    <div id="miniControlPanel">
                         <button class="friendly-button" id="startButtonMini" type="button" onclick="adjustSliderStartYear()">⏮️</button><br>
                         <button class="friendly-button" id="minusButtonMini" type="button" onclick="adjustSliderDown()">⏪</button><br>
                         <button class="friendly-button" id="playButtonMini" type="button" onclick="playBack()">▶️</button><br>
