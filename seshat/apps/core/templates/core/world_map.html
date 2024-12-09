@@ -303,7 +303,7 @@
     }
 
     #miniControlPanel button {
-        height: 20%;
+        height: 15%;
     }
 
     /* Media Queries for Responsiveness */
@@ -368,12 +368,12 @@
             {% block content %}
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;" id="controlPanel">
-                    <button style="height: 10%" class="friendly-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">▼</button>
+                    <button style="height: 10%" class="friendly-button" id="toggleControlPanelButton" onclick="toggleControlPanel()">▼</button><br><br>
                     <div id="miniControlPanel">
-                        <button class="friendly-button" id="startButtonMini" type="button" onclick="adjustSliderStartYear()">⏮️</button><br>
-                        <button class="friendly-button" id="minusButtonMini" type="button" onclick="adjustSliderDown()">⏪</button><br>
-                        <button class="friendly-button" id="playButtonMini" type="button" onclick="playBack()">▶️</button><br>
-                        <button class="friendly-button" id="plusButtonMini" type="button" onclick="adjustSliderUp()">⏩</button><br>
+                        <button class="friendly-button" id="startButtonMini" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
+                        <button class="friendly-button" id="minusButtonMini" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                        <button class="friendly-button" id="playButtonMini" type="button" onclick="playBack()">▶️</button><br><br>
+                        <button class="friendly-button" id="plusButtonMini" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
                         <button class="friendly-button" id="endButtonMini" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                     </div>
                     <div id="controlPanelContent" style="display: none;">
