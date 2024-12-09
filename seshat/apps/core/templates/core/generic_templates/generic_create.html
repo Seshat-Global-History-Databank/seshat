@@ -1,8 +1,47 @@
 {% extends "core/form_base_for_new_approach_upgrade.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% crispy ReferenceWithPageForm ReferenceWithPageForm.helper %}
 
 {% block extra_vars %}
+<style>
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: darkred;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 20px;
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(2, 57, 2);
+            padding-left: 20px;
+    }
+
+
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        background: white;
+        border: none;
+        outline: 0;
+        margin-left:-20px;
+        cursor:text;
+        box-shadow: none;
+        padding-right: 1px;
+        margin-top:10px;
+
+    }
+
+
+</style>
 
     {% if extra_var and extra_var2 and extra_var3 %}
     <div class="col-md-4">
@@ -39,4 +78,29 @@
         {% endif %}
     </div>
     {% endif %}
+    <div class="col-md-4 mt-1">
+        {{ form.suggested_expert|as_crispy_field }}
+    </div>
+
+    <div class="col-md-4 pb-2">
+
+    {{ form.expert_reviewed_by_me|as_crispy_field }}
+
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+            allowClear: true,
+        });
+    });
+    
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+return new bootstrap.Popover(popoverTriggerEl)
+})
+
+
+</script>
 {% endblock extra_vars %}

@@ -1504,7 +1504,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 def seshat_comment_part_create_from_null_view_inline(request, app_name, model_name, instance_id):
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
-        big_father = SeshatComment.objects.create(text='a new_comment_text')
+        big_father = SeshatComment.objects.create(text='')
         #big_father = SeshatComment.objects.get(id=com_id)
         com_id = big_father.pk
         model_class = apps.get_model(app_label=app_name, model_name= model_name)
@@ -1762,9 +1762,23 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
     #('seshatcomment-update', self.pk)
     template_name = "core/delete_general.html"
     permission_required = 'core.add_capital'
-    
-    # def get_success_url(self):
-    #     return redirect(reverse('seshatcomment-update', kwargs={'pk': self.object.comment.pk}))
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        father_comment = self.object.comment
+
+        # Delete the current comment part
+        self.object.delete()
+
+        # Check if the father comment has any remaining comment parts
+        if not father_comment.inner_comments_related.exists():
+            father_comment.delete()
+            # Redirect to 'seshat-index' if the father comment is deleted
+            return redirect('seshat-index')
+
+        # Otherwise, redirect to the father comment's update page
+        return redirect('seshatcomment-update', pk=father_comment.pk)
+
     def get_success_url(self):
         return reverse_lazy('seshatcomment-update', kwargs={'pk': self.object.comment.pk})
 
@@ -3848,7 +3862,7 @@ def seshatcommentpart_create_view_old(request):
             citation = get_or_create_citation(reference, page_from, page_to)
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
@@ -3893,7 +3907,7 @@ def seshatcommentpart_create_view(request):
             comment_order = form.cleaned_data['comment_order']
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
@@ -5271,7 +5285,7 @@ def seshatcomment_create_view(request):
         if form.is_valid():
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)

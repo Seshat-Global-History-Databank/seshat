@@ -1,4 +1,6 @@
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
+
+from seshat.apps.accounts.models import Seshat_Expert
 import datetime
 
 from django import forms
@@ -41,10 +43,26 @@ commonwidgets = {
     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
 }
 
-# class ExpertReviewedForm(forms.ModelForm):
-#     expert_reviewed_by_me = forms.BooleanField(required=False, label="Expert Reviewed by Me")
+class ExpertReviewedForm(forms.ModelForm):
+    expert_reviewed_by_me = forms.BooleanField(
+        required=False, 
+        label="Expert Reviewed by Me"
+    )
 
-class Polity_research_assistantForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['suggested_expert'] = forms.ModelMultipleChoiceField(
+            queryset=Seshat_Expert.objects.filter(role='Seshat Expert'),
+            widget=forms.SelectMultiple(attrs={
+                'class': 'form-control mb-3 js-states js-example-basic-multiple',
+                'text':'suggested_experts[]',
+                'data-select2-id': 'select2-data-id_suggested_expert'
+            }),
+            required=False
+        )
+ 
+
+class Polity_research_assistantForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_research_assistant model.
     """
@@ -61,7 +79,7 @@ class Polity_research_assistantForm(forms.ModelForm):
         widgets['polity_ra'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_utm_zoneForm(forms.ModelForm):
+class Polity_utm_zoneForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_utm_zone model.
     """
@@ -78,7 +96,7 @@ class Polity_utm_zoneForm(forms.ModelForm):
         widgets['utm_zone'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_original_nameForm(forms.ModelForm):
+class Polity_original_nameForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_original_name model.
     """
@@ -95,7 +113,7 @@ class Polity_original_nameForm(forms.ModelForm):
         widgets['original_name'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_alternative_nameForm(forms.ModelForm):
+class Polity_alternative_nameForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_alternative_name model.
     """
@@ -112,7 +130,7 @@ class Polity_alternative_nameForm(forms.ModelForm):
         widgets['alternative_name'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_peak_yearsForm(forms.ModelForm):
+class Polity_peak_yearsForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_peak_years model.
     """
@@ -138,7 +156,7 @@ class Polity_peak_yearsForm(forms.ModelForm):
          
         
 
-class Polity_durationForm(forms.ModelForm):
+class Polity_durationForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_duration model.
     """
@@ -161,7 +179,7 @@ class Polity_durationForm(forms.ModelForm):
         widgets['polity_year_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_degree_of_centralizationForm(forms.ModelForm):
+class Polity_degree_of_centralizationForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_degree_of_centralization model.
     """
@@ -178,7 +196,7 @@ class Polity_degree_of_centralizationForm(forms.ModelForm):
         widgets['degree_of_centralization'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_suprapolity_relationsForm(forms.ModelForm):
+class Polity_suprapolity_relationsForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_suprapolity_relations model.
     """
@@ -198,7 +216,7 @@ class Polity_suprapolity_relationsForm(forms.ModelForm):
         widgets['other_polity'] = forms.Select(attrs={'class': 'form-control  mb-4 pb-4 js-example-basic-single', 'id': 'id_other_polity', 'name': 'other_polity'})   
         
 
-class Polity_capitalForm(forms.ModelForm):
+class Polity_capitalForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_capital model.
     """
@@ -222,7 +240,7 @@ class Polity_capitalForm(forms.ModelForm):
 
         
 
-class Polity_languageForm(forms.ModelForm):
+class Polity_languageForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_language model.
     """
@@ -239,7 +257,7 @@ class Polity_languageForm(forms.ModelForm):
         widgets['language'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_linguistic_familyForm(forms.ModelForm):
+class Polity_linguistic_familyForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_linguistic_family model.
     """
@@ -256,7 +274,7 @@ class Polity_linguistic_familyForm(forms.ModelForm):
         widgets['linguistic_family'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_language_genusForm(forms.ModelForm):
+class Polity_language_genusForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_language_genus model.
     """
@@ -273,7 +291,7 @@ class Polity_language_genusForm(forms.ModelForm):
         widgets['language_genus'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_religion_genusForm(forms.ModelForm):
+class Polity_religion_genusForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_religion_genus model.
     """
@@ -290,7 +308,7 @@ class Polity_religion_genusForm(forms.ModelForm):
         widgets['religion_genus'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_religion_familyForm(forms.ModelForm):
+class Polity_religion_familyForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_religion_family model.
     """
@@ -307,7 +325,7 @@ class Polity_religion_familyForm(forms.ModelForm):
         widgets['religion_family'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_religionForm(forms.ModelForm):
+class Polity_religionForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_religion model.
     """
@@ -324,7 +342,7 @@ class Polity_religionForm(forms.ModelForm):
         widgets['religion'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_relationship_to_preceding_entityForm(forms.ModelForm):
+class Polity_relationship_to_preceding_entityForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_relationship_to_preceding_entity model.
     """
@@ -341,7 +359,7 @@ class Polity_relationship_to_preceding_entityForm(forms.ModelForm):
         widgets['relationship_to_preceding_entity'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_preceding_entityForm(forms.ModelForm):
+class Polity_preceding_entityForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_preceding_entity model.
     """
@@ -368,7 +386,7 @@ class Polity_preceding_entityForm(forms.ModelForm):
         widgets['other_polity'] = forms.Select(attrs={'class': 'form-control  mb-4 pb-4 js-example-basic-single', 'id': 'id_other_polity', 'name': 'other_polity'}) 
         
 
-class Polity_succeeding_entityForm(forms.ModelForm):
+class Polity_succeeding_entityForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_succeeding_entity model.
     """
@@ -387,7 +405,7 @@ class Polity_succeeding_entityForm(forms.ModelForm):
         widgets['succeeding_entity'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_supracultural_entityForm(forms.ModelForm):
+class Polity_supracultural_entityForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_supracultural_entity model.
     """
@@ -404,7 +422,7 @@ class Polity_supracultural_entityForm(forms.ModelForm):
         widgets['supracultural_entity'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_scale_of_supracultural_interactionForm(forms.ModelForm):
+class Polity_scale_of_supracultural_interactionForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_scale_of_supracultural_interaction model.
     """
@@ -423,7 +441,7 @@ class Polity_scale_of_supracultural_interactionForm(forms.ModelForm):
         widgets['scale_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_alternate_religion_genusForm(forms.ModelForm):
+class Polity_alternate_religion_genusForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_alternate_religion_genus model.
     """
@@ -440,7 +458,7 @@ class Polity_alternate_religion_genusForm(forms.ModelForm):
         widgets['alternate_religion_genus'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_alternate_religion_familyForm(forms.ModelForm):
+class Polity_alternate_religion_familyForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_alternate_religion_family model.
     """
@@ -457,7 +475,7 @@ class Polity_alternate_religion_familyForm(forms.ModelForm):
         widgets['alternate_religion_family'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_alternate_religionForm(forms.ModelForm):
+class Polity_alternate_religionForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_alternate_religion model.
     """
@@ -474,7 +492,7 @@ class Polity_alternate_religionForm(forms.ModelForm):
         widgets['alternate_religion'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_expertForm(forms.ModelForm):
+class Polity_expertForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_expert model.
     """
@@ -491,7 +509,7 @@ class Polity_expertForm(forms.ModelForm):
         widgets['expert'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_editorForm(forms.ModelForm):
+class Polity_editorForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_editor model.
     """
@@ -508,7 +526,7 @@ class Polity_editorForm(forms.ModelForm):
         widgets['editor'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_religious_traditionForm(forms.ModelForm):
+class Polity_religious_traditionForm(ExpertReviewedForm):
     """
     Form for creating and updating Polity_religious_tradition model.
     """

@@ -12,7 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
+from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart
 
 from seshat.apps.accounts.models import Seshat_Expert
 
@@ -7713,8 +7713,38 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         if my_form.is_valid():
             # print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
             # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+            logged_in_user = request.user
+            new_object = my_form.save(commit=False)
+            suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
+            #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
+            try:
+                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+            except:
+                logged_in_expert = None
 
-            new_object = my_form.save()
+            print("-------------------------", suggested_experts)
+            print("-------------------------", new_object)
+
+            if suggested_experts:
+                # create a Prvate Comment to attach parts to it:
+                father_private_comment = SeshatPrivateComment.objects.create(text="")
+                new_object.private_comment = father_private_comment
+                seshat_private_comment_part = SeshatPrivateCommentPart(
+                    private_comment_part_text=f"A new review request for Review has been assigned to you.",
+                    private_comment_owner=logged_in_expert, 
+                    private_comment= father_private_comment
+                )
+
+                print("####################", new_object)
+
+                seshat_private_comment_part.save()
+
+                seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
+            
+            new_object.save()  # Save the object to persist the association
+
+
+
             action = request.POST.get('action')
             if action == 'redirect_one':
                 return redirect("polity-detail-main", pk=new_object.polity.id) 
@@ -7927,6 +7957,16 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
 
             new_object = my_form.save()
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                # if the object has some description already
+                if new_object.comment:
+                    return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
+                else:
+                    return redirect(f"{x_name}-detail", pk=new_object.id) 
+                 # Replace 'success_url_name' with your success URL
 
 
             # Add the current user as a curator if they are an instance of Seshat_Expert
@@ -7939,7 +7979,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             # if seshat_expert_instance:
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
-            return redirect(f"{x_name}-detail", pk=my_object.id)
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
         
         # Prepare the context for invalid form
         context = {
