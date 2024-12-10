@@ -157,15 +157,15 @@
 <div class="container mt-1">
     <div class="tab-container" style="font-family: 'Roboto Mono', monospace;" >
         <div class="tab active" id="step1-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 1: Insert the data</span>
+            <span ><i class="fa-solid fa-circle"></i> 1: Insert the data</span>
         </div>
         <div class="arrow" style="color:gray">&#10132;</div>
         <div class="tab waiting" id="step2-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 2: Add the first chunk of the description</span>
+            <span ><i class="fa-solid fa-circle"></i> 2: Add the first chunk of the description</span>
         </div>
         <div class="arrow" style="color:gray">&#10132;</div>
         <div class="tab waiting" id="step3-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+            <span ><i class="fa-solid fa-circle"></i> 3: Expand the description</span>
         </div>
         
     </div>
@@ -283,13 +283,16 @@
                 </div>
                 <div class="col-sm-12 row">
 
-                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto">
+                    <div class="col-sm-3 mb-2 pb-4 d-grid mx-auto">
                         <button type="submit" name="action" value="redirect_one" class="btn btn-outline-secondary my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit without Description</button>
                     </div>
-                    <div class="col-sm-5 mb-2 pb-4 d-grid mx-auto ">
+                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto ">
                         <button type="submit" name="action" value="redirect_two" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">Submit and Continue to add Description</button>
                     </div>
-                    <div class="col-sm-3 mb-2 pb-4 d-grid mx-auto">
+                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto ">
+                        <button type="submit" name="action" value="redirect_three" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">Expert Checked</button>
+                    </div>
+                    <div class="col-sm-2 mb-2 pb-4 d-grid mx-auto">
                         {% block delete_button %}
                         {% endblock delete_button %}
                     </div>

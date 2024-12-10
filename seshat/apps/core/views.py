@@ -7,7 +7,7 @@ from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from django.contrib.sites.shortcuts import get_current_site
-from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm
+from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render
@@ -34,7 +34,7 @@ from django.views.decorators.http import require_GET
 
 from django.contrib.auth.decorators import login_required, permission_required
 from seshat.apps.accounts.models import Seshat_Expert
-from seshat.apps.general.models import Polity_preceding_entity
+from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
 
 from django.core.paginator import Paginator
 
@@ -913,7 +913,8 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     my_is_uncertain = my_instance.is_uncertain
                     my_private_comment = my_instance.private_comment
 
-
+                    initial_data = {'verify': False}
+                    expert_form = ExpertCheckedForm(initial=initial_data)
 
                     abc.append({
                         'my_id': my_id,
@@ -931,6 +932,10 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         'my_polity_id': my_polity_id,
                         'my_private_comment': my_private_comment,
                         'my_inner_private_comments_related': my_inner_private_comments_related,
+                        'expert_form':  expert_form,
+                        'my_model': mm,  # Add the model name
+
+
                     })
 
         # for model_name in related_models:
@@ -940,10 +945,25 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
         #         context['related_objects'] = related_objects
         #         break
         
+        # Add the ExpertCheckedForm to the context
+
         context['my_app_models'] = abc
 
-
         return context
+    
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests for the expert form.
+        """
+        # Handle the expert form submission
+        self.object = self.get_object()  # Required for UpdateView
+        expert_form = ExpertCheckedForm(request.POST)
+        if expert_form.is_valid():
+            if expert_form.cleaned_data['verify']:
+                self.object.expert_checked = True
+                self.object.save()
+
+        return super().post(request, *args, **kwargs)
 
 
     # def get_context_data(self, **kwargs):
@@ -1481,6 +1501,8 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     'my_polity_id': my_polity_id,
                     'my_private_comment': my_private_comment,
                     'my_inner_private_comments_related': my_inner_private_comments_related,
+                    'my_model': mm,  # Add the model name
+
                 })
 
 
@@ -4677,6 +4699,8 @@ def update_seshat_comment_part_view(request, pk):
                     'my_polity_id': my_polity_id,
                     'my_private_comment': my_private_comment,
                     'my_inner_private_comments_related': my_inner_private_comments_related,
+                    'my_model': mm,  # Add the model name
+
                 })
 
 
@@ -5414,3 +5438,76 @@ def xxyyzz(request, com_id):
 
 def cliopatria(request):
     return render(request, 'core/cliopatria.html')
+
+
+def expert_checked_view(request, my_inst):
+    if request.method == "POST":
+        expert_form = ExpertCheckedForm(request.POST)
+        if expert_form.is_valid():
+            if expert_form.cleaned_data['verify']:
+                my_inst.is_expert_checked = True
+                my_inst.save()
+            return redirect('seshat-index')  # Redirect to a success page or the same view
+    else:
+        expert_form = ExpertCheckedForm(initial={'verify': my_inst.is_expert_checked})  # Pre-fill based on current value
+
+    return render(request, "core/seshatcomments/seshatcomment_update.html", {'expert_form': expert_form, 'my_inst': my_inst})
+
+
+def verify_expert(request, pk, my_app_name, my_model):
+    """
+    View to handle the expert review verification form when `my_inst` is passed directly.
+
+    Args:
+        request: The HTTP request object.
+        my_inst: The instance to verify.
+
+    Returns:
+        A redirect to the appropriate page or an error response.
+    """
+    if request.method == "POST":
+        # Check if the user has permission to verify
+        # if not request.user.has_perm('your_app.can_verify_expert'):  # Replace with actual permission
+        #     return HttpResponseForbidden("You do not have permission to verify.")
+        from django.apps import apps
+
+        MyModel = apps.get_model(my_app_name, my_model)
+        my_inst = get_object_or_404(MyModel, pk=pk)
+
+        # Update the is_expert_checked attribute
+        my_inst.expert_reviewed = True
+        my_inst.save()
+
+        # Redirect to a success page or the same page
+        return redirect('seshat-index')  # Replace with the appropriate URL name
+
+    # If GET request, you can redirect or show an error
+    return redirect('seshat-index')  # Replace with an appropriate fallback
+
+
+def verify_expert2(request, my_inst):
+    """
+    View to handle the expert review verification form when `my_inst` is passed directly.
+
+    Args:
+        request: The HTTP request object.
+        my_inst: The instance to verify.
+
+    Returns:
+        A redirect to the appropriate page or an error response.
+    """
+    if request.method == "POST":
+        # Check if the user has permission to verify
+        # if not request.user.has_perm('your_app.can_verify_expert'):  # Replace with actual permission
+        #     return HttpResponseForbidden("You do not have permission to verify.")
+
+        # Update the is_expert_checked attribute
+        my_inst.expert_reviewed = True
+        my_inst.save()
+
+        # Redirect to a success page or the same page
+        return redirect('seshat-index')  # Replace with the appropriate URL name
+
+    # If GET request, you can redirect or show an error
+    return redirect('seshat-index')  # Replace with an appropriate fallback
+

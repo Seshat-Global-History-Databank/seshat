@@ -7741,6 +7741,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
 
                 seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
             
+            new_object.expert_reviewed = False
             new_object.save()  # Save the object to persist the association
 
 
@@ -7762,8 +7763,6 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
 
-            #return redirect('seshat-index') 
-            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
     else:
         polity_id_x = request.GET.get('polity_id_x')
         my_form = form_class(initial= {'polity': polity_id_x,})

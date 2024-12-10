@@ -109,17 +109,17 @@
 </div>
 {% else %}
 <div class="container table-responsive mt-1">
-    <div class="tab-container">
+    <div class="tab-container"  style="font-family: 'Roboto Mono', monospace;" >
         <div class="tab done" id="step1-tab">
-            <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data</span>
+            <span ><i class="fa-solid fa-circle-check"></i> 1: Insert the data</span>
         </div>
         <div class="arrow">&#10132;</div>
         <div class="tab  done" id="step2-tab">
-            <span ><i class="fa-solid fa-circle-check"></i> Step 2: Add the first chunk of the description</span>
+            <span ><i class="fa-solid fa-circle-check"></i> 2: Add the first chunk of the description</span>
         </div>
         <div class="arrow"  style="color:seagreen">&#10132;</div>
         <div class="tab active" id="step3-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+            <span ><i class="fa-solid fa-circle"></i> 3: Expand the description</span>
         </div>
     </div>
 
@@ -332,6 +332,14 @@
     <div>
 
         {% for my_inst in my_app_models %}
+        <form method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
+            {% csrf_token %}
+        
+            <h3>Expert Review</h3>
+            {{ my_inst.expert_form.as_p }}
+        
+            <button type="submit" class="btn btn-primary">Saveeeeee</button>
+        </form>
             {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
 
             {% endif %}   

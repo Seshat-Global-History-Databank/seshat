@@ -1,9 +1,10 @@
 {% extends "core/form_base_for_new_approach_upgrade.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load custom_filters %}
 
 {% block extra_vars %}
-
+{% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions and 'core.add_seshatprivatecommentpart' in request.user.get_all_permissions %}
     {% if extra_var and extra_var2 and extra_var3 %}
 
     <div class="col-md-4">
@@ -40,6 +41,77 @@
         {% endif %}
     </div>
     {% endif %}
+
+
+{% elif request.user.is_authenticated and request.user.id == 1240 %}
+    {% if extra_var and extra_var2 and extra_var3 %}
+
+    <div class="col-md-4">
+        {{ extra_var }}
+    </div>
+    <div class="col-md-4">
+        {{ extra_var3 }}
+
+    </div>
+    <div class="col-md-4 pb-2">
+        {{ form.polity }}
+    </div>
+    <div class="col-md-6 pb-4">
+        {{ extra_var2 }}
+    </div>
+    {% elif extra_var and extra_var2  %}
+        <div class="col-md-4">
+            {{ extra_var.name|replace_underscore_and_capitalize }}:
+            {{ extra_var }}
+            {% if extra_var.name == 'polity_cap'  %}
+            <span class="text-secondary">
+                Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+            </span>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {{ extra_var2 }}
+        </div>
+    {% else %}
+    <div class="col-md-4 pb-2">
+        {{ extra_var }}
+        {% if extra_var.name == 'polity_cap'  %}
+        <span class="text-secondary">
+            Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+        </span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+    <div class="col-md-4 pb-2">
+
+
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+    {{ form.suggested_expert|as_crispy_field }}
+
+
+    {% else %}
+    {{ form.expert_reviewed_by_me|as_crispy_field }}
+
+    {% endif %}
+</div>
+
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2({
+                allowClear: true,
+            });
+        });
+        
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+    })
+    
+    
+    </script>
 
 {% endblock extra_vars %}
 

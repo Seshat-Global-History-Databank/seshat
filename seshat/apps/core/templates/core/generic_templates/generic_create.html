@@ -1,6 +1,7 @@
 {% extends "core/form_base_for_new_approach_upgrade.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load custom_filters %}
 {% crispy ReferenceWithPageForm ReferenceWithPageForm.helper %}
 
 {% block extra_vars %}
@@ -79,12 +80,21 @@
     </div>
     {% endif %}
     <div class="col-md-4 mt-1">
-        {{ form.suggested_expert|as_crispy_field }}
     </div>
 
     <div class="col-md-4 pb-2">
 
+        
+
+    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+    {{ form.suggested_expert|as_crispy_field }}
+
+
+    {% else %}
     {{ form.expert_reviewed_by_me|as_crispy_field }}
+
+    {% endif %}
+
 
 </div>
 

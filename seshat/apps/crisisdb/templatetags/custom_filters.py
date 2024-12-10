@@ -254,3 +254,4 @@ def give_me_a_color(value):
     index = int(value) % 30
 
     return light_colors[index]
+

@@ -14,42 +14,26 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.template.defaulttags import register
 
-commonlabels = {
-    'year_from': 'Start Year',
-    'year_to': 'End Year',
-    'tag': 'Confidence Level',
-    "is_disputed" : "Dispute?",
-    "is_uncertain" : "Uncertainty?",
-    "expert_reviewed" : "Expert Checked?",
-    "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
-    'citations': 'Add one or more Citations',
-    'finalized': 'This piece of data is verified.',
-}
 
-commonfields = ['polity', 'year_from', 'year_to',
-                'description', 'tag', 'is_disputed', 'is_uncertain', 'expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
-
-commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
-    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
-    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'placeholder':'Add a meaningful description (optional)'}),
-    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
-    'tag': forms.RadioSelect(),
-    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
-}
 
 class ExpertReviewedForm(forms.ModelForm):
     expert_reviewed_by_me = forms.BooleanField(
-        required=False, 
-        label="Expert Reviewed by Me"
+        widget=forms.CheckboxInput(attrs={'class': 'mb-3'}),
+        label="Expert Reviewed By ME.",
+        initial=False,  # Default value is False
+        required=False  # Make it optional if needed
+    )
+    expert_reviewed = forms.BooleanField(
+        widget=forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': False}),
+        label="Expert Reviewed!",
+        initial=False,  # Default value is False
+        required=False,  # Make it optional if needed
+        disabled=True
     )
 
     def __init__(self, *args, **kwargs):
+        # user = kwargs.pop('user', None)  # Pop the user from kwargs
+        # print(user)
         super().__init__(*args, **kwargs)
         self.fields['suggested_expert'] = forms.ModelMultipleChoiceField(
             queryset=Seshat_Expert.objects.filter(role='Seshat Expert'),
@@ -60,7 +44,38 @@ class ExpertReviewedForm(forms.ModelForm):
             }),
             required=False
         )
+
+    def clean_expert_reviewed(self):
+        # Explicitly set the value to False
+        return False
  
+
+commonlabels = {
+    'year_from': 'Start Year',
+    'year_to': 'End Year',
+    'tag': 'Confidence Level',
+    "is_disputed" : "Dispute?",
+    "is_uncertain" : "Uncertainty?",
+    "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
+    'citations': 'Add one or more Citations',
+    'finalized': 'This piece of data is verified.',
+}
+
+commonfields = ['polity', 'year_from', 'year_to',
+                'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations']
+
+commonwidgets = {
+    'polity': forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
+    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
+    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
+    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'placeholder':'Add a meaningful description (optional)'}),
+    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
+    'tag': forms.RadioSelect(),
+    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+    "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+    'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
+}
 
 class Polity_research_assistantForm(ExpertReviewedForm):
     """

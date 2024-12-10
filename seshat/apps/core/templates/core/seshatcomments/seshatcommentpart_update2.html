@@ -201,24 +201,27 @@
 </style>
 
 <div class="container pt-2">
-<div class="tab-container">
+  <div class="tab-container"  style="font-family: 'Roboto Mono', monospace;" >
     <div class="tab done" id="step1-tab">
-        <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data</span>
+        <span ><i class="fa-solid fa-circle-check"></i> 1: Insert the data</span>
     </div>
     <div class="arrow">&#10132;</div>
     <div class="tab  done" id="step2-tab">
-        <span ><i class="fa-solid fa-circle-check"></i> Step 2: Add the first chunk of the description</span>
+        <span ><i class="fa-solid fa-circle-check"></i> 2: Add the first chunk of the description</span>
     </div>
     <div class="arrow"  style="color:seagreen">&#10132;</div>
     <div class="tab active" id="step3-tab">
-        <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+        <span ><i class="fa-solid fa-circle"></i> 3: Expand the description</span>
     </div>
-
-
 </div>
 
 <div class="row d-flex">
-    <span class="col-md-12 align-right">
+  <div class="col-md-10">
+
+  </div>
+  <div class="col-md-2"> 
+
+    <span class="col-md-4 align-right">
       <a href="{% url 'synczotero100' %}" 
          class="btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end" 
          id="syncBtn" 
@@ -230,7 +233,12 @@
       </a>
       <span class="h6 text-secondary px-1"></span>
   </span>
+
 </div>
+
+
+</div>
+
 {% if messages %}
 <ul class="messages mt-3">
     {% for message in messages %}
@@ -255,7 +263,7 @@
 <!-- seshatcommentpart_create.html -->
 {% autoescape off %}
 
-<div style="border: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
+<div style="border: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;  box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);">
   <table class="table table-borderless align-middle">
       <thead>        
         <tr class="bg-colorful-light h6">
@@ -394,13 +402,15 @@
 
 
 
-  <div  style="border-bottom: 2px solid rgba(120, 40, 35, 0.311); border-left: 2px solid rgba(120, 40, 35, 0.311); border-right: 2px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
+  <div class="pt-3" style="border-bottom: 2px solid rgba(120, 40, 35, 0.311); border-left: 2px solid rgba(120, 40, 35, 0.311); border-right: 2px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden; ">
     <table class="table table-borderless align-middle">
-        <thead>        
-          <tr style="color: #782823">
-            <th style="text-align: left;" class="h6" scope="col">Description* (Public):</th>
-          </tr>
-        </thead>
+      <thead>        
+        <tr style="color: #782823;  border-bottom: 2px solid rgba(120, 40, 35, 0.311);" class="pb-2">
+          <th style="text-align: left;" class="h6 pb-2" scope="col">Description (Public):
+            <small class="text-secondary fw-norma"  style="float: right;" > Note: Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
+          </th>
+        </tr>
+      </thead>
         <tbody>
 
     {% autoescape off %}

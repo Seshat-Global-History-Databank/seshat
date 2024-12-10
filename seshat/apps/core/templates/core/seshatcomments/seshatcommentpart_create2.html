@@ -194,43 +194,45 @@
 </style>
 
 <div class="container pt-2">
-    <div class="tab-container row">
-      <div class="col-md-2">
-          <span class="tab done" id="step1-tab">
-              <span ><i class="fa-solid fa-circle-check"></i> Step 1: Insert the data</span>
-            </span>
+      <div class="tab-container"  style="font-family: 'Roboto Mono', monospace;" >
+        <div class="tab done" id="step1-tab">
+            <span ><i class="fa-solid fa-circle-check"></i> 1: Insert the data</span>
         </div>
-        <div class="arrow col-md-1"  style="color:seagreen; text-align:center;">&#10132;</div>
-
-        <div class="col-md-3">
-
+        <div class="arrow">&#10132;</div>
         <div class="tab  done" id="step2-tab">
-            <span ><i class="fa-solid fa-circle-check"></i> Step 2: Add the first chunk of the description</span>
+            <span ><i class="fa-solid fa-circle-check"></i> 2: Add the first chunk of the description</span>
         </div>
-      </div>
-
-        <div class="arrow col-md-1"  style="color:seagreen; text-align:center;">&#10132;</div>
-        <div class="col-md-3">
-
+        <div class="arrow"  style="color:seagreen">&#10132;</div>
         <div class="tab active" id="step3-tab">
-            <span ><i class="fa-solid fa-circle"></i> Step 3: Expand the description</span>
+            <span ><i class="fa-solid fa-circle"></i> 3: Expand the description</span>
         </div>
-      </div>
-      <div class="col-md-1">
+    </div>
 
-        <a href="{% url 'synczotero100' %}" 
-        class="btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end" 
-        id="syncBtn" 
-        onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"
-        data-bs-toggle="tooltip" 
-        data-bs-placement="top" 
-        title="Sync references with Zotero (Last 100)">
-        <b>Z &nbsp;<i class="fa-solid fa-arrows-rotate"></i></b>
-     </a>
+    <div class="row d-flex">
+      <div class="col-md-10">
+
       </div>
+      <div class="col-md-2"> 
+
+        <span class="col-md-4 align-right">
+          <a href="{% url 'synczotero100' %}" 
+             class="btn btn-outline-danger btn-sm pb-1 pt-1 my-1 float-end" 
+             id="syncBtn" 
+             onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"
+             data-bs-toggle="tooltip" 
+             data-bs-placement="top" 
+             title="Sync references with Zotero (Last 100)">
+             <b>Z &nbsp;<i class="fa-solid fa-arrows-rotate"></i></b>
+          </a>
+          <span class="h6 text-secondary px-1"></span>
+      </span>
+
+    </div>
+
+
+  </div>
 
     
-    </div>
     {% if messages %}
     <ul class="messages mt-3">
         {% for message in messages %}

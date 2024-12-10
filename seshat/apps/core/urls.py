@@ -113,6 +113,8 @@ urlpatterns += [
          name='seshatcomment-detail'),
     path('core/seshatcomments/<int:pk>/update/',
          views.SeshatCommentUpdate.as_view(), name="seshatcomment-update"),
+    path('core/seshatcomments/verify_expert/<int:pk>/<str:my_app_name>/<str:my_model>/', views.verify_expert, name='verify_expert'),
+    path('core/seshatcomments/verify_expert', views.verify_expert2, name='verify_expert2'),
     path('core/seshatcomments/<int:pk>/delete/',
          views.SeshatCommentDelete.as_view(), name="seshatcomment-delete"),
     # Download
@@ -168,6 +170,7 @@ urlpatterns += [path('core/nlp_datapoints_2/', views.nlp_datapoints_2, name="nlp
 urlpatterns += [
      path('core/not_found_404', views.four_o_four,
          name="four-o-four"),
+
 
 ]
 
