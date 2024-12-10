@@ -203,69 +203,69 @@
 </style>
 <div class="container">
     <div class="row">
-      <div class="mb-2 mt-4">
-        <span class="col-md-6 px-0">
-          <span class="h2 py-3 ps-0"><span class="text-dark">Social Complexity Variables</span> 
-          </span>               
-         </span>
-        <span ><a href="{% url 'download_csv_all_sc' %}" class="btn btn-outline-success mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a> </span>
-        <span ><a href="{% url 'problematic_sc_data_table' %}" class="btn btn-outline-danger mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges </a> </span>
+        <div class="col-md-10 px-0 pt-3 pe-3">
+          <span class="h2 py-3 ps-0">
+            <span class="text-dark">Social Complexity Variables</span> 
+            <span ><a href="{% url 'download_csv_all_sc' %}" class="btn btn-outline-success mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-file-csv"></i> &nbsp; Download <b>All</b> (.CSV) </a> </span>
+            <span ><a href="{% url 'problematic_sc_data_table' %}" class="btn btn-outline-danger mx-1 float-end" style="padding: 3px 8px; font-size: 1.0rem;"> <i class="fa-solid fa-up-right-from-square fa-sm"></i>  &nbsp;Inconsistent Year Ranges </a> </span>
+          </span>  
+          <h5 class="pt-2">
+            <span class="h6 text-secondary"><i class="fa-solid fa-database"></i> We have coded a total of  
+              <b class="h5 text-dark">
+              {{number_of_all_rows|intcomma}}</b>
+              different values for 
+              <b class="h5 text-dark">
+              {{number_of_variables}}</b>
+              variables in 
+              <b class="h5 text-dark">
+              {{all_polities}}</b>
+              polities.</span>
+          </h5>
+          <h6 class="fw-normal">
+            This section of Seshat provides a detailed exploration of the diverse aspects that characterize past polities' societal structures and advancements. It includes data on infrastructure like roads, bridges, and irrigation systems; administrative and governance systems such as courts, bureaucracies, and legal codes; and cultural and intellectual achievements, including writing systems, scientific literature, and sacred texts. This section also captures economic activities, including markets, trade emporia, and currency systems, as well as population dynamics and territorial extents. By coding these variables systematically, this section helps researchers analyze the development, complexity, and functionality of historical societies, offering a comprehensive view of how polities managed resources, facilitated communication, and maintained social order.
+          </h6>
 
+               
+         </div>
+         <div class="col-md-2 mb-1 mt-3 float-end">
 
-    </div>
-
-        <h5>
-          <span class="h6 text-secondary">* We have coded a total of  
-            <b class="h5 text-dark">
-            {{number_of_all_rows|intcomma}}</b>
-            different values for 
-            <b class="h5 text-dark">
-            {{number_of_variables}}</b>
-            variables in 
-            <b class="h5 text-dark">
-            {{all_polities}}</b>
-            polities.</span>
-        </h5>
-
-
-        <h6>
-          Here is a legend to guide you in understanding the metadata more clearly:
-        </h6>
- 
-        <span class="progress align-items-center py-0 m-0">
-          <span class="progress-bar bg-range" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+        <span class="progress2 align-items-center py-0 m-0">
+          <span class="progress-bar bg-range" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
             <b class="text-dark">Range</b> 
         </span>
-          <span class="progress-bar bg-present" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+          <span class="progress-bar bg-present" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
             <b class="text-dark">Present</b> 
         </span>
-        <span class="progress-bar bg-partial" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+        <span class="progress-bar bg-partial" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
           <b class="text-dark">Partially coded</b> 
       </span>
-      <span class="progress-bar bg-transitional text-dark" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+      <span class="progress-bar bg-transitional text-dark" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
         <b class="text-dark">Transitional</b> 
     </span>
 
-          <span class="progress-bar bg-absent" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+          <span class="progress-bar bg-absent" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
             <b class="text-dark">Absent</b> 
         </span>
 
-            <span class="progress-bar bg-suspected-unknown" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+            <span class="progress-bar bg-suspected-unknown" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
               <b class="text-white">Suspected Unknown</b> 
           </span>
 
-            <span class="progress-bar bg-unknown" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+            <span class="progress-bar bg-unknown" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
               <b class="text-white">Unknown</b> 
           </span>
 
-          <span class="progress-bar bg-uncoded" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+          <span class="progress-bar bg-uncoded" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
             <b class="text-white">Uncoded</b> 
         </span>
 
-            <span class="progress-bar bg-secondary-light" role="progressbar" style="width: 12%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+            <span class="progress-bar bg-secondary-light" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
               <b class="text-dark">To Be Coded</b> 
           </span>
         </span>
+
+    </div>
+
         {% for sect, subsect in all_vars_grouped.items %}
         <div class="row">
           <div class="col-md-12">
