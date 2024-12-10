@@ -240,7 +240,7 @@
           <b class="text-dark">Range</b> 
       </span>
         <span class="progress-bar bg-present" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
-          <b class="text-dark">Present</b> 
+          <b class="text-dark">Present / Coded</b> 
       </span>
       <span class="progress-bar bg-partial" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
         <b class="text-dark">Partially coded</b> 
@@ -346,27 +346,26 @@
             </div>
 
               <div class="progress align-items-center py-0 m-0">
-                <span class="progress-bar {% if v.17 == 'Present' or v.17 == 'Properly Coded' %}bg-success-light{% else %}bg-info-light{% endif %} py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="{{v.17}}: # {{v.9}}">
-                   
-
+                <span class="progress-bar {% if v.17 == 'Present' or v.17 == 'Properly Coded' %} bg-present {% else %} bg-range{% endif %} py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.9|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="{{v.17}}: # {{v.9}}">
                   </span>
-                  <span class="progress-bar bg-danger-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Absent: # {{v.10}}">
+                  <span class="progress-bar bg-partial py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Partially coded: # {{v.16}}">
+                  </span>
+                  <span class="progress-bar bg-absent py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.10|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Absent: # {{v.10}}">
 
                 </span>
-                <span class="progress-bar bg-warning-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Suspected Unknown: # {{v.11}}">
+                <span class="progress-bar bg-suspected-unknown py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.11|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Suspected Unknown: # {{v.11}}">
 
               </span>
-              <span class="progress-bar bg-unknown-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Unknown: # {{v.12}}">
+              <span class="progress-bar bg-unknown py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.12|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Unknown: # {{v.12}}">
 
 
               </span>
 
 
-                <span class="progress-bar bg-uncoded-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Uncoded: # {{v.13}}">
+                <span class="progress-bar bg-uncoded py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.13|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Uncoded: # {{v.13}}">
             </span>
 
-              <span class="progress-bar bg-trans-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.16|div:v.6|mul:v.7|div:v.14|mul:100 }}{% else %}0{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="Partially coded: # {{v.16}}">
-          </span>
+
 
 
               <span class="progress-bar bg-secondary-light py-1" role="progressbar" style="width: {% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}%; height: 1.25rem !important;" aria-valuenow="{% if v.14 != 0 and v.6 != 0 %}{{ v.15|div:v.14|mul:100 }}{% else %}100{% endif %}" aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true" title="To Be Coded: # {{v.15}} Polities">
