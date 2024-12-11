@@ -9,6 +9,7 @@ urlpatterns += [path('codebook', views.seshatcodebookold, name='seshat-codebook'
 urlpatterns += [path('downloads_page/', views.seshatolddownloads, name='seshat-olddownloads'),]
 urlpatterns += [path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),]
 urlpatterns += [path('download_oldcsv/<str:file_name>/', views.download_oldcsv, name='download_oldcsv'),]
+urlpatterns += [path('seshat-experts/', views.SeshatExpertListView.as_view(), name='seshat-expert-list'),]
 
 urlpatterns += [path('code_book_new_1', views.seshatcodebooknew1, name='code_book_1'),]
 #urlpatterns += [path('code_book_new_2', views.download_oldcsv, name='code_book_2'),]

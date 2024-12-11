@@ -255,3 +255,12 @@ def give_me_a_color(value):
 
     return light_colors[index]
 
+
+@register.filter
+def in_group(user, group_name):
+    """
+    Checks if a user is in a given group.
+    """
+    if user.is_authenticated:
+        return user.groups.filter(name=group_name).exists()
+    return False

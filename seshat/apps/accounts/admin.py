@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
+from .forms import SeshatExpertAdminForm
+
 from .models import Profile, Seshat_Expert, Seshat_Task
 ######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 
@@ -46,8 +48,12 @@ class SeshatExpertAdmin(admin.ModelAdmin):
     """
     Custom admin for Seshat_Expert model.
     """
+    form = SeshatExpertAdminForm
+
     list_display = ('id', 'get_full_name', 'role', 'get_username', 'email', 'is_staff', 'is_active', 'last_login', 'date_joined')
     list_filter = ('role',)  # Add filters for roles
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'user__email')  # Enable search by user details
+
     ordering = ('user__last_name', 'user__first_name')  # Order by name
 
     @admin.display(description='Full Name')
@@ -92,7 +98,5 @@ class SeshatExpertAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Seshat_Expert, SeshatExpertAdmin)
-
-
 
 

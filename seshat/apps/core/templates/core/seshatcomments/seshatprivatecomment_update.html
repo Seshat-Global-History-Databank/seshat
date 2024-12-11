@@ -15,9 +15,11 @@
       }
     
       .bg-colorful-light {
-        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.026),rgb(242, 199, 119, 0.026),rgb(151, 230, 151, 0.026));
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.22),rgb(242, 199, 119, 0.22),rgb(151, 230, 151, 0.22));
         border-radius: 10px;
+        color:#782823;
       }
+    
 
       .roboto-regular {
         font-family: "Roboto", sans-serif;
@@ -38,8 +40,7 @@
         padding-top: 0;
     }
 </style>
-
-{% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+{% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
 
 {% if object.text == "No Descriptions provided." %}
 <div class="container pt-1">
@@ -50,188 +51,449 @@
 {% else %}
 <div class="container table-responsive mb-5">
     <div class="row pt-3" style="vertical-align: bottom;">
-        <div class="col-md-6" >
-            <h6 class="roboto-regular">Add private comments for this database record:</h6>
+        <div class="col-md-12">
+
+
+        {% for my_inst in my_app_models %}
+
+        {% if  my_inst.my_curators_list %}
+        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+            <div class="h5 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;&nbsp;<i class="fa-regular fa-square-check"></i>  This record has already been Expert Reviewed by the following Experts:
+                <br>
 
         </div>
-        <div class="col-md-6" style="text-align:right;">
-            {% if my_app_models %}
-            {% for my_inst in my_app_models %}
-        
-            <h6>
-                {% if my_inst.commented_pols_link and user.is_authenticated  %}
-                <a href="{% url 'polities-commented'  %}" class="btn btn-sm btn-outline-danger me-1 fw-bold"> &nbsp; See All Commented Polities</a>
-                {% endif %}
-        
-            </h6>
-            {% endfor %}
+        <div class="ps-3 h6 my-3">
+            <span class="ps-2 mt-3">
+                <i class="fa-solid fa-check"></i> &nbsp; {{ my_inst.my_curators_list }}
+            </span> 
+
+        </div>
+        </div>
+
             {% endif %}
+
+        {% if user|in_group:"Chief Seshat External Experts" and my_inst.my_model != 'polity' %}
+
+        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+
+
+            <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
+                {% csrf_token %}
+                <div class="h3 mb-1" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                    <button 
+                    type="submit" 
+                    class="btn btn-outline-success bg-colorful-light px-3 py-1 fw-bold" 
+                    id="saveButton" 
+                    style="display: none; vertical-align: top;"
+                >
+                <i class="fa-solid fa-signature"></i> Sign and Save
+                </button>
+                </div>
+                <div class="form-check pt-2 ps-5">
+                    <input 
+                        type="checkbox" 
+                        name="verify" 
+                        class="form-check-input checkboxinput" 
+                        style="transform: scale(1.5); margin-right: 10px;" 
+                        id="id_verify" 
+                        onclick="toggleButton()"
+                    >
+                    <label class="form-check-label ps-2" for="id_verify">I ({{user}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
+                </div>
+                <div class="mt-3">
+
+                </div>
+            </form>
+        </div>
+
+        {% endif %}
+
+        {% endfor %}
         </div>
     
         </div>
     {% if my_app_models %}
+    {% for my_inst in my_app_models %}
+    {% if my_inst.commented_pols_link and user.is_authenticated  %}
+
     <div class="mainform">
 
-    <table class="table table-borderless align-middle bg-colorful-light" style="border-radius:5px;">
-
-        <tbody>
-            {% for my_inst in my_app_models %}
-                    <tr >
-                        <td class="p-2" style="text-align: left;">
-                          {% if my_inst.my_var_name %}
-                          <span class="fs-6">Variable: </span>
-                          <span class="fw-bold fs-5">{{ my_inst.my_var_name }}</span> <br>
-                          {% endif %}
-                          {% if my_inst.my_value %}
-                          <span class="fs-6">Coded Value: </span>
-                          <span class="fw-bold fs-5"> {{ my_inst.my_value }} </span>                            <br>
-
-                          {% endif %}
-      
-                          <span class="fs-6">Polity: </span>
-                          <span class="fw-bold fs-5"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
-                          <br>
-                          <span>
-                            {% block years_short_for_top_pol %}
-                            {% if my_inst.start_year == None %}
-                            {% elif  my_inst.start_year == my_inst.end_year %}
-                                {% if  my_inst.start_year < 0 %}
-                                    {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> 
+        <table class="table table-borderless align-middle bg-colorful-light" style="border-radius:5px;">
+    
+            <tbody>
+                        <tr >
+                            <td class="p-2" style="text-align: left;">
+                              {% if my_inst.my_var_name %}
+                              <span class="fs-6">Variable: </span>
+                              <span class="fw-bold fs-5">{{ my_inst.my_var_name }}</span> <br>
+                              {% endif %}
+                              {% if my_inst.my_value %}
+                              <span class="fs-6">Coded Value: </span>
+                              <span class="fw-bold fs-5"> {{ my_inst.my_value }} </span>                            <br>
+    
+                              {% endif %}
+          
+                              <span class="fs-6">Polity: </span>
+                              <span class="fw-bold fs-5"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}">{{my_inst.my_polity}}</a></span>
+                              <br>
+                              <span>
+                                {% block years_short_for_top_pol %}
+                                {% if my_inst.start_year == None %}
+                                {% elif  my_inst.start_year == my_inst.end_year %}
+                                    {% if  my_inst.start_year < 0 %}
+                                        {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> 
+                                    {% else %}
+                                        {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
+                                    {% endif %}
+                                {% elif my_inst.end_year == None %}
+                                    {% if  my_inst.start_year < 0 %}
+                                        {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
+                                    {% else %}
+                                        {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
+                                    {% endif %}
+                                {% elif my_inst.end_year == None and  my_inst.start_year == None %}
+                                    <i class="fa-solid fa-minus"></i> 
                                 {% else %}
-                                    {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
+                                    {% if  my_inst.start_year < 0 and my_inst.end_year < 0 %}
+                                        {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
+                                    {% elif  my_inst.start_year < 0 and my_inst.end_year >= 0 %}
+                                        {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
+                                    {% else %}
+                                        {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
+                                    {% endif %}
                                 {% endif %}
-                            {% elif my_inst.end_year == None %}
-                                {% if  my_inst.start_year < 0 %}
-                                    {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
-                                {% else %}
-                                    {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                                {% endif %}
-                            {% elif my_inst.end_year == None and  my_inst.start_year == None %}
-                                <i class="fa-solid fa-minus"></i> 
-                            {% else %}
-                                {% if  my_inst.start_year < 0 and my_inst.end_year < 0 %}
-                                    {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
-                                {% elif  my_inst.start_year < 0 and my_inst.end_year >= 0 %}
-                                    {{ my_inst.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                                {% else %}
-                                    {{ my_inst.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                                {% endif %}
+                                {% endblock years_short_for_top_pol %}
+                              </span>
+                              
+                              {% if my_inst.my_year_from == None %}
+                              {% elif my_inst.my_year_from == my_inst.my_year_to %}
+                              <span class="fs-6">Year Range: </span>
+                                  {% if my_inst.my_year_from < 0 %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </span>
+                                  {% else %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></span>
+                                  {% endif %}
+                              {% elif my_inst.my_year_to == None %}
+                              <span class="fs-6">Year Range: </span>
+                                  {% if my_inst.my_year_from < 0 %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span></span>
+                                  {% else %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></span>
+                                  {% endif %}
+                              {% elif my_inst.my_year_to == None and my_inst.my_year_from == None %}
+                                  <span class="fw-bold fs-5" style="text-align: center;"> <i class="fa-solid fa-minus"></i> </span>
+                              {% else %}
+                              <span class="fs-6">Year Range: </span>
+                                  {% if my_inst.my_year_from < 0 and my_inst.my_year_to < 0 %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to|abs }} <span class="text-secondary">BCE</span></span>
+                                  {% elif my_inst.my_year_from < 0 and my_inst.my_year_to >= 0 %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></span>
+                                  {% else %}
+                                  <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></span>
+                                  {% endif %}
+                              {% endif %}
+                              <br>
+    
+                    <!-- Tag tag (Disputed/Suspected etc.) -->
+                    {% if my_inst.my_tag %}
+    
+                    <span class="fs-6">Tags: </span>
+    
+    
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
+                            {% if my_inst.my_tag == 'DSP' %}
+                        Disputed is coded
+                            {% elif  my_inst.my_tag == 'SSP' %}
+                        The value is suspected (Expert Check Needed).
+                            {% elif  my_inst.my_tag == 'UNK' %}
+                        Unknown.
+                            {% elif  my_inst.my_tag == 'IFR' %}
+                        The coded value is inferred.
+                            {% elif  my_inst.my_tag == 'TRS' %}
+                        The value is backed up by sufficient evidence.
+                            {% else  %}
+                            No Descriptions
+                            {% endif %}">
+                            {% if my_inst.my_tag == "DSP" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.my_tag == "SSP" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#d4507c;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.my_tag == "UNK" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.my_tag == "IFR" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.my_tag == "UND" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ my_inst.my_tag }}</span>
+                            {% else  %}
+                                <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ my_inst.my_tag }}</span>
                             {% endif %}
-                            {% endblock years_short_for_top_pol %}
-                          </span>
-                          
-                          {% if my_inst.my_year_from == None %}
-                          {% elif my_inst.my_year_from == my_inst.my_year_to %}
-                          <span class="fs-6">Year Range: </span>
-                              {% if my_inst.my_year_from < 0 %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </span>
-                              {% else %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></span>
-                              {% endif %}
-                          {% elif my_inst.my_year_to == None %}
-                          <span class="fs-6">Year Range: </span>
-                              {% if my_inst.my_year_from < 0 %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span></span>
-                              {% else %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></span>
-                              {% endif %}
-                          {% elif my_inst.my_year_to == None and my_inst.my_year_from == None %}
-                              <span class="fw-bold fs-5" style="text-align: center;"> <i class="fa-solid fa-minus"></i> </span>
-                          {% else %}
-                          <span class="fs-6">Year Range: </span>
-                              {% if my_inst.my_year_from < 0 and my_inst.my_year_to < 0 %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to|abs }} <span class="text-secondary">BCE</span></span>
-                              {% elif my_inst.my_year_from < 0 and my_inst.my_year_to >= 0 %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></span>
-                              {% else %}
-                              <span class="fw-bold fs-5" style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></span>
-                              {% endif %}
-                          {% endif %}
-                          <br>
-
-                <!-- Tag tag (Disputed/Suspected etc.) -->
-                {% if my_inst.my_tag %}
-
-                <span class="fs-6">Tags: </span>
-
-
-                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
-                        {% if my_inst.my_tag == 'DSP' %}
-                    Disputed is coded
-                        {% elif  my_inst.my_tag == 'SSP' %}
-                    The value is suspected (Expert Check Needed).
-                        {% elif  my_inst.my_tag == 'UNK' %}
-                    Unknown.
-                        {% elif  my_inst.my_tag == 'IFR' %}
-                    The coded value is inferred.
-                        {% elif  my_inst.my_tag == 'TRS' %}
-                    The value is backed up by sufficient evidence.
-                        {% else  %}
-                        No Descriptions
-                        {% endif %}">
-                        {% if my_inst.my_tag == "DSP" %}
-                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ my_inst.my_tag }}</span>
-                        {% elif  my_inst.my_tag == "SSP" %}
-                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#d4507c;"> {{ my_inst.my_tag }}</span>
-                        {% elif  my_inst.my_tag == "UNK" %}
-                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ my_inst.my_tag }}</span>
-                        {% elif  my_inst.my_tag == "IFR" %}
-                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ my_inst.my_tag }}</span>
-                        {% elif  my_inst.my_tag == "UND" %}
-                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ my_inst.my_tag }}</span>
-                        {% else  %}
-                            <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ my_inst.my_tag }}</span>
+                            </a>
                         {% endif %}
-                        </a>
-                    {% endif %}
-
-                        <!-- Disputred tag (Disputed/or Not etc.) -->
-                    {% if my_inst.my_is_disputed %}
-                    
-                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="There is disagreement among scholars.">
-                        <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
-                    </a>
-                    
-                    {% endif %}
-                    
-                    <!-- Disputred tag (Disputed/or Not etc.) -->
-                    {% if my_inst.my_is_uncertain %}
-                    <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
-                        <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
-                    </a>
-                    {% endif %}
-                    
-                    <!-- Expert Checked Tag -->
-                    {% if my_inst.my_expert_reviewed %}
-                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.curators_list }}">
-                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert {{my_inst.my_id}}</span>
-                        </a>
-                    {% endif %}
+    
+                            <!-- Disputred tag (Disputed/or Not etc.) -->
+                        {% if my_inst.my_is_disputed %}
                         
-      
-                      </td>
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="There is disagreement among scholars.">
+                            <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
+                        </a>
+                        
+                        {% endif %}
+                        
+                        <!-- Disputred tag (Disputed/or Not etc.) -->
+                        {% if my_inst.my_is_uncertain %}
+                        <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+                            <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+                        </a>
+                        {% endif %}
+                        
+                        <!-- Expert Checked Tag -->
+                        {% if my_inst.my_curators_list %}
+                            <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by: {{ my_inst.my_curators_list }}">
+                                <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+                            </a>
+                        {% endif %}
+                            
+          
+                          </td>
+                      </tr>
+                 
+                {% if my_inst.my_instance.description %}
+                {% autoescape off %}
+                <tr>
+                    <td>
+                      <b> Public Comment (Description): </b> 
+                      <span > {{my_inst.my_description|make_references_look_nicer}}</span>
+                    </td>
+                </tr>
+                {% endautoescape %}
+    
+                {% endif %}
+        
+            </tbody>
+          </table>
+        </div>
+
+    {% else %}
+
+
+    <div style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
+        <table class="table table-borderless align-middle">
+            <thead>        
+              <tr class="h6 text-secondary">
+                <th style="text-align: left;" class="h6" scope="col">Variable</th>
+                <th style="text-align: left;" class="h6" scope="col">Coded Value</th>
+                <th style="text-align: left;" class="h6" scope="col">Polity</th>
+                <th style="text-align: center;" class="h6" scope="col">Year(s)</th>
+                <th class="h6" scope="col" style="text-align: left">Tag(s)</th>
+                <th class="h6" scope="col" style="text-align: center">Update</th>
+              </tr>
+            </thead>
+            <tbody>
+                  <tr class="bg-colorful-light h6">
+                      <td  class="fw-bold"  style="text-align: left;">{{ my_inst.my_var_name }}</td>
+                      <td  class="fw-bold"   style="text-align: left;">{{ my_inst.my_value }}</td>
+    
+                      <td style="text-align: left;">
+                        <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}" class="text-teal" >{{my_inst.my_polity}}</a></span>
+                        
+                        </td>
+                        {% if my_inst.year_from == None %}
+                            <td style="text-align: center;"> - </td>
+                        {% elif my_inst.year_from == my_inst.year_to %}
+                            {% if my_inst.year_from < 0 %}
+                            <td style="text-align: center;">{{ my_inst.year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </td>
+                            {% else %}
+                            <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span></td>
+                            {% endif %}
+                        {% elif my_inst.year_to == None %}
+                            {% if my_inst.year_from < 0 %}
+                            <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span></td>
+                            {% else %}
+                            <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span></td>
+                            {% endif %}
+                        {% elif my_inst.year_to == None and my_inst.year_from == None %}
+                            <td style="text-align: center;"> <i class="fa-solid fa-minus"></i> </td>
+                        {% else %}
+                            {% if my_inst.year_from < 0 and my_inst.year_to < 0 %}
+                            <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to|abs }} <span class="text-secondary">BCE</span></td>
+                            {% elif my_inst.year_from < 0 and my_inst.year_to >= 0 %}
+                            <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to }} <span class="text-secondary">CE</span></td>
+                            {% else %}
+                            <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to }} <span class="text-secondary">CE</span></td>
+                            {% endif %}
+                        {% endif %}
+                                          
+                      <!-- Tag tag (Disputed/Suspected etc.) -->
+                      <td>
+    
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
+                            {% if my_inst.tag == 'DSP' %}
+                        Disputed is coded
+                            {% elif  my_inst.tag == 'SSP' %}
+                        The value is suspected (Expert Check Needed).
+                            {% elif  my_inst.tag == 'UNK' %}
+                        Unknown.
+                            {% elif  my_inst.tag == 'IFR' %}
+                        The coded value is inferred.
+                            {% elif  my_inst.tag == 'TRS' %}
+                        The value is backed up by sufficient evidence.
+                            {% else  %}
+                            No Descriptions
+                            {% endif %}">
+                            {% if my_inst.tag == "DSP" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.tag == "SSP" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#d4507c;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.tag == "UNK" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.tag == "IFR" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee; color:#4048a7;"> {{ my_inst.my_tag }}</span>
+                            {% elif  my_inst.tag == "UND" %}
+                            <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c8c8c8; color:#272729;"> {{ my_inst.my_tag }}</span>
+                            {% else  %}
+                                <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c7e79e; color:#2f872f;">{{ my_inst.my_tag }}</span>
+                            {% endif %}
+                            </a>
+                        
+                            <!-- Disputred tag (Disputed/or Not etc.) -->
+                        {% if my_inst.my_is_disputed %}
+                        
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="There is disagreement among scholars.">
+                            <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#1c0b0b; color:#f39b9b;"> Disputed</span>
+                        </a>
+                        
+                        {% endif %}
+                        
+                        <!-- Disputred tag (Disputed/or Not etc.) -->
+                        {% if my_inst.my_is_uncertain %}
+                        <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+                            <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+                        </a>
+                        {% endif %}
+                        
+                        <!-- Expert Checked Tag -->
+                        {% if my_inst.my_curators_list %}
+                            <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.my_curators_list }}">
+                                <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+                            </a>
+                        {% endif %}
+                            
+                        </td>
+    
+                        <td style="text-align: center;">
+                            {% if my_inst.my_var_name_underlined %}
+    
+                                {% if my_inst.description %}
+                                    {% with my_inst.my_var_name_underlined|add:"-update" as meat %}
+                                    <div class="py-1">
+                                    <a href="{% url meat my_inst.my_id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                    </div>
+                                    {% endwith %}
+    
+                                {% else %}
+                                {% with my_inst.my_var_name_underlined|add:"-updatenew" as meat %}
+                                <div class="py-1">
+                                <a href="{% url meat my_inst.my_id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                                </div>
+                                {% endwith %}
+                                {% endif %}
+                            {% else %}
+                                -  
+                            {% endif %}
+    
+                          </td>
+                          </tr>
+    
+                          
+    
+            </tbody>
+          </table>
+        </div>
+        <div class="pt-2 pb-4" style=" border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
+            <table class="table table-borderless align-middle">
+                <thead>        
+                  <tr>
+                    <th style="text-align: left;" class="fw-bold" scope="col">Description (Public): <sup>  <span class="badge bg-warning text-dark border border-dark">NEW</span> &nbsp;<i class="fa-solid fa-circle-info text-secondary"    type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Each description has several subdescriptions. A subdescription is a combination of some text and its corresponding citation(s)."></i></sup> 
+    
+
+                    </th>
                   </tr>
-             
-            {% if my_inst.my_description %}
+                </thead>
+                <tbody>
+    
+            {% autoescape off %}
+            {% for my_inst in my_app_models %}
+
+            <tr>
+                <td style="text-align: left;">
+                    {{my_inst.my_instance.comment}}
+
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% endautoescape %}
+            {% if my_inst.my_instance.description %}
             {% autoescape off %}
             <tr>
-                <td>
-                  <b> Public Comment (Description): </b> 
-                  <span > {{my_inst.my_description|make_references_look_nicer}}</span>
+                <td class="text-secondary">
+                  <b> Description (Public): </b>
+                  <small > {{my_inst.my_description|make_references_look_nicer}}</small>
                 </td>
             </tr>
             {% endautoescape %}
 
             {% endif %}
-
-            {% endfor %}
-
         </tbody>
-      </table>
-    </div>
+        </table>
+    
+        </div>
+        {% endif %}
+
+        {% endfor %}
+
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {% endif %}
-      <h6 class="roboto-regular pt-4">All existing Private Comments:</h6>
+      <h6 class="roboto-regular pt-1">
+        {% if object.inner_private_comments_related.all %}
+        All Private Comments: 
+        {% else %}
+        No Private Comments yet. Add the first one here:
+        {% endif %}
+
+    </h6>
       <div class="privatecommentform">
         <div class="d-flex align-items-center">
             {% if messages %}
@@ -248,19 +510,26 @@
         </div>
     <form action="{% url 'xxyyzz' com_id=object.id %}" method="post">
             {% csrf_token %}
-        <table id="table_id" class="table align-middle pt-0 mt-0"> 
+
+            {% if object.inner_private_comments_related.all %}
+
+        <table id="table_id" class="table table-borderless table-hover align-middle pt-0 mt-0"> 
             <thead>
                 <tr class="text-dark" >
-                        <th class="col-md-9" scope="col" style="text-align: left">Private Comment 
-                            <span class="text-secondary">(Only visible to Selected Seshat Experts/RAs)</span>
+                        <th class="col-md-9" scope="col" style="text-align: left"><small>   Private Comment 
+                            <span class="text-secondary">(Only visible to Selected Seshat Experts/RAs) </small></span>
                         </th>
-                          <th class="col-md-2" scope="col" style="text-align: right"> Target Experts or Researchers</th>
+                          <th class="col-md-2" scope="col" style="text-align: right"> <small>Target Experts or Researchers</small> </th>
 
-                          <th class="col-md-1" scope="col" style="text-align: right">                        
-                            <input type="submit" class="btn border border-dark fw-bold pt-0 pb-0 px-1" 
-                            style="background:#7ac5ee;" 
+                          <th class="col-md-1" scope="col" style="text-align: right">  
+                            <small>
+
+                                                
+                            <input type="submit" class="btn border border-dark fw-normal pt-0 pb-0 px-1" 
+                            style="background:#90e6fc; color: #1c2e4a;" 
                             value="Set Done" 
                             title="First tick the comments and then click here to mark them as completed.">
+                        </small>  
                         </th>
                 </tr>
               </thead>
@@ -329,9 +598,11 @@
 
             </tbody>
           </table>
+          {% endif %}
+
          
         </form>
-        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+        {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
         <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=object.id %}">
             {% csrf_token %}
             <div class="row mt-3">
@@ -378,6 +649,12 @@
         $(ctl).prop("class", "btn btn-success px-4 disabled");
         $(ctl).text(msg);
         return true;
+    }
+
+    function toggleButton() {
+        const checkbox = document.getElementById('id_verify');
+        const button = document.getElementById('saveButton');
+        button.style.display = checkbox.checked ? 'inline-block' : 'none';
     }
 </script>
 

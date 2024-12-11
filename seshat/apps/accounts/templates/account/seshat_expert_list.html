@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seshat Experts</title>
+</head>
+<body>
+    <h1>List of Seshat Experts</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expert in experts %}
+                <tr>
+                    <td>{{ expert }}</td> <!-- Adjust fields as needed -->
+                    <td>{{ expert.role }}</td>
+
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No experts found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

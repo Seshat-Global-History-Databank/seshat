@@ -1,0 +1,55 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+{% load custom_filters %}
+
+{% load humanize %}
+
+
+{% block content %}
+<div class="container">
+    <h1 class="pt-2">List of Seshat Experts</h1>
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Staff</th>
+                <th>Active</th>
+                <th>Last Login</th>
+                <th>Date Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expert in experts %}
+                <tr>
+                    <td>{{ expert.id }}</td>
+                    <td>
+                        {% if expert.user.first_name and expert.user.last_name %}
+                            {{ expert.user.first_name }} {{ expert.user.last_name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ expert.user.username }}</td>
+                    <td>{{ expert.user.email }}</td>
+                    <td>{{ expert.role }}</td>
+                    <td>{{ expert.user.is_staff|yesno:"Yes,No" }}</td>
+                    <td>{{ expert.user.is_active|yesno:"Yes,No" }}</td>
+                    <td>{{ expert.user.last_login|date:"Y-m-d H:i" }}</td>
+                    <td>{{ expert.user.date_joined|date:"Y-m-d" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="9">No experts found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

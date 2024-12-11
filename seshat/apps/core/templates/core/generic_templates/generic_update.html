@@ -4,6 +4,45 @@
 {% load custom_filters %}
 
 {% block extra_vars %}
+
+<style>
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: darkred;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 20px;
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(2, 57, 2);
+            padding-left: 20px;
+    }
+
+
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        background: white;
+        border: none;
+        outline: 0;
+        margin-left:-20px;
+        cursor:text;
+        box-shadow: none;
+        padding-right: 1px;
+        margin-top:10px;
+
+    }
+
+
+</style>
 {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions and 'core.add_seshatprivatecommentpart' in request.user.get_all_permissions %}
     {% if extra_var and extra_var2 and extra_var3 %}
 
@@ -20,7 +59,7 @@
         {{ extra_var2|as_crispy_field }}
     </div>
     {% elif extra_var and extra_var2  %}
-        <div class="col-md-4">
+        <div class="col-md-6">
             {{ extra_var|as_crispy_field }}
             {% if extra_var.name == 'polity_cap'  %}
             <span class="text-secondary">
@@ -28,11 +67,11 @@
             </span>
             {% endif %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             {{ extra_var2|as_crispy_field }}
         </div>
     {% else %}
-    <div class="col-md-4 pb-2">
+    <div class="col-md-6 pb-2">
         {{ extra_var|as_crispy_field }}
         {% if extra_var.name == 'polity_cap'  %}
         <span class="text-secondary">
@@ -85,18 +124,8 @@
 
     {% endif %}
 
-    <div class="col-md-4 pb-2">
 
 
-    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
-    {{ form.suggested_expert|as_crispy_field }}
-
-
-    {% else %}
-    {{ form.expert_reviewed_by_me|as_crispy_field }}
-
-    {% endif %}
-</div>
 
     <script>
         $(document).ready(function() {

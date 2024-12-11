@@ -360,8 +360,8 @@
                   {% endif %}
                   
                   <!-- Expert Checked Tag -->
-                  {% if my_inst.my_expert_reviewed %}
-                      <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.curators_list }}">
+                  {% if my_inst.my_curators_list %}
+                      <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.my_curators_list }}">
                           <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert {{my_inst.my_id}}</span>
                       </a>
                   {% endif %}
@@ -407,7 +407,7 @@
       <thead>        
         <tr style="color: #782823;  border-bottom: 2px solid rgba(120, 40, 35, 0.311);" class="pb-2">
           <th style="text-align: left;" class="h6 pb-2" scope="col">Description (Public):
-            <small class="text-secondary fw-norma"  style="float: right;" > Note: Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
+            <sup><i class="fa-solid fa-circle-info text-secondary"    type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Each description has several subdescriptions. A subdescription is a combination of some text and its corresponding citation(s)."></i></sup> 
           </th>
         </tr>
       </thead>

@@ -590,6 +590,9 @@ class SeshatCommentPartForm2_UPGRADE(forms.Form):
 class ExpertCheckedForm(forms.Form):
     verify = forms.BooleanField(
         required=False,  # Checkbox is optional
-        label="Mark as Expert Checked",
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+        label="I have checked this coded record and would like to mark it as Expert Checked under my name.",
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',                 
+            'style': 'transform: scale(1.5); margin-right: 10px;',  # Adjust size and spacing
+        })
     )

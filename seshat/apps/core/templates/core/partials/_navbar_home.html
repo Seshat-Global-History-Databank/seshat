@@ -176,7 +176,7 @@
                             <a href="{% url 'account_logout' %}" class="pe-3  fw-light nav-link active" style="color:rgba(255,255,255,.55)"><strong>Logout </strong></a>
                         </li>
 
-                        {%  if  'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+                        {%  if  'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
                         <li class="nav-item mx-1">
                             <a href="{% url 'user-profile' %}" class="pe-2 text-light nav-link active"> <i class="fas fa-user-check text-light"></i><strong> {{ user.email|username_from_email }} </strong>
                                 <sup class="badge rounded-pill  fw-bold" style="padding: 3px 5px 2px 5px; color:#782823; background-color:#fffdf2;">{{ notifications_count }}</sup>

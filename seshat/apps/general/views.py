@@ -7730,7 +7730,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
                 father_private_comment = SeshatPrivateComment.objects.create(text="")
                 new_object.private_comment = father_private_comment
                 seshat_private_comment_part = SeshatPrivateCommentPart(
-                    private_comment_part_text=f"A new review request for Review has been assigned to you.",
+                    private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
                     private_comment_owner=logged_in_expert, 
                     private_comment= father_private_comment
                 )
@@ -7955,7 +7955,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
 
+            new_object = my_form.save(commit=False)
+            new_object.expert_reviewed = False
             new_object = my_form.save()
+            
             action = request.POST.get('action')
             if action == 'redirect_one':
                 return redirect("polity-detail-main", pk=new_object.polity.id) 

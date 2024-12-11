@@ -71,11 +71,12 @@ commonwidgets = {
     'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'placeholder':'Add a meaningful description (optional)'}),
     'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
     'tag': forms.RadioSelect(),
-    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3',}),
     "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
     "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
 }
+
 
 class Polity_research_assistantForm(ExpertReviewedForm):
     """

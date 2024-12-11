@@ -9,6 +9,11 @@
 
 {% block content %}
 <style>
+    label {
+        color:#235347 !important;
+        font-family: Roboto Mono;
+
+    }
     .bg-colorful:hover {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
     
@@ -16,6 +21,12 @@
     
       .bg-colorful-light {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.22),rgb(242, 199, 119, 0.22),rgb(151, 230, 151, 0.22));
+        border-radius: 10px;
+        color:#782823;
+      }
+
+      .bg-colorful-extra-light {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.11),rgb(242, 199, 119, 0.11),rgb(151, 230, 151, 0.11));
         border-radius: 10px;
         color:#782823;
       }
@@ -220,8 +231,8 @@
                     {% endif %}
                     
                     <!-- Expert Checked Tag -->
-                    {% if my_inst.my_expert_reviewed %}
-                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.curators_list }}">
+                    {% if my_inst.my_curators_list %}
+                        <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Checked and accepted by a Seshat Expert: {{ my_inst.my_curators_list }}">
                             <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
                         </a>
                     {% endif %}
@@ -266,8 +277,12 @@
         <table class="table table-borderless align-middle">
             <thead>        
               <tr>
-                <th style="text-align: left;" class="h6" scope="col">Description (Public):
-                    <small class="text-secondary float-end" >Note: Each description has several <u>subdescriptions</u>. A subdescription is a combination of some text and its corresponding citation(s).</small>
+                <th style="text-align: left;" class="h6" scope="col">Description (Public): <sup><i class="fa-solid fa-circle-info text-secondary"    type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Each description has several subdescriptions. A subdescription is a combination of some text and its corresponding citation(s)."></i></sup> 
+
+
+                   
+
+                    
                 </th>
               </tr>
             </thead>
@@ -332,14 +347,56 @@
     <div>
 
         {% for my_inst in my_app_models %}
-        <form method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
-            {% csrf_token %}
-        
-            <h3>Expert Review</h3>
-            {{ my_inst.expert_form.as_p }}
-        
-            <button type="submit" class="btn btn-primary">Saveeeeee</button>
-        </form>
+
+        {% if  my_inst.my_curators_list %}
+        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+            <div class="h5 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;&nbsp;<i class="fa-regular fa-square-check"></i>  This record has already been Expert Reviewed by the following Experts:
+                <br>
+
+        </div>
+        <div class="ps-3 h6 my-3">
+            <span class="ps-2 mt-3">
+                <i class="fa-solid fa-check"></i> &nbsp; {{ my_inst.my_curators_list }}
+            </span> 
+
+        </div>
+        </div>
+
+            {% endif %}
+
+
+        {% if user|in_group:"Chief Seshat Researchers" %}
+        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+            <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
+                {% csrf_token %}
+                <div class="h3 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-regular fa-circle-check"></i>  Expert Review &nbsp;
+                    <button 
+                    type="submit" 
+                    class="btn btn-outline-success bg-colorful-light px-3 py-0 fw-bold" 
+                    id="saveButton" 
+                    style="display: none;"
+                >
+                <i class="fa-solid fa-signature"></i> Sign and Save
+                </button>
+                </div>
+                <div class="form-check pt-2 ps-5">
+                    <input 
+                        type="checkbox" 
+                        name="verify" 
+                        class="form-check-input checkboxinput" 
+                        style="transform: scale(1.5); margin-right: 10px;" 
+                        id="id_verify" 
+                        onclick="toggleButton()"
+                    >
+                    <label class="form-check-label ps-2" for="id_verify">I ({{user}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
+                </div>
+                <div class="mt-3">
+
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
             {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
 
             {% endif %}   
@@ -351,7 +408,7 @@
                     {% if my_inst.my_inner_private_comments_related %}
                     text-secondary
                     {% else %} text-secondary {% endif %} 
-                    " style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);">
+                    " >
                     <th class="col-md-9 h6" scope="col" style="text-align: left">Private Comment 
 
                                 <small class="fw-normal">(Only visible to Selected Seshat Experts/RAs)</small>
@@ -366,7 +423,7 @@
 
         {% if my_inst.my_inner_private_comments_related %}
             {% for subcom in my_inst.my_inner_private_comments_related.all %}
-                <tr class="py-1 bg-colorful-light {% if subcom.is_done %}bg-light text-secondary{% endif %}" style="border-bottom: 1px solid rgba(120, 40, 35, 0.311); border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; ">
+                <tr class="py-1 bg-colorful-extra-light {% if subcom.is_done %}bg-light text-secondary{% endif %}" >
                     <div class="row">
 
                     <td class="col-md-9 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
@@ -410,7 +467,7 @@
         </tr>
         {% endif %}
         <tr>
-        <td class="pt-3">
+        <td class="py-3">
             <a class="p-0 m-0"  
             style="display:block;overflow: hidden;" 
             href="{% url 'create_private_subcomment_new' app_name=my_inst.my_app_name model_name=my_inst.my_var_name_underlined instance_id=my_inst.my_id %}">
@@ -479,6 +536,7 @@
             });
         });
 
+
         newinsertTriggers.forEach(trigger => {
             trigger.addEventListener('mouseover', function() {
                 const counter = this.getAttribute('data-counter');
@@ -499,6 +557,13 @@
             });
         });
     });
+
+    function toggleButton() {
+        const checkbox = document.getElementById('id_verify');
+        const button = document.getElementById('saveButton');
+        button.style.display = checkbox.checked ? 'inline-block' : 'none';
+    }
+
 </script>
 
   {% endblock %}

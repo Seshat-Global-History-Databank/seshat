@@ -50,7 +50,7 @@
         margin-right: 10px; /* Add some spacing between radio buttons */
     }
     .form-check-label {
-        display: flex;
+        display: inline-block;
         align-items: center;
         margin-right: 15px; /* Add spacing between radio buttons */
     }
@@ -151,6 +151,17 @@
         box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
     }
     
+    .scrollable-box {
+        width: 100%; /* You can adjust this value */
+        max-width: 600px; /* Optional: Restricts max width */
+        height: 300px; /* Adjust this to set the box height */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Hides horizontal overflow */
+        border: 1px solid #ddd; /* Optional: Adds a border for aesthetics */
+        padding: 10px; /* Optional: Adds some padding inside the box */
+        background-color: #f9f9f9; /* Optional: Sets background color */
+        border-radius: 5px; /* Optional: Rounds the box corners */
+    }
 
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
@@ -225,16 +236,16 @@
         <hr class="bg-colorful">
         {% endif %}
         <div class="row pt-2 ps-2 mainform">
-            <div class="col-sm-12 row">
+            <div class="col-sm-6 row">
                 {% if myvar == 'Polity Preceding Entity' %}
 
                 {% elif myvar == 'Polity Duration' or myvar == 'Polity Peak Years' %}
-                <div class="col-sm-4 pb-2">
+                <div class="col-sm-12 pb-2">
                     {{ form.polity|as_crispy_field }}
                 </div>
                 {% else %}
 
-                <div class="col-sm-6 pb-2">
+                <div class="col-sm-12 pb-2">
                     {{ form.polity|as_crispy_field }}
                 </div>
 
@@ -245,63 +256,102 @@
                     {{ form.year_to|as_crispy_field }}
                   </div>
                   {% endif %}
-
+                  {% block extra_vars %}
+                  {% endblock extra_vars %}
+  
 
                   <div class="col-sm-12" style="display:none">
                     {{ form.description }}
                   </div>
-                  {% block extra_vars %}
-                  {% endblock extra_vars %}
-                  <div class="col-sm-2 mb-1">
+
+                  <div class="col-sm-4 mb-1">
                     {{ form.is_disputed|as_crispy_field }}
                     {{ form.is_uncertain|as_crispy_field }}
-                    {{ form.expert_reviewed|as_crispy_field }}
                 </div>
-                <div class="col-sm-2 pe-0">
-                    <fieldset>
-                        <div class="form-check pb-4 justify-content-end">
-                            {% for radio in form.tag %}
-                                <label class="ps-4 pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
-                                    {{ radio.tag }}
-                                    <span class="badge rounded-pill px-3 py-1 border border-dark
-                                        {% if radio.choice_label == 'Confident' %}
-                                            bg-success
-                                        {% elif radio.choice_label == 'Inferred' %}
-                                            bg-primary 
-                                        {% elif radio.choice_label == 'Suspected' %}
-                                            bg-warning text-dark 
-                                        {% elif radio.choice_label == 'Undecided' %}
-                                            bg-secondary 
-                                        {% endif %}
-                                    ">  
-                                        {{ radio.choice_label }}
-                                    </span>
-                                </label>
-                            {% endfor %}
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-sm-12 row">
 
-                    <div class="col-sm-3 mb-2 pb-4 d-grid mx-auto">
-                        <button type="submit" name="action" value="redirect_one" class="btn btn-outline-secondary my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit without Description</button>
-                    </div>
-                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto ">
-                        <button type="submit" name="action" value="redirect_two" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">Submit and Continue to add Description</button>
-                    </div>
-                    <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto ">
-                        <button type="submit" name="action" value="redirect_three" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">Expert Checked</button>
-                    </div>
-                    <div class="col-sm-2 mb-2 pb-4 d-grid mx-auto">
-                        {% block delete_button %}
-                        {% endblock delete_button %}
-                    </div>
+                <div class="col-sm-8 pe-0">
+                    <span class="form-check pb-4">
+                        {% for radio in form.tag %}
+                            <label class="ps-4 pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
+                                {{ radio.tag }}
+                                <span class="badge" 
+                                    {% if radio.choice_label == 'Confident' %}
+                                    style=" font-family: Roboto Mono; color:#163832; font-optical-sizing: auto; font-weight: 700; background:#bee3ba; width: 100px;"
+                                    {% elif radio.choice_label == 'Inferred' %}
+                                    style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#add8e6; color:#324366; width: 100px;"  
+                                    {% elif radio.choice_label == 'Suspected' %}
+                                    style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#8f2d56; width: 100px;"
+                                    {% elif radio.choice_label == 'Undecided' %}
+                                    style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background: #d4d4d4; color:#272729; width: 100px;"  
+                                    {% endif %}
+                                >  
+                                    {{ radio.choice_label }}
+                                </span>
+                            </label>
 
+
+                        {% endfor %}
+                    </span>
+            </div>
+            <div class="col-sm-12 pb-5">
+
+                {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+                {{ form.suggested_expert|as_crispy_field }}
+                <small>These Seshat Experts will get Notifications to review the inserted record.</small>
+            
+                {% else %}
+                {{ form.expert_reviewed_by_me|as_crispy_field }}
+            
+                {% endif %}
+            
+
+            </div>
+
+
+
+            </div>
+
+            <div class="col-sm-6">
+                {% if object.comment %}
+                <b>Description:</b> <br>
+                {% autoescape off %}
+                <div class="scrollable-box">
+                    {{object.comment}}
                 </div>
+                {% endautoescape %}
+
+                {% endif %}
             </div>
 
 
                   <!-- Here come the extra vars -->
+
+        </div>
+        <div class="col-sm-12 row pt-4">
+
+            <div class="col-sm-4 mb-2 pb-4 d-grid mx-auto">
+                {% if not object.comment %}
+
+                <button type="submit" name="action" value="redirect_one" class="btn btn-outline-secondary my-auto btn-block btn-lg" style="font-family: 'Roboto Mono', monospace;">Submit without Description</button>
+                {% endif %}
+
+            </div>
+            <div class="col-sm-5 mb-2 pb-4 d-grid mx-auto ">
+                <button type="submit" name="action" value="redirect_two" class="btn  my-auto btn-block btn-lg goodsubmit" style="font-family: 'Roboto Mono', monospace;">
+                    {% if object.comment %}
+                    Submit and Go to Description
+
+                    {% else %}
+
+                    Submit and Continue to add Description
+                    {% endif %}
+
+                </button>
+            </div>
+            <div class="col-sm-3 mb-2 pb-4 d-grid mx-auto">
+                {% block delete_button %}
+                {% endblock delete_button %}
+            </div>
 
         </div>
 
