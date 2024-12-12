@@ -690,7 +690,6 @@
                         plotPolities();
                         allPolitiesLoaded = true;
                         document.getElementById('loadingIndicator').style.display = 'none';
-                        document.getElementById('cliopatria-link').style.display = 'block';
 
                         return fetch('/core/world_map_all_with_vars');
                     })
@@ -717,7 +716,6 @@
                         allVariablesLoaded = true;
                         plotPolities();
                         document.getElementById('variablesLoadingIndicator').style.display = 'none';
-                        document.getElementById('cliopatria-link').style.display = 'block';
 
                         return fetch('/core/provinces_and_countries');
                     })
@@ -740,7 +738,6 @@
                         });
 
                         document.getElementById('baseMapCurrentLoadingIndicator').style.display = 'none';
-                        document.getElementById('cliopatria-link').style.display = 'block';
                         document.getElementById('baseMap').options[4].disabled = false;
                     });
             }
@@ -818,7 +815,6 @@
                 var initialDisplayYear = {{ display_year }};
                 if (selectedYear != initialDisplayYear) {
                     document.getElementById('loadingIndicator').style.display = 'block';
-                    document.getElementById('cliopatria-link').style.display = 'none';
                 }
             }
 
@@ -1415,7 +1411,6 @@
         allPolitiesLoaded = true;
         plotPolities()
         document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('cliopatria-link').style.display = 'block';
         allPolitiesLoaded = false;
 
         // Display slider value
