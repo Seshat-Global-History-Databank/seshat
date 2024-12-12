@@ -456,11 +456,14 @@ function updateLegend() {
 
     if (variable == 'polity') {
         if (addedPolities.length > 0) {
-            // Add clear selection button
-            var clearSelectionButton = document.createElement('button');
-            clearSelectionButton.textContent = 'Clear selection';
-            clearSelectionButton.onclick = clearSelection;
-            legendDiv.appendChild(clearSelectionButton);
+
+            if (baseMap != 'cesium') {
+                // Add clear selection button
+                var clearSelectionButton = document.createElement('button');
+                clearSelectionButton.textContent = 'Clear selection';
+                clearSelectionButton.onclick = clearSelection;
+                legendDiv.appendChild(clearSelectionButton);
+            }
 
             // Make the polityContainer scrollable if there are more than 7 polities
             if (addedPolities.length > 7) {
