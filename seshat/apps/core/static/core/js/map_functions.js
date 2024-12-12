@@ -698,6 +698,18 @@ function toggleSettings() {
     }
 }
 
+function closeSettings() {
+    var settings = document.getElementById("settings");
+    settings.style.display = "none";
+    // Enable the map controls when the settings are closed
+    map.dragging.enable();
+    map.zoomControl.enable();
+    map.scrollWheelZoom.enable();
+    // Show the legend and popup when the settings are closed
+    document.getElementById('variableLegend').style.display = 'block';
+    document.getElementById('popup').style.display = 'block';
+}
+
 function toggleHelp() {
     var help = document.getElementById("help");
     if (help.style.display === "none" || help.style.display === "") {
@@ -721,4 +733,16 @@ function toggleHelp() {
         document.getElementById('variableLegend').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
     }
+}
+
+function closeHelp() {
+    var help = document.getElementById("help");
+    help.style.display = "none";
+    // Enable the map controls when the help text is closed
+    map.dragging.enable();
+    map.zoomControl.enable();
+    map.scrollWheelZoom.enable();
+    // Show the legend and popup when the help text is closed
+    document.getElementById('variableLegend').style.display = 'block';
+    document.getElementById('popup').style.display = 'block';
 }
