@@ -348,7 +348,7 @@
         }
 
         .display-info-container::after, .variable-info-container::after, .previouslySelectedVariable-container::after {
-            width: 150px;
+            width: 300px;
             right: 100%;
         }
 
@@ -423,7 +423,7 @@
                             </div>
                             <label for="chooseVariable">Variable: </label>
                             <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();"
-                                style="width: 150px; text-overflow: ellipsis;" disabled>
+                                style="width: 300px; text-overflow: ellipsis;" disabled>
                                 <option value="polity">Political boundaries</option>
                             </select>
                             <div class="variable-info-container">
@@ -436,7 +436,7 @@
                             <fieldset id="chooseCategoricalVariableSelectionFieldset">
                                 <label for="chooseCategoricalVariableSelection"></label>
                                 <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
-                                    onchange="plotPolities()" style="width: 150px; text-overflow: ellipsis;">
+                                    onchange="plotPolities()" style="width: 300px; text-overflow: ellipsis;">
                                 </select>
                             </fieldset>
                             <div id="variablesLoadingIndicator">
@@ -459,7 +459,7 @@
                             </fieldset>
                             <label for="opacitySlide">Opacity:</label>
                             <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
-                                class="slider" onchange="plotPolities()" style="width: 150px;"><br><br>
+                                class="slider" onchange="plotPolities()" style="width: 300px;"><br><br>
                             <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
                             <!-- <label for="showCapitals">Show capital cities</label>
                                                                                                                 <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
