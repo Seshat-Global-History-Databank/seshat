@@ -557,6 +557,8 @@
                 document.getElementById("mapAndGlobe").style.width = "100%";
                 document.getElementById("globe").style.height = "90%";
                 document.getElementById("variableLegend").style.display = "none";
+                // Set the default base map to Cesium Globe on mobile devices
+                document.getElementById("baseMap").value = "cesium";
             } else {
                 // It might have made more sense to set Esri/arcgis as default and change to Cesium on mobile, but...
                 // the above if statement bizzarely won't let me update the sliderdiv *and* set document.getElementById("cesium").checked = true;
