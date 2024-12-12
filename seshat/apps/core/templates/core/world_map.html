@@ -818,6 +818,7 @@
             var popup = document.getElementById('popup');
             var hideUnselected = document.getElementById('hideUnselected').checked;
             var selectAll = document.getElementById('selectAll').checked;
+            var playButton = document.getElementById('playButton');
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
@@ -1412,6 +1413,13 @@
             }
 
             updateLegend();
+
+            if (playButton.innerHTML == '⏸') {
+                // Disable the popup when playing
+                popup.style.display = 'none';
+            } else {
+                popup.style.display = 'block';
+            }
 
         }
 
