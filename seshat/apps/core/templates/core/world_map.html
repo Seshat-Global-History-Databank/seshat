@@ -147,6 +147,24 @@
         padding: 10px;
     }
 
+    .help {
+        display: none;
+        position: absolute;
+        bottom: 15%;
+        top: 7%;
+        left: 3.8%;
+        z-index: 999;
+        max-height: 100%; /* Ensure it doesn't exceed the parent div height */
+        overflow-y: auto; /* Add vertical scroll if content overflows */
+        margin-top: 10px;
+        background-color: rgba(255, 253, 242, 1);
+        border-color: #782823;
+        border-radius: 5px;
+        border-style: solid;
+        border-width: 4px;
+        padding: 10px;
+    }
+
     #popup{
         overflow: auto;
         border-style: solid;
@@ -159,7 +177,7 @@
         accent-color: teal;
     }
 
-    .settings p {
+    .help p {
         margin: 0;
     }
     .transparent-button {
@@ -392,6 +410,7 @@
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
                 <div id="worldMapControlPanel">
                     <button style="height: 10%" class="friendly-button" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
+                    <button style="height: 10%" class="friendly-button" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
                     <div id="playBackControls">
                         <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
                         <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
@@ -491,6 +510,8 @@
                                 <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
                             </fieldset>
                         </div><br>
+                    </div>
+                    <div class="help" id="help">
                         <p><b>🔹 Hover the mouse over polity shapes on the map to reveal information.</b></p>
                         <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
                         <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>

@@ -684,6 +684,8 @@ function toggleSettings() {
         // Temporarily hide the legend and popup when the settings are open
         document.getElementById('variableLegend').style.display = 'none';
         document.getElementById('popup').style.display = 'none';
+        // Hide help text when settings are open
+        document.getElementById('help').style.display = 'none';
     } else {
         settings.style.display = "none";
         // Enable the map controls when the settings are closed
@@ -691,6 +693,31 @@ function toggleSettings() {
         map.zoomControl.enable();
         map.scrollWheelZoom.enable();
         // Show the legend and popup when the settings are closed
+        document.getElementById('variableLegend').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+    }
+}
+
+function toggleHelp() {
+    var help = document.getElementById("help");
+    if (help.style.display === "none" || help.style.display === "") {
+        help.style.display = "block";
+        // Disable the map controls when the help text is open
+        map.dragging.disable();
+        map.zoomControl.disable();
+        map.scrollWheelZoom.disable();
+        // Temporarily hide the legend and popup when the help text is open
+        document.getElementById('variableLegend').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+        // Hide settings when help text is open
+        document.getElementById('settings').style.display = 'none';
+    } else {
+        help.style.display = "none";
+        // Enable the map controls when the help text is closed
+        map.dragging.enable();
+        map.zoomControl.enable();
+        map.scrollWheelZoom.enable();
+        // Show the legend and popup when the help text is closed
         document.getElementById('variableLegend').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
     }
