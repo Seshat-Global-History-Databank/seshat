@@ -499,10 +499,7 @@
                                         <option value="osm">Street Maps (OSM)</option>
                                         <option value="carto">Basic unlabelled (CARTO)</option>
                                         <option value="gadm" disabled>Clickable borders (GADM)</option>
-                                    </select>
-                                    <div id="baseMapCurrentLoadingIndicator">
-                                        <p>Loading current borders...</p>
-                                    </div><br>
+                                    </select><br>
                                 </fieldset>
                                 <fieldset id="baseMapGADMFieldset">
                                     <label for="baseMapGADM">Current borders:</label>
@@ -737,7 +734,6 @@
                             };
                         });
 
-                        document.getElementById('baseMapCurrentLoadingIndicator').style.display = 'none';
                         document.getElementById('baseMap').options[4].disabled = false;
                     });
             }
