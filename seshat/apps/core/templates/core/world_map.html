@@ -469,13 +469,11 @@
                             <!-- <label for="showCapitals">Show capital cities</label>
                                                                                                                 <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
                             <label for="enterYear">Enter year:</label>
-                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;"
-                                onchange="storeYear()">
-                            <p>🗣️ <i>Hit enter to set year.</i></p>
+                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
+                            <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
                             <label for="increment">Play rate (years/second):</label>
-                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;"
-                                onchange="playRateValue()">
-                            <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
+                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
+                            <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p><br><br>
                         </fieldset>
                         <div id="baseMapControls">
                             <fieldset>
@@ -497,7 +495,7 @@
                                 <label for="baseMapOnly">Base map only</label>
                                 <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
                             </fieldset>
-                        </div>
+                        </div><br>
                         <p><b>🔹 Hover the mouse over polity shapes on the map to reveal information.</b></p>
                         <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
                         <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
