@@ -175,7 +175,6 @@ function playBack() {
                 stopPlay();
             }
         }, milliseconds); // Interval based on user input
-        document.getElementById('playButtonMini').innerHTML = '⏸';
         document.getElementById('playButton').innerHTML = '⏸';
     } else {
         stopPlay();
@@ -185,7 +184,6 @@ function playBack() {
 
 function stopPlay() {
     clearInterval(playInterval);
-    document.getElementById('playButtonMini').innerHTML = '▶️';
     document.getElementById('playButton').innerHTML = '▶️';
 };
 
@@ -677,7 +675,6 @@ function populateVariableDropdown(variables) {
 
 function toggleSettings() {
     var settings = document.getElementById("settings");
-    console.log(settings);
     if (settings.style.display === "none" || settings.style.display === "") {
         settings.style.display = "block";
         // Disable the map controls when the settings are open
