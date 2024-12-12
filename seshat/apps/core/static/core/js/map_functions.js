@@ -218,6 +218,8 @@ function switchBaseMap() {
     if (selectedMap === 'cesium') {
         // Disable the play button when switching to the globe view
         document.getElementById('playButton').disabled = true;
+        // Select all polities when switching to the globe view
+        document.getElementById('selectAll').checked = true;
     } else {
         // Enable the play button when switching to the map view
         document.getElementById('playButton').disabled = false;
