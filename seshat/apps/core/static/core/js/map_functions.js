@@ -323,6 +323,7 @@ function updateLegend() {
     var legendDiv = document.getElementById('variableLegend');
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     var displayComponent = document.getElementById('switchPolitiesComponents').value;
+    var baseMap = document.getElementById('baseMap').value;
 
     // Clear the current legend
     legendDiv.innerHTML = '';
@@ -471,6 +472,19 @@ function updateLegend() {
                 polityContainer.style.overflowY = '';
             }
         }
+    }
+
+    // Ensure the legend is positioned to the right when the globe view is selected
+    if (baseMap == 'cesium') {
+        legendDiv.style.left = '10';
+        legendDiv.style.right = '';
+        legendDiv.style.top = '10';
+        legendDiv.style.bottom = '';
+    } else {
+        legendDiv.style.right = '10';
+        legendDiv.style.left = '';
+        legendDiv.style.bottom = '90';
+        legendDiv.style.top = '';
     }
 }
 
