@@ -137,6 +137,7 @@
         left: 3.8%;
         z-index: 999;
         max-height: 100%; /* Ensure it doesn't exceed the parent div height */
+        height: auto;
         overflow-y: auto; /* Add vertical scroll if content overflows */
         margin-top: 10px;
         background-color: rgba(255, 253, 242, 1);
@@ -296,7 +297,7 @@
         100% { transform: rotate(360deg); }
     }
 
-    #crossButton {
+    .crossButton {
         background-color: rgba(255, 253, 242, 1);
         right: 4%;
         position: absolute;
@@ -438,7 +439,7 @@
                         </div>
                     </div>
                     <div class="settings" id="settings">
-                        <button id="crossButton" onclick="toggleSettings()">❌</button>
+                        <button class="crossButton" onclick="toggleSettings()">❌</button>
                         <fieldset>
                             <div id="loadingIndicator">
                                 <div class="spinner"></div>
@@ -515,6 +516,7 @@
                         </div><br>
                     </div>
                     <div class="help" id="help">
+                        <button class="crossButton" onclick="toggleHelp()">❌</button>
                         <p><b>🔹 Hover the mouse over polity shapes on the map to reveal information.</b></p>
                         <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
                         <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
