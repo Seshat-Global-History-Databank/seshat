@@ -679,7 +679,15 @@ function toggleSettings() {
     var dropdown = document.getElementById("tips");
     if (dropdown.style.display === "none" || dropdown.style.display === "") {
         dropdown.style.display = "block";
+        // Disable the map controls when the settings are open
+        map.dragging.disable();
+        map.zoomControl.disable();
+        map.scrollWheelZoom.disable();
     } else {
         dropdown.style.display = "none";
+        // Enable the map controls when the settings are closed
+        map.dragging.enable();
+        map.zoomControl.enable();
+        map.scrollWheelZoom.enable();
     }
 }
