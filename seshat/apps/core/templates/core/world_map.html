@@ -1296,8 +1296,10 @@
                                             previousPopupBorderColor = popup.style.borderColor;
                                             previousPopupBorderWidth = popup.style.borderWidth;
 
-                                            // Update the popup with new content
-                                            popup.style.display = 'block';
+                                            // Update the popup with new content, but only show it if the settings or help divs are not displayed
+                                            if (document.getElementById("settings").style.display == "none" && document.getElementById("help").style.display == "none") {
+                                                popup.style.display = 'block';
+                                            }
                                             popup.innerHTML = popupContent;
                                             popup.style.borderColor = layer.feature.properties.colour;
                                             popup.style.borderWidth = '4px';
