@@ -467,12 +467,10 @@ function updateLegend() {
 
             // Make the polityContainer scrollable if there are more than 7 polities
             if (addedPolities.length > 7) {
-                polityContainer.style.maxHeight = '420px';
-                polityContainer.style.overflowY = 'scroll';
+                polityContainer.style.maxHeight = '100%';
             } else {
                 // Reset to default if fewer than 7 polities to ensure it behaves correctly on subsequent updates
                 polityContainer.style.maxHeight = '';
-                polityContainer.style.overflowY = '';
             }
         }
     }
