@@ -484,8 +484,8 @@ function updateLegend() {
     } else {
         legendDiv.style.right = '10';
         legendDiv.style.left = '';
-        legendDiv.style.bottom = '90';
-        legendDiv.style.top = '';
+        legendDiv.style.bottom = '';
+        legendDiv.style.top = '10';
     }
 }
 
