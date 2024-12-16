@@ -202,7 +202,7 @@
                     <div id="baseMapControls">
                         <fieldset>
                             <label for="baseMap">Choose base map:</label>
-                            <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
+                            <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
                                 <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
                                 <option value="cesium">Globe (Cesium)</option>
                                 <option value="osm">Street Maps (OSM)</option>
@@ -212,7 +212,7 @@
                         </fieldset>
                         <fieldset id="baseMapGADMFieldset">
                             <label for="baseMapGADM">Current borders:</label>
-                            <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
+                            <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
                                 <option value="country">Countries</option>
                                 <option value="province">Provinces</option>
                             </select><br>
