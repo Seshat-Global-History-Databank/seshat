@@ -819,6 +819,8 @@
             var hideUnselected = document.getElementById('hideUnselected').checked;
             var selectAll = document.getElementById('selectAll').checked;
             var playButton = document.getElementById('playButton');
+            var settings = document.getElementById('settings');
+            var help = document.getElementById('help');
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
@@ -1319,7 +1321,11 @@
                                                     layer.setStyle({
                                                         weight: newWeight
                                                     });
-                                                    popup.style.display = 'block';
+                                                    if (settings.style.display == "block" || help.style.display == "block") {
+                                                        popup.style.display = 'none';
+                                                    } else {
+                                                        popup.style.display = 'block';
+                                                    }
                                                     // Add the popup to the popup div
                                                     popup.innerHTML = popupContent;
                                                     // Set the border colour of the popup div
@@ -1351,7 +1357,11 @@
                                                 });
                                                 updateLegend();
                                             } else {
-                                                popup.style.display = 'block';
+                                                if (settings.style.display == "block" || help.style.display == "block") {
+                                                    popup.style.display = 'none';
+                                                } else {
+                                                    popup.style.display = 'block';
+                                                }
                                                 // Add the popup to the popup div
                                                 popup.innerHTML = popupContent;
                                                 // Set the border colour of the popup div
@@ -1421,6 +1431,10 @@
                 popup.style.display = 'none';
             } else {
                 popup.style.display = 'block';
+            }
+
+            if (settings.style.display == "block" || help.style.display == "block") {
+                popup.style.display = 'none';
             }
 
         }
