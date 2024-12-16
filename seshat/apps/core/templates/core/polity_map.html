@@ -148,41 +148,6 @@
 <body>
     {% block content %}
     {% if content.include_polity_map %}
-        <h2 class="h2 text-dark federicka-medium">
-            <span>Displayed: </span>
-            <span id="sliderDate"></span>
-        </h2>
-        <div style="display: flex;" id="controls-and-maps">
-            <div id="polityMapControlPanel">
-                <button style="height: 10%" class="friendly-button-small" id="toggleSettingsButton"
-                    onclick="toggleSettings()">⚙️</button><br><br>
-                <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
-                <div id="playBackControls">
-                    <button class="friendly-button-small" id="startButton" type="button"
-                        onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
-                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
-                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
-                </div>
-            </div>
-            <div id="polityMapAndGlobe">
-                <div id="map">
-                    <div id="componentLegend"></div>
-                </div>
-                <div id="globeParent">
-                    <div id="globe"></div>
-                    <div id="componentLegend2"></div>
-                </div>
-            </div>
-        </div>
-        <div class="slider-container" style="position: relative; padding-bottom: 20px;">
-            <datalist id="yearTickmarks"></datalist>
-            <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
-                max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
-                style="width: 100%;" list="yearTickmarks">
-            <div id="yearTickmarkValues"></div><br>
-        </div>
         <div class="settings" id="settings">
             <button class="crossButton" onclick="toggleSettings()">❌</button>
             <fieldset>
@@ -241,6 +206,41 @@
             <p>
                 <b><a href="../cliopatria" target="_blank">🔹 Learn more about the polity border choices.</a></b>
             </p><br>
+        </div>
+        <h2 class="h2 text-dark federicka-medium">
+            <span>Displayed: </span>
+            <span id="sliderDate"></span>
+        </h2>
+        <div style="display: flex;" id="controls-and-maps">
+            <div id="polityMapControlPanel">
+                <button style="height: 10%" class="friendly-button-small" id="toggleSettingsButton"
+                    onclick="toggleSettings()">⚙️</button><br><br>
+                <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
+                <div id="playBackControls">
+                    <button class="friendly-button-small" id="startButton" type="button"
+                        onclick="adjustSliderStartYear()">⏮️</button><br><br>
+                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
+                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
+                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                </div>
+            </div>
+            <div id="polityMapAndGlobe">
+                <div id="map">
+                    <div id="componentLegend"></div>
+                </div>
+                <div id="globeParent">
+                    <div id="globe"></div>
+                    <div id="componentLegend2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="slider-container" style="position: relative; padding-bottom: 20px;">
+            <datalist id="yearTickmarks"></datalist>
+            <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
+                max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
+                style="width: 100%;" list="yearTickmarks">
+            <div id="yearTickmarkValues"></div><br>
         </div>
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
