@@ -723,6 +723,8 @@ function populateVariableDropdown(variables) {
 function toggleSettings() {
     var settings = document.getElementById("settings");
     var selectedMap = document.getElementById("baseMap").value;
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
 
     if (settings.style.display === "none" || settings.style.display === "") {
         settings.style.display = "block";
@@ -731,10 +733,12 @@ function toggleSettings() {
         map.zoomControl.disable();
         map.scrollWheelZoom.disable();
         // Temporarily hide the legend and popup when the settings are open
-        if (selectedMap === 'cesium') {
-            document.getElementById('variableLegend').style.display = 'none';
+        if (selectedMap === 'cesium' && variableLegend !== null) {
+            variableLegend.style.display = 'none';
         }
-        document.getElementById('popup').style.display = 'none';
+        if (popup !== null) {
+            popup.style.display = 'none';
+        }
         // Hide help text when settings are open
         document.getElementById('help').style.display = 'none';
     } else {
@@ -744,30 +748,42 @@ function toggleSettings() {
         map.zoomControl.enable();
         map.scrollWheelZoom.enable();
         // Show the legend and popup when the settings are closed
-        if (document.getElementById('variableLegend').innerHTML != '') {
-            document.getElementById('variableLegend').style.display = 'block';
+        if (variableLegend !== null) {
+            if (variableLegend.innerHTML != '') {
+                variableLegend.style.display = 'block';
+            }
         }
-        document.getElementById('popup').style.display = 'block';
+        if (popup !== null) {
+            popup.style.display = 'block';
+        }
     }
 }
 
 function closeSettings() {
     var settings = document.getElementById("settings");
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
     settings.style.display = "none";
     // Enable the map controls when the settings are closed
     map.dragging.enable();
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
     // Show the legend and popup when the settings are closed
-    if (document.getElementById('variableLegend').innerHTML != '') {
-        document.getElementById('variableLegend').style.display = 'block';
+    if (variableLegend !== null) {
+        if (variableLegend.innerHTML != '') {
+            variableLegend.style.display = 'block';
+        }
     }
-    document.getElementById('popup').style.display = 'block';
+    if (popup !== null) {
+        popup.style.display = 'block';
+    }
 }
 
 function toggleHelp() {
     var help = document.getElementById("help");
     var selectedMap = document.getElementById("baseMap").value;
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
     if (help.style.display === "none" || help.style.display === "") {
         help.style.display = "block";
         // Disable the map controls when the help text is open
@@ -775,10 +791,12 @@ function toggleHelp() {
         map.zoomControl.disable();
         map.scrollWheelZoom.disable();
         // Temporarily hide the legend and popup when the help text is open
-        if (selectedMap === 'cesium') {
-            document.getElementById('variableLegend').style.display = 'none';
+        if (selectedMap === 'cesium' && variableLegend !== null) {
+            variableLegend.style.display = 'none';
         }
-        document.getElementById('popup').style.display = 'none';
+        if (popup !== null) {
+            popup.style.display = 'none';
+        }
         // Hide settings when help text is open
         document.getElementById('settings').style.display = 'none';
     } else {
@@ -788,23 +806,33 @@ function toggleHelp() {
         map.zoomControl.enable();
         map.scrollWheelZoom.enable();
         // Show the legend and popup when the help text is closed
-        if (document.getElementById('variableLegend').innerHTML != '') {
-            document.getElementById('variableLegend').style.display = 'block';
+        if (variableLegend !== null) {
+            if (variableLegend.innerHTML != '') {
+                variableLegend.style.display = 'block';
+            }
         }
-        document.getElementById('popup').style.display = 'block';
+        if (popup !== null) {
+            popup.style.display = 'block';
+        }
     }
 }
 
 function closeHelp() {
     var help = document.getElementById("help");
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
     help.style.display = "none";
     // Enable the map controls when the help text is closed
     map.dragging.enable();
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
     // Show the legend and popup when the help text is closed
-    if (document.getElementById('variableLegend').innerHTML != '') {
-        document.getElementById('variableLegend').style.display = 'block';
+    if (variableLegend !== null) {
+        if (variableLegend.innerHTML != '') {
+            variableLegend.style.display = 'block';
+        }
     }
-    document.getElementById('popup').style.display = 'block';
+    if (popup !== null) {
+        popup.style.display = 'block';
+    }
 }
