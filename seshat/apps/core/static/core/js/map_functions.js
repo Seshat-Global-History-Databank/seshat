@@ -217,6 +217,7 @@ function switchBaseMap() {
     var settings = document.getElementById("settings");
     var help = document.getElementById("help");
     var legendDiv = document.getElementById('variableLegend');
+    var selectAll = document.getElementById('selectAll');
 
     if (legendDiv === null) {
         if (selectedMap === 'cesium') {
@@ -230,8 +231,10 @@ function switchBaseMap() {
         // Disable the play button when switching to the globe view
         document.getElementById('playButton').disabled = true;
         // Select all polities when switching to the globe view and disable the button
-        document.getElementById('selectAll').checked = true;
-        document.getElementById('selectAll').disabled = true;
+        if (selectAll !== null) {
+            selectAll.checked = true;
+            selectAll.disabled = true;
+        }
         // Diable the legend when switching to the globe view if the help or settings are open
         if (help.style.display === "block" || settings.style.display === "block") {
             legendDiv.style.display = 'none';
@@ -242,7 +245,9 @@ function switchBaseMap() {
         // Enable the legend when switching to the map view, even if the help or settings are open
         legendDiv.style.display = 'block';
         // Enable the select all checkbox when switching to the map view
-        document.getElementById('selectAll').disabled = false;
+        if (selectAll !== null) {
+            selectAll.disabled = false;
+        }
     }
 
     if (base == 'province') {
