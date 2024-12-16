@@ -744,7 +744,10 @@ function closeSettings() {
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
     // Show the legend and popup when the settings are closed
-    document.getElementById('variableLegend').style.display = 'block';
+    if (document.getElementById('variableLegend').innerHTML != '') {
+        document.getElementById('variableLegend').style.display = 'block';
+        console.log('got here 2');
+    }
     document.getElementById('popup').style.display = 'block';
 }
 
@@ -784,6 +787,8 @@ function closeHelp() {
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
     // Show the legend and popup when the help text is closed
-    document.getElementById('variableLegend').style.display = 'block';
+    if (document.getElementById('variableLegend').innerHTML != '') {
+        document.getElementById('variableLegend').style.display = 'block';
+    }
     document.getElementById('popup').style.display = 'block';
 }
