@@ -214,15 +214,24 @@ function switchToBCE() {
 function switchBaseMap() {
     var selectedMap = document.getElementById("baseMap").value;
     var base = document.getElementById("baseMapGADM").value
+    var settings = document.getElementById("settings");
+    var help = document.getElementById("help");
+    var legendDiv = document.getElementById('variableLegend');
 
     if (selectedMap === 'cesium') {
         // Disable the play button when switching to the globe view
         document.getElementById('playButton').disabled = true;
         // Select all polities when switching to the globe view
         document.getElementById('selectAll').checked = true;
+        // Diable the legend when switching to the globe view if the help or settings are open
+        if (help.style.display === "block" || settings.style.display === "block") {
+            legendDiv.style.display = 'none';
+        }
     } else {
         // Enable the play button when switching to the map view
         document.getElementById('playButton').disabled = false;
+        // Enable the legend when switching to the map view, even if the help or settings are open
+        legendDiv.style.display = 'block';
     }
 
     if (base == 'province') {
@@ -693,13 +702,18 @@ function populateVariableDropdown(variables) {
 
 function toggleSettings() {
     var settings = document.getElementById("settings");
+    var selectedMap = document.getElementById("baseMap").value;
+
     if (settings.style.display === "none" || settings.style.display === "") {
         settings.style.display = "block";
         // Disable the map controls when the settings are open
         map.dragging.disable();
         map.zoomControl.disable();
         map.scrollWheelZoom.disable();
-        // Temporarily hide the popup when the settings are open
+        // Temporarily hide the legend and popup when the settings are open
+        if (selectedMap === 'cesium') {
+            document.getElementById('variableLegend').style.display = 'none';
+        }
         document.getElementById('popup').style.display = 'none';
         // Hide help text when settings are open
         document.getElementById('help').style.display = 'none';
@@ -709,7 +723,8 @@ function toggleSettings() {
         map.dragging.enable();
         map.zoomControl.enable();
         map.scrollWheelZoom.enable();
-        // Show the popup when the settings are closed
+        // Show the legend and popup when the settings are closed
+        document.getElementById('variableLegend').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
     }
 }
@@ -721,19 +736,24 @@ function closeSettings() {
     map.dragging.enable();
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
-    // Show the popup when the settings are closed
+    // Show the legend and popup when the settings are closed
+    document.getElementById('variableLegend').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
 }
 
 function toggleHelp() {
     var help = document.getElementById("help");
+    var selectedMap = document.getElementById("baseMap").value;
     if (help.style.display === "none" || help.style.display === "") {
         help.style.display = "block";
         // Disable the map controls when the help text is open
         map.dragging.disable();
         map.zoomControl.disable();
         map.scrollWheelZoom.disable();
-        // Temporarily hide the popup when the help text is open
+        // Temporarily hide the legend and popup when the help text is open
+        if (selectedMap === 'cesium') {
+            document.getElementById('variableLegend').style.display = 'none';
+        }
         document.getElementById('popup').style.display = 'none';
         // Hide settings when help text is open
         document.getElementById('settings').style.display = 'none';
@@ -743,7 +763,8 @@ function toggleHelp() {
         map.dragging.enable();
         map.zoomControl.enable();
         map.scrollWheelZoom.enable();
-        // Show the popup when the help text is closed
+        // Show the legend and popup when the help text is closed
+        document.getElementById('variableLegend').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
     }
 }
@@ -755,6 +776,7 @@ function closeHelp() {
     map.dragging.enable();
     map.zoomControl.enable();
     map.scrollWheelZoom.enable();
-    // Show the popup when the help text is closed
+    // Show the legend and popup when the help text is closed
+    document.getElementById('variableLegend').style.display = 'block';
     document.getElementById('popup').style.display = 'block';
 }
