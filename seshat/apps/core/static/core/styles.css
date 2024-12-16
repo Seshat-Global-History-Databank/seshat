@@ -237,3 +237,12 @@ hr.bg-fading {
 .friendly-button.collapsed {
     transform: rotate(180deg);
 }
+
+.crossButton {
+    background-color: rgba(255, 253, 242, 1);
+    right: 1%;
+    top: 1%;
+    padding-left: 1%;
+    position: absolute;
+    border-color: rgba(255, 253, 242, 1);
+}
