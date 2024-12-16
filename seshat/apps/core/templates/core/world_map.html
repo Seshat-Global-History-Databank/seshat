@@ -340,6 +340,12 @@
         display: none
     }
 
+    #slider-container {
+        position: relative;
+        width: 600%;
+        display: block;
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
         #controlPanel {
@@ -527,7 +533,7 @@
                     </div>
                     <div id="sliderdiv">
                         <fieldset>
-                            <div class="slider-container" id="slider-container" style="position: relative; width: 400%; display: block">
+                            <div class="slider-container" id="slider-container">
                                 <datalist id="yearTickmarks"></datalist>
                                 <div id="yearTickmarkValues"></div><br>
                                 <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
