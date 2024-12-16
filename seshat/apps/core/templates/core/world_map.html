@@ -1314,6 +1314,7 @@
 
                                         function handleLayerInteraction(e, layer, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
                                             let newWeight;
+                                            document.getElementById('variableLegend').style.display = 'block';
                                             if (variable == 'polity') {
                                                 if (shape.weight === 0) {
                                                     // Increase the weight of the clicked layer

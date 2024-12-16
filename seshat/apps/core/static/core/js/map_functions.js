@@ -581,6 +581,8 @@ function updateComponentLegend() {
 }
 
 function clearSelection() {
+    var legendDiv = document.getElementById('variableLegend');
+    legendDiv.style.display = 'none';
     document.getElementById('selectAll').checked = false;
     document.getElementById('hideUnselected').disabled = false;
     var popup = document.getElementById('popup');
@@ -594,9 +596,11 @@ function clearSelection() {
 }
 
 function selectAllCheckbox() {
+    var legendDiv = document.getElementById('variableLegend');
     var selectAll = document.getElementById('selectAll').checked;
     if (selectAll) {
         document.getElementById('hideUnselected').disabled = true;
+        legendDiv.style.display = 'block';
     } else {
         document.getElementById('hideUnselected').disabled = false;
         clearSelection();
