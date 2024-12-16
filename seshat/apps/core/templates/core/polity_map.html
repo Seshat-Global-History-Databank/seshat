@@ -152,13 +152,6 @@
             <span>Displayed: </span>
             <span id="sliderDate"></span>
         </h2>
-        <div class="slider-container" style="position: relative; padding-bottom: 20px;">
-            <datalist id="yearTickmarks"></datalist>
-            <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
-                max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
-                style="width: 100%;" list="yearTickmarks">
-            <div id="yearTickmarkValues"></div><br>
-        </div>
         <div style="display: flex;" id="controls-and-maps">
             <div id="polityMapControlPanel">
                 <button style="height: 10%" class="friendly-button-small" id="toggleSettingsButton"
@@ -182,6 +175,13 @@
                     <div id="componentLegend2"></div>
                 </div>
             </div>
+        </div>
+        <div class="slider-container" style="position: relative; padding-bottom: 20px;">
+            <datalist id="yearTickmarks"></datalist>
+            <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
+                max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
+                style="width: 100%;" list="yearTickmarks">
+            <div id="yearTickmarkValues"></div><br>
         </div>
         <div class="settings" id="settings">
             <button class="crossButton" onclick="toggleSettings()">❌</button>
