@@ -231,10 +231,29 @@ hr.bg-fading {
     transition: transform 0.3s ease;
     padding: 5%;
     font-size: 1.75em;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Add this line */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .friendly-button.collapsed {
+    transform: rotate(180deg);
+}
+
+.friendly-button-small {
+    width: 25px;
+    background-color: rgba(255, 253, 242, 1);
+    border: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    padding: 5%;
+    font-size: 1.2em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.friendly-button-small.collapsed {
     transform: rotate(180deg);
 }
 

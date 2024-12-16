@@ -107,10 +107,9 @@
     #polityMapControlPanel {
         width: auto;
         position: relative;
-        height: 100%;
+        height: 55vh;
         overflow: hidden;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 10px;
     }
 
     .settings {
@@ -162,16 +161,16 @@
         </div>
         <div style="display: flex;" id="controls-and-maps">
             <div id="polityMapControlPanel">
-                <button style="height: 10%" class="friendly-button" id="toggleSettingsButton"
+                <button style="height: 10%" class="friendly-button-small" id="toggleSettingsButton"
                     onclick="toggleSettings()">⚙️</button><br><br>
-                <button style="height: 10%" class="friendly-button" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
+                <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
                 <div id="playBackControls">
-                    <button class="friendly-button" id="startButton" type="button"
+                    <button class="friendly-button-small" id="startButton" type="button"
                         onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                    <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
-                    <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
-                    <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                    <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
+                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
+                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                 </div>
             </div>
             <div id="polityMapAndGlobe">
