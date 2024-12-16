@@ -553,10 +553,6 @@ function updateComponentLegend() {
 
     // Add a legend for polity components if the displayComponent is set to 'components' and there is more than one
     if (addedPolities.length > 0 && displayComponent == 'components') {
-        var legendTitle = document.createElement('h3');
-        legendTitle.textContent = 'Components';
-        legendDiv.appendChild(legendTitle);
-        legendDiv2.appendChild(legendTitle.cloneNode(true));
         for (var i = 0; i < addedPolities.length; i++) {
             var legendItem = document.createElement('p');
             var colorBox = document.createElement('span');
