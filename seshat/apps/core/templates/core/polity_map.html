@@ -193,8 +193,7 @@
                         <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
                             class="slider" onchange="plotPolities()" style="width: 300px;"><br><br>
                         <label for="enterYear">Enter year:</label>
-                        <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;"
-                            onchange="storeYear()">
+                        <input type="number" id="enterYear" name="enterYear" value="{{ content.display_year }}" style="width: 75px;">
                         <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
                         <label for="increment">Play rate (years/second):</label>
                         <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
