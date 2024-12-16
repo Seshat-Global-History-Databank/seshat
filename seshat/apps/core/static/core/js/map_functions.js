@@ -218,6 +218,14 @@ function switchBaseMap() {
     var help = document.getElementById("help");
     var legendDiv = document.getElementById('variableLegend');
 
+    if (legendDiv === null) {
+        if (selectedMap === 'cesium') {
+            legendDiv = document.getElementById('componentLegend2');
+        } else {
+            legendDiv = document.getElementById('componentLegend');
+        }
+    }
+
     if (selectedMap === 'cesium') {
         // Disable the play button when switching to the globe view
         document.getElementById('playButton').disabled = true;
