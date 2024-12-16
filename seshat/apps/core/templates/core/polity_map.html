@@ -17,20 +17,17 @@
     }
 
     #polityMapAndGlobe {
-        display: flex;
-        flex-direction: column;
+        position: relative;
+        height: 55vh;
         width: 100%;
-        align-items: center;
+        overflow: hidden; /* Ensure child elements do not overflow */
     }
 
     #map {
-        position: absolute;
-        width: 125vh;
-        height: 55vh;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        flex: 1;
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        position: relative;
     }
     #globeParent {
         width: 100%;
