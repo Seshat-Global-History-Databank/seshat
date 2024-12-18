@@ -518,7 +518,7 @@ function updateLegend() {
 function updateComponentLegend() {
 
     var legendDiv = document.getElementById('componentLegend');
-    var legendDiv2 = document.getElementById('componentLegendGlobe');
+    var legendDivGlobe = document.getElementById('componentLegendGlobe');
     var displayComponent = document.getElementById('switchPolitiesComponents').value;
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     // Create a container for polity items
@@ -526,9 +526,9 @@ function updateComponentLegend() {
 
     // Clear current legend and ensure it is displayed
     legendDiv.innerHTML = '';
-    legendDiv2.innerHTML = '';
+    legendDivGlobe.innerHTML = '';
     legendDiv.style.display = 'block';
-    legendDiv2.style.display = 'block';
+    legendDivGlobe.style.display = 'block';
 
     var addedPolities = [];
     var addedPolityNames = [];
@@ -570,7 +570,7 @@ function updateComponentLegend() {
         // Append the container to the legendDiv
         legendDiv.appendChild(polityContainer);
         polityContainer2 = polityContainer.cloneNode(true);
-        legendDiv2.appendChild(polityContainer2);
+        legendDivGlobe.appendChild(polityContainer2);
 
         // Make the polityContainer scrollable if there are more than 7 polities
         if (addedPolities.length > 7) {
@@ -584,7 +584,7 @@ function updateComponentLegend() {
     } else {
         // Hide the component legend if there are no components to display
         legendDiv.style.display = 'none';
-        legendDiv2.style.display = 'none';
+        legendDivGlobe.style.display = 'none';
     }
 }
 
