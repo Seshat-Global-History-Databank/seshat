@@ -221,7 +221,7 @@ function switchBaseMap() {
 
     if (legendDiv === null) {
         if (selectedMap === 'cesium') {
-            legendDiv = document.getElementById('componentLegend2');
+            legendDiv = document.getElementById('componentLegendGlobe');
         } else {
             legendDiv = document.getElementById('componentLegend');
         }
@@ -518,7 +518,7 @@ function updateLegend() {
 function updateComponentLegend() {
 
     var legendDiv = document.getElementById('componentLegend');
-    var legendDiv2 = document.getElementById('componentLegend2');
+    var legendDiv2 = document.getElementById('componentLegendGlobe');
     var displayComponent = document.getElementById('switchPolitiesComponents').value;
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     // Create a container for polity items
