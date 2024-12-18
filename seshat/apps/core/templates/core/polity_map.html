@@ -246,6 +246,9 @@
         <script src="{% static 'core/js/map_functions.js' %}"></script>
         <script>
 
+            // Hide components/polity switch for now so "Polity components" is always displayed
+            document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
+
             // Allows scrolling on the componentLegend div
             const componentLegend = document.getElementById('componentLegend');
             componentLegend.addEventListener('wheel', function (event) {

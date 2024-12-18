@@ -472,7 +472,9 @@
                                 </select>
                                 <div class="display-info-container">
                                     ℹ️
-                                </div><br><br>
+                                </div>
+                            </fieldset>
+                            <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
                                 <label for="baseMapOnly">Hide unselected</label>
                                 <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
                                 <label for="baseMapOnly">Select all</label>
@@ -549,6 +551,9 @@
     </div>
     <script src="{% static 'core/js/map_functions.js' %}"></script>
     <script>
+
+        // Hide components/polity switch for now so "Full polities" is always displayed
+        document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
 
         // Set the default base map to Cesium Globe on mobile devices
         // Also place the enter year input field where the slider normally is
@@ -861,9 +866,9 @@
 
             // Show the switchPolitiesComponents dropdown if the variable is polity
             if (variable == 'polity') {
-                document.getElementById('switchPolitiesComponentsFieldset').style.display = 'block';
+                document.getElementById('switchPoliticalBoundariesFieldset').style.display = 'block';
             } else {
-                document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
+                document.getElementById('switchPoliticalBoundariesFieldset').style.display = 'none';
             }
 
             // Load capital info if not already loaded
