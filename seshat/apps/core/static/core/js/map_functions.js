@@ -586,6 +586,13 @@ function updateComponentLegend() {
         legendDiv.style.display = 'none';
         legendDivGlobe.style.display = 'none';
     }
+
+    // Hide the legend if there is only one component to display
+    if (addedPolities.length == 1) {
+        legendDiv.style.display = 'none';
+        legendDivGlobe.style.display = 'none';
+    }
+
 }
 
 function clearSelection() {
