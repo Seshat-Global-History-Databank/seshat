@@ -20,7 +20,7 @@ Follow the README instructions in the `notebooks` folder.
 
 .. tip::
 
-    You may want to start by reading the `Software tools <software-tools.rst>`_ page to ensure you have both Python and Git installed on your computer.
+    You may want to start by reading the `Software tools <software-tools.rst>`_ page to ensure you have Python and Git installed on your computer.
 
 
 Requesting edits to the Cliopatria dataset
