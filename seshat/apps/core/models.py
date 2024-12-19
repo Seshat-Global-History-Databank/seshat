@@ -1248,6 +1248,13 @@ class SeshatCommon(models.Model):
             return ", ".join(my_list)
         else:
             return None
+        
+    def curators_list_ids(self):
+        my_list = [curator.id for curator in self.curator.all()]
+        if my_list:
+            return my_list
+        else:
+            return None
 
 # class Annual_wages(SeshatCommon):
 #     name = models.CharField(max_length=100, default="Annual_wages")

@@ -7743,7 +7743,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
+                #print("####################", new_object)
 
                 seshat_private_comment_part.save()
 
@@ -7900,10 +7900,10 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
-                print(seshat_private_comment_part)
-                print(father_private_comment)
-                print('-----------------------')
+                # print("####################", new_object)
+                # print(seshat_private_comment_part)
+                # print(father_private_comment)
+                # print('-----------------------')
                 seshat_private_comment_part.save()
                 seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
             
@@ -8119,9 +8119,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
-                print(seshat_private_comment_part)
-                print(father_private_comment)
+                # print("####################", new_object)
+                # print(seshat_private_comment_part)
+                # print(father_private_comment)
 
                 seshat_private_comment_part.save()
 

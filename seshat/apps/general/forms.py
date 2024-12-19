@@ -55,27 +55,29 @@ commonlabels = {
     'year_from': 'Start Year',
     'year_to': 'End Year',
     'tag': 'Confidence Level',
-    "is_disputed" : "Dispute?",
-    "is_uncertain" : "Uncertainty?",
+    #"is_disputed" : "<span class='mb-3'>Disputeeeee?</span>",
+    "is_disputed": '       <span class="badge px-3 py-1"  style="font-family: Roboto Mono;  background:#400000; color:#f39b9b; vertical-align: top;"> Disputed? </span>',
+    #"is_uncertain" : "Uncertainty?",
+    "is_uncertain": '        <span class="badge px-3 py-1" style="font-family: Roboto Mono; color:#1a1259; background:#ffcd72; vertical-align: top;"> Uncertain?</span>',
     "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
     'citations': 'Add one or more Citations',
     'finalized': 'This piece of data is verified.',
 }
 
 commonfields = ['polity', 'year_from', 'year_to',
-                'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations']
+                'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations', 'curator',]
 
 commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
-    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
-    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: Use §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
-    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
+    'polity': forms.Select(attrs={'class': 'form-control  mb-2 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
+    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-2',}),
+    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-2', }),
+    'description': Textarea(attrs={'class': 'form-control  mb-1', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: Use §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
+    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-1 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
     'tag': forms.RadioSelect(),
     "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3',}),
     "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
+    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-1', }),
+    'finalized': forms.CheckboxInput(attrs={'class': 'mb-1', 'checked': True, }),
 }
 
 

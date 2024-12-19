@@ -916,6 +916,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     my_year_to = my_instance.year_to
                     my_tag = my_instance.get_tag_display()
                     my_curators_list = my_instance.curators_list
+                    my_curators_list_ids = my_instance.curators_list_ids
                     my_is_disputed = my_instance.is_disputed
                     my_is_uncertain = my_instance.is_uncertain
                     my_private_comment = my_instance.private_comment
@@ -931,6 +932,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         'my_year_to': my_year_to,
                         'my_tag': my_tag,
                         'my_curators_list': my_curators_list,
+                        'my_curators_list_ids': my_curators_list_ids,
                         'my_is_disputed': my_is_disputed,
                         'my_is_uncertain': my_is_uncertain,
                         'my_var_name_underlined': my_var_name_underlined,
@@ -1487,6 +1489,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
                 my_curators_list = my_instance.curators_list
+                my_curators_list_ids = my_instance.curators_list_ids
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -1501,6 +1504,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
                     'my_curators_list': my_curators_list,
+                    'my_curators_list_ids': my_curators_list_ids,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -4686,6 +4690,7 @@ def update_seshat_comment_part_view(request, pk):
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
                 my_curators_list = my_instance.curators_list
+                my_curators_list_ids = my_instance.curators_list_ids
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -4700,6 +4705,7 @@ def update_seshat_comment_part_view(request, pk):
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
                     'my_curators_list': my_curators_list,
+                    'my_curators_list_ids': my_curators_list_ids,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -5256,6 +5262,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                         my_year_to = my_instance.year_to
                         my_tag = my_instance.get_tag_display()
                         my_curators_list = my_instance.curators_list
+                        my_curators_list_ids = my_instance.curators_list_ids
                         my_is_disputed = my_instance.is_disputed
                         my_is_uncertain = my_instance.is_uncertain
 
@@ -5273,6 +5280,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                             'my_polity_id': my_polity_id,
                             'my_description': my_desc,
                             'my_curators_list': my_curators_list,
+                            'my_curators_list_ids': my_curators_list_ids,
                             'my_is_disputed': my_is_disputed,
                             'my_is_uncertain': my_is_uncertain,
                             'my_model': mm,  # new

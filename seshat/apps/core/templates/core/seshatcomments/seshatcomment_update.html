@@ -230,8 +230,8 @@
                     
                     <!-- Disputred tag (Disputed/or Not etc.) -->
                     {% if my_inst.my_is_uncertain %}
-                    <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f7d6b4; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
-                        <span class="badge" style="color:#864e13;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
+                    <a type="button" class="fs-6 badge p-0 m-0" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#ffcd72; " data-bs-toggle="tooltip" data-bs-html="true"  title="Uncertainty has been coded.">
+                        <span class="badge" style="color:#1a1259;"> <i class="fa-regular fa-circle-question fa-sm"></i> Uncertain</span>
                     </a>
                     {% endif %}
                     
@@ -361,16 +361,26 @@
         </div>
         <div class="ps-3 h6 my-3">
             <span class="ps-2 mt-3">
-                <i class="fa-solid fa-check"></i> &nbsp; {{ my_inst.my_curators_list }}
+                <i class="fa-solid fa-check"></i> &nbsp; 
+                {% if user|get_seshat_expert in my_inst.my_curators_list_ids %}
+                <b><u> You</u> </b>: 
+                {% endif %} {{ my_inst.my_curators_list }} 
             </span> 
-
         </div>
         </div>
+            
+        {% else %}
+        <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
+            <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+            </div>
+        </div>
 
-            {% endif %}
+        {% endif %}
 
 
-        {% if user|in_group:"Chief Seshat Researchers" %}
+
+        {% if user|in_group:"Chief Seshat External Experts" %}
         <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
             <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
                 {% csrf_token %}

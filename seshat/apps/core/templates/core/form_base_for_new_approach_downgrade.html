@@ -113,6 +113,12 @@
         padding: 0;
     }
     
+    .checkboxinput {
+        width: 18px;  /* Increase the width of the checkbox */
+        height: 18px; /* Increase the height of the checkbox */
+        cursor: pointer; /* Change the cursor to indicate interactivity */
+    }
+
     .tab-container {
         display: flex;
         justify-content: center;
@@ -247,10 +253,10 @@
                         {% if myvar == 'Polity Preceding Entity' %}
         
                         {% elif myvar == 'Polity Duration' or myvar == 'Polity Peak Years' %}
-                        <div class="col-sm-6 pb-0">
+                        <div class="col-sm-6 pb-2">
                             {{ form.polity|as_crispy_field }}
                         </div>
-                        <div class="col-sm-6 pb-0">
+                        <div class="col-sm-6 pb-2">
                         </div>
                         {% elif myvar == 'Power Transition' %}
                         <div class="col-sm-8 pb-0">
@@ -272,6 +278,34 @@
                             {{ form.year_to|as_crispy_field }}
                           </div>
                           {% endif %}
+                          <hr class="bg-secondary" style="height:1px !important;">
+
+                          <div class="col-sm-12">
+
+                            {% if form.instance.pk %}
+                                {% if form.instance.curator.exists %}
+                                <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
+                                    <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
+                                        {% for curator in form.instance.curator.all %}
+                                        <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
+
+                                        {% endfor %}            
+                                </div>
+        
+                                </div>
+                
+
+                                {% else %}
+                                <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
+                                    <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                                        <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                                    </div>
+                                </div>
+
+                                {% endif %}
+                            {% endif %}
+                        
+                        </div>
 
                           {% block extra_vars %}
                           {% endblock extra_vars %}
@@ -281,7 +315,7 @@
                             {{ form.description }}
                           </div>
         
-                          <div class="col-sm-2 pb-0 pt-4">
+                          <div class="col-sm-2 pb-0 pt-4" style="align-items: end;">
                             {{ form.is_disputed|as_crispy_field }}
                             {{ form.is_uncertain|as_crispy_field }}
                         </div>
