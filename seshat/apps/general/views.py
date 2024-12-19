@@ -12,7 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
+from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart
 
 from seshat.apps.accounts.models import Seshat_Expert
 
@@ -7664,7 +7664,7 @@ from seshat.apps.core.forms import  SeshatCommentPartForm2
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_section, var_subsection,):
+def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_section, var_subsection, db_section):
     # Retrieve the object for the given model class
     #import time
     #start_time = time.time()
@@ -7679,7 +7679,7 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_s
         'see_all_url': myvar+"s_all",
         'letsdo': 'Let us do it!!!',
         'form': form_inline_new,
-        'db_section': 'general',
+        'db_section': db_section,
         'var_section': var_section,
         'var_subsection': var_subsection,
     }
@@ -7687,6 +7687,9 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_s
     #print('elapsed_time RT', end_time-start_time)
 
     return render(request, 'core/generic_templates/generic_detail.html', context)
+
+
+
 
 # Use the login_required, permission_required, and user_passes_test decorators
 @login_required
@@ -7696,8 +7699,15 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
     x_name_1 = x_name
     x_name_2 = None
     x_name_3 = None
-    
-    if coded_value == 'duration':
+
+    if coded_value == "power_transition":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
+    elif coded_value == "widespread_religion":
+        x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to' 
+    elif coded_value == 'duration':
         x_name_with_from = 'polity_year_from'
         x_name_with_to = 'polity_year_to'
     elif coded_value == 'peak_years':
@@ -7713,8 +7723,37 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         if my_form.is_valid():
             # print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
             # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+            logged_in_user = request.user
+            new_object = my_form.save(commit=False)
+            suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
+            #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
+            try:
+                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+            except:
+                logged_in_expert = None
 
-            new_object = my_form.save()
+
+            if suggested_experts:
+                # create a Prvate Comment to attach parts to it:
+                father_private_comment = SeshatPrivateComment.objects.create(text="")
+                new_object.private_comment = father_private_comment
+                seshat_private_comment_part = SeshatPrivateCommentPart(
+                    private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
+                    private_comment_owner=logged_in_expert, 
+                    private_comment= father_private_comment
+                )
+
+                print("####################", new_object)
+
+                seshat_private_comment_part.save()
+
+                seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
+            
+            new_object.expert_reviewed = False
+            new_object.save()  # Save the object to persist the association
+
+
+
             action = request.POST.get('action')
             if action == 'redirect_one':
                 return redirect("polity-detail-main", pk=new_object.polity.id) 
@@ -7732,8 +7771,6 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
 
-            #return redirect('seshat-index') 
-            return redirect(f"{x_name}-detail", pk=new_object.id)  # Replace 'success_url_name' with your success URL
     else:
         polity_id_x = request.GET.get('polity_id_x')
         my_form = form_class(initial= {'polity': polity_id_x,})
@@ -7748,11 +7785,42 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         "my_exp": my_exp,
         #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
     }
-    if coded_value in ['preceding_entity']:
+
+
+    if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+        context.update({
+            'extra_var': my_form[x_name_with_from],
+            'extra_var2': my_form[x_name_with_to],
+        })
+    elif coded_value in ['preceding_entity']:
         context.update({
             'extra_var': my_form['other_polity'],
             'extra_var2': my_form['merged_old_data'],
             'extra_var3': my_form['relationship_to_preceding_entity'],
+        })
+    elif coded_value in ['widespread_religion']:
+        context.update({
+            'extra_var': my_form[x_name_1],
+            'extra_var2': my_form[x_name_2],
+            'extra_var3': my_form[x_name_3],
+        })
+    elif coded_value in ['power_transition']:
+        context.update({
+            'extra_var': my_form[x_name_1],
+            'extra_var2': my_form[x_name_2],
+            'extra_var3': my_form[x_name_3],
+            'extra_var4': my_form[x_name_4],
+            'extra_var5': my_form[x_name_5],
+            'extra_var6': my_form[x_name_6],
+            'extra_var7': my_form[x_name_7],
+            'extra_var8': my_form[x_name_8],
+            'extra_var9': my_form[x_name_9],
+            'extra_var10': my_form[x_name_10],
+            'extra_var11': my_form[x_name_11],
+            'extra_var12': my_form[x_name_12],
+            'extra_var13': my_form[x_name_13],
+            'extra_var14': my_form[x_name_14],
+
         })
     elif coded_value in ['suprapolity_relations']:
         context.update({
@@ -7786,7 +7854,14 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
     
-    if coded_value == 'duration':
+    if coded_value == "power_transition":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
+    elif coded_value == "widespread_religion":
+        x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to'
+    elif coded_value == 'duration':
         x_name_with_from = 'polity_year_from'
         x_name_with_to = 'polity_year_to'
     elif coded_value == 'peak_years':
@@ -7801,24 +7876,53 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         my_form = form_class(request.POST, instance=my_object)
 
         if my_form.is_valid():
-            # print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
-            # my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+            logged_in_user = request.user
+            new_object = my_form.save(commit=False)
+            suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
+            #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
+            try:
+                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+            except:
+                logged_in_expert = None
 
-            new_object = my_form.save()
+
+            if suggested_experts:
+                if new_object.private_comment and new_object.private_comment.id != 1:
+                    print('##### ID ######', new_object.private_comment.id)
+                    father_private_comment = new_object.private_comment
+                else:
+                # create a Prvate Comment to attach parts to it:
+                    father_private_comment = SeshatPrivateComment.objects.create(text="")
+                    new_object.private_comment = father_private_comment
+                seshat_private_comment_part = SeshatPrivateCommentPart(
+                    private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
+                    private_comment_owner=logged_in_expert, 
+                    private_comment= father_private_comment
+                )
+
+                print("####################", new_object)
+                print(seshat_private_comment_part)
+                print(father_private_comment)
+                print('-----------------------')
+                seshat_private_comment_part.save()
+                seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
+            
+            new_object.expert_reviewed = False
+            new_object.save()  # Save the object to persist the association
+
+            
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                # if the object has some description already
+                if new_object.comment:
+                    return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
+                else:
+                    return redirect(f"{x_name}-detail", pk=new_object.id) 
+                 # Replace 'success_url_name' with your success URL
 
 
-            # Add the current user as a curator if they are an instance of Seshat_Expert
-            # logged_in_user = request.user
-
-            # try:
-            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
-            # except:
-            #     seshat_expert_instance = None
-            # if seshat_expert_instance:
-            #     print("Alllllllloooooooooooooooo: ", logged_in_user)
-            #     new_object.curator.add(seshat_expert_instance)
-            return redirect("polity-detail-main", pk=my_object.polity.id) 
-            #return redirect(f"{x_name}-detail", pk=my_object.id)
         
         # Prepare the context for invalid form
         context = {
@@ -7831,17 +7935,45 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             "my_exp": my_exp,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me'],
         }
-        if coded_value in ['preceding_entity']:
+
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['preceding_entity']:
             context.update({
                 'extra_var': my_form['other_polity'],
                 'extra_var2': my_form['merged_old_data'],
                 'extra_var3': my_form['relationship_to_preceding_entity'],
             })
+        elif coded_value in ['widespread_religion']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        elif coded_value in ['power_transition']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+                'extra_var12': my_form[x_name_12],
+                'extra_var13': my_form[x_name_13],
+                'extra_var14': my_form[x_name_14],
+            })
         elif coded_value in ['suprapolity_relations']:
             context.update({
                 'extra_var': my_form['supra_polity_relations'],
                 'extra_var2': my_form['other_polity'],
-
             })
         elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
             context.update({
@@ -7871,11 +8003,41 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
-        if coded_value in ['preceding_entity']:
+
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['preceding_entity']:
             context.update({
                 'extra_var': my_form['other_polity'],
                 'extra_var2': my_form['merged_old_data'],
                 'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['widespread_religion']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        elif coded_value in ['power_transition']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+                'extra_var12': my_form[x_name_12],
+                'extra_var13': my_form[x_name_13],
+                'extra_var14': my_form[x_name_14],
+
             })
         elif coded_value in ['suprapolity_relations']:
             context.update({
@@ -7907,7 +8069,14 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
     
-    if coded_value == 'duration':
+    if coded_value == "power_transition":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
+    elif coded_value == "widespread_religion":
+        x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
+        x_name_with_from = f'{x_name}_from'
+        x_name_with_to = f'{x_name}_to'
+    elif coded_value == 'duration':
         x_name_with_from = 'polity_year_from'
         x_name_with_to = 'polity_year_to'
     elif coded_value == 'peak_years':
@@ -7926,7 +8095,52 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
 
-            new_object = my_form.save()
+            logged_in_user = request.user
+            new_object = my_form.save(commit=False)
+            suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
+            #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
+            try:
+                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+            except:
+                logged_in_expert = None
+
+
+            if suggested_experts:
+                if new_object.private_comment and new_object.private_comment.id != 1:
+                    print('##### ID ######', new_object.private_comment.id)
+                    father_private_comment = new_object.private_comment
+                else:
+                # create a Prvate Comment to attach parts to it:
+                    father_private_comment = SeshatPrivateComment.objects.create(text="")
+                    new_object.private_comment = father_private_comment
+                seshat_private_comment_part = SeshatPrivateCommentPart(
+                    private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
+                    private_comment_owner=logged_in_expert, 
+                    private_comment= father_private_comment
+                )
+
+                print("####################", new_object)
+                print(seshat_private_comment_part)
+                print(father_private_comment)
+
+                seshat_private_comment_part.save()
+
+                seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
+            
+            new_object.expert_reviewed = False
+            new_object.save()  # Save the object to persist the association
+
+            
+            action = request.POST.get('action')
+            if action == 'redirect_one':
+                return redirect("polity-detail-main", pk=new_object.polity.id) 
+            elif action == 'redirect_two':
+                # if the object has some description already
+                if new_object.comment:
+                    return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
+                else:
+                    return redirect(f"{x_name}-detail", pk=new_object.id) 
+                 # Replace 'success_url_name' with your success URL
 
 
             # Add the current user as a curator if they are an instance of Seshat_Expert
@@ -7939,7 +8153,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             # if seshat_expert_instance:
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
-            return redirect(f"{x_name}-detail", pk=my_object.id)
+            #return redirect(f"{x_name}-detail", pk=my_object.id)
         
         # Prepare the context for invalid form
         context = {
@@ -7953,11 +8167,40 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
-        if coded_value in ['preceding_entity']:
+
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['preceding_entity']:
             context.update({
                 'extra_var': my_form['other_polity'],
                 'extra_var2': my_form['merged_old_data'],
                 'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['widespread_religion']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        elif coded_value in ['power_transition']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+                'extra_var12': my_form[x_name_12],
+                'extra_var13': my_form[x_name_13],
+                'extra_var14': my_form[x_name_14],
             })
         elif coded_value in ['suprapolity_relations']:
             context.update({
@@ -7993,11 +8236,41 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
-        if coded_value in ['preceding_entity']:
+
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+            context.update({
+                'extra_var': my_form[x_name_with_from],
+                'extra_var2': my_form[x_name_with_to],
+            })
+        elif coded_value in ['preceding_entity']:
             context.update({
                 'extra_var': my_form['other_polity'],
                 'extra_var2': my_form['merged_old_data'],
                 'extra_var3': my_form['relationship_to_preceding_entity'],
+            })
+        elif coded_value in ['widespread_religion']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+            })
+        elif coded_value in ['power_transition']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+                'extra_var12': my_form[x_name_12],
+                'extra_var13': my_form[x_name_13],
+                'extra_var14': my_form[x_name_14],
+
             })
         elif coded_value in ['suprapolity_relations']:
             context.update({
@@ -8022,6 +8295,70 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
     return render(request, 'core/generic_templates/generic_update.html', context)
 
+
+def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
+    if var_name in ["widespread_religion",]:
+        object_list = model_class.objects.all().order_by('polity_id', 'order')
+    else:
+        object_list = model_class.objects.all()
+    #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+    extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
+
+    orderby = request.GET.get('orderby', None)
+
+    # Apply sorting if orderby is provided and is a valid field name
+    if orderby and hasattr(model_class, orderby):
+        object_list = object_list.order_by(orderby)
+
+    var_name_with_from = var_name
+    var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
+
+    # if var_name in ["official_religion", "elites_religion",]:
+    #     ordering_tag_value = "coded_value_id"
+    # #     # ?orderby=formal_legal_code&orderby2=tag
+    # elif var_name in ["widespread_religion",]:
+    #     ordering_tag_value = "order"
+    # else:
+    #     ordering_tag_value = "coded_value"
+
+    # Define any additional context variables you want to pass to the template
+    context = {
+        'object_list': object_list,
+        'var_name': var_name,
+        'create_url': f'{var_name}-create',
+        'update_url': f'{var_name}-update',
+        'update_url_new': f'{var_name}-updatenew',
+        'download_url': f'{var_name}-download',
+        'pagination_url': f'{var_name}s',
+        'metadownload_url':  f'{var_name}-metadownload',
+        'list_all_url':  f'{var_name}s_all',
+        'var_name_display': var_name_display,
+        'ordering_tag': f"?orderby={var_name}",
+        'var_section': var_section,
+        'var_subsection': var_subsection,
+        'var_main_desc': var_main_desc,
+        'myvar': var_name_display,
+        'extra_var_dict': extra_var_dict,  # Add the dictionary to the context
+        #'extra_var': obj[var_name],
+
+        #'obj_var': my_form[x_name], 
+        #"myvar": myvar,
+        #"my_exp": my_exp,
+    }
+
+
+    context["inner_vars"] = {
+        var_name_display: {
+            'min': None,
+            'max': None,
+            'scale': None, 
+            'var_exp_source': None, 
+            'var_exp': var_exp_new,
+            'units': None, 
+            'choices': 'ABSENT_PRESENT_CHOICES', 
+            'null_meaning': None}}
+
+    return render(request, 'core/generic_templates/generic_list_all.html', context)
 
 
 

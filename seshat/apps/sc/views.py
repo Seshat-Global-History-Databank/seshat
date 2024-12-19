@@ -12315,6 +12315,9 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_s
         'var_subsection': var_subsection,
         'db_section': 'sc',
     }
+
+    if myvar == "human_sacrifice":
+        context['db_section'] = 'crisisdb'
     #end_time = time.time()
     #print('elapsed_time RT', end_time-start_time)
 

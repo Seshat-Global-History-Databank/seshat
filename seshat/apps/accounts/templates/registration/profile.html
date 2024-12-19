@@ -35,19 +35,16 @@
     .nav-tabs .nav-link:hover {
       font-weight: bold;
     }
+
+    .expert_name {
+      border-radius: 5px;
+  }
       
 </style>
 <div class="container">
-    <div class="main-body">
+    <div class="main-body pt-3">
     <!-- source: https://www.bootdey.com/snippets/view/profile-with-data-and-skills#css -->
-          <!-- Breadcrumb -->
-          <nav aria-label="breadcrumb" class="main-breadcrumb mt-2">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="{% url 'seshat-index' %}">Home</a></li>
-              <li class="breadcrumb-item active" aria-current="page">User Profile</li>
-            </ol>
-          </nav>
-          <!-- /Breadcrumb -->
+
     
           <div class="row">
             <div class="col-md-3">
@@ -81,7 +78,6 @@
               </div>
               <hr>
               <div class="col-md-12 my-3">
-                <h4>Notifications:</h4>
 
                     <div class="mt-1">
                         <!-- Nav Tabs -->
@@ -122,56 +118,56 @@
                             <div class="tab-pane fade show active row gutters-sm" id="table1" role="tabpanel" aria-labelledby="table1-tab">
                               {% if all_their_private_comments %}
                               <div class="table-responsive">
-                                  <table id="table_id" class="table align-middle pt-0" style="padding: 0.25 rem !important;">
-                                      <thead>
-                                        <tr class="bg-colorful">
-                                              <th scope="col" class="text-dark">Comment</th>
-                                              <th scope="col" class="text-dark"  style="text-align: center">Full Discussion</th>
-                                              <th scope="col" class="text-dark"  style="text-align: right">Last Modified</th>
-                                          </tr>
-                                      </thead>
+                                  <table id="table_id" class="table table-hover align-middle pt-0" style="padding: 0.25 rem !important;">
+
                                       <tbody>
             
                                           {% for a_private_comment_part in all_their_private_comments %}
                                           {% if a_private_comment_part.is_done %}
                                           <tr style="background:lightgray">
-                                            <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                            <td  class="col-md-12" scope="col">
                                                 {% autoescape off %}
                                                 <span class="fw-light">
                                                   <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
+                                                  
+                                                  &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>
+                                                  <span>
+                                                    <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                    </span></a>
+     
+                           
+                                                  <br> 
                                                   
                                                   {{a_private_comment_part.private_comment_part_text}}</span>
                                                 {% endautoescape %}
             
                                             </td>                                    
-                                            <td  class="col-md-2"  style="text-align: center">
-                                              <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                              </span></a>
-                                            </td>
-            
-                                            {% autoescape off %}
-                                            <td  class="col-md-2 text-dark"  style="text-align: right;"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                            {% endautoescape %}
                                         </tr>
                                           {% else %}
                                           <tr>
-                                              <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                              <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 border border-dark" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    
+                                                    &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>
+                                                    <span>
+                                                      <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                      </span></a>
+                                                    </span>
+                             
+                                                    <br> 
+                                                    <span class="bg-white">
+                                                      {% if a_private_comment_part.private_comment.general_polity_preceding_entity_related %}
+                                                      {% endif %}
+
+                                                    </span>
+                                                  </span>
                                                     
                                                     {{a_private_comment_part.private_comment_part_text}}</span>
                                                   {% endautoescape %}
             
                                               </td>                                    
-                                              <td  class="col-md-2"  style="text-align: center">
-                                                <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge bg-colorful border border-dark text-dark fs-6"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                                </span></a>
-                                              </td>
-            
-                                              {% autoescape off %}
-                                              <td  class="col-md-2 text-dark"  style="text-align: right;"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                              {% endautoescape %}
                                           </tr>
                                           {% endif %}
             
@@ -193,56 +189,49 @@
 
                               {% if comments_written_by_user %}
                               <div class="table-responsive">
-                                  <table id="table_id" class="table align-middle" style="padding: 0.25 rem !important;">
-                                      <thead>
-                                          <tr class="bg-colorful">
-                                              <th scope="col" class="text-dark">Comment</th>
-                                              <th scope="col" class="text-dark"  style="text-align: center">Full Discussion</th>
-                                              <th scope="col" class="text-dark"  style="text-align: right">Last Modified</th>
-                                          </tr>
-                                      </thead>
+                                  <table id="table_id" class="table table-hover align-middle" style="padding: 0.25 rem !important;">
+                         
                                       <tbody>
             
                                           {% for a_private_comment_part in comments_written_by_user %}
                                           {% if a_private_comment_part.is_done %}
                                           <tr style="background:lightgray">
-                                            <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                            <td  class="col-md-12" scope="col">
                                                 {% autoescape off %}
                                                 <span class="fw-light">
                                                   <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
                                                   
-                                                  {{a_private_comment_part.private_comment_part_text}}</span>
+                                                  &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>            <span>
+                                                    <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                    </span></a>
+                                                  </span>
+                           
+                                                  <br>                                                 {{a_private_comment_part.private_comment_part_text}}</span>
                                                 {% endautoescape %}
+
             
                                             </td>                                    
-                                            <td  class="col-md-2"  style="text-align: center">
-                                              <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                              </span></a>
-                                            </td>
-            
-                                            {% autoescape off %}
-                                            <td  class="col-md-2 text-dark"  style="text-align: right;"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                            {% endautoescape %}
                                         </tr>
                                           {% else %}
                                           <tr>
-                                              <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                              <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 border border-dark" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    
+                                                    &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
+                                                    <span>
+                                                      <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                      </span></a>
+                                                    </span>
+                             
+                                                    <br> 
+                                                    
                                                     
                                                     {{a_private_comment_part.private_comment_part_text}}</span>
                                                   {% endautoescape %}
             
                                               </td>                                    
-                                              <td  class="col-md-2"  style="text-align: center">
-                                                <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge bg-colorful border border-dark text-dark fs-6"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                                </span></a>
-                                              </td>
-            
-                                              {% autoescape off %}
-                                              <td  class="col-md-2 text-dark"  style="text-align: right;"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                              {% endautoescape %}
                                           </tr>
                                           {% endif %}
             
@@ -264,56 +253,48 @@
 
                               {% if all_done_private_comments %}
                               <div class="table-responsive">
-                                  <table id="table_id" class="table align-middle" style="padding: 0.25 rem !important;">
-                                      <thead>
-                                          <tr class="bg-colorful">
-                                              <th scope="col" class="text-dark">Comment</th>
-                                              <th scope="col" class="text-dark"  style="text-align: center">Full Discussion</th>
-                                              <th scope="col" class="text-dark"  style="text-align: right">Last Modified</th>
-                                          </tr>
-                                      </thead>
+                                  <table id="table_id" class="table table-hover align-middle" style="padding: 0.25 rem !important;">
+                         
                                       <tbody>
             
                                           {% for a_private_comment_part in all_done_private_comments %}
                                           {% if a_private_comment_part.is_done %}
                                           <tr style="background:lightgray">
-                                            <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                            <td  class="col-md-12" scope="col">
                                                 {% autoescape off %}
                                                 <span class="fw-light">
                                                   <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
                                                   
+                                                  &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
+                                                  <span>
+                                                    <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                    </span></a>
+                                                  </span>
+                                                  <br> 
                                                   {{a_private_comment_part.private_comment_part_text}}</span>
                                                 {% endautoescape %}
             
                                             </td>                                    
-                                            <td  class="col-md-2"  style="text-align: center">
-                                              <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                              </span></a>
-                                            </td>
-            
-                                            {% autoescape off %}
-                                            <td  class="col-md-2 text-dark"  style="text-align: right;"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                            {% endautoescape %}
                                         </tr>
                                           {% else %}
                                           <tr>
-                                              <td  class="col-md-8" scope="col" class="text-danger col-md-2">
+                                              <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 border border-dark" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    
+                                                    &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
+                                                    <span>
+                                                      <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                      </span></a>
+                                                    </span>
+                             
+                                                    <br> 
                                                     
                                                     {{a_private_comment_part.private_comment_part_text}}</span>
                                                   {% endautoescape %}
             
                                               </td>                                    
-                                              <td  class="col-md-2"  style="text-align: center">
-                                                <a class="p-0 m-0" style="display:block;" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge bg-colorful border border-dark text-dark fs-6"><span style="vertical-align:bottom;"> Full Discussion</span>
-                                                </span></a>
-                                              </td>
-            
-                                              {% autoescape off %}
-                                              <td  class="col-md-2 text-dark"  style="text-align: right; font-size:small"> <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small></td>
-                                              {% endautoescape %}
                                           </tr>
                                           {% endif %}
             

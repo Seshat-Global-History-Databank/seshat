@@ -12,34 +12,8 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.template.defaulttags import register
 
-commonlabels = {
-    'year_from': 'Start Year',
-    'year_to': 'End Year',
-    'tag': 'Confidence Level',
-    "is_disputed" : "&nbsp; <b> Dispute? </b>",
-    "is_uncertain" : "&nbsp; <b> Uncertainty? </b>",
-    "expert_reviewed" : "&nbsp; Expert Checked?",
-    "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
-    'citations': 'Add one or more Citations',
-    'finalized': 'This piece of data is verified.',
-}
-
-commonfields = ['polity', 'year_from', 'year_to',
-                'description', 'tag', 'is_disputed', 'is_uncertain','expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
-
-commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),
-    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-1',}),
-    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-1', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-1', 'style': 'height: 220px', 'placeholder':'Add a Note (optional)'}),
-    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-1 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple', }),
-    'tag': forms.RadioSelect(),
-    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-1', }),
-    "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-1', }),
-    "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-1', }),
-    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-1', }),
-    'finalized': forms.CheckboxInput(attrs={'class': 'mb-1', 'checked': True, }),
-}
+from seshat.apps.general.forms import commonlabels, commonfields, commonwidgets, ExpertReviewedForm
+from seshat.apps.accounts.models import Seshat_Expert
 
 ############## American Violence
 
@@ -201,7 +175,7 @@ class Crisis_consequenceForm(forms.ModelForm):
 ###########################
 ####################################
 
-class Power_transitionForm(forms.ModelForm):
+class Power_transitionForm(ExpertReviewedForm):
     """
     Form for creating and updating a power transition.
     """
@@ -228,25 +202,25 @@ class Power_transitionForm(forms.ModelForm):
 
 
         labels = commonlabels.copy()
-        labels['polity'] = "<span class='h6 text-teal'> Polity: </span>"
-        labels['name'] = "<span class='h6 text-teal'> Conflict Name: </span>"
-        labels['predecessor'] = "<span class='h6 text-teal'> Predecessor: </span>"
-        labels['successor'] = "<span class='h6 text-teal'> Successor: </span>"
-        labels['reign_number_predecessor'] = "<span class='h6 text-teal'> Reign Number (predecessor): </span>"
-        labels['culture_group'] = "<span class='h6 text-teal'> Culture Group: </span>"
+        labels['polity'] = "<span class='fs-6'> Polity: </span>"
+        labels['name'] = "<span class='fs-6'> Conflict Name: </span>"
+        labels['predecessor'] = "<span class='fs-6'> Predecessor: </span>"
+        labels['successor'] = "<span class='fs-6'> Successor: </span>"
+        labels['reign_number_predecessor'] = "<span class='fs-6'> Reign Number (predecessor): </span>"
+        labels['culture_group'] = "<span class='fs-6'> Culture Group: </span>"
 
-        labels['year_from'] = "<span class='h6 text-teal'> Start Year (of Predecessor): </span>"
-        labels['year_to'] = "<span class='h6 text-teal'> End Year (Transition): </span>"
-        labels["contested"] = "<span class='h6 text-teal'> Contested: </span>"
-        labels["overturn"] = "<span class='h6 text-teal'> Overturn: </span>"
-        labels["predecessor_assassination"] = "<span class='h6 text-teal'> Predecessor_Assassination: </span>"
-        labels["intra_elite"] = "<span class='h6 text-teal'> Intra_Elite: </span>"
-        labels["military_revolt"] = "<span class='h6 text-teal'> Military_Revolt: </span>"
-        labels["popular_uprising"] = "<span class='h6 text-teal'> Popular_Uprising: </span>"
-        labels["separatist_rebellion"] = "<span class='h6 text-teal'> Separatist_Rebellion: </span>"
-        labels["external_invasion"] = "<span class='h6 text-teal'> External_Invasion: </span>"
-        labels["external_interference"] = "<span class='h6 text-teal'> External_Interference: </span>"
-        labels["description"] = "<span class='h6 text-teal'> Note: </span>"
+        labels['year_from'] = "<span class='fs-6'> Start Year (of Predecessor): </span>"
+        labels['year_to'] = "<span class='fs-6'> Transition Year: </span>"
+        labels["contested"] = "<span class='fs-6'> Contested: </span>"
+        labels["overturn"] = "<span class='fs-6'> Overturn: </span>"
+        labels["predecessor_assassination"] = "<span class='fs-6'> Predecessor Assassination: </span>"
+        labels["intra_elite"] = "<span class='fs-6'> Intra Elite: </span>"
+        labels["military_revolt"] = "<span class='fs-6'> Military Revolt: </span>"
+        labels["popular_uprising"] = "<span class='fs-6'> Popular Uprising: </span>"
+        labels["separatist_rebellion"] = "<span class='fs-6'> Separatist Rebellion: </span>"
+        labels["external_invasion"] = "<span class='fs-6'> External Invasion: </span>"
+        labels["external_interference"] = "<span class='fs-6'> External Interference: </span>"
+        labels["description"] = "<span class='fs-6'> Description: </span>"
         #labels["expert_reviewed"] = "&nbsp; Expert Checked?"
         #labels["drb_reviewed"] = "&nbsp; Data Review Board Reviewed?"
 
@@ -270,7 +244,7 @@ class Power_transitionForm(forms.ModelForm):
 
 
 
-class Human_sacrificeForm(forms.ModelForm):
+class Human_sacrificeForm(ExpertReviewedForm):
     """
     Form for creating and updating a human sacrifice.
     """

@@ -36,37 +36,69 @@ def give_me_a_color_for_expert(value):
         str: A color for the expert.
     """
     light_colors = [
-    '#e6b8af',
-    '#f4cccc',
-    '#fce5cd',
-    '#fff2cc',
-    '#d9ead3',
-    '#d0e0e3',
-    '#c9daf8',
-    '#cfe2f3',
-    '#d9d2e9',
-    '#ead1dc',
-    '#dd7e6b',
-    '#ea9999',
-    '#f9cb9c',
-    '#ffe599',
-    '#b6d7a8',
-    '#a2c4c9',
-    '#a4c2f4',
-    '#9fc5e8',
-    '#b4a7d6',
-    '#d5a6bd',
-    '#cc4125',
-    '#e06666',
-    '#f6b26b',
-    '#ffd966',
-    '#93c47d',
-    '#76a5af',
-    '#6d9eeb',
-    '#6fa8dc',
-    '#8e7cc3',
-    '#c27ba0',
+    '#b86354',  # Darker red tone of #e6b8af
+    '#cc6666',  # Darker red tone of #f4cccc
+    '#d9a065',  # Darker orange tone of #fce5cd
+    '#d6b656',  # Darker yellow tone of #fff2cc
+    '#94b373',  # Darker green tone of #d9ead3
+    '#6c8488',  # Darker blue-gray tone of #d0e0e3
+    '#6a92d1',  # Darker blue tone of #c9daf8
+    '#7292a6',  # Darker gray-blue tone of #cfe2f3
+    '#8f78c3',  # Darker purple tone of #d9d2e9
+    '#c35b7f',  # Darker pink-purple tone of #ead1dc
+    '#a93d2b',  # Darker orange-red tone of #dd7e6b
+    '#b85454',  # Darker red tone of #ea9999
+    '#e09957',  # Darker orange tone of #f9cb9c
+    '#d7b942',  # Darker yellow tone of #ffe599
+    '#79a659',  # Darker green tone of #b6d7a8
+    '#4e7476',  # Darker teal tone of #a2c4c9
+    '#4a7bbf',  # Darker blue tone of #a4c2f4
+    '#4e92b8',  # Darker blue tone of #9fc5e8
+    '#6c5ba3',  # Darker purple tone of #b4a7d6
+    '#a35f88',  # Darker pink-purple tone of #d5a6bd
+    '#892f15',  # Darker red tone of #cc4125
+    '#a73f3f',  # Darker red tone of #e06666
+    '#b86b35',  # Darker orange tone of #f6b26b
+    '#d6ac34',  # Darker yellow tone of #ffd966
+    '#5d8e52',  # Darker green tone of #93c47d
+    '#43696d',  # Darker teal tone of #76a5af
+    '#3d64b3',  # Darker blue tone of #6d9eeb
+    '#4176a5',  # Darker blue tone of #6fa8dc
+    '#654da6',  # Darker purple tone of #8e7cc3
+    '#8f5477',  # Darker pink tone of #c27ba0
     ]
+    # light_colors = [
+    # '#e6b8af',
+    # '#f4cccc',
+    # '#fce5cd',
+    # '#fff2cc',
+    # '#d9ead3',
+    # '#d0e0e3',
+    # '#c9daf8',
+    # '#cfe2f3',
+    # '#d9d2e9',
+    # '#ead1dc',
+    # '#dd7e6b',
+    # '#ea9999',
+    # '#f9cb9c',
+    # '#ffe599',
+    # '#b6d7a8',
+    # '#a2c4c9',
+    # '#a4c2f4',
+    # '#9fc5e8',
+    # '#b4a7d6',
+    # '#d5a6bd',
+    # '#cc4125',
+    # '#e06666',
+    # '#f6b26b',
+    # '#ffd966',
+    # '#93c47d',
+    # '#76a5af',
+    # '#6d9eeb',
+    # '#6fa8dc',
+    # '#8e7cc3',
+    # '#c27ba0',
+    # ]
 
     index = int(value) % 30
     return light_colors[index]
@@ -223,7 +255,7 @@ class SeshatPrivateComment(models.Model):
             private_comment_parts = []
             for private_comment_part in all_private_comment_parts:
                 my_color = give_me_a_color_for_expert(private_comment_part.private_comment_owner.id)
-                private_comment_full_text = f'<span class="badge text-dark fs-6 border border-dark" style="background:{my_color};">' + str(private_comment_part.private_comment_owner) + "</span> " + private_comment_part.private_comment_part_text + "<br>"
+                private_comment_full_text = f'<span class="badge text-dark fs-6" style="border: 2px solid {my_color};">' + str(private_comment_part.private_comment_owner) + "</span> " + private_comment_part.private_comment_part_text + "<br>"
                 private_comment_parts.append(private_comment_full_text)
             if not private_comment_parts or private_comment_parts == [None]:
                 to_be_shown = " Nothing "
@@ -235,6 +267,103 @@ class SeshatPrivateComment(models.Model):
             to_be_shown = "EMPTY_PRIVATE_COMMENT"
         return f'{to_be_shown}'
     
+    def show_inline(self) -> str:
+        all_private_comment_parts = self.inner_private_comments_related.all().order_by('created_date')
+        if all_private_comment_parts:
+            private_comment_parts = []
+            for private_comment_part in all_private_comment_parts:
+                # Assign a color for the owner
+                owner_color = give_me_a_color_for_expert(private_comment_part.private_comment_owner.id)
+
+                # Create the owner badge
+                owner_badge = (
+                    f'<span class="text-dark px-1 fs-6" '
+                    f'style="border: 2px solid {owner_color}; border-left: 10px solid {owner_color}; border-radius:5px;">'
+                    f'{private_comment_part.private_comment_owner}</span>'
+                )
+
+                # Assign colors to each reader and create reader badges
+                reader_badges = []
+                for reader in private_comment_part.private_comment_reader.all():
+                    reader_color = give_me_a_color_for_expert(reader.id)  # Use the same function for readers
+                    reader_badge = (
+                        f'<span class="text-dark px-1" '
+                        f'style="border: 2px solid {reader_color}; border-left: 10px solid {reader_color}; border-radius:5px;">'
+                        f'{reader}</span>'
+                    )
+                    reader_badges.append(reader_badge)
+
+                # Combine the owner badge, reader badges, and comment text
+                readers_html = "<i class='fa-solid fa-at text-secondary'></i>&nbsp;" + " ".join(reader_badges) if reader_badges else " "
+                private_comment_full_text = (
+                    f"<div class='pb-3'> {owner_badge} {readers_html} "
+                    f"<span class='text-secondary'> {private_comment_part.private_comment_part_text}</span></div>"
+                    
+                )
+                private_comment_parts.append(private_comment_full_text)
+
+            if not private_comment_parts or private_comment_parts == [None]:
+                to_be_shown = " Nothing "
+            else:
+                to_be_shown = " ".join(private_comment_parts)
+        elif self.text and not all_private_comment_parts:
+            to_be_shown = "No Private Comments."
+        else:
+            to_be_shown = "EMPTY_PRIVATE_COMMENT"
+        return f'{to_be_shown}'
+    
+    def show_inline_short(self) -> str:
+        all_private_comment_parts = self.inner_private_comments_related.all().order_by('created_date')
+        if all_private_comment_parts:
+            private_comment_parts = []
+            for private_comment_part in all_private_comment_parts:
+                # Assign a color for the owner
+                owner_color = give_me_a_color_for_expert(private_comment_part.private_comment_owner.id)
+
+                # Create the owner badge
+                owner_badge = (
+                    f'<span class="text-dark px-1 fs-6" '
+                    f'style="border: 2px solid {owner_color}; border-left: 10px solid {owner_color}; border-radius:5px;">'
+                    f'{private_comment_part.private_comment_owner}</span>'
+                )
+
+                # Assign colors to each reader and create reader badges
+                reader_badges = []
+                for reader in private_comment_part.private_comment_reader.all():
+                    reader_color = give_me_a_color_for_expert(reader.id)  # Use the same function for readers
+                    reader_badge = (
+                        f'<span class="text-dark px-1" '
+                        f'style="border: 2px solid {reader_color}; border-left: 10px solid {reader_color}; border-radius:5px;">'
+                        f'{reader}</span>'
+                    )
+                    reader_badges.append(reader_badge)
+
+                # Combine the owner badge, reader badges, and comment text
+                readers_html = "<i class='fa-solid fa-at text-secondary'></i>&nbsp;" + " ".join(reader_badges) if reader_badges else " "
+
+                if private_comment_part.private_comment_part_text.endswith("I would appreciate it if you could review it."):
+                    private_comment_full_text = (
+                        f"<div class='pb-3'><span class='text-secondary badge fs-6'> <i class='fa-solid fa-check-to-slot fs-6'></i> Review Request Sent By:</span> {owner_badge} {readers_html} </div>"
+                    )
+                else:
+                    private_comment_full_text = (
+                        f"<div class='pb-3'> {owner_badge} {readers_html} "
+                        f"<span class='text-secondary'> {private_comment_part.private_comment_part_text}</span></div>"
+                    )
+
+                private_comment_parts.append(private_comment_full_text)
+
+            if not private_comment_parts or private_comment_parts == [None]:
+                to_be_shown = " Nothing "
+            else:
+                to_be_shown = " ".join(private_comment_parts)
+        elif self.text and not all_private_comment_parts:
+            to_be_shown = "No Private Comments."
+        else:
+            to_be_shown = "EMPTY_PRIVATE_COMMENT"
+        return f'{to_be_shown}'
+    
+
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -1103,7 +1232,7 @@ class SeshatCommon(models.Model):
     drb_reviewed = models.BooleanField(null=True, blank=True, default=False)
     curator = models.ManyToManyField(Seshat_Expert,  related_name="%(app_label)s_%(class)s_related",
                                related_query_name="%(app_label)s_%(class)ss", blank=True,)
-    comment = models.ForeignKey(SeshatComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
     private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
 
     class Meta:

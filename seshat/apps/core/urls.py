@@ -7,8 +7,13 @@ urlpatterns += [path('methods/', views.seshatmethods, name='seshat-methods'),]
 urlpatterns += [path('whoweare/', views.seshatwhoweare, name='seshat-whoweare'),]
 urlpatterns += [path('codebook', views.seshatcodebookold, name='seshat-codebook'),]
 urlpatterns += [path('downloads_page/', views.seshatolddownloads, name='seshat-olddownloads'),]
-urlpatterns += [path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),]
+urlpatterns += [
+    path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),
+    path('get-description/<str:model_name>/<int:obj_id>/', views.get_description, name='get-description'),
+
+]
 urlpatterns += [path('download_oldcsv/<str:file_name>/', views.download_oldcsv, name='download_oldcsv'),]
+urlpatterns += [path('seshat-research-network/', views.SeshatExpertListView.as_view(), name='seshat-research-network'),]
 
 urlpatterns += [path('code_book_new_1', views.seshatcodebooknew1, name='code_book_1'),]
 #urlpatterns += [path('code_book_new_2', views.download_oldcsv, name='code_book_2'),]
@@ -113,6 +118,8 @@ urlpatterns += [
          name='seshatcomment-detail'),
     path('core/seshatcomments/<int:pk>/update/',
          views.SeshatCommentUpdate.as_view(), name="seshatcomment-update"),
+    path('core/seshatcomments/verify_expert/<int:pk>/<str:my_app_name>/<str:my_model>/', views.verify_expert, name='verify_expert'),
+    path('core/seshatcomments/verify_expert', views.verify_expert2, name='verify_expert2'),
     path('core/seshatcomments/<int:pk>/delete/',
          views.SeshatCommentDelete.as_view(), name="seshatcomment-delete"),
     # Download
@@ -168,6 +175,7 @@ urlpatterns += [path('core/nlp_datapoints_2/', views.nlp_datapoints_2, name="nlp
 urlpatterns += [
      path('core/not_found_404', views.four_o_four,
          name="four-o-four"),
+
 
 ]
 

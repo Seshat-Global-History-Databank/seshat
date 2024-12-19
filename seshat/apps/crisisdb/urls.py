@@ -1,9 +1,18 @@
 from .models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_violence, Us_location, Us_violence_subtype, Us_violence_data_source, Power_transition
+
+from .forms import Human_sacrificeForm, Power_transitionForm
+
 from django.urls import path
 
 from .views import confirm_delete_view, delete_object_view
 
 from . import views
+from seshat.apps.general.views import dynamic_create_view, dynamic_detail_view, generic_list_view, dynamic_update_view, dynamic_update_view_old, generic_metadata_download, generic_download
+
+model_form_pairs_main = [
+     (Human_sacrifice, Human_sacrificeForm, 'human_sacrifice', 'human_sacrifice', 'Human Sacrifice', 'Religion and Normative Ideology', 'Human Sacrifice', 'crisisdb'),
+     (Power_transition, Power_transitionForm, 'power_transition', 'power_transition', 'Power Transition', 'Power Transitions', None, 'crisisdb'),
+                         ]
 
 model_form_pairs = [
      (Us_location, 'us_location', ),
@@ -14,6 +23,9 @@ model_form_pairs = [
 
 ]
 
+
+
+
 urlpatterns = [
     path('vars/', views.QingVars, name='qing_vars'),
     path('playground/', views.playground, name='playground'),
@@ -21,6 +33,109 @@ urlpatterns = [
          name="playgrounddownload"),
      #path('fpl_all/', views.fpl_all,name="fpl_all"), 
 ]
+
+
+
+#############
+#############
+# Create URL patterns dynamically for each model-class pair: UPDATE
+for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section in model_form_pairs_main:
+    urlpatterns.append(
+        path(f'{x_name}/create/', dynamic_create_view, {
+            'form_class': form_class,
+            'x_name': x_name,
+            'myvar': myvar,
+            'coded_value': coded_value,
+            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'var_section': sec,
+            'var_subsection': subsec,
+            #'db_section': db_section,
+        }, name=f'{x_name}-create')
+     )
+    urlpatterns.append(
+        path(f'{x_name}/updatenew/<int:object_id>/', dynamic_update_view, {
+            'form_class': form_class,
+            'model_class': model_class,
+            'x_name': x_name,
+            'myvar': myvar,
+            'coded_value': coded_value,
+            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'var_section': sec,
+            'var_subsection': subsec,
+            #'db_section': db_section,
+            'delete_url_name': x_name + "-confirm-delete",
+        }, name=f'{x_name}-updatenew')
+    )
+    urlpatterns.append(
+        path(f'{x_name}/update_old/<int:object_id>/', dynamic_update_view_old, {
+            'form_class': form_class,
+            'model_class': model_class,
+            'x_name': x_name,
+            'myvar': myvar,
+            'coded_value': coded_value,
+            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'var_section': sec,
+            'var_subsection': subsec,
+            #'db_section': db_section,
+            'delete_url_name': x_name + "-confirm-delete",
+        }, name=f'{x_name}-update')
+    )
+    urlpatterns.append(
+        path(f'{x_name}/<int:pk>/', dynamic_detail_view, {
+          'model_class': model_class,
+          'myvar': x_name,
+          'var_section': sec,
+          'var_subsection': subsec,
+          'db_section': db_section,
+          'var_name_display': myvar,
+        }, name=f'{x_name}-detail')
+     )
+    if coded_value == 'human_sacrifice':
+     urlpatterns.append(
+          path(f'{x_name}s_all/', generic_list_view, {
+               'model_class': model_class,
+               'var_name': x_name,
+               'coded_value': coded_value,
+               'var_name_display': myvar,
+               'var_section': sec,
+               'var_subsection': subsec,
+               #'db_section': db_section,
+               'var_main_desc': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+
+          }, name=f'{x_name}s_all')
+          )
+    urlpatterns.append(
+        path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
+          'model_class': model_class,
+            'var_name': x_name,
+        }, name=f'{x_name}-confirm-delete')
+     )
+    urlpatterns.append(
+        path(f'{x_name}/<int:pk>/delete/', delete_object_view, {
+          'model_class': model_class,
+            'var_name': x_name,
+        }, name=f'{x_name}-delete')
+     )
+    urlpatterns.append(
+        path(f'{x_name}download/', generic_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+        }, name=f'{x_name}-download')
+     )
+    urlpatterns.append(
+        path(f'{x_name}metadownload/', generic_metadata_download, {
+            'var_name': x_name,
+            'var_name_display': myvar,
+            'var_section': sec,
+            'var_subsection': subsec,
+            #'db_section': db_section,
+            'var_main_desc': '-',# sc_var_defs[x_name],
+        }, name=f'{x_name}-metadownload')
+     )
+
+
+
+
 
 urlpatterns += [
     path('us_locations/', views.UsLocationListView.as_view(), name='us_location_list'),
@@ -100,10 +215,10 @@ urlpatterns += [
     path('power_transitions/', views.Power_transitionListView.as_view(), name='power_transitions'),
     path('power_transitions_list_all/', views.Power_transitionListViewAll.as_view(), name='power_transition_list'),
     path('power_transitions_all/', views.Power_transitionListViewAll.as_view(), name='power_transitions_all'),
-    path('power_transition/<int:pk>', views.Power_transitionDetailView.as_view(),
-         name='power_transition-detail'),
-    path('power_transition/<int:pk>/update/',
-         views.Power_transitionUpdate.as_view(), name="power_transition-update"),
+#     path('power_transition/<int:pk>', views.Power_transitionDetailView.as_view(),
+#          name='power_transition-detail'),
+#     path('power_transition/<int:pk>/update/',
+#          views.Power_transitionUpdate.as_view(), name="power_transition-update"),
     path('power_transition/<int:pk>/updateheavy/',
          views.Power_transitionUpdateHeavy.as_view(), name="power_transition-update_heavy"),
     #path('power_transition/<int:pk>/delete/',
@@ -117,26 +232,26 @@ urlpatterns += [
 
 ]
 
-urlpatterns += [
-    path('human_sacrifice/create/', views.Human_sacrificeCreate.as_view(),
-         name="human_sacrifice-create"),
+# urlpatterns += [
+#     path('human_sacrifice/create/', views.Human_sacrificeCreate.as_view(),
+#          name="human_sacrifice-create"),
 
-    path('human_sacrifices/', views.Human_sacrificeListView.as_view(), name='human_sacrifices'),
-    path('human_sacrifices_all/', views.Human_sacrificeListViewAll.as_view(), name='human_sacrifices_all'),
-    path('human_sacrifice/<int:pk>', views.Human_sacrificeDetailView.as_view(),
-         name='human_sacrifice-detail'),
-    path('human_sacrifice/<int:pk>/update/',
-         views.Human_sacrificeUpdate.as_view(), name="human_sacrifice-update"),
-    path('human_sacrifice/<int:pk>/delete/',
-         views.Human_sacrificeDelete.as_view(), name="human_sacrifice-delete"),
-    # Download
-    path('human_sacrificedownload/', views.human_sacrifice_download,
-         name="human_sacrifice-download"),
-    path('human_sacrificemetadownload/', views.human_sacrifice_meta_download,
-         name="human_sacrifice-metadownload"),
-     path('create_subcomment/<int:hs_instance_id>/', views.create_a_comment_with_a_subcomment, name='create_subcomment'),
+#     path('human_sacrifices/', views.Human_sacrificeListView.as_view(), name='human_sacrifices'),
+#     path('human_sacrifices_all/', views.Human_sacrificeListViewAll.as_view(), name='human_sacrifices_all'),
+#     path('human_sacrifice/<int:pk>', views.Human_sacrificeDetailView.as_view(),
+#          name='human_sacrifice-detail'),
+#     path('human_sacrifice/<int:pk>/update/',
+#          views.Human_sacrificeUpdate.as_view(), name="human_sacrifice-update"),
+#     path('human_sacrifice/<int:pk>/delete/',
+#          views.Human_sacrificeDelete.as_view(), name="human_sacrifice-delete"),
+#     # Download
+#     path('human_sacrificedownload/', views.human_sacrifice_download,
+#          name="human_sacrifice-download"),
+#     path('human_sacrificemetadownload/', views.human_sacrifice_meta_download,
+#          name="human_sacrifice-metadownload"),
+#      path('create_subcomment/<int:hs_instance_id>/', views.create_a_comment_with_a_subcomment, name='create_subcomment'),
 
-]
+# ]
         
 
 urlpatterns += [

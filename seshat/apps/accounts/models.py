@@ -79,12 +79,20 @@ class Seshat_Expert(models.Model):
     Model representing a Seshat Expert.
     """
     SESHATADMIN = 'Seshat Admin'
-    RA = 'RA'
+    RA = 'Researcher'
     SESHATEXPERT = 'Seshat Expert'
+    LR = 'Lead Researcher'
+    SD = 'Seshat Director'
+    PM = 'Project Manager'
+
     ROLE_CHOICES = (
         (SESHATADMIN, 'Seshat Admin'),
-        (RA, 'RA'),
+        (RA, 'Researcher'),
         (SESHATEXPERT, 'Seshat Expert'),
+        (LR, 'Lead Researcher'),
+        (SD, 'Seshat Director'),
+        (PM, 'Project Manager'),
+
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=60,

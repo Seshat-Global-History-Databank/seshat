@@ -204,18 +204,22 @@
                                       
                                         <span class="card-text-spaced">
                                             <span class="left-span">    
-                                                <span class="badge border border-dark text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;"><a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm"></i></a></span>
+                                                <span class="badge border border-dark text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;">
+                                                    {% if a_trans.has_description %}
+                                                    <a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm"></i></a>
+                                                    {% else %}
+                                                    <a href="{% url 'power_transition-updatenew' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-danger fa-sm"></i></a>
+                                                    {% endif %} 
+                                                </span>
 
 
-                                        <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
+                                        <span class="badge border border-dark text-dark px-2 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
                                         
                                             {% if a_trans.year_from == None and a_trans.year_to == None %}
                                             <a type="button" class="p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
                                                 <span><i class="fa-solid fa-clock text-secondary p-0 m-0"></i> </span>
                                             </a>
-                                            {% elif a_trans.year_from == None and a_trans.year_to != None %}
-                                                ? <i class="fas fa-long-arrow-alt-right"></i>
-
+                                            {% elif a_trans.year_to != None %}
                                                 {% if  a_trans.year_to < 0 %}
                                                 {{ a_trans.year_to|abs }} 
                                                 
@@ -228,82 +232,28 @@
                                         
                                                 {% endif %} 
                                             {% elif a_trans.year_from != None and a_trans.year_to == None %}
-                                                {% if  a_trans.year_from < 0 %}
-                                                {{ a_trans.year_from|abs }} 
-                                                
-                                                <span class="text-secondary fw-light fs-6">BCE</span> 
-                                            
-                                                {% else %}
-                                                {{ a_trans.year_from }} 
-                                            
-                                                <span class="text-secondary fw-light fs-6">CE</span>
-                                        
-                                                {% endif %} 
-                                                <i class="fas fa-long-arrow-alt-right"></i> ?
+                                                 ?
 
-                                                
-                                            {% elif  a_trans.year_from == a_trans.year_to %}
-                                                {% if  a_trans.year_from < 0 %}
-                                                {{ a_trans.year_from|abs }} 
-                                                
-                                                <span class="text-secondary fw-light fs-6">BCE</span> 
-                                            
-                                                {% else %}
-                                                {{ a_trans.year_from }} 
-                                            
-                                                <span class="text-secondary fw-light fs-6">CE</span>
-                                        
-                                                {% endif %}
                                             {% elif a_trans.year_to == None %}
-                                                {% if  a_trans.year_from < 0 %}
-                                                {{ a_trans.year_from|abs }} 
-                                                
-                                                    <span class="text-secondary fw-light fs-6">BCE</span>
-                                            
-                                                {% else %}
-                                                {{ a_trans.year_from }} 
-                                                
-                                                    <span class="text-secondary fw-light fs-6">CE</span>
-                                            
-                                                {% endif %}
+                                            ?
                                             {% elif a_trans.year_to == None and  a_trans.year_from == None %}
                                                 <i class="fa-solid fa-minus"></i> 
                                             {% else %}
-                                                {% if  a_trans.year_from < 0 and a_trans.year_to < 0 %}
-                                                {{ a_trans.year_from|abs }} 
-                                                
-                                                    <span class="text-secondary fw-light fs-6">BCE</span> 
-                                            
-                                                <i class="fas fa-long-arrow-alt-right"></i> {{ a_trans.year_to|abs }}         
-                                                    <span class="text-secondary fw-light fs-6">BCE</span> 
-                                            
-                                                {% elif  a_trans.year_from < 0 and a_trans.year_to >= 0 %}
-                                                {{ a_trans.year_from|abs }}         
-                                                    <span class="text-secondary fw-light fs-6">BCE</span> 
-                                             <i class="fas fa-long-arrow-alt-right"></i> {{ a_trans.year_to }}         
-                                                    <span class="text-secondary fw-light fs-6">CE</span> 
-                                            
-                                                {% else %}
-                                                {{ a_trans.year_from }} 
-                                                    <span class="text-secondary fw-light fs-6">CE</span>
-                                              <i class="fas fa-long-arrow-alt-right"></i> {{ a_trans.year_to }}         
-                                                    <span class="text-secondary fw-light fs-6">CE</span> 
-                                            
-                                                {% endif %}
+                                                xyz
                                         
                                             {% endif %}
                                             {% if  info_list.polity_end_year < a_trans.year_to %}
-                                            <span class="text-danger"> *Bad Years...</span>
+                                            <span class="text-danger"> *</span>
                                             {% endif %}
                                         </span>
                                         <a class="h6" href="{% url 'polity-detail-main' pol_id %}#power_transition_{{ a_trans.trans_id}}">
-                                            <span class = "fw-bold text-danger">
+                                            <span class = "fw-normal text-secondary">
                                                 {{ a_trans.predecessor }}
                                             </span> 
-                                            <span class="text-dark">
+                                            <span class="text-success">
                                                 <i class="fa-solid fa-arrow-right-long fa-sm"></i> 
                                             </span> 
-                                            <span class = "fw-bold text-teal">
+                                            <span class = "fw-bold text-dark">
                                                 {{ a_trans.successor }}
                                             </span>
                                         </a>

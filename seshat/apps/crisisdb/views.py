@@ -802,16 +802,13 @@ class Power_transitionListView(PermissionRequiredMixin, generic.ListView):
 
         return context
     
-class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
+class Power_transitionListViewAll(generic.ListView):
     """
     View for listing all Power_transition instances.
-
-    Note:
-        This view is only accessible to users with the 'add_capital' permission.
     """
     model = Power_transition
     template_name = "crisisdb/power_transition/power_transition_list_all_new.html"
-    permission_required = 'core.add_capital'
+    #permission_required = 'core.add_capital'
     #paginate_by = 50
 
     def get_absolute_url(self):
@@ -858,6 +855,9 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
                         'polity_end_year': 2000,
                         'trans_list': []
                         }
+            has_description = False
+            if transition.description:
+                has_description = True
 
             pols_dict[polity_id]['trans_list'].append({
                 'year_from': transition.year_from,
@@ -866,8 +866,6 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
                 'successor': transition.successor,
                 'name': transition.name,
                 'trans_id': transition.id,
-
-
                 'overturn': transition.overturn,
                 'predecessor_assassination':  transition.predecessor_assassination,
                 'intra_elite': transition.intra_elite,
@@ -876,6 +874,7 @@ class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
                 'separatist_rebellion': transition.separatist_rebellion,
                 'external_invasion': transition.external_invasion,
                 'external_interference': transition.external_interference,
+                'has_description': has_description,
             })
         #print(grouped_dict)
 
@@ -1317,7 +1316,7 @@ def create_a_comment_with_a_subcomment(request, hs_instance_id):
     Upon calling this function, I want to create a subcomment and assign it to a comment and then assign the comment to the model_name with id=hs_instance_id.
     """
     # Create a new comment instance and save it to the database
-    comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+    comment_instance = SeshatComment.objects.create(text='')
     user_logged_in = request.user
     
     # Get the Seshat_Expert instance associated with the user

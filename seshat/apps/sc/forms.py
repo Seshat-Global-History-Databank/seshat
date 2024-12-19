@@ -6,6 +6,9 @@ from django.db.models.base import Model
 from django.forms import ModelForm
 from django.forms.widgets import Textarea
 
+from seshat.apps.general.forms import commonlabels, commonfields, commonwidgets, ExpertReviewedForm
+from seshat.apps.accounts.models import Seshat_Expert
+
 from django.utils.safestring import mark_safe
 
 from django.core.exceptions import ValidationError
@@ -14,38 +17,39 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from django.template.defaulttags import register
 
-commonlabels = {
-    'polity': '&nbsp;<b>Polity:</b>',
-    'year_from': '&nbsp;<b>Start Year:</b>',
-    'year_to': '&nbsp;<b>End Year:</b>',
-    'tag': 'Confidence Level',
-    'description': "&nbsp; <b> Description: </b>",
-    "is_disputed" : "Dispute?",
-    "is_uncertain" : "Uncertainty?",
-    "expert_reviewed" : "Expert Checked?",
-    "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
-    'citations': 'Add one or more Citations',
-    'finalized': 'This piece of data is verified.',
-}
 
-commonfields = ['polity', 'year_from', 'year_to',
-                'description', 'tag', 'is_disputed', 'is_uncertain', 'expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
+# commonlabels = {
+#     'polity': '&nbsp;<b>Polity:</b>',
+#     'year_from': '&nbsp;<b>Start Year:</b>',
+#     'year_to': '&nbsp;<b>End Year:</b>',
+#     'tag': 'Confidence Level',
+#     'description': "&nbsp; <b> Description: </b>",
+#     "is_disputed" : "Dispute?",
+#     "is_uncertain" : "Uncertainty?",
+#     "expert_reviewed" : "Expert Checked?",
+#     "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
+#     'citations': 'Add one or more Citations',
+#     'finalized': 'This piece of data is verified.',
+# }
 
-commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),
-    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
-    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
-    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
-    'tag': forms.RadioSelect(),
-    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
-}
+# commonfields = ['polity', 'year_from', 'year_to',
+#                 'description', 'tag', 'is_disputed', 'is_uncertain', 'expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
 
-class RaForm(forms.ModelForm):
+# commonwidgets = {
+#     'polity': forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),
+#     'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
+#     'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
+#     'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
+#     'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
+#     'tag': forms.RadioSelect(),
+#     "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
+# }
+
+class RaForm(ExpertReviewedForm):
     """
     
     """
@@ -62,7 +66,7 @@ class RaForm(forms.ModelForm):
         widgets['sc_ra'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_territoryForm(forms.ModelForm):
+class Polity_territoryForm(ExpertReviewedForm):
     """
     
     """
@@ -81,7 +85,7 @@ class Polity_territoryForm(forms.ModelForm):
         widgets['polity_territory_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Polity_populationForm(forms.ModelForm):
+class Polity_populationForm(ExpertReviewedForm):
     """
     
     """
@@ -100,7 +104,7 @@ class Polity_populationForm(forms.ModelForm):
         widgets['polity_population_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Population_of_the_largest_settlementForm(forms.ModelForm):
+class Population_of_the_largest_settlementForm(ExpertReviewedForm):
     """
     
     """
@@ -119,7 +123,7 @@ class Population_of_the_largest_settlementForm(forms.ModelForm):
         widgets['population_of_the_largest_settlement_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Settlement_hierarchyForm(forms.ModelForm):
+class Settlement_hierarchyForm(ExpertReviewedForm):
     """
     
     """
@@ -138,7 +142,7 @@ class Settlement_hierarchyForm(forms.ModelForm):
         widgets['settlement_hierarchy_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Administrative_levelForm(forms.ModelForm):
+class Administrative_levelForm(ExpertReviewedForm):
     """
     
     """
@@ -157,7 +161,7 @@ class Administrative_levelForm(forms.ModelForm):
         widgets['administrative_level_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Religious_levelForm(forms.ModelForm):
+class Religious_levelForm(ExpertReviewedForm):
     """
     
     """
@@ -176,7 +180,7 @@ class Religious_levelForm(forms.ModelForm):
         widgets['religious_level_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Military_levelForm(forms.ModelForm):
+class Military_levelForm(ExpertReviewedForm):
     """
     
     """
@@ -195,7 +199,7 @@ class Military_levelForm(forms.ModelForm):
         widgets['military_level_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         
 
-class Professional_military_officerForm(forms.ModelForm):
+class Professional_military_officerForm(ExpertReviewedForm):
     """
     
     """
@@ -212,7 +216,7 @@ class Professional_military_officerForm(forms.ModelForm):
         widgets['professional_military_officer'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Professional_soldierForm(forms.ModelForm):
+class Professional_soldierForm(ExpertReviewedForm):
     """
     
     """
@@ -229,7 +233,7 @@ class Professional_soldierForm(forms.ModelForm):
         widgets['professional_soldier'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Professional_priesthoodForm(forms.ModelForm):
+class Professional_priesthoodForm(ExpertReviewedForm):
     """
     
     """
@@ -246,7 +250,7 @@ class Professional_priesthoodForm(forms.ModelForm):
         widgets['professional_priesthood'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Full_time_bureaucratForm(forms.ModelForm):
+class Full_time_bureaucratForm(ExpertReviewedForm):
     """
     
     """
@@ -263,7 +267,7 @@ class Full_time_bureaucratForm(forms.ModelForm):
         widgets['full_time_bureaucrat'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Examination_systemForm(forms.ModelForm):
+class Examination_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -280,7 +284,7 @@ class Examination_systemForm(forms.ModelForm):
         widgets['examination_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Merit_promotionForm(forms.ModelForm):
+class Merit_promotionForm(ExpertReviewedForm):
     """
     
     """
@@ -297,7 +301,7 @@ class Merit_promotionForm(forms.ModelForm):
         widgets['merit_promotion'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Specialized_government_buildingForm(forms.ModelForm):
+class Specialized_government_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -314,7 +318,7 @@ class Specialized_government_buildingForm(forms.ModelForm):
         widgets['specialized_government_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Formal_legal_codeForm(forms.ModelForm):
+class Formal_legal_codeForm(ExpertReviewedForm):
     """
     
     """
@@ -331,7 +335,7 @@ class Formal_legal_codeForm(forms.ModelForm):
         widgets['formal_legal_code'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class JudgeForm(forms.ModelForm):
+class JudgeForm(ExpertReviewedForm):
     """
     
     """
@@ -348,7 +352,7 @@ class JudgeForm(forms.ModelForm):
         widgets['judge'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class CourtForm(forms.ModelForm):
+class CourtForm(ExpertReviewedForm):
     """
     
     """
@@ -365,7 +369,7 @@ class CourtForm(forms.ModelForm):
         widgets['court'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Professional_lawyerForm(forms.ModelForm):
+class Professional_lawyerForm(ExpertReviewedForm):
     """
     
     """
@@ -382,7 +386,7 @@ class Professional_lawyerForm(forms.ModelForm):
         widgets['professional_lawyer'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Irrigation_systemForm(forms.ModelForm):
+class Irrigation_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -399,7 +403,7 @@ class Irrigation_systemForm(forms.ModelForm):
         widgets['irrigation_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Drinking_water_supply_systemForm(forms.ModelForm):
+class Drinking_water_supply_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -416,7 +420,7 @@ class Drinking_water_supply_systemForm(forms.ModelForm):
         widgets['drinking_water_supply_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class MarketForm(forms.ModelForm):
+class MarketForm(ExpertReviewedForm):
     """
     
     """
@@ -433,7 +437,7 @@ class MarketForm(forms.ModelForm):
         widgets['market'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Food_storage_siteForm(forms.ModelForm):
+class Food_storage_siteForm(ExpertReviewedForm):
     """
     
     """
@@ -450,7 +454,7 @@ class Food_storage_siteForm(forms.ModelForm):
         widgets['food_storage_site'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class RoadForm(forms.ModelForm):
+class RoadForm(ExpertReviewedForm):
     """
     
     """
@@ -467,7 +471,7 @@ class RoadForm(forms.ModelForm):
         widgets['road'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class BridgeForm(forms.ModelForm):
+class BridgeForm(ExpertReviewedForm):
     """
     
     """
@@ -484,7 +488,7 @@ class BridgeForm(forms.ModelForm):
         widgets['bridge'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class CanalForm(forms.ModelForm):
+class CanalForm(ExpertReviewedForm):
     """
     
     """
@@ -501,7 +505,7 @@ class CanalForm(forms.ModelForm):
         widgets['canal'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class PortForm(forms.ModelForm):
+class PortForm(ExpertReviewedForm):
     """
     
     """
@@ -518,7 +522,7 @@ class PortForm(forms.ModelForm):
         widgets['port'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Mines_or_quarryForm(forms.ModelForm):
+class Mines_or_quarryForm(ExpertReviewedForm):
     """
     
     """
@@ -535,7 +539,7 @@ class Mines_or_quarryForm(forms.ModelForm):
         widgets['mines_or_quarry'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Mnemonic_deviceForm(forms.ModelForm):
+class Mnemonic_deviceForm(ExpertReviewedForm):
     """
     
     """
@@ -552,7 +556,7 @@ class Mnemonic_deviceForm(forms.ModelForm):
         widgets['mnemonic_device'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Nonwritten_recordForm(forms.ModelForm):
+class Nonwritten_recordForm(ExpertReviewedForm):
     """
     
     """
@@ -569,7 +573,7 @@ class Nonwritten_recordForm(forms.ModelForm):
         widgets['nonwritten_record'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Written_recordForm(forms.ModelForm):
+class Written_recordForm(ExpertReviewedForm):
     """
     
     """
@@ -586,7 +590,7 @@ class Written_recordForm(forms.ModelForm):
         widgets['written_record'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class ScriptForm(forms.ModelForm):
+class ScriptForm(ExpertReviewedForm):
     """
     
     """
@@ -603,7 +607,7 @@ class ScriptForm(forms.ModelForm):
         widgets['script'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Non_phonetic_writingForm(forms.ModelForm):
+class Non_phonetic_writingForm(ExpertReviewedForm):
     """
     
     """
@@ -620,7 +624,7 @@ class Non_phonetic_writingForm(forms.ModelForm):
         widgets['non_phonetic_writing'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Phonetic_alphabetic_writingForm(forms.ModelForm):
+class Phonetic_alphabetic_writingForm(ExpertReviewedForm):
     """
     
     """
@@ -637,7 +641,7 @@ class Phonetic_alphabetic_writingForm(forms.ModelForm):
         widgets['phonetic_alphabetic_writing'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Lists_tables_and_classificationForm(forms.ModelForm):
+class Lists_tables_and_classificationForm(ExpertReviewedForm):
     """
     
     """
@@ -654,7 +658,7 @@ class Lists_tables_and_classificationForm(forms.ModelForm):
         widgets['lists_tables_and_classification'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class CalendarForm(forms.ModelForm):
+class CalendarForm(ExpertReviewedForm):
     """
     
     """
@@ -671,7 +675,7 @@ class CalendarForm(forms.ModelForm):
         widgets['calendar'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Sacred_textForm(forms.ModelForm):
+class Sacred_textForm(ExpertReviewedForm):
     """
     
     """
@@ -688,7 +692,7 @@ class Sacred_textForm(forms.ModelForm):
         widgets['sacred_text'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Religious_literatureForm(forms.ModelForm):
+class Religious_literatureForm(ExpertReviewedForm):
     """
     
     """
@@ -705,7 +709,7 @@ class Religious_literatureForm(forms.ModelForm):
         widgets['religious_literature'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Practical_literatureForm(forms.ModelForm):
+class Practical_literatureForm(ExpertReviewedForm):
     """
     
     """
@@ -722,7 +726,7 @@ class Practical_literatureForm(forms.ModelForm):
         widgets['practical_literature'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class HistoryForm(forms.ModelForm):
+class HistoryForm(ExpertReviewedForm):
     """
     
     """
@@ -739,7 +743,7 @@ class HistoryForm(forms.ModelForm):
         widgets['history'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class PhilosophyForm(forms.ModelForm):
+class PhilosophyForm(ExpertReviewedForm):
     """
     
     """
@@ -756,7 +760,7 @@ class PhilosophyForm(forms.ModelForm):
         widgets['philosophy'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Scientific_literatureForm(forms.ModelForm):
+class Scientific_literatureForm(ExpertReviewedForm):
     """
     
     """
@@ -773,7 +777,7 @@ class Scientific_literatureForm(forms.ModelForm):
         widgets['scientific_literature'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class FictionForm(forms.ModelForm):
+class FictionForm(ExpertReviewedForm):
     """
     
     """
@@ -790,7 +794,7 @@ class FictionForm(forms.ModelForm):
         widgets['fiction'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class ArticleForm(forms.ModelForm):
+class ArticleForm(ExpertReviewedForm):
     """
     
     """
@@ -807,7 +811,7 @@ class ArticleForm(forms.ModelForm):
         widgets['article'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class TokenForm(forms.ModelForm):
+class TokenForm(ExpertReviewedForm):
     """
     
     """
@@ -824,7 +828,7 @@ class TokenForm(forms.ModelForm):
         widgets['token'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Precious_metalForm(forms.ModelForm):
+class Precious_metalForm(ExpertReviewedForm):
     """
     
     """
@@ -841,7 +845,7 @@ class Precious_metalForm(forms.ModelForm):
         widgets['precious_metal'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Foreign_coinForm(forms.ModelForm):
+class Foreign_coinForm(ExpertReviewedForm):
     """
     
     """
@@ -858,7 +862,7 @@ class Foreign_coinForm(forms.ModelForm):
         widgets['foreign_coin'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Indigenous_coinForm(forms.ModelForm):
+class Indigenous_coinForm(ExpertReviewedForm):
     """
     
     """
@@ -875,7 +879,7 @@ class Indigenous_coinForm(forms.ModelForm):
         widgets['indigenous_coin'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Paper_currencyForm(forms.ModelForm):
+class Paper_currencyForm(ExpertReviewedForm):
     """
     
     """
@@ -892,7 +896,7 @@ class Paper_currencyForm(forms.ModelForm):
         widgets['paper_currency'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class CourierForm(forms.ModelForm):
+class CourierForm(ExpertReviewedForm):
     """
     
     """
@@ -909,7 +913,7 @@ class CourierForm(forms.ModelForm):
         widgets['courier'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Postal_stationForm(forms.ModelForm):
+class Postal_stationForm(ExpertReviewedForm):
     """
     
     """
@@ -926,7 +930,7 @@ class Postal_stationForm(forms.ModelForm):
         widgets['postal_station'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class General_postal_serviceForm(forms.ModelForm):
+class General_postal_serviceForm(ExpertReviewedForm):
     """
     
     """
@@ -944,7 +948,7 @@ class General_postal_serviceForm(forms.ModelForm):
         
 
 # NEW SC vars
-class Communal_buildingForm(forms.ModelForm):
+class Communal_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -962,7 +966,7 @@ class Communal_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets['communal_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
-class Utilitarian_public_buildingForm(forms.ModelForm):
+class Utilitarian_public_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -980,7 +984,7 @@ class Utilitarian_public_buildingForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets['utilitarian_public_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
-class Other_utilitarian_public_buildingForm(forms.ModelForm):
+class Other_utilitarian_public_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -999,7 +1003,7 @@ class Other_utilitarian_public_buildingForm(forms.ModelForm):
         widgets['other_utilitarian_public_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Symbolic_buildingForm(forms.ModelForm):
+class Symbolic_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -1018,7 +1022,7 @@ class Symbolic_buildingForm(forms.ModelForm):
         widgets['symbolic_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Entertainment_buildingForm(forms.ModelForm):
+class Entertainment_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -1037,7 +1041,7 @@ class Entertainment_buildingForm(forms.ModelForm):
         widgets['entertainment_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Knowledge_or_information_buildingForm(forms.ModelForm):
+class Knowledge_or_information_buildingForm(ExpertReviewedForm):
     """
     
     """
@@ -1056,7 +1060,7 @@ class Knowledge_or_information_buildingForm(forms.ModelForm):
         widgets['knowledge_or_information_building'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Special_purpose_siteForm(forms.ModelForm):
+class Special_purpose_siteForm(ExpertReviewedForm):
     """
     
     """
@@ -1075,7 +1079,7 @@ class Special_purpose_siteForm(forms.ModelForm):
         widgets['special_purpose_site'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Ceremonial_siteForm(forms.ModelForm):
+class Ceremonial_siteForm(ExpertReviewedForm):
     """
     
     """
@@ -1094,7 +1098,7 @@ class Ceremonial_siteForm(forms.ModelForm):
         widgets['ceremonial_site'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Burial_siteForm(forms.ModelForm):
+class Burial_siteForm(ExpertReviewedForm):
     """
     
     """
@@ -1113,7 +1117,7 @@ class Burial_siteForm(forms.ModelForm):
         widgets['burial_site'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Trading_emporiaForm(forms.ModelForm):
+class Trading_emporiaForm(ExpertReviewedForm):
     """
     
     """
@@ -1132,7 +1136,7 @@ class Trading_emporiaForm(forms.ModelForm):
         widgets['trading_emporia'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class EnclosureForm(forms.ModelForm):
+class EnclosureForm(ExpertReviewedForm):
     """
     
     """
@@ -1151,7 +1155,7 @@ class EnclosureForm(forms.ModelForm):
         widgets['enclosure'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Length_measurement_systemForm(forms.ModelForm):
+class Length_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1170,7 +1174,7 @@ class Length_measurement_systemForm(forms.ModelForm):
         widgets['length_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Area_measurement_systemForm(forms.ModelForm):
+class Area_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1189,7 +1193,7 @@ class Area_measurement_systemForm(forms.ModelForm):
         widgets['area_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Volume_measurement_systemForm(forms.ModelForm):
+class Volume_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1208,7 +1212,7 @@ class Volume_measurement_systemForm(forms.ModelForm):
         widgets['volume_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Weight_measurement_systemForm(forms.ModelForm):
+class Weight_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1227,7 +1231,7 @@ class Weight_measurement_systemForm(forms.ModelForm):
         widgets['weight_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Time_measurement_systemForm(forms.ModelForm):
+class Time_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1246,7 +1250,7 @@ class Time_measurement_systemForm(forms.ModelForm):
         widgets['time_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Geometrical_measurement_systemForm(forms.ModelForm):
+class Geometrical_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1265,7 +1269,7 @@ class Geometrical_measurement_systemForm(forms.ModelForm):
         widgets['geometrical_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Other_measurement_systemForm(forms.ModelForm):
+class Other_measurement_systemForm(ExpertReviewedForm):
     """
     
     """
@@ -1284,7 +1288,7 @@ class Other_measurement_systemForm(forms.ModelForm):
         widgets['other_measurement_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Debt_and_credit_structureForm(forms.ModelForm):
+class Debt_and_credit_structureForm(ExpertReviewedForm):
     """
     
     """
@@ -1303,7 +1307,7 @@ class Debt_and_credit_structureForm(forms.ModelForm):
         widgets['debt_and_credit_structure'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
 
-class Store_of_wealthForm(forms.ModelForm):
+class Store_of_wealthForm(ExpertReviewedForm):
     """
     
     """
@@ -1321,7 +1325,7 @@ class Store_of_wealthForm(forms.ModelForm):
         widgets = dict(commonwidgets)
         widgets['store_of_wealth'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
-class Source_of_supportForm(forms.ModelForm):
+class Source_of_supportForm(ExpertReviewedForm):
     """
     
     """
@@ -1341,7 +1345,7 @@ class Source_of_supportForm(forms.ModelForm):
 
 
 
-class Occupational_complexityForm(forms.ModelForm):
+class Occupational_complexityForm(ExpertReviewedForm):
     """
     
     """
@@ -1358,7 +1362,7 @@ class Occupational_complexityForm(forms.ModelForm):
         widgets['occupational_complexity'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Special_purpose_houseForm(forms.ModelForm):
+class Special_purpose_houseForm(ExpertReviewedForm):
     """
     
     """
@@ -1375,7 +1379,7 @@ class Special_purpose_houseForm(forms.ModelForm):
         widgets['special_purpose_house'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Other_special_purpose_siteForm(forms.ModelForm):
+class Other_special_purpose_siteForm(ExpertReviewedForm):
     """
     
     """
@@ -1393,7 +1397,7 @@ class Other_special_purpose_siteForm(forms.ModelForm):
 
 
 
-class Largest_communication_distanceForm(forms.ModelForm):
+class Largest_communication_distanceForm(ExpertReviewedForm):
     """
     
     """
@@ -1413,7 +1417,7 @@ class Largest_communication_distanceForm(forms.ModelForm):
         widgets['largest_communication_distance_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
 
 
-class Fastest_individual_communicationForm(forms.ModelForm):
+class Fastest_individual_communicationForm(ExpertReviewedForm):
     """
     
     """

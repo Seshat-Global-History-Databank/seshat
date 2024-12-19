@@ -1,0 +1,113 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+{% load custom_filters %}
+
+{% load humanize %}
+
+
+{% block content %}
+<div class="container">
+    <h2 class="pt-2">Seshat Research Network (Researchers and Experts)</h2>
+    <table class="table table-hover table-borderless">
+        <thead>
+            <tr class="border-bottom" style="background:#b3cde0">
+                <th>ID</th>
+                <th>UID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th style="text-align: center">Groups</th>
+                <th style="text-align: left">Permissions</th>
+                <th style="text-align: right">Date Joined</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% autoescape off %}
+            {% for expert in experts %}
+                <tr class="
+                {% if expert.user|is_user_real %}
+                text-dark
+                {% else %}
+                text-secondary
+                {% endif %}
+                border-bottom
+                ">
+                    <td>{{ expert.id }}</td>
+                    <td>{{ expert.user_id }}</td>
+
+                    <td class="fw-bold">
+                        {% if expert.user.first_name and expert.user.last_name %}
+                            {{ expert.user.first_name }} {{ expert.user.last_name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td style="font-family: Roboto Mono;">
+                        {% if expert.user|is_user_real and expert.iser_id != 150 %}
+                        {{ expert.user.email }}
+                        {% else %}
+                        -
+                        {% endif %}
+                        </td>
+                    <td>{{ expert.role }}</td>
+
+                    <td style="text-align: center">
+                        {% for group in expert.user.related_groups %}
+                            {% if group.name == "Seshat Users First Round" %}
+                            <i class="fa-solid fa-user fa-lg" style="color: silver"></i>
+                            {% elif group.name == "Chief Seshat Researchers" %}
+                            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086"></i>
+
+                            {% elif group.name == "Chief Seshat External Experts" %}
+                            <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62"></i>
+
+                            {% elif group.name == "Chief Seshat Admins" %}
+                            <i class="fa-solid fa-user-gear fa-lg"  style="color: #f67e7d"></i>
+                            {% else %}
+                                {% if request.user.email == 'benam.mjd@gmail.com' %}
+                                {{group.name}}
+                                {% endif %}
+
+                            {% endif %}                            
+                        {% endfor %}
+                    </td>
+                    <td style="text-align: left">
+                        <i class="fa-solid fa-eye text-primary fa-lg"></i>
+                        <i class="fa-solid fa-download text-secondary fa-lg"></i>
+
+                        {% for perm in expert.user.related_permissions %}
+                            {% if perm.name == "Can add capital" %}
+                            <i class="fa-regular fa-square-plus fa-lg text-success"></i>
+                            <i class="fa-solid fa-pen-to-square fa-lg text-warning"></i>
+                            <i class="fa-regular fa-trash-can fa-lg text-danger"></i>
+                    
+                            {% elif perm.name == "Can add seshat private comment part" %}
+                            <i class="fa-solid fa-square-check text-dark fa-lg"></i>
+                            {% else %}
+                            {% if request.user.email == 'benamggg.mjd@gmail.com' %}
+                            {{perm.name}}
+                            {% endif %}
+                          
+                            {% endif %}
+                        {% endfor %}
+                        <i class="fa-regular fa-comment fa-lg" style="color:#73a5c6;"></i>
+
+                    </td>
+                    <td class="text-secondary" style="text-align: right">{{ expert.user.date_joined|date:"Y-m-d" }}</td>
+
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="9">No experts found.</td>
+                </tr>
+            {% endfor %}
+            {% endautoescape %}
+
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

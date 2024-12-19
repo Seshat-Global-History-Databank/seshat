@@ -585,3 +585,14 @@ class SeshatCommentPartForm2_UPGRADE(forms.Form):
 
 #formset = ReferenceFormSet2(prefix='refs')
 #comment_order = forms.IntegerField(label='Do NOT Change This Number: ', required=False,)
+
+
+class ExpertCheckedForm(forms.Form):
+    verify = forms.BooleanField(
+        required=False,  # Checkbox is optional
+        label="I have checked this coded record and would like to mark it as Expert Checked under my name.",
+        widget=forms.CheckboxInput(attrs={
+            'class': 'form-check-input',                 
+            'style': 'transform: scale(1.5); margin-right: 10px;',  # Adjust size and spacing
+        })
+    )

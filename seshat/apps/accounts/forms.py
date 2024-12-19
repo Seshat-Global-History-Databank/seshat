@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models.base import Model
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelChoiceField, Select
 from django.forms.widgets import Textarea
 
 from django.core.exceptions import ValidationError
@@ -11,7 +11,6 @@ from django.template.defaulttags import register
 from .models import Seshat_Task, Seshat_Expert, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
 
 
 class Seshat_TaskForm(forms.ModelForm):
@@ -109,3 +108,27 @@ class CustomSignUpForm(UserCreationForm):
             if len(username_parts) > 5:
                 raise ValidationError("Email address contains too many dots in the username part.")
         return email
+    
+
+class SeshatExpertAdminForm(ModelForm):
+    class Meta:
+        model = Seshat_Expert
+        fields = '__all__'
+
+    # Override the user field
+    user = ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=Select(attrs={'class': 'form-control'}),
+        label="User",
+        help_text="Select a user for this expert.",
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Customize display of user dropdown
+        self.fields['user'].queryset = User.objects.filter(is_staff=True).order_by('id')
+        self.fields['user'].label_from_instance = lambda obj: f"{obj.id}: {obj.username} ({obj.first_name} {obj.last_name} - {obj.email})"
+
+
+
+

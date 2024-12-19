@@ -10,6 +10,43 @@
 
 
 <style>
+
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: darkred;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 20px;
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(2, 57, 2);
+            padding-left: 20px;
+    }
+
+
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        background: white;
+        border: none;
+        outline: 0;
+        margin-left:-20px;
+        cursor:text;
+        box-shadow: none;
+        padding-right: 1px;
+        margin-top:10px;
+
+    }
+
+
     /* Style the dropdown */
     .select2-container .select2-selection--single {
       height: 38px;
@@ -28,6 +65,15 @@
         background-color: #782823;
         color: beige;
       }
+
+      .goodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border:2px solid seagreen;
+      }
+
+      .goodsubmit:hover{
+        font-weight: bold;
+      }
   
     /* Style the dropdown arrow */
     .select2-container .select2-selection__arrow {
@@ -42,7 +88,7 @@
         margin-right: 10px; /* Add some spacing between radio buttons */
     }
     .form-check-label {
-        display: flex;
+        display: inline-block;
         align-items: center;
         margin-right: 15px; /* Add spacing between radio buttons */
     }
@@ -50,6 +96,7 @@
     .form-check-label input[type="radio"] {
         margin-right: 5px; /* Add spacing between radio circle and label */
     }
+
 
     /* Hide the up and down arrows */
     input[type="number"]::-webkit-inner-spin-button,
@@ -121,6 +168,24 @@
     }
 
     
+    .mainform {
+        background:rgba(255, 235, 205, 0.464); 
+        border: 1px #78292366 solid;
+        border-radius: 5px;
+        box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
+    }
+    
+    .scrollable-box {
+        width: 100%; /* You can adjust this value */
+        height: 200px; /* Adjust this to set the box height */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Hides horizontal overflow */
+        border: 1px solid #ddd; /* Optional: Adds a border for aesthetics */
+        padding: 10px; /* Optional: Adds some padding inside the box */
+        background-color: #f9f9f9; /* Optional: Sets background color */
+        border-radius: 5px; /* Optional: Rounds the box corners */
+    }
+
     
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
@@ -128,162 +193,203 @@
 
 
     <div class="row d-flex mt-3">
-        <div class="col-md-4">
-            <h6><span class="text-secondary">Section:</span>  {{var_section}} / 
-                {% if var_subsection %}
-                {{var_subsection}}
-                {% else %}
-                    &nbsp;- 
-                {% endif %}
+        <div class="col-md-3">
+            <h5><span class="text-secondary">Section:</span>  {{var_section}} </h5>
+            {% if var_subsection %}
+
+            <h6>
+                <span class="text-secondary">Subsection:</span>  {{var_subsection}}
+
             </h6>
+            {% endif %}
             {% if myvar == 'Polity Preceding Entity' %}
             <h4><span >Polity Succession</span></h4>
 
             {% else %}
 
             <h4><span >{{ myvar }}</span></h4>
-            {% endif %}        </div>
-        <div class="col-md-8 border-dark">
+            {% endif %}       
             {% autoescape off %}
-            <h6 class="lead-2 text-secondary"><span class="text-dark fw-bold">{{ myvar }}: </span> {{my_exp}}</h6>
+            <h6 class="lead-2 text-secondary">{{my_exp}}</h6>
             {% endautoescape %}
-
-        </div> 
-
-    </div> 
-
-    <form id="regForm" action="" method="post" >
-        {% csrf_token %}
-        <legend>
-
-        </legend>
-        {% if messages %}
-        <ul class="messages mt-3">
-            {% for message in messages %}
-            <div class="container-fluid p-0">
-                <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-                    <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
-                </div>
-            </div>
-            {% endfor %}
-            {% if form.non_field_errors %}
-            {% for error in form.non_field_errors %}
-            <div class="container-fluid p-0">
-              <div class="text-danger" role="alert" >
-                <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
-              </div>
-            </div>
-            {% endfor %}
-            <hr> 
-            {% endif %}
-        </ul>
-        <hr class="bg-colorful">
-        {% endif %}
-        <div class="row pt-2 ps-2" style="background:rgba(255, 235, 205, 0.664);">
-            <div class="col-sm-12 row">
-                {% if myvar == 'Polity Preceding Entity' %}
-
-                {% elif myvar == 'Polity Duration' and myvar == 'Polity Peak Years' %}
-                <div class="col-sm-6 pb-2">
-                    {{ form.polity|as_crispy_field }}
-                </div>
-                {% else %}
-
-                <div class="col-sm-6 pb-2">
-                    {{ form.polity|as_crispy_field }}
-                </div>
-                <div class="col-sm-3 pb-2">
-                    {{ form.year_from|as_crispy_field }}
-                  </div>
-                  <div class="col-sm-3 pb-2">
-                    {{ form.year_to|as_crispy_field }}
-                  </div>
-                  {% endif %}
-
-                  {% block extra_vars %}
-                  {% endblock extra_vars %}
-
-                  <div class="col-sm-3 mb-1">
-                    {{ form.is_disputed|as_crispy_field }}
-                    {{ form.is_uncertain|as_crispy_field }}
-                    {{ form.expert_reviewed|as_crispy_field }}
-                </div>
-                <div class="col-sm-3 pe-0">
-                    <fieldset>
-                        <div class="form-check pb-4 justify-content-end">
-                            {% for radio in form.tag %}
-                                <label class="ps-4 pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
-                                    {{ radio.tag }}
-                                    <span class="badge rounded-pill px-3 py-1 border border-dark
-                                        {% if radio.choice_label == 'Confident' %}
-                                            bg-success
-                                        {% elif radio.choice_label == 'Inferred' %}
-                                            bg-primary 
-                                        {% elif radio.choice_label == 'Suspected' %}
-                                            bg-warning text-dark 
-                                        {% elif radio.choice_label == 'Undecided' %}
-                                            bg-secondary 
-                                        {% endif %}
-                                    ">  
-                                        {{ radio.choice_label }}
-                                    </span>
-                                </label>
-                            {% endfor %}
+ 
+        </div>
+        <div class="col-md-9 border-dark mainform mb-4"> 
+            <form id="regForm" action="" method="post" >
+                {% csrf_token %}
+                <legend>
+        
+                </legend>
+                {% if messages %}
+                <ul class="messages mt-3">
+                    {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                            <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
                         </div>
-                    </fieldset>
-                </div>
-                <div class="col-sm-12">
-                    {{ form.description|as_crispy_field }}
-                  </div>
-                <div class="col-sm-12 row">
-                    <div class="col-sm-6 mb-2 py-2 d-grid mx-auto">
-
                     </div>
-                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                    <div class="container-fluid p-0">
+                      <div class="text-danger" role="alert" >
+                        <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <hr> 
+                    {% endif %}
+                </ul>
+                <hr class="bg-colorful">
+                {% endif %}
+                <div class="row pt-2 ps-2">
+                    <div class="col-sm-12 row">
+                        {% if myvar == 'Polity Preceding Entity' %}
+        
+                        {% elif myvar == 'Polity Duration' or myvar == 'Polity Peak Years' %}
+                        <div class="col-sm-6 pb-0">
+                            {{ form.polity|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6 pb-0">
+                        </div>
+                        {% elif myvar == 'Power Transition' %}
+                        <div class="col-sm-8 pb-0">
+                            {{ form.polity|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-4 pb-0">
+                            {{ form.year_to|as_crispy_field }}
+                        </div>
+                        {% else %}
+        
+                        <div class="col-sm-6 pb-0">
+                            {{ form.polity|as_crispy_field }}
+                        </div>
+        
+                        <div class="col-sm-3 pb-0">
+                            {{ form.year_from|as_crispy_field }}
+                          </div>
+                          <div class="col-sm-3 pb-0">
+                            {{ form.year_to|as_crispy_field }}
+                          </div>
+                          {% endif %}
+
+                          {% block extra_vars %}
+                          {% endblock extra_vars %}
+          
+        
+                          <div class="col-sm-12" style="display:none">
+                            {{ form.description }}
+                          </div>
+        
+                          <div class="col-sm-2 pb-0 pt-4">
+                            {{ form.is_disputed|as_crispy_field }}
+                            {{ form.is_uncertain|as_crispy_field }}
+                        </div>
+        
+                        <div class="col-sm-4 pe-0 pt-4">
+                            <span class="form-check pb-4">
+                                {% for radio in form.tag %}
+                                    <label class="pb-1 pe-0 h6 form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.tag }}
+                                        <span class="badge" 
+                                            {% if radio.choice_label == 'Confident' %}
+                                            style=" font-family: Roboto Mono; color:#163832; font-optical-sizing: auto; font-weight: 700; background:#bee3ba; width: 100px;"
+                                            {% elif radio.choice_label == 'Inferred' %}
+                                            style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#add8e6; color:#324366; width: 100px;"  
+                                            {% elif radio.choice_label == 'Suspected' %}
+                                            style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#edd0e7; color:#8f2d56; width: 100px;"
+                                            {% elif radio.choice_label == 'Undecided' %}
+                                            style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background: #d4d4d4; color:#272729; width: 100px;"  
+                                            {% endif %}
+                                        >  
+                                            {{ radio.choice_label }}
+                                        </span>
+                                    </label>
+        
+        
+                                {% endfor %}
+                            </span>
+                    </div>
+                    <div class="col-sm-6 pt-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
+        
+                        {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+                        {{ form.suggested_expert|as_crispy_field }}
+                        <small>These Seshat Experts will get Notifications to review the inserted record.</small>
+                    
+                        {% else %}
+                        {{ form.expert_reviewed_by_me|as_crispy_field }}
+                    
+                        {% endif %}
+                    
+        
+                    </div>
+                    <div class="col-sm-12 pe-0">
+
+                        {% if object.comment %}
+                            <b>Description (NEW):</b> <br>
+                            {% autoescape off %}
+                            <div class="scrollable-box">
+                                {{object.comment}}
+                            </div>
+                            {% endautoescape %}
+
+                        {% else %}
+                            {{ form.description|as_crispy_field }}
+                        {% endif %}
+                     </div>
+
+        
+                    </div>
+                    <div class="col-sm-6 mb-1 pb-3 d-grid mx-auto ">
+                        <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit" style="font-family: 'Roboto Mono', monospace;">
+                            Submit
+ 
+                        </button>
+                    </div>
+                    <div class="col-sm-2 mb-1 pb-3 d-grid mx-auto">
                         {% block delete_button %}
                         {% endblock delete_button %}
                     </div>
-                    <div class="col-sm-3 mb-2 py-2 d-grid mx-auto">
-                        <button type="submit" class="btn btn-outline-success my-auto btn-block btn-lg">Submit for Review*</button>
-                    </div>
+        
+        
+        
+                          <!-- Here come the extra vars -->
+        
                 </div>
-            </div>
 
 
-                  <!-- Here come the extra vars -->
 
-        </div>
+        
+                <div class="row">
+                    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions%}
+                    <div class="col-md-12 py-3 ps-4">
+                        <div class="mb-2">
+                            <i class="fas fa-user-check"></i> You are a Seshat Researcher; you can insert a new Record to the Database.
+                        </div> 
+                        <div  class="mb-2" style="display: none;">
+                            {{ form.finalized|as_crispy_field }}
+                        </div>               
+                    </div>
+                    {% else %}
+                    <div class="col-md-12 py-3 ps-4">
+                        <input type="checkbox" id="seshatexpert" name="vehicle2" value="Car" onclick="return false">
+                        <label for="seshatexpert"> You are not an authorized Seshat Researcher.</label>
+                    </div>
+                    {% endif %}
+        
+                </div>
+        
+                <!-- {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="text-danger"><h3> {{ error }} </h3></div>
+                    {% endfor %}
+                {% endfor %}
+                {% endif %} -->
+                  </form>
+        </div> 
 
-        <div class="row">
-            {% if request.user.is_staff %}
-            <div class="col-md-4 py-3 ps-4">
-                <div class="mb-2">
-                    <i class="fas fa-user-check"></i> You are a Seshat Expert; you can enter a fact.
-                </div> 
-                <div  class="mb-2" style="display: none;">
-                    {{ form.finalized|as_crispy_field }}
-                </div>               
-            </div>
-            {% else %}
-            <div class="col-md-4 py-3 ps-4">
-                <input type="checkbox" id="seshatexpert" name="vehicle2" value="Car" onclick="return false">
-                <label for="seshatexpert"> You are not a Seshat Expert.</label>
-            </div>
-            {% endif %}
-
-        </div>
-
-        <!-- {% if form.errors %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <div class="text-danger"><h3> {{ error }} </h3></div>
-            {% endfor %}
-        {% endfor %}
-        {% endif %} -->
-          </form>
-
-        {% block delete_option %}
-        {% endblock delete_option %}
+    </div> 
 
 </div>
 
@@ -292,6 +398,18 @@
         // Initialize Select2 with an empty dataset
         $('.js-example-basic-single').select2();
     });    
+
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+            allowClear: true,
+        });
+    });
+    
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+    })
+
 
 </script>
 {% endblock %}

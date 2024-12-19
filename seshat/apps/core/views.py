@@ -6,8 +6,10 @@ import numpy as np
 from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
+from seshat.apps.crisisdb.models import Human_sacrifice
+
 from django.contrib.sites.shortcuts import get_current_site
-from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm
+from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render
@@ -16,7 +18,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.utils.text import slugify
@@ -32,15 +34,20 @@ from django.db.models.functions import Replace
 
 from django.views.decorators.http import require_GET
 
-from django.contrib.auth.decorators import login_required, permission_required
+from django.utils.decorators import method_decorator
+
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
-from seshat.apps.general.models import Polity_preceding_entity
+from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
 
 from django.core.paginator import Paginator
 
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, render, redirect
 import os
+
+from django.contrib.contenttypes.models import ContentType
+
 
 from django.apps import apps
 
@@ -908,12 +915,13 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     my_year_from = my_instance.year_from
                     my_year_to = my_instance.year_to
                     my_tag = my_instance.get_tag_display()
-                    my_expert_reviewed = my_instance.expert_reviewed
+                    my_curators_list = my_instance.curators_list
                     my_is_disputed = my_instance.is_disputed
                     my_is_uncertain = my_instance.is_uncertain
                     my_private_comment = my_instance.private_comment
 
-
+                    initial_data = {'verify': False}
+                    expert_form = ExpertCheckedForm(initial=initial_data)
 
                     abc.append({
                         'my_id': my_id,
@@ -922,7 +930,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         'my_year_from': my_year_from,
                         'my_year_to': my_year_to,
                         'my_tag': my_tag,
-                        'my_expert_reviewed': my_expert_reviewed,
+                        'my_curators_list': my_curators_list,
                         'my_is_disputed': my_is_disputed,
                         'my_is_uncertain': my_is_uncertain,
                         'my_var_name_underlined': my_var_name_underlined,
@@ -931,6 +939,11 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         'my_polity_id': my_polity_id,
                         'my_private_comment': my_private_comment,
                         'my_inner_private_comments_related': my_inner_private_comments_related,
+                        'expert_form':  expert_form,
+                        'my_model': mm,  # Add the model name
+                        'my_instance': my_instance,  # Add the model name
+
+
                     })
 
         # for model_name in related_models:
@@ -940,10 +953,25 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
         #         context['related_objects'] = related_objects
         #         break
         
+        # Add the ExpertCheckedForm to the context
+
         context['my_app_models'] = abc
 
-
         return context
+    
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests for the expert form.
+        """
+        # Handle the expert form submission
+        self.object = self.get_object()  # Required for UpdateView
+        expert_form = ExpertCheckedForm(request.POST)
+        if expert_form.is_valid():
+            if expert_form.cleaned_data['verify']:
+                self.object.expert_checked = True
+                self.object.save()
+
+        return super().post(request, *args, **kwargs)
 
 
     # def get_context_data(self, **kwargs):
@@ -1458,7 +1486,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                 my_year_from = my_instance.year_from
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
-                my_expert_reviewed = my_instance.expert_reviewed
+                my_curators_list = my_instance.curators_list
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -1472,7 +1500,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     'my_year_from': my_year_from,
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
-                    'my_expert_reviewed': my_expert_reviewed,
+                    'my_curators_list': my_curators_list,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -1481,6 +1509,9 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     'my_polity_id': my_polity_id,
                     'my_private_comment': my_private_comment,
                     'my_inner_private_comments_related': my_inner_private_comments_related,
+                    'my_model': mm,  # Add the model name
+                    'my_instance': my_instance,
+
                 })
 
 
@@ -1504,7 +1535,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 def seshat_comment_part_create_from_null_view_inline(request, app_name, model_name, instance_id):
     if request.method == 'POST':
         form = SeshatCommentPartForm2(request.POST)
-        big_father = SeshatComment.objects.create(text='a new_comment_text')
+        big_father = SeshatComment.objects.create(text='')
         #big_father = SeshatComment.objects.get(id=com_id)
         com_id = big_father.pk
         model_class = apps.get_model(app_label=app_name, model_name= model_name)
@@ -1762,9 +1793,23 @@ class SeshatCommentPartDelete(PermissionRequiredMixin, DeleteView):
     #('seshatcomment-update', self.pk)
     template_name = "core/delete_general.html"
     permission_required = 'core.add_capital'
-    
-    # def get_success_url(self):
-    #     return redirect(reverse('seshatcomment-update', kwargs={'pk': self.object.comment.pk}))
+
+    def form_valid(self, form):
+        self.object = self.get_object()
+        father_comment = self.object.comment
+
+        # Delete the current comment part
+        self.object.delete()
+
+        # Check if the father comment has any remaining comment parts
+        if not father_comment.inner_comments_related.exists():
+            father_comment.delete()
+            # Redirect to 'seshat-index' if the father comment is deleted
+            return redirect('seshat-index')
+
+        # Otherwise, redirect to the father comment's update page
+        return redirect('seshatcomment-update', pk=father_comment.pk)
+
     def get_success_url(self):
         return reverse_lazy('seshatcomment-update', kwargs={'pk': self.object.comment.pk})
 
@@ -3848,7 +3893,7 @@ def seshatcommentpart_create_view_old(request):
             citation = get_or_create_citation(reference, page_from, page_to)
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
@@ -3893,7 +3938,7 @@ def seshatcommentpart_create_view(request):
             comment_order = form.cleaned_data['comment_order']
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
@@ -4640,7 +4685,7 @@ def update_seshat_comment_part_view(request, pk):
                 my_year_from = my_instance.year_from
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
-                my_expert_reviewed = my_instance.expert_reviewed
+                my_curators_list = my_instance.curators_list
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -4654,7 +4699,7 @@ def update_seshat_comment_part_view(request, pk):
                     'my_year_from': my_year_from,
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
-                    'my_expert_reviewed': my_expert_reviewed,
+                    'my_curators_list': my_curators_list,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -4663,6 +4708,9 @@ def update_seshat_comment_part_view(request, pk):
                     'my_polity_id': my_polity_id,
                     'my_private_comment': my_private_comment,
                     'my_inner_private_comments_related': my_inner_private_comments_related,
+                    'my_model': mm,  # Add the model name
+                    'my_instance': my_instance,
+
                 })
 
 
@@ -5196,45 +5244,63 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                         except:
                             my_var_name = my_instance.name
 
+                        try:
+                            my_var_name_underlined = my_instance.clean_name().lower().replace(" ", "_")
+                        except:
+                            my_var_name_underlined = None
+
+                        my_id = my_instance.id
                         my_value = my_instance.show_value
                         my_desc = my_instance.description
                         my_year_from = my_instance.year_from
                         my_year_to = my_instance.year_to
                         my_tag = my_instance.get_tag_display()
-                        my_expert_reviewed = my_instance.expert_reviewed
+                        my_curators_list = my_instance.curators_list
                         my_is_disputed = my_instance.is_disputed
                         my_is_uncertain = my_instance.is_uncertain
 
 
                         abc.append({
+                            'my_id': my_id,
                             'my_polity': my_polity,
                             'my_value': my_value,
+                            'my_app_name': myapp,
                             'my_year_from': my_year_from,
                             'my_year_to': my_year_to,
                             'my_tag': my_tag,
                             'my_var_name': my_var_name,
+                            'my_var_name_underlined': my_var_name_underlined,
                             'my_polity_id': my_polity_id,
                             'my_description': my_desc,
-                            'my_expert_reviewed': my_expert_reviewed,
+                            'my_curators_list': my_curators_list,
                             'my_is_disputed': my_is_disputed,
                             'my_is_uncertain': my_is_uncertain,
+                            'my_model': mm,  # new
+                            'my_instance': my_instance,  # new
                         })
             else:
                 for mm, mymodel in mymodels.items():
                     if mm == 'polity' and mymodel.objects.filter(private_comment_n=self.object.id):
                         my_instance = mymodel.objects.get(private_comment_n=self.object.id)
+                        
+                        my_id = my_instance.id
                         my_polity = my_instance
                         my_polity_id = my_instance.id
                         my_start_year = my_instance.start_year
                         my_end_year = my_instance.end_year
 
                         abc.append({
+                            'my_id': my_id,
                             'my_polity': my_polity,
                             'my_polity_id': my_polity_id,
+                            'my_app_name': myapp,
                             'commented_pols_link': True,
                             'start_year': my_start_year,
                             'end_year': my_end_year,
+                            'my_model': mm,  # new
+                            'my_instance': my_instance,  # new
 
+ 
                         })
 
         # for model_name in related_models:
@@ -5245,6 +5311,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         #         break
         
         context['my_app_models'] = abc
+    
 
         context['another_form'] = SeshatPrivateCommentPartForm()
 
@@ -5271,7 +5338,7 @@ def seshatcomment_create_view(request):
         if form.is_valid():
             user_logged_in = request.user
 
-            comment_instance = SeshatComment.objects.create(text='a new_comment_text')
+            comment_instance = SeshatComment.objects.create(text='')
 
             try:
                 seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
@@ -5400,3 +5467,135 @@ def xxyyzz(request, com_id):
 
 def cliopatria(request):
     return render(request, 'core/cliopatria.html')
+
+
+def expert_checked_view(request, my_inst):
+    if request.method == "POST":
+        expert_form = ExpertCheckedForm(request.POST)
+        if expert_form.is_valid():
+            if expert_form.cleaned_data['verify']:
+                my_inst.is_expert_checked = True
+                my_inst.save()
+            return redirect('seshat-index')  # Redirect to a success page or the same view
+    else:
+        expert_form = ExpertCheckedForm(initial={'verify': my_inst.is_expert_checked})  # Pre-fill based on current value
+
+    return render(request, "core/seshatcomments/seshatcomment_update.html", {'expert_form': expert_form, 'my_inst': my_inst})
+
+
+def verify_expert(request, pk, my_app_name, my_model):
+    """
+    View to handle the expert review verification form when `my_inst` is passed directly.
+
+    Args:
+        request: The HTTP request object.
+        my_inst: The instance to verify.
+
+    Returns:
+        A redirect to the appropriate page or an error response.
+    """
+    if request.method == "POST":
+        # Check if the user has permission to verify
+        # if not request.user.has_perm('your_app.can_verify_expert'):  # Replace with actual permission
+        #     return HttpResponseForbidden("You do not have permission to verify.")
+        MyModel = apps.get_model(my_app_name, my_model)
+        my_inst = get_object_or_404(MyModel, pk=pk)
+
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+
+        # Update the is_expert_checked attribute
+        my_inst.curator.add(seshat_expert_instance)
+        my_inst.save()
+
+        return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+    # If GET request, you can redirect or show an error
+    return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+def verify_expert2(request, my_inst):
+    """
+    View to handle the expert review verification form when `my_inst` is passed directly.
+
+    Args:
+        request: The HTTP request object.
+        my_inst: The instance to verify.
+
+    Returns:
+        A redirect to the appropriate page or an error response.
+    """
+    if request.method == "POST":
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+        # Check if the user has permission to verify
+        # if not request.user.has_perm('your_app.can_verify_expert'):  # Replace with actual permission
+        #     return HttpResponseForbidden("You do not have permission to verify.")
+
+        # Update the is_expert_checked attribute
+        my_inst.curator.add(seshat_expert_instance)
+        my_inst.save()
+
+        # Redirect to a success page or the same page
+        return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+    # If GET request, you can redirect or show an error
+    return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+
+class SeshatExpertListView(ListView):
+    model = Seshat_Expert
+    template_name = 'seshat_expert_list.html'  # Specify your HTML template
+    context_object_name = 'experts'  # Name for the object in the template context
+
+    # Restrict access to users in the "seshat-chief-execs" group
+    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists()))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    # Optionally, filter or order objects
+    # def get_queryset(self):
+    #     return Seshat_Expert.objects.select_related('user').order_by(
+    #                     F('user__last_login').desc(nulls_last=True)
+    #                     ) 
+    def get_queryset(self):
+        # Fetch related groups and permissions for each expert's user
+        return (
+            Seshat_Expert.objects.select_related('user')
+            .prefetch_related(
+                Prefetch(
+                    'user__groups',
+                    queryset=Group.objects.all(),
+                    to_attr='related_groups'
+                ),
+                Prefetch(
+                    'user__user_permissions',
+                    queryset=Permission.objects.all(),
+                    to_attr='related_permissions'
+                )
+            )
+            .order_by(F('user__last_login').desc(nulls_last=True))
+        )
+    
+
+def get_description_old(request, obj_id):
+    obj = get_object_or_404(Human_sacrifice, id=obj_id)
+    content = render_to_string('core/description_snippet.html', {'obj': obj})
+    return HttpResponse(content.strip())  # Remove leading/trailing whitespace
+
+
+
+
+
+def get_description(request, model_name, obj_id):
+    try:
+        # Dynamically get the model class based on the model name
+        model = ContentType.objects.get(model=model_name.lower()).model_class()
+        obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        content = render_to_string('core/description_snippet.html', {'obj': obj})
+        return HttpResponse(content.strip())  # Remove leading/trailing whitespace
+    except ContentType.DoesNotExist:
+        return HttpResponse("Invalid model name.", status=400)

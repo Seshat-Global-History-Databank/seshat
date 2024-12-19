@@ -178,6 +178,15 @@ def profile(request):
     all_facts = 0
     all_tasks_given = []
     user_profile_id = None
+
+    a_private_comment_part = SeshatPrivateCommentPart.objects.first()
+    private_comment = a_private_comment_part.private_comment
+
+    # Explore attributes
+    #print("##########################")
+    #print(dir(private_comment))
+
+
     if request.user.is_authenticated:
         user_profile_id = request.user.profile.id
     my_user = Profile.objects.get(pk = user_profile_id)

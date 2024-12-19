@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
+from .forms import SeshatExpertAdminForm
+
 from .models import Profile, Seshat_Expert, Seshat_Task
 ######EMAIL_CONFIRMATION_BRANCH is the keyword that needs to be searched
 
@@ -38,8 +40,63 @@ class CustomUserAdmin(admin.ModelAdmin):
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile)
-admin.site.register(Seshat_Expert)
+#admin.site.unregister(Seshat_Expert)
 admin.site.register(Seshat_Task)
 
+
+class SeshatExpertAdmin(admin.ModelAdmin):
+    """
+    Custom admin for Seshat_Expert model.
+    """
+    form = SeshatExpertAdminForm
+
+    list_display = ('id', 'get_full_name', 'role', 'get_username', 'email', 'is_staff', 'is_active', 'last_login', 'date_joined')
+    list_filter = ('role',)  # Add filters for roles
+    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'user__email')  # Enable search by user details
+
+    ordering = ('user__last_name', 'user__first_name')  # Order by name
+
+    @admin.display(description='Full Name')
+    def get_full_name(self, obj):
+        """
+        Returns the full name of the user.
+        """
+        if obj.user.first_name and obj.user.last_name:
+            return f"{obj.user.first_name} {obj.user.last_name}"
+        return "N/A"
+
+    @admin.display(description='Username')
+    def get_username(self, obj):
+        """
+        Returns the username of the user.
+        """
+        return obj.user.username
+    
+    @admin.display(description='Last login')
+    def last_login(self, obj):
+        return obj.user.last_login
+    
+    @admin.display(description='Joined')
+    def date_joined(self, obj):
+        return obj.user.date_joined
+
+    @admin.display(description='Email')
+    def email(self, obj):
+        """
+        Returns the email of the user.
+        """
+        return obj.user.email
+    
+    @admin.display(description='Active')
+    def is_active(self, obj):
+        return obj.user.is_active
+
+    @admin.display(description='Staff')
+    def is_staff(self, obj):
+        return obj.user.is_staff
+
+    
+
+admin.site.register(Seshat_Expert, SeshatExpertAdmin)
 
 

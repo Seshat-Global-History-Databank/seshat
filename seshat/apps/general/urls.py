@@ -535,29 +535,29 @@ urlpatterns = [
 
 #####################
 model_form_pairs = [
-(Polity_utm_zone, Polity_utm_zoneForm, 'polity_utm_zone', 'utm_zone', 'Polity Utm Zone', 'Identity and Location', None),
-(Polity_original_name, Polity_original_nameForm, 'polity_original_name', 'original_name', 'Polity Original Name', 'Identity and Location', None),
-(Polity_alternative_name, Polity_alternative_nameForm, 'polity_alternative_name', 'alternative_name', 'Polity Alternative Name', 'Identity and Location', None),
-(Polity_peak_years, Polity_peak_yearsForm, 'polity_peak_years', 'peak_years', 'Polity Peak Years', 'Temporal Bounds', None),
-(Polity_duration, Polity_durationForm, 'polity_duration', 'duration', 'Polity Duration', 'Temporal Bounds', None),
-(Polity_degree_of_centralization, Polity_degree_of_centralizationForm, 'polity_degree_of_centralization', 'degree_of_centralization', 'Polity Degree Of Centralization', 'Political and Cultural Relations', None),
-(Polity_suprapolity_relations, Polity_suprapolity_relationsForm, 'polity_suprapolity_relations', 'suprapolity_relations', 'Polity Suprapolity Relations', 'Language', None),
-(Polity_capital, Polity_capitalForm, 'polity_capital', 'capital', 'Polity Capital', 'Identity and Location', None),
-(Polity_language, Polity_languageForm, 'polity_language', 'language', 'Polity Language', 'Language', None),
-(Polity_linguistic_family, Polity_linguistic_familyForm, 'polity_linguistic_family', 'linguistic_family', 'Polity Linguistic Family', 'Language', None),
-(Polity_language_genus, Polity_language_genusForm, 'polity_language_genus', 'language_genus', 'Polity Language Genus', 'Language', None),
-(Polity_religion_genus, Polity_religion_genusForm, 'polity_religion_genus', 'religion_genus', 'Polity Religion Genus', 'Religion', None),
-(Polity_religion_family, Polity_religion_familyForm, 'polity_religion_family', 'religion_family', 'Polity Religion Family', 'Religion', None),
-(Polity_religion, Polity_religionForm, 'polity_religion', 'religion', 'Polity Religion', 'Religion', None),
-(Polity_relationship_to_preceding_entity, Polity_relationship_to_preceding_entityForm, 'polity_relationship_to_preceding_entity', 'relationship_to_preceding_entity', 'Polity Relationship To Preceding Entity', 'Political and Cultural Relations', None),
-(Polity_preceding_entity, Polity_preceding_entityForm, 'polity_preceding_entity', 'preceding_entity', 'Polity Preceding Entity', 'Political and Cultural Relations', None),
-(Polity_succeeding_entity, Polity_succeeding_entityForm, 'polity_succeeding_entity', 'succeeding_entity', 'Polity Succeeding Entity', 'Political and Cultural Relations', None),
-(Polity_supracultural_entity, Polity_supracultural_entityForm, 'polity_supracultural_entity', 'supracultural_entity', 'Polity Supracultural Entity', 'Political and Cultural Relations', None),
-(Polity_scale_of_supracultural_interaction, Polity_scale_of_supracultural_interactionForm, 'polity_scale_of_supracultural_interaction', 'scale_of_supracultural_interaction', 'Polity Scale Of Supracultural Interaction', 'Political and Cultural Relations', None),
-(Polity_alternate_religion_genus, Polity_alternate_religion_genusForm, 'polity_alternate_religion_genus', 'alternate_religion_genus', 'Polity Alternate Religion Genus', 'Religion', None),
-(Polity_alternate_religion_family, Polity_alternate_religion_familyForm, 'polity_alternate_religion_family', 'alternate_religion_family', 'Polity Alternate Religion Family', 'Religion', None),
-(Polity_alternate_religion, Polity_alternate_religionForm, 'polity_alternate_religion', 'alternate_religion', 'Polity Alternate Religion', 'Religion', None),
-(Polity_religious_tradition, Polity_religious_traditionForm, 'polity_religious_tradition', 'religious_tradition', 'Polity Religious Tradition', 'Religion', None),
+(Polity_utm_zone, Polity_utm_zoneForm, 'polity_utm_zone', 'utm_zone', 'Polity Utm Zone', 'Identity and Location', None, 'general'),
+(Polity_original_name, Polity_original_nameForm, 'polity_original_name', 'original_name', 'Polity Original Name', 'Identity and Location', None, 'general'),
+(Polity_alternative_name, Polity_alternative_nameForm, 'polity_alternative_name', 'alternative_name', 'Polity Alternative Name', 'Identity and Location', None, 'general'),
+(Polity_peak_years, Polity_peak_yearsForm, 'polity_peak_years', 'peak_years', 'Polity Peak Years', 'Temporal Bounds', None, 'general'),
+(Polity_duration, Polity_durationForm, 'polity_duration', 'duration', 'Polity Duration', 'Temporal Bounds', None, 'general'),
+(Polity_degree_of_centralization, Polity_degree_of_centralizationForm, 'polity_degree_of_centralization', 'degree_of_centralization', 'Polity Degree Of Centralization', 'Political and Cultural Relations', None, 'general'),
+(Polity_suprapolity_relations, Polity_suprapolity_relationsForm, 'polity_suprapolity_relations', 'suprapolity_relations', 'Polity Suprapolity Relations', 'Language', None, 'general'),
+(Polity_capital, Polity_capitalForm, 'polity_capital', 'capital', 'Polity Capital', 'Identity and Location', None, 'general'),
+(Polity_language, Polity_languageForm, 'polity_language', 'language', 'Polity Language', 'Language', None, 'general'),
+(Polity_linguistic_family, Polity_linguistic_familyForm, 'polity_linguistic_family', 'linguistic_family', 'Polity Linguistic Family', 'Language', None, 'general'),
+(Polity_language_genus, Polity_language_genusForm, 'polity_language_genus', 'language_genus', 'Polity Language Genus', 'Language', None, 'general'),
+(Polity_religion_genus, Polity_religion_genusForm, 'polity_religion_genus', 'religion_genus', 'Polity Religion Genus', 'Religion', None, 'general'),
+(Polity_religion_family, Polity_religion_familyForm, 'polity_religion_family', 'religion_family', 'Polity Religion Family', 'Religion', None, 'general'),
+(Polity_religion, Polity_religionForm, 'polity_religion', 'religion', 'Polity Religion', 'Religion', None, 'general'),
+(Polity_relationship_to_preceding_entity, Polity_relationship_to_preceding_entityForm, 'polity_relationship_to_preceding_entity', 'relationship_to_preceding_entity', 'Polity Relationship To Preceding Entity', 'Political and Cultural Relations', None, 'general'),
+(Polity_preceding_entity, Polity_preceding_entityForm, 'polity_preceding_entity', 'preceding_entity', 'Polity Preceding Entity', 'Political and Cultural Relations', None, 'general'),
+(Polity_succeeding_entity, Polity_succeeding_entityForm, 'polity_succeeding_entity', 'succeeding_entity', 'Polity Succeeding Entity', 'Political and Cultural Relations', None, 'general'),
+(Polity_supracultural_entity, Polity_supracultural_entityForm, 'polity_supracultural_entity', 'supracultural_entity', 'Polity Supracultural Entity', 'Political and Cultural Relations', None, 'general'),
+(Polity_scale_of_supracultural_interaction, Polity_scale_of_supracultural_interactionForm, 'polity_scale_of_supracultural_interaction', 'scale_of_supracultural_interaction', 'Polity Scale Of Supracultural Interaction', 'Political and Cultural Relations', None, 'general'),
+(Polity_alternate_religion_genus, Polity_alternate_religion_genusForm, 'polity_alternate_religion_genus', 'alternate_religion_genus', 'Polity Alternate Religion Genus', 'Religion', None, 'general'),
+(Polity_alternate_religion_family, Polity_alternate_religion_familyForm, 'polity_alternate_religion_family', 'alternate_religion_family', 'Polity Alternate Religion Family', 'Religion', None, 'general'),
+(Polity_alternate_religion, Polity_alternate_religionForm, 'polity_alternate_religion', 'alternate_religion', 'Polity Alternate Religion', 'Religion', None, 'general'),
+(Polity_religious_tradition, Polity_religious_traditionForm, 'polity_religious_tradition', 'religious_tradition', 'Polity Religious Tradition', 'Religion', None, 'general'),
 
 ]
 
@@ -570,7 +570,7 @@ model_form_pairs = [
 
 
 # Create URL patterns dynamically for each model-class pair: UPDATE
-for model_class, form_class, x_name, coded_value, myvar, sec, subsec in model_form_pairs:
+for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section in model_form_pairs:
     urlpatterns.append(
         path(f'{x_name}/create/', views.dynamic_create_view, {
             'form_class': form_class,
@@ -615,6 +615,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec in model_fo
           'var_name_display': myvar,
           'var_section': sec,
           'var_subsection': subsec,
+          'db_section': db_section,
         }, name=f'{x_name}-detail')
      )
     urlpatterns.append(
