@@ -187,12 +187,12 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_name': x_name,
         }, name=f'{x_name}-delete')
      )
-#     urlpatterns.append(
-#         path(f'{x_name}download/', generic_download, {
-#             'model_class': model_class,
-#             'var_name': x_name,
-#         }, name=f'{x_name}-download')
-#      )
+    urlpatterns.append(
+        path(f'{x_name}download/', generic_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+        }, name=f'{x_name}-download')
+     )
     urlpatterns.append(
         path(f'{x_name}metadownload/', generic_metadata_download, {
             'var_name': x_name,

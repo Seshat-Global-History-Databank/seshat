@@ -183,8 +183,8 @@ def profile(request):
     private_comment = a_private_comment_part.private_comment
 
     # Explore attributes
-    print("##########################")
-    print(dir(private_comment))
+    #print("##########################")
+    #print(dir(private_comment))
 
 
     if request.user.is_authenticated:
