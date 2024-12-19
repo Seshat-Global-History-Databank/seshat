@@ -1,0 +1,19 @@
+{% load custom_filters %}
+
+{% autoescape off %}
+{% if obj.description %}
+    {{ obj.description|make_references_look_nicer }}
+    <br>
+{% else %}
+    -
+{% endif %}
+{% if obj.comment and obj.comment.id > 1 %}
+    {{ obj.comment }}
+    <a class="p-0 m-0" style="display:block; overflow: hidden;" 
+       href="{% url 'seshatcomment-update' obj.comment.id %}">
+        <span class="badge bg-teal text-dark">
+            <i class="fa-solid fa-pen-to-square"></i> EDIT
+        </span>
+    </a>
+{% endif %}
+{% endautoescape %}

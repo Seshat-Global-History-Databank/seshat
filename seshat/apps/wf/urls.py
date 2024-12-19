@@ -3,6 +3,9 @@ from .models import Long_wall, Copper, Bronze, Iron, Steel, Javelin, Atlatl, Sli
 from .forms import Long_wallForm, CopperForm, BronzeForm, IronForm, SteelForm, JavelinForm, AtlatlForm, SlingForm, Self_bowForm, Composite_bowForm, CrossbowForm, Tension_siege_engineForm, Sling_siege_engineForm, Gunpowder_siege_artilleryForm, Handheld_firearmForm, War_clubForm, Battle_axeForm, DaggerForm, SwordForm, SpearForm, PolearmForm, DogForm, DonkeyForm, HorseForm, CamelForm, ElephantForm, Wood_bark_etcForm, Leather_clothForm, ShieldForm, HelmetForm, BreastplateForm, Limb_protectionForm, Scaled_armorForm, Laminar_armorForm, Plate_armorForm, Small_vessels_canoes_etcForm, Merchant_ships_pressed_into_serviceForm, Specialized_military_vesselForm, Settlements_in_a_defensive_positionForm, Wooden_palisadeForm, Earth_rampartForm, DitchForm, MoatForm, Stone_walls_non_mortaredForm, Stone_walls_mortaredForm, Fortified_campForm, Complex_fortificationForm, Modern_fortificationForm, ChainmailForm
 
 
+
+from seshat.apps.general.views import dynamic_create_view, dynamic_update_view,  dynamic_update_view_old, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
+
 from django.urls import path
 
 from .var_defs import wf_var_defs
@@ -1063,24 +1066,28 @@ model_form_pairs = [
      (Chainmail, ChainmailForm, 'chainmail', 'Chainmail', 'Armor', None),
 ]
 
+model_form_pairs_qugmented = [[a[0], a[1], a[2], a[2], a[3], a[4], a[5], 'wf'] for a in model_form_pairs]
+
 # Create URL patterns dynamically for each model-class pair: UPDATE
-for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
+for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section in model_form_pairs_qugmented:
     urlpatterns.append(
-        path(f'{x_name}/create/', views.dynamic_create_view, {
+        path(f'{x_name}/create/', dynamic_create_view, {
             'form_class': form_class,
             'x_name': x_name,
-            'myvar': myvar,
+            'myvar': myvar,            
+            'coded_value': coded_value,
             'my_exp': wf_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
         }, name=f'{x_name}-create')
      )
     urlpatterns.append(
-        path(f'{x_name}/updatenew/<int:object_id>/', views.dynamic_update_view, {
+        path(f'{x_name}/updatenew/<int:object_id>/', dynamic_update_view, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,
-            'myvar': myvar,
+            'myvar': myvar,            
+            'coded_value': coded_value,
             'my_exp': wf_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
@@ -1088,11 +1095,12 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-updatenew')
     )
     urlpatterns.append(
-        path(f'{x_name}/update_old/<int:object_id>/', views.dynamic_update_view_old, {
+        path(f'{x_name}/update_old/<int:object_id>/', dynamic_update_view_old, {
             'form_class': form_class,
             'model_class': model_class,
             'x_name': x_name,
-            'myvar': myvar,
+            'myvar': myvar,            
+            'coded_value': coded_value,
             'my_exp': wf_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
@@ -1100,18 +1108,20 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}-update')
     )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/', views.dynamic_detail_view, {
+        path(f'{x_name}/<int:pk>/', dynamic_detail_view, {
           'model_class': model_class,
           'myvar': x_name,
           'var_section': sec,
           'var_subsection': subsec,
+          'db_section': db_section,
           'var_name_display': myvar,
         }, name=f'{x_name}-detail')
      )
     urlpatterns.append(
-        path(f'{x_name}s_all/', views.generic_list_view, {
+        path(f'{x_name}s_all/', generic_list_view, {
             'model_class': model_class,
             'var_name': x_name,
+            'coded_value': coded_value,
             'var_name_display': myvar,
             'var_section': sec,
             'var_subsection': subsec,
@@ -1120,25 +1130,25 @@ for model_class, form_class, x_name, myvar, sec, subsec in model_form_pairs:
         }, name=f'{x_name}s_all')
      )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
+        path(f'{x_name}/<int:pk>/confirm-delete/', confirm_delete_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-confirm-delete')
      )
     urlpatterns.append(
-        path(f'{x_name}/<int:pk>/delete/', views.delete_object_view, {
+        path(f'{x_name}/<int:pk>/delete/', delete_object_view, {
           'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-delete')
      )
     urlpatterns.append(
-        path(f'{x_name}download/', views.generic_download, {
+        path(f'{x_name}download/', generic_download, {
             'model_class': model_class,
             'var_name': x_name,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(
-        path(f'{x_name}metadownload/', views.generic_metadata_download, {
+        path(f'{x_name}metadownload/', generic_metadata_download, {
             'var_name': x_name,
             'var_name_display': myvar,
             'var_section': sec,

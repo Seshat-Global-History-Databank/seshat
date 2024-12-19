@@ -37,10 +37,7 @@
     }
 
     .expert_name {
-      background:rgba(255, 235, 205, 0.464); 
-      border-bottom: 1px #78292366 solid;
       border-radius: 5px;
-      box-shadow: 0 3px 3px hsl(0deg 0% 0% / 0.3);
   }
       
 </style>
@@ -151,7 +148,7 @@
                                               <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 fw-normal expert_name" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
                                                     
                                                     &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>
                                                     <span>
@@ -220,7 +217,7 @@
                                               <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 fw-normal expert_name" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
                                                     
                                                     &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
                                                     <span>
@@ -284,7 +281,7 @@
                                               <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="badge text-dark fs-6 fw-normal expert_name" style="background: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
                                                     
                                                     &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
                                                     <span>

@@ -14,6 +14,11 @@
         font-family: Roboto Mono;
 
     }
+    .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    
+      }
+
     .bg-colorful:hover {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
     
@@ -402,7 +407,7 @@
             {% endif %}   
 
 
-            <table class="table table-borderless align-middle pt-5">
+            <table class="table table-borderless table-hover align-middle pt-5">
                 <thead>
                     <tr class="
                     {% if my_inst.my_inner_private_comments_related %}
@@ -411,7 +416,7 @@
                     " >
                     <th class="col-md-9 h6" scope="col" style="text-align: left">Private Comment 
 
-                                <small class="fw-normal">(Only visible to Selected Seshat Experts/RAs)</small>
+                                <small class="fw-normal">(Only visible to Selected Seshat Experts/RAs) &nbsp;&nbsp;&nbsp;</small>
                             </th>
                               <th class="col-md-2 h6" scope="col" style="text-align: right"> Target Experts or Researchers</th>
          
@@ -427,7 +432,7 @@
                     <div class="row">
 
                     <td class="col-md-9 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
-                        <span class="badge text-dark mb-1  {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span>
+                        <span class="badge text-dark mb-1 p-1 {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border: 2px solid {{subcom.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{subcom.private_comment_owner.id|give_me_a_color}} {% endif %}; border-radius:5px;">{{subcom.private_comment_owner}}</span>
                         <small class="text-secondary">
                             {% if subcom.created_date %}
                                 {{ subcom.created_date|naturaltime }}
@@ -443,7 +448,9 @@
                     </td>
                     <td class="col-md-2 pe-2" style="text-align: right">
                         {% for an_expert in  subcom.private_comment_reader.all %}
-                        <span class="badge text-dark" style="background: {% if subcom.is_done %}lightgray{% else %} {{an_expert.id|give_me_a_color}}{% endif %};">{{an_expert}}</span>
+                        <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
+                        border: 2px solid {{an_expert.id|give_me_a_color}}; border-left: 10px solid {{an_expert.id|give_me_a_color}}
+                        {% endif %}; border-radius:5px; ">{{an_expert}}</span>
                         {% endfor %}
                     </td>
     
@@ -466,26 +473,23 @@
 
         </tr>
         {% endif %}
-        <tr>
-        <td class="py-3">
-            <a class="p-0 m-0"  
-            style="display:block;overflow: hidden;" 
-            href="{% url 'create_private_subcomment_new' app_name=my_inst.my_app_name model_name=my_inst.my_var_name_underlined instance_id=my_inst.my_id %}">
-
-                <span class="badge badge-jid badge-jid text-dark fs-6 p-2 bg-colorful" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c; border:1px solid #782823"> &nbsp;
-                    <i class="fa-regular fa-comment"></i>
-                    <span> &nbsp;&nbsp; Add a Private Comment &nbsp;&nbsp;
-                    </span>
-                </span>
-            </a>
-        </td>
-
-        </tr>
 
         {% endautoescape %}
             </tbody>
         </table>
 
+        <span>
+            <a class="pt-3 m-0 mx-auto"  
+            style="display:inline-block;overflow: hidden;" 
+            href="{% url 'create_private_subcomment_new' app_name=my_inst.my_app_name model_name=my_inst.my_var_name_underlined instance_id=my_inst.my_id %}">
+
+                <span class="badge badge-jid badge-jid text-dark fs-6 p-2 bg-colorful" style="vertical-align:bottom; white-space: nowrap; z-index:999; border-left:10px solid #1a7baf"> &nbsp;
+                    <i class="fa-regular fa-comment"></i>
+                    <span> &nbsp;&nbsp; Add your Private Comment &nbsp;&nbsp;
+                    </span>
+                </span>
+            </a>
+        </span>
         {% endfor %}
     </div>
 </div>

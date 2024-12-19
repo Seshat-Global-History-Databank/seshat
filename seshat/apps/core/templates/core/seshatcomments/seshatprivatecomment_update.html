@@ -32,7 +32,6 @@
         border-radius: 5px;
     }
     .privatecommentform {
-        background:rgba(255, 235, 205, 0.264); 
         border: 1px #782923 solid;
         border-radius: 5px;
         padding-left: 10px;
@@ -56,19 +55,18 @@
 
         {% for my_inst in my_app_models %}
 
-        {% if  my_inst.my_curators_list %}
-        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
-            <div class="h5 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;&nbsp;<i class="fa-regular fa-square-check"></i>  This record has already been Expert Reviewed by the following Experts:
-                <br>
+            {% if  my_inst.my_curators_list %}
+            <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+                <div class="h5 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;&nbsp;<i class="fa-regular fa-square-check"></i>  This record has already been Expert Reviewed by the following Experts:
+                    <br>
 
-        </div>
-        <div class="ps-3 h6 my-3">
-            <span class="ps-2 mt-3">
-                <i class="fa-solid fa-check"></i> &nbsp; {{ my_inst.my_curators_list }}
-            </span> 
-
-        </div>
-        </div>
+            </div>
+            <div class="ps-3 h6 my-3">
+                <span class="ps-2 mt-3">
+                    <i class="fa-solid fa-check"></i> &nbsp; {{ my_inst.my_curators_list }} 
+                </span> 
+            </div>
+            </div>
 
             {% endif %}
 
@@ -98,7 +96,7 @@
                         id="id_verify" 
                         onclick="toggleButton()"
                     >
-                    <label class="form-check-label ps-2" for="id_verify">I ({{user}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
+                    <label class="form-check-label ps-2" for="id_verify">I ({{user.full_name}}) have checked and verified this coded record and would like to mark it as expert reviewed under my name.</label>
                 </div>
                 <div class="mt-3">
 
@@ -411,18 +409,21 @@
         </div>
         <div class="pt-2 pb-4" style=" border-bottom-left-radius: 5px;  border-bottom-right-radius: 5px; overflow: hidden;">
             <table class="table table-borderless align-middle">
-                <thead>        
+                <thead>    
+                    {% if my_inst.my_instance.comment %}
+ 
                   <tr>
                     <th style="text-align: left;" class="fw-bold" scope="col">Description (Public): <sup>  <span class="badge bg-warning text-dark border border-dark">NEW</span> &nbsp;<i class="fa-solid fa-circle-info text-secondary"    type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="Each description has several subdescriptions. A subdescription is a combination of some text and its corresponding citation(s)."></i></sup> 
-    
 
                     </th>
                   </tr>
+                  {% endif %}
+
                 </thead>
                 <tbody>
     
             {% autoescape off %}
-            {% for my_inst in my_app_models %}
+            {% if my_inst.my_instance.comment %}
 
             <tr>
                 <td style="text-align: left;">
@@ -430,7 +431,7 @@
 
                 </td>
             </tr>
-            {% endfor %}
+            {% endif %}
 
             {% endautoescape %}
             {% if my_inst.my_instance.description %}
@@ -543,7 +544,7 @@
                         <div class="row">
 
                         <td class="col-md-9 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
-                            <span class="badge text-dark mb-1  {% if subcom.is_done %} {% else %} fs-6 {% endif %} border border-dark" style="background: {% if subcom.is_done %}lightgray {% else %} {{subcom.private_comment_owner.id|give_me_a_color}}{% endif %} ;">{{subcom.private_comment_owner}}</span> 
+                            <span class="badge text-dark mb-1 p-1 {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border: 2px solid {{subcom.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{subcom.private_comment_owner.id|give_me_a_color}} {% endif %};  border-radius:5px;">{{subcom.private_comment_owner}}</span> 
                             {% if subcom.created_date %}
                               <small class="text-secondary">&nbsp; {{ subcom.created_date|naturaltime }}</small> 
                             {% else %}
@@ -563,7 +564,9 @@
                         </td>
                         <td class="col-md-2" style="text-align: right">
                             {% for an_expert in  subcom.private_comment_reader.all %}
-                            <span class="badge text-dark" style="background: {% if subcom.is_done %}lightgray{% else %} {{an_expert.id|give_me_a_color}}{% endif %};">{{an_expert}}</span>
+                            <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
+                        border: 2px solid {{an_expert.id|give_me_a_color}}; border-left: 10px solid {{an_expert.id|give_me_a_color}}
+                        {% endif %};  border-radius:5px;">{{an_expert}}</span>
                             {% endfor %}
                         </td>
 

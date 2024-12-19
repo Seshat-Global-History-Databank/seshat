@@ -2,9 +2,21 @@
 {% load mathfilters %}
 <sup style="top: -0.6em;">
     <span class="text-dark">
+    {% if value.year_from == None and value.year_to == None %}
 
-    {% if value.year_from == None %}
+    {% elif value.year_from == None and value.year_to != None %}
+        {% if  value.year_to < 0 %}
+        {{ value.year_to|abs }} 
         
+            <span class="text-secondary fw-normal fs-6">BCE</span>
+    
+        {% else %}
+        {{ value.year_to }} 
+        
+            <span class="text-secondary fw-normal fs-6">CE</span>
+    
+        {% endif %}
+
     {% elif  value.year_from == value.year_to %}
         {% if  value.year_from < 0 %}
         {{ value.year_from|abs }} 

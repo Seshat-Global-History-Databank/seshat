@@ -4,147 +4,103 @@
 {% load custom_filters %}
 
 {% block extra_vars %}
+<hr class="bg-secondary" style="height:1px !important;">
 
-<style>
-    .select2-selection__choice__remove {
-        color: red;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-        color: darkred;
-        cursor: pointer;
-        display: inline-block;
-        font-weight: bold;
-        margin-right: 20px;
-
-    }
-        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
-            color:rgb(2, 57, 2);
-            padding-left: 20px;
-    }
-
-
-
-    .select2-container .select2-search--inline {
-        padding-left: -40px;
-    }
-
-    .select2-container--default .select2-search--inline .select2-search__field {
-        background: white;
-        border: none;
-        outline: 0;
-        margin-left:-20px;
-        cursor:text;
-        box-shadow: none;
-        padding-right: 1px;
-        margin-top:10px;
-
-    }
-
-
-</style>
 {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions and 'core.add_seshatprivatecommentpart' in request.user.get_all_permissions %}
-    {% if extra_var and extra_var2 and extra_var3 %}
-
-    <div class="col-md-4">
+{% if extra_var and extra_var2 and extra_var3 and extra_var4 and extra_var5 and extra_var6 and extra_var7 and extra_var8 and extra_var9 and extra_var10 and extra_var11 and extra_var12 and extra_var13 and extra_var14 and extra_var4.name == 'contested' %}
+<div class="col-md-4 pb-3">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var4|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var5|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var6|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var7|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var8|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var9|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var10|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var11|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var12|as_crispy_field }}
+</div>
+<div class="col-md-12 pb-3">
+    {{ extra_var13|as_crispy_field }}
+</div>
+{% elif extra_var and extra_var2 and extra_var3 and extra_var.name == 'other_polity' %}
+<div class="col-md-6 pb-3">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ form.polity|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-6 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+{% elif extra_var and extra_var2 and extra_var3 and extra_var.name == 'widespread_religion' %}
+<div class="col-md-4 pb-3">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+{% elif extra_var and extra_var2  %}
+    <div class="col-md-6 pb-3">
         {{ extra_var|as_crispy_field }}
+        {% if extra_var.name == 'polity_cap'  %}
+        <span class="text-secondary">
+            Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+        </span>
+        {% endif %}
     </div>
-    <div class="col-md-4">
-        {{ extra_var3|as_crispy_field }}
-    </div>
-    <div class="col-md-4 pb-2">
-        {{ form.polity|as_crispy_field }}
-    </div>
-    <div class="col-md-6 pb-4">
+    <div class="col-md-6 pb-3">
         {{ extra_var2|as_crispy_field }}
     </div>
-    {% elif extra_var and extra_var2  %}
-        <div class="col-md-6">
-            {{ extra_var|as_crispy_field }}
-            {% if extra_var.name == 'polity_cap'  %}
-            <span class="text-secondary">
-                Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
-            </span>
-            {% endif %}
-        </div>
-        <div class="col-md-6">
-            {{ extra_var2|as_crispy_field }}
-        </div>
-    {% else %}
-    <div class="col-md-6 pb-2">
-        {{ extra_var|as_crispy_field }}
-        {% if extra_var.name == 'polity_cap'  %}
-        <span class="text-secondary">
-            Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
-        </span>
-        {% endif %}
-    </div>
+{% else %}
+<div class="col-md-6 pb-3">
+    {{ extra_var|as_crispy_field }}
+    {% if extra_var.name == 'polity_cap'  %}
+    <span class="text-secondary">
+        Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
+    </span>
     {% endif %}
+</div>
+<div class="col-md-6 pb-3">
+</div>
 
+{% endif %}
 
-{% elif request.user.is_authenticated and request.user.id == 1240 %}
-    {% if extra_var and extra_var2 and extra_var3 %}
-
-    <div class="col-md-4">
-        {{ extra_var }}
-    </div>
-    <div class="col-md-4">
-        {{ extra_var3 }}
-
-    </div>
-    <div class="col-md-4 pb-2">
-        {{ form.polity }}
-    </div>
-    <div class="col-md-6 pb-4">
-        {{ extra_var2 }}
-    </div>
-    {% elif extra_var and extra_var2  %}
-        <div class="col-md-4">
-            {{ extra_var.name|replace_underscore_and_capitalize }}:
-            {{ extra_var }}
-            {% if extra_var.name == 'polity_cap'  %}
-            <span class="text-secondary">
-                Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
-            </span>
-            {% endif %}
-        </div>
-        <div class="col-md-4">
-            {{ extra_var2 }}
-        </div>
-    {% else %}
-    <div class="col-md-4 pb-2">
-        {{ extra_var }}
-        {% if extra_var.name == 'polity_cap'  %}
-        <span class="text-secondary">
-            Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'capital-create' %}" >here</a> first.
-        </span>
-        {% endif %}
-    </div>
-    {% endif %}
-
-    {% endif %}
-
-
-
-
-    <script>
-        $(document).ready(function() {
-            $('.js-example-basic-multiple').select2({
-                allowClear: true,
-            });
-        });
-        
-        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-    return new bootstrap.Popover(popoverTriggerEl)
-    })
-    
-    
-    </script>
+{% endif %}
 
 {% endblock extra_vars %}
 
 {% block delete_button %}
     <!-- Render the delete button for the specified object ID -->
-    <a href="{% url delete_url object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete</a>
+    <a href="{% url delete_url object.id %}" type="cancel" class="btn py-2 btn-outline-danger my-auto btn-block" style="font-family: 'Roboto Mono', monospace;">Delete</a>
 {% endblock delete_button %}

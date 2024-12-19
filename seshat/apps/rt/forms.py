@@ -9,38 +9,42 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
+from seshat.apps.general.forms import commonlabels, commonfields, commonwidgets, ExpertReviewedForm
+from seshat.apps.accounts.models import Seshat_Expert
+
+
 from django.template.defaulttags import register
 
-commonlabels = {
-    'polity': '&nbsp;<b>Polity:</b>',
-    'year_from': '&nbsp;<b>Start Year:</b>',
-    'year_to': '&nbsp;<b>End Year:</b>',
-    'tag': 'Confidence Level',
-    'description': "&nbsp; <b> Description: </b>",
-    "is_disputed" : "&nbsp; <b> Dispute? </b>",
-    "is_uncertain" : "&nbsp; <b> Uncertainty? </b>",
-    "expert_reviewed" : "&nbsp; <b> Expert Checked? </b>",
-    "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
-    'citations': 'Add one or more Citations',
-    'finalized': 'This piece of data is verified.',
-}
+# commonlabels = {
+#     'polity': '&nbsp;<b>Polity:</b>',
+#     'year_from': '&nbsp;<b>Start Year:</b>',
+#     'year_to': '&nbsp;<b>End Year:</b>',
+#     'tag': 'Confidence Level',
+#     'description': "&nbsp; <b> Description: </b>",
+#     "is_disputed" : "&nbsp; <b> Dispute? </b>",
+#     "is_uncertain" : "&nbsp; <b> Uncertainty? </b>",
+#     "expert_reviewed" : "&nbsp; <b> Expert Checked? </b>",
+#     "drb_reviewed" : "&nbsp; Data Review Board Reviewed?",
+#     'citations': 'Add one or more Citations',
+#     'finalized': 'This piece of data is verified.',
+# }
 
-commonfields = ['polity', 'year_from', 'year_to',
-                'description', 'tag', 'is_disputed', 'is_uncertain', 'expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
+# commonfields = ['polity', 'year_from', 'year_to',
+#                 'description', 'tag', 'is_disputed', 'is_uncertain', 'expert_reviewed', 'drb_reviewed', 'finalized', 'citations']
 
-commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),
-    'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
-    'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 340px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
-    'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
-    'tag': forms.RadioSelect(),
-    "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
-    'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
-}
+# commonwidgets = {
+#     'polity': forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),
+#     'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
+#     'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
+#     'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 340px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: USe §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
+#     'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
+#     'tag': forms.RadioSelect(),
+#     "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "is_uncertain" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "expert_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
+#     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
+# }
 
 # class RaForm(forms.ModelForm):
 #     class Meta:
@@ -52,7 +56,7 @@ commonwidgets = {
 #         widgets = dict(commonwidgets)
 #         widgets['sc_ra'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
-class Widespread_religionForm(forms.ModelForm):
+class Widespread_religionForm(ExpertReviewedForm):
     """
     Form for creating and updating the Widespread_religion model.
     """
@@ -76,7 +80,7 @@ class Widespread_religionForm(forms.ModelForm):
         widgets['order'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         widgets['degree_of_prevalence'] = forms.Select(attrs={'class': 'form-control  mb-3', })
 
-class Official_religionForm(forms.ModelForm):
+class Official_religionForm(ExpertReviewedForm):
     """
     Form for creating and updating creating and updating the Official_religion model.
     """
@@ -93,7 +97,7 @@ class Official_religionForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_official_religion', 'name': 'official_religion' })
         
 
-class Elites_religionForm(forms.ModelForm):
+class Elites_religionForm(ExpertReviewedForm):
     """
     Form for creating and updating the Elites_religion model.
     """
@@ -110,7 +114,7 @@ class Elites_religionForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3 js-example-basic-single', 'id': 'id_elites_religion', 'name': 'elites_religion' })
         
 ##########################################
-class Theo_sync_dif_relForm(forms.ModelForm):
+class Theo_sync_dif_relForm(ExpertReviewedForm):
     """
     Form for creating and updating the Theo_sync_dif_rel model.
     """
@@ -127,7 +131,7 @@ class Theo_sync_dif_relForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Sync_rel_pra_ind_beliForm(forms.ModelForm):
+class Sync_rel_pra_ind_beliForm(ExpertReviewedForm):
     """
     Form for creating and updating the Sync_rel_pra_ind_beli model.
     """
@@ -144,7 +148,7 @@ class Sync_rel_pra_ind_beliForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Religious_fragmentationForm(forms.ModelForm):
+class Religious_fragmentationForm(ExpertReviewedForm):
     """
     Form for creating and updating the Religious_fragmentation model.
     """
@@ -161,7 +165,7 @@ class Religious_fragmentationForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_vio_freq_rel_grpForm(forms.ModelForm):
+class Gov_vio_freq_rel_grpForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_vio_freq_rel_grp model.
     """
@@ -178,7 +182,7 @@ class Gov_vio_freq_rel_grpForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_pub_worForm(forms.ModelForm):
+class Gov_res_pub_worForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_pub_wor model.
     """
@@ -195,7 +199,7 @@ class Gov_res_pub_worForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_pub_prosForm(forms.ModelForm):
+class Gov_res_pub_prosForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_pub_pros model.
     """
@@ -212,7 +216,7 @@ class Gov_res_pub_prosForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_convForm(forms.ModelForm):
+class Gov_res_convForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_conv model.
     """
@@ -229,7 +233,7 @@ class Gov_res_convForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_press_convForm(forms.ModelForm):
+class Gov_press_convForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_press_conv model.
     """
@@ -246,7 +250,7 @@ class Gov_press_convForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
+class Gov_res_prop_own_for_rel_grpForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_prop_own_for_rel_grp model.
     """
@@ -263,7 +267,7 @@ class Gov_res_prop_own_for_rel_grpForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Tax_rel_adh_act_insForm(forms.ModelForm):
+class Tax_rel_adh_act_insForm(ExpertReviewedForm):
     """
     Form for creating and updating the Tax_rel_adh_act_ins model.
     """
@@ -280,7 +284,7 @@ class Tax_rel_adh_act_insForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
+class Gov_obl_rel_grp_ofc_recoForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_obl_rel_grp_ofc_reco model.
     """
@@ -297,7 +301,7 @@ class Gov_obl_rel_grp_ofc_recoForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_cons_rel_builForm(forms.ModelForm):
+class Gov_res_cons_rel_builForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_cons_rel_buil model.
     """
@@ -314,7 +318,7 @@ class Gov_res_cons_rel_builForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_rel_eduForm(forms.ModelForm):
+class Gov_res_rel_eduForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_rel_edu model.
     """
@@ -331,7 +335,7 @@ class Gov_res_rel_eduForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_res_cir_rel_litForm(forms.ModelForm):
+class Gov_res_cir_rel_litForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_res_cir_rel_lit model.
     """
@@ -348,7 +352,7 @@ class Gov_res_cir_rel_litForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
+class Gov_dis_rel_grp_occ_funForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_dis_rel_grp_occ_fun model.
     """
@@ -365,7 +369,7 @@ class Gov_dis_rel_grp_occ_funForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Soc_vio_freq_rel_grpForm(forms.ModelForm):
+class Soc_vio_freq_rel_grpForm(ExpertReviewedForm):
     """
     Form for creating and updating the Soc_vio_freq_rel_grp model.
     """
@@ -382,7 +386,7 @@ class Soc_vio_freq_rel_grpForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
+class Soc_dis_rel_grp_occ_funForm(ExpertReviewedForm):
     """
     Form for creating and updating the Soc_dis_rel_grp_occ_fun model.
     """
@@ -399,7 +403,7 @@ class Soc_dis_rel_grp_occ_funForm(forms.ModelForm):
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
         
 
-class Gov_press_conv_for_agaForm(forms.ModelForm):
+class Gov_press_conv_for_agaForm(ExpertReviewedForm):
     """
     Form for creating and updating the Gov_press_conv_for_aga model.
     """

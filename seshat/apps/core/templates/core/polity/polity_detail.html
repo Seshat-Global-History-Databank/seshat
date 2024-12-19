@@ -15,6 +15,11 @@
         margin: 10px 0; /* Adjust the value as per your requirement */
         content: "";
     }
+    .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    
+      }
+
     .bg-colorful:hover {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
         color:black;
@@ -62,6 +67,7 @@
         /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
         /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
     }
 
     .highlighted-value {
@@ -1502,8 +1508,8 @@
                 {% if values %}
                     <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
                             {% for value in values %}
-                            <div class="col-md-9 pb-1">
-                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                            <div class="col-md-9">
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title ">
                                     {% if key == "Polity_suprapolity_relations" %}
                                     <span class="h5 fw-bold" >
                                         <span class="py-2 fs-6 fw-bold  text-secondary"  id="{{key}}"> 
@@ -1667,6 +1673,9 @@
                             <div class="col-md-3">
                                 <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b> <u>View all such records</u></b></a>
                             </div>
+                            <div class="col-md-12">
+                                {% include "core/partials/_private_comment_inline.html" %}
+                            </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
                                     <p class="fs-6 my-1 py-1">
@@ -1758,6 +1767,9 @@
                             </div>
                             <div class="col-md-3">
                                 <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
+                            </div>
+                            <div class="col-md-12">
+                                {% include "core/partials/_private_comment_inline.html" %}
                             </div>
                             {% if value.description %}
                                 <div class="col-md-12 highlighted-value my-0 py-0">
@@ -1852,6 +1864,9 @@
                                 <div class="col-md-3">
                                     <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
                                 </div>
+                                <div class="col-md-12">
+                                    {% include "core/partials/_private_comment_inline.html" %}
+                                </div>
                                 {% if value.description %}
                                     <div class="col-md-12 highlighted-value my-0 py-0">
                                         <p class="fs-6 my-1 py-1" >
@@ -1943,6 +1958,9 @@
                                     </div>
                                     <div class="col-md-2">
                                         <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {% include "core/partials/_private_comment_inline.html" %}
                                     </div>
                                     {% if value.description %}
                                         <div class="col-md-12 highlighted-value my-0 py-0">
@@ -2189,11 +2207,22 @@
                             </span>
                             <span class = "fw-bold text-dark pt-2" style="display:block;">
                                 {% include "core/partials/_year_block_value_inline_pt.html" %}
+                                <div style="display: block; padding: 0;">
+                                    <div style="display: inline-flex; flex-direction: row;">
+                                        {% include "core/partials/_tag_value_inline.html" %}
+                                        {% include "core/partials/_disputed_value_inline.html" %}
+                                        {% include "core/partials/_uncertain_value_inline.html" %}
+                                        {% include "core/partials/_expert_checked_value_inline.html" %}
+                                    </div>
+                                </div>
                             </span>
                         </span>
                         {% with my_app_name='crisisdb' %}
-                            {% include "core/partials/_abc_x.html" %}
+                            {% include "core/partials/_abc.html" %}
                         {% endwith %}
+                        <div class="col-md-12">
+                            {% include "core/partials/_private_comment_inline.html" %}
+                        </div>
 
                         {% include "core/partials/_power_transitions_inline.html" %}
                     {% endfor %}                            

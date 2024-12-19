@@ -77,14 +77,48 @@
       background: purple,
     }
 
+    #loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        backdrop-filter: blur(5px); /* Blur effect */
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        visibility: hidden; /* Initially hidden */
+        opacity: 0;
+        transition: visibility 0.2s, opacity 0.2s ease-in-out;
+    }
+    
+    .spinner-container {
+        text-align: center;
+        font-size: 2rem;
+        color: #555;
+    }
+    
+    #loading-overlay.active {
+        visibility: visible;
+        opacity: 1;
+    }
+    
+
 </style>
 
 <div class="container pt-3">
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner-container">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+        </div>
+    </div>
     <div class="row">
     <div class="col-md-6">
         <h2>Polities <span class="text-secondary">(light)</span> </h2>
         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}    
-        <a class="btn btn-sm btn-outline-dark fw-bold me-1 my-1" href="{% url 'polities' %}" >See Progress in coding for Polities (heavy)</a>
+        <a class="btn btn-sm btn-outline-dark fw-bold me-1 my-1 heavy-link" href="{% url 'polities' %}" >See Progress in coding for Polities (heavy)</a>
         {% endif %}
 
         <div class="pb-3 text-right">
@@ -331,4 +365,18 @@
     {% endfor %}
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const loadingOverlay = document.getElementById("loading-overlay");
+    
+        // Attach event listeners to all links with the 'heavy-link' class
+        document.querySelectorAll(".heavy-link").forEach(function (link) {
+            link.addEventListener("click", function () {
+                // Show the loading spinner
+                loadingOverlay.classList.add("active");
+            });
+        });
+    });
+    
+</script>
   {% endblock %}

@@ -157,26 +157,8 @@
                 <tr class="p-0 m-0">
                     <td colspan="7" class="p-0 my-0" style="width:100%">
                         <div id="collapseOne_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ forloop.counter }}">
-                            <span class="accordion-body m-0">
-                                {% autoescape off %}
-                                {% if obj.description %}
-                                {{ obj.description|make_references_look_nicer }}
-                                <br>
-                                    {% else %}
-                                    -
-                                    {% endif%}
-                                    {% if obj.comment and obj.comment.id > 1 %}
-                                    {{obj.comment }}
-                                    <a class="p-0 m-0" 
-                                    style="display:block; overflow: hidden;" 
-                                    href="{% url 'seshatcomment-update' obj.comment.id %}">
-                                        <span class="badge bg-teal text-dark ">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                            EDIT
-                                        </span>
-                                    </a>
-                                    {% endif %}
-                                    {% endautoescape %}
+                            <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
+                                <i class="fa-solid fa-spinner fa-spin"></i> Loading...
                             </span>
                         </div>
                     </td>    
@@ -214,6 +196,23 @@
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
     })
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.accordion-body').forEach(function (span) {
+            const objId = span.getAttribute('data-obj-id'); // Object ID
+            const modelName = span.getAttribute('data-model-name'); // Model name
+            fetch(`/get-description/${modelName}/${objId}/`)  // Replace with your endpoint
+                .then(response => response.text())
+                .then(data => {
+                    span.innerHTML = data; // Populate the span with the fetched content
+                })
+                .catch(error => {
+                    console.error('Error loading content:', error);
+                    span.innerHTML = "Failed to load content.";
+                });
+        });
+    });
+    
 </script>
 
 {% endblock %}

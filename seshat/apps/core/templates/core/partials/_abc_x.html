@@ -85,26 +85,5 @@ href="{% url key|lower|add:'-update' value.id %}">
 </span>
 
 
-    {% if value.private_comment and 'core.add_seshatprivatecommentpart' in  user.get_all_permissions  %}
-
-        {% if value.private_comment.id == 1 or value.private_comment.inner_private_comments_related.all|length == 0 %}
-        {% else  %}
-        <span class="bg-warning p-0 m-0">
-        <div class="border border-2 border-secondary p-0 m-0 rounded" style="background-color:beige">
-            <div class="fw-bold ps-3 py-2 m-0 border-2 border-bottom border-secondary ">Private Comments <span class="text-secondary"> (Only visible to Selected Seshat Experts/RAs)</span></div>
-
-            <div class="p-2 mt-2">
-            {{value.private_comment}}
-            </div>
-            <div class="p-1 mb-1">
-                <a class="p-1 m-0 fs-6" href="{% url 'seshatprivatecomment-update' value.private_comment.id %}"><span class="badge badge-jid bg-warning text-dark"> <i class=" fa-solid fa-pen-to-square bg-warning text-dark"></i><span class="hover-text" style="vertical-align:bottom;">&nbsp;&nbsp;Add your Private Comment</span></span></a>
-            </div>
-
-        </div>
-    </span>
-
-        {% endif %}  
-    {% endif %}   
-
 
 {% endif %}

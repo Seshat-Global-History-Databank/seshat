@@ -3,6 +3,7 @@ import re
 
 from seshat.apps.rt.var_defs import swapped_dict
 
+from seshat.apps.accounts.models import Seshat_Expert  # Update with the correct path to your Seshat_Expert model
 
 register = template.Library()
 
@@ -219,37 +220,71 @@ def make_references_look_nicer(value):
 @register.filter
 def give_me_a_color(value):
     light_colors = [
-    '#e6b8af',
-    '#f4cccc',
-    '#fce5cd',
-    '#fff2cc',
-    '#d9ead3',
-    '#d0e0e3',
-    '#c9daf8',
-    '#cfe2f3',
-    '#d9d2e9',
-    '#ead1dc',
-    '#dd7e6b',
-    '#ea9999',
-    '#f9cb9c',
-    '#ffe599',
-    '#b6d7a8',
-    '#a2c4c9',
-    '#a4c2f4',
-    '#9fc5e8',
-    '#b4a7d6',
-    '#d5a6bd',
-    '#cc4125',
-    '#e06666',
-    '#f6b26b',
-    '#ffd966',
-    '#93c47d',
-    '#76a5af',
-    '#6d9eeb',
-    '#6fa8dc',
-    '#8e7cc3',
-    '#c27ba0',
+        '#b86354',  # Darker red tone of #e6b8af
+        '#cc6666',  # Darker red tone of #f4cccc
+        '#d9a065',  # Darker orange tone of #fce5cd
+        '#d6b656',  # Darker yellow tone of #fff2cc
+        '#94b373',  # Darker green tone of #d9ead3
+        '#6c8488',  # Darker blue-gray tone of #d0e0e3
+        '#6a92d1',  # Darker blue tone of #c9daf8
+        '#7292a6',  # Darker gray-blue tone of #cfe2f3
+        '#8f78c3',  # Darker purple tone of #d9d2e9
+        '#c35b7f',  # Darker pink-purple tone of #ead1dc
+        '#a93d2b',  # Darker orange-red tone of #dd7e6b
+        '#b85454',  # Darker red tone of #ea9999
+        '#e09957',  # Darker orange tone of #f9cb9c
+        '#d7b942',  # Darker yellow tone of #ffe599
+        '#79a659',  # Darker green tone of #b6d7a8
+        '#4e7476',  # Darker teal tone of #a2c4c9
+        '#4a7bbf',  # Darker blue tone of #a4c2f4
+        '#4e92b8',  # Darker blue tone of #9fc5e8
+        '#6c5ba3',  # Darker purple tone of #b4a7d6
+        '#a35f88',  # Darker pink-purple tone of #d5a6bd
+        '#892f15',  # Darker red tone of #cc4125
+        '#a73f3f',  # Darker red tone of #e06666
+        '#b86b35',  # Darker orange tone of #f6b26b
+        '#d6ac34',  # Darker yellow tone of #ffd966
+        '#5d8e52',  # Darker green tone of #93c47d
+        '#43696d',  # Darker teal tone of #76a5af
+        '#3d64b3',  # Darker blue tone of #6d9eeb
+        '#4176a5',  # Darker blue tone of #6fa8dc
+        '#654da6',  # Darker purple tone of #8e7cc3
+        '#8f5477',  # Darker pink tone of #c27ba0
     ]
+
+
+    # light_colors = [
+    # '#e6b8af',
+    # '#f4cccc',
+    # '#fce5cd',
+    # '#fff2cc',
+    # '#d9ead3',
+    # '#d0e0e3',
+    # '#c9daf8',
+    # '#cfe2f3',
+    # '#d9d2e9',
+    # '#ead1dc',
+    # '#dd7e6b',
+    # '#ea9999',
+    # '#f9cb9c',
+    # '#ffe599',
+    # '#b6d7a8',
+    # '#a2c4c9',
+    # '#a4c2f4',
+    # '#9fc5e8',
+    # '#b4a7d6',
+    # '#d5a6bd',
+    # '#cc4125',
+    # '#e06666',
+    # '#f6b26b',
+    # '#ffd966',
+    # '#93c47d',
+    # '#76a5af',
+    # '#6d9eeb',
+    # '#6fa8dc',
+    # '#8e7cc3',
+    # '#c27ba0',
+    # ]
 
     index = int(value) % 30
 
@@ -264,3 +299,46 @@ def in_group(user, group_name):
     if user.is_authenticated:
         return user.groups.filter(name=group_name).exists()
     return False
+
+
+@register.filter
+def is_user_real(user):
+    """
+    Check if the username has an underscore and if the part after the underscore
+    matches the domain part of the email.
+
+    Args:
+        username (str): The username to check.
+        email (str): The email to check against.
+
+    Returns:
+        bool: True if the username is valid, False otherwise.
+    """
+    if "_" not in user.username or user.last_login:
+        return True  # No underscore in username
+
+    # Split username and email
+    username_part_2 = user.username.split("_")[1]
+    email_domain = user.email.split("@")[1]  # Get the part after '@' in the email
+
+    # if email_domain.startswith(username_part_2):
+    #     return False
+    # Compare second part of username to email domain
+    return username_part_2 != email_domain.split(".")[0]
+
+@register.filter
+def textincludes(value, arg):
+    """Check if a string includes a given substring."""
+    if isinstance(value, str):
+        return arg in value
+    return False
+
+@register.filter
+def get_seshat_expert(user):
+    """
+    Custom filter to get the Seshat_Expert object associated with a user.
+    """
+    try:
+        return Seshat_Expert.objects.get(user=user).id
+    except Seshat_Expert.DoesNotExist:
+        return None

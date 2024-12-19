@@ -82,26 +82,4 @@ href="{% url key|lower|add:'-update' value.id %}">
 
 </span>
 
-<span class="bg-warning p-0 m-0">
-
-    {% if value.private_comment and 'core.add_seshatprivatecommentpart' in  user.get_all_permissions  %}
-        {% if value.private_comment.id == 1 or value.private_comment.inner_private_comments_related.all|length == 0 %}
-        {% else  %}
-        <div class="border border-4 border-warning p-0 m-0 rounded">
-            <div class="fw-bold p-1 m-0 border-2 border-bottom border-warning ">PRIVATE COMMENTS</div>
-
-            <div class="p-1">
-            {{value.private_comment}}
-            </div>
-            <div class="p-1">
-                <a class="p-1 m-0 fs-6" href="{% url 'seshatprivatecomment-update' value.private_comment.id %}"><span class="badge badge-jid bg-warning text-dark"> <i class=" fa-solid fa-pen-to-square bg-warning text-dark"></i><span class="hover-text" style="vertical-align:bottom;">&nbsp;&nbsp;Add your Private Comment</span></span></a>
-            </div>
-
-        </div>
-
-        {% endif %}  
-    {% endif %}   
-
-</span>
-
 {% endif %}

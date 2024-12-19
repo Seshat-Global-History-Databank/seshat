@@ -17,19 +17,19 @@ from django.template.defaulttags import register
 
 
 class ExpertReviewedForm(forms.ModelForm):
-    expert_reviewed_by_me = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={'class': 'mb-3'}),
-        label="Expert Reviewed By ME.",
-        initial=False,  # Default value is False
-        required=False  # Make it optional if needed
-    )
-    expert_reviewed = forms.BooleanField(
-        widget=forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': False}),
-        label="Expert Reviewed!",
-        initial=False,  # Default value is False
-        required=False,  # Make it optional if needed
-        disabled=True
-    )
+    # expert_reviewed_by_me = forms.BooleanField(
+    #     widget=forms.CheckboxInput(attrs={'class': 'mb-3'}),
+    #     label="Expert Reviewed By ME.",
+    #     initial=False,  # Default value is False
+    #     required=False  # Make it optional if needed
+    # )
+    # expert_reviewed = forms.BooleanField(
+    #     widget=forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': False}),
+    #     label="Expert Reviewed!",
+    #     initial=False,  # Default value is False
+    #     required=False,  # Make it optional if needed
+    #     disabled=True
+    # )
 
     def __init__(self, *args, **kwargs):
         # user = kwargs.pop('user', None)  # Pop the user from kwargs
@@ -42,12 +42,13 @@ class ExpertReviewedForm(forms.ModelForm):
                 'text':'suggested_experts[]',
                 'data-select2-id': 'select2-data-id_suggested_expert'
             }),
+            label="My Suggested Seshat Experts  &nbsp; <i class='fa-solid fa-user-graduate text-primary fa-sm'></i><i class='fa-solid fa-user-graduate text-teal'></i><i class='fa-solid fa-user-graduate text-danger fa-sm'></i>",  # Updated label
             required=False
         )
 
-    def clean_expert_reviewed(self):
-        # Explicitly set the value to False
-        return False
+    # def clean_expert_reviewed(self):
+    #     # Explicitly set the value to False
+    #     return False
  
 
 commonlabels = {
@@ -68,7 +69,7 @@ commonwidgets = {
     'polity': forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
     'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-3',}),
     'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-3', }),
-    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'placeholder':'Add a meaningful description (optional)'}),
+    'description': Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: Use §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),
     'citations': forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple', 'text':'citations[]' , 'style': 'height: 340px', 'multiple': 'multiple'}),
     'tag': forms.RadioSelect(),
     "is_disputed" : forms.CheckboxInput(attrs={'class': 'mb-3',}),
@@ -76,6 +77,7 @@ commonwidgets = {
     "drb_reviewed" : forms.CheckboxInput(attrs={'class': 'mb-3', }),
     'finalized': forms.CheckboxInput(attrs={'class': 'mb-3', 'checked': True, }),
 }
+
 
 
 class Polity_research_assistantForm(ExpertReviewedForm):

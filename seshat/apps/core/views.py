@@ -6,6 +6,8 @@ import numpy as np
 from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
+from seshat.apps.crisisdb.models import Human_sacrifice
+
 from django.contrib.sites.shortcuts import get_current_site
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
 from django.shortcuts import render, redirect
@@ -16,7 +18,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 from django.utils.text import slugify
@@ -43,6 +45,9 @@ from django.core.paginator import Paginator
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404, render, redirect
 import os
+
+from django.contrib.contenttypes.models import ContentType
+
 
 from django.apps import apps
 
@@ -5239,6 +5244,11 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                         except:
                             my_var_name = my_instance.name
 
+                        try:
+                            my_var_name_underlined = my_instance.clean_name().lower().replace(" ", "_")
+                        except:
+                            my_var_name_underlined = None
+
                         my_id = my_instance.id
                         my_value = my_instance.show_value
                         my_desc = my_instance.description
@@ -5259,6 +5269,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                             'my_year_to': my_year_to,
                             'my_tag': my_tag,
                             'my_var_name': my_var_name,
+                            'my_var_name_underlined': my_var_name_underlined,
                             'my_polity_id': my_polity_id,
                             'my_description': my_desc,
                             'my_curators_list': my_curators_list,
@@ -5541,12 +5552,50 @@ class SeshatExpertListView(ListView):
     context_object_name = 'experts'  # Name for the object in the template context
 
     # Restrict access to users in the "seshat-chief-execs" group
-    @method_decorator(user_passes_test(lambda u: u.groups.filter(name='Chief Seshat Researchers').exists()))
+    @method_decorator(user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists()))
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
     # Optionally, filter or order objects
+    # def get_queryset(self):
+    #     return Seshat_Expert.objects.select_related('user').order_by(
+    #                     F('user__last_login').desc(nulls_last=True)
+    #                     ) 
     def get_queryset(self):
-        return Seshat_Expert.objects.select_related('user').order_by(
-                        F('user__last_login').desc(nulls_last=True)
-                        ) # Example ordering
+        # Fetch related groups and permissions for each expert's user
+        return (
+            Seshat_Expert.objects.select_related('user')
+            .prefetch_related(
+                Prefetch(
+                    'user__groups',
+                    queryset=Group.objects.all(),
+                    to_attr='related_groups'
+                ),
+                Prefetch(
+                    'user__user_permissions',
+                    queryset=Permission.objects.all(),
+                    to_attr='related_permissions'
+                )
+            )
+            .order_by(F('user__last_login').desc(nulls_last=True))
+        )
+    
+
+def get_description_old(request, obj_id):
+    obj = get_object_or_404(Human_sacrifice, id=obj_id)
+    content = render_to_string('core/description_snippet.html', {'obj': obj})
+    return HttpResponse(content.strip())  # Remove leading/trailing whitespace
+
+
+
+
+
+def get_description(request, model_name, obj_id):
+    try:
+        # Dynamically get the model class based on the model name
+        model = ContentType.objects.get(model=model_name.lower()).model_class()
+        obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        content = render_to_string('core/description_snippet.html', {'obj': obj})
+        return HttpResponse(content.strip())  # Remove leading/trailing whitespace
+    except ContentType.DoesNotExist:
+        return HttpResponse("Invalid model name.", status=400)
