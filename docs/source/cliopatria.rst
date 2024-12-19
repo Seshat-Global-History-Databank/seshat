@@ -7,7 +7,7 @@ Presently it comprises over 1800 political entities sampled at varying timesteps
 Cliopatria is available as part of the Seshat database and API and is used on the `World Map <https://seshat-db.com/core/world_map>`_ and polity pages of the Seshat website.
 
 Working with the Cliopatria borders dataset
---------------------------------------------
+-------------------------------------------
 
 Cliopatria is available as a stand-alone dataset which is stored and documented at `github.com/Seshat-Global-History-Databank/cliopatria <https://github.com/Seshat-Global-History-Databank/cliopatria>`_.
 The data takes the form of a single GeoJSON file, a format that can be loaded by a wide variety of software for handling geospatial data.
