@@ -67,8 +67,6 @@
 
     .inner-content {
         flex-grow: 1;
-        /* Allow content to grow and fill remaining space */
-        /* Add any additional styles for your content here */
     }
     .leaflet-popup-content-wrapper {
         width: 320px;
@@ -76,13 +74,14 @@
 
     #variableLegend {
         position: absolute;
-        bottom: 90;
-        right: 10;
         background-color: rgba(255, 253, 242, 1);
         padding: 10px;
         border-radius: 5px;
-        max-width: 200px;
+        max-width: 50%;
+        width: 200px;
         z-index: 999;
+        max-height: 60%;
+        overflow-y: auto;
     }
 
     /* Hide scrollbar for WebKit browsers */
@@ -131,12 +130,39 @@
         left: 4%;
         z-index: 1000;
     }
-    .helpcontainer {
-        display: flex;
+    .settings {
+        display: none;
         position: absolute;
-        top: 30%;
-        left: 30%;
-        z-index: 1000;
+        top: 7%;
+        left: 3.8%;
+        z-index: 999;
+        max-height: 100%; /* Ensure it doesn't exceed the parent div height */
+        height: auto;
+        overflow-y: auto; /* Add vertical scroll if content overflows */
+        margin-top: 10px;
+        background-color: rgba(255, 253, 242, 1);
+        border-color: #782823;
+        border-radius: 5px;
+        border-style: solid;
+        border-width: 4px;
+        padding: 10px;
+    }
+
+    .help {
+        display: none;
+        position: absolute;
+        top: 7%;
+        left: 3.8%;
+        z-index: 999;
+        max-height: 100%; /* Ensure it doesn't exceed the parent div height */
+        overflow-y: auto; /* Add vertical scroll if content overflows */
+        margin-top: 10px;
+        background-color: rgba(255, 253, 242, 1);
+        border-color: #782823;
+        border-radius: 5px;
+        border-style: solid;
+        border-width: 4px;
+        padding: 10px;
     }
 
     #popup{
@@ -147,31 +173,11 @@
         border-radius: 5px; /* Adds rounded edges */
     }
 
-    #help {
-        overflow: auto;
-        border-style: solid;
-        border-width: 0px;
-        background-color: none;
-        border-radius: 5px; /* Adds rounded edges */
-        display: flex;
-        align-items: center;
-    }
-
     input {
         accent-color: teal;
     }
 
-    .tips-content {
-        display: none;
-        margin-top: 10px;
-        background-color: rgba(255, 253, 242, 1);
-        border-color: #782823;
-        border-radius: 5px;
-        border-style: solid;
-        border-width: 4px;
-        padding: 10px;
-    }
-    .tips-content p {
+    .help p {
         margin: 0;
     }
     .transparent-button {
@@ -213,14 +219,13 @@
         opacity: 1;
     }
 
-    .variable-info-container {
+    .info-container {
         position: relative;
         display: inline-block;
         cursor: pointer;
     }
     
-    .variable-info-container::after {
-        content: "Polity polygons on the map are colored based on the selected variable. Select 'Political boundaries' to assign a unique color to each polity.";
+    .info-container::after {
         visibility: hidden;
         width: 200px;
         background-color: #782823;
@@ -235,8 +240,16 @@
         opacity: 0;
         transition: opacity 0.3s;
     }
+
+    #variable-info-container::after {
+        content: "Polity polygons on the map are colored based on the selected variable. Select 'Political boundaries' to assign a unique color to each polity.";
+    }
+
+    #selection-info-container::after {
+        content: "Checking 'Hide unselected' hides all unselected polities. Checking 'Select all' highlights all polities. Click 'Clear selection' to deselect all polities.";
+    }
     
-    .variable-info-container:hover::after {
+    .info-container:hover::after {
         visibility: visible;
         opacity: 1;
     }
@@ -246,6 +259,7 @@
         display: none;
         background: none;
         border: none;
+        padding-right: 2%;
     }
 
     .previouslySelectedVariable-container {
@@ -290,11 +304,53 @@
         100% { transform: rotate(360deg); }
     }
 
-    #crossButton {
-        background-color: rgba(255, 253, 242, 1);
-        right: 4%;
-        position: absolute;
-        border-color: #782823;
+    #playBackControls {
+        height: 80%;
+        text-align: center;
+    }
+
+    #playBackControls button {
+        height: 15%;
+    }
+
+    #worldMapControlPanel {
+        width: auto;
+        position: relative;
+        height: 100%;
+        padding-top: 5%;
+        padding-bottom: 14%;
+        padding-left: 10px;
+        padding-right: 10px;
+        overflow: hidden;
+    }
+
+    #mapAndGlobe {
+        position: relative;
+        height: 85vh;
+        width: 100%;
+        overflow: hidden; /* Ensure child elements do not overflow */
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        position: relative;
+    }
+
+    #globe {
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+        position: relative;
+        max-height: 85vh;
+        display: none
+    }
+
+    #slider-container {
+        position: relative;
+        width: 600%;
+        display: block;
     }
 
     /* Media Queries for Responsiveness */
@@ -309,18 +365,18 @@
             font-size: 24px;
         }
 
-        .topleftcontainer, .helpcontainer {
+        .topleftcontainer {
             top: 5%;
             left: 5%;
         }
 
-        #variableLegend, #sliderdiv {
+        #sliderdiv {
             width: 90%;
             left: 5%;
         }
 
-        .display-info-container::after, .variable-info-container::after, .previouslySelectedVariable-container::after {
-            width: 150px;
+        .display-info-container::after, .info-container::after, .previouslySelectedVariable-container::after {
+            width: 300px;
             right: 100%;
         }
 
@@ -332,7 +388,11 @@
             font-size: 60px;
         }
 
-        #map, #globe {
+        #map {
+            height: 60vh;
+        }
+
+        #globe {
             height: 60vh;
         }
 
@@ -350,6 +410,7 @@
             border-width: 8px;
         }
     }
+
 </style>
 <body style="background-color: #fffdf2;">
     <div class="wrapper">
@@ -357,118 +418,28 @@
             {% include "core/partials/_navbar_home.html" %}
             {% block content %}
             <div style="display: flex; height: 85vh;" id="controls-and-maps">
-                <div style="width: auto; position: relative; height: 100%; padding: 10px; overflow: hidden;" id="controlPanel">
-                    <fieldset>
-                        <legend>
-                            <h1 class="text-teal federicka-big">Seshat World Map</h1>
-                        </legend>
-                        <div id="loadingIndicator">
-                            <div class="spinner"></div>                   
-                        </div>
-                        <div style="display: none; text-align: center;" id="cliopatria-link">
-                            <p>
-                                <a href="../cliopatria" target="_blank">🔹 Learn more about this dataset.</a>
-                            </p>
-                            <p>
-                                <button class="transparent-button" onclick="toggleTips()">🔹 How to navigate this map.</button>
-                            </p>
-                        </div>
-                        <label for="chooseVariable">Variable: </label>
-                        <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();" style="width: 150px; text-overflow: ellipsis;" disabled>
-                            <option value="polity">Political boundaries</option>
-                        </select>
-                        <div class="variable-info-container">
-                            ℹ️
-                        </div>
-                        <div class="previouslySelectedVariable-container">
-                            <button id="previouslySelectedVariable" type="button" onclick="previouslySelectedVariableButton()">🔄</button>
-                        </div><br>
-                        <fieldset id="chooseCategoricalVariableSelectionFieldset">
-                            <label for="chooseCategoricalVariableSelection"></label>
-                            <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection" onchange="plotPolities()" style="width: 150px; text-overflow: ellipsis;">            
-                            </select>
-                        </fieldset>
-                        <div id="variablesLoadingIndicator">
-                            <p>Loading Seshat variables...</p>
-                        </div>
-                        <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
-                            <label for="switchPolitiesComponents">Display:</label>
-                            <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                <option value="polities">Full polities</option>
-                                <option value="components">Polity components</option>
-                            </select>
-                            <div class="display-info-container">
-                                ℹ️
-                            </div>
-                        </fieldset>
-                        <label for="opacitySlide">Opacity:</label>
-                        <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7" class="slider"
-                            onchange="plotPolities()" style="width: 150px;"><br><br>
-                        <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
-                        <!-- <label for="showCapitals">Show capital cities</label>
-                        <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
-                        <label for="enterYear">Enter year:</label>
-                        <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
-                        <p>🗣️ <i>Hit enter to set year.</i></p>
-                        <label for="increment">Play rate (years/second):</label>
-                        <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
-                        <p style="width: 250px;">🗣️ <i>Hit enter to set play rate (inaccurate at high speeds).</i></p>
-                        <div style="text-align: center;">
-                            <button id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                            <button id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                            <button id="playButton" type="button" onclick="playBack()">▶️</button>
-                            <button id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                            <button id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button><br>
-                        </div>
-                    </fieldset>
-                    <div id="baseMapControls" style="position: absolute; bottom: 0px; display: flex; flex-direction: column; justify-content: flex-end;">
-                        <fieldset>
-                            <legend id="background-map-header" style="display: none">
-                                <h1 class="text-teal federicka-big">Background map</h1>
-                            </legend>
-                            <label><input type="radio" name="baseMap" id="baseMapEsri" value="arcgis" onclick="switchBaseMapWorldMap()">Satellite (<a href="https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9" target="_blank">Esri World Imagery</a>)</label><br>
-                            <label><input type="radio" name="baseMap" id="baseMapCesium" value="cesium" onclick="switchBaseMap()" checked>Globe (<a href="https://cesium.com/" target="_blank">Cesium</a>)</label><br>
-                            <label><input type="radio" name="baseMap" id="baseMapOSM" value="osm" onclick="switchBaseMapWorldMap()">Steet Maps (<a href="https://www.openstreetmap.org/" target="_blank">OSM</a>)</label><br>
-                            <label><input type="radio" name="baseMap" id="baseMapBasic" value="carto" onclick="switchBaseMapWorldMap()">Basic unlabelled (<a href="https://carto.com/basemaps" target="_blank">CARTO</a>)</label><br>
-                            <label><input type="radio" name="baseMap" id="baseMapCurrent" value="gadm" onclick="switchBaseMapWorldMap()" disabled>Clickable borders (<a href="https://gadm.org/maps.html" target="_blank">GADM</a>)</label>
-                            <div id="baseMapCurrentLoadingIndicator">
-                                <p>Loading current borders...</p>
-                            </div><br>
-                        </fieldset>
-                        <fieldset id="baseMapGADMFieldset">
-                            <label for="baseMapGADM">Current borders:</label>
-                            <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
-                                <option value="country">Countries</option>
-                                <option value="province">Provinces</option>
-                            </select><br>
-                            <label for="baseMapOnly">Base map only</label>
-                            <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                        </fieldset>
+                <div id="worldMapControlPanel">
+                    <div id="loadingIndicator">
+                        <div class="spinner"></div><br>
+                    </div>
+                    <button style="height: 10%" class="friendly-button" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
+                    <button style="height: 10%" class="friendly-button" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
+                    <div id="playBackControls">
+                        <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
+                        <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                        <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
+                        <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
+                        <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                     </div>
                 </div>
-                <div style="position: relative; height: 85vh; width: 80%" id="mapAndGlobe">
-                    <div id="map" style="height: 100%; width: 100%; z-index: 0; position: relative;">
+                <div id="mapAndGlobe">
+                    <div id="map">
                         <div class="topleftcontainer">
                             <div id="popup" class="p-1"></div>
                         </div>
-                        <div class="helpcontainer">
-                            <div id="help" class="p-1">
-                                <div id="tips" class="tips-content">
-                                    <button id="crossButton" onclick="toggleTips()">❌</button>
-                                    <p><b>🔹 Hover the mouse over polity shapes on the map to reveal information.</b></p>
-                                    <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
-                                    <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
-                                    <p><b>🔹 Enter a year of interest to jump to it, or use the slider at the bottom of the page.</b></p>
-                                    <p><b>🔹 Use the variable dropdown to color polities by different Seshat variables.</b></p>
-                                    <p><b>🔹 Use the opacity slider to adjust the transparency of the polity shapes.</b></p>
-                                    <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
-                                    <p><b>🔹 Use the background map controls to switch between different base maps.</b></p>
-                                </div>
-                            </div>
-                        </div>
                         <h1 class="text-teal sliderDate" id="sliderDate"></h1>
                     </div>
-                    <div id="globe" style="height: 100%; width: 100%; z-index: 0; position: relative; max-height: 85vh; display: none">
+                    <div id="globe">
                         <h1 class="text-teal sliderDate" id="sliderDate2"></h1>
                         <div class="enterYearMobileContainer" id="enterYearMobileContainer" style="display: none; width: 100%; padding: 5px;">
                             <label for="enterYearMobile">Enter year:</label>
@@ -476,13 +447,109 @@
                             <button id="switchToBCE" onclick="switchToBCE()">To BCE</button>
                         </div>
                     </div>
+                    <div class="settings" id="settings">
+                        <button class="crossButton" onclick="toggleSettings()">❌</button>
+                        <fieldset>
+                            <label for="chooseVariable">Variable: </label>
+                            <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();"
+                                style="width: 300px; text-overflow: ellipsis;" disabled>
+                                <option value="polity">Political boundaries</option>
+                            </select>
+                            <div class="info-container" id="variable-info-container">
+                                ℹ️
+                            </div>
+                            <div class="previouslySelectedVariable-container">
+                                <button id="previouslySelectedVariable" type="button"
+                                    onclick="previouslySelectedVariableButton()">🔄</button>
+                            </div><br>
+                            <fieldset id="chooseCategoricalVariableSelectionFieldset">
+                                <label for="chooseCategoricalVariableSelection"></label>
+                                <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
+                                    onchange="plotPolities()" style="width: 300px; text-overflow: ellipsis;">
+                                </select>
+                            </fieldset>
+                            <div id="variablesLoadingIndicator">
+                                <p>Loading Seshat variables...</p>
+                            </div>
+                            <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
+                                <label for="switchPolitiesComponents">Display:</label>
+                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                                    <option value="polities">Full polities</option>
+                                    <option value="components">Polity components</option>
+                                </select>
+                                <div class="display-info-container">
+                                    ℹ️
+                                </div>
+                            </fieldset>
+                            <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
+                                <label for="baseMapOnly">Hide unselected</label>
+                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
+                                <label for="baseMapOnly">Select all</label>
+                                <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked>
+                                <div class="info-container" id="selection-info-container">
+                                    ℹ️
+                                </div><br>
+                                <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button><br><br>
+                            </fieldset>
+                            <label for="opacitySlide">Opacity:</label>
+                            <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
+                                class="slider" onchange="plotPolities()" style="width: 300px;"><br><br>
+                            <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
+                            <!-- <label for="showCapitals">Show capital cities</label>
+                                                                                                                <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
+                            <label for="enterYear">Enter year:</label>
+                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
+                            <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
+                            <label for="increment">Play rate (years/second):</label>
+                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
+                            <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter to set play rate.</i></p><br><br>
+                        </fieldset>
+                        <div id="baseMapControls">
+                            <fieldset>
+                                <label for="baseMap">Choose base map:</label>
+                                <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
+                                    <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                                    <option value="cesium">Globe (Cesium)</option>
+                                    <option value="osm">Street Maps (OSM)</option>
+                                    <option value="carto">Basic unlabelled (CARTO)</option>
+                                    <option value="gadm" disabled>Clickable borders (GADM)</option>
+                                </select><br>
+                            </fieldset>
+                            <fieldset id="baseMapGADMFieldset">
+                                <label for="baseMapGADM">Current borders:</label>
+                                <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
+                                    <option value="country">Countries</option>
+                                    <option value="province">Provinces</option>
+                                </select><br>
+                                <label for="baseMapOnly">Base map only</label>
+                                <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
+                            </fieldset>
+                        </div><br>
+                    </div>
+                    <div class="help" id="help">
+                        <button class="crossButton" onclick="toggleHelp()">❌</button>
+                        <h2>How to use the Seshat World Map</h2>
+                        <p><b>🔹 Use the slider at the bottom of the page to adjust the displayed year.</b></p>
+                        <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
+                        <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
+                        <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p><br>
+                        <p><b> The settings gear (⚙️) can be used to access additional controls:</b></p>
+                        <p><b>🔹 Use the "Enter year" box to quickly navigate to a specific year.</b></p>
+                        <p><b>🔹 Use the "Play rate" box to set the rate of the animation (and the skip controls increment).</b></p>
+                        <p><b>🔹 Use the variable dropdown to color polities by different Seshat variables.</b></p>
+                        <p><b>🔹 Use the opacity slider to adjust the transparency of the polity shapes.</b></p>
+                        <p><b>🔹 Use the "Choose base map" dropdown to switch between different base maps.</b></p>
+                        <p>
+                            <b><a href="../cliopatria" target="_blank">🔹 Learn more about the polity border choices.</a></b>
+                        </p><br>
+                    </div>
                     <div id="sliderdiv">
                         <fieldset>
-                            <div class="slider-container" id="slider-container" style="position: relative; width: 400%; display: block">
+                            <div class="slider-container" id="slider-container">
                                 <datalist id="yearTickmarks"></datalist>
                                 <div id="yearTickmarkValues"></div><br>
                                 <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
-                                    value="{{ display_year }}" class="slider" onchange="plotPolities(); adjustScroll();"
+                                    value="{{ display_year }}" class="slider" onchange="plotPolities(); adjustScroll(); closeSettings(); closeHelp();"
                                     style="width: 100%;" list="yearTickmarks">
                             </div>
                         </fieldset>
@@ -494,6 +561,9 @@
     </div>
     <script src="{% static 'core/js/map_functions.js' %}"></script>
     <script>
+
+        // Hide components/polity switch for now so "Full polities" is always displayed
+        document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
 
         // Set the default base map to Cesium Globe on mobile devices
         // Also place the enter year input field where the slider normally is
@@ -507,10 +577,14 @@
                 document.getElementById("mapAndGlobe").style.width = "100%";
                 document.getElementById("globe").style.height = "90%";
                 document.getElementById("variableLegend").style.display = "none";
+                // Set the default base map to Cesium Globe on mobile devices
+                document.getElementById("baseMap").value = "cesium";
+                // Ensure selectAll is unchecked by default
+                document.getElementById("selectAll").checked = false;
             } else {
-                // It might have made more sense to set Esri as default and change to Cesium on mobile, but...
+                // It might have made more sense to set Esri/arcgis as default and change to Cesium on mobile, but...
                 // the above if statement bizzarely won't let me update the sliderdiv *and* set document.getElementById("cesium").checked = true;
-                document.getElementById("baseMapEsri").checked = true;
+                document.getElementById("baseMap").value = "arcgis";
                 switchBaseMap();
             }
         });
@@ -650,7 +724,6 @@
                         plotPolities();
                         allPolitiesLoaded = true;
                         document.getElementById('loadingIndicator').style.display = 'none';
-                        document.getElementById('cliopatria-link').style.display = 'block';
 
                         return fetch('/core/world_map_all_with_vars');
                     })
@@ -677,8 +750,6 @@
                         allVariablesLoaded = true;
                         plotPolities();
                         document.getElementById('variablesLoadingIndicator').style.display = 'none';
-                        document.getElementById('background-map-header').style.display = 'block';
-                        document.getElementById('cliopatria-link').style.display = 'block';
 
                         return fetch('/core/provinces_and_countries');
                     })
@@ -700,10 +771,7 @@
                             };
                         });
 
-                        document.getElementById('baseMapCurrentLoadingIndicator').style.display = 'none';
-                        document.getElementById('cliopatria-link').style.display = 'block';
-                        document.getElementById('baseMapCurrent').disabled = false;
-
+                        document.getElementById('baseMap').options[4].disabled = false;
                     });
             }
 
@@ -761,18 +829,28 @@
         function plotPolities() {  // This function is defined differently in the polity_map template
 
             var variable = document.getElementById('chooseVariable').value;
+
+            if (variable != 'polity') {
+                // Ensure hideUnselected is unchecked if the variable is not polity
+                document.getElementById('hideUnselected').checked = false;
+            }
+
             var selectedYear = document.getElementById('dateSlide').value;
             var opacity = document.getElementById('opacitySlide').value;
             var atLeastOnePolityHighlighted = false;
-            var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
+            var selectedMap = document.getElementById('baseMap').value;
             var popup = document.getElementById('popup');
+            var hideUnselected = document.getElementById('hideUnselected').checked;
+            var selectAll = document.getElementById('selectAll').checked;
+            var playButton = document.getElementById('playButton');
+            var settings = document.getElementById('settings');
+            var help = document.getElementById('help');
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
                 var initialDisplayYear = {{ display_year }};
                 if (selectedYear != initialDisplayYear) {
                     document.getElementById('loadingIndicator').style.display = 'block';
-                    document.getElementById('cliopatria-link').style.display = 'none';
                 }
             }
 
@@ -798,12 +876,10 @@
 
             // Show the switchPolitiesComponents dropdown if the variable is polity
             if (variable == 'polity') {
-                document.getElementById('switchPolitiesComponentsFieldset').style.display = 'block';
+                document.getElementById('switchPoliticalBoundariesFieldset').style.display = 'block';
             } else {
-                document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
+                document.getElementById('switchPoliticalBoundariesFieldset').style.display = 'none';
             }
-
-            updateLegend();
 
             // Load capital info if not already loaded
             if (typeof allCapitalsInfo === 'undefined') {
@@ -839,7 +915,10 @@
                 shapesData.forEach(function (shape) {
 
                     // Set weight and colour based on the variable
-                    if (variable == 'polity') {  
+                    if (variable == 'polity') {
+                        if(selectAll){
+                            shape.weight = polityBorderWeightSelected;
+                        }
                         shapeWeight = shape.weight;
                         shapeColour = shape.colour;
 
@@ -1192,109 +1271,33 @@
                         } else {
                         
                             // Add shape
-                            var geoJSONLayer = L.geoJSON(JSON.parse(shape.geom_json), {
-                                style: function (feature) {
-                                    // Create the style object
-                                    var style = {
-                                        fillColor: shapeColour,        // Set the fill color
-                                        weight: shapeWeight,          // Set the border weight
-                                        fillOpacity: opacity         // Set the fill opacity
-                                    };
-                                    // Set the border color
-                                    if (shape[variable] == 'unknown' || shape[variable] == 'Unknown'){
-                                        style.color = 'black';
-                                    } else {
-                                        style.color = shapeColour;
-                                    }
-                                    return style;
-                                },
-                                onEachFeature: function (feature, layer) {
-                                    // Add seshat_id to the layer and add a blank string if it doesn't exist
-                                    layer.feature.properties.seshat_id = shape.seshat_id || '';
-                                    // Add polity name to the layer
-                                    layer.feature.properties.name = shape.name;
-                                    // Add the colour to the layer
-                                    layer.feature.properties.colour = shapeColour;
-                        
-                                    // Add the popup for the initially selected polity
-                                    if (shape.weight > 0) {
-                                        popup.style.display = 'block';
-                                        // Add the popup to the popup div
-                                        popup.innerHTML = popupContent;
-                                        // Set the border colour of the popup div
-                                        popup.style.borderColor = layer.feature.properties.colour;
-                                        // Increase the border width of the popup div
-                                        popup.style.borderWidth = '4px';
-                                    };
-
-                                    var isClicked = false; // Flag to track if the layer was clicked
-                                    var previousPopupContent = '';
-                                    var previousPopupBorderColor = '';
-                                    var previousPopupBorderWidth = '';
-
-                                    function handleMouseover(e, layer, popupContent) {
-                                        // Store the previous state of the popup
-                                        previousPopupContent = popup.innerHTML;
-                                        previousPopupBorderColor = popup.style.borderColor;
-                                        previousPopupBorderWidth = popup.style.borderWidth;
-
-                                        // Update the popup with new content
-                                        popup.style.display = 'block';
-                                        popup.innerHTML = popupContent;
-                                        popup.style.borderColor = layer.feature.properties.colour;
-                                        popup.style.borderWidth = '4px';
-                                    }
-
-                                    function handleMouseout() {
-                                        // Revert the popup to the previous state only if the layer was not clicked
-                                        if (!isClicked) {
-                                            popup.innerHTML = previousPopupContent;
-                                            popup.style.borderColor = previousPopupBorderColor;
-                                            popup.style.borderWidth = previousPopupBorderWidth;
-                                        }
-                                    }
-
-                                    function handleLayerInteraction(e, layer, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
-                                        let newWeight;
-                                        if (variable == 'polity') {
-                                            if (shape.weight === 0) {
-                                                // Increase the weight of the clicked layer
-                                                newWeight = polityBorderWeightSelected;
-                                                layer.setStyle({
-                                                    weight: newWeight
-                                                });
-                                                popup.style.display = 'block';
-                                                // Add the popup to the popup div
-                                                popup.innerHTML = popupContent;
-                                                // Set the border colour of the popup div
-                                                popup.style.borderColor = layer.feature.properties.colour;
-                                                // Increase the border width of the popup div
-                                                popup.style.borderWidth = '4px';
-                                            } else {
-                                                // Decrease the weight of the clicked layer
-                                                newWeight = polityBorderWeight;
-                                                // Remove the popup from the popup div
-                                                popup.innerHTML = '';
-                                                popup.style.display = 'none';
-                                            }
-                                            // Update weights in this layer and others of the same polity
-                                            map.eachLayer(function (layer) {
-                                                if (layer.feature && layer.feature.properties && layer.feature.properties.name === shape.name) {
-                                                    layer.setStyle({
-                                                        weight: newWeight
-                                                    });
-                                                }
-                                            });
-                                            // Update weights in shapesData
-                                            var i = 0;
-                                            shapesData.forEach(function (shape2) {
-                                                if (shape2.name === shape.name) {
-                                                    shapesData[i]['weight'] = newWeight;
-                                                }
-                                                i++;
-                                            });
-                                            updateLegend();
+                            if(shape.weight > 0 || !hideUnselected){
+                                var geoJSONLayer = L.geoJSON(JSON.parse(shape.geom_json), {
+                                    style: function (feature) {
+                                        // Create the style object
+                                        var style = {
+                                            fillColor: shapeColour,        // Set the fill color
+                                            weight: shapeWeight,          // Set the border weight
+                                            fillOpacity: opacity         // Set the fill opacity
+                                        };
+                                        // Set the border color
+                                        if (shape[variable] == 'unknown' || shape[variable] == 'Unknown'){
+                                            style.color = 'black';
                                         } else {
+                                            style.color = shapeColour;
+                                        }
+                                        return style;
+                                    },
+                                    onEachFeature: function (feature, layer) {
+                                        // Add seshat_id to the layer and add a blank string if it doesn't exist
+                                        layer.feature.properties.seshat_id = shape.seshat_id || '';
+                                        // Add polity name to the layer
+                                        layer.feature.properties.name = shape.name;
+                                        // Add the colour to the layer
+                                        layer.feature.properties.colour = shapeColour;
+                            
+                                        // Add the popup for the initially selected polity
+                                        if (shape.weight > 0) {
                                             popup.style.display = 'block';
                                             // Add the popup to the popup div
                                             popup.innerHTML = popupContent;
@@ -1302,40 +1305,129 @@
                                             popup.style.borderColor = layer.feature.properties.colour;
                                             // Increase the border width of the popup div
                                             popup.style.borderWidth = '4px';
+                                        };
+
+                                        var isClicked = false; // Flag to track if the layer was clicked
+                                        var previousPopupContent = '';
+                                        var previousPopupBorderColor = '';
+                                        var previousPopupBorderWidth = '';
+
+                                        function handleMouseover(e, layer, popupContent) {
+                                            // Store the previous state of the popup
+                                            previousPopupContent = popup.innerHTML;
+                                            previousPopupBorderColor = popup.style.borderColor;
+                                            previousPopupBorderWidth = popup.style.borderWidth;
+
+                                            // Update the popup with new content, but only show it if the settings or help divs are not displayed
+                                            if (document.getElementById("settings").style.display == "none" && document.getElementById("help").style.display == "none") {
+                                                popup.style.display = 'block';
+                                            }
+                                            popup.innerHTML = popupContent;
+                                            popup.style.borderColor = layer.feature.properties.colour;
+                                            popup.style.borderWidth = '4px';
                                         }
-                                        if (isClick) {
-                                            isClicked = true; // Set the flag if the interaction is a click
+
+                                        function handleMouseout() {
+                                            // Revert the popup to the previous state only if the layer was not clicked
+                                            if (!isClicked) {
+                                                popup.innerHTML = previousPopupContent;
+                                                popup.style.borderColor = previousPopupBorderColor;
+                                                popup.style.borderWidth = previousPopupBorderWidth;
+                                            }
                                         }
-                                        L.DomEvent.stopPropagation(e);
+
+                                        function handleLayerInteraction(e, layer, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
+                                            let newWeight;
+                                            document.getElementById('variableLegend').style.display = 'block';
+                                            if (variable == 'polity') {
+                                                if (shape.weight === 0) {
+                                                    // Increase the weight of the clicked layer
+                                                    newWeight = polityBorderWeightSelected;
+                                                    layer.setStyle({
+                                                        weight: newWeight
+                                                    });
+                                                    if (settings.style.display == "block" || help.style.display == "block") {
+                                                        popup.style.display = 'none';
+                                                    } else {
+                                                        popup.style.display = 'block';
+                                                    }
+                                                    // Add the popup to the popup div
+                                                    popup.innerHTML = popupContent;
+                                                    // Set the border colour of the popup div
+                                                    popup.style.borderColor = layer.feature.properties.colour;
+                                                    // Increase the border width of the popup div
+                                                    popup.style.borderWidth = '4px';
+                                                } else {
+                                                    // Decrease the weight of the clicked layer
+                                                    newWeight = polityBorderWeight;
+                                                    // Remove the popup from the popup div
+                                                    popup.innerHTML = '';
+                                                    popup.style.display = 'none';
+                                                }
+                                                // Update weights in this layer and others of the same polity
+                                                map.eachLayer(function (layer) {
+                                                    if (layer.feature && layer.feature.properties && layer.feature.properties.name === shape.name) {
+                                                        layer.setStyle({
+                                                            weight: newWeight
+                                                        });
+                                                    }
+                                                });
+                                                // Update weights in shapesData
+                                                var i = 0;
+                                                shapesData.forEach(function (shape2) {
+                                                    if (shape2.name === shape.name) {
+                                                        shapesData[i]['weight'] = newWeight;
+                                                    }
+                                                    i++;
+                                                });
+                                                updateLegend();
+                                            } else {
+                                                if (settings.style.display == "block" || help.style.display == "block") {
+                                                    popup.style.display = 'none';
+                                                } else {
+                                                    popup.style.display = 'block';
+                                                }
+                                                // Add the popup to the popup div
+                                                popup.innerHTML = popupContent;
+                                                // Set the border colour of the popup div
+                                                popup.style.borderColor = layer.feature.properties.colour;
+                                                // Increase the border width of the popup div
+                                                popup.style.borderWidth = '4px';
+                                            }
+                                            if (isClick) {
+                                                isClicked = true; // Set the flag if the interaction is a click
+                                            }
+                                            L.DomEvent.stopPropagation(e);
+                                        }
+
+                                        layer.on('click', function (e) {
+                                            handleLayerInteraction(e, this, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, true);
+                                        });
+
+                                        layer.on('mouseover', function (e) {
+                                            handleMouseover(e, this, popupContent);
+                                        });
+
+                                        layer.on('mouseout', function () {
+                                            handleMouseout();
+                                        });
                                     }
-
-                                    layer.on('click', function (e) {
-                                        handleLayerInteraction(e, this, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, true);
-                                    });
-
-                                    layer.on('mouseover', function (e) {
-                                        handleMouseover(e, this, popupContent);
-                                    });
-
-                                    layer.on('mouseout', function () {
-                                        handleMouseout();
-                                    });
-                                }
-                            }).addTo(map);
+                                }).addTo(map);
                         
-                            // Open the corresponding Seshat page in a new browser tab when a shape is double-clicked
-                            geoJSONLayer.on('dblclick', function (event) {
-                                // Check if the shape has a corresponding seshat_id
-                                if (shape.seshat_id in seshat_id_page_id) {
-                                    // Open the corresponding URL
-                                    var polityId = seshat_id_page_id[shape.seshat_id]['id'];
-                                    window.open('/core/polity/' + polityId, '_blank');
-                                }
-                            });
+                                // Open the corresponding Seshat page in a new browser tab when a shape is double-clicked
+                                geoJSONLayer.on('dblclick', function (event) {
+                                    // Check if the shape has a corresponding seshat_id
+                                    if (shape.seshat_id in seshat_id_page_id) {
+                                        // Open the corresponding URL
+                                        var polityId = seshat_id_page_id[shape.seshat_id]['id'];
+                                        window.open('/core/polity/' + polityId, '_blank');
+                                    }
+                                });
                         
-                            // Update the displayedShapes array
-                            if (displayedShapes.indexOf(shape.name) === -1) {
-                                displayedShapes.push(shape.name);
+                                // Update the displayedShapes array
+                                if (displayedShapes.indexOf(shape.name) === -1) {
+                                    displayedShapes.push(shape.name);
+                                }
                             }
                         }
                     }
@@ -1357,6 +1449,19 @@
                 popup.style.display = 'none';
             }
 
+            updateLegend();
+
+            if (playButton.innerHTML == '⏸') {
+                // Disable the popup when playing
+                popup.style.display = 'none';
+            } else {
+                popup.style.display = 'block';
+            }
+
+            if (settings.style.display == "block" || help.style.display == "block") {
+                popup.style.display = 'none';
+            }
+
         }
 
         // Initial plot on page load
@@ -1364,7 +1469,6 @@
         allPolitiesLoaded = true;
         plotPolities()
         document.getElementById('loadingIndicator').style.display = 'none';
-        document.getElementById('cliopatria-link').style.display = 'block';
         allPolitiesLoaded = false;
 
         // Display slider value

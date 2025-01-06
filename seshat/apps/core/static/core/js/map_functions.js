@@ -212,15 +212,42 @@ function switchToBCE() {
 }
 
 function switchBaseMap() {
-    var selectedMap = document.querySelector('input[name="baseMap"]:checked').value;
+    var selectedMap = document.getElementById("baseMap").value;
     var base = document.getElementById("baseMapGADM").value
+    var settings = document.getElementById("settings");
+    var help = document.getElementById("help");
+    var legendDiv = document.getElementById('variableLegend');
+    var selectAll = document.getElementById('selectAll');
+
+    if (legendDiv === null) {
+        if (selectedMap === 'cesium') {
+            legendDiv = document.getElementById('componentLegendGlobe');
+        } else {
+            legendDiv = document.getElementById('componentLegend');
+        }
+    }
 
     if (selectedMap === 'cesium') {
         // Disable the play button when switching to the globe view
         document.getElementById('playButton').disabled = true;
+        // Select all polities when switching to the globe view and disable the button
+        if (selectAll !== null) {
+            selectAll.checked = true;
+            selectAll.disabled = true;
+        }
+        // Diable the legend when switching to the globe view if the help or settings are open
+        if (help.style.display === "block" || settings.style.display === "block") {
+            legendDiv.style.display = 'none';
+        }
     } else {
         // Enable the play button when switching to the map view
         document.getElementById('playButton').disabled = false;
+        // Enable the legend when switching to the map view, even if the help or settings are open
+        legendDiv.style.display = 'block';
+        // Enable the select all checkbox when switching to the map view
+        if (selectAll !== null) {
+            selectAll.disabled = false;
+        }
     }
 
     if (base == 'province') {
@@ -321,6 +348,7 @@ function updateLegend() {
     var legendDiv = document.getElementById('variableLegend');
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     var displayComponent = document.getElementById('switchPolitiesComponents').value;
+    var baseMap = document.getElementById('baseMap').value;
 
     // Clear the current legend
     legendDiv.innerHTML = '';
@@ -351,8 +379,16 @@ function updateLegend() {
 
         // Add a legend for highlighted polities
         if (addedPolities.length > 0) {
+
+            if (baseMap != 'cesium') {
+                // Add clear selection button
+                var clearSelectionButton = document.createElement('button');
+                clearSelectionButton.textContent = 'Clear selection';
+                clearSelectionButton.onclick = clearSelection;
+                legendDiv.appendChild(clearSelectionButton);
+            }
+
             var legendTitle = document.createElement('h3');
-            legendTitle.textContent = 'Selected Polities';
             legendDiv.appendChild(legendTitle);
             // Create a container for polity items
             var polityContainer = document.createElement('div');
@@ -435,7 +471,7 @@ function updateLegend() {
         }
     }
 
-    if (document.querySelector('input[name="baseMap"]:checked').value == 'gadm') {
+    if (document.getElementById("baseMap").value == 'gadm') {
         var legendItem = document.createElement('p');
 
         var colorBox = document.createElement('span');
@@ -454,29 +490,35 @@ function updateLegend() {
 
     if (variable == 'polity') {
         if (addedPolities.length > 0) {
-            // Add clear selection button
-            var clearSelectionButton = document.createElement('button');
-            clearSelectionButton.textContent = 'Clear selection';
-            clearSelectionButton.onclick = clearSelection;
-            legendDiv.appendChild(clearSelectionButton);
 
             // Make the polityContainer scrollable if there are more than 7 polities
             if (addedPolities.length > 7) {
-                polityContainer.style.maxHeight = '420px';
-                polityContainer.style.overflowY = 'scroll';
+                polityContainer.style.maxHeight = '100%';
             } else {
                 // Reset to default if fewer than 7 polities to ensure it behaves correctly on subsequent updates
                 polityContainer.style.maxHeight = '';
-                polityContainer.style.overflowY = '';
             }
         }
+    }
+
+    // Ensure the legend is positioned to the right when the globe view is selected
+    if (baseMap == 'cesium') {
+        legendDiv.style.left = '10';
+        legendDiv.style.right = '';
+        legendDiv.style.top = '10';
+        legendDiv.style.bottom = '';
+    } else {
+        legendDiv.style.right = '10';
+        legendDiv.style.left = '';
+        legendDiv.style.bottom = '';
+        legendDiv.style.top = '10';
     }
 }
 
 function updateComponentLegend() {
 
     var legendDiv = document.getElementById('componentLegend');
-    var legendDiv2 = document.getElementById('componentLegend2');
+    var legendDivGlobe = document.getElementById('componentLegendGlobe');
     var displayComponent = document.getElementById('switchPolitiesComponents').value;
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     // Create a container for polity items
@@ -484,9 +526,9 @@ function updateComponentLegend() {
 
     // Clear current legend and ensure it is displayed
     legendDiv.innerHTML = '';
-    legendDiv2.innerHTML = '';
+    legendDivGlobe.innerHTML = '';
     legendDiv.style.display = 'block';
-    legendDiv2.style.display = 'block';
+    legendDivGlobe.style.display = 'block';
 
     var addedPolities = [];
     var addedPolityNames = [];
@@ -511,10 +553,6 @@ function updateComponentLegend() {
 
     // Add a legend for polity components if the displayComponent is set to 'components' and there is more than one
     if (addedPolities.length > 0 && displayComponent == 'components') {
-        var legendTitle = document.createElement('h3');
-        legendTitle.textContent = 'Components';
-        legendDiv.appendChild(legendTitle);
-        legendDiv2.appendChild(legendTitle.cloneNode(true));
         for (var i = 0; i < addedPolities.length; i++) {
             var legendItem = document.createElement('p');
             var colorBox = document.createElement('span');
@@ -532,37 +570,57 @@ function updateComponentLegend() {
         // Append the container to the legendDiv
         legendDiv.appendChild(polityContainer);
         polityContainer2 = polityContainer.cloneNode(true);
-        legendDiv2.appendChild(polityContainer2);
+        legendDivGlobe.appendChild(polityContainer2);
 
         // Make the polityContainer scrollable if there are more than 7 polities
         if (addedPolities.length > 7) {
             polityContainer.style.maxHeight = '300px';
-            polityContainer.style.overflowY = 'scroll';
             polityContainer2.style.maxHeight = '300px';
-            polityContainer2.style.overflowY = 'scroll';
         } else {
             // Reset to default if fewer than 7 polities to ensure it behaves correctly on subsequent updates
             polityContainer.style.maxHeight = '';
-            polityContainer.style.overflowY = '';
             polityContainer2.style.maxHeight = '';
-            polityContainer2.style.overflowY = '';
         }
     } else {
         // Hide the component legend if there are no components to display
         legendDiv.style.display = 'none';
-        legendDiv2.style.display = 'none';
+        legendDivGlobe.style.display = 'none';
     }
+
+    // Hide the legend if there is only one component to display
+    if (addedPolities.length == 1) {
+        legendDiv.style.display = 'none';
+        legendDivGlobe.style.display = 'none';
+    }
+
 }
 
 function clearSelection() {
+    var legendDiv = document.getElementById('variableLegend');
+    legendDiv.style.display = 'none';
+    document.getElementById('selectAll').checked = false;
+    document.getElementById('hideUnselected').disabled = false;
     var popup = document.getElementById('popup');
     popup.innerHTML = '';
     popup.style.display = 'none';
     shapesData.forEach(function (shape) {
         shape['weight'] = 0;
     });
+    document.getElementById('hideUnselected').checked = false;
     plotPolities();
 }
+
+function selectAllCheckbox() {
+    var legendDiv = document.getElementById('variableLegend');
+    var selectAll = document.getElementById('selectAll').checked;
+    if (selectAll) {
+        document.getElementById('hideUnselected').disabled = true;
+        legendDiv.style.display = 'block';
+    } else {
+        document.getElementById('hideUnselected').disabled = false;
+        clearSelection();
+    }
+};
 
 function updateCategoricalVariableSelection(variable){
     var dropdown = document.getElementById('chooseCategoricalVariableSelection');
@@ -661,11 +719,119 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function toggleTips() {
-    var dropdown = document.getElementById("tips");
-    if (dropdown.style.display === "none" || dropdown.style.display === "") {
-        dropdown.style.display = "block";
+function toggleSettings() {
+    var settings = document.getElementById("settings");
+    var selectedMap = document.getElementById("baseMap").value;
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
+
+    if (settings.style.display === "none" || settings.style.display === "") {
+        settings.style.display = "block";
+        // Disable the map controls when the settings are open
+        map.dragging.disable();
+        map.zoomControl.disable();
+        map.scrollWheelZoom.disable();
+        // Temporarily hide the legend and popup when the settings are open
+        if (selectedMap === 'cesium' && variableLegend !== null) {
+            variableLegend.style.display = 'none';
+        }
+        if (popup !== null) {
+            popup.style.display = 'none';
+        }
+        // Hide help text when settings are open
+        document.getElementById('help').style.display = 'none';
     } else {
-        dropdown.style.display = "none";
+        settings.style.display = "none";
+        // Enable the map controls when the settings are closed
+        map.dragging.enable();
+        map.zoomControl.enable();
+        map.scrollWheelZoom.enable();
+        // Show the legend and popup when the settings are closed
+        if (variableLegend !== null) {
+            if (variableLegend.innerHTML != '') {
+                variableLegend.style.display = 'block';
+            }
+        }
+        if (popup !== null) {
+            popup.style.display = 'block';
+        }
+    }
+}
+
+function closeSettings() {
+    var settings = document.getElementById("settings");
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
+    settings.style.display = "none";
+    // Enable the map controls when the settings are closed
+    map.dragging.enable();
+    map.zoomControl.enable();
+    map.scrollWheelZoom.enable();
+    // Show the legend and popup when the settings are closed
+    if (variableLegend !== null) {
+        if (variableLegend.innerHTML != '') {
+            variableLegend.style.display = 'block';
+        }
+    }
+    if (popup !== null) {
+        popup.style.display = 'block';
+    }
+}
+
+function toggleHelp() {
+    var help = document.getElementById("help");
+    var selectedMap = document.getElementById("baseMap").value;
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
+    if (help.style.display === "none" || help.style.display === "") {
+        help.style.display = "block";
+        // Disable the map controls when the help text is open
+        map.dragging.disable();
+        map.zoomControl.disable();
+        map.scrollWheelZoom.disable();
+        // Temporarily hide the legend and popup when the help text is open
+        if (selectedMap === 'cesium' && variableLegend !== null) {
+            variableLegend.style.display = 'none';
+        }
+        if (popup !== null) {
+            popup.style.display = 'none';
+        }
+        // Hide settings when help text is open
+        document.getElementById('settings').style.display = 'none';
+    } else {
+        help.style.display = "none";
+        // Enable the map controls when the help text is closed
+        map.dragging.enable();
+        map.zoomControl.enable();
+        map.scrollWheelZoom.enable();
+        // Show the legend and popup when the help text is closed
+        if (variableLegend !== null) {
+            if (variableLegend.innerHTML != '') {
+                variableLegend.style.display = 'block';
+            }
+        }
+        if (popup !== null) {
+            popup.style.display = 'block';
+        }
+    }
+}
+
+function closeHelp() {
+    var help = document.getElementById("help");
+    var variableLegend = document.getElementById('variableLegend');
+    var popup = document.getElementById('popup');
+    help.style.display = "none";
+    // Enable the map controls when the help text is closed
+    map.dragging.enable();
+    map.zoomControl.enable();
+    map.scrollWheelZoom.enable();
+    // Show the legend and popup when the help text is closed
+    if (variableLegend !== null) {
+        if (variableLegend.innerHTML != '') {
+            variableLegend.style.display = 'block';
+        }
+    }
+    if (popup !== null) {
+        popup.style.display = 'block';
     }
 }
