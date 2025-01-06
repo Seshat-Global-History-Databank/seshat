@@ -219,14 +219,13 @@
         opacity: 1;
     }
 
-    .variable-info-container {
+    .info-container {
         position: relative;
         display: inline-block;
         cursor: pointer;
     }
     
-    .variable-info-container::after {
-        content: "Polity polygons on the map are colored based on the selected variable. Select 'Political boundaries' to assign a unique color to each polity.";
+    .info-container::after {
         visibility: hidden;
         width: 200px;
         background-color: #782823;
@@ -241,8 +240,16 @@
         opacity: 0;
         transition: opacity 0.3s;
     }
+
+    #variable-info-container::after {
+        content: "Polity polygons on the map are colored based on the selected variable. Select 'Political boundaries' to assign a unique color to each polity.";
+    }
+
+    #selection-info-container::after {
+        content: "Checking 'Hide unselected' hides all unselected polities. Checking 'Select all' highlights all polities. Click 'Clear selection' to deselect all polities.";
+    }
     
-    .variable-info-container:hover::after {
+    .info-container:hover::after {
         visibility: visible;
         opacity: 1;
     }
@@ -368,7 +375,7 @@
             left: 5%;
         }
 
-        .display-info-container::after, .variable-info-container::after, .previouslySelectedVariable-container::after {
+        .display-info-container::after, .info-container::after, .previouslySelectedVariable-container::after {
             width: 300px;
             right: 100%;
         }
@@ -448,7 +455,7 @@
                                 style="width: 300px; text-overflow: ellipsis;" disabled>
                                 <option value="polity">Political boundaries</option>
                             </select>
-                            <div class="variable-info-container">
+                            <div class="info-container" id="variable-info-container">
                                 ℹ️
                             </div>
                             <div class="previouslySelectedVariable-container">
@@ -478,7 +485,10 @@
                                 <label for="baseMapOnly">Hide unselected</label>
                                 <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
                                 <label for="baseMapOnly">Select all</label>
-                                <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked><br>
+                                <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked>
+                                <div class="info-container" id="selection-info-container">
+                                    ℹ️
+                                </div><br>
                                 <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button><br><br>
                             </fieldset>
                             <label for="opacitySlide">Opacity:</label>
