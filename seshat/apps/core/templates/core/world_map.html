@@ -796,22 +796,22 @@
         // Note: uncoded and no seshat page are both now set to the same colour
         // Note: if you modify this, you should check that updateLegend() is consistent (found in map_functions.js)
         let variableColourMapping = {
-            'present': 'green',
-            'absent': 'red',
+            'present': '#82c1c1',
+            'absent': '#ff9c9c',
             'P~A': 'orange',
-            'A~P': 'blue',
-            'unknown': 'yellow',
-            'uncoded': 'grey',
-            'no seshat page': 'grey'
+            'A~P': '#ffc68c',
+            'unknown': 'slategray',
+            'uncoded': 'silver',
+            'no seshat page': 'lightgrey'
         };
 
         let oneLanguageColourMapping = {
-            'Present exclusively': 'green',
-            'Present': '#13d446',
-            'Absent': 'red',
-            'Unknown': 'yellow',
-            'Uncoded': 'grey',
-            'No Seshat page': 'grey'
+            'Present exclusively': 'blue',
+            'Present': '#82c1c1',
+            'Absent': '#ff9c9c',
+            'Unknown': 'slategray',
+            'Uncoded': 'silver',
+            'No Seshat page': 'lightgrey'
         };
 
         function switchBaseMapWorldMap() {
