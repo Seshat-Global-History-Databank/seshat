@@ -431,9 +431,6 @@ function updateLegend() {
             legendItem.appendChild(colorBox);
 
             if (key === 'Unknown') {
-                colorBox.style.border = '1px solid black';
-            }
-            if (key === 'Unknown') {
                 legendItem.appendChild(document.createTextNode('Coded unknown'));
             } else {
                 legendItem.appendChild(document.createTextNode(`${key}`));
@@ -460,10 +457,6 @@ function updateLegend() {
             colorBox.style.backgroundColor = variableColourMapping[key];
             colorBox.style.marginRight = '10px';
             legendItem.appendChild(colorBox);
-
-            if (key === 'unknown') {
-                colorBox.style.border = '1px solid black';
-            }
 
             legendItem.appendChild(document.createTextNode(longAbsentPresentVarName(key)));
 
