@@ -4393,14 +4393,22 @@ def assign_categorical_variables_to_shapes(shapes, variables):
                 shape['alternate_religion_genus'].extend([arg.alternate_religion_genus for arg in alternate_religion_genuses.get(polity.id, [])])
                 shape['alternate_religion_family'].extend([arf.alternate_religion_family for arf in alternate_religion_families.get(polity.id, [])])
                 shape['alternate_religion'].extend([ar.alternate_religion for ar in alternate_religions.get(polity.id, [])])
-                shape['settlement_hierarchy_from'] = Settlement_hierarchy.objects.filter(polity_id=polity.id)[0].settlement_hierarchy_from
-                shape['settlement_hierarchy_to'] = Settlement_hierarchy.objects.filter(polity_id=polity.id)[0].settlement_hierarchy_to
-                shape['religious_level_from'] = Religious_level.objects.filter(polity_id=polity.id)[0].religious_level_from
-                shape['religious_level_to'] = Religious_level.objects.filter(polity_id=polity.id)[0].religious_level_to
-                shape['military_level_from'] = Military_level.objects.filter(polity_id=polity.id)[0].military_level_from
-                shape['military_level_to'] = Military_level.objects.filter(polity_id=polity.id)[0].military_level_to
-                shape['administrative_level_from'] = Administrative_level.objects.filter(polity_id=polity.id)[0].administrative_level_from
-                shape['administrative_level_to'] = Administrative_level.objects.filter(polity_id=polity.id)[0].administrative_level_to
+                settlement_hierarchy = Settlement_hierarchy.objects.filter(polity_id=polity.id)
+                if settlement_hierarchy:
+                    shape['settlement_hierarchy_from'] = settlement_hierarchy[0].settlement_hierarchy_from
+                    shape['settlement_hierarchy_to'] = settlement_hierarchy[0].settlement_hierarchy_to
+                religious_level = Religious_level.objects.filter(polity_id=polity.id)
+                if religious_level:
+                    shape['religious_level_from'] = religious_level[0].religious_level_from
+                    shape['religious_level_to'] = religious_level[0].religious_level_to
+                military_level = Military_level.objects.filter(polity_id=polity.id)
+                if military_level:
+                    shape['military_level_from'] = military_level[0].military_level_from
+                    shape['military_level_to'] = military_level[0].military_level_to
+                administrative_level = Administrative_level.objects.filter(polity_id=polity.id)
+                if administrative_level:
+                    shape['administrative_level_from'] = administrative_level[0].administrative_level_from
+                    shape['administrative_level_to'] = administrative_level[0].administrative_level_to
 
                 # Get the years for the variables which have years for the polity
                 shape['linguistic_family_dict'].update({lf.linguistic_family: [lf.year_from, lf.year_to] for lf in linguistic_families.get(polity.id, [])})
