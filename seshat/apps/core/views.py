@@ -69,7 +69,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
-from ..sc.models import Settlement_hierarchy
+from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level
 
 from ..crisisdb.models import Power_transition
 
@@ -4281,7 +4281,9 @@ def assign_categorical_variables_to_shapes(shapes, variables):
     if 'Social Complexity Variables' not in variables:
         variables['Social Complexity Variables'] = {}
     variables['Social Complexity Variables']['settlement_hierarchy'] = {'formatted': 'settlement_hierarchy', 'full_name': 'Settlement Hierarchy'}
-    
+    variables['Social Complexity Variables']['religious_level'] = {'formatted': 'religious_level', 'full_name': 'Religious Level'}
+    variables['Social Complexity Variables']['military_level'] = {'formatted': 'military_level', 'full_name': 'Military Level'}
+    variables['Social Complexity Variables']['administrative_level'] = {'formatted': 'administrative_level', 'full_name': 'Administrative Level'}
 
     # Fetch all polities and store them in a dictionary for quick access
     polities = {polity.new_name: polity for polity in Polity.objects.all()}
@@ -4371,6 +4373,12 @@ def assign_categorical_variables_to_shapes(shapes, variables):
         shape['alternate_religion_dict'] = {}
         shape['settlement_hierarchy_from'] = 0
         shape['settlement_hierarchy_to'] = 0
+        shape['religious_level_from'] = 0
+        shape['religious_level_to'] = 0
+        shape['military_level_from'] = 0
+        shape['military_level_to'] = 0
+        shape['administrative_level_from'] = 0
+        shape['administrative_level_to'] = 0
         if shape['seshat_id'] != 'none':  # Skip shapes with no seshat_id
             polity = polities.get(shape['seshat_id'])
             if polity:
@@ -4387,6 +4395,12 @@ def assign_categorical_variables_to_shapes(shapes, variables):
                 shape['alternate_religion'].extend([ar.alternate_religion for ar in alternate_religions.get(polity.id, [])])
                 shape['settlement_hierarchy_from'] = Settlement_hierarchy.objects.filter(polity_id=polity.id)[0].settlement_hierarchy_from
                 shape['settlement_hierarchy_to'] = Settlement_hierarchy.objects.filter(polity_id=polity.id)[0].settlement_hierarchy_to
+                shape['religious_level_from'] = Religious_level.objects.filter(polity_id=polity.id)[0].religious_level_from
+                shape['religious_level_to'] = Religious_level.objects.filter(polity_id=polity.id)[0].religious_level_to
+                shape['military_level_from'] = Military_level.objects.filter(polity_id=polity.id)[0].military_level_from
+                shape['military_level_to'] = Military_level.objects.filter(polity_id=polity.id)[0].military_level_to
+                shape['administrative_level_from'] = Administrative_level.objects.filter(polity_id=polity.id)[0].administrative_level_from
+                shape['administrative_level_to'] = Administrative_level.objects.filter(polity_id=polity.id)[0].administrative_level_to
 
                 # Get the years for the variables which have years for the polity
                 shape['linguistic_family_dict'].update({lf.linguistic_family: [lf.year_from, lf.year_to] for lf in linguistic_families.get(polity.id, [])})
