@@ -25,7 +25,14 @@ Seshat websites explained
 Academic publications
 ---------------------
 
-A full list of academic publications associated with the project is available at `seshatdatabank.info/academic-publications <https://seshatdatabank.info/academic-publications>`_.
+A full list of academic publications associated with the Seshat project team is available at `seshatdatabank.info/academic-publications <https://seshatdatabank.info/academic-publications>`_.
+
+.. list-table:: Third party publications
+   :header-rows: 1
+
+   * - Link
+   * - `Scale and information-processing thresholds in Holocene social evolution <https://pubmed.ncbi.nlm.nih.gov/32409638/>`_
+
 
 GitHub organisation
 -------------------
