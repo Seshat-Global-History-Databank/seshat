@@ -667,6 +667,30 @@
             if (shape.alternate_religion) {
                 shape.alternate_religion = JSON.parse(shape.alternate_religion.replace(/'/g, '"'));
             }
+            if (shape.settlement_hierarchy_from) {
+                shape.settlement_hierarchy_from = JSON.parse(shape.settlement_hierarchy.replace(/'/g, '"'));
+            }
+            if (shape.settlement_hierarchy_to) {
+                shape.settlement_hierarchy_to = JSON.parse(shape.settlement_hierarchy.replace(/'/g, '"'));
+            }
+            if (shape.religious_level_from) {
+                shape.religious_level_from = JSON.parse(shape.religious_level_from.replace(/'/g, '"'));
+            }
+            if (shape.religious_level_to) {
+                shape.religious_level_to = JSON.parse(shape.religious_level_to.replace(/'/g, '"'));
+            }
+            if (shape.military_level_from) {
+                shape.military_level_from = JSON.parse(shape.military_level_from.replace(/'/g, '"'));
+            }
+            if (shape.military_level_to) {
+                shape.military_level_to = JSON.parse(shape.military_level_to.replace(/'/g, '"'));
+            }
+            if (shape.administrative_level_from) {
+                shape.administrative_level_from = JSON.parse(shape.administrative_level_from.replace(/'/g, '"'));
+            }
+            if (shape.administrative_level_to) {
+                shape.administrative_level_to = JSON.parse(shape.administrative_level_to.replace(/'/g, '"'));
+            }
             // Any fields that end _dict should be converted to a dictionary from a string
             for (const [key, value] of Object.entries(shape)) {
                 if (key.endsWith('_dict')) {
@@ -812,6 +836,24 @@
             'Unknown': 'slategray',
             'Uncoded': 'silver',
             'No Seshat page': 'silver'
+        };
+
+        let hierarchicalComplexityColourMapping = {
+            0: 'grey',
+            1: '#ff9c9c',
+            2: '#ffc68c',
+            3: '#82c1c1',
+            4: 'orange',
+            5: 'blue',
+            6: 'purple',
+            7: 'green',
+            8: 'red',
+            9: 'yellow',
+            10: 'brown',
+            11: 'pink',
+            12: 'cyan',
+            13: 'magenta',
+            14: 'teal'
         };
 
         function switchBaseMapWorldMap() {
@@ -962,6 +1004,11 @@
                                 shapeColour = oneLanguageColourMapping['No Seshat page'];
                             }
                         }
+                    
+                    // Hierarchical complexity variables
+                    } else if (variable == 'settlement_hierarchy_from' || 'settlement_hierarchy_to' || variable == 'religious_level_from' || 'religious_level_to' || variable == 'military_level_from' || 'military_level_to' || variable == 'administrative_level_from' || 'administrative_level_to') {
+                        shapeWeight = polityBorderWeightSelected;
+                        shapeColour = hierarchicalComplexityColourMapping[shape[variable]];
 
                     } else {  // Absent-present variables
                         shapeWeight = polityBorderWeightSelected;
@@ -1158,60 +1205,92 @@
                             // this will need to be updated to use shape[variable + '_dict'] as done above for absent/present variables
                             // Note: the actual colouring of the shapes is done in the style function above and this is already set up to handle the dictionaries
                             popupContent = popupContent + `
-                                        <tr>
-                                            <td>Languages</td>
-                                            <td><span style="text-transform: capitalize;">${shape.language.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Language Genus</td>
-                                            <td><span style="text-transform: capitalize;">${shape.language_genus.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Linguistic Family</td>
-                                            <td><span style="text-transform: capitalize;">${shape.linguistic_family.join(', ')}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                                if (variable == 'religious_tradition' || variable == 'religion' || variable == 'religion_family' || variable == 'religion_genus' || variable == 'alternate_religion' || variable == 'alternate_religion_family' || variable == 'alternate_religion_genus') {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Religious Traditions</td>
-                                            <td><span style="text-transform: capitalize;">${shape.religious_tradition}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Religions</td>
-                                            <td><span style="text-transform: capitalize;">${shape.religion.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Religion Genus</td>
-                                            <td><span style="text-transform: capitalize;">${shape.religion_genus.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Religion Family</td>
-                                            <td><span style="text-transform: capitalize;">${shape.religion_family.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Alternate Religions</td>
-                                            <td><span style="text-transform: capitalize;">${shape.alternate_religion.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Alternate Religion Genus</td>
-                                            <td><span style="text-transform: capitalize;">${shape.alternate_religion_genus.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Alternate Religion Family</td>
-                                            <td><span style="text-transform: capitalize;">${shape.alternate_religion_family.join(', ')}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                                if (allCapitalsInfo[shape.seshat_id]) {
-                                    if (allCapitalsInfo[shape.seshat_id]['year_from'] <= selectedYearInt && allCapitalsInfo[shape.seshat_id]['year_to'] >= selectedYearInt) {
-                                        popupContent = popupContent + `
-                                            <tr>
-                                                <td>Capital: </td>
-                                                <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
-                                            </tr>
-                                        `;
+                                    <tr>
+                                        <td>Languages</td>
+                                        <td><span style="text-transform: capitalize;">${shape.language.join(', ')}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Language Genus</td>
+                                        <td><span style="text-transform: capitalize;">${shape.language_genus.join(', ')}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Linguistic Family</td>
+                                        <td><span style="text-transform: capitalize;">${shape.linguistic_family.join(', ')}</span></td>
+                                    </tr>
+                                `;
+                        }
+                        if (variable == 'religious_tradition' || variable == 'religion' || variable == 'religion_family' || variable == 'religion_genus' || variable == 'alternate_religion' || variable == 'alternate_religion_family' || variable == 'alternate_religion_genus') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Religious Traditions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religious_tradition}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religion Genus</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion_genus.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religion Family</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion_family.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religion Genus</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion_genus.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religion Family</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion_family.join(', ')}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (variable == 'settlement_hierarchy_from' || variable == 'settlement_hierarchy_to') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Settlement Hierarchy</td>
+                                    <td><span style="text-transform: capitalize;">${shape.settlement_hierarchy_from} to ${shape.settlement_hierarchy_to}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (variable == 'religious_level_from' || variable == 'religious_level_to') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Religious Level</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religious_level_from} to ${shape.religious_level_to}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (variable == 'military_level_from' || variable == 'military_level_to') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Military Level</td>
+                                    <td><span style="text-transform: capitalize;">${shape.military_level_from} to ${shape.military_level_to}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (variable == 'administrative_level_from' || variable == 'administrative_level_to') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Administrative Level</td>
+                                    <td><span style="text-transform: capitalize;">${shape.administrative_level_from} to ${shape.administrative_level_to}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (allCapitalsInfo[shape.seshat_id]) {
+                            if (allCapitalsInfo[shape.seshat_id]['year_from'] <= selectedYearInt && allCapitalsInfo[shape.seshat_id]['year_to'] >= selectedYearInt) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Capital: </td>
+                                        <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
+                                    </tr>
+                                `;
 
                                 popupContent = popupContent + `
                                                 <tr>
