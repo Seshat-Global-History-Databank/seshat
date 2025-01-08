@@ -410,6 +410,37 @@ function updateLegend() {
             legendDiv.appendChild(polityContainer);
         }
 
+    } else if (hierarchicalComplexityVariables.includes(variable)) {
+
+        var legendTitle = document.createElement('h3');
+        legendTitle.textContent = variable;
+        legendDiv.appendChild(legendTitle);
+
+        let hierarchicalVariableMaxValue;
+        if (variable == 'settlement_hierarchy') {
+            hierarchicalVariableMaxValue = highestSettlementHierarchy;
+        } else if (variable == 'religious_level') {
+            hierarchicalVariableMaxValue = highestReligiousLevel;
+        } else if (variable == 'military_level') {
+            hierarchicalVariableMaxValue = highestMilitaryLevel;
+        } else if (variable == 'administrative_level') {
+            hierarchicalVariableMaxValue = highestAdministrativeLevel;
+        }
+
+        for (var i = 0; i <= hierarchicalVariableMaxValue; i++) {
+            var legendItem = document.createElement('p');
+            var colorBox = document.createElement('span');
+            colorBox.style.display = 'inline-block';
+            colorBox.style.width = '20px';
+            colorBox.style.height = '20px';
+            colorBox.style.backgroundColor = hierarchicalComplexityColour(hierarchicalVariableMaxValue, i);
+            colorBox.style.border = '1px solid black';
+            colorBox.style.marginRight = '10px';
+            legendItem.appendChild(colorBox);
+            legendItem.appendChild(document.createTextNode(i));
+            legendDiv.appendChild(legendItem);
+        }
+
     } else if (variable in categorical_variables) {
         
         var legendTitle = document.createElement('h3');
