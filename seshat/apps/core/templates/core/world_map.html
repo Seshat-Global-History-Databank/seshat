@@ -714,6 +714,11 @@
         var tick_years = {{ tick_years }};
         setSliderTicks(tick_years);
 
+        var highestSettlementHierarchy;
+        var highestReligiousLevel;
+        var highestMilitaryLevel;
+        var highestAdministrativeLevel;
+
         // Load all polity shapes and modern province/country shapes in background
         window.addEventListener('load', function () {
             function fetchData(url, displayYear) {
@@ -762,6 +767,12 @@
                         allVariablesLoaded = true;
                         plotPolities();
                         document.getElementById('variablesLoadingIndicator').style.display = 'none';
+
+                        // Get the highest values of the hierarchical complexity variables
+                        highestSettlementHierarchy = data.highest_settlement_hierarchy;
+                        highestReligiousLevel = data.highest_religious_level;
+                        highestMilitaryLevel = data.highest_military_level;
+                        highestAdministrativeLevel = data.highest_administrative_level;
 
                         return fetch('/core/provinces_and_countries');
                     })
@@ -826,23 +837,23 @@
             'No Seshat page': 'silver'
         };
 
-        let hierarchicalComplexityColourMapping = {
-            0: 'grey',
-            1: '#ff9c9c',
-            2: '#ffc68c',
-            3: '#82c1c1',
-            4: 'orange',
-            5: 'blue',
-            6: 'purple',
-            7: 'green',
-            8: 'red',
-            9: 'yellow',
-            10: 'brown',
-            11: 'pink',
-            12: 'cyan',
-            13: 'magenta',
-            14: 'teal'
-        };
+        function hierarchicalComplexityColour(maxValue, value) {
+            // If the value is null, return silver
+            if (value == null) {
+                return 'silver';
+            }
+            // If the value is 0, return white
+            if (value == 0) {
+                return 'white';
+            }
+            // If the value is greater than the maximum value, return red
+            if (value > maxValue) {
+                return 'red';
+            }
+            // Calculate the colour based on the value and the maximum value
+            let hue = (1 - value / maxValue) * 120;
+            return `hsl(${hue}, 100%, 50%)`;
+        }
 
         function switchBaseMapWorldMap() {
             switchBaseMap();
@@ -997,7 +1008,18 @@
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariables.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
-                        shapeColour = hierarchicalComplexityColourMapping[shape[variable][0]]; // TODO: Make this an average
+                        // Get the maximum value of the hierarchical complexity variable
+                        let hierarchicalVariableMaxValue;
+                        if (variable == 'settlement_hierarchy') {
+                            hierarchicalVariableMaxValue = highestSettlementHierarchy;
+                        } else if (variable == 'religious_level') {
+                            hierarchicalVariableMaxValue = highestReligiousLevel;
+                        } else if (variable == 'military_level') {
+                            hierarchicalVariableMaxValue = highestMilitaryLevel;
+                        } else if (variable == 'administrative_level') {
+                            hierarchicalVariableMaxValue = highestAdministrativeLevel;
+                        }
+                        shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][0]); // TODO: Make this an average
 
                     } else {  // Absent-present variables
                         shapeWeight = polityBorderWeightSelected;

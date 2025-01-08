@@ -4640,6 +4640,12 @@ def map_view_all_with_vars(request):
     # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
     content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
 
+    # Get the highest values of hierarchical complexity variables for the legend
+    content['highest_settlement_hierarchy'] = max([max(filter(None, shape['settlement_hierarchy']), default=0) for shape in content['shapes'] if shape['settlement_hierarchy']], default=0)
+    content['highest_religious_level'] = max([max(filter(None, shape['religious_level']), default=0) for shape in content['shapes'] if shape['religious_level']], default=0)
+    content['highest_military_level'] = max([max(filter(None, shape['military_level']), default=0) for shape in content['shapes'] if shape['military_level']], default=0)
+    content['highest_administrative_level'] = max([max(filter(None, shape['administrative_level']), default=0) for shape in content['shapes'] if shape['administrative_level']], default=0)
+
     return JsonResponse(content)
 
 def provinces_and_countries_view(request):
