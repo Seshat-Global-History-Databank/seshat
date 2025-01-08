@@ -667,29 +667,17 @@
             if (shape.alternate_religion) {
                 shape.alternate_religion = JSON.parse(shape.alternate_religion.replace(/'/g, '"'));
             }
-            if (shape.settlement_hierarchy_from) {
-                shape.settlement_hierarchy_from = JSON.parse(shape.settlement_hierarchy.replace(/'/g, '"'));
+            if (shape.settlement_hierarchy) {
+                shape.settlement_hierarchy = JSON.parse(shape.settlement_hierarchy.replace(/'/g, '"'));
             }
-            if (shape.settlement_hierarchy_to) {
-                shape.settlement_hierarchy_to = JSON.parse(shape.settlement_hierarchy.replace(/'/g, '"'));
+            if (shape.religious_level) {
+                shape.religious_level = JSON.parse(shape.religious_level.replace(/'/g, '"'));
             }
-            if (shape.religious_level_from) {
-                shape.religious_level_from = JSON.parse(shape.religious_level_from.replace(/'/g, '"'));
+            if (shape.military_level) {
+                shape.military_level = JSON.parse(shape.military_level.replace(/'/g, '"'));
             }
-            if (shape.religious_level_to) {
-                shape.religious_level_to = JSON.parse(shape.religious_level_to.replace(/'/g, '"'));
-            }
-            if (shape.military_level_from) {
-                shape.military_level_from = JSON.parse(shape.military_level_from.replace(/'/g, '"'));
-            }
-            if (shape.military_level_to) {
-                shape.military_level_to = JSON.parse(shape.military_level_to.replace(/'/g, '"'));
-            }
-            if (shape.administrative_level_from) {
-                shape.administrative_level_from = JSON.parse(shape.administrative_level_from.replace(/'/g, '"'));
-            }
-            if (shape.administrative_level_to) {
-                shape.administrative_level_to = JSON.parse(shape.administrative_level_to.replace(/'/g, '"'));
+            if (shape.administrative_level) {
+                shape.administrative_level = JSON.parse(shape.administrative_level.replace(/'/g, '"'));
             }
             // Any fields that end _dict should be converted to a dictionary from a string
             for (const [key, value] of Object.entries(shape)) {
@@ -1006,9 +994,9 @@
                         }
                     
                     // Hierarchical complexity variables
-                    } else if (variable == 'settlement_hierarchy_from' || 'settlement_hierarchy_to' || variable == 'religious_level_from' || 'religious_level_to' || variable == 'military_level_from' || 'military_level_to' || variable == 'administrative_level_from' || 'administrative_level_to') {
+                    } else if (variable == 'settlement_hierarchy' || variable == 'religious_level' || variable == 'military_level' || variable == 'administrative_level') {
                         shapeWeight = polityBorderWeightSelected;
-                        shapeColour = hierarchicalComplexityColourMapping[shape[variable]];
+                        shapeColour = hierarchicalComplexityColourMapping[shape[variable][0]]; // TODO: Make this an average
 
                     } else {  // Absent-present variables
                         shapeWeight = polityBorderWeightSelected;
@@ -1251,35 +1239,35 @@
                                 </tr>
                             `;
                         }
-                        if (variable == 'settlement_hierarchy_from' || variable == 'settlement_hierarchy_to') {
+                        if (variable == 'settlement_hierarchy') {
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Settlement Hierarchy</td>
-                                    <td><span style="text-transform: capitalize;">${shape.settlement_hierarchy_from} to ${shape.settlement_hierarchy_to}</span></td>
+                                    <td><span style="text-transform: capitalize;">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
                                 </tr>
                             `;
                         }
-                        if (variable == 'religious_level_from' || variable == 'religious_level_to') {
+                        if (variable == 'religious_level') {
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Religious Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.religious_level_from} to ${shape.religious_level_to}</span></td>
+                                    <td><span style="text-transform: capitalize;">${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
                                 </tr>
                             `;
                         }
-                        if (variable == 'military_level_from' || variable == 'military_level_to') {
+                        if (variable == 'military_level') {
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Military Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.military_level_from} to ${shape.military_level_to}</span></td>
+                                    <td><span style="text-transform: capitalize;">${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
                                 </tr>
                             `;
                         }
-                        if (variable == 'administrative_level_from' || variable == 'administrative_level_to') {
+                        if (variable == 'administrative_level') {
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Administrative Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.administrative_level_from} to ${shape.administrative_level_to}</span></td>
+                                    <td><span style="text-transform: capitalize;">${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
                                 </tr>
                             `;
                         }
