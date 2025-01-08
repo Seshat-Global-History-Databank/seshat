@@ -1145,6 +1145,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
         path(f'{x_name}download/', generic_download, {
             'model_class': model_class,
             'var_name': x_name,
+            'db_section': db_section,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(

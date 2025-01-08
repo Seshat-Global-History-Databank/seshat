@@ -646,6 +646,11 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
         path(f'{x_name}download/', views.generic_download, {
             'model_class': model_class,
             'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'db_section': db_section,
+            'var_section': sec,
+            'var_subsection': subsec,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(

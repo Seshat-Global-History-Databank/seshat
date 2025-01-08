@@ -39,6 +39,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
 from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
+from seshat.apps.sc.models import Token
+
 
 from django.core.paginator import Paginator
 
@@ -5601,8 +5603,12 @@ def get_description_old(request, obj_id):
 def get_description(request, model_name, obj_id):
     try:
         # Dynamically get the model class based on the model name
-        model = ContentType.objects.get(model=model_name.lower()).model_class()
-        obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        # make sure we bring in app_label to add more safety and security
+        if model_name != 'token':
+            model = ContentType.objects.get(model=model_name.lower()).model_class()
+            obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        else:
+            obj = get_object_or_404(Token, id=obj_id) 
         content = render_to_string('core/description_snippet.html', {'obj': obj})
         return HttpResponse(content.strip())  # Remove leading/trailing whitespace
     except ContentType.DoesNotExist:
