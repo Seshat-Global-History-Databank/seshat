@@ -1008,7 +1008,12 @@
                         } else if (variable == 'administrative_level') {
                             hierarchicalVariableMaxValue = highestAdministrativeLevel;
                         }
-                        shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][0]); // TODO: Make this an average
+                        // Calculate the colour based highest of the from and to values
+                        if (shape[variable][1] != 'None' && shape[variable][1] != null) {  // If the to value is not None, use it since it is the highest
+                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][1]);
+                        } else { // If the to value is None, use the from value (even if it is None)
+                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][0]);
+                        }
 
                     } else {  // Absent-present variables
                         shapeWeight = polityBorderWeightSelected;
