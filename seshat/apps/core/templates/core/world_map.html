@@ -875,6 +875,7 @@
             var playButton = document.getElementById('playButton');
             var settings = document.getElementById('settings');
             var help = document.getElementById('help');
+            var hierarchicalComplexityVariables = ['military_level', 'religious_level', 'settlement_hierarchy', 'administrative_level'];
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
@@ -994,7 +995,7 @@
                         }
                     
                     // Hierarchical complexity variables
-                    } else if (variable == 'settlement_hierarchy' || variable == 'religious_level' || variable == 'military_level' || variable == 'administrative_level') {
+                    } else if (hierarchicalComplexityVariables.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
                         shapeColour = hierarchicalComplexityColourMapping[shape[variable][0]]; // TODO: Make this an average
 
@@ -1130,7 +1131,7 @@
                                 </tr>
                         `;
                         // Absent/present variables
-                        if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable)) {
+                        if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable) && !hierarchicalComplexityVariables.includes(variable)) {
                             if (shape[variable + '_dict']) {
                                 // Iterate through key/values in the dictionary
                                 var counter = 0;
@@ -1243,7 +1244,7 @@
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Settlement Hierarchy</td>
-                                    <td><span style="text-transform: capitalize;">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
+                                    <td><span">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
                                 </tr>
                             `;
                         }
@@ -1251,7 +1252,7 @@
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Religious Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
+                                    <td><span>${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
                                 </tr>
                             `;
                         }
@@ -1259,7 +1260,7 @@
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Military Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
+                                    <td><span>${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
                                 </tr>
                             `;
                         }
@@ -1267,7 +1268,7 @@
                             popupContent = popupContent + `
                                 <tr>
                                     <td>Administrative Level</td>
-                                    <td><span style="text-transform: capitalize;">${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
+                                    <td><span>${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
                                 </tr>
                             `;
                         }
