@@ -5,6 +5,7 @@ from .forms import Human_sacrificeForm, Power_transitionForm
 from django.urls import path
 
 from .views import confirm_delete_view, delete_object_view
+from .var_defs import crisisdb_var_defs
 
 from . import views
 from seshat.apps.general.views import dynamic_create_view, dynamic_detail_view, generic_list_view, dynamic_update_view, dynamic_update_view_old, generic_metadata_download, generic_download
@@ -46,10 +47,10 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'x_name': x_name,
             'myvar': myvar,
             'coded_value': coded_value,
-            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'my_exp': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
-            #'db_section': db_section,
+            'db_section': db_section,
         }, name=f'{x_name}-create')
      )
     urlpatterns.append(
@@ -59,10 +60,10 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'x_name': x_name,
             'myvar': myvar,
             'coded_value': coded_value,
-            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'my_exp': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
-            #'db_section': db_section,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-updatenew')
     )
@@ -73,10 +74,10 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'x_name': x_name,
             'myvar': myvar,
             'coded_value': coded_value,
-            'my_exp': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+            'my_exp': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
             'var_section': sec,
             'var_subsection': subsec,
-            #'db_section': db_section,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-update')
     )
@@ -99,8 +100,8 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
                'var_name_display': myvar,
                'var_section': sec,
                'var_subsection': subsec,
-               #'db_section': db_section,
-               'var_main_desc': '-',# sc_var_defs.get(x_name, f"NO Desc: {x_name}"),
+               'db_section': db_section,
+               'var_main_desc': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
 
           }, name=f'{x_name}s_all')
           )
@@ -120,6 +121,11 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
         path(f'{x_name}download/', generic_download, {
             'model_class': model_class,
             'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,        
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(
@@ -129,7 +135,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_section': sec,
             'var_subsection': subsec,
             #'db_section': db_section,
-            'var_main_desc': '-',# sc_var_defs[x_name],
+            'var_main_desc': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
         }, name=f'{x_name}-metadownload')
      )
 
@@ -208,8 +214,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('power_transition/create/', views.Power_transitionCreate.as_view(),
-         name="power_transition-create"),
+    #path('power_transition/create/', views.Power_transitionCreate.as_view(),  name="power_transition-create"),
      path('power_transition/createheavy/', views.Power_transitionCreateHeavy.as_view(),
          name="power_transition-create_heavy"),
     path('power_transitions/', views.Power_transitionListView.as_view(), name='power_transitions'),

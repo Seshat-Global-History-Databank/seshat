@@ -580,6 +580,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'my_exp': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
         }, name=f'{x_name}-create')
      )
     urlpatterns.append(
@@ -592,6 +593,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'my_exp': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-updatenew')
     )
@@ -605,6 +607,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'my_exp': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-update')
     )
@@ -626,6 +629,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'coded_value': coded_value,
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'var_main_desc': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
 
         }, name=f'{x_name}s_all')
@@ -646,6 +650,11 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
         path(f'{x_name}download/', views.generic_download, {
             'model_class': model_class,
             'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(

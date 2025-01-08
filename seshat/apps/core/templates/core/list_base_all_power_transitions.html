@@ -5,6 +5,44 @@
 
 {% block content %}
 <style>
+
+
+    .bg-present {
+        color:black;
+        background: #82c1c1
+      }
+    
+      .bg-partial {
+        color:black;
+        background: #9dd894
+      }
+    
+      .bg-transitional {
+        color:black;
+        background: #ffc68c
+      }
+    
+      .bg-absent {
+        color:black;
+        background: #ff9c9c
+      }
+    
+      .bg-suspected-unknown {
+        color:white;
+        background: #c8b5da
+      }
+    
+      .bg-unknown {
+        color:white;
+        background: slategray;
+      }
+    
+      .bg-uncoded {
+        color:white;
+        background: silver;
+      }
+    
+
     .card-text-spaced {
         font-size: 16px;
         color: #782823;
@@ -29,35 +67,72 @@
             font-size: 16px;
             color: #782823;
         }
+
+        .edit-button:hover {
+            color:red !important;
+        }
     
 </style>
 <div class="container">
     {% if object_list %}
     <div class="row d-flex mt-3">
         <div class="row">
-            <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
-            <div class="col-md-6 justify-content-end">
-                <h6><span class="text-secondary text-end">Section</span>: <mark>Power Transitions </mark></h6>
-                <div>
-                    <h1 class="mb-3"><span class="display-6">Power Transitions</span></h1>
-                  </div>
-                  <div>
-                    <h6 class="fw-bold"><span class="fw-normal"><i class="fa-solid fa-caret-right"></i> We define Power transition as a transition of power.</span>
-                    </h6>
-                </div>
-                <div class="contributors mt-4">
-                    <h6><span class="text-secondary text-end">
-                        <i class="fa-solid fa-people-group"></i> Contributors</span>: Dan Hoyer, Peter Turchin, Sam, etc.
-                    </h6>   
-                </div>
-            <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
-          </div>
-          <div class="col-md-6">
-            {% block download_button %}
-            {% endblock download_button %}
-          </div>
+            <div class="col-md-10 px-0 pt-3 pe-3">
+              <span class="h2 py-3 ps-0">
+                <span class="text-dark">Power Transitions</span> 
+                {% block download_button %}
+                {% endblock download_button %}
+              </span>  
+              <h5 class="pt-2">
+                <span class="h6 text-secondary"><i class="fa-solid fa-database"></i> We have coded a total of  
+                  <b class="h5 text-dark">
+                  </b>
+                  yyy different values for 
+                  <b class="h5 text-dark">
+                  xx</b>
+                  variables in 
+                  <b class="h5 text-dark">
+                    {{object_list|length}}</b>
+                  polities.</span>
+              </h5>
+              <h6 class="fw-normal">
+                We are interested in cataloguing the relative stability of past societies as proxied by the transition of power from one ruler to the next. In particular, we identify each transition of power (from named predecessor to named successor) and record whether it took place through normal succession mechanisms (whether legal/institutionalized means or customary/de facto procedures) or as the result of a conflict. We are seeking to record this information across the Seshat sample of polities, subject to availability of evidence. We are particularly interested in documenting the ebb and flow of stability in particular regions over time.
+              </h6>
+                   
+             </div>
+             <div class="col-md-2 mb-1 mt-3 float-end">
+    
+            <span class="progress2 align-items-center py-0 m-0">
+              <span class="progress-bar bg-present" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+                <b class="text-dark">Present</b> 
+            </span>
+            <span class="progress-bar bg-partial" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+              <b class="text-dark">Inferred Present</b> 
+          </span>
+          <span class="progress-bar bg-transitional text-dark" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+            <b class="text-dark">Inferred Absent</b> 
+        </span>
+    
+              <span class="progress-bar bg-absent" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+                <b class="text-dark">Absent</b> 
+            </span>
+    
+                <span class="progress-bar bg-suspected-unknown" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+                  <b class="text-white">Suspected Unknown</b> 
+              </span>
+    
+                <span class="progress-bar bg-unknown" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true">
+                  <b class="text-white">Unknown</b> 
+              </span>
+    
+              <span class="progress-bar bg-uncoded" role="progressbar" style="width: 100%; border-radius:5px;"  aria-valuemin="0" aria-valuemax="100" data-bs-toggle="tooltip" data-bs-html="true"> 
+                <b class="text-white">Uncoded</b> 
+            </span>
+            </span>
+    
         </div>
 
+    </div>
 
 
       </div>
@@ -65,53 +140,72 @@
     {% endblock main_description %}
     {% block secondary_description %}
     {% endblock secondary_description %}
-    <hr class="bg-colorful p-0 m-0">
+    <span class="left-span px-1" style="color:rgba(0, 139, 139, 0.837);">
+                        
+        <div class="row">
+          <div class="col-md-3">
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;" >OT</span> Overturn
+          </div>
+          <div class="col-md-3">                            
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >PA</span> Predecessor Assassination</div>
+
+          <div class="col-md-3">                             
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >IE</span> Intra-Elite</div>
+          <div class="col-md-3">
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >MR</span> Military Revolt
+          </div>
+          <div class="col-md-3">
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >PU</span> Popular Uprising
+          </div>
+          <div class="col-md-3">
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >SR</span> Separatist Rebellion
+          </div>
+          <div class="col-md-3">                             
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >EV</span> External Invasion
+          </div>
+          <div class="col-md-3">
+              <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >EF</span> External Inteference
+          </div>
+      </div>
+  </span> 
+    <div class="accordion accordion-flush pb-4" id="accordionpt_id">
+        <div class="accordion-item" style="background-color:#fffdf2;">
+          <h2 class="accordion-header" id="headingOneCont">
+            <button class="accordion-button collapsed px-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOnept_id" aria-expanded="false" aria-controls="collapseOnept_id" style="background-color:#fffdf2; padding-top: 0.25rem !important; padding-bottom: 0.25rem !important;">
+              <span><i class="fa-solid fa-arrow-down-short-wide"></i> &nbsp; Coding Instructions:</span> 
+            </button>
+          </h2>
+          <div id="collapseOnept_id" class="accordion-collapse collapse" aria-labelledby="headingOneCont">
+            <div class="accordion-body table-responsive p-0">
+                <div class="pt_id">
+                <b>Predecessor:</b> If a ruler came to power after a period during which the polity had no ruler (e.g. an interregnum), enter “None” in the predecessor field.<br>
+                <b>Successor:</b> If a ruler’s reign was followed by a period during which there was no ruler, enter “None” in the successor field.<br>
+                <b>Contested:</b> Was the transition from predecessor to successor contested in any way? Code present if there was a contest at any time from the end of the predecessor’s reign to the end of the first 365 days of the successor’s reign. This is a general variable covering many possibilities, disambiguated in other variables. It should also be coded present if the transition was contested in a way not covered by any of the other variables, e.g. the judiciary challenges the result of a presidential election.If there was a contest, code for the following types of contest (note: multiple types of contest can be present).<br>
+                <b>Overturn:</b> Was the predecessor forcibly removed from power, e.g. through assassination, forced abdication, external invasion forcing them into exile? Note: There will often be succession crises when there is no “normal line of succession,” so that there will be a “contested transition” with no overturn. Examples: 1. The dynasty ends with no heir (typical cause of a succession crisis); 2. The previous ruler has died and divided the kingdom between his sons (who then decide to fight for it all); 3. There is no formal succession procedure and every power transitions is a fight (e.g., Mamluk Sultanate). These cases should not qualify as a successful overturn as nobody is being overturned, but still count as a contested transition.<br>
+                <b>Predecessor assassination:</b> Was the predecessor assassinated? This does not have to be carried out by the ultimate successor or their allies, but applies to any killing. Judicially sanctioned executions (e.g. of Charles I of England) also count.<br>
+                <b>Intra-elite coup:</b> Code present if either 1. the predecessor was removed from power by an intra-elite coup; or 2. the successor was unsuccessfully challenged by rival elites during their first year.<br>
+                <b>Military revolt:</b> Code as for intra-elite coup, but for rebellions that have military leadership. “Military” refers to professional soldiers and officers, not to nobles who have armed retinues (these are counted as elites).<br>
+                <b>Popular uprising:</b> For rebellions in which the majority of participants are non-elites.<br>
+                <b>Separatist rebellion:</b> Part of the polity attempts to secede, whether successfully or unsuccessfully.<br>
+                <b>External invasion: </b> An external polity invades. An invasion does not have to aim specifically at removing the ruler in order to code this variable present. However, small border skirmishes do not justify a “present” code and can be ignored. <br>
+                <b>External interference: </b> Code this variable present when an external force helps internal rebels, e.g. by providing financial support or arms. Both external invasion and external interference may be present, e.g. when one polity sends military aid for a time, and then turns to an invasion.
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
     <div class="table-responsive" style="overflow-x:hidden;">
         <div>
-            <span class="left-span px-1" style="color:rgba(0, 139, 139, 0.837);">
-                        
-                <h6 class="fw-bold" style="color:rgba(0, 139, 139, 0.837); text-align: left; line-height: 1.75;">
-                     <span class="badge bg-secondary" style="vertical-align: top;">&nbsp;</span> absent&nbsp;&nbsp; 
-                    <span class="badge bg-success" style="vertical-align: top;">&nbsp;</span> present&nbsp;&nbsp; <span class="badge bg-dark" style="vertical-align: top;">&nbsp;</span> inferred absent&nbsp;&nbsp; 
-                    <span class="badge bg-primary" style="vertical-align: top;">&nbsp;</span> inferred present&nbsp;&nbsp; <span class="badge bg-warning" style="vertical-align: top;">&nbsp;</span> suspected unknown&nbsp;&nbsp; <span class="fw-normal text-dark"></span>
-                    <span class="badge bg-danger" style="vertical-align: top;">&nbsp;</span> unknown <span class="fw-normal text-dark"> are coded for:</span> <br>  
-                    
 
-                  </h6>
-                  <div class="row">
-                    <div class="col-md-3">
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;" >OT</span> Overturn
-                    </div>
-                    <div class="col-md-3">                            
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >PA</span> Predecessor Assassination</div>
-
-                    <div class="col-md-3">                             
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >IE</span> Intra-Elite</div>
-                    <div class="col-md-3">
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >MR</span> Military Revolt
-                    </div>
-                    <div class="col-md-3">
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >PU</span> Popular Uprising
-                    </div>
-                    <div class="col-md-3">
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >SR</span> Separatist Rebellion
-                    </div>
-                    <div class="col-md-3">                             
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >EV</span> External Invasion
-                    </div>
-                    <div class="col-md-3">
-                        <span class="badge bg-light text-dark border border-dark" style="padding-bottom:3px;"  >EF</span> External Inteference
-                    </div>
-                </div>
-            </span> 
 
         <table id="table_id" class="table align-middle table-striped table-bordered mb-4" style="padding: 0.25 rem !important;">
             <tbody>
             
                 {% for pol_id, info_list in object_list.items %}
                 <tr>
-                    <td class="text-teal h4 sticky-start pt-2" scope="row"  style="text-align: center">
-                        <div class="h5">
+                    <td class="text-teal h4 sticky-start pt-2" scope="row"  style="text-align: left">
+                        <span class="h5">
                             <span class="badge  border border-dark text-dark p-1 fs-5" style="background:  #94dbeb">{{ info_list.trans_list|length }}</span> <span class="text-secondary">Power
 
                                 {% with num_transitions=info_list.trans_list|length %}
@@ -123,12 +217,12 @@
                                 {% endwith %}
 
                                 for:</span> 
-                        </div>
-                        <div class="h4">
+                        </span>
+                        <span class="h4">
                             <a href="{% url 'polity-detail-main' pol_id %}#power_transition_var">{{ info_list.polity_long_name }}</a>
                             <a class="h5" href="{% url 'polity-detail-main' pol_id %}#power_transition_var">({{ info_list.polity_new_name }})</a>
-                        </div>
-                        <div class="h5 text-dark">
+                        </span>
+                        <span class="h5 text-dark">
                             <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-5" style="background: linear-gradient(to right, #d1fedea6, #c1ecf69a)">
                                         
                                 {% if info_list.polity_start_year == None %}
@@ -187,7 +281,7 @@
                                 {% endif %}
                             </span>
                             
-                        </div>
+                        </span>
                 </td>
             </tr>
                 <tr>
@@ -204,16 +298,16 @@
                                       
                                         <span class="card-text-spaced">
                                             <span class="left-span">    
-                                                <span class="badge border border-dark text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;">
+                                                <span class="badge text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;">
                                                     {% if a_trans.has_description %}
-                                                    <a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm"></i></a>
+                                                    <a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm edit-button"></i></a>
                                                     {% else %}
-                                                    <a href="{% url 'power_transition-updatenew' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-danger fa-sm"></i></a>
+                                                    <a href="{% url 'power_transition-updatenew' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-success edit-button fa-sm"></i> cccccc</a>
                                                     {% endif %} 
                                                 </span>
 
 
-                                        <span class="badge border border-dark text-dark px-2 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
+                                        <span class="badge text-dark px-2 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
                                         
                                             {% if a_trans.year_from == None and a_trans.year_to == None %}
                                             <a type="button" class="p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>
@@ -268,115 +362,131 @@
 
 <span class="right-span fw-normal">   
     {% if  a_trans.overturn == "P" %}
-    <span class="badge border border-dark bg-success">OV</span> 
+    <span class="badge bg-present">OV</span> 
     {% elif  a_trans.overturn == "IP" %}
-    <span class="badge border border-dark bg-primary">OV</span> 
+    <span class="badge bg-partial">OV</span> 
     {% elif  a_trans.overturn == "A" %}
-    <span class="badge border border-dark bg-secondary">OV</span> 
+    <span class="badge bg-absent">OV</span> 
     {% elif  a_trans.overturn == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">OV</span> 
+    <span class="badge bg-transitional">OV</span> 
     {% elif  a_trans.overturn == "U" %}
-    <span class="badge border border-dark bg-danger">OV</span> 
+    <span class="badge bg-unknown">OV</span> 
     {% elif  a_trans.overturn == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">OV</span>
+    <span class="badge bg-suspected-unknown">OV</span>
+    {% else %}
+    <span class="badge bg-uncoded">OV</span> 
     {% endif %}
 
     {% if  a_trans.predecessor_assassination == "P" %}
-    <span class="badge border border-dark bg-success">PA</span> 
+    <span class="badge bg-present">PA</span> 
     {% elif  a_trans.predecessor_assassination == "IP" %}
-    <span class="badge border border-dark bg-primary">PA</span> 
+    <span class="badge bg-partial">PA</span> 
     {% elif  a_trans.predecessor_assassination == "A" %}
-    <span class="badge border border-dark bg-secondary">PA</span> 
+    <span class="badge bg-absent">PA</span> 
     {% elif  a_trans.predecessor_assassination == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">PA</span> 
+    <span class="badge bg-transitional">PA</span> 
     {% elif  a_trans.predecessor_assassination == "U" %}
-    <span class="badge border border-dark bg-danger">PA</span> 
+    <span class="badge bg-unknown">PA</span> 
     {% elif  a_trans.predecessor_assassination == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">PA</span>
+    <span class="badge bg-suspected-unknown">PA</span>
+    {% else %}
+    <span class="badge bg-uncoded">PA</span> 
     {% endif %}
 
     {% if  a_trans.intra_elite == "P" %}
-    <span class="badge border border-dark bg-success">IE</span> 
+    <span class="badge bg-present">IE</span> 
     {% elif  a_trans.intra_elite == "IP" %}
-    <span class="badge border border-dark bg-primary">IE</span> 
+    <span class="badge bg-partial">IE</span> 
     {% elif  a_trans.intra_elite == "A" %}
-    <span class="badge border border-dark bg-secondary">IE</span> 
+    <span class="badge bg-absent">IE</span> 
     {% elif  a_trans.intra_elite == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">IE</span> 
+    <span class="badge bg-transitional">IE</span> 
     {% elif  a_trans.intra_elite == "U" %}
-    <span class="badge border border-dark bg-danger">IE</span> 
+    <span class="badge bg-unknown">IE</span> 
     {% elif  a_trans.intra_elite == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">IE</span>
+    <span class="badge bg-suspected-unknown">IE</span>
+    {% else %}
+    <span class="badge bg-uncoded">IE</span> 
     {% endif %}
 
     {% if  a_trans.military_revolt == "P" %}
-    <span class="badge border border-dark bg-success">MR</span> 
+    <span class="badge bg-present">MR</span> 
     {% elif  a_trans.military_revolt == "IP" %}
-    <span class="badge border border-dark bg-primary">MR</span> 
+    <span class="badge bg-partial">MR</span> 
     {% elif  a_trans.military_revolt == "A" %}
-    <span class="badge border border-dark bg-secondary">MR</span> 
+    <span class="badge bg-absent">MR</span> 
     {% elif  a_trans.military_revolt == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">MR</span> 
+    <span class="badge bg-transitional">MR</span> 
     {% elif  a_trans.military_revolt == "U" %}
-    <span class="badge border border-dark bg-danger">MR</span> 
+    <span class="badge bg-unknown">MR</span> 
     {% elif  a_trans.military_revolt == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">MR</span>
+    <span class="badge bg-suspected-unknown">MR</span>
+    {% else %}
+    <span class="badge bg-uncoded">MR</span> 
     {% endif %}
 
     {% if  a_trans.popular_uprising == "P" %}
-    <span class="badge border border-dark bg-success">PU</span> 
+    <span class="badge bg-present">PU</span> 
     {% elif  a_trans.popular_uprising == "IP" %}
-    <span class="badge border border-dark bg-primary">PU</span> 
+    <span class="badge bg-partial">PU</span> 
     {% elif  a_trans.popular_uprising == "A" %}
-    <span class="badge border border-dark bg-secondary">PU</span> 
+    <span class="badge bg-absent">PU</span> 
     {% elif  a_trans.popular_uprising == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">PU</span> 
+    <span class="badge bg-transitional">PU</span> 
     {% elif  a_trans.popular_uprising == "U" %}
-    <span class="badge border border-dark bg-danger">PU</span> 
+    <span class="badge bg-unknown">PU</span> 
     {% elif  a_trans.popular_uprising == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">PU</span>
+    <span class="badge bg-suspected-unknown">PU</span>
+    {% else %}
+    <span class="badge bg-uncoded">PU</span> 
     {% endif %}
 
     {% if  a_trans.separatist_rebellion == "P" %}
-    <span class="badge border border-dark bg-success">SR</span> 
+    <span class="badge bg-present">SR</span> 
     {% elif  a_trans.separatist_rebellion == "IP" %}
-    <span class="badge border border-dark bg-primary">SR</span> 
+    <span class="badge bg-partial">SR</span> 
     {% elif  a_trans.separatist_rebellion == "A" %}
-    <span class="badge border border-dark bg-secondary">SR</span> 
+    <span class="badge bg-absent">SR</span> 
     {% elif  a_trans.separatist_rebellion == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">SR</span> 
+    <span class="badge bg-transitional">SR</span> 
     {% elif  a_trans.separatist_rebellion == "U" %}
-    <span class="badge border border-dark bg-danger">SR</span> 
+    <span class="badge bg-unknown">SR</span> 
     {% elif  a_trans.separatist_rebellion == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">SR</span>
+    <span class="badge bg-suspected-unknown">SR</span>
+    {% else %}
+    <span class="badge bg-uncoded">SR</span> 
     {% endif %}
 
     {% if  a_trans.external_invasion == "P" %}
-    <span class="badge border border-dark bg-success">EV</span> 
+    <span class="badge bg-present">EV</span> 
     {% elif  a_trans.external_invasion == "IP" %}
-    <span class="badge border border-dark bg-primary">EV</span> 
+    <span class="badge bg-partial">EV</span> 
     {% elif  a_trans.external_invasion == "A" %}
-    <span class="badge border border-dark bg-secondary">EV</span> 
+    <span class="badge bg-absent">EV</span> 
     {% elif  a_trans.external_invasion == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">EV</span> 
+    <span class="badge bg-transitional">EV</span> 
     {% elif  a_trans.external_invasion == "U" %}
-    <span class="badge border border-dark bg-danger">EV</span> 
+    <span class="badge bg-unknown">EV</span> 
     {% elif  a_trans.external_invasion == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">EV</span>
+    <span class="badge bg-suspected-unknown">EV</span>
+    {% else %}
+    <span class="badge bg-uncoded">EV</span> 
     {% endif %}
 
     {% if  a_trans.external_interference == "P" %}
-    <span class="badge border border-dark bg-success">EF</span> 
+    <span class="badge bg-present">EF</span> 
     {% elif  a_trans.external_interference == "IP" %}
-    <span class="badge border border-dark bg-primary">EF</span> 
+    <span class="badge bg-partial">EF</span> 
     {% elif  a_trans.external_interference == "A" %}
-    <span class="badge border border-dark bg-secondary">EF</span> 
+    <span class="badge bg-absent">EF</span> 
     {% elif  a_trans.external_interference == "IA" %}
-    <span class="badge border border-dark bg-dark text-light">EF</span> 
+    <span class="badge bg-transitional">EF</span> 
     {% elif  a_trans.external_interference == "U" %}
-    <span class="badge border border-dark bg-danger">EF</span> 
+    <span class="badge bg-unknown">EF</span> 
     {% elif  a_trans.external_interference == "SU" %}
-    <span class="badge border border-dark bg-warning text-dark">EF</span>
+    <span class="badge bg-suspected-unknown">EF</span>
+    {% else %}
+    <span class="badge bg-uncoded">EF</span> 
     {% endif %}
 
 

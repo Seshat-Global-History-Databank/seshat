@@ -34,6 +34,8 @@ from django.core.paginator import Paginator
 
 from django.http import HttpResponse
 
+from django.forms.models import model_to_dict
+
 import requests
 from requests.structures import CaseInsensitiveDict
 
@@ -7695,10 +7697,19 @@ def dynamic_detail_view(request, pk, model_class, myvar, var_name_display, var_s
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection):
+def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, db_section):
     x_name_1 = x_name
     x_name_2 = None
     x_name_3 = None
+
+
+    db_section_mapper = {
+        'general': 'General',
+        'sc': 'Social Complexity',
+        'wf': 'Warfare',
+        'rt': 'Religion Tolerance',
+        'crisisdb': 'Crisisdb',
+    }
 
     if coded_value == "power_transition":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
@@ -7743,7 +7754,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
+                #print("####################", new_object)
 
                 seshat_private_comment_part.save()
 
@@ -7783,6 +7794,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         'var_section': var_section,
         'var_subsection': var_subsection,
         "my_exp": my_exp,
+        'db_section_mapper': db_section_mapper[db_section],
         #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
     }
 
@@ -7850,9 +7862,17 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, delete_url_name):
+def dynamic_update_view_old(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, db_section, delete_url_name):
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
+
+    db_section_mapper = {
+        'general': 'General',
+        'sc': 'Social Complexity',
+        'wf': 'Warfare',
+        'rt': 'Religion Tolerance',
+        'crisisdb': 'Crisisdb',
+    }
     
     if coded_value == "power_transition":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
@@ -7900,10 +7920,10 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
-                print(seshat_private_comment_part)
-                print(father_private_comment)
-                print('-----------------------')
+                # print("####################", new_object)
+                # print(seshat_private_comment_part)
+                # print(father_private_comment)
+                # print('-----------------------')
                 seshat_private_comment_part.save()
                 seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
             
@@ -7999,6 +8019,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             "myvar": myvar,
             'var_section': var_section,
             'var_subsection': var_subsection,
+            'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
@@ -8065,9 +8086,18 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
 @login_required
 @permission_required('core.add_capital', raise_exception=True)
 @user_passes_test(has_add_capital_permission, login_url='permission_denied')
-def dynamic_update_view(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, delete_url_name):
+def dynamic_update_view(request, object_id, form_class, model_class, x_name, coded_value, myvar, my_exp, var_section, var_subsection, db_section, delete_url_name):
     # Retrieve the object based on the object_id
     my_object = model_class.objects.get(id=object_id)
+
+    db_section_mapper = {
+        'general': 'General',
+        'sc': 'Social Complexity',
+        'wf': 'Warfare',
+        'rt': 'Religion Tolerance',
+        'crisisdb': 'Crisisdb',
+    }
+
     
     if coded_value == "power_transition":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
@@ -8119,9 +8149,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                     private_comment= father_private_comment
                 )
 
-                print("####################", new_object)
-                print(seshat_private_comment_part)
-                print(father_private_comment)
+                # print("####################", new_object)
+                # print(seshat_private_comment_part)
+                # print(father_private_comment)
 
                 seshat_private_comment_part.save()
 
@@ -8163,6 +8193,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             "myvar": myvar,
             'var_section': var_section,
             'var_subsection': var_subsection,
+            'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
@@ -8232,6 +8263,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             "myvar": myvar,
             'var_section': var_section,
             'var_subsection': var_subsection,
+            'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
@@ -8296,73 +8328,73 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     return render(request, 'core/generic_templates/generic_update.html', context)
 
 
-def generic_list_view(request, model_class, var_name, var_name_display, var_section, var_subsection, var_main_desc):
-    if var_name in ["widespread_religion",]:
-        object_list = model_class.objects.all().order_by('polity_id', 'order')
-    else:
-        object_list = model_class.objects.all()
-    #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
-    extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
+# def generic_list_view_old(request, model_class, var_name, var_name_display, var_section, var_subsection, db_section, var_main_desc):
+#     if var_name in ["widespread_religion",]:
+#         object_list = model_class.objects.all().order_by('polity_id', 'order')
+#     else:
+#         object_list = model_class.objects.all()
+#     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
+#     extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
-    orderby = request.GET.get('orderby', None)
+#     orderby = request.GET.get('orderby', None)
 
-    # Apply sorting if orderby is provided and is a valid field name
-    if orderby and hasattr(model_class, orderby):
-        object_list = object_list.order_by(orderby)
+#     # Apply sorting if orderby is provided and is a valid field name
+#     if orderby and hasattr(model_class, orderby):
+#         object_list = object_list.order_by(orderby)
 
-    var_name_with_from = var_name
-    var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
+#     var_name_with_from = var_name
+#     var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
 
-    # if var_name in ["official_religion", "elites_religion",]:
-    #     ordering_tag_value = "coded_value_id"
-    # #     # ?orderby=formal_legal_code&orderby2=tag
-    # elif var_name in ["widespread_religion",]:
-    #     ordering_tag_value = "order"
-    # else:
-    #     ordering_tag_value = "coded_value"
+#     # if var_name in ["official_religion", "elites_religion",]:
+#     #     ordering_tag_value = "coded_value_id"
+#     # #     # ?orderby=formal_legal_code&orderby2=tag
+#     # elif var_name in ["widespread_religion",]:
+#     #     ordering_tag_value = "order"
+#     # else:
+#     #     ordering_tag_value = "coded_value"
 
-    # Define any additional context variables you want to pass to the template
-    context = {
-        'object_list': object_list,
-        'var_name': var_name,
-        'create_url': f'{var_name}-create',
-        'update_url': f'{var_name}-update',
-        'update_url_new': f'{var_name}-updatenew',
-        'download_url': f'{var_name}-download',
-        'pagination_url': f'{var_name}s',
-        'metadownload_url':  f'{var_name}-metadownload',
-        'list_all_url':  f'{var_name}s_all',
-        'var_name_display': var_name_display,
-        'ordering_tag': f"?orderby={var_name}",
-        'var_section': var_section,
-        'var_subsection': var_subsection,
-        'var_main_desc': var_main_desc,
-        'myvar': var_name_display,
-        'extra_var_dict': extra_var_dict,  # Add the dictionary to the context
-        #'extra_var': obj[var_name],
+#     # Define any additional context variables you want to pass to the template
+#     context = {
+#         'object_list': object_list,
+#         'var_name': var_name,
+#         'create_url': f'{var_name}-create',
+#         'update_url': f'{var_name}-update',
+#         'update_url_new': f'{var_name}-updatenew',
+#         'download_url': f'{var_name}-download',
+#         'pagination_url': f'{var_name}s',
+#         'metadownload_url':  f'{var_name}-metadownload',
+#         'list_all_url':  f'{var_name}s_all',
+#         'var_name_display': var_name_display,
+#         'ordering_tag': f"?orderby={var_name}",
+#         'var_section': var_section,
+#         'var_subsection': var_subsection,
+#         'var_main_desc': var_main_desc,
+#         'myvar': var_name_display,
+#         'extra_var_dict': extra_var_dict,  # Add the dictionary to the context
+#         #'extra_var': obj[var_name],
 
-        #'obj_var': my_form[x_name], 
-        #"myvar": myvar,
-        #"my_exp": my_exp,
-    }
-
-
-    context["inner_vars"] = {
-        var_name_display: {
-            'min': None,
-            'max': None,
-            'scale': None, 
-            'var_exp_source': None, 
-            'var_exp': var_exp_new,
-            'units': None, 
-            'choices': 'ABSENT_PRESENT_CHOICES', 
-            'null_meaning': None}}
-
-    return render(request, 'core/generic_templates/generic_list_all.html', context)
+#         #'obj_var': my_form[x_name], 
+#         #"myvar": myvar,
+#         #"my_exp": my_exp,
+#     }
 
 
+#     context["inner_vars"] = {
+#         var_name_display: {
+#             'min': None,
+#             'max': None,
+#             'scale': None, 
+#             'var_exp_source': None, 
+#             'var_exp': var_exp_new,
+#             'units': None, 
+#             'choices': 'ABSENT_PRESENT_CHOICES', 
+#             'null_meaning': None}}
 
-def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, var_main_desc):
+#     return render(request, 'core/generic_templates/generic_list_all.html', context)
+
+
+
+def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, db_section, var_main_desc):
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     else:
@@ -8480,49 +8512,180 @@ def delete_object_view(request, model_class, pk, var_name):
     return redirect(success_url)
 
 
-def generic_download(request, model_class, var_name):
+def generic_download(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
     items = model_class.objects.all()
+
+
+    # special case of RT:
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
+    if db_section == 'rt' and not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+        items = items.filter(polity__new_name__in=rt_allowed_polities)
 
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    file_name = f"social_complexity_{var_name}_{current_datetime}.csv"
+    db_section_mapper = {
+        'general': 'general',
+        'sc': 'social_complexity',
+        'wf': 'warfare',
+        'rt': 'religion_tolerance',
+        'crisisdb': 'crisisdb',
+    }
+    file_name = f"{db_section_mapper[db_section]}_{var_name}_{current_datetime}.csv"
 
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
-    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        var_name_with_from = var_name + "_from"
-        var_name_with_to = var_name + "_to"
-    else:
-        var_name_with_from = var_name
-        var_name_with_to = None
+    # if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+    #     var_name_with_from = var_name + "_from"
+    #     var_name_with_to = var_name + "_to"
+    # else:
+    #     var_name_with_from = var_name
+    #     var_name_with_to = None
 
     writer = csv.writer(response, delimiter='|')
-    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        writer.writerow(['variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    var_name_with_from, var_name_with_to, 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    else:
-        writer.writerow(['variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
-                    var_name, 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
-    for obj in items:
-        if obj.clean_name_spaced() == 'Polity Duration':
-            writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
-                        obj.polity_year_from, obj.polity_year_to, obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                        obj.expert_reviewed,])
-        elif obj.clean_name_spaced() == 'Polity Peak Years':
-            writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
-                        obj.peak_year_from, obj.peak_year_to, obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                        obj.expert_reviewed,])
+
+    for loop_number, objj in enumerate(items):
+        # convert to dict
+        obj = model_to_dict(objj)  # Convert the object to a dictionary
+
+        ##################
+
+        if coded_value == "power_transition":
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 
+        elif coded_value == "widespread_religion":
+            x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+        elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
+            x_name_with_from = f'{x_name}_from'
+            x_name_with_to = f'{x_name}_to'
+        elif coded_value == 'duration':
+            x_name_with_from = 'polity_year_from'
+            x_name_with_to = 'polity_year_to'
+        elif coded_value == 'peak_years':
+            x_name_with_from = 'peak_year_from'
+            x_name_with_to = 'peak_year_to'
+        elif coded_value == 'scale_of_supracultural_interaction':
+            x_name_with_from = 'scale_from'
+            x_name_with_to = 'scale_to'
+
+
+
+
+        coded_cols = {} 
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+            coded_cols.update({
+                x_name_with_from: obj[x_name_with_from],
+                x_name_with_to: obj[x_name_with_to],
+            })
+        elif coded_value in ['preceding_entity']:
+            coded_cols.update({
+                x_name: obj['other_polity'],
+                x_name_2: obj['merged_old_data'],
+                x_name_3: obj['relationship_to_preceding_entity'],
+            })
+        elif db_section == 'rt' and  coded_value in ['widespread_religion']:
+            coded_cols.update({
+                x_name_2: objj.widespread_religion,
+                x_name_3: objj.get_degree_of_prevalence_display(),
+            })
+        elif db_section == 'rt' and  x_name in ['official_religion', 'elites_religion']:
+            coded_cols.update({
+                'religion': objj.coded_value,
+            })
+        elif db_section == 'rt' and 'freq_' in x_name:
+            coded_cols.update({
+                'coded_value': objj.get_coded_value_display(),
+            })
+        elif db_section == 'rt':
+            coded_cols.update({
+                'coded_value': obj[coded_value],
+            })
+        elif coded_value in ['power_transition']:
+            coded_cols.update({
+                x_name_2: obj[x_name_2],
+                x_name_3: obj[x_name_3],
+                x_name_4: obj[x_name_4],
+                x_name_5: obj[x_name_5],
+                x_name_6: obj[x_name_6],
+                x_name_7: obj[x_name_7],
+                x_name_8: obj[x_name_8],
+                x_name_9: obj[x_name_9],
+                x_name_10: obj[x_name_10],
+                x_name_11: obj[x_name_11],
+                x_name_12: obj[x_name_12],
+                x_name_1: obj[x_name_1],
+
+            })
+        elif coded_value in ['suprapolity_relations']:
+            coded_cols.update({
+                x_name: obj['supra_polity_relations'],
+                x_name_2: obj['other_polity'],
+
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            coded_cols.update({
+                x_name_with_from: obj[x_name_with_from],
+                x_name_with_to: obj[x_name_with_to],
+            })
+        elif coded_value in ['capital',]:
+            coded_cols.update({
+                x_name: obj['polity_cap'], 
+                x_name_2: obj[coded_value], 
+            })
         else:
-            if obj.show_value() == "NO_VALUE_ON_WIKI" or obj.show_value() == "NO_VALID_VALUE":
-                continue
-            elif "O_VALUE_ON_WIKI" in str(obj.show_value()):
-                continue
-            else:
-                writer.writerow(['General Variables',obj.subsection() , obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.clean_name()[7:],
-                        obj.show_value(), None,  obj.year_from, obj.year_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-                        obj.expert_reviewed,])
+            coded_cols.update({
+                x_name: obj[coded_value],
+            })
+
+
+        ############
+
+        if objj.curators_list():
+            is_expert_reviewed = True
+        else:
+            is_expert_reviewed = False
+
+        sublist_1_row = ['variable_set', 'section', 'subsection', 'variable_name', 'polity_name', 'polity_new_ID', 'polity_old_ID', ]
+
+        # special case of widespread religion. Merge order into variable name
+        if coded_value in ['widespread_religion']:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_dynamic(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+        elif db_section == 'rt':
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+        else:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+
+
+        if objj.clean_name_spaced() == 'Polity Duration':
+            sublist_3_row = ['confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
+            sublist_3 = [objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
+        elif coded_value in ['power_transition']:
+            sublist_3_row = ['transition_year', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
+            sublist_3 = [objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
+        else:
+            sublist_3_row = ['year_from', 'year_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
+            sublist_3 = [objj.year_from, objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
+        sublist_2 = []
+        sublist_2_row = []
+
+
+        for k, v in coded_cols.items():
+            #if objj.clean_name_spaced() == 'Polity Duration':
+            #    continue
+            sublist_2_row.append(k)
+            sublist_2.append(v)
+
+        if loop_number == 0:
+            writer.writerow(sublist_1_row + sublist_2_row + sublist_3_row)
+
+
+        if objj.show_value() == "NO_VALUE_ON_WIKI" or objj.show_value() == "NO_VALID_VALUE":
+            continue
+        elif "O_VALUE_ON_WIKI" in str(objj.show_value()):
+            continue
+        else:
+            writer.writerow(sublist_1 + sublist_2 + sublist_3)
 
 
         # if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:

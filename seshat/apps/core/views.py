@@ -39,6 +39,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
 from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
+from seshat.apps.sc.models import Token
+
 
 from django.core.paginator import Paginator
 
@@ -916,6 +918,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                     my_year_to = my_instance.year_to
                     my_tag = my_instance.get_tag_display()
                     my_curators_list = my_instance.curators_list
+                    my_curators_list_ids = my_instance.curators_list_ids
                     my_is_disputed = my_instance.is_disputed
                     my_is_uncertain = my_instance.is_uncertain
                     my_private_comment = my_instance.private_comment
@@ -931,6 +934,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
                         'my_year_to': my_year_to,
                         'my_tag': my_tag,
                         'my_curators_list': my_curators_list,
+                        'my_curators_list_ids': my_curators_list_ids,
                         'my_is_disputed': my_is_disputed,
                         'my_is_uncertain': my_is_uncertain,
                         'my_var_name_underlined': my_var_name_underlined,
@@ -1487,6 +1491,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
                 my_curators_list = my_instance.curators_list
+                my_curators_list_ids = my_instance.curators_list_ids
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -1501,6 +1506,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
                     'my_curators_list': my_curators_list,
+                    'my_curators_list_ids': my_curators_list_ids,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -4686,6 +4692,7 @@ def update_seshat_comment_part_view(request, pk):
                 my_year_to = my_instance.year_to
                 my_tag = my_instance.get_tag_display()
                 my_curators_list = my_instance.curators_list
+                my_curators_list_ids = my_instance.curators_list_ids
                 my_is_disputed = my_instance.is_disputed
                 my_is_uncertain = my_instance.is_uncertain
                 my_private_comment = my_instance.private_comment
@@ -4700,6 +4707,7 @@ def update_seshat_comment_part_view(request, pk):
                     'my_year_to': my_year_to,
                     'my_tag': my_tag,
                     'my_curators_list': my_curators_list,
+                    'my_curators_list_ids': my_curators_list_ids,
                     'my_is_disputed': my_is_disputed,
                     'my_is_uncertain': my_is_uncertain,
                     'my_var_name_underlined': my_var_name_underlined,
@@ -5256,6 +5264,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                         my_year_to = my_instance.year_to
                         my_tag = my_instance.get_tag_display()
                         my_curators_list = my_instance.curators_list
+                        my_curators_list_ids = my_instance.curators_list_ids
                         my_is_disputed = my_instance.is_disputed
                         my_is_uncertain = my_instance.is_uncertain
 
@@ -5273,6 +5282,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
                             'my_polity_id': my_polity_id,
                             'my_description': my_desc,
                             'my_curators_list': my_curators_list,
+                            'my_curators_list_ids': my_curators_list_ids,
                             'my_is_disputed': my_is_disputed,
                             'my_is_uncertain': my_is_uncertain,
                             'my_model': mm,  # new
@@ -5593,8 +5603,12 @@ def get_description_old(request, obj_id):
 def get_description(request, model_name, obj_id):
     try:
         # Dynamically get the model class based on the model name
-        model = ContentType.objects.get(model=model_name.lower()).model_class()
-        obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        # make sure we bring in app_label to add more safety and security
+        if model_name != 'token':
+            model = ContentType.objects.get(model=model_name.lower()).model_class()
+            obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        else:
+            obj = get_object_or_404(Token, id=obj_id) 
         content = render_to_string('core/description_snippet.html', {'obj': obj})
         return HttpResponse(content.strip())  # Remove leading/trailing whitespace
     except ContentType.DoesNotExist:

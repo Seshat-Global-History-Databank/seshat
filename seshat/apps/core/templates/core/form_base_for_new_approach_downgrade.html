@@ -113,6 +113,12 @@
         padding: 0;
     }
     
+    .checkboxinput {
+        width: 18px;  /* Increase the width of the checkbox */
+        height: 18px; /* Increase the height of the checkbox */
+        cursor: pointer; /* Change the cursor to indicate interactivity */
+    }
+
     .tab-container {
         display: flex;
         justify-content: center;
@@ -194,25 +200,36 @@
 
     <div class="row d-flex mt-3">
         <div class="col-md-3">
-            <h5><span class="text-secondary">Section:</span>  {{var_section}} </h5>
+            {% if db_section_mapper %}
+
+            <h5 class="p-2 m-0" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
+            </h5>
+            {% endif %}
+
+            {% if var_section %}
+            <h5 class="p-2 m-0 fw-normal" style="background:#aaf0c9;">{{var_section}} </h5>
+            {% endif %}
+
             {% if var_subsection %}
 
-            <h6>
-                <span class="text-secondary">Subsection:</span>  {{var_subsection}}
+            <h6 class="p-2 m-0" style="background:#cbf5dd">
+               {{var_subsection}}
 
             </h6>
             {% endif %}
+
             {% if myvar == 'Polity Preceding Entity' %}
             <h4><span >Polity Succession</span></h4>
 
             {% else %}
 
-            <h4><span >{{ myvar }}</span></h4>
-            {% endif %}       
+            <h4 class="fw-bold pt-2"><span >{{ myvar }}</span></h4>
+            {% endif %}
+
             {% autoescape off %}
-            <h6 class="lead-2 text-secondary">{{my_exp}}</h6>
+            <small class="text-dark" style="text-align: justify;">{{my_exp}}</small>
             {% endautoescape %}
- 
+
         </div>
         <div class="col-md-9 border-dark mainform mb-4"> 
             <form id="regForm" action="" method="post" >
@@ -247,10 +264,10 @@
                         {% if myvar == 'Polity Preceding Entity' %}
         
                         {% elif myvar == 'Polity Duration' or myvar == 'Polity Peak Years' %}
-                        <div class="col-sm-6 pb-0">
+                        <div class="col-sm-6 pb-2">
                             {{ form.polity|as_crispy_field }}
                         </div>
-                        <div class="col-sm-6 pb-0">
+                        <div class="col-sm-6 pb-2">
                         </div>
                         {% elif myvar == 'Power Transition' %}
                         <div class="col-sm-8 pb-0">
@@ -273,6 +290,33 @@
                           </div>
                           {% endif %}
 
+                          <div class="col-sm-12">
+
+                            {% if form.instance.pk %}
+                                {% if form.instance.curator.exists %}
+                                <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
+                                    <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
+                                        {% for curator in form.instance.curator.all %}
+                                        <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
+
+                                        {% endfor %}            
+                                </div>
+        
+                                </div>
+                
+
+                                {% else %}
+                                <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
+                                    <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                                        <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                                    </div>
+                                </div>
+
+                                {% endif %}
+                            {% endif %}
+                        
+                        </div>
+
                           {% block extra_vars %}
                           {% endblock extra_vars %}
           
@@ -281,7 +325,7 @@
                             {{ form.description }}
                           </div>
         
-                          <div class="col-sm-2 pb-0 pt-4">
+                          <div class="col-sm-2 pb-0 pt-4" style="align-items: end;">
                             {{ form.is_disputed|as_crispy_field }}
                             {{ form.is_uncertain|as_crispy_field }}
                         </div>
