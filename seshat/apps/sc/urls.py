@@ -193,9 +193,9 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_name': x_name,
             'x_name': x_name,
             'coded_value': coded_value,
-            'db_section': db_section,
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
         }, name=f'{x_name}-download')
      )
     urlpatterns.append(

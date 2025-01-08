@@ -8553,7 +8553,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         ##################
 
         if coded_value == "power_transition":
-            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 
         elif coded_value == "widespread_religion":
             x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -8584,14 +8584,25 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_2: obj['merged_old_data'],
                 x_name_3: obj['relationship_to_preceding_entity'],
             })
-        elif coded_value in ['widespread_religion']:
+        elif db_section == 'rt' and  coded_value in ['widespread_religion']:
             coded_cols.update({
                 x_name_2: objj.widespread_religion,
                 x_name_3: objj.get_degree_of_prevalence_display(),
             })
+        elif db_section == 'rt' and  x_name in ['official_religion', 'elites_religion']:
+            coded_cols.update({
+                'religion': objj.coded_value,
+            })
+        elif db_section == 'rt' and 'freq_' in x_name:
+            coded_cols.update({
+                'coded_value': objj.get_coded_value_display(),
+            })
+        elif db_section == 'rt':
+            coded_cols.update({
+                'coded_value': obj[coded_value],
+            })
         elif coded_value in ['power_transition']:
             coded_cols.update({
-                x_name_1: obj[x_name_1],
                 x_name_2: obj[x_name_2],
                 x_name_3: obj[x_name_3],
                 x_name_4: obj[x_name_4],
@@ -8603,8 +8614,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_10: obj[x_name_10],
                 x_name_11: obj[x_name_11],
                 x_name_12: obj[x_name_12],
-                x_name_13: obj[x_name_13],
-                x_name_14: obj[x_name_14],
+                x_name_1: obj[x_name_1],
 
             })
         elif coded_value in ['suprapolity_relations']:
@@ -8641,6 +8651,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         # special case of widespread religion. Merge order into variable name
         if coded_value in ['widespread_religion']:
             sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_dynamic(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+        elif db_section == 'rt':
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
         else:
             sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
 
@@ -8648,6 +8660,9 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         if objj.clean_name_spaced() == 'Polity Duration':
             sublist_3_row = ['confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
+        elif coded_value in ['power_transition']:
+            sublist_3_row = ['transition_year', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
+            sublist_3 = [objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
         else:
             sublist_3_row = ['year_from', 'year_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_from, objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]

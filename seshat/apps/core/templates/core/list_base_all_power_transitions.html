@@ -67,6 +67,10 @@
             font-size: 16px;
             color: #782823;
         }
+
+        .edit-button:hover {
+            color:red !important;
+        }
     
 </style>
 <div class="container">
@@ -200,8 +204,8 @@
             
                 {% for pol_id, info_list in object_list.items %}
                 <tr>
-                    <td class="text-teal h4 sticky-start pt-2" scope="row"  style="text-align: center">
-                        <div class="h5">
+                    <td class="text-teal h4 sticky-start pt-2" scope="row"  style="text-align: left">
+                        <span class="h5">
                             <span class="badge  border border-dark text-dark p-1 fs-5" style="background:  #94dbeb">{{ info_list.trans_list|length }}</span> <span class="text-secondary">Power
 
                                 {% with num_transitions=info_list.trans_list|length %}
@@ -213,12 +217,12 @@
                                 {% endwith %}
 
                                 for:</span> 
-                        </div>
-                        <div class="h4">
+                        </span>
+                        <span class="h4">
                             <a href="{% url 'polity-detail-main' pol_id %}#power_transition_var">{{ info_list.polity_long_name }}</a>
                             <a class="h5" href="{% url 'polity-detail-main' pol_id %}#power_transition_var">({{ info_list.polity_new_name }})</a>
-                        </div>
-                        <div class="h5 text-dark">
+                        </span>
+                        <span class="h5 text-dark">
                             <span class="badge border border-dark text-dark px-2 py-1 fw-light fs-5" style="background: linear-gradient(to right, #d1fedea6, #c1ecf69a)">
                                         
                                 {% if info_list.polity_start_year == None %}
@@ -277,7 +281,7 @@
                                 {% endif %}
                             </span>
                             
-                        </div>
+                        </span>
                 </td>
             </tr>
                 <tr>
@@ -294,16 +298,16 @@
                                       
                                         <span class="card-text-spaced">
                                             <span class="left-span">    
-                                                <span class="badge border border-dark text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;">
+                                                <span class="badge text-dark p-1 fs-6" style="text-align: left; background: #f8bdb2a1;">
                                                     {% if a_trans.has_description %}
-                                                    <a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm"></i></a>
+                                                    <a href="{% url 'power_transition-update' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-dark fa-sm edit-button"></i></a>
                                                     {% else %}
-                                                    <a href="{% url 'power_transition-updatenew' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-danger fa-sm"></i></a>
+                                                    <a href="{% url 'power_transition-updatenew' a_trans.trans_id %}"> <i class="fa-solid fa-pencil text-success edit-button fa-sm"></i> cccccc</a>
                                                     {% endif %} 
                                                 </span>
 
 
-                                        <span class="badge border border-dark text-dark px-2 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
+                                        <span class="badge text-dark px-2 py-1 fw-normal fs-6" style="background: linear-gradient(to right, #f8bdb288, #faf0b68e)">
                                         
                                             {% if a_trans.year_from == None and a_trans.year_to == None %}
                                             <a type="button" class="p-0 m-0" data-bs-toggle="tooltip" data-bs-html="true"  title='Year Range of Polity is assumed.'>

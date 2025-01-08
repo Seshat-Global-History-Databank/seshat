@@ -123,6 +123,8 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_name': x_name,
             'x_name': x_name,
             'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
             'db_section': db_section,        
         }, name=f'{x_name}-download')
      )
@@ -132,7 +134,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_name_display': myvar,
             'var_section': sec,
             'var_subsection': subsec,
-            'db_section': db_section,
+            #'db_section': db_section,
             'var_main_desc': crisisdb_var_defs.get(x_name, f"NO Desc: {x_name}"),
         }, name=f'{x_name}-metadownload')
      )
@@ -212,8 +214,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('power_transition/create/', views.Power_transitionCreate.as_view(),
-         name="power_transition-create"),
+    #path('power_transition/create/', views.Power_transitionCreate.as_view(),  name="power_transition-create"),
      path('power_transition/createheavy/', views.Power_transitionCreateHeavy.as_view(),
          name="power_transition-create_heavy"),
     path('power_transitions/', views.Power_transitionListView.as_view(), name='power_transitions'),

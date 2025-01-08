@@ -69,6 +69,7 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'my_exp': rt_var_defs[myvar.lower().capitalize()],
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-updatenew')
     )
@@ -82,6 +83,7 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'my_exp': rt_var_defs[myvar.lower().capitalize()],
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'delete_url_name': x_name + "-confirm-delete",
         }, name=f'{x_name}-update')
     )
@@ -94,6 +96,7 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'my_exp': rt_var_defs[myvar.lower().capitalize()],
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
         }, name=f'{x_name}-create')
      )
     urlpatterns.append(
@@ -104,6 +107,7 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'var_name_display': myvar,
             'var_section': sec,
             'var_subsection': subsec,
+            'db_section': db_section,
             'var_main_desc': rt_var_defs[myvar.lower().capitalize()],
         }, name=f'{x_name}s_all')
      )
@@ -113,6 +117,8 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'var_name': x_name,
             'x_name': x_name,
             'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
             'db_section': db_section,
         }, name=f'{x_name}-download')
      )
@@ -122,6 +128,7 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'var_name_display': myvar,
             'var_section': sec,
             'var_subsection': subsec,
+            #'db_section': db_section,
             'var_main_desc': rt_var_defs[myvar.lower().capitalize()],
         }, name=f'{x_name}-metadownload')
      )
