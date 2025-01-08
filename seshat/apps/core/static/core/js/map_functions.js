@@ -427,29 +427,28 @@ function updateLegend() {
             hierarchicalVariableMaxValue = highestAdministrativeLevel;
         }
 
-        var legendItem = document.createElement('p');
-        var colorBox = document.createElement('span');
-        colorBox.style.display = 'inline-block';
-        colorBox.style.width = '20px';
-        colorBox.style.height = '20px';
-        colorBox.style.backgroundColor = 'blue';
-        colorBox.style.border = '1px solid black';
-        colorBox.style.marginRight = '10px';
-        legendItem.appendChild(colorBox);
-        legendItem.appendChild(document.createTextNode(0));
-        legendDiv.appendChild(legendItem);
+        for (var key in hierarchicalComplexityColourMapping) {
 
-        var legendItem = document.createElement('p');
-        var colorBox = document.createElement('span');
-        colorBox.style.display = 'inline-block';
-        colorBox.style.width = '20px';
-        colorBox.style.height = '20px';
-        colorBox.style.backgroundColor = 'red';
-        colorBox.style.border = '1px solid black';
-        colorBox.style.marginRight = '10px';
-        legendItem.appendChild(colorBox);
-        legendItem.appendChild(document.createTextNode(hierarchicalVariableMaxValue));
-        legendDiv.appendChild(legendItem);
+            var legendItem = document.createElement('p');
+
+            var colorBox = document.createElement('span');
+            colorBox.style.display = 'inline-block';
+            colorBox.style.width = '20px';
+            colorBox.style.height = '20px';
+            colorBox.style.backgroundColor = hierarchicalComplexityColourMapping[key];
+            colorBox.style.marginRight = '10px';
+            legendItem.appendChild(colorBox);
+
+            if (key === 'min') {
+                legendItem.appendChild(document.createTextNode(0));
+            } else if (key === 'max') {
+                legendItem.appendChild(document.createTextNode(hierarchicalVariableMaxValue));
+            } else {
+                legendItem.appendChild(document.createTextNode(`${key}`));
+            }
+
+            legendDiv.appendChild(legendItem);
+        };
 
     } else if (variable in categorical_variables) {
         
@@ -875,18 +874,33 @@ function hierarchicalComplexityColour(maxValue, value) {
     if (value == null) {
         return 'silver';
     }
-    // If the value is 0, return blue
+    // If the value is 0, return the min color
     if (value == 0) {
-        return 'blue';
+        return hierarchicalComplexityColourMapping['min'];
     }
-    // If the value is greater than the maximum value, return red
+    // If the value is greater than the maximum value, return the max color
     if (value > maxValue) {
-        return 'red';
+        return hierarchicalComplexityColourMapping['max'];
     }
     // Calculate the colour based on the value and the maximum value
     let ratio = value / maxValue;
-    let r = Math.round(255 * ratio);
-    let g = 0;
-    let b = Math.round(255 * (1 - ratio));
+
+    // Convert hex to RGB
+    function hexToRgb(hex) {
+        let bigint = parseInt(hex.slice(1), 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
+    }
+
+    let startColor = hexToRgb(hierarchicalComplexityColourMapping['min']);
+    let endColor = hexToRgb(hierarchicalComplexityColourMapping['max']);
+
+    let r = Math.round(startColor.r + ratio * (endColor.r - startColor.r));
+    let g = Math.round(startColor.g + ratio * (endColor.g - startColor.g));
+    let b = Math.round(startColor.b + ratio * (endColor.b - startColor.b));
+
     return `rgb(${r}, ${g}, ${b})`;
 }
