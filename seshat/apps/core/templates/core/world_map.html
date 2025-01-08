@@ -1241,36 +1241,72 @@
                             `;
                         }
                         if (variable == 'settlement_hierarchy') {
-                            popupContent = popupContent + `
-                                <tr>
-                                    <td>Settlement Hierarchy</td>
-                                    <td><span">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
-                                </tr>
-                            `;
+                            if (shape.settlement_hierarchy[0] == shape.settlement_hierarchy[1]) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span">${shape.settlement_hierarchy[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
                         }
                         if (variable == 'religious_level') {
-                            popupContent = popupContent + `
-                                <tr>
-                                    <td>Religious Level</td>
-                                    <td><span>${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
-                                </tr>
-                            `;
+                            if (shape.religious_level[0] == shape.religious_level[1]) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>${shape.religious_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
                         }
                         if (variable == 'military_level') {
-                            popupContent = popupContent + `
-                                <tr>
-                                    <td>Military Level</td>
-                                    <td><span>${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
-                                </tr>
-                            `;
+                            if (shape.military_level[0] == shape.military_level[1]) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>${shape.military_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
                         }
                         if (variable == 'administrative_level') {
-                            popupContent = popupContent + `
-                                <tr>
-                                    <td>Administrative Level</td>
-                                    <td><span>${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
-                                </tr>
-                            `;
+                            if (shape.administrative_level[0] == shape.administrative_level[1]) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>${shape.administrative_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
                         }
                         if (allCapitalsInfo[shape.seshat_id]) {
                             if (allCapitalsInfo[shape.seshat_id]['year_from'] <= selectedYearInt && allCapitalsInfo[shape.seshat_id]['year_to'] >= selectedYearInt) {
