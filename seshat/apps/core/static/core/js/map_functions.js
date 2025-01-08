@@ -828,3 +828,21 @@ function closeHelp() {
         popup.style.display = 'block';
     }
 }
+
+function hierarchicalComplexityColour(maxValue, value) {
+    // If the value is null, return silver (Uncoded)
+    if (value == null) {
+        return 'silver';
+    }
+    // If the value is 0, return white
+    if (value == 0) {
+        return 'white';
+    }
+    // If the value is greater than the maximum value, return red
+    if (value > maxValue) {
+        return 'red';
+    }
+    // Calculate the colour based on the value and the maximum value
+    let hue = (1 - value / maxValue) * 120;
+    return `hsl(${hue}, 100%, 50%)`;
+}
