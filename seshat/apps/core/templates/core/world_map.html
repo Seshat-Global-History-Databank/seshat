@@ -1248,6 +1248,13 @@
                                         <td><span">${shape.settlement_hierarchy[0]}</span></td>
                                     </tr>
                                 `;
+                            } else if (shape.settlement_hierarchy.length == 0) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
                             } else {
                                 popupContent = popupContent + `
                                     <tr>
@@ -1263,6 +1270,13 @@
                                     <tr>
                                         <td>Religious Level</td>
                                         <td><span>${shape.religious_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.religious_level.length == 0) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
                             } else {
@@ -1282,6 +1296,13 @@
                                         <td><span>${shape.military_level[0]}</span></td>
                                     </tr>
                                 `;
+                            } else if (shape.military_level.length == 0) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
                             } else {
                                 popupContent = popupContent + `
                                     <tr>
@@ -1297,6 +1318,13 @@
                                     <tr>
                                         <td>Administrative Level</td>
                                         <td><span>${shape.administrative_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.administrative_level.length == 0) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
                             } else {
