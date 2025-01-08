@@ -614,6 +614,8 @@
                 updateCategoricalVariableSelection(localStorage.getItem('variable')); 
             };
         }
+
+        var hierarchicalComplexityVariables = ['military_level', 'religious_level', 'settlement_hierarchy', 'administrative_level'];
         
         var displayedShapes = [];
         var polityBorderWeight = 0;
@@ -868,7 +870,6 @@
             var playButton = document.getElementById('playButton');
             var settings = document.getElementById('settings');
             var help = document.getElementById('help');
-            var hierarchicalComplexityVariables = ['military_level', 'religious_level', 'settlement_hierarchy', 'administrative_level'];
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
