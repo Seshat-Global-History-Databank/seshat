@@ -427,19 +427,29 @@ function updateLegend() {
             hierarchicalVariableMaxValue = highestAdministrativeLevel;
         }
 
-        for (var i = 0; i <= hierarchicalVariableMaxValue; i++) {
-            var legendItem = document.createElement('p');
-            var colorBox = document.createElement('span');
-            colorBox.style.display = 'inline-block';
-            colorBox.style.width = '20px';
-            colorBox.style.height = '20px';
-            colorBox.style.backgroundColor = hierarchicalComplexityColour(hierarchicalVariableMaxValue, i);
-            colorBox.style.border = '1px solid black';
-            colorBox.style.marginRight = '10px';
-            legendItem.appendChild(colorBox);
-            legendItem.appendChild(document.createTextNode(i));
-            legendDiv.appendChild(legendItem);
-        }
+        var legendItem = document.createElement('p');
+        var colorBox = document.createElement('span');
+        colorBox.style.display = 'inline-block';
+        colorBox.style.width = '20px';
+        colorBox.style.height = '20px';
+        colorBox.style.backgroundColor = 'blue';
+        colorBox.style.border = '1px solid black';
+        colorBox.style.marginRight = '10px';
+        legendItem.appendChild(colorBox);
+        legendItem.appendChild(document.createTextNode(0));
+        legendDiv.appendChild(legendItem);
+
+        var legendItem = document.createElement('p');
+        var colorBox = document.createElement('span');
+        colorBox.style.display = 'inline-block';
+        colorBox.style.width = '20px';
+        colorBox.style.height = '20px';
+        colorBox.style.backgroundColor = 'red';
+        colorBox.style.border = '1px solid black';
+        colorBox.style.marginRight = '10px';
+        legendItem.appendChild(colorBox);
+        legendItem.appendChild(document.createTextNode(hierarchicalVariableMaxValue));
+        legendDiv.appendChild(legendItem);
 
     } else if (variable in categorical_variables) {
         
@@ -865,15 +875,18 @@ function hierarchicalComplexityColour(maxValue, value) {
     if (value == null) {
         return 'silver';
     }
-    // If the value is 0, return white
+    // If the value is 0, return blue
     if (value == 0) {
-        return 'white';
+        return 'blue';
     }
     // If the value is greater than the maximum value, return red
     if (value > maxValue) {
         return 'red';
     }
     // Calculate the colour based on the value and the maximum value
-    let hue = (1 - value / maxValue) * 120;
-    return `hsl(${hue}, 100%, 50%)`;
+    let ratio = value / maxValue;
+    let r = Math.round(255 * ratio);
+    let g = 0;
+    let b = Math.round(255 * (1 - ratio));
+    return `rgb(${r}, ${g}, ${b})`;
 }
