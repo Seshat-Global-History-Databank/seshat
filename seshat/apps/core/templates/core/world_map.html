@@ -772,10 +772,7 @@
                         document.getElementById('variablesLoadingIndicator').style.display = 'none';
 
                         // Get the highest values of the hierarchical complexity variables
-                        highestSettlementHierarchy = data.highest_settlement_hierarchy;
-                        highestReligiousLevel = data.highest_religious_level;
-                        highestMilitaryLevel = data.highest_military_level;
-                        highestAdministrativeLevel = data.highest_administrative_level;
+                        highestComplexityValues = data.highest_complexity_values;
 
                         return fetch('/core/provinces_and_countries');
                     })
@@ -957,18 +954,9 @@
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
-                        // Get the maximum value of the hierarchical complexity variable
-                        let hierarchicalVariableMaxValue;
-                        if (variable == 'Settlement Hierarchy') {
-                            hierarchicalVariableMaxValue = highestSettlementHierarchy;
-                        } else if (variable == 'Religious Level') {
-                            hierarchicalVariableMaxValue = highestReligiousLevel;
-                        } else if (variable == 'Military Level') {
-                            hierarchicalVariableMaxValue = highestMilitaryLevel;
-                        } else if (variable == 'Administrative Level') {
-                            hierarchicalVariableMaxValue = highestAdministrativeLevel;
-                        }
                         let variable_underscore = variable.toLowerCase().replace(' ', '_');
+                        // Get the maximum value of the hierarchical complexity variable
+                        let hierarchicalVariableMaxValue = highestComplexityValues[variable_underscore];
                         // Calculate the colour based highest of the from and to values
                         if (shape[variable_underscore][1] != 'None' && shape[variable_underscore][1] != null) {  // If the to value is not None, use it since it is the highest
                             shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable_underscore][1]);

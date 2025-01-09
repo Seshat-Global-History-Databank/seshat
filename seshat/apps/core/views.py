@@ -4641,10 +4641,11 @@ def map_view_all_with_vars(request):
     content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
 
     # Get the highest values of hierarchical complexity variables for the legend
-    content['highest_settlement_hierarchy'] = max([max(filter(None, shape['settlement_hierarchy']), default=0) for shape in content['shapes'] if shape['settlement_hierarchy']], default=0)
-    content['highest_religious_level'] = max([max(filter(None, shape['religious_level']), default=0) for shape in content['shapes'] if shape['religious_level']], default=0)
-    content['highest_military_level'] = max([max(filter(None, shape['military_level']), default=0) for shape in content['shapes'] if shape['military_level']], default=0)
-    content['highest_administrative_level'] = max([max(filter(None, shape['administrative_level']), default=0) for shape in content['shapes'] if shape['administrative_level']], default=0)
+    content['highest_complexity_values'] = {}
+    content['highest_complexity_values']['settlement_hierarchy'] = max([max(filter(None, shape['settlement_hierarchy']), default=0) for shape in content['shapes'] if shape['settlement_hierarchy']], default=0)
+    content['highest_complexity_values']['religious_level'] = max([max(filter(None, shape['religious_level']), default=0) for shape in content['shapes'] if shape['religious_level']], default=0)
+    content['highest_complexity_values']['military_level'] = max([max(filter(None, shape['military_level']), default=0) for shape in content['shapes'] if shape['military_level']], default=0)
+    content['highest_complexity_values']['administrative_level'] = max([max(filter(None, shape['administrative_level']), default=0) for shape in content['shapes'] if shape['administrative_level']], default=0)
 
     return JsonResponse(content)
 

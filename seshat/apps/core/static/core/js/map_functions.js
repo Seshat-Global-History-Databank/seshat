@@ -416,16 +416,9 @@ function updateLegend() {
         legendTitle.textContent = variable;
         legendDiv.appendChild(legendTitle);
 
-        let hierarchicalVariableMaxValue;
-        if (variable == 'Settlement Hierarchy') {
-            hierarchicalVariableMaxValue = highestSettlementHierarchy;
-        } else if (variable == 'Religious Level') {
-            hierarchicalVariableMaxValue = highestReligiousLevel;
-        } else if (variable == 'Military Level') {
-            hierarchicalVariableMaxValue = highestMilitaryLevel;
-        } else if (variable == 'Administrative Level') {
-            hierarchicalVariableMaxValue = highestAdministrativeLevel;
-        }
+        let variable_underscore = variable.toLowerCase().replace(' ', '_');
+        // Get the maximum value of the hierarchical complexity variable
+        let hierarchicalVariableMaxValue = highestComplexityValues[variable_underscore];
 
         for (var key in hierarchicalComplexityColourMapping) {
 
