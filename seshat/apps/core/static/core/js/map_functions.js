@@ -744,7 +744,11 @@ function populateVariableDropdown(variables) {
             Object.entries(vars).forEach(([variable, details]) => {
                 const option = document.createElement('option');
                 option.value = details.formatted;
-                option.textContent = details.full_name;
+                if (hierarchicalComplexityVariables.includes(variable)) {
+                    option.textContent = "Hierarchical Complexity: " + details.full_name;
+                } else {
+                    option.textContent = details.full_name;
+                }
                 optgroup.appendChild(option);
             });
             optgroup.innerHTML = [...optgroup.children].sort((a, b) => a.textContent.localeCompare(b.textContent)).map(e => e.outerHTML).join('');
