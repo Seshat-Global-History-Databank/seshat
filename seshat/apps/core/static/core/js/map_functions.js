@@ -410,6 +410,39 @@ function updateLegend() {
             legendDiv.appendChild(polityContainer);
         }
 
+    } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
+
+        var legendTitle = document.createElement('h3');
+        legendTitle.textContent = variable;
+        legendDiv.appendChild(legendTitle);
+
+        let variable_underscore = variable.toLowerCase().replace(' ', '_');
+        // Get the maximum value of the hierarchical complexity variable
+        let hierarchicalVariableMaxValue = highestComplexityValues[variable_underscore];
+
+        for (var key in hierarchicalComplexityColourMapping) {
+
+            var legendItem = document.createElement('p');
+
+            var colorBox = document.createElement('span');
+            colorBox.style.display = 'inline-block';
+            colorBox.style.width = '20px';
+            colorBox.style.height = '20px';
+            colorBox.style.backgroundColor = hierarchicalComplexityColourMapping[key];
+            colorBox.style.marginRight = '10px';
+            legendItem.appendChild(colorBox);
+
+            if (key === 'min') {
+                legendItem.appendChild(document.createTextNode(0));
+            } else if (key === 'max') {
+                legendItem.appendChild(document.createTextNode(hierarchicalVariableMaxValue));
+            } else {
+                legendItem.appendChild(document.createTextNode(`${key}`));
+            }
+
+            legendDiv.appendChild(legendItem);
+        };
+
     } else if (variable in categorical_variables) {
         
         var legendTitle = document.createElement('h3');
@@ -601,6 +634,9 @@ function clearSelection() {
     });
     document.getElementById('hideUnselected').checked = false;
     plotPolities();
+    if (document.getElementById('chooseVariable').value != 'polity') {
+        legendDiv.style.display = 'block';
+    };
 }
 
 function selectAllCheckbox() {
@@ -704,9 +740,14 @@ function populateVariableDropdown(variables) {
             Object.entries(vars).forEach(([variable, details]) => {
                 const option = document.createElement('option');
                 option.value = details.formatted;
-                option.textContent = details.full_name;
+                if (hierarchicalComplexityVariables.includes(variable)) {
+                    option.textContent = "Hierarchical Complexity: " + details.full_name;
+                } else {
+                    option.textContent = details.full_name;
+                }
                 optgroup.appendChild(option);
             });
+            optgroup.innerHTML = [...optgroup.children].sort((a, b) => a.textContent.localeCompare(b.textContent)).map(e => e.outerHTML).join('');
             chooseVariableDropdown.appendChild(optgroup);
         }
     });
@@ -827,4 +868,40 @@ function closeHelp() {
     if (popup !== null) {
         popup.style.display = 'block';
     }
+}
+
+function hierarchicalComplexityColour(maxValue, value) {
+    // If the value is null, return silver (Uncoded)
+    if (value == null) {
+        return 'silver';
+    }
+    // If the value is 0, return the min color
+    if (value == 0) {
+        return hierarchicalComplexityColourMapping['min'];
+    }
+    // If the value is greater than the maximum value, return the max color
+    if (value > maxValue) {
+        return hierarchicalComplexityColourMapping['max'];
+    }
+    // Calculate the colour based on the value and the maximum value
+    let ratio = value / maxValue;
+
+    // Convert hex to RGB
+    function hexToRgb(hex) {
+        let bigint = parseInt(hex.slice(1), 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
+    }
+
+    let startColor = hexToRgb(hierarchicalComplexityColourMapping['min']);
+    let endColor = hexToRgb(hierarchicalComplexityColourMapping['max']);
+
+    let r = Math.round(startColor.r + ratio * (endColor.r - startColor.r));
+    let g = Math.round(startColor.g + ratio * (endColor.g - startColor.g));
+    let b = Math.round(startColor.b + ratio * (endColor.b - startColor.b));
+
+    return `rgb(${r}, ${g}, ${b})`;
 }

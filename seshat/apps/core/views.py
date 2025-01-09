@@ -71,6 +71,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
 from ..general.models import Polity_research_assistant, Polity_duration, Polity_linguistic_family, Polity_language_genus, Polity_language, POLITY_LINGUISTIC_FAMILY_CHOICES, POLITY_LANGUAGE_GENUS_CHOICES, POLITY_LANGUAGE_CHOICES, Polity_religious_tradition, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, POLITY_RELIGION_GENUS_CHOICES, POLITY_RELIGION_FAMILY_CHOICES, POLITY_RELIGION_CHOICES
+from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, Administrative_level
 
 from ..crisisdb.models import Power_transition
 
@@ -4259,7 +4260,7 @@ def assign_categorical_variables_to_shapes(shapes, variables):
     Assign the categorical variables to the shapes.
 
     Note:
-        Currently only language and religion variables are implemented.
+        Extend this function to add more of the variables.
 
     Args:
         shapes (list): The shapes to assign the variables to.
@@ -4268,7 +4269,7 @@ def assign_categorical_variables_to_shapes(shapes, variables):
     Returns:
         tuple: A tuple containing the shapes and the variables.
     """
-    # Add categorical variables to the variables dictionary
+    # Add categorical variables from General Variables to the variables dictionary
     variables['General Variables'] = {
         'polity_linguistic_family': {'formatted': 'linguistic_family', 'full_name': 'Linguistic Family'},
         'polity_language_genus': {'formatted': 'language_genus', 'full_name': 'Language Genus'},
@@ -4282,10 +4283,18 @@ def assign_categorical_variables_to_shapes(shapes, variables):
         'polity_alternate_religion': {'formatted': 'alternate_religion', 'full_name': 'Alternate Religion'},
     }
 
+    # Add categorical variables from Social Complexity Variables to the variables dictionary
+    if 'Social Complexity Variables' not in variables:
+        variables['Social Complexity Variables'] = {}
+    variables['Social Complexity Variables']['settlement_hierarchy'] = {'formatted': 'Settlement Hierarchy', 'full_name': 'Settlement Hierarchy'}
+    variables['Social Complexity Variables']['religious_level'] = {'formatted': 'Religious Level', 'full_name': 'Religious Level'}
+    variables['Social Complexity Variables']['military_level'] = {'formatted': 'Military Level', 'full_name': 'Military Level'}
+    variables['Social Complexity Variables']['administrative_level'] = {'formatted': 'Administrative Level', 'full_name': 'Administrative Level'}
+
     # Fetch all polities and store them in a dictionary for quick access
     polities = {polity.new_name: polity for polity in Polity.objects.all()}
 
-    # Fetch all linguistic families, language genuses, and languages and store them in dictionaries for quick access
+    # Fetch all categorical variables and store them in dictionaries for quick access
     linguistic_families = {}
     for lf in Polity_linguistic_family.objects.all():
         if lf.polity_id not in linguistic_families:
@@ -4346,7 +4355,7 @@ def assign_categorical_variables_to_shapes(shapes, variables):
             alternate_religions[ar.polity_id] = []
         alternate_religions[ar.polity_id].append(ar)
 
-    # Add language variable info to polity shapes
+    # Add categorical variable info to polity shapes
     for shape in shapes:
         shape['linguistic_family'] = []
         shape['linguistic_family_dict'] = {}
@@ -4368,6 +4377,10 @@ def assign_categorical_variables_to_shapes(shapes, variables):
         shape['alternate_religion_family_dict'] = {}
         shape['alternate_religion'] = []
         shape['alternate_religion_dict'] = {}
+        shape['settlement_hierarchy'] = []
+        shape['religious_level'] = []
+        shape['military_level'] = []
+        shape['administrative_level'] = []
         if shape['seshat_id'] != 'none':  # Skip shapes with no seshat_id
             polity = polities.get(shape['seshat_id'])
             if polity:
@@ -4382,8 +4395,24 @@ def assign_categorical_variables_to_shapes(shapes, variables):
                 shape['alternate_religion_genus'].extend([arg.alternate_religion_genus for arg in alternate_religion_genuses.get(polity.id, [])])
                 shape['alternate_religion_family'].extend([arf.alternate_religion_family for arf in alternate_religion_families.get(polity.id, [])])
                 shape['alternate_religion'].extend([ar.alternate_religion for ar in alternate_religions.get(polity.id, [])])
+                settlement_hierarchy = Settlement_hierarchy.objects.filter(polity_id=polity.id)
+                if settlement_hierarchy:
+                    shape['settlement_hierarchy'].append(settlement_hierarchy[0].settlement_hierarchy_from)
+                    shape['settlement_hierarchy'].append(settlement_hierarchy[0].settlement_hierarchy_to)
+                religious_level = Religious_level.objects.filter(polity_id=polity.id)
+                if religious_level:
+                    shape['religious_level'].append(religious_level[0].religious_level_from)
+                    shape['religious_level'].append(religious_level[0].religious_level_to)
+                military_level = Military_level.objects.filter(polity_id=polity.id)
+                if military_level:
+                    shape['military_level'].append(military_level[0].military_level_from)
+                    shape['military_level'].append(military_level[0].military_level_to)
+                administrative_level = Administrative_level.objects.filter(polity_id=polity.id)
+                if administrative_level:
+                    shape['administrative_level'].append(administrative_level[0].administrative_level_from)
+                    shape['administrative_level'].append(administrative_level[0].administrative_level_to)
 
-                # Get the years for the variables for the polity
+                # Get the years for the variables which have years for the polity
                 shape['linguistic_family_dict'].update({lf.linguistic_family: [lf.year_from, lf.year_to] for lf in linguistic_families.get(polity.id, [])})
                 shape['language_genus_dict'].update({lg.language_genus: [lg.year_from, lg.year_to] for lg in language_genuses.get(polity.id, [])})
                 shape['language_dict'].update({l.language: [l.year_from, l.year_to] for l in languages.get(polity.id, [])})
@@ -4395,7 +4424,7 @@ def assign_categorical_variables_to_shapes(shapes, variables):
                 shape['alternate_religion_family_dict'].update({arf.alternate_religion_family: [arf.year_from, arf.year_to] for arf in alternate_religion_families.get(polity.id, [])})
                 shape['alternate_religion_dict'].update({ar.alternate_religion: [ar.year_from, ar.year_to] for ar in alternate_religions.get(polity.id, [])})
 
-        # If no linguistic family, language genus, or language was found, append 'Uncoded'
+        # If no variable was found, append 'Uncoded'
         polity = polities.get(shape['seshat_id'])
         if polity:
             if not shape['linguistic_family']:
@@ -4616,6 +4645,13 @@ def map_view_all_with_vars(request):
 
     # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
     content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
+
+    # Get the highest values of hierarchical complexity variables for the legend
+    content['highest_complexity_values'] = {}
+    content['highest_complexity_values']['settlement_hierarchy'] = max([max(filter(None, shape['settlement_hierarchy']), default=0) for shape in content['shapes'] if shape['settlement_hierarchy']], default=0)
+    content['highest_complexity_values']['religious_level'] = max([max(filter(None, shape['religious_level']), default=0) for shape in content['shapes'] if shape['religious_level']], default=0)
+    content['highest_complexity_values']['military_level'] = max([max(filter(None, shape['military_level']), default=0) for shape in content['shapes'] if shape['military_level']], default=0)
+    content['highest_complexity_values']['administrative_level'] = max([max(filter(None, shape['administrative_level']), default=0) for shape in content['shapes'] if shape['administrative_level']], default=0)
 
     return JsonResponse(content)
 

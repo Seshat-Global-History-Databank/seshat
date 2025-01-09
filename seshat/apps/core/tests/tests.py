@@ -4,7 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from ..models import Cliopatria, GADMShapefile, GADMCountries, GADMProvinces, Polity, Capital
 from ...general.models import Polity_capital, Polity_peak_years, Polity_language, Polity_religious_tradition
-from ...sc.models import Judge
+from ...sc.models import Judge, Settlement_hierarchy, Religious_level, Military_level, Administrative_level
 from ...wf.models import Copper
 from ...rt.models import Gov_res_pub_pros
 from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes
@@ -174,6 +174,30 @@ class ShapesTest(TestCase):
         Polity_religious_tradition.objects.create(
             name='religious_tradition',
             religious_tradition='Islam',
+            polity_id=2
+        )
+        Settlement_hierarchy.objects.create(
+            name='settlement_hierarchy',
+            settlement_hierarchy_from=6,
+            settlement_hierarchy_to=7,
+            polity_id=2
+        )
+        Religious_level.objects.create(
+            name='religious_level',
+            religious_level_from=9,
+            religious_level_to=10,
+            polity_id=2
+        )
+        Military_level.objects.create(
+            name='military_level',
+            military_level_from=13,
+            military_level_to=14,
+            polity_id=2
+        )
+        Administrative_level.objects.create(
+            name='administrative_level',
+            administrative_level_from=5,
+            administrative_level_to=6,
             polity_id=2
         )
 
@@ -587,3 +611,7 @@ class ShapesTest(TestCase):
         self.assertEqual(result_shapes[0]['language_dict']['English'], [1998, 2000])
         self.assertEqual(result_shapes[0]['language_dict']['French'], [1999, 2007])
         self.assertEqual(result_shapes[0]['religious_tradition'], ['Christianity', 'Islam'])
+        self.assertEqual(result_shapes[0]['settlement_hierarchy'], [6, 7])
+        self.assertEqual(result_shapes[0]['religious_level'], [9, 10])
+        self.assertEqual(result_shapes[0]['military_level'], [13, 14])
+        self.assertEqual(result_shapes[0]['administrative_level'], [5, 6])
