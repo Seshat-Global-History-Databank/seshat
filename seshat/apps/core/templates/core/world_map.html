@@ -1253,7 +1253,7 @@
                                         <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
-                            } else if (shape.settlement_hierarchy[0] == shape.settlement_hierarchy[1]) {
+                            } else if (shape.settlement_hierarchy[0] == shape.settlement_hierarchy[1] || shape.settlement_hierarchy[1] == 'None' || shape.settlement_hierarchy[1] == null) {
                                 popupContent = popupContent + `
                                     <tr>
                                         <td>Settlement Hierarchy</td>
@@ -1277,7 +1277,7 @@
                                         <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
-                            } else if (shape.religious_level[0] == shape.religious_level[1]) {
+                            } else if (shape.religious_level[0] == shape.religious_level[1] || shape.religious_level[1] == 'None' || shape.religious_level[1] == null) {
                                 popupContent = popupContent + `
                                     <tr>
                                         <td>Religious Level</td>
@@ -1301,7 +1301,7 @@
                                         <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
-                            } else if (shape.military_level[0] == shape.military_level[1]) {
+                            } else if (shape.military_level[0] == shape.military_level[1] || shape.military_level[1] == 'None' || shape.military_level[1] == null) {
                                 popupContent = popupContent + `
                                     <tr>
                                         <td>Military Level</td>
@@ -1325,7 +1325,7 @@
                                         <td><span>Uncoded</span></td>
                                     </tr>
                                 `;
-                            } else if (shape.administrative_level[0] == shape.administrative_level[1]) {
+                            } else if (shape.administrative_level[0] == shape.administrative_level[1] || shape.administrative_level[1] == 'None' || shape.administrative_level[1] == null) {
                                 popupContent = popupContent + `
                                     <tr>
                                         <td>Administrative Level</td>
