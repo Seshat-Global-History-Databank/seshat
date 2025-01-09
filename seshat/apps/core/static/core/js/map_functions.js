@@ -410,20 +410,20 @@ function updateLegend() {
             legendDiv.appendChild(polityContainer);
         }
 
-    } else if (hierarchicalComplexityVariables.includes(variable)) {
+    } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
 
         var legendTitle = document.createElement('h3');
         legendTitle.textContent = variable;
         legendDiv.appendChild(legendTitle);
 
         let hierarchicalVariableMaxValue;
-        if (variable == 'settlement_hierarchy') {
+        if (variable == 'Settlement Hierarchy') {
             hierarchicalVariableMaxValue = highestSettlementHierarchy;
-        } else if (variable == 'religious_level') {
+        } else if (variable == 'Religious Hierarchy') {
             hierarchicalVariableMaxValue = highestReligiousLevel;
-        } else if (variable == 'military_level') {
+        } else if (variable == 'Military Hierarchy') {
             hierarchicalVariableMaxValue = highestMilitaryLevel;
-        } else if (variable == 'administrative_level') {
+        } else if (variable == 'Administrative Hierarchy') {
             hierarchicalVariableMaxValue = highestAdministrativeLevel;
         }
 

@@ -615,7 +615,8 @@
             };
         }
 
-        var hierarchicalComplexityVariables = ['military_level', 'religious_level', 'settlement_hierarchy', 'administrative_level'];
+        var hierarchicalComplexityVariablesFull = ['Military Level', 'Administrative Level', 'Religious Level', 'Settlement Hierarchy'];
+        var hierarchicalComplexityVariables = ['military_level', 'administrative_level', 'religious_level', 'settlement_hierarchy'];
         
         var displayedShapes = [];
         var polityBorderWeight = 0;
@@ -940,6 +941,7 @@
             var selectedYearInt = parseInt(selectedYear);
             // Add shapes to the map
             // Don't plot them if "Base map only" checkbox selected
+            console.log(variable);
             if (!document.getElementById('baseMapOnly').checked){
 
                 // Iterate through shapesData and plot the shapes
@@ -953,6 +955,27 @@
                         shapeWeight = shape.weight;
                         shapeColour = shape.colour;
 
+                    // Hierarchical complexity variables
+                    } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
+                        shapeWeight = polityBorderWeightSelected;
+                        // Get the maximum value of the hierarchical complexity variable
+                        let hierarchicalVariableMaxValue;
+                        if (variable == 'Settlement Hierarchy') {
+                            hierarchicalVariableMaxValue = highestSettlementHierarchy;
+                        } else if (variable == 'Religious Level') {
+                            hierarchicalVariableMaxValue = highestReligiousLevel;
+                        } else if (variable == 'Military Level') {
+                            hierarchicalVariableMaxValue = highestMilitaryLevel;
+                        } else if (variable == 'Administrative Level') {
+                            hierarchicalVariableMaxValue = highestAdministrativeLevel;
+                        }
+                        let variable_underscore = variable.toLowerCase().replace(' ', '_');
+                        // Calculate the colour based highest of the from and to values
+                        if (shape[variable_underscore][1] != 'None' && shape[variable_underscore][1] != null) {  // If the to value is not None, use it since it is the highest
+                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable_underscore][1]);
+                        } else { // If the to value is None, use the from value (even if it is None)
+                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable_underscore][0]);
+                        }
                     } else if (variable in categorical_variables){
                         shapeWeight = polityBorderWeightSelected;
                         // If the shape has a dictionary for the variable the key of the dict is the variable value and the value is a list of start and end years.
@@ -992,27 +1015,6 @@
                             } else if (shape[variable][0] == 'No Seshat page') {
                                 shapeColour = oneLanguageColourMapping['No Seshat page'];
                             }
-                        }
-                    
-                    // Hierarchical complexity variables
-                    } else if (hierarchicalComplexityVariables.includes(variable)) {
-                        shapeWeight = polityBorderWeightSelected;
-                        // Get the maximum value of the hierarchical complexity variable
-                        let hierarchicalVariableMaxValue;
-                        if (variable == 'settlement_hierarchy') {
-                            hierarchicalVariableMaxValue = highestSettlementHierarchy;
-                        } else if (variable == 'religious_level') {
-                            hierarchicalVariableMaxValue = highestReligiousLevel;
-                        } else if (variable == 'military_level') {
-                            hierarchicalVariableMaxValue = highestMilitaryLevel;
-                        } else if (variable == 'administrative_level') {
-                            hierarchicalVariableMaxValue = highestAdministrativeLevel;
-                        }
-                        // Calculate the colour based highest of the from and to values
-                        if (shape[variable][1] != 'None' && shape[variable][1] != null) {  // If the to value is not None, use it since it is the highest
-                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][1]);
-                        } else { // If the to value is None, use the from value (even if it is None)
-                            shapeColour = hierarchicalComplexityColour(hierarchicalVariableMaxValue, shape[variable][0]);
                         }
 
                     } else {  // Absent-present variables
@@ -1256,7 +1258,7 @@
                                 </tr>
                             `;
                         }
-                        if (variable == 'settlement_hierarchy') {
+                        if (variable == 'Settlement Hierarchy') {
                             if (shape.settlement_hierarchy.length == 0) {
                                 popupContent = popupContent + `
                                     <tr>
@@ -1280,7 +1282,7 @@
                                 `;
                             }
                         }
-                        if (variable == 'religious_level') {
+                        if (variable == 'Religious Level') {
                             if (shape.religious_level.length == 0) {
                                 popupContent = popupContent + `
                                     <tr>
@@ -1304,7 +1306,7 @@
                                 `;
                             }
                         }
-                        if (variable == 'military_level') {
+                        if (variable == 'Military Level') {
                             if (shape.military_level.length == 0) {
                                 popupContent = popupContent + `
                                     <tr>
@@ -1328,7 +1330,7 @@
                                 `;
                             }
                         }
-                        if (variable == 'administrative_level') {
+                        if (variable == 'Administrative Level') {
                             if (shape.administrative_level.length == 0) {
                                 popupContent = popupContent + `
                                     <tr>

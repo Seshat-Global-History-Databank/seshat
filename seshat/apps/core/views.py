@@ -4280,10 +4280,10 @@ def assign_categorical_variables_to_shapes(shapes, variables):
     # Add categorical variables from Social Complexity Variables to the variables dictionary
     if 'Social Complexity Variables' not in variables:
         variables['Social Complexity Variables'] = {}
-    variables['Social Complexity Variables']['settlement_hierarchy'] = {'formatted': 'settlement_hierarchy', 'full_name': 'Settlement Hierarchy'}
-    variables['Social Complexity Variables']['religious_level'] = {'formatted': 'religious_level', 'full_name': 'Religious Level'}
-    variables['Social Complexity Variables']['military_level'] = {'formatted': 'military_level', 'full_name': 'Military Level'}
-    variables['Social Complexity Variables']['administrative_level'] = {'formatted': 'administrative_level', 'full_name': 'Administrative Level'}
+    variables['Social Complexity Variables']['settlement_hierarchy'] = {'formatted': 'Settlement Hierarchy', 'full_name': 'Settlement Hierarchy'}
+    variables['Social Complexity Variables']['religious_level'] = {'formatted': 'Religious Level', 'full_name': 'Religious Level'}
+    variables['Social Complexity Variables']['military_level'] = {'formatted': 'Military Level', 'full_name': 'Military Level'}
+    variables['Social Complexity Variables']['administrative_level'] = {'formatted': 'Administrative Level', 'full_name': 'Administrative Level'}
 
     # Fetch all polities and store them in a dictionary for quick access
     polities = {polity.new_name: polity for polity in Polity.objects.all()}
