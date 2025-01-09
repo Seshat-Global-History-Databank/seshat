@@ -419,11 +419,11 @@ function updateLegend() {
         let hierarchicalVariableMaxValue;
         if (variable == 'Settlement Hierarchy') {
             hierarchicalVariableMaxValue = highestSettlementHierarchy;
-        } else if (variable == 'Religious Hierarchy') {
+        } else if (variable == 'Religious Level') {
             hierarchicalVariableMaxValue = highestReligiousLevel;
-        } else if (variable == 'Military Hierarchy') {
+        } else if (variable == 'Military Level') {
             hierarchicalVariableMaxValue = highestMilitaryLevel;
-        } else if (variable == 'Administrative Hierarchy') {
+        } else if (variable == 'Administrative Level') {
             hierarchicalVariableMaxValue = highestAdministrativeLevel;
         }
 
