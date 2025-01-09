@@ -4578,6 +4578,9 @@ def map_view_initial(request):
     # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
     content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
 
+    # Add version parameter to force browser to fetch the latest JS file
+    content['version'] = int(time.time())
+
     return render(request,
                   'core/world_map.html',
                   content
@@ -4610,6 +4613,9 @@ def map_view_all(request):
 
     # Set the last year in history we ever want to display, which will be used to determine when we should say "present"
     content['last_history_year'] = content['latest_year']  # Set this to the latest year in the data or a value of choice
+
+    # Add version parameter to force browser to fetch the latest JS file
+    content['version'] = int(time.time())
 
     return JsonResponse(content)
 
@@ -4652,6 +4658,9 @@ def map_view_all_with_vars(request):
     content['highest_complexity_values']['religious_level'] = max([max(filter(None, shape['religious_level']), default=0) for shape in content['shapes'] if shape['religious_level']], default=0)
     content['highest_complexity_values']['military_level'] = max([max(filter(None, shape['military_level']), default=0) for shape in content['shapes'] if shape['military_level']], default=0)
     content['highest_complexity_values']['administrative_level'] = max([max(filter(None, shape['administrative_level']), default=0) for shape in content['shapes'] if shape['administrative_level']], default=0)
+
+    # Add version parameter to force browser to fetch the latest JS file
+    content['version'] = int(time.time())
 
     return JsonResponse(content)
 
