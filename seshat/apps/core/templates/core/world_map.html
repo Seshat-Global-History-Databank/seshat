@@ -1136,7 +1136,7 @@
                                 </tr>
                         `;
                         // Absent/present variables
-                        if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable) && !hierarchicalComplexityVariables.includes(variable)) {
+                        if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable) && !hierarchicalComplexityVariablesFull.includes(variable)) {
                             if (shape[variable + '_dict']) {
                                 // Iterate through key/values in the dictionary
                                 var counter = 0;
