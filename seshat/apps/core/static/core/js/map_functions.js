@@ -747,6 +747,7 @@ function populateVariableDropdown(variables) {
                 option.textContent = details.full_name;
                 optgroup.appendChild(option);
             });
+            optgroup.innerHTML = [...optgroup.children].sort((a, b) => a.textContent.localeCompare(b.textContent)).map(e => e.outerHTML).join('');
             chooseVariableDropdown.appendChild(optgroup);
         }
     });
