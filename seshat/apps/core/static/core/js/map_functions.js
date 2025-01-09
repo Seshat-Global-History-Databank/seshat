@@ -634,6 +634,9 @@ function clearSelection() {
     });
     document.getElementById('hideUnselected').checked = false;
     plotPolities();
+    if (document.getElementById('chooseVariable').value != 'polity') {
+        legendDiv.style.display = 'block';
+    };
 }
 
 function selectAllCheckbox() {
