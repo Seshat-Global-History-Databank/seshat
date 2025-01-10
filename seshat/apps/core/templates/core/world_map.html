@@ -532,7 +532,7 @@
                         <p><b>Take a moment to familiarise yourself with the controls, then close this popup window.</b></p><br>
                         <p><b>🔹 Use the slider at the bottom of the page to adjust the displayed year.</b></p>
                         <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
-                        <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
+                        <p><b>🔹 Click polities on the map to add them to or remove them from the legend.</b></p>
                         <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p><br>
                         <p><b> The settings gear (⚙️) can be used to access additional controls:</b></p>
                         <p><b>🔹 Use the "Enter year" box to quickly navigate to a specific year.</b></p>
@@ -815,6 +815,9 @@
 
         // Set the default base map to Esri World Imagery
         switchBaseMap();
+
+        // Open the help popup by default
+        toggleHelp();
 
         // Note: these are the choices for the variable values as encoded in sc.models
         // Note: uncoded and no seshat page are both now set to the same colour
