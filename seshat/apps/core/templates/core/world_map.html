@@ -1465,13 +1465,12 @@
                                         }
 
                                         function handleMouseout() {
-                                            // Note: we have decided to keep the popup set to the hovered on polity when the mouse leaves, the code below will revert it to the clicked polity
                                             // Revert the popup to the previous state only if the layer was not clicked
-                                            // if (!isClicked) {
-                                            //     popup.innerHTML = previousPopupContent;
-                                            //     popup.style.borderColor = previousPopupBorderColor;
-                                            //     popup.style.borderWidth = previousPopupBorderWidth;
-                                            // }
+                                            if (!isClicked) {
+                                                popup.innerHTML = previousPopupContent;
+                                                popup.style.borderColor = previousPopupBorderColor;
+                                                popup.style.borderWidth = previousPopupBorderWidth;
+                                            }
                                         }
 
                                         function handleLayerInteraction(e, layer, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
