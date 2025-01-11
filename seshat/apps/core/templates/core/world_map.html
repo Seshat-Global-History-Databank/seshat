@@ -153,7 +153,7 @@
         position: absolute;
         top: 7%;
         left: 3.8%;
-        z-index: 999;
+        z-index: 9999;
         max-height: 100%; /* Ensure it doesn't exceed the parent div height */
         overflow-y: auto; /* Add vertical scroll if content overflows */
         margin-top: 10px;
@@ -501,7 +501,7 @@
                             <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
                             <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
                             <label for="increment">Play rate (years/second):</label>
-                            <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
+                            <input type="number" id="increment" name="increment" value="50" style="width: 50px;" onchange="playRateValue()">
                             <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter to set play rate.</i></p><br><br>
                         </fieldset>
                         <div id="baseMapControls">
@@ -528,10 +528,11 @@
                     </div>
                     <div class="help" id="help">
                         <button class="crossButton" onclick="toggleHelp()">❌</button>
-                        <h2>How to use the Seshat World Map</h2>
+                        <h2>🎉 Welcome to the Seshat World Map! 🎉</h2>
+                        <p><b>Take a moment to familiarise yourself with the controls, then close this popup window.</b></p><br>
                         <p><b>🔹 Use the slider at the bottom of the page to adjust the displayed year.</b></p>
                         <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
-                        <p><b>🔹 Clicking polity shapes adds them to the legend.</b></p>
+                        <p><b>🔹 Click polities on the map to add them to or remove them from the legend.</b></p>
                         <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p><br>
                         <p><b> The settings gear (⚙️) can be used to access additional controls:</b></p>
                         <p><b>🔹 Use the "Enter year" box to quickly navigate to a specific year.</b></p>
@@ -814,6 +815,9 @@
 
         // Set the default base map to Esri World Imagery
         switchBaseMap();
+
+        // Open the help popup by default
+        toggleHelp();
 
         // Note: these are the choices for the variable values as encoded in sc.models
         // Note: uncoded and no seshat page are both now set to the same colour

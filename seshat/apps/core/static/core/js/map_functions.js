@@ -360,6 +360,23 @@ function updateLegend() {
             shape_name_col_dict = {};
             shape_name_col_dict['polity'] = shape.name;
             shape_name_col_dict['colour'] = shape.colour;
+            if (shape.seshat_id in seshat_id_page_id) {
+                var polityId = seshat_id_page_id[shape.seshat_id]['id'];
+                shape_name_col_dict['link'] = '<a href="/core/polity/' + polityId + '" target="_blank">' + shape.name + '</a>';
+            } else if (shape.seshat_id.includes(';')) {
+                var polityIds = shape.seshat_id.split(';');
+                var polityLinks = [];
+                polityIds.forEach(function (polityId) {
+                    if (polityId in seshat_id_page_id) {
+                        polityLinks.push('<a href="/core/polity/' + seshat_id_page_id
+                            [polityId]['id'] + '" target="_blank">' + polityId + '</a>');
+                    }
+                }
+                );
+                shape_name_col_dict['link'] = shape.name + '; ' + polityLinks.join('; ');
+            } else {
+                shape_name_col_dict['link'] = shape.name;
+            }
             if (shape.weight > 0 && !addedPolityNames.includes(shape_name_col_dict['polity'])) {
                 // If the shape spans the selected year and should be displayed according to the shouldDisplayComponent() function
                 if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger)
@@ -402,7 +419,7 @@ function updateLegend() {
                 colorBox.style.border = '1px solid black';
                 colorBox.style.marginRight = '10px';
                 legendItem.appendChild(colorBox);
-                legendItem.appendChild(document.createTextNode(addedPolities[i].polity));
+                legendItem.innerHTML += addedPolities[i].link; // Treat link as HTML
                 polityContainer.appendChild(legendItem); // Append to the container
             }
 
