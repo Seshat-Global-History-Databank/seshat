@@ -199,6 +199,7 @@
             <h2>How to use Seshat Maps</h2>
             <p><b>🔹 Use the slider at the bottom of the map to adjust the displayed year.</b></p>
             <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
+            <p><b>🔹 Switch between a Globe and a Mercator map projection with 🌍.</b></p>
             <p><b> The settings gear (⚙️) can be used to access additional controls:</b></p>
             <p><b>🔹 Use the "Enter year" box to quickly navigate to a specific year.</b></p>
             <p><b>🔹 Use the "Play rate" box to set the rate of the animation (and the skip controls increment).</b></p>
@@ -218,8 +219,8 @@
                     onclick="toggleSettings()">⚙️</button><br><br>
                 <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
                 <div id="playBackControls">
-                    <button class="friendly-button-small" id="startButton" type="button"
-                        onclick="adjustSliderStartYear()">⏮️</button><br><br>
+                    <button class="friendly-button-small" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button><br><br>
+                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
                     <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
                     <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
                     <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
