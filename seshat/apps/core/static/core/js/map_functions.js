@@ -218,6 +218,7 @@ function switchBaseMap() {
     var help = document.getElementById("help");
     var legendDiv = document.getElementById('variableLegend');
     var selectAll = document.getElementById('selectAll');
+    var globeButton = document.getElementById('globeButton');
 
     if (legendDiv === null) {
         if (selectedMap === 'cesium') {
@@ -340,17 +341,19 @@ function switchBaseMap() {
             }
         });
     }
+    if (selectedMap === 'cesium') {
+        globeButton.innerHTML = '🗺️';
+    } else {
+        globeButton.innerHTML = '🌍';
+    }
     plotPolities();
 }
 
 function pressGlobeButton() {
     var selectedMap = document.getElementById('baseMap').value;
-    var globeButton = document.getElementById('globeButton');
     if (selectedMap === 'cesium') {
-        globeButton.innerHTML = '🌍';
         document.getElementById('baseMap').value = 'arcgis';
     } else {
-        globeButton.innerHTML = '🗺️';
         document.getElementById('baseMap').value = 'cesium';
     }
     switchBaseMap();
