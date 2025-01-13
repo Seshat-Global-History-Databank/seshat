@@ -343,6 +343,19 @@ function switchBaseMap() {
     plotPolities();
 }
 
+function pressGlobeButton() {
+    var selectedMap = document.getElementById('baseMap').value;
+    var globeButton = document.getElementById('globeButton');
+    if (selectedMap === 'cesium') {
+        globeButton.innerHTML = '🌍';
+        document.getElementById('baseMap').value = 'arcgis';
+    } else {
+        globeButton.innerHTML = '🗺️';
+        document.getElementById('baseMap').value = 'cesium';
+    }
+    switchBaseMap();
+}
+
 function updateLegend() {
     var variable = document.getElementById('chooseVariable').value;
     var legendDiv = document.getElementById('variableLegend');
