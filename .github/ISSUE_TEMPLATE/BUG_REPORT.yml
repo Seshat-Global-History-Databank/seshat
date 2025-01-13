@@ -37,9 +37,7 @@ body:
     id: screenshot
     attributes:
       label: "Screenshots"
-      description: If applicable, add screenshots to help explain your problem.
-      value: |
-        ![DESCRIPTION](LINK.png)
+      description: Add screenshots to help explain your problem using the "Paste, drop or click to add files" button below.
     validations:
       required: false
   - type: textarea
