@@ -444,6 +444,14 @@ class ShapesTest(TestCase):
                         }
         )
 
+    def test_get_all_suprapolity_relations(self):
+        """Test the get_all_suprapolity_relations function."""
+        result = get_all_suprapolity_relations()
+        self.assertEqual(result[1], [{'other_polity_id': 2, 'supra_polity_relations': 'vassalage'},
+                                     {'other_polity_id': 3, 'supra_polity_relations': 'vassalage'}
+                                    ])
+        self.assertEqual(result[2], [{'other_polity_id': 3, 'supra_polity_relations': 'personal union'}])
+
     def test_polity_map(self):
         """Test the polity_map template tag."""
         expected_result = {
@@ -478,6 +486,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
+        expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
         result = polity_map(self.pk, test=True)
     
         self.assertEqual(result, expected_result)
@@ -517,6 +526,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
+        expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
         result = polity_map(2, test=True)
 
         self.assertEqual(result, expected_result)
@@ -630,11 +640,3 @@ class ShapesTest(TestCase):
         self.assertEqual(result_shapes[0]['religious_level'], [9, 10])
         self.assertEqual(result_shapes[0]['military_level'], [13, 14])
         self.assertEqual(result_shapes[0]['administrative_level'], [5, 6])
-
-    def test_get_all_suprapolity_relations(self):
-        """Test the get_all_suprapolity_relations function."""
-        result = get_all_suprapolity_relations()
-        self.assertEqual(result[1], [{'other_polity_id': 2, 'supra_polity_relations': 'vassalage'},
-                                     {'other_polity_id': 3, 'supra_polity_relations': 'vassalage'}
-                                    ])
-        self.assertEqual(result[2], [{'other_polity_id': 3, 'supra_polity_relations': 'personal union'}])

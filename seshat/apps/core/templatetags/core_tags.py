@@ -3,7 +3,7 @@ from django.db import connection
 from django.db.models import F
 from ..models import Polity, Capital
 from ...general.models import Polity_capital, Polity_peak_years
-from ..views import get_polity_shape_content
+from ..views import get_polity_shape_content, get_all_suprapolity_relations
 
 register = template.Library()
 
@@ -52,6 +52,8 @@ def polity_map(pk, test=False):
             content['display_year'] = peak_years.peak_year_from
         except:
             pass
+
+        content['suprapolity_relations'] = get_all_suprapolity_relations()
     
     return {'content': content}
 
