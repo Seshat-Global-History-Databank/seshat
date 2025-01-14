@@ -152,9 +152,9 @@
         <div class="settings" id="settings">
             <button class="crossButton" onclick="toggleSettings()">❌</button>
             <fieldset>
-                <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
-                    <label for="switchPolitiesComponents">Display:</label>
-                    <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                <fieldset id="supraPolityRelationsFieldset" style="display: block">
+                    <label for="supraPolityRelations">Display:</label>
+                    <select name="supraPolityRelations" id="supraPolityRelations" onchange="plotPolities()">
                         <option value="polities">Full polities</option>
                         <option value="components" selected>Polity components</option>
                     </select>
@@ -352,7 +352,7 @@
                 // Convert to int, because for some reason JS converts it to a string
                 var selectedYearInt = parseInt(selectedYear);
 
-                displayComponent = document.getElementById('switchPolitiesComponents').value;
+                displayComponent = document.getElementById('supraPolityRelations').value;
                 // Add shapes to the map
                 // Don't plot them if "Base map only" checkbox selected
                 if (!document.getElementById('baseMapOnly').checked) {
