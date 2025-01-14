@@ -154,10 +154,7 @@
             <fieldset>
                 <fieldset id="supraPolityRelationsFieldset" style="display: block">
                     <label for="supraPolityRelations">Display Suprapolity Relations</label>
-                    <select name="supraPolityRelations" id="supraPolityRelations" onchange="plotPolities()">
-                        <option value="polities">Full polities</option>
-                        <option value="components" selected>Polity components</option>
-                    </select>
+                    <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();" checked>
                     <div class="display-info-container">
                         ℹ️
                     </div><br><br>
@@ -350,18 +347,15 @@
                 }
 
                 // Convert to int, because for some reason JS converts it to a string
-                var selectedYearInt = parseInt(selectedYear);
+                var selectedYearInteger = parseInt(selectedYear);
 
-                displayComponent = document.getElementById('supraPolityRelations').value;
                 // Add shapes to the map
                 // Don't plot them if "Base map only" checkbox selected
                 if (!document.getElementById('baseMapOnly').checked) {
                     polityMapShapesData.forEach(function (shape) {
 
-                        // If the shape spans the selected year and should be displayed according to the shouldDisplayComponent() function
-                        if ((parseInt(shape.start_year) <= selectedYearInt && parseInt(shape.end_year) >= selectedYearInt)
-                            && shouldDisplayComponent(displayComponent, shape)
-                        ) {
+                        // If the shape spans the selected year and is a component (does not have its own components)
+                        if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
 
                             // Format the area float
                             const formattedArea = parseFloat(shape.area).toLocaleString('en-US', {

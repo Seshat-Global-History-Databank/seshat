@@ -578,7 +578,7 @@ function updateComponentLegend() {
 
     var legendDiv = document.getElementById('componentLegend');
     var legendDivGlobe = document.getElementById('componentLegendGlobe');
-    var supraPolityRelations = document.getElementById('supraPolityRelations').value;
+    var supraPolityRelations = document.getElementById('supraPolityRelations').checked;
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     // Create a container for polity items
     var polityContainer = document.createElement('div');
@@ -596,9 +596,8 @@ function updateComponentLegend() {
         shape_name_col_dict['polity'] = shape.name;
         shape_name_col_dict['colour'] = shape.colour;
         if (!addedPolityNames.includes(shape_name_col_dict['polity'])) {
-            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger)
-                && shouldDisplayPolityRelations(supraPolityRelations, shape)
-            ) {
+            // If the shape spans the selected year and is a component (does not have its own components)
+            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
                 addedPolities.push(shape_name_col_dict);
                 addedPolityNames.push(shape_name_col_dict['polity']);
             };
@@ -610,8 +609,8 @@ function updateComponentLegend() {
         return a.polity.localeCompare(b.polity);
     });
 
-    // Add a legend for polity components if the displayComponent is set to 'components' and there is more than one
-    if (addedPolities.length > 0 && supraPolityRelations == 'components') {
+    // Add a legend for polity components if there is more than one component to display
+    if (addedPolities.length > 0) {
         for (var i = 0; i < addedPolities.length; i++) {
             var legendItem = document.createElement('p');
             var colorBox = document.createElement('span');
@@ -735,18 +734,6 @@ function shouldDisplayComponent(displayComponent, shape) {
         && (shape.member_of === null || shape.member_of === '')) {
         return true;
     } else if (displayComponent == 'components'
-        && (shape.components === null || shape.components === '')) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function shouldDisplayPolityRelations(supraPolityRelations, shape) {
-    if (supraPolityRelations == 'polities'
-        && (shape.member_of === null || shape.member_of === '')) {
-        return true;
-    } else if (supraPolityRelations == 'components'
         && (shape.components === null || shape.components === '')) {
         return true;
     } else {
