@@ -326,6 +326,7 @@
                 var selectedYear = document.getElementById('dateSlide').value;
                 var opacity = document.getElementById('opacitySlide').value;
                 var selectedMap = document.getElementById("baseMap").value;
+                var supraPolityRelations = document.getElementById('supraPolityRelations').checked;
 
                 // Remove all existing data sources from the viewer
                 viewer.dataSources.removeAll();
@@ -481,7 +482,7 @@
                                 });
                                 capitalsInfo.forEach(function (capital) {
                                     // If the capital existed in the selected year (or years not specified)
-                                    if ((capital['year_from'] <= selectedYearInt && capital['year_to'] >= selectedYearInt)) {
+                                    if ((capital['year_from'] <= selectedYearInteger && capital['year_to'] >= selectedYearInteger)) {
                                         var marker = L.circleMarker([capital.latitude, capital.longitude], {
                                             color: 'black', // Set the border color
                                             fillColor: shape.colour,  // Set the fill color based on the "colour" field
