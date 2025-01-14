@@ -3,11 +3,11 @@ from django.contrib.gis.geos import MultiPolygon, Polygon, GEOSGeometry
 from django.test import TestCase, Client
 from django.urls import reverse
 from ..models import Cliopatria, GADMShapefile, GADMCountries, GADMProvinces, Polity, Capital
-from ...general.models import Polity_capital, Polity_peak_years, Polity_language, Polity_religious_tradition
+from ...general.models import Polity_capital, Polity_peak_years, Polity_language, Polity_religious_tradition, Polity_suprapolity_relations
 from ...sc.models import Judge, Settlement_hierarchy, Religious_level, Military_level, Administrative_level
 from ...wf.models import Copper
 from ...rt.models import Gov_res_pub_pros
-from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes
+from ..views import get_provinces, get_polity_shape_content, get_all_polity_capitals, assign_variables_to_shapes, assign_categorical_variables_to_shapes, get_all_suprapolity_relations
 from ..templatetags.core_tags import get_polity_capitals, polity_map
 
 
@@ -29,7 +29,7 @@ class ShapesTest(TestCase):
             long_name='TestPolity',
             new_name='IqAbbs1'
         )
-        Polity.objects.create(
+        self.polity2 = Polity.objects.create(
             name='TestPolity2',
             id=2,
             long_name='TestPolity2',
@@ -37,7 +37,7 @@ class ShapesTest(TestCase):
             start_year=-100,
             end_year=1100
         )
-        Polity.objects.create(
+        self.polity3 = Polity.objects.create(
             name='TestPolity3',
             id=3,
             long_name='TestPolity3',
@@ -199,6 +199,16 @@ class ShapesTest(TestCase):
             administrative_level_from=5,
             administrative_level_to=6,
             polity_id=2
+        )
+        Polity_suprapolity_relations.objects.create(
+            polity=self.polity,
+            other_polity=self.polity2,
+            supra_polity_relations='personal union',
+        )
+        Polity_suprapolity_relations.objects.create(
+            polity=self.polity2,
+            other_polity=self.polity3,
+            supra_polity_relations='vassalage',
         )
 
     # Model tests
