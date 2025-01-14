@@ -38,7 +38,7 @@ from django.utils.decorators import method_decorator
 
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
-from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
+from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years, Polity_suprapolity_relations
 from seshat.apps.sc.models import Token
 
 
@@ -4160,6 +4160,19 @@ def get_all_polity_capitals():
         cache.set('all_capitals_info', all_capitals_info, 3600)
 
     return all_capitals_info
+
+def get_all_suprapolity_relations():
+    relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations')
+    result = {}
+    for relation in relations:
+        polity_id = relation['polity_id']
+        if polity_id not in result:
+            result[polity_id] = []
+        result[polity_id].append({
+            'other_polity_id': relation['other_polity_id'],
+            'supra_polity_relations': relation['supra_polity_relations']
+        })
+    return result
 
 def assign_variables_to_shapes(shapes, app_map):
     """
