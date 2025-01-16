@@ -54,19 +54,23 @@ def polity_map(pk, test=False):
             pass
 
         all_suprapolity_relations = get_all_suprapolity_relations()
-        try:
-            suprapolity_relations = all_suprapolity_relations[pk]
-        except:
-            suprapolity_relations = []
+        suprapolity_relations = all_suprapolity_relations.get(pk, [])
+        
+        relation_seshat_ids = []
+        relation_polity_ids = [spr['other_polity_id'] for spr in suprapolity_relations]
+        
+        relation_polities = Polity.objects.filter(id__in=relation_polity_ids).values('id', 'new_name', 'long_name')
+        relation_polity_info = {polity['id']: polity for polity in relation_polities}
+        
         for spr in suprapolity_relations:
-            relation_polity = Polity.objects.get(id=spr['other_polity_id'])
-            spr['shapes'] = get_polity_shape_content(seshat_id=relation_polity.new_name)['shapes']
-            if relation_polity.new_name not in relation_seshat_ids:
-                relation_seshat_ids.append(relation_polity.new_name)
+            polity = relation_polity_info[spr['other_polity_id']]
+            spr['shapes'] = get_polity_shape_content(seshat_id=polity['new_name'])['shapes']
+            if polity['new_name'] not in relation_seshat_ids:
+                relation_seshat_ids.append(polity['new_name'])
+        
+        relations_seshat_id_page_id = {polity['new_name']: {'id': polity['id'], 'long_name': polity['long_name'] or ""} for polity in relation_polity_info.values()}
+        
         content['suprapolity_relations'] = suprapolity_relations
-        relation_polities = Polity.objects.filter(new_name__in=relation_seshat_ids).values('new_name', 'id', 'long_name')
-        relation_polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in relation_polities]
-        relations_seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in relation_polity_info}
         content['relations_seshat_id_page_id'] = relations_seshat_id_page_id
     
     return {'content': content}
