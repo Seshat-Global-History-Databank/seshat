@@ -30,7 +30,6 @@ def polity_map(pk, test=False):
         else:
             content = get_polity_shape_content(seshat_id=polity.new_name, tick_number=10)
         capitals_info = get_polity_capitals(pk)
-        # Set the start and end years to be the same as the polity where missing
         modified_caps = capitals_info
         i = 0
         for capital_info in capitals_info:
@@ -53,7 +52,15 @@ def polity_map(pk, test=False):
         except:
             pass
 
-        content['suprapolity_relations'] = get_all_suprapolity_relations()
+        all_suprapolity_relations = get_all_suprapolity_relations()
+        try:
+            suprapolity_relations = all_suprapolity_relations[pk]
+        except:
+            suprapolity_relations = []
+        for spr in suprapolity_relations:
+            relation_polity = Polity.objects.get(id=spr['other_polity_id'])
+            spr['shapes'] = get_polity_shape_content(seshat_id=relation_polity.new_name)['shapes']
+        content['suprapolity_relations'] = suprapolity_relations
     
     return {'content': content}
 
