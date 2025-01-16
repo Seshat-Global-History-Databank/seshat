@@ -431,21 +431,21 @@
                                         <th></th>
                                     </tr>
                             `;
-                            if (shape.seshat_id in seshat_id_page_id) {
-                                var polityId = seshat_id_page_id[shape.seshat_id]['id'];
-                                longName = seshat_id_page_id[shape.seshat_id]['long_name'];
+                            function seshatPageLink(shape, seshatData, selectedMap) {
+                                var polityId = seshatData[shape.seshat_id]['id'];
+                                var longName = seshatData[shape.seshat_id]['long_name'];
                                 if (longName == '') {
-                                    longName = '[Page empty]'
+                                    longName = '[Page empty]';
                                 }
                                 if (selectedMap == 'cesium') {
-                                    popupContent = popupContent + `
-                                    <tr>
-                                        <td>Seshat page</td>
-                                        <td>${longName} (${shape.seshat_id})</td>
-                                    </tr>
-                                `;
+                                    return `
+                                        <tr>
+                                            <td>Seshat page</td>
+                                            <td>${longName} (${shape.seshat_id})</td>
+                                        </tr>
+                                    `;
                                 } else {
-                                    popupContent = popupContent + `
+                                    return `
                                         <tr>
                                             <td>Seshat page</td>
                                             <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
@@ -453,27 +453,12 @@
                                     `;
                                 }
                             }
+
+                            if (shape.seshat_id in seshat_id_page_id) {
+                                popupContent += seshatPageLink(shape, seshat_id_page_id, selectedMap);
+                            }
                             if (shape.seshat_id in relations_seshat_id_page_id) {
-                                var polityId = relations_seshat_id_page_id[shape.seshat_id]['id'];
-                                longName = relations_seshat_id_page_id[shape.seshat_id]['long_name'];
-                                if (longName == '') {
-                                    longName = '[Page empty]'
-                                }
-                                if (selectedMap == 'cesium') {
-                                    popupContent = popupContent + `
-                                    <tr>
-                                        <td>Seshat page</td>
-                                        <td>${longName} (${shape.seshat_id})</td>
-                                    </tr>
-                                `;
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Seshat page</td>
-                                            <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
-                                        </tr>
-                                    `;
-                                }
+                                popupContent += seshatPageLink(shape, relations_seshat_id_page_id, selectedMap);
                             }
                             var popupContent = popupContent + `
                                     <tr>
