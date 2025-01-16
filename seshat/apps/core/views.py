@@ -4165,11 +4165,16 @@ def get_all_suprapolity_relations():
     relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations')
     result = {}
     for relation in relations:
-        polity_id = relation['polity_id']
-        if polity_id not in result:
-            result[polity_id] = []
-        result[polity_id].append({
+        if relation['polity_id'] not in result:
+            result[relation['polity_id']] = []
+        result[relation['polity_id']].append({
             'other_polity_id': relation['other_polity_id'],
+            'supra_polity_relations': relation['supra_polity_relations']
+        })
+        if relation['other_polity_id'] not in result:
+            result[relation['other_polity_id']] = []
+        result[relation['other_polity_id']].append({
+            'other_polity_id': relation['polity_id'],
             'supra_polity_relations': relation['supra_polity_relations']
         })
     return result
