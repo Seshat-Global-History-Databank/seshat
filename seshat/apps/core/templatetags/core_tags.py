@@ -61,8 +61,8 @@ def polity_map(pk, test=False):
         for spr in suprapolity_relations:
             relation_polity = Polity.objects.get(id=spr['other_polity_id'])
             spr['shapes'] = get_polity_shape_content(seshat_id=relation_polity.new_name)['shapes']
-            if spr['other_polity_id'] not in relation_seshat_ids:
-                relation_seshat_ids.append(spr['other_polity_id'])
+            if relation_polity.new_name not in relation_seshat_ids:
+                relation_seshat_ids.append(relation_polity.new_name)
         content['suprapolity_relations'] = suprapolity_relations
         relation_polities = Polity.objects.filter(new_name__in=relation_seshat_ids).values('new_name', 'id', 'long_name')
         relation_polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in relation_polities]
