@@ -44,6 +44,7 @@ def polity_map(pk, test=False):
         content = {}
         content['include_polity_map'] = False
 
+    relation_seshat_ids = []
     if content['include_polity_map']:
         # Update the default display year to be the peak year (if it exists)
         try:
@@ -60,7 +61,13 @@ def polity_map(pk, test=False):
         for spr in suprapolity_relations:
             relation_polity = Polity.objects.get(id=spr['other_polity_id'])
             spr['shapes'] = get_polity_shape_content(seshat_id=relation_polity.new_name)['shapes']
+            if spr['other_polity_id'] not in relation_seshat_ids:
+                relation_seshat_ids.append(spr['other_polity_id'])
         content['suprapolity_relations'] = suprapolity_relations
+        relation_polities = Polity.objects.filter(new_name__in=relation_seshat_ids).values('new_name', 'id', 'long_name')
+        relation_polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in relation_polities]
+        relations_seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in relation_polity_info}
+        content['relations_seshat_id_page_id'] = relations_seshat_id_page_id
     
     return {'content': content}
 

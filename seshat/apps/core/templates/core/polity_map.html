@@ -292,6 +292,9 @@
                 {% endfor %}
             ];
 
+            var seshat_id_page_id = {{ content.seshat_id_page_id | safe }};
+            var relations_seshat_id_page_id = {{ content.relations_seshat_id_page_id | safe }};
+
             var provinceShapeData;
             var countryShapeData;
 
@@ -427,6 +430,52 @@
                                         <th>${shape.name}</th>
                                         <th></th>
                                     </tr>
+                            `;
+                            if (shape.seshat_id in seshat_id_page_id) {
+                                var polityId = seshat_id_page_id[shape.seshat_id]['id'];
+                                longName = seshat_id_page_id[shape.seshat_id]['long_name'];
+                                if (longName == '') {
+                                    longName = '[Page empty]'
+                                }
+                                if (selectedMap == 'cesium') {
+                                    popupContent = popupContent + `
+                                    <tr>
+                                        <td>Seshat page</td>
+                                        <td>${longName} (${shape.seshat_id})</td>
+                                    </tr>
+                                `;
+                                } else {
+                                    popupContent = popupContent + `
+                                        <tr>
+                                            <td>Seshat page</td>
+                                            <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
+                                        </tr>
+                                    `;
+                                }
+                            }
+                            if (shape.seshat_id in relations_seshat_id_page_id) {
+                                var polityId = relations_seshat_id_page_id[shape.seshat_id]['id'];
+                                longName = relations_seshat_id_page_id[shape.seshat_id]['long_name'];
+                                if (longName == '') {
+                                    longName = '[Page empty]'
+                                }
+                                if (selectedMap == 'cesium') {
+                                    popupContent = popupContent + `
+                                    <tr>
+                                        <td>Seshat page</td>
+                                        <td>${longName} (${shape.seshat_id})</td>
+                                    </tr>
+                                `;
+                                } else {
+                                    popupContent = popupContent + `
+                                        <tr>
+                                            <td>Seshat page</td>
+                                            <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
+                                        </tr>
+                                    `;
+                                }
+                            }
+                            var popupContent = popupContent + `
                                     <tr>
                                         <td>Wikipedia page</td>
                                         <td><a href="${wiki_page}" target="_blank">${shape.wikipedia_name}</a></td>
