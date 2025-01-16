@@ -272,6 +272,26 @@
             // Load capital info
             var capitalsInfo = {{ content.capitals_info | safe }};
 
+            // Load suprapolity relations
+            var supraPolityRelationData = [
+                {% for relation in content.suprapolity_relations %}
+                    {
+                        'polity_id': '{{ relation.polity_id }}',
+                        'other_polity_id': '{{ relation.other_polity_id }}',
+                        'suprapolity_relations': '{{ relation.suprapolity_relations }}',
+                        'shapes': [
+                            {% for shape in relation.shapes %}
+                                {
+                                    {% for key, value in shape.items %}
+                                        '{{ key }}': '{{ value|escapejs }}',
+                                    {% endfor %}
+                                },
+                            {% endfor %}
+                        ]
+                    },
+                {% endfor %}
+            ];
+
             var provinceShapeData;
             var countryShapeData;
 
@@ -350,10 +370,19 @@
                 // Convert to int, because for some reason JS converts it to a string
                 var selectedYearInteger = parseInt(selectedYear);
 
+                var toDisplayShapesData = polityMapShapesData;
+                // console.log(toDisplayShapesData.length);
+                // // If suprapolity relations are enabled add the relation shapes to toDisplayShapesData
+                // if (supraPolityRelations) {
+                //     supraPolityRelationData.forEach(function (relationData) {
+                //         toDisplayShapesData.push(relationData['shapes']);
+                //     });
+                // }
+                // console.log(toDisplayShapesData.length);
                 // Add shapes to the map
                 // Don't plot them if "Base map only" checkbox selected
                 if (!document.getElementById('baseMapOnly').checked) {
-                    polityMapShapesData.forEach(function (shape) {
+                    toDisplayShapesData.forEach(function (shape) {
 
                         // If the shape spans the selected year and is a component (does not have its own components)
                         if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
