@@ -65,10 +65,15 @@ def polity_map(pk, test=False):
         for spr in suprapolity_relations:
             polity = relation_polity_info[spr['other_polity_id']]
             spr['shapes'] = get_polity_shape_content(seshat_id=polity['new_name'])['shapes']
-            # Replace the start_year and end_year of each shape with the year_from and to_year of the relation
             for shape in spr['shapes']:
-                shape['start_year'] = spr['year_from']
-                shape['end_year'] = spr['year_to']
+                if spr['year_from']:
+                    shape['relation_start_year'] = spr['year_from']
+                else:
+                    shape['relation_start_year'] = shape['start_year']
+                if spr['year_to']:
+                    shape['relation_end_year'] = spr['year_to']
+                else:
+                    shape['relation_end_year'] = shape['end_year']
                 shape['supra_polity_relations'] = spr['supra_polity_relations']
             if polity['new_name'] not in relation_seshat_ids:
                 relation_seshat_ids.append(polity['new_name'])
