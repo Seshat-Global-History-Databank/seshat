@@ -591,15 +591,35 @@ function updateComponentLegend() {
 
     var addedPolities = [];
     var addedPolityNames = [];
-    polityMapShapesData.forEach(function (shape) {
+    var toDisplayShapesData = polityMapShapesData.slice();
+    // If suprapolity relations are enabled add the relation shapes to toDisplayShapesData
+    if (supraPolityRelations) {
+        supraPolityRelationData.forEach(function (relationData) {
+            relationData['shapes'].forEach(function (shape) {
+                toDisplayShapesData.push(shape);
+            });
+        });
+    }
+    toDisplayShapesData.forEach(function (shape) {
         shape_name_col_dict = {};
         shape_name_col_dict['polity'] = shape.name;
         shape_name_col_dict['colour'] = shape.colour;
         if (!addedPolityNames.includes(shape_name_col_dict['polity'])) {
             // If the shape spans the selected year and is a component (does not have its own components)
             if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
-                addedPolities.push(shape_name_col_dict);
-                addedPolityNames.push(shape_name_col_dict['polity']);
+                var shouldPlot = true;
+                // If the shape has supra_polity_relations, the range from relation_start_year to relation_end_year must also span the selected year
+                if (shape.supra_polity_relations !== undefined) {
+                    if ((parseInt(shape.relation_start_year) <= selectedYearInteger && parseInt(shape.relation_end_year) >= selectedYearInteger)) {
+                        shouldPlot = true;
+                    } else {
+                        shouldPlot = false;
+                    }
+                }
+                if (shouldPlot) {
+                    addedPolities.push(shape_name_col_dict);
+                    addedPolityNames.push(shape_name_col_dict['polity']);
+                }
             };
         };
     });
