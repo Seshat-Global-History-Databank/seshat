@@ -460,6 +460,16 @@
                             if (shape.seshat_id in relations_seshat_id_page_id) {
                                 popupContent += seshatPageLink(shape, relations_seshat_id_page_id, selectedMap);
                             }
+
+                            if (supraPolityRelations && shape.supra_polity_relations !== undefined) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Suprapolity relation</td>
+                                        <td style="text-transform: capitalize;">${shape.supra_polity_relations}</td>
+                                    </tr>
+                                `;
+                            }
+
                             var popupContent = popupContent + `
                                     <tr>
                                         <td>Wikipedia page</td>

@@ -69,6 +69,7 @@ def polity_map(pk, test=False):
             for shape in spr['shapes']:
                 shape['start_year'] = spr['year_from']
                 shape['end_year'] = spr['year_to']
+                shape['supra_polity_relations'] = spr['supra_polity_relations']
             if polity['new_name'] not in relation_seshat_ids:
                 relation_seshat_ids.append(polity['new_name'])
         
