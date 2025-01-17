@@ -4162,20 +4162,24 @@ def get_all_polity_capitals():
     return all_capitals_info
 
 def get_all_suprapolity_relations():
-    relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations')
+    relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations', 'year_from', 'year_to')
     result = {}
     for relation in relations:
         if relation['polity_id'] not in result:
             result[relation['polity_id']] = []
         result[relation['polity_id']].append({
             'other_polity_id': relation['other_polity_id'],
-            'supra_polity_relations': relation['supra_polity_relations']
+            'supra_polity_relations': relation['supra_polity_relations'],
+            'year_from': relation['year_from'],
+            'year_to': relation['year_to']
         })
         if relation['other_polity_id'] not in result:
             result[relation['other_polity_id']] = []
         result[relation['other_polity_id']].append({
             'other_polity_id': relation['polity_id'],
-            'supra_polity_relations': relation['supra_polity_relations']
+            'supra_polity_relations': relation['supra_polity_relations'],
+            'year_from': relation['year_from'],
+            'year_to': relation['year_to']
         })
     return result
 

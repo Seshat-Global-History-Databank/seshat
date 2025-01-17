@@ -204,6 +204,8 @@ class ShapesTest(TestCase):
             polity=self.polity,
             other_polity=self.polity2,
             supra_polity_relations='vassalage',
+            year_from=2000,
+            year_to=2020
         )
         Polity_suprapolity_relations.objects.create(
             polity=self.polity,
@@ -447,12 +449,12 @@ class ShapesTest(TestCase):
     def test_get_all_suprapolity_relations(self):
         """Test the get_all_suprapolity_relations function."""
         result = get_all_suprapolity_relations()
-        self.assertEqual(result[1][0], {'other_polity_id': 2, 'supra_polity_relations': 'vassalage'})
-        self.assertEqual(result[1][1], {'other_polity_id': 3, 'supra_polity_relations': 'vassalage'})
-        self.assertEqual(result[2][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage'})
-        self.assertEqual(result[2][1], {'other_polity_id': 3, 'supra_polity_relations': 'personal union'})
-        self.assertEqual(result[3][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage'})
-        self.assertEqual(result[3][1], {'other_polity_id': 2, 'supra_polity_relations': 'personal union'})
+        self.assertEqual(result[1][0], {'other_polity_id': 2, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020})
+        self.assertEqual(result[1][1], {'other_polity_id': 3, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None})
+        self.assertEqual(result[2][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020})
+        self.assertEqual(result[2][1], {'other_polity_id': 3, 'supra_polity_relations': 'personal union', 'year_from': None, 'year_to': None})
+        self.assertEqual(result[3][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None})
+        self.assertEqual(result[3][1], {'other_polity_id': 2, 'supra_polity_relations': 'personal union', 'year_from': None, 'year_to': None})
 
     def test_polity_map(self):
         """Test the polity_map template tag."""
@@ -488,7 +490,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
-        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+        expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
         result = polity_map(self.pk, test=True)
     
         self.assertEqual(result, expected_result)
@@ -528,7 +530,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
-        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+        expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
         result = polity_map(2, test=True)
 
         self.assertEqual(result, expected_result)
