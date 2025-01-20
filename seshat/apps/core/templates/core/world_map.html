@@ -198,7 +198,7 @@
     }
     
     .display-info-container::after {
-        content: "Many polities have component sub-polities with their own polygons on the map. Switching to 'Polity components' assigns a unique color to each polity component. 'Full polities' shows components from the same polity in the same color.";
+        content: "Selecting 'Polity' applies colors to the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Polity component' assigns a unique color to each polity component which lacks any lower level components in 'Cliopatria'.";
         visibility: hidden;
         width: 200px;
         background-color: #782823;
@@ -473,10 +473,10 @@
                                 <p>Loading Seshat variables...</p>
                             </div>
                             <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
-                                <label for="switchPolitiesComponents">Display:</label>
+                                <label for="switchPolitiesComponents">One color per </label>
                                 <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                    <option value="polities">Full polities</option>
-                                    <option value="components">Polity components</option>
+                                    <option value="polities">Polity</option>
+                                    <option value="components">Polity component</option>
                                 </select>
                                 <div class="display-info-container">
                                     ℹ️
