@@ -362,22 +362,6 @@
             // Set the default base map to Esri World Imagery
             switchBaseMap();
 
-            function shouldDisplayShapePolityPage(shape) {
-                if (shape.suprapolity_relation_shape && !shape.other_polity_is_child) {
-                    if (shape.member_of === null || shape.member_of === '') {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    if (shape.components === null || shape.components === '') {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            }
-
             function plotPolities() {  // This function is defined differently in the world_map template
 
                 var selectedYear = document.getElementById('dateSlide').value;

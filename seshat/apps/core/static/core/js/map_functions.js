@@ -606,7 +606,7 @@ function updateComponentLegend() {
         shape_name_col_dict['colour'] = shape.colour;
         if (!addedPolityNames.includes(shape_name_col_dict['polity'])) {
             // If the shape spans the selected year and is a component (does not have its own components)
-            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
+            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && shouldDisplayShapePolityPage(shape)) {
                 var shouldPlot = true;
                 // If the shape has supra_polity_relations, the range from relation_start_year to relation_end_year must also span the selected year
                 if (shape.supra_polity_relations !== undefined) {
@@ -758,6 +758,22 @@ function shouldDisplayComponent(displayComponent, shape) {
         return true;
     } else {
         return false;
+    }
+}
+
+function shouldDisplayShapePolityPage(shape) {
+    if (shape.suprapolity_relation_shape && !shape.other_polity_is_child) {
+        if (shape.member_of === null || shape.member_of === '') {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (shape.components === null || shape.components === '') {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
