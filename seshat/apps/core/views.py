@@ -4165,13 +4165,17 @@ def get_all_suprapolity_relations():
     relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations', 'year_from', 'year_to')
     result = {}
     for relation in relations:
+        other_polity_is_child = False
+        if relation['supra_polity_relations'] == 'vassalage' or relation['supra_polity_relations'] == 'nominal allegiance':
+            other_polity_is_child = True
         if relation['polity_id'] not in result:
             result[relation['polity_id']] = []
         result[relation['polity_id']].append({
             'other_polity_id': relation['other_polity_id'],
             'supra_polity_relations': relation['supra_polity_relations'],
             'year_from': relation['year_from'],
-            'year_to': relation['year_to']
+            'year_to': relation['year_to'],
+            'other_polity_is_child': False
         })
         if relation['other_polity_id'] not in result:
             result[relation['other_polity_id']] = []
@@ -4179,7 +4183,8 @@ def get_all_suprapolity_relations():
             'other_polity_id': relation['polity_id'],
             'supra_polity_relations': relation['supra_polity_relations'],
             'year_from': relation['year_from'],
-            'year_to': relation['year_to']
+            'year_to': relation['year_to'],
+            'other_polity_is_child': other_polity_is_child
         })
     return result
 

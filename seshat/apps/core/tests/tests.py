@@ -449,11 +449,11 @@ class ShapesTest(TestCase):
     def test_get_all_suprapolity_relations(self):
         """Test the get_all_suprapolity_relations function."""
         result = get_all_suprapolity_relations()
-        self.assertEqual(result[1][0], {'other_polity_id': 2, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020, 'other_polity_is_child': True})
-        self.assertEqual(result[1][1], {'other_polity_id': 3, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None, 'other_polity_is_child': True})
-        self.assertEqual(result[2][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020, 'other_polity_is_child': False})
+        self.assertEqual(result[1][0], {'other_polity_id': 2, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020, 'other_polity_is_child': False})
+        self.assertEqual(result[1][1], {'other_polity_id': 3, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None, 'other_polity_is_child': False})
+        self.assertEqual(result[2][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': 2000, 'year_to': 2020, 'other_polity_is_child': True})
         self.assertEqual(result[2][1], {'other_polity_id': 3, 'supra_polity_relations': 'personal union', 'year_from': None, 'year_to': None, 'other_polity_is_child': False})
-        self.assertEqual(result[3][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None, 'other_polity_is_child': False})
+        self.assertEqual(result[3][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None, 'other_polity_is_child': True})
         self.assertEqual(result[3][1], {'other_polity_id': 2, 'supra_polity_relations': 'personal union', 'year_from': None, 'year_to': None, 'other_polity_is_child': False})
 
     # def test_polity_map(self):
