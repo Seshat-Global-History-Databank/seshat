@@ -39,27 +39,40 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Adding data to the database...'))
         for feature in cliopatria_data['features']:
             properties = feature['properties']
-            self.stdout.write(self.style.SUCCESS(f"Creating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
-            
-            # Save geom and convert Polygon to MultiPolygon if necessary
-            geom = GEOSGeometry(json.dumps(feature['geometry']))
-            if geom.geom_type == 'Polygon':
-                geom = MultiPolygon(geom)
 
-            Cliopatria.objects.create(
-                geom=geom,
-                name=properties['DisplayName'],
-                wikipedia_name=properties['Wikipedia'],
-                seshat_id=properties['SeshatID'],
-                area=properties['Area'],
-                start_year=properties['FromYear'],
-                end_year=properties['ToYear'],
-                polity_start_year=properties['PolityStartYear'],
-                polity_end_year=properties['PolityEndYear'],
-                colour=properties['Color'],
-                components=properties['Components'],
-                member_of=properties['MemberOf']
-            )
+            # Ensure that polities where properties['MemberOf'] is not empty but the 'SeshatID' of the parent includes a ';' are ignored
+            if properties['MemberOf']:
+                # Find the parent polity where "Name" is the same as the "MemberOf" value
+                parent_polity = next((f for f in cliopatria_data['features'] if f['properties']['Name'] == properties['MemberOf']), None)
+                # If the parent polity exists and its 'SeshatID' includes a ';', then set 'MemberOf' to empty
+                if parent_polity and ";" in parent_polity['properties']['SeshatID']:
+                    properties['MemberOf'] = ""
+                    self.stdout.write(self.style.WARNING(f"Updating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']}) to have not be a member of anything, since it is a member of a Supra-polity"))
+
+            # Ignore Cliopatria Supra-polities since we will use the Seshat data to represent them
+            if ";" not in properties['SeshatID']:
+
+                self.stdout.write(self.style.SUCCESS(f"Creating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
+                
+                # Save geom and convert Polygon to MultiPolygon if necessary
+                geom = GEOSGeometry(json.dumps(feature['geometry']))
+                if geom.geom_type == 'Polygon':
+                    geom = MultiPolygon(geom)
+
+                Cliopatria.objects.create(
+                    geom=geom,
+                    name=properties['DisplayName'],
+                    wikipedia_name=properties['Wikipedia'],
+                    seshat_id=properties['SeshatID'],
+                    area=properties['Area'],
+                    start_year=properties['FromYear'],
+                    end_year=properties['ToYear'],
+                    polity_start_year=properties['PolityStartYear'],
+                    polity_end_year=properties['PolityEndYear'],
+                    colour=properties['Color'],
+                    components=properties['Components'],
+                    member_of=properties['MemberOf']
+                )
 
         self.stdout.write(self.style.SUCCESS(f"Successfully imported all data from {cliopatria_geojson_path}"))
 
