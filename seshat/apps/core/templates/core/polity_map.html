@@ -153,8 +153,8 @@
             <button class="crossButton" onclick="toggleSettings()">❌</button>
             <fieldset>
                 <fieldset id="supraPolityRelationsFieldset" style="display: block">
-                    <label for="supraPolityRelations">Suprapolity Relations</label>
-                    <div id="supraPolityRelationsDiv" disabled>
+                    <div id="supraPolityRelationsDiv" style="display: none;">
+                        <label for="supraPolityRelations">Suprapolity Relations</label>
                         <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();">
                         <div class="display-info-container">
                             ℹ️
@@ -294,9 +294,10 @@
                 {% endfor %}
             ];
             var supraPolityRelationsCheckbox = document.getElementById('supraPolityRelations');
+            var supraPolityRelationDiv = document.getElementById('supraPolityRelationsDiv');
             // If any suprapolity relations exist, enable the checkbox div
             if (supraPolityRelationData.length > 0) {
-                supraPolityRelationsDiv.disabled = false;
+                supraPolityRelationDiv.style.display = 'block';
             }
             // If any of the relationships are child relationships, check the checkbox
             if (supraPolityRelationData.some(relation => relation.other_polity_is_child === 'True')) {
