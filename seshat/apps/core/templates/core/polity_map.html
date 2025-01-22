@@ -264,6 +264,8 @@
                         {% for key, value in shape.items %}
                             '{{ key }}': '{{ value|escapejs }}',
                         {% endfor %}
+                        'suprapolity_relation_shape': false,
+                        'other_polity_is_child': false,
                     },
                 {% endfor %}
             ];
@@ -280,27 +282,31 @@
                         'polity_id': '{{ relation.polity_id }}',
                         'other_polity_id': '{{ relation.other_polity_id }}',
                         'suprapolity_relations': '{{ relation.suprapolity_relations }}',
-                        'other_polity_is_child': '{{ relation.other_polity_is_child }}',
+                        'other_polity_is_child': {{ relation.other_polity_is_child | lower }},
                         'shapes': [
                             {% for shape in relation.shapes %}
                                 {
                                     {% for key, value in shape.items %}
                                         '{{ key }}': '{{ value|escapejs }}',
                                     {% endfor %}
+                                    'suprapolity_relation_shape': true,
+                                    'other_polity_is_child': {{ relation.other_polity_is_child | lower }},
                                 },
                             {% endfor %}
                         ]
                     },
                 {% endfor %}
             ];
+
             var supraPolityRelationsCheckbox = document.getElementById('supraPolityRelations');
             var supraPolityRelationDiv = document.getElementById('supraPolityRelationsDiv');
             // If any suprapolity relations exist, enable the checkbox div
             if (supraPolityRelationData.length > 0) {
                 supraPolityRelationDiv.style.display = 'block';
             }
+
             // If any of the relationships are child relationships, check the checkbox
-            if (supraPolityRelationData.some(relation => relation.other_polity_is_child === 'True')) {
+            if (supraPolityRelationData.some(relation => relation.other_polity_is_child === true)) {
                 supraPolityRelationsCheckbox.checked = true;
             }
 
@@ -356,6 +362,22 @@
             // Set the default base map to Esri World Imagery
             switchBaseMap();
 
+            function shouldDisplayShapePolityPage(shape) {
+                if (shape.suprapolity_relation_shape && !shape.other_polity_is_child) {
+                    if (shape.member_of === null || shape.member_of === '') {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    if (shape.components === null || shape.components === '') {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+
             function plotPolities() {  // This function is defined differently in the world_map template
 
                 var selectedYear = document.getElementById('dateSlide').value;
@@ -401,7 +423,7 @@
                     toDisplayShapesData.forEach(function (shape) {
 
                         // If the shape spans the selected year and is a component (does not have its own components)
-                        if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && (shape.components === null || shape.components === '')) {
+                        if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && shouldDisplayShapePolityPage(shape)) {
 
                             var shouldPlot = true;
                             // If the shape has supra_polity_relations, the range from relation_start_year to relation_end_year must also span the selected year
