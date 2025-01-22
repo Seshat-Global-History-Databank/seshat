@@ -154,9 +154,11 @@
             <fieldset>
                 <fieldset id="supraPolityRelationsFieldset" style="display: block">
                     <label for="supraPolityRelations">Suprapolity Relations</label>
-                    <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();">
-                    <div class="display-info-container">
-                        ℹ️
+                    <div id="supraPolityRelationsDiv" disabled>
+                        <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();">
+                        <div class="display-info-container">
+                            ℹ️
+                        </div>
                     </div><br><br>
                 </fieldset>
                 <label for="opacitySlide">Opacity:</label>
@@ -278,6 +280,7 @@
                         'polity_id': '{{ relation.polity_id }}',
                         'other_polity_id': '{{ relation.other_polity_id }}',
                         'suprapolity_relations': '{{ relation.suprapolity_relations }}',
+                        'other_polity_is_child': '{{ relation.other_polity_is_child }}',
                         'shapes': [
                             {% for shape in relation.shapes %}
                                 {
@@ -290,6 +293,15 @@
                     },
                 {% endfor %}
             ];
+            var supraPolityRelationsCheckbox = document.getElementById('supraPolityRelations');
+            // If any suprapolity relations exist, enable the checkbox div
+            if (supraPolityRelationData.length > 0) {
+                supraPolityRelationsDiv.disabled = false;
+            }
+            // If any of the relationships are child relationships, check the checkbox
+            if (supraPolityRelationData.some(relation => relation.other_polity_is_child === 'True')) {
+                supraPolityRelationsCheckbox.checked = true;
+            }
 
             var seshat_id_page_id = {{ content.seshat_id_page_id | safe }};
             var relations_seshat_id_page_id = {{ content.relations_seshat_id_page_id | safe }};
