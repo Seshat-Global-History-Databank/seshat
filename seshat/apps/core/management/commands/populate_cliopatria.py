@@ -39,27 +39,29 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Adding data to the database...'))
         for feature in cliopatria_data['features']:
             properties = feature['properties']
-            self.stdout.write(self.style.SUCCESS(f"Creating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
-            
-            # Save geom and convert Polygon to MultiPolygon if necessary
-            geom = GEOSGeometry(json.dumps(feature['geometry']))
-            if geom.geom_type == 'Polygon':
-                geom = MultiPolygon(geom)
+            # Ignore Cliopatria Supra-polities since we will use the Seshat data to represent them
+            if ";" not in properties['SeshatID']:
+                self.stdout.write(self.style.SUCCESS(f"Creating Cliopatria instance for {properties['DisplayName']} ({properties['FromYear']} - {properties['ToYear']})"))
+                
+                # Save geom and convert Polygon to MultiPolygon if necessary
+                geom = GEOSGeometry(json.dumps(feature['geometry']))
+                if geom.geom_type == 'Polygon':
+                    geom = MultiPolygon(geom)
 
-            Cliopatria.objects.create(
-                geom=geom,
-                name=properties['DisplayName'],
-                wikipedia_name=properties['Wikipedia'],
-                seshat_id=properties['SeshatID'],
-                area=properties['Area'],
-                start_year=properties['FromYear'],
-                end_year=properties['ToYear'],
-                polity_start_year=properties['PolityStartYear'],
-                polity_end_year=properties['PolityEndYear'],
-                colour=properties['Color'],
-                components=properties['Components'],
-                member_of=properties['MemberOf']
-            )
+                Cliopatria.objects.create(
+                    geom=geom,
+                    name=properties['DisplayName'],
+                    wikipedia_name=properties['Wikipedia'],
+                    seshat_id=properties['SeshatID'],
+                    area=properties['Area'],
+                    start_year=properties['FromYear'],
+                    end_year=properties['ToYear'],
+                    polity_start_year=properties['PolityStartYear'],
+                    polity_end_year=properties['PolityEndYear'],
+                    colour=properties['Color'],
+                    components=properties['Components'],
+                    member_of=properties['MemberOf']
+                )
 
         self.stdout.write(self.style.SUCCESS(f"Successfully imported all data from {cliopatria_geojson_path}"))
 
