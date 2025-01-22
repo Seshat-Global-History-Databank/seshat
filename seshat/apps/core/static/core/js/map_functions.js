@@ -379,17 +379,21 @@ function updateLegend() {
             if (shape.seshat_id in seshat_id_page_id) {
                 var polityId = seshat_id_page_id[shape.seshat_id]['id'];
                 shape_name_col_dict['link'] = '<a href="/core/polity/' + polityId + '" target="_blank">' + shape.name + '</a>';
-            } else if (shape.seshat_id.includes(';')) {
-                var polityIds = shape.seshat_id.split(';');
-                var polityLinks = [];
-                polityIds.forEach(function (polityId) {
-                    if (polityId in seshat_id_page_id) {
-                        polityLinks.push('<a href="/core/polity/' + seshat_id_page_id
-                            [polityId]['id'] + '" target="_blank">' + polityId + '</a>');
-                    }
-                }
-                );
-                shape_name_col_dict['link'] = shape.name + '; ' + polityLinks.join('; ');
+            
+            // This code is commented out because Supra-polities from the Cliopatria GeoJSON with multiple Seshat IDs are not currently being loaded into the database
+
+            // } else if (shape.seshat_id.includes(';')) {
+            //     var polityIds = shape.seshat_id.split(';');
+            //     var polityLinks = [];
+            //     polityIds.forEach(function (polityId) {
+            //         if (polityId in seshat_id_page_id) {
+            //             polityLinks.push('<a href="/core/polity/' + seshat_id_page_id
+            //                 [polityId]['id'] + '" target="_blank">' + polityId + '</a>');
+            //         }
+            //     }
+            //     );
+            //     shape_name_col_dict['link'] = shape.name + '; ' + polityLinks.join('; ');
+
             } else {
                 shape_name_col_dict['link'] = shape.name;
             }
