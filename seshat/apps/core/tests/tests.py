@@ -456,84 +456,84 @@ class ShapesTest(TestCase):
         self.assertEqual(result[3][0], {'other_polity_id': 1, 'supra_polity_relations': 'vassalage', 'year_from': None, 'year_to': None, 'other_polity_is_child': True})
         self.assertEqual(result[3][1], {'other_polity_id': 2, 'supra_polity_relations': 'personal union', 'year_from': None, 'year_to': None, 'other_polity_is_child': False})
 
-    # def test_polity_map(self):
-    #     """Test the polity_map template tag."""
-    #     expected_result = {
-    #         'content': {
-    #             'shapes': [
-    #                 {
-    #                     'seshat_id': 'IqAbbs1',
-    #                     'name': 'Testpolityname',
-    #                     'start_year': 2000,
-    #                     'end_year': 2020,
-    #                     'polity_start_year': 2000,
-    #                     'polity_end_year': 2020,
-    #                     'colour': "#FFFFFF",
-    #                     'area': 100.0,
-    #                     'geom_json': self.geo_square,
-    #                     'id': 1,
-    #                     'components': 'Test components',
-    #                     'member_of': 'Test member_of',
-    #                     'wikipedia_name': 'Test Wikipedia'
-    #                 }
-    #             ],
-    #             'earliest_year': 2000,
-    #             'display_year': 2001,  # This is the peak year of the polity
-    #             'latest_year': 2020,
-    #             'tick_years': json.dumps([2000, 2010, 2020]),
-    #             'seshat_id_page_id': {
-    #                 'IqAbbs1': {'id': 1, 'long_name': 'TestPolity'}
-    #             },
-    #             'include_polity_map': True,
-    #             'capitals_info': [
-    #                 {'capital': 'Test Capital', 'latitude': 51.567522, 'longitude': -0.1294531, 'year_from': 2000, 'year_to': 2020}
-    #             ]
-    #         }
-    #     }
-    #     expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
-    #     result = polity_map(self.pk, test=True)
+    def test_polity_map(self):
+        """Test the polity_map template tag."""
+        expected_result = {
+            'content': {
+                'shapes': [
+                    {
+                        'seshat_id': 'IqAbbs1',
+                        'name': 'Testpolityname',
+                        'start_year': 2000,
+                        'end_year': 2020,
+                        'polity_start_year': 2000,
+                        'polity_end_year': 2020,
+                        'colour': "#FFFFFF",
+                        'area': 100.0,
+                        'geom_json': self.geo_square,
+                        'id': 1,
+                        'components': 'Test components',
+                        'member_of': 'Test member_of',
+                        'wikipedia_name': 'Test Wikipedia'
+                    }
+                ],
+                'earliest_year': 2000,
+                'display_year': 2001,  # This is the peak year of the polity
+                'latest_year': 2020,
+                'tick_years': json.dumps([2000, 2010, 2020]),
+                'seshat_id_page_id': {
+                    'IqAbbs1': {'id': 1, 'long_name': 'TestPolity'}
+                },
+                'include_polity_map': True,
+                'capitals_info': [
+                    {'capital': 'Test Capital', 'latitude': 51.567522, 'longitude': -0.1294531, 'year_from': 2000, 'year_to': 2020}
+                ]
+            }
+        }
+        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+        result = polity_map(self.pk, test=True)
     
-    #     self.assertEqual(result, expected_result)
+        self.assertEqual(result, expected_result)
 
-    # def test_polity_map_no_peak_year_set(self):
-    #     """Test the polity_map template tag for a polity that has no peak year set."""
-    #     expected_result = {
-    #         'content': {
-    #             'shapes': [
-    #                 {
-    #                     'seshat_id': 'Cn5Dyna',
-    #                     'name': 'Testpolityname2',
-    #                     'start_year': 0,
-    #                     'end_year': 1000,
-    #                     'polity_start_year': 0,  # Note: this is taken from the shape objectm, not the polity object (they don't match in this test case)
-    #                     'polity_end_year': 1000,
-    #                     'colour': "#FFFFFF",
-    #                     'area': 100.0,
-    #                     'geom_json': self.geo_square,
-    #                     'id': 2,
-    #                     'components': 'Test components',
-    #                     'member_of': 'Test member_of',
-    #                     'wikipedia_name': 'Test Wikipedia 2'
-    #                 }
-    #             ],
-    #             'earliest_year': 0,
-    #             'display_year': 0,
-    #             'latest_year': 1000,
-    #             'tick_years': json.dumps([0, 500, 1000]),
-    #             'seshat_id_page_id': {
-    #                 'Cn5Dyna': {'id': 2, 'long_name': 'TestPolity2'}
-    #             },
-    #             'include_polity_map': True,
-    #             'capitals_info': [
-    #                 {'capital': 'Test Capital 2A', 'latitude': 51.567523, 'longitude': -0.1294532, 'year_from': 0, 'year_to': 100},
-    #                 {'capital': 'Test Capital 2', 'latitude': 51.567523, 'longitude': -0.1294532, 'year_from': -100, 'year_to': 1100}
-    #             ]
-    #         }
-    #     }
-    #     expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
-    #     result = polity_map(2, test=True)
+    def test_polity_map_no_peak_year_set(self):
+        """Test the polity_map template tag for a polity that has no peak year set."""
+        expected_result = {
+            'content': {
+                'shapes': [
+                    {
+                        'seshat_id': 'Cn5Dyna',
+                        'name': 'Testpolityname2',
+                        'start_year': 0,
+                        'end_year': 1000,
+                        'polity_start_year': 0,  # Note: this is taken from the shape objectm, not the polity object (they don't match in this test case)
+                        'polity_end_year': 1000,
+                        'colour': "#FFFFFF",
+                        'area': 100.0,
+                        'geom_json': self.geo_square,
+                        'id': 2,
+                        'components': 'Test components',
+                        'member_of': 'Test member_of',
+                        'wikipedia_name': 'Test Wikipedia 2'
+                    }
+                ],
+                'earliest_year': 0,
+                'display_year': 0,
+                'latest_year': 1000,
+                'tick_years': json.dumps([0, 500, 1000]),
+                'seshat_id_page_id': {
+                    'Cn5Dyna': {'id': 2, 'long_name': 'TestPolity2'}
+                },
+                'include_polity_map': True,
+                'capitals_info': [
+                    {'capital': 'Test Capital 2A', 'latitude': 51.567523, 'longitude': -0.1294532, 'year_from': 0, 'year_to': 100},
+                    {'capital': 'Test Capital 2', 'latitude': 51.567523, 'longitude': -0.1294532, 'year_from': -100, 'year_to': 1100}
+                ]
+            }
+        }
+        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+        result = polity_map(2, test=True)
 
-    #     self.assertEqual(result, expected_result)
+        self.assertEqual(result, expected_result)
 
     def test_polity_map_no_content(self):
         """Test the polity_map func when polity has no shapes associated."""
