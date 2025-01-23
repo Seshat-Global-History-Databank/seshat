@@ -196,12 +196,6 @@
         display: inline-block;
         cursor: pointer;
     }
-
-    .suprapolity-display-info-container {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-    }
     
     .display-info-container::after {
         content: "Selecting 'Polity' applies colors to the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Polity component' assigns a unique color to each polity component which lacks any lower level components in 'Cliopatria'.";
@@ -219,30 +213,8 @@
         opacity: 0;
         transition: opacity 0.3s;
     }
-
-    .suprapolity-display-info-container::after {
-        content: "Selecting 'Polity' applies colors to each polity in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Supra-polity relation' enables color sharing between polities recorded as having a Supra-polity relationship in the Seshat database.";
-        visibility: hidden;
-        width: 200px;
-        background-color: #782823;
-        color: #fff;
-        border-radius: 5px;
-        padding: 10px;
-        position: absolute;
-        z-index: 9999;
-        top: 50%;
-        right: 125%;
-        margin-top: -20px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
     
     .display-info-container:hover::after {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    .suprapolity-display-info-container:hover::after {
         visibility: visible;
         opacity: 1;
     }
@@ -408,11 +380,6 @@
             right: 100%;
         }
 
-        .suprapolity-display-info-container::after {
-            width: 300px;
-            right: 100%;
-        }
-
         .federicka-big {
             font-size: 24px;
         }
@@ -514,16 +481,6 @@
                                         <option value="components">Polity component</option>
                                     </select>
                                     <div class="display-info-container">
-                                        ℹ️
-                                    </div><br>
-                                </div>
-                                <div id="supraPolityRelationsSwitch" style="display: block;">
-                                    <label for="supraPolityRelations">One color per </label>
-                                    <select name="supraPolityRelations" id="supraPolityRelations" onchange="plotPolities()">
-                                        <option value="polities">Polity</option>
-                                        <option value="supra_polity_relations">Supra-polity relation</option>
-                                    </select>
-                                    <div class="suprapolity-display-info-container">
                                         ℹ️
                                     </div><br>
                                 </div>
