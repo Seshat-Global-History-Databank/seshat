@@ -960,7 +960,11 @@
                             shape.weight = polityBorderWeightSelected;
                         }
                         shapeWeight = shape.weight;
-                        shapeColour = shape.colour;
+                        if (shape.supra_polity_relations && shape.supra_polity_relations.length > 0 && displayComponent == 'supra-polities'){
+                            shapeColour = shape.supra_polity_relationship_colour;
+                        } else {
+                            shapeColour = shape.colour;
+                        }
 
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariablesFull.includes(variable)) {

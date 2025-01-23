@@ -754,7 +754,7 @@ function longAbsentPresentVarName(var_name){
 }
 
 function shouldDisplayComponent(displayComponent, shape) {
-    if (displayComponent == 'polities'
+    if ((displayComponent == 'polities' || displayComponent == 'supra-polities')
         && (shape.member_of === null || shape.member_of === '')) {
         return true;
     } else if (displayComponent == 'components'

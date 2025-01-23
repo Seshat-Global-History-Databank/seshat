@@ -4106,6 +4106,12 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
 
     if displayed_year == "all":
         displayed_year = initial_displayed_year 
+        all_suprapolity_relations = get_all_suprapolity_relations()
+        # Add a new field to each shape called suprapolity_relationship_colour which is a duplicate of colour
+        for shape in shapes:
+            shape['supra_polity_relationship_colour'] = 'orange'  # TODO: Choose colour based on the relationship
+            page_id = seshat_id_page_id.get(shape['seshat_id'], {}).get('id')
+            shape['supra_polity_relations'] = all_suprapolity_relations.get(page_id, [])
 
     if seshat_id != "all":  # Used in the polity pages
         earliest_year = min([shape['start_year'] for shape in shapes])
