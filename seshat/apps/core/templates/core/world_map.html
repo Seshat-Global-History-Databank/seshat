@@ -473,17 +473,18 @@
                                 <p>Loading Seshat variables...</p>
                             </div>
                             <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
-                                <!-- cliopatriaComponentsSwitch is disabled as it was decided we don't want this on the world map -->
-                                <div id="cliopatriaComponentsSwitch" style="display: block;">
-                                    <label for="switchPolitiesComponents">One color per </label>
-                                    <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                        <option value="components">Sub-polity (component)</option>
-                                        <option value="polities" selected>Polity</option>
-                                        <option value="supra-polities">Supra-polity relation</option>
-                                    </select>
-                                    <div class="display-info-container">
-                                        ℹ️
-                                    </div><br>
+                                <label for="switchPolitiesComponents">One color per </label>
+                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                                    <option value="components">Sub-polity (component)</option>
+                                    <option value="polities" selected>Polity</option>
+                                    <option value="supra-polities">Supra-polity relation</option>
+                                </select>
+                                <div class="display-info-container">
+                                    ℹ️
+                                </div><br>
+                                <div id="suprapolitiesOnlyDiv" style="display: none;">
+                                    <label for="suprapolitiesOnly">Show polities with Supra-polity relations only</label>
+                                    <input type="checkbox" id="suprapolitiesOnly" name="suprapolitiesOnly" onclick=plotPolities()><br>
                                 </div>
                                 <label for="baseMapOnly">Hide unselected</label>
                                 <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
@@ -876,6 +877,14 @@
             var playButton = document.getElementById('playButton');
             var settings = document.getElementById('settings');
             var help = document.getElementById('help');
+            var displayComponent = document.getElementById('switchPolitiesComponents').value;
+
+            // If displayComponent is 'supra-polities', show the suprapolitiesOnlyDiv
+            if (displayComponent == 'supra-polities') {
+                document.getElementById('suprapolitiesOnlyDiv').style.display = 'block';
+            } else {
+                document.getElementById('suprapolitiesOnlyDiv').style.display = 'none';
+            }
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
@@ -1029,8 +1038,6 @@
                             }
                         }
                     }
-
-                    displayComponent = document.getElementById('switchPolitiesComponents').value;
 
                     // If the shape spans the selected year and should be displayed according to the shouldDisplayComponent() function
                     if ((parseInt(shape.start_year) <= selectedYearInt && parseInt(shape.end_year) >= selectedYearInt)
