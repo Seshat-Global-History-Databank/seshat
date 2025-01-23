@@ -473,14 +473,17 @@
                                 <p>Loading Seshat variables...</p>
                             </div>
                             <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
-                                <label for="switchPolitiesComponents">One color per </label>
-                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                    <option value="polities">Polity</option>
-                                    <option value="components">Polity component</option>
-                                </select>
-                                <div class="display-info-container">
-                                    ℹ️
-                                </div><br>
+                                <!-- cliopatriaComponentsSwitch is disabled as it was decided we don't want this on the world map -->
+                                <div id="cliopatriaComponentsSwitch" style="display: none;">
+                                    <label for="switchPolitiesComponents">One color per </label>
+                                    <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                                        <option value="polities">Polity</option>
+                                        <option value="components">Polity component</option>
+                                    </select>
+                                    <div class="display-info-container">
+                                        ℹ️
+                                    </div><br>
+                                </div>
                                 <label for="baseMapOnly">Hide unselected</label>
                                 <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
                                 <label for="selectAll">Select all</label>
