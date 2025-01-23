@@ -198,7 +198,7 @@
     }
     
     .display-info-container::after {
-        content: "Selecting 'Polity' applies colors to the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Polity component' assigns a unique color to each polity component which lacks any lower level components in 'Cliopatria'.";
+        content: "'Polity' is the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Sub-polity' shows components which lack lower level components in 'Cliopatria'. 'Supra-polity relation' shows Supra-polity relationships from the Seshat database.";
         visibility: hidden;
         width: 200px;
         background-color: #782823;
@@ -474,11 +474,12 @@
                             </div>
                             <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
                                 <!-- cliopatriaComponentsSwitch is disabled as it was decided we don't want this on the world map -->
-                                <div id="cliopatriaComponentsSwitch" style="display: none;">
+                                <div id="cliopatriaComponentsSwitch" style="display: block;">
                                     <label for="switchPolitiesComponents">One color per </label>
                                     <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                        <option value="polities">Polity</option>
-                                        <option value="components">Polity component</option>
+                                        <option value="components">Sub-polity (component)</option>
+                                        <option value="polities" selected>Polity</option>
+                                        <option value="supra-polities">Supra-polity relation</option>
                                     </select>
                                     <div class="display-info-container">
                                         ℹ️
