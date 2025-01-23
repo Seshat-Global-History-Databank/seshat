@@ -4162,31 +4162,43 @@ def get_all_polity_capitals():
     return all_capitals_info
 
 def get_all_suprapolity_relations():
+    """
+    Get all supra-polity relations.
+
+    Returns:
+        dict: A dictionary containing the supra-polity relations.
+    """
+
+    # Try to get the relations from the cache
+    all_suprapolity_relations = cache.get('all_suprapolity_relations')
+
     relations = Polity_suprapolity_relations.objects.filter(other_polity_id__isnull=False).values('polity_id', 'other_polity_id', 'supra_polity_relations', 'year_from', 'year_to')
-    result = {}
+    all_suprapolity_relations = {}
     for relation in relations:
         other_polity_is_child = False
         if relation['supra_polity_relations'] == 'vassalage' or relation['supra_polity_relations'] == 'nominal allegiance':
             other_polity_is_child = True
-        if relation['polity_id'] not in result:
-            result[relation['polity_id']] = []
-        result[relation['polity_id']].append({
+        if relation['polity_id'] not in all_suprapolity_relations:
+            all_suprapolity_relations[relation['polity_id']] = []
+        all_suprapolity_relations[relation['polity_id']].append({
             'other_polity_id': relation['other_polity_id'],
             'supra_polity_relations': relation['supra_polity_relations'],
             'year_from': relation['year_from'],
             'year_to': relation['year_to'],
             'other_polity_is_child': False
         })
-        if relation['other_polity_id'] not in result:
-            result[relation['other_polity_id']] = []
-        result[relation['other_polity_id']].append({
+        if relation['other_polity_id'] not in all_suprapolity_relations:
+            all_suprapolity_relations[relation['other_polity_id']] = []
+        all_suprapolity_relations[relation['other_polity_id']].append({
             'other_polity_id': relation['polity_id'],
             'supra_polity_relations': relation['supra_polity_relations'],
             'year_from': relation['year_from'],
             'year_to': relation['year_to'],
             'other_polity_is_child': other_polity_is_child
         })
-    return result
+        # Store the relations in the cache for 1 hour
+        cache.set('all_suprapolity_relations', all_suprapolity_relations, 3600)
+    return all_suprapolity_relations
 
 def assign_variables_to_shapes(shapes, app_map):
     """
