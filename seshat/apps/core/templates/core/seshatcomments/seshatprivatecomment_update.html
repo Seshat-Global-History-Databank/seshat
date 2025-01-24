@@ -142,7 +142,12 @@
                               {% endif %}
                               {% if my_inst.my_value %}
                               <span class="fs-6">Coded Value: </span>
-                              <span class="fw-bold fs-5"> {{ my_inst.my_value }} </span>                            <br>
+                              <span class="fw-bold fs-5"> 
+                                {% autoescape off %}
+                                {{ my_inst.my_value }}
+                                {% endautoescape %}
+
+                            </span>                            <br>
     
                               {% endif %}
           
@@ -304,7 +309,12 @@
             <tbody>
                   <tr class="bg-colorful-light h6">
                       <td  class="fw-bold"  style="text-align: left;">{{ my_inst.my_var_name }}</td>
-                      <td  class="fw-bold"   style="text-align: left;">{{ my_inst.my_value }}</td>
+                      <td  class="fw-bold"   style="text-align: left;">
+                        
+                        {% autoescape off %}
+                        {{ my_inst.my_value }}
+                        {% endautoescape %}
+                        </td>
     
                       <td style="text-align: left;">
                         <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}" class="text-teal" >{{my_inst.my_polity}}</a></span>

@@ -162,15 +162,15 @@ def rtvars(request):
             var_type="A/P/U/~"
 
             for obj in queryset:
-                if obj.show_value() == 'present':
+                if obj.show_value() == 'Present':
                     filtered_queryset_pres +=1
-                if obj.show_value() == 'absent':
+                if obj.show_value() == 'Absent':
                     filtered_queryset_abs +=1
-                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                if obj.show_value() == "Unknown" and obj.tag == "TRS":
                     filtered_queryset_unk +=1
-                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                if obj.show_value() == "Unknown" and obj.tag == "SSP":
                     filtered_queryset_sus_unk +=1
-                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                if obj.show_value() == 'Uncoded' or obj.tag == "UND":
                     filtered_queryset_unc +=1
                 if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
                     filtered_queryset_trans +=1

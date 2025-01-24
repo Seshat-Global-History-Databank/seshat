@@ -233,7 +233,13 @@
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Warfare Variables (MilTech)" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#wf_var"><span class="badge bg-danger p-1 mx-0 fs-5 ">WF</span></a>
                         </span>
-                        {% endif %}
+                        {% endif %} 
+
+                        {% if has_any_ec_data %}
+                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Economy Variables (Luxury Goods)" data-bs-html="true" data-bs-trigger="focus">
+                        <a href="#ec_var"><span class="badge p-1 mx-0 fs-5" style="background: #40e0d0;">EC</span></a>
+                        </span>
+                        {% endif %} 
 
                         {% if has_any_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Religion Tolerance" data-bs-html="true" data-bs-trigger="focus">
@@ -1067,6 +1073,171 @@
             </div>
 
             {% endif %}
+
+
+<!-- ec -->
+{% if all_ec_data %}
+<div class="col-md-12 m-0 p-0">
+    <span class=" h3 fw-bold m-0 p-0 ">  
+        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #40e0d03b;">
+            Economy Variables (Luxury Goods)
+        </span>   
+        <span class=" mt-3 fs-5">
+            <a href="#ec_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
+        </span>                 
+
+    </span>
+</div>
+
+<div class="row">
+    {% for key_top, values_top in all_ec_data.items %}
+
+        {% for key_m, values_m in values_top.items %}
+        {% if values_m %}
+
+        <div class="col-md-2 mt-2 pt-1 border-top border-1 border-danger d-flex align-items-top">
+
+            <span class=" fs-6 text-dark border-danger"  style="text-align: left;">
+                <i class="fa-solid fa-circle fa-2xs text-danger"></i>
+                <span class="fw-bold"> {{key_top}}</span> 
+                {% if key_m != 'None' %}
+                <span class="fw-light">/ {{key_m}}</span> 
+                {% endif %}
+            </span>
+
+         </div>
+         {% endif %}
+
+         {% if values_m %}
+
+                <div class="col-md-10 py-2" id="table_id_sc">
+    
+                {% for key, values in values_m.items %}
+                {% if values %}
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1"> 
+                        <a class="h6 text-dark" href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                            {{ values.0.clean_name_spaced}}
+                        </a> 
+                    {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                    <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                    </a> 
+                    {% endif %}
+                </div>
+                    <table class="table mb-2 pb-2 shadow-box fs-6" style="width: auto;">
+
+                    {% for vv in values %}
+
+                    {% if vv.year_from == None and vv.year_to == None %}
+                        
+
+                    {% else %}
+                    <tr style="border-top:5px solid lightgray; margin-bottom: 10px;">
+
+                        <td class="text-end ps-5 bg-light" style="padding-top:5px;">
+                            <span class="text-secondary fw-light fs-6" style="border-radius:5px">
+                                {% if vv.year_from == None %}
+                                    &nbsp;
+                                {% elif  vv.year_from == vv.year_to %}
+                                    {% if  vv.year_from < 0 %}
+                                    {{ vv.year_from|abs }} 
+                                    <span class="text-secondary fw-light fs-6">BCE</span> 
+                                    {% else %}
+                                    {{ vv.year_from }} 
+                                    <span class="text-secondary fw-light fs-6">CE</span>
+                                    {% endif %}
+                                {% elif vv.year_to == None %}
+                                    {% if  vv.year_from < 0 %}
+                                    {{ vv.year_from|abs }} 
+                                        <span class="text-secondary fw-light fs-6">BCE</span>
+                                    {% else %}
+                                    {{ vv.year_from }} 
+                                        <span class="text-secondary fw-light fs-6">CE</span>
+                                    {% endif %}
+                                {% elif vv.year_to == None and  vv.year_from == None %}
+                                    <i class="fa-solid fa-minus"></i> 
+                                {% else %}
+                                    {% if  vv.year_from < 0 and vv.year_to < 0 %}
+                                    {{ vv.year_from|abs }} 
+                                        <span class="text-secondary fw-light fs-6">BCE</span> 
+                                    <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
+                                        <span class="text-secondary fw-light fs-6">BCE</span> 
+                                    {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
+                                    {{ vv.year_from|abs }}         
+                                        <span class="text-secondary fw-light fs-6">BCE</span> 
+                                <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
+                                        <span class="text-secondary fw-light fs-6">CE</span> 
+                                    {% else %}
+                                    {{ vv.year_from }} 
+                                        <span class="text-secondary fw-light fs-6">CE</span>
+                                <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
+                                        <span class="text-secondary fw-light fs-6">CE</span> 
+                                    {% endif %}
+                                {% endif %}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% endif %}
+                    <tr>
+                        <td class="ps-2">
+                            <a href="#{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+
+                            {% autoescape off %}
+
+                            <span>
+                                {{ vv.show_value }}   
+                            </span>
+                            {% endautoescape %}
+
+                        </a> 
+
+                        </td>
+                    </tr>
+
+
+                    {% endfor %}
+                </table>
+                <br>
+
+
+                        </span>
+                {% endif %}
+
+                {% endfor %}
+
+                {% for key, values in values_m.items %}
+                    {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                    <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                        {{ key|replace_underscore_and_capitalize }} 
+                            <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                            </a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+
+    </div>
+    {% endif %}
+
+
+    {% endfor %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="col-md-9">
+    <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
+        <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #dc35453b; border:1px solid #dc3545">
+            Economy Variables (Luxury Goods)
+        </span>   
+        <span class=" mt-3 fs-5">
+    Coding in Progress.
+        </span>                 
+    </span>
+</div>
+
+{% endif %}
+
+
 <!-- RT -->
 {% if all_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
 <div class="col-md-12 m-0 p-0">
@@ -1907,6 +2078,103 @@
     
         <hr class="light-heavy-hr">
 
+
+
+    <!-- EC NEW -->
+    {% autoescape off %}
+    <div class=" ps-0 ms-0 ">
+        <div>
+            <span class="h1" style="text-align: left; color:#40e0d0;" >
+                <span class="h1 federicka-huge" id="ec_var">
+                    Economy Variables </span> <span class="h2 federicka-bigger" >(Luxury Goods)</span>
+            </span>
+        </div>
+        {% for key_top, values_top in all_ec_data.items %}
+            <div class="py-2 ps-0 ms-0">
+            {% for key_m, values_m in values_top.items %}
+                {% if values_m %}
+                <div class="py-3 ps-0 ms-0">
+                    <span class="h4 my-5 py-2 px-2 ms-0 federicka-medium text-dark"  style="background-color: #f3bc9f;">
+                        <span> {{key_top}}</span> 
+                        {% if key_m != 'None' %}
+                        <span class="fw-light">/ {{key_m}}</span> 
+                        {% endif %}
+                    </span>
+                </div>
+                {% endif %}
+                {% for key, values in values_m.items %}
+                {% if values %}
+                    <div class="row d-flex mt-3 mb-5" style="--bs-gutter-x:0rem!important">
+                            {% for value in values %}
+                            <div class="col-md-9" id="{{key}}">
+                                <span class="h5 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
+                                    {% include "core/partials/_year_block_value_inline.html" %}
+
+                                    <span class="h5 fw-bold" >
+                                         {{ value.show_value }}
+                                    </span>
+                                    <br>
+                                    <div style="display: block; padding: 0;">
+                                        <div style="display: inline-flex; flex-direction: row;">
+                                            {% include "core/partials/_tag_value_inline.html" %}
+                                            {% include "core/partials/_disputed_value_inline.html" %}
+                                            {% include "core/partials/_uncertain_value_inline.html" %}
+                                            {% include "core/partials/_expert_checked_value_inline.html" %}
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </span>
+
+                                {% with my_app_name='ec' %}
+                                    {% include "core/partials/_abc.html" %}
+                                {% endwith %}
+
+                            </div>
+                            <div class="col-md-3">
+                                <a href="{% url key|lower|add:'s_all' %}" class="btn float-end fw-light text-secondary"><b><u>View all such records</u></b></a>
+                            </div>
+                            <div class="col-md-12">
+                                {% include "core/partials/_private_comment_inline.html" %}
+                            </div>
+                            {% if value.description %}
+                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                    <p class="fs-6 my-1 py-1" >
+                                            {{ value.description|make_references_look_nicer }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                            {% if value.comment %}
+                                {% if value.comment_id > 1  and value.comment.inner_comments_related.all|length >= 1 %}
+                                <div class="col-md-12 highlighted-value my-0 py-0">
+                                    <p class="fs-6 my-1 py-1" id="{{key}}"> 
+                                        <i class="fa-solid text-secondary fa-quote-left"></i>  {{ value.comment }}  <i class="fa-solid text-secondary fa-quote-right"></i>                                           
+                                         <span>
+                                            {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                                            <a class="p-0 m-0" 
+                                            style="display:block; overflow: hidden;" 
+                                            href="{% url 'seshatcomment-update' value.comment.id %}">
+                                            </a>  
+                                            {% endif %}
+                                        </span>       
+                                     </p> 
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                    </div>
+                    <br>
+                    {% endif %}
+                    {% endfor %}
+
+                {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+
+    {% endautoescape  %}
+
+    <hr class="light-heavy-hr">
         <!-- RT NEW -->
         {% autoescape off %}
         {% if all_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
