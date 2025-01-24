@@ -632,9 +632,9 @@ def get_all_ec_data_for_a_polity(polity_id):
         m = ct.model_class()
         if m and m.__module__ == "seshat.apps.ec.models":
             my_data = m.objects.filter(polity = polity_id)
-            print('mmmmmmmmmmmmmmmmm:', m.__name__ )
+            #print('mmmmmmmmmmmmmmmmm:', m.__name__ )
             if m.__name__ == 'Precious_metal':
-                print('Hooooooooooooooo')
+                #print('Hooooooooooooooo')
                 continue
 
             #print(f"--------xxxxxxxxxxxxx-----{m.__name__}, ")
