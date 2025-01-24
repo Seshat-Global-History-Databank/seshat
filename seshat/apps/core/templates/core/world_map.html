@@ -960,12 +960,20 @@
                             shape.weight = polityBorderWeightSelected;
                         }
                         shapeWeight = shape.weight;
+                        shapeColour = shape.colour;
                         if (shape.supra_polity_relations && shape.supra_polity_relations.length > 0 && displayComponent == 'supra-polities'){
-                            shapeColour = shape.supra_polity_relationship_colour;
-                        } else {
-                            shapeColour = shape.colour;
+                            if (shape.supra_polity_relations.some(relation => relation.other_polity_is_child)){
+                                shapeColour = shape.colour;
+                            } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance')){
+                                shapeColour = shape.supra_polity_relations.find(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance').colour;
+                            } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'personal union' || relation.supra_polity_relations == 'alliance' || relation.supra_polity_relations == 'unknown'  || relation.supra_polity_relations == 'uncoded')){
+                                colourList = shape.supra_polity_relations.map(relation => relation.colour);
+                                colourList.push(shape.colour);
+                                colourList.sort();
+                                shapeColour = colourList[0];
+                            }
                         }
-
+                        shape.colour = shapeColour;
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
