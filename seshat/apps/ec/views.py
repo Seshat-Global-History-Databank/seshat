@@ -66,7 +66,7 @@ def ecvars(request):
         count = model.objects.count()
         pols_count = Polity.objects.count()
         number_of_all_rows += count
-        model_title = model_name.replace("_", " ").title()
+        model_title = model_name.replace("_", " ").replace('Lux ', '').title()
         model_create = model_name.lower() + "-create"
         model_download = model_name.lower() + "-download"
         model_metadownload = model_name.lower() + "-metadownload"
