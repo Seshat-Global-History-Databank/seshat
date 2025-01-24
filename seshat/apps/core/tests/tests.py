@@ -490,7 +490,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
-        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+
         result = polity_map(self.pk, test=True)
     
         self.assertEqual(result, expected_result)
@@ -530,7 +530,7 @@ class ShapesTest(TestCase):
                 ]
             }
         }
-        # expected_result['content']['suprapolity_relations'] = get_all_suprapolity_relations()  # Already tested in test_get_all_suprapolity_relations
+
         result = polity_map(2, test=True)
 
         self.assertEqual(result, expected_result)
