@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.forms.formsets import BaseFormSet
 
 
-from seshat.apps.core.models import Section, Subsection, Variablehierarchy, Reference, Citation, SeshatComment, SeshatCommentPart, Polity, Capital, Nga, SeshatPrivateCommentPart, SeshatPrivateComment, Religion
+from seshat.apps.core.models import Section, Subsection, Variablehierarchy, Reference, Citation, SeshatComment, SeshatCommentPart, Polity, Capital, Nga, SeshatPrivateCommentPart, SeshatPrivateComment, Religion, Prec_met_instance
 from django.core.exceptions import NON_FIELD_ERRORS
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -32,6 +32,20 @@ class ReligionForm(forms.ModelForm):
         widgets = {
             'religion_name': forms.TextInput(
                 attrs={'class': 'form-control mb-3', })}
+        
+
+class PreciousMetalInstanceForm(forms.ModelForm):
+    class Meta:
+        model = Prec_met_instance
+        fields = ['name', 'metal']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter instance name'}),
+            'metal': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter metal name'}),
+        }
+        labels = {
+            'name': 'Instance Name',
+            'metal': 'Metal Name',
+        }
 
 
 class ReferenceForm(forms.ModelForm):

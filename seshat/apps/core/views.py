@@ -39,7 +39,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
 from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years
-from seshat.apps.sc.models import Token
+from seshat.apps.sc.models import Token, Precious_metal
+from seshat.apps.ec.models import Lux_precious_metal
 
 
 from django.core.paginator import Paginator
@@ -79,7 +80,7 @@ from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Re
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
+from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
 
 
 from django.shortcuts import HttpResponse
@@ -372,6 +373,20 @@ class ReferenceListView(generic.ListView):
             str: The absolute URL of the view.
         """
         return reverse('references')
+    
+    # def check_missing_zotero_items(self, queryset):
+    #     """
+    #     Check if all items in zotero_list_unknown appear in the zotero_link column.
+
+    #     Args:
+    #         queryset (QuerySet): The queryset of references.
+
+    #     Returns:
+    #         list: List of missing items.
+    #     """
+    #     zotero_links = queryset.values_list('zotero_link', flat=True)
+    #     missing_items = [item for item in self.zotero_list_unknown if item not in zotero_links]
+    #     return missing_items
 
     def get_queryset(self):
         """
@@ -380,7 +395,7 @@ class ReferenceListView(generic.ListView):
         Returns:
             QuerySet: The queryset of references.
         """
-        queryset = Reference.objects.exclude(creator='MAJIDBENAM').all()
+        queryset = Reference.objects.exclude(creator='MAJIDBENAM').all()        
         return queryset
     
     # def get_context_data(self, **kwargs):
@@ -886,7 +901,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
+        my_apps=['rt', 'general', 'sc', 'wf', 'ec', 'crisisdb']
         my_app_models = {name: apps.all_models[name] for name in my_apps}
 
         #context['my_app_models'] = my_app_models
@@ -894,7 +909,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
 
         for myapp, mymodels in my_app_models.items():
             for mm, mymodel in mymodels.items():
-                if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=self.object.id):
+                if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=self.object.id):
                     my_instance = mymodel.objects.get(comment=self.object.id)
                     my_polity = my_instance.polity
                     my_polity_id = my_instance.polity.id
@@ -1460,7 +1475,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
         big_father = SeshatComment.objects.get(id=com_id)
 
     #
-    my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
+    my_apps=['rt', 'general', 'sc', 'wf', 'ec', 'crisisdb']
     my_app_models = {name: apps.all_models[name] for name in my_apps}
 
     #context['my_app_models'] = my_app_models
@@ -1468,7 +1483,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 
     for myapp, mymodels in my_app_models.items():
         for mm, mymodel in mymodels.items():
-            if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=big_father):
+            if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=big_father):
                 my_instance = mymodel.objects.get(comment=big_father)
                 my_polity = my_instance.polity
                 my_polity_id = my_instance.polity.id
@@ -2635,6 +2650,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
             context["all_sc_data"], context["has_any_sc_data"] = get_all_sc_data_for_a_polity(self.object.pk)
             context["all_wf_data"], context["has_any_wf_data"] = get_all_wf_data_for_a_polity(self.object.pk)
+            context["all_ec_data"], context["has_any_ec_data"] = get_all_ec_data_for_a_polity(self.object.pk)
             context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.object.pk)
             context["all_crisis_cases_data"] = get_all_crisis_cases_data_for_a_polity(self.object.pk)
             context["all_power_transitions_data"] = get_all_power_transitions_data_for_a_polity(self.object.pk)
@@ -2661,6 +2677,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_general_data"] = None
             context["all_sc_data"] = None
             context["all_wf_data"] = None
+            context["all_ec_data"] = None
             context["all_rt_data"] = None
         ################# NEW
         Polity_object = Polity.objects.get(id=self.object.pk)
@@ -4705,7 +4722,7 @@ def update_seshat_comment_part_view(request, pk):
     parent_comment_part = SeshatComment.objects.get(id=parent_comment_id)
 
     #
-    my_apps=['rt', 'general', 'sc', 'wf', 'crisisdb']
+    my_apps=['rt', 'general', 'sc', 'wf', 'ec','crisisdb']
     my_app_models = {name: apps.all_models[name] for name in my_apps}
 
     #context['my_app_models'] = my_app_models
@@ -4713,7 +4730,7 @@ def update_seshat_comment_part_view(request, pk):
 
     for myapp, mymodels in my_app_models.items():
         for mm, mymodel in mymodels.items():
-            if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=parent_comment_part):
+            if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=parent_comment_part):
                 my_instance = mymodel.objects.get(comment=parent_comment_part)
                 my_polity = my_instance.polity
                 my_polity_id = my_instance.polity.id
@@ -5279,7 +5296,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        my_apps=['core', 'rt', 'general', 'sc', 'wf', 'crisisdb']
+        my_apps=['core', 'rt', 'general', 'sc', 'wf', 'ec', 'crisisdb']
         my_app_models = {name: apps.all_models[name] for name in my_apps}
 
         #context['my_app_models'] = my_app_models
@@ -5288,7 +5305,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         for myapp, mymodels in my_app_models.items():
             if myapp != 'core':
                 for mm, mymodel in mymodels.items():
-                    if '_citations' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(private_comment=self.object.id):
+                    if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(private_comment=self.object.id):
                         my_instance = mymodel.objects.get(private_comment=self.object.id)
                         my_polity = my_instance.polity
                         my_polity_id = my_instance.polity.id
@@ -5649,9 +5666,13 @@ def get_description(request, model_name, obj_id):
     try:
         # Dynamically get the model class based on the model name
         # make sure we bring in app_label to add more safety and security
-        if model_name != 'token':
+        if model_name not in ['token', 'lux_precious_metal', 'precious_metal'] :
             model = ContentType.objects.get(model=model_name.lower()).model_class()
             obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        elif model_name == 'lux_precious_metal':
+            obj = get_object_or_404(Lux_precious_metal, id=obj_id) 
+        elif model_name == 'precious_metal':
+            obj = get_object_or_404(Precious_metal, id=obj_id) 
         else:
             obj = get_object_or_404(Token, id=obj_id) 
         content = render_to_string('core/description_snippet.html', {'obj': obj})

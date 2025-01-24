@@ -32,6 +32,11 @@
 {% block extracols %}
 
 <td style="text-align: left;">
-<span class="h5 fw-bold">{{ object.show_value }}</span>
+<span class="h6 fw-bold">
+   {% autoescape off %}
+   {{ object.show_value }}
+   {% endautoescape %}
+
+</span>
 </td>
 {% endblock extracols %}
