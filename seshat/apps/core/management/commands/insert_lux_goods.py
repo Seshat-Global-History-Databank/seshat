@@ -18,6 +18,11 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Fetching polities and experts...")  
 
+        unique_polity_new_ids = Polity.objects.values_list('new_name', flat=True).distinct()
+
+        # Convert the queryset to a list (if needed)
+        unique_polity_new_ids_list = list(unique_polity_new_ids)
+
         for pol_var_tuple, coded_cols in my_final_dic_with_citations_stripped.items():
             polity_new_id, var_name = pol_var_tuple
             print(polity_new_id)
@@ -96,6 +101,37 @@ class Command(BaseCommand):
             #big_father = SeshatComment.objects.get(id=com_id)
             com_id = big_father.pk
 
+            # break place_of_prov 
+            all_places_str =[]
+            all_places_pol = []
+            if coded_cols['place_str']:
+                all_places = coded_cols['place_str'].split(";")
+            else:
+                all_places = ''
+
+            for a_p in all_places:
+                if a_p == 'domestic':
+                    if polity_new_id in unique_polity_new_ids_list:
+                        all_places_pol.append(polity_new_id)
+                    elif polity_new_id in pol_maps:
+                        all_places_pol.append(pol_maps[polity_new_id])
+                    else:
+                        print("Baaaaaaaaaaaaaaaaaaaaaaaad: ", polity_new_id)
+                elif a_p in unique_polity_new_ids_list and a_p not in all_places_pol:
+                    all_places_pol.append(a_p)
+                elif a_p in pol_maps and a_p not in all_places_pol:
+                    all_places_pol.append(pol_maps[a_p])
+                else:
+                    all_places_str.append(a_p)
+
+            # Str Locations Done
+            if all_places_str:
+                all_places_str_str = '; '.join(all_places_str)
+            else:
+                all_places_str_str = None
+
+
+
             #model_class = apps.get_model(app_label='ec', model_name=Lux_precious_metal)
 
             model_instance = var_to_model[var_name].objects.create(
@@ -107,13 +143,19 @@ class Command(BaseCommand):
                 elite_consumption_tag=coded_cols['elite_tag'], 
                 common_people_consumption=coded_cols['cp'], 
                 common_people_consumption_tag=coded_cols['cp_tag'], 
-                place_of_provenance_str=coded_cols['place_str'], 
+                place_of_provenance_str=all_places_str_str, 
                 polity_id=my_polity_id
                 )
             # create model_instance
             model_instance.comment = big_father
 
             model_instance.save()
+
+
+            # attach location pols.
+            for pol_pol in all_places_pol:
+                polity_to_be_added = Polity.objects.get(new_name=pol_pol)
+                model_instance.place_of_provenance_pol.add(polity_to_be_added)
 
             seshat_expert_instance = Seshat_Expert.objects.get(id=2)
 
