@@ -18,15 +18,15 @@ urlpatterns = [
 ]
 
 model_form_pairs_qugmented = [
-    (Lux_precious_metal, Lux_precious_metalForm, 'lux_precious_metal', 'coded_value', 'Lux Precious Metal', 'Luxury Goods', None, 'ec'),
+    (Lux_precious_metal, Lux_precious_metalForm, 'lux_precious_metal', 'coded_value', 'Precious Metal', 'Luxury Goods', None, 'ec'),
     (Luxury_fabrics, Luxury_fabricsForm, 'luxury_fabrics', 'coded_value', 'Luxury Fabrics', 'Luxury Goods', None, 'ec'),
     (Luxury_manufactured_goods, Luxury_manufactured_goodsForm, 'luxury_manufactured_goods', 'coded_value', 'Luxury Manufactured Goods', 'Luxury Goods', None, 'ec'),
     (Luxury_spices_incense_and_dyes, Luxury_spices_incense_and_dyesForm, 'luxury_spices_incense_and_dyes', 'coded_value', 'Luxury Spices Incense And Dyes', 'Luxury Goods', None, 'ec'),
     (Luxury_drink_alcohol, Luxury_drink_alcoholForm, 'luxury_drink_alcohol', 'coded_value', 'Luxury Drink/Alcohol', 'Luxury Goods', None, 'ec'),
     (Luxury_glass_goods, Luxury_glass_goodsForm, 'luxury_glass_goods', 'coded_value', 'Luxury Glass Goods', 'Luxury Goods', None, 'ec'),
-    (Lux_fine_ceramic_wares, Lux_fine_ceramic_waresForm, 'lux_fine_ceramic_wares', 'coded_value', 'Lux Fine Ceramic Wares', 'Luxury Goods', None, 'ec'),
-    (Lux_precious_stone, Lux_precious_stoneForm, 'lux_precious_stone', 'coded_value', 'Lux Precious Stone', 'Luxury Goods', None, 'ec'),
-    (Lux_statuary, Lux_statuaryForm, 'lux_statuary', 'coded_value', 'Lux Statuary', 'Luxury Goods', None, 'ec'),
+    (Lux_fine_ceramic_wares, Lux_fine_ceramic_waresForm, 'lux_fine_ceramic_wares', 'coded_value', 'Fine Ceramic Wares', 'Luxury Goods', None, 'ec'),
+    (Lux_precious_stone, Lux_precious_stoneForm, 'lux_precious_stone', 'coded_value', 'Precious Stone', 'Luxury Goods', None, 'ec'),
+    (Lux_statuary, Lux_statuaryForm, 'lux_statuary', 'coded_value', 'Statuary', 'Luxury Goods', None, 'ec'),
     (Luxury_food, Luxury_foodForm, 'luxury_food', 'coded_value', 'Luxury Food', 'Luxury Goods', None, 'ec'),
     (Other_luxury_personal_items, Other_luxury_personal_itemsForm, 'other_luxury_personal_items', 'coded_value', 'Other Luxury Personal Items', 'Luxury Goods', None, 'ec'),
     ]
