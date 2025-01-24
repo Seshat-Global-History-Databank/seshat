@@ -1,4 +1,4 @@
-from .models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
+from .models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga, Moralizing_supernatural_punishment_and_reward, Moralizing_supernatural_concern_is_primary, Moralizing_enforcement_is_certain, Moralizing_enforcement_is_broad, Moralizing_enforcement_is_targeted, Moralizing_enforcement_of_rulers, Moralizing_religion_adopted_by_elites, Moralizing_religion_adopted_by_commoners, Moralizing_enforcement_in_afterlife, Moralizing_enforcement_in_this_life, Moralizing_enforcement_is_agentic
 
 from django import forms
 from django.db.models.base import Model
@@ -418,3 +418,137 @@ class Gov_press_conv_for_agaForm(ExpertReviewedForm):
         labels['coded_value'] = "&nbsp;<b> Societal Pressure To Convert Or Against Conversion: </b>"
         widgets = dict(commonwidgets)
         widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+
+
+##### MSP Forms:
+
+class Moralizing_supernatural_punishment_and_rewardForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_supernatural_punishment_and_reward
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Supernatural Punishment And Reward: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_supernatural_concern_is_primaryForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_supernatural_concern_is_primary
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Supernatural Concern Is Primary: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_is_certainForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_is_certain
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement Is Certain: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_is_broadForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_is_broad
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement Is Broad: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_is_targetedForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_is_targeted
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement Is Targeted: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_of_rulersForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_of_rulers
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement Of Rulers: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_religion_adopted_by_elitesForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_religion_adopted_by_elites
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Religion Adopted By Elites: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_religion_adopted_by_commonersForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_religion_adopted_by_commoners
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Religion Adopted By Commoners: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_in_afterlifeForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_in_afterlife
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement In Afterlife: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_in_this_lifeForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_in_this_life
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement In This Life: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        
+
+
+class Moralizing_enforcement_is_agenticForm(ExpertReviewedForm):
+    class Meta:
+        model = Moralizing_enforcement_is_agentic
+        fields = commonfields.copy()
+        fields.append('coded_value')
+        labels = commonlabels
+        labels['coded_value'] = "&nbsp;<b> Moralizing Enforcement Is Agentic: </b>"
+        widgets = dict(commonwidgets)
+        widgets['coded_value'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        

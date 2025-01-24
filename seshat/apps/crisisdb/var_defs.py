@@ -1,4 +1,5 @@
 crisisdb_var_defs = {
+    'human_sacrifice': 'Human Sacrifice is the deliberate and ritualized killing of a person to please or placate supernatural entities (including gods, spirits, and ancestors) or gain other supernatural benefits.',
     'power_transition': '''
     We are interested in cataloguing the relative stability of past societies as proxied by the transition of power from one ruler to the next. In particular, we identify each transition of power (from named predecessor to named successor) and record whether it took place through normal succession mechanisms (whether legal/institutionalized means or customary/de facto procedures) or as the result of a conflict. We are seeking to record this information across the Seshat sample of polities, subject to availability of evidence. We are particularly interested in documenting the ebb and flow of stability in particular regions over time.<br><br>
 

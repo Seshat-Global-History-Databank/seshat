@@ -7708,7 +7708,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         'sc': 'Social Complexity',
         'wf': 'Warfare',
         'ec': 'Economy',
-        'rt': 'Religion Tolerance',
+        'rt': 'Religion Variables',
         'crisisdb': 'Crisisdb',
     }
 
@@ -7904,7 +7904,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         'sc': 'Social Complexity',
         'wf': 'Warfare',
         'ec': 'Economy',
-        'rt': 'Religion Tolerance',
+        'rt': 'Religion Variables',
         'crisisdb': 'Crisisdb',
     }
     
@@ -8188,7 +8188,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         'sc': 'Social Complexity',
         'wf': 'Warfare',
         'ec': 'Economy',
-        'rt': 'Religion Tolerance',
+        'rt': 'Religion Variables',
         'crisisdb': 'Crisisdb',
     }
 

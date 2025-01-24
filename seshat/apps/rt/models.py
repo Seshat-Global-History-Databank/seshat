@@ -235,7 +235,7 @@ class Widespread_religion(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -326,7 +326,7 @@ class Official_religion(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -417,7 +417,7 @@ class Elites_religion(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -531,7 +531,7 @@ class Theo_sync_dif_rel(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -644,7 +644,7 @@ class Sync_rel_pra_ind_beli(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -757,7 +757,7 @@ class Religious_fragmentation(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Religious Landscape"
+        return "Religious Demography"
 
     def sub_subsection(self):
         return None
@@ -870,10 +870,10 @@ class Gov_vio_freq_rel_grp(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -983,10 +983,10 @@ class Gov_res_pub_wor(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1096,10 +1096,10 @@ class Gov_res_pub_pros(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1209,10 +1209,10 @@ class Gov_res_conv(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1322,10 +1322,10 @@ class Gov_press_conv(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1435,10 +1435,10 @@ class Gov_res_prop_own_for_rel_grp(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1548,10 +1548,10 @@ class Tax_rel_adh_act_ins(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1661,10 +1661,10 @@ class Gov_obl_rel_grp_ofc_reco(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1774,10 +1774,10 @@ class Gov_res_cons_rel_buil(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -1887,10 +1887,10 @@ class Gov_res_rel_edu(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2000,10 +2000,10 @@ class Gov_res_cir_rel_lit(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2113,10 +2113,10 @@ class Gov_dis_rel_grp_occ_fun(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Government Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Government Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2226,10 +2226,10 @@ class Soc_vio_freq_rel_grp(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Societal Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Societal Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2339,10 +2339,10 @@ class Soc_dis_rel_grp_occ_fun(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Societal Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Societal Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2452,10 +2452,10 @@ class Gov_press_conv_for_aga(SeshatCommon):
         return None  
 
     def subsection(self):
-        return "Societal Restrictions"
+        return "Religious Tolerance"
 
     def sub_subsection(self):
-        return None
+        return "Societal Restrictions"
 
     def get_absolute_url(self):
         """
@@ -2467,6 +2467,559 @@ class Gov_press_conv_for_aga(SeshatCommon):
             str: A string of the url to access a particular instance of the model.
         """
         return reverse('gov_press_conv_for_aga-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+
+
+###################################### MSP
+class Moralizing_supernatural_punishment_and_reward(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_supernatural_punishment_and_reward")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_supernatural_punishment_and_reward'
+        verbose_name_plural = 'Moralizing Supernatural Punishment And Rewards'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_supernatural_punishment_and_reward"
+
+    def clean_name_spaced(self):
+        return "Moralizing Supernatural Punishment And Reward"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_supernatural_punishment_and_reward-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_supernatural_concern_is_primary(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_supernatural_concern_is_primary")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_supernatural_concern_is_primary'
+        verbose_name_plural = 'Moralizing Supernatural Concern is Primarys'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_supernatural_concern_is_primary"
+
+    def clean_name_spaced(self):
+        return "Moralizing Supernatural Concern is Primary"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_supernatural_concern_is_primary-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_is_certain(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_is_certain")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_is_certain'
+        verbose_name_plural = 'Moralizing Enforcement is Certains'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_is_certain"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement is Certain"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_is_certain-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_is_broad(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_is_broad")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_is_broad'
+        verbose_name_plural = 'Moralizing Enforcement is Broads'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_is_broad"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement is Broad"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_is_broad-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_is_targeted(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_is_targeted")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_is_targeted'
+        verbose_name_plural = 'Moralizing Enforcement is Targeteds'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_is_targeted"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement is Targeted"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_is_targeted-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_of_rulers(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_of_rulers")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_of_rulers'
+        verbose_name_plural = 'Moralizing Enforcement of Rulerss'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_of_rulers"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement of Rulers"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_of_rulers-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_religion_adopted_by_elites(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_religion_adopted_by_elites")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_religion_adopted_by_elites'
+        verbose_name_plural = 'Moralizing Religion Adopted by Elitess'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_religion_adopted_by_elites"
+
+    def clean_name_spaced(self):
+        return "Moralizing Religion Adopted by Elites"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_religion_adopted_by_elites-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_religion_adopted_by_commoners(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_religion_adopted_by_commoners")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_religion_adopted_by_commoners'
+        verbose_name_plural = 'Moralizing Religion Adopted by Commonerss'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_religion_adopted_by_commoners"
+
+    def clean_name_spaced(self):
+        return "Moralizing Religion Adopted by Commoners"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_religion_adopted_by_commoners-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_in_afterlife(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_in_afterlife")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_in_afterlife'
+        verbose_name_plural = 'Moralizing Enforcement in Afterlifes'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_in_afterlife"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement in Afterlife"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_in_afterlife-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_in_this_life(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_in_this_life")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_in_this_life'
+        verbose_name_plural = 'Moralizing Enforcement in This Lifes'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_in_this_life"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement in This Life"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_in_this_life-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+    
+
+class Moralizing_enforcement_is_agentic(SeshatCommon):
+    name = models.CharField(max_length=100, default="Moralizing_enforcement_is_agentic")
+    coded_value = models.CharField(max_length=500, choices=ABSENT_PRESENT_CHOICES)
+
+    class Meta:
+        verbose_name = 'Moralizing_enforcement_is_agentic'
+        verbose_name_plural = 'Moralizing Enforcement is Agentics'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        return return_citations(self)
+
+    def clean(self):
+        clean_times(self)
+
+    def clean_name(self):
+        return "moralizing_enforcement_is_agentic"
+
+    def clean_name_spaced(self):
+        return "Moralizing Enforcement is Agentic"
+
+    def show_value(self):
+        if self.coded_value:
+            return self.get_coded_value_display()
+        else:
+            return " - "
+
+    def show_value_from(self):
+        if self.coded_value:
+            return self.coded_value
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Moralizing Supernatural Punishment and Reward"
+
+    def sub_subsection(self):
+        return None
+
+    def get_absolute_url(self):
+        return reverse('moralizing_enforcement_is_agentic-detail', args=[str(self.id)])
 
     def __str__(self) -> str:
         return call_my_name(self)

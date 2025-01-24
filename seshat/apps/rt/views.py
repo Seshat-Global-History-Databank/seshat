@@ -13,6 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
 from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy
 
+from ..crisisdb.models import Human_sacrifice
 # from .mycodes import *
 from django.conf import settings
 
@@ -55,11 +56,15 @@ def rtvars(request):
         HttpResponse: The response object that contains the rendered RT variables page.
     """
     app_name = 'rt'  # Replace with your app name
-    models_1 = apps.get_app_config(app_name).get_models()
+    #models_1 = apps.get_app_config(app_name).get_models()
+    models_1 = list(apps.get_app_config(app_name).get_models())
+    models_1.append(Human_sacrifice)
 
     unique_politys = set()
     number_of_all_rows = 0
     number_of_variables = 0
+
+    #all_human_sacrifice_data = Human_sacrifice.objects.all()
     all_vars_grouped = {}
 
     all_sect_download_links = {}
@@ -85,8 +90,8 @@ def rtvars(request):
             else:
                 all_vars_grouped[s_value]["None"] = []
 
-    models = apps.get_app_config(app_name).get_models()
-
+    models = list(apps.get_app_config(app_name).get_models())
+    models.append(Human_sacrifice)
     for model in models:
         model_name = model.__name__
         if model_name == "Ra":
@@ -989,7 +994,7 @@ def show_problematic_rt_data_table(request):
 
 
 @permission_required('core.view_capital')
-def download_csv_religious_landscape(request):
+def download_csv_religious_demography(request):
     """
     Download all data for the Religious Landscape model in the RT app.
 
@@ -1028,7 +1033,7 @@ def download_csv_religious_landscape(request):
         if model_name == "Ra":
             continue
         s_value = str(model().subsection())
-        if s_value == "Religious Landscape":
+        if s_value == "Religious Demography":
             items = model.objects.all()
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
@@ -1077,7 +1082,8 @@ def download_csv_government_restrictions(request):
         if model_name == "Ra":
             continue
         s_value = str(model().subsection())
-        if s_value == "Government Restrictions":
+        ss_value = str(model().sub_subsection())
+        if s_value == "Religious Tolerance" and ss_value == "Government Restrictions":
             items = model.objects.all()
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
@@ -1126,7 +1132,8 @@ def download_csv_societal_restrictions(request):
         if model_name == "Ra":
             continue
         s_value = str(model().subsection())
-        if s_value == "Societal Restrictions":
+        ss_value = str(model().sub_subsection())
+        if s_value == "Religious Tolerance" and ss_value == "Societal Restrictions":
             items = model.objects.all()
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
@@ -1134,6 +1141,156 @@ def download_csv_societal_restrictions(request):
                             obj.expert_reviewed, obj.drb_reviewed,])
 
     return response
+
+@permission_required('core.view_capital')
+def download_csv_moralizing_supernatural_punishment_and_reward(request):
+    """
+    Download all data for the Societal Restrictions model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
+    # Fetch all models in the "socomp" app
+    app_name = 'rt'  # Replace with your app name
+    app_models = apps.get_app_config(app_name).get_models()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type='text/csv')
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    file_name = f"religion_msp_{current_datetime}.csv"
+
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter='|')
+
+    # type the headers
+    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    # Iterate over each model
+    for model in app_models:
+        # Get all rows of data from the model
+        model_name = model.__name__
+        if model_name == "Ra":
+            continue
+        s_value = str(model().subsection())
+        if s_value == "Moralizing Supernatural Punishment and Reward":
+            items = model.objects.all()
+            for obj in items:
+                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
+
+@permission_required('core.view_capital')
+def download_csv_religious_tolerance(request):
+    """
+    Download all data for the Societal Restrictions model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
+    # Fetch all models in the "socomp" app
+    app_name = 'rt'  # Replace with your app name
+    app_models = apps.get_app_config(app_name).get_models()
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type='text/csv')
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    file_name = f"religion_religious_tolerance_{current_datetime}.csv"
+
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter='|')
+
+    # type the headers
+    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    # Iterate over each model
+    for model in app_models:
+        # Get all rows of data from the model
+        model_name = model.__name__
+        if model_name == "Ra":
+            continue
+        s_value = str(model().subsection())
+        if s_value == "Religious Tolerance":
+            items = model.objects.all()
+            for obj in items:
+                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
+
+@permission_required('core.view_capital')
+def download_csv_human_sacrifice(request):
+    """
+    Download all data for the Societal Restrictions model in the RT app.
+
+    Note:
+        The access to this view is restricted to users with the 'core.view_capital' permission.
+
+    Args:
+        request (HttpRequest): The request object used to generate this page.
+
+    Returns:
+        HttpResponse: The response object that contains the CSV file.
+    """
+    # Fetch all models in the "socomp" app
+    #app_name = 'crisisdb'  # Replace with your app name
+    app_models = [Human_sacrifice]
+
+    # Create a response object with CSV content type
+    response = HttpResponse(content_type='text/csv')
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    file_name = f"religion_human_sacrifice_{current_datetime}.csv"
+
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
+    # Create a CSV writer
+    writer = csv.writer(response, delimiter='|')
+
+    # type the headers
+    writer.writerow(['subsection', 'variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    'value_from', 'value_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked', 'DRB_reviewed'])
+    # Iterate over each model
+    for model in app_models:
+        # Get all rows of data from the model
+        model_name = model.__name__
+        if model_name == "Ra":
+            continue
+        s_value = str(model().subsection())
+        if s_value == "Human Sacrifice":
+            items = model.objects.all()
+            for obj in items:
+                writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
+                            obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
+                            obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
 
 def get_ref_options(request):
     options = Reference.objects.all()

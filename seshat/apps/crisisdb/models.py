@@ -816,6 +816,21 @@ class Human_sacrifice(SeshatCommon):
             return "NO_NGA_ASSOCIATED"
         else:
             return nga_rel.nga_party.name
+        
+    def show_value_from(self):
+        if self.get_human_sacrifice_display():
+            return self.get_human_sacrifice_display()
+        else:
+            return None
+
+    def show_value_to(self):
+        return None  
+
+    def subsection(self):
+        return "Human Sacrifice"
+
+    def sub_subsection(self):
+        return None
 
     def get_absolute_url(self):
         """

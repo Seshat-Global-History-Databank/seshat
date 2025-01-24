@@ -583,7 +583,7 @@ class ShapesTest(TestCase):
         app_map = {
             'sc': 'Social Complexity Variables',
             'wf': 'Warfare Variables (Military Technologies)',
-            'rt': 'Religion Tolerance'
+            'rt': 'Religion Variables'
         }
         result_shapes, result_variables = assign_variables_to_shapes(shapes, app_map)
         # Choose some example variables to test
@@ -601,7 +601,7 @@ class ShapesTest(TestCase):
         }
         self.assertEqual(result_variables['Social Complexity Variables']['judge'], expected_result_variables_judge)
         self.assertEqual(result_variables['Warfare Variables (Military Technologies)']['copper'], expected_result_variables_copper)
-        self.assertEqual(result_variables['Religion Tolerance']['gov_res_pub_pros'], expected_result_variables_gov_res_pub_pros)
+        self.assertEqual(result_variables['Religion Variables']['gov_res_pub_pros'], expected_result_variables_gov_res_pub_pros)
 
         # Test that the shapes have been updated with the variables
         self.assertEqual(result_shapes[0]['Judge'], 'present')
