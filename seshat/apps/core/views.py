@@ -4210,6 +4210,7 @@ def add_suprapolity_relations_to_shapes(shapes, seshat_id_page_id):
     Returns:
         list: The shapes with the supra-polity relations added.
     """
+    # TODO: this function isn't currently used or tested, but was created for visualing supra-polity relations on the world map
     all_suprapolity_relations = get_all_suprapolity_relations()
     # Add in colour information for the other polities in the supra-polity relations
     for shape in shapes:
@@ -4642,8 +4643,8 @@ def map_view_initial(request):
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
 
-    # Add suprapolity relations to the shapes
-    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
+    # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
+    # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
 
     return render(request,
                   'core/world_map.html',
@@ -4681,8 +4682,8 @@ def map_view_all(request):
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
 
-    # Add suprapolity relations to the shapes
-    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
+    # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
+    # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
 
     return JsonResponse(content)
 
@@ -4729,8 +4730,8 @@ def map_view_all_with_vars(request):
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
 
-    # Add suprapolity relations to the shapes
-    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
+    # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
+    # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
 
     return JsonResponse(content)
 
