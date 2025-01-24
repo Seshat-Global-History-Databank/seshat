@@ -477,7 +477,8 @@
                                 <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
                                     <option value="components">Sub-polity (component)</option>
                                     <option value="polities" selected>Polity</option>
-                                    <option value="supra-polities">Supra-polity relation</option>
+                                    <option style="display: none;" value="supra-polities">Supra-polity relation</option>
+                                    <!-- TODO: when working on issue #224 remove the above style tag so supra-polities can be selected -->
                                 </select>
                                 <div class="display-info-container">
                                     ℹ️
@@ -961,19 +962,20 @@
                         }
                         shapeWeight = shape.weight;
                         shapeColour = shape.colour;
-                        if (shape.supra_polity_relations && shape.supra_polity_relations.length > 0 && displayComponent == 'supra-polities'){
-                            if (shape.supra_polity_relations.some(relation => relation.other_polity_is_child)){
-                                shapeColour = shape.colour;
-                            } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance')){
-                                shapeColour = shape.supra_polity_relations.find(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance').colour;
-                            } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'personal union' || relation.supra_polity_relations == 'alliance' || relation.supra_polity_relations == 'unknown'  || relation.supra_polity_relations == 'uncoded')){
-                                colourList = shape.supra_polity_relations.map(relation => relation.colour);
-                                colourList.push(shape.colour);
-                                colourList.sort();
-                                shapeColour = colourList[0];
-                            }
-                        }
-                        shape.colour = shapeColour;
+
+                        // TODO: Continue developing this logic when working on issue #224
+                        // if (shape.supra_polity_relations && shape.supra_polity_relations.length > 0 && displayComponent == 'supra-polities'){
+                        //     if (shape.supra_polity_relations.some(relation => relation.other_polity_is_child)){
+                        //         shapeColour = shape.colour;
+                        //     } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance')){
+                        //         shapeColour = shape.supra_polity_relations.find(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance').colour;
+                        //     } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'personal union' || relation.supra_polity_relations == 'alliance' || relation.supra_polity_relations == 'unknown'  || relation.supra_polity_relations == 'uncoded')){
+                        //         colourList = shape.supra_polity_relations.map(relation => relation.colour);
+                        //         colourList.push(shape.colour);
+                        //         colourList.sort();
+                        //         shapeColour = colourList[0];
+                        //     }
+                        // }
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
