@@ -4106,16 +4106,6 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
 
     if displayed_year == "all":
         displayed_year = initial_displayed_year 
-        all_suprapolity_relations = get_all_suprapolity_relations()
-        # Add in colour information for the other polities in the supra-polity relations
-        for shape in shapes:
-            page_id = seshat_id_page_id.get(shape['seshat_id'], {}).get('id')
-            shape['supra_polity_relations'] = all_suprapolity_relations.get(page_id, [])
-            for relation in shape['supra_polity_relations']:
-                for shape_2 in shapes:
-                    shape_2_page_id = seshat_id_page_id.get(shape_2['seshat_id'], {}).get('id')
-                    if shape_2_page_id == relation['other_polity_id']:
-                        relation['colour'] = shape_2['colour']
 
     if seshat_id != "all":  # Used in the polity pages
         earliest_year = min([shape['start_year'] for shape in shapes])
@@ -4209,6 +4199,32 @@ def get_all_suprapolity_relations():
         # Store the relations in the cache for 1 hour
         cache.set('all_suprapolity_relations', all_suprapolity_relations, 3600)
     return all_suprapolity_relations
+
+def add_suprapolity_relations_to_shapes(shapes):
+    """
+    Add the supra-polity relations to the shapes.
+
+    Args:
+        shapes (list): The shapes to add the supra-polity relations to.
+
+    Returns:
+        list: The shapes with the supra-polity relations added.
+    """
+    all_suprapolity_relations = get_all_suprapolity_relations()
+    seshat_ids = [shape['seshat_id'] for shape in shapes if shape['seshat_id']]
+    polities = Polity.objects.filter(new_name__in=seshat_ids).values('new_name', 'id', 'long_name')
+    polity_info = [(polity['new_name'], polity['id'], polity['long_name']) for polity in polities]
+    seshat_id_page_id = {new_name: {'id': id, 'long_name': long_name or ""} for new_name, id, long_name in polity_info}
+    # Add in colour information for the other polities in the supra-polity relations
+    for shape in shapes:
+        page_id = seshat_id_page_id.get(shape['seshat_id'], {}).get('id')
+        shape['supra_polity_relations'] = all_suprapolity_relations.get(page_id, [])
+        for relation in shape['supra_polity_relations']:
+            for shape_2 in shapes:
+                shape_2_page_id = seshat_id_page_id.get(shape_2['seshat_id'], {}).get('id')
+                if shape_2_page_id == relation['other_polity_id']:
+                    relation['colour'] = shape_2['colour']
+    return shapes
 
 def assign_variables_to_shapes(shapes, app_map):
     """
@@ -4630,6 +4646,9 @@ def map_view_initial(request):
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
 
+    # Add suprapolity relations to the shapes
+    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'])
+
     return render(request,
                   'core/world_map.html',
                   content
@@ -4665,6 +4684,9 @@ def map_view_all(request):
 
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
+
+    # Add suprapolity relations to the shapes
+    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'])
 
     return JsonResponse(content)
 
@@ -4710,6 +4732,9 @@ def map_view_all_with_vars(request):
 
     # Add version parameter to force browser to fetch the latest JS file
     content['version'] = int(time.time())
+
+    # Add suprapolity relations to the shapes
+    content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'])
 
     return JsonResponse(content)
 
