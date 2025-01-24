@@ -379,17 +379,21 @@ function updateLegend() {
             if (shape.seshat_id in seshat_id_page_id) {
                 var polityId = seshat_id_page_id[shape.seshat_id]['id'];
                 shape_name_col_dict['link'] = '<a href="/core/polity/' + polityId + '" target="_blank">' + shape.name + '</a>';
-            } else if (shape.seshat_id.includes(';')) {
-                var polityIds = shape.seshat_id.split(';');
-                var polityLinks = [];
-                polityIds.forEach(function (polityId) {
-                    if (polityId in seshat_id_page_id) {
-                        polityLinks.push('<a href="/core/polity/' + seshat_id_page_id
-                            [polityId]['id'] + '" target="_blank">' + polityId + '</a>');
-                    }
-                }
-                );
-                shape_name_col_dict['link'] = shape.name + '; ' + polityLinks.join('; ');
+            
+            // This code is commented out because Supra-polities from the Cliopatria GeoJSON with multiple Seshat IDs are not currently being loaded into the database
+
+            // } else if (shape.seshat_id.includes(';')) {
+            //     var polityIds = shape.seshat_id.split(';');
+            //     var polityLinks = [];
+            //     polityIds.forEach(function (polityId) {
+            //         if (polityId in seshat_id_page_id) {
+            //             polityLinks.push('<a href="/core/polity/' + seshat_id_page_id
+            //                 [polityId]['id'] + '" target="_blank">' + polityId + '</a>');
+            //         }
+            //     }
+            //     );
+            //     shape_name_col_dict['link'] = shape.name + '; ' + polityLinks.join('; ');
+
             } else {
                 shape_name_col_dict['link'] = shape.name;
             }
@@ -578,7 +582,7 @@ function updateComponentLegend() {
 
     var legendDiv = document.getElementById('componentLegend');
     var legendDivGlobe = document.getElementById('componentLegendGlobe');
-    var displayComponent = document.getElementById('switchPolitiesComponents').value;
+    var supraPolityRelations = document.getElementById('supraPolityRelations').checked;
     var selectedYearInteger = parseInt(document.getElementById('dateSlide').value);
     // Create a container for polity items
     var polityContainer = document.createElement('div');
@@ -591,16 +595,35 @@ function updateComponentLegend() {
 
     var addedPolities = [];
     var addedPolityNames = [];
-    polityMapShapesData.forEach(function (shape) {
+    var toDisplayShapesData = polityMapShapesData.slice();
+    // If suprapolity relations are enabled add the relation shapes to toDisplayShapesData
+    if (supraPolityRelations) {
+        supraPolityRelationData.forEach(function (relationData) {
+            relationData['shapes'].forEach(function (shape) {
+                toDisplayShapesData.push(shape);
+            });
+        });
+    }
+    toDisplayShapesData.forEach(function (shape) {
         shape_name_col_dict = {};
         shape_name_col_dict['polity'] = shape.name;
         shape_name_col_dict['colour'] = shape.colour;
         if (!addedPolityNames.includes(shape_name_col_dict['polity'])) {
-            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger)
-                && shouldDisplayComponent(displayComponent, shape)
-            ) {
-                addedPolities.push(shape_name_col_dict);
-                addedPolityNames.push(shape_name_col_dict['polity']);
+            // If the shape spans the selected year and is a component (does not have its own components)
+            if ((parseInt(shape.start_year) <= selectedYearInteger && parseInt(shape.end_year) >= selectedYearInteger) && shouldDisplayShapePolityPage(shape)) {
+                var shouldPlot = true;
+                // If the shape has supra_polity_relations, the range from relation_start_year to relation_end_year must also span the selected year
+                if (shape.supra_polity_relations !== undefined) {
+                    if ((parseInt(shape.relation_start_year) <= selectedYearInteger && parseInt(shape.relation_end_year) >= selectedYearInteger)) {
+                        shouldPlot = true;
+                    } else {
+                        shouldPlot = false;
+                    }
+                }
+                if (shouldPlot) {
+                    addedPolities.push(shape_name_col_dict);
+                    addedPolityNames.push(shape_name_col_dict['polity']);
+                }
             };
         };
     });
@@ -610,8 +633,8 @@ function updateComponentLegend() {
         return a.polity.localeCompare(b.polity);
     });
 
-    // Add a legend for polity components if the displayComponent is set to 'components' and there is more than one
-    if (addedPolities.length > 0 && displayComponent == 'components') {
+    // Add a legend for polity components if there is more than one component to display
+    if (addedPolities.length > 0) {
         for (var i = 0; i < addedPolities.length; i++) {
             var legendItem = document.createElement('p');
             var colorBox = document.createElement('span');
@@ -731,7 +754,7 @@ function longAbsentPresentVarName(var_name){
 }
 
 function shouldDisplayComponent(displayComponent, shape) {
-    if (displayComponent == 'polities'
+    if ((displayComponent == 'polities' || displayComponent == 'supra-polities')
         && (shape.member_of === null || shape.member_of === '')) {
         return true;
     } else if (displayComponent == 'components'
@@ -739,6 +762,22 @@ function shouldDisplayComponent(displayComponent, shape) {
         return true;
     } else {
         return false;
+    }
+}
+
+function shouldDisplayShapePolityPage(shape) {
+    if (shape.suprapolity_relation_shape && !shape.other_polity_is_child) {
+        if (shape.member_of === null || shape.member_of === '') {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if (shape.components === null || shape.components === '') {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

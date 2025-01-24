@@ -198,7 +198,8 @@
     }
     
     .display-info-container::after {
-        content: "Many polities have component sub-polities with their own polygons on the map. Switching to 'Polity components' assigns a unique color to each polity component. 'Full polities' shows components from the same polity in the same color.";
+        /* content: "'Polity' is the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Sub-polity' shows components which lack lower level components in 'Cliopatria'. 'Supra-polity relation' shows Supra-polity relationships from the Seshat database."; */
+        content: "'Polity' is the highest level of political unification in the 'Cliopatria' polity borders geospatial dataset used by Seshat. 'Sub-polity' shows components which lack lower level components in 'Cliopatria'.";
         visibility: hidden;
         width: 200px;
         background-color: #782823;
@@ -452,7 +453,7 @@
                         <button class="crossButton" onclick="toggleSettings()">❌</button>
                         <fieldset>
                             <label for="chooseVariable">Variable: </label>
-                            <select name="chooseVariable" id="chooseVariable" onchange="clearSelection();"
+                            <select name="chooseVariable" id="chooseVariable" onchange="plotPolities();"
                                 style="width: 300px; text-overflow: ellipsis;" disabled>
                                 <option value="polity">Political boundaries</option>
                             </select>
@@ -472,20 +473,24 @@
                             <div id="variablesLoadingIndicator">
                                 <p>Loading Seshat variables...</p>
                             </div>
-                            <fieldset id="switchPolitiesComponentsFieldset" style="display: block">
-                                <label for="switchPolitiesComponents">Display:</label>
+                            <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
+                                <label for="switchPolitiesComponents">One color per </label>
                                 <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                    <option value="polities">Full polities</option>
-                                    <option value="components">Polity components</option>
+                                    <option value="components">Sub-polity (component)</option>
+                                    <option value="polities" selected>Polity</option>
+                                    <option style="display: none;" value="supra-polities">Supra-polity relation</option>
+                                    <!-- TODO: when working on issue #224 remove the above style tag so supra-polities can be selected -->
                                 </select>
                                 <div class="display-info-container">
                                     ℹ️
+                                </div><br>
+                                <div id="suprapolitiesOnlyDiv" style="display: none;">
+                                    <label for="suprapolitiesOnly">Show polities with Supra-polity relations only</label>
+                                    <input type="checkbox" id="suprapolitiesOnly" name="suprapolitiesOnly" onclick=plotPolities()><br>
                                 </div>
-                            </fieldset>
-                            <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
                                 <label for="baseMapOnly">Hide unselected</label>
                                 <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
-                                <label for="baseMapOnly">Select all</label>
+                                <label for="selectAll">Select all</label>
                                 <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked>
                                 <div class="info-container" id="selection-info-container">
                                     ℹ️
@@ -526,6 +531,7 @@
                                 <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
                             </fieldset>
                         </div><br>
+                        <p>🚨 <b>Close this window to enable zooming on the map.</b></p>
                     </div>
                     <div class="help" id="help">
                         <button class="crossButton" onclick="toggleHelp()">❌</button>
@@ -535,16 +541,12 @@
                         <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
                         <p><b>🔹 Switch between a Globe and a Mercator map projection with 🌍.</b></p>
                         <p><b>🔹 Click polities on the map to add them to or remove them from the legend.</b></p>
-                        <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p><br>
-                        <p><b> The settings gear (⚙️) can be used to access additional controls:</b></p>
-                        <p><b>🔹 Use the "Enter year" box to quickly navigate to a specific year.</b></p>
-                        <p><b>🔹 Use the "Play rate" box to set the rate of the animation (and the skip controls increment).</b></p>
-                        <p><b>🔹 Use the variable dropdown to color polities by different Seshat variables.</b></p>
-                        <p><b>🔹 Use the opacity slider to adjust the transparency of the polity shapes.</b></p>
-                        <p><b>🔹 Use the "Choose base map" dropdown to switch between different base maps.</b></p>
+                        <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
+                        <p><b>🔹The settings gear (⚙️) can be used to access additional controls</b></p>
                         <p>
                             <b><a href="../cliopatria" target="_blank">🔹 Learn more about the polity border choices.</a></b>
-                        </p><br>
+                        </p>
+                        <p>🚨 <b>Close this window to enable zooming on the map.</b></p><br>
                     </div>
                     <div id="sliderdiv">
                         <fieldset>
@@ -564,9 +566,6 @@
     </div>
     <script src="{% static 'core/js/map_functions.js' %}?v={{ version }}"></script>
     <script>
-
-        // Hide components/polity switch for now so "Full polities" is always displayed
-        document.getElementById('switchPolitiesComponentsFieldset').style.display = 'none';
 
         // Set the default base map to Cesium Globe on mobile devices
         // Also place the enter year input field where the slider normally is
@@ -880,6 +879,14 @@
             var playButton = document.getElementById('playButton');
             var settings = document.getElementById('settings');
             var help = document.getElementById('help');
+            var displayComponent = document.getElementById('switchPolitiesComponents').value;
+
+            // If displayComponent is 'supra-polities', show the suprapolitiesOnlyDiv
+            if (displayComponent == 'supra-polities') {
+                document.getElementById('suprapolitiesOnlyDiv').style.display = 'block';
+            } else {
+                document.getElementById('suprapolitiesOnlyDiv').style.display = 'none';
+            }
 
             // If not all polities loaded and the url year does not match the selected year, restore the loading indicator
             if (!allPolitiesLoaded) {
@@ -957,6 +964,19 @@
                         shapeWeight = shape.weight;
                         shapeColour = shape.colour;
 
+                        // TODO: Continue developing this logic when working on issue #224
+                        // if (shape.supra_polity_relations && shape.supra_polity_relations.length > 0 && displayComponent == 'supra-polities'){
+                        //     if (shape.supra_polity_relations.some(relation => relation.other_polity_is_child)){
+                        //         shapeColour = shape.colour;
+                        //     } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance')){
+                        //         shapeColour = shape.supra_polity_relations.find(relation => relation.supra_polity_relations == 'vassalage' || relation.supra_polity_relations == 'nominal allegiance').colour;
+                        //     } else if (shape.supra_polity_relations.some(relation => relation.supra_polity_relations == 'personal union' || relation.supra_polity_relations == 'alliance' || relation.supra_polity_relations == 'unknown'  || relation.supra_polity_relations == 'uncoded')){
+                        //         colourList = shape.supra_polity_relations.map(relation => relation.colour);
+                        //         colourList.push(shape.colour);
+                        //         colourList.sort();
+                        //         shapeColour = colourList[0];
+                        //     }
+                        // }
                     // Hierarchical complexity variables
                     } else if (hierarchicalComplexityVariablesFull.includes(variable)) {
                         shapeWeight = polityBorderWeightSelected;
@@ -1034,8 +1054,6 @@
                         }
                     }
 
-                    displayComponent = document.getElementById('switchPolitiesComponents').value;
-
                     // If the shape spans the selected year and should be displayed according to the shouldDisplayComponent() function
                     if ((parseInt(shape.start_year) <= selectedYearInt && parseInt(shape.end_year) >= selectedYearInt)
                         && shouldDisplayComponent(displayComponent, shape)
@@ -1098,30 +1116,34 @@
                                         </tr>
                                     `;
                             }
-                        } else if (shape.seshat_id.includes(';')) {
-                            var polityIds = shape.seshat_id.split(';');
-                            var polityLinks = '';
-                            for (var i = 0; i < polityIds.length; i++) {
-                                if (polityIds[i] in seshat_id_page_id) {
-                                    var polityId = seshat_id_page_id[polityIds[i]]['id'];
-                                    longName = seshat_id_page_id[polityIds[i]]['long_name'];
-                                    if (longName == '') {
-                                        longName = '[Page empty]'
-                                    }
-                                    if (selectedMap == 'cesium') {
-                                        polityLinks = polityLinks + `${longName} (${polityIds[i]})<br>`;
-                                    } else {
-                                        polityLinks = polityLinks + `<a href="/core/polity/${polityId}" target="_blank">${longName} (${polityIds[i]})</a><br>`;
-                                    }
-                                }
-                            }
-                            popupContent = popupContent + `
-                                    <tr>
-                                        <td>Seshat pages</td>
-                                        <td>${polityLinks}</td>
-                                    </tr>
-                                `;
                         }
+
+                        // This code is commented out because Supra-polities from the Cliopatria GeoJSON with multiple Seshat IDs are not currently being loaded into the database
+
+                        // } else if (shape.seshat_id.includes(';')) {
+                        //     var polityIds = shape.seshat_id.split(';');
+                        //     var polityLinks = '';
+                        //     for (var i = 0; i < polityIds.length; i++) {
+                        //         if (polityIds[i] in seshat_id_page_id) {
+                        //             var polityId = seshat_id_page_id[polityIds[i]]['id'];
+                        //             longName = seshat_id_page_id[polityIds[i]]['long_name'];
+                        //             if (longName == '') {
+                        //                 longName = '[Page empty]'
+                        //             }
+                        //             if (selectedMap == 'cesium') {
+                        //                 polityLinks = polityLinks + `${longName} (${polityIds[i]})<br>`;
+                        //             } else {
+                        //                 polityLinks = polityLinks + `<a href="/core/polity/${polityId}" target="_blank">${longName} (${polityIds[i]})</a><br>`;
+                        //             }
+                        //         }
+                        //     }
+                        //     popupContent = popupContent + `
+                        //             <tr>
+                        //                 <td>Seshat pages</td>
+                        //                 <td>${polityLinks}</td>
+                        //             </tr>
+                        //         `;
+                        // }
 
                         let wiki_page = 'https://en.wikipedia.org/wiki/' + shape.wikipedia_name.replace(/ /g, '_');
                         popupContent = popupContent + `

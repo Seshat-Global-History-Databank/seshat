@@ -3,7 +3,7 @@ from django.db import connection
 from django.db.models import F
 from ..models import Polity, Capital
 from ...general.models import Polity_capital, Polity_peak_years
-from ..views import get_polity_shape_content
+from ..views import get_polity_shape_content, get_all_suprapolity_relations
 
 register = template.Library()
 
@@ -30,7 +30,6 @@ def polity_map(pk, test=False):
         else:
             content = get_polity_shape_content(seshat_id=polity.new_name, tick_number=10)
         capitals_info = get_polity_capitals(pk)
-        # Set the start and end years to be the same as the polity where missing
         modified_caps = capitals_info
         i = 0
         for capital_info in capitals_info:
@@ -45,6 +44,7 @@ def polity_map(pk, test=False):
         content = {}
         content['include_polity_map'] = False
 
+    relation_seshat_ids = []
     if content['include_polity_map']:
         # Update the default display year to be the peak year (if it exists)
         try:
@@ -52,6 +52,37 @@ def polity_map(pk, test=False):
             content['display_year'] = peak_years.peak_year_from
         except:
             pass
+        
+        if not test:
+            all_suprapolity_relations = get_all_suprapolity_relations()
+            suprapolity_relations = all_suprapolity_relations.get(pk, [])
+            
+            relation_seshat_ids = []
+            relation_polity_ids = [spr['other_polity_id'] for spr in suprapolity_relations]
+            
+            relation_polities = Polity.objects.filter(id__in=relation_polity_ids).values('id', 'new_name', 'long_name')
+            relation_polity_info = {polity['id']: polity for polity in relation_polities}
+            
+            for spr in suprapolity_relations:
+                polity = relation_polity_info[spr['other_polity_id']]
+                spr['shapes'] = get_polity_shape_content(seshat_id=polity['new_name'])['shapes']
+                for shape in spr['shapes']:
+                    if spr['year_from']:
+                        shape['relation_start_year'] = spr['year_from']
+                    else:
+                        shape['relation_start_year'] = shape['start_year']
+                    if spr['year_to']:
+                        shape['relation_end_year'] = spr['year_to']
+                    else:
+                        shape['relation_end_year'] = shape['end_year']
+                    shape['supra_polity_relations'] = spr['supra_polity_relations']
+                if polity['new_name'] not in relation_seshat_ids:
+                    relation_seshat_ids.append(polity['new_name'])
+            
+            relations_seshat_id_page_id = {polity['new_name']: {'id': polity['id'], 'long_name': polity['long_name'] or ""} for polity in relation_polity_info.values()}
+            
+            content['suprapolity_relations'] = suprapolity_relations
+            content['relations_seshat_id_page_id'] = relations_seshat_id_page_id
     
     return {'content': content}
 
