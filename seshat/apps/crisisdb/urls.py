@@ -11,7 +11,7 @@ from . import views
 from seshat.apps.general.views import dynamic_create_view, dynamic_detail_view, generic_list_view, dynamic_update_view, dynamic_update_view_old, generic_metadata_download, generic_download
 
 model_form_pairs_main = [
-     (Human_sacrifice, Human_sacrificeForm, 'human_sacrifice', 'human_sacrifice', 'Human Sacrifice', 'Religion and Normative Ideology', 'Human Sacrifice', 'crisisdb'),
+     (Human_sacrifice, Human_sacrificeForm, 'human_sacrifice', 'human_sacrifice', 'Human Sacrifice', 'Human Sacrifice', None, 'rt'),
      (Power_transition, Power_transitionForm, 'power_transition', 'power_transition', 'Power Transition', 'Power Transitions', None, 'crisisdb'),
                          ]
 

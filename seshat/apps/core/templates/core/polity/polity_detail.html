@@ -242,8 +242,8 @@
                         {% endif %} 
 
                         {% if has_any_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Religion Tolerance" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#rt_var"><span class="badge p-1 mx-0 fs-5 " style="background: #59007f;">RT</span></a>
+                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Religion Variables" data-bs-html="true" data-bs-trigger="focus">
+                        <a href="#rt_var"><span class="badge p-1 mx-0 fs-5 " style="background: #59007f;">RG</span></a>
                         </span>
                         {% endif %}
 
@@ -1243,7 +1243,7 @@
 <div class="col-md-12 m-0 p-0">
     <span class=" h3 fw-bold m-0 p-0 ">  
         <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #59007f3b;">
-            Religion Tolerance
+            Religion Variables
         </span>   
         <span class=" mt-3 fs-5">
             <a href="#rt_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
@@ -1404,7 +1404,7 @@
 <div class="col-md-9">
     <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
         <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #59007f3b; border:1px solid #59007f">
-            Religion Tolerance
+            Religion Variables
         </span>   
         <span class=" mt-3 fs-5">
     Coding in Progress.
@@ -2182,7 +2182,7 @@
                 <div>
                     <span class="h1" style="text-align: left; color:#59007f;" >
                         <span class="h1 federicka-huge" id="rt_var">
-                            Religion Tolerance</span>
+                            Religion Variables</span>
                     </span>
                 </div>
                 {% for key_top, values_top in all_rt_data.items %}

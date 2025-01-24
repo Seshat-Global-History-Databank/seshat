@@ -1,6 +1,70 @@
 swapped_dict = {
-    'Widespread_religion': 'Widespread religion', 'Official_religion':'Official religion', 'Elites_religion':'Elites religion',
-    'Theo_sync_dif_rel': 'Theological syncretism of different religions', 'Sync_rel_pra_ind_beli': 'Syncretism of religious practices at the level of individual believers', 'Religious_fragmentation': 'Religious fragmentation', 'Gov_vio_freq_rel_grp': 'Frequency of governmental violence against religious groups', 'Gov_res_pub_wor': 'Government restrictions on public worship', 'Gov_res_pub_pros': 'Government restrictions on public proselytizing', 'Gov_res_conv': 'Government restrictions on conversion', 'Gov_press_conv': 'Government pressure to convert', 'Gov_res_prop_own_for_rel_grp': 'Government restrictions on property ownership for adherents of any religious group', 'Tax_rel_adh_act_ins': 'Taxes based on religious adherence or on religious activities and institutions', 'Gov_obl_rel_grp_ofc_reco': 'Governmental obligations for religious groups to apply for official recognition', 'Gov_res_cons_rel_buil': 'Government restrictions on construction of religious buildings', 'Gov_res_rel_edu': 'Government restrictions on religious education', 'Gov_res_cir_rel_lit': 'Government restrictions on circulation of religious literature', 'Gov_dis_rel_grp_occ_fun': 'Government discrimination against religious groups taking up certain occupations or functions', 'Soc_vio_freq_rel_grp': 'Frequency of societal violence against religious groups', 'Soc_dis_rel_grp_occ_fun': 'Societal discrimination against religious groups taking up certain occupations or functions', 'Gov_press_conv_for_aga': 'Societal pressure to convert or against conversion'}
+    'Widespread_religion': 'Widespread religion',
+    
+    'Official_religion':'Official religion',
+    
+    'Elites_religion':'Elites religion',
+    'Theo_sync_dif_rel': 'Theological syncretism of different religions',
+    
+    'Sync_rel_pra_ind_beli': 'Syncretism of religious practices at the level of individual believers',
+    
+    'Religious_fragmentation': 'Religious fragmentation',
+    
+    'Gov_vio_freq_rel_grp': 'Frequency of governmental violence against religious groups',
+    
+    'Gov_res_pub_wor': 'Government restrictions on public worship',
+    
+    'Gov_res_pub_pros': 'Government restrictions on public proselytizing',
+    
+    'Gov_res_conv': 'Government restrictions on conversion',
+    
+    'Gov_press_conv': 'Government pressure to convert',
+    
+    'Gov_res_prop_own_for_rel_grp': 'Government restrictions on property ownership for adherents of any religious group',
+    
+    'Tax_rel_adh_act_ins': 'Taxes based on religious adherence or on religious activities and institutions',
+    
+    'Gov_obl_rel_grp_ofc_reco': 'Governmental obligations for religious groups to apply for official recognition',
+    
+    'Gov_res_cons_rel_buil': 'Government restrictions on construction of religious buildings',
+    
+    'Gov_res_rel_edu': 'Government restrictions on religious education',
+    
+    'Gov_res_cir_rel_lit': 'Government restrictions on circulation of religious literature',
+    
+    'Gov_dis_rel_grp_occ_fun': 'Government discrimination against religious groups taking up certain occupations or functions',
+    
+    'Soc_vio_freq_rel_grp': 'Frequency of societal violence against religious groups',
+    
+    'Soc_dis_rel_grp_occ_fun': 'Societal discrimination against religious groups taking up certain occupations or functions',
+    
+    'Gov_press_conv_for_aga': 'Societal pressure to convert or against conversion',
+
+    # MSP
+    'Moralizing_supernatural_punishment_and_reward': "Moralizing Supernatural Punishment And Reward",
+
+    'Moralizing_supernatural_concern_is_primary': "Moralizing Supernatural Concern Is Primary",
+
+    'Moralizing_enforcement_is_certain': "Moralizing Enforcement Is Certain",
+
+    'Moralizing_enforcement_is_broad': "Moralizing Enforcement Is Broad",
+
+    'Moralizing_enforcement_is_targeted': "Moralizing Enforcement Is Targeted",
+
+    'Moralizing_enforcement_of_rulers': "Moralizing Enforcement Of Rulers",
+
+    'Moralizing_religion_adopted_by_elites': "Moralizing Religion Adopted By Elites",
+
+    'Moralizing_religion_adopted_by_commoners': "Moralizing Religion Adopted By Commoners",
+
+    'Moralizing_enforcement_in_afterlife': "Moralizing Enforcement In Afterlife",
+
+    'Moralizing_enforcement_in_this_life': "Moralizing Enforcement In This Life",
+
+    'Moralizing_enforcement_is_agentic': "Moralizing Enforcement Is Agentic",
+    'Human_sacrifice': "Human Sacrifice",
+
+    }
 
 
 rt_var_defs = {
@@ -95,6 +159,23 @@ rt_var_defs = {
         "This variable is coded to measure the frequency of societal violence against religious groups within the polity. "
         "It reflects how often non-governmental entities, such as societal groups or individuals, engage in violent actions against religious communities. "
         "The variable provides insights into the recurring nature of violence originating from societal sources against religious groups.",
+
+##### MSP
+    'Moralizing supernatural punishment and reward': 'Refers to the presence of moralizing beliefs and practices in any degree, whether enforced by supernatural agents or non-agentic forces (e.g. karmic principles).',
+    'Moralizing supernatural concern is primary': 'The principal concerns of supernatural agents or forces pertain to cooperation in human affairs (rather than the behaviour of humans toward the supernatural realm, for example by discharging ritual obligations)',
+    'Moralizing enforcement is certain': 'Moralizing supernatural punishments and/or rewards are certain and predictable (rather than arbitrary or capricious)',
+    'Moralizing enforcement is broad': 'Moralizing supernatural punishments and/or rewards enforce norms across a broad range of moral domains (instead of just a few domains)',
+    'Moralizing enforcement is targeted': 'Moralizing supernatural punishments and/or rewards are targeted specifically at culpable individuals (instead of the whole group)',
+    'Moralizing enforcement of rulers': 'Moralizing supernatural forces or agents punish and/or reward rulers',
+    'Moralizing religion adopted by elites': 'The elites of the polity subscribe to moralizing supernatural punishments and/or rewards',
+    'Moralizing religion adopted by commoners': 'The commoners of the polity subscribe to moralizing supernatural punishments and/or rewards',
+    'Moralizing enforcement in afterlife': 'punishment is delayed until after the death of the transgressor',
+    'Moralizing enforcement in this life': "punishment occurs during transgressor's lifetime",
+    'Moralizing enforcement is agentic': 'Moralizing enforcement is administered by a supernatural agent, such as a deity or spirit (as opposed to an impersonal supernatural force, such as karma).',
+
+    # HS
+    'Human sacrifice': "Human Sacrifice Definition",
+
 
 }
 
