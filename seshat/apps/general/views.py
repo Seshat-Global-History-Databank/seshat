@@ -7445,15 +7445,15 @@ def generalvars(request):
             var_type="A/P/U/~"
 
             for obj in queryset:
-                if obj.show_value() == 'present':
+                if obj.show_value() == 'Present':
                     filtered_queryset_pres +=1
-                if obj.show_value() == 'absent':
+                if obj.show_value() == 'Absent':
                     filtered_queryset_abs +=1
-                if obj.show_value() == "unknown" and obj.tag == "TRS":
+                if obj.show_value() == "Unknown" and obj.tag == "TRS":
                     filtered_queryset_unk +=1
-                if obj.show_value() == "unknown" and obj.tag == "SSP":
+                if obj.show_value() == "Unknown" and obj.tag == "SSP":
                     filtered_queryset_sus_unk +=1
-                if obj.show_value() == 'uncoded' or obj.tag == "UND":
+                if obj.show_value() == 'Uncoded' or obj.tag == "UND":
                     filtered_queryset_unc +=1
                 if obj.show_value() == 'Transitional (Present -> Absent)' or obj.show_value() == 'Transitional (Absent -> Present)':
                     filtered_queryset_trans +=1
@@ -7707,6 +7707,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         'general': 'General',
         'sc': 'Social Complexity',
         'wf': 'Warfare',
+        'ec': 'Economy',
         'rt': 'Religion Tolerance',
         'crisisdb': 'Crisisdb',
     }
@@ -7715,6 +7716,10 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
     elif coded_value == "widespread_religion":
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif x_name == "lux_precious_metal":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+    elif db_section == 'ec':
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
         x_name_with_from = f'{x_name}_from'
         x_name_with_to = f'{x_name}_to' 
@@ -7762,6 +7767,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             
             new_object.expert_reviewed = False
             new_object.save()  # Save the object to persist the association
+            my_form.save_m2m()
 
 
 
@@ -7834,6 +7840,33 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             'extra_var14': my_form[x_name_14],
 
         })
+    elif x_name in ['lux_precious_metal'] and db_section == 'ec':
+        context.update({
+            'extra_var': my_form[x_name_1],
+            'extra_var2': my_form[x_name_2],
+            'extra_var3': my_form[x_name_3],
+            'extra_var4': my_form[x_name_4],
+            'extra_var5': my_form[x_name_5],
+            'extra_var6': my_form[x_name_6],
+            'extra_var7': my_form[x_name_7],
+            'extra_var8': my_form[x_name_8],
+            'extra_var9': my_form[x_name_9],
+            'extra_var10': my_form[x_name_10],
+            'extra_var11': my_form[x_name_11],
+        })
+    elif db_section == 'ec':
+        context.update({
+            'extra_var': my_form[x_name_1],
+            'extra_var2': my_form[x_name_2],
+            'extra_var3': my_form[x_name_3],
+            'extra_var4': my_form[x_name_4],
+            'extra_var5': my_form[x_name_5],
+            'extra_var6': my_form[x_name_6],
+            'extra_var7': my_form[x_name_7],
+            'extra_var8': my_form[x_name_8],
+            'extra_var9': my_form[x_name_9],
+            'extra_var10': my_form[x_name_10],
+        })
     elif coded_value in ['suprapolity_relations']:
         context.update({
             'extra_var': my_form['supra_polity_relations'],
@@ -7870,6 +7903,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         'general': 'General',
         'sc': 'Social Complexity',
         'wf': 'Warfare',
+        'ec': 'Economy',
         'rt': 'Religion Tolerance',
         'crisisdb': 'Crisisdb',
     }
@@ -7878,6 +7912,10 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
     elif coded_value == "widespread_religion":
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif x_name == "lux_precious_metal":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+    elif db_section == 'ec':
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
         x_name_with_from = f'{x_name}_from'
         x_name_with_to = f'{x_name}_to'
@@ -7929,6 +7967,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             
             new_object.expert_reviewed = False
             new_object.save()  # Save the object to persist the association
+            my_form.save_m2m()
 
             
             action = request.POST.get('action')
@@ -7989,6 +8028,33 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
                 'extra_var12': my_form[x_name_12],
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
+            })
+        elif x_name in ['lux_precious_metal'] and db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+            })
+        elif db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
             })
         elif coded_value in ['suprapolity_relations']:
             context.update({
@@ -8060,6 +8126,33 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
                 'extra_var14': my_form[x_name_14],
 
             })
+        elif x_name in ['lux_precious_metal'] and db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+            })
+        elif db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+            })
         elif coded_value in ['suprapolity_relations']:
             context.update({
                 'extra_var': my_form['supra_polity_relations'],
@@ -8094,6 +8187,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         'general': 'General',
         'sc': 'Social Complexity',
         'wf': 'Warfare',
+        'ec': 'Economy',
         'rt': 'Religion Tolerance',
         'crisisdb': 'Crisisdb',
     }
@@ -8103,6 +8197,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
     elif coded_value == "widespread_religion":
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+    elif x_name == "lux_precious_metal":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+    elif db_section == 'ec':
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
         x_name_with_from = f'{x_name}_from'
         x_name_with_to = f'{x_name}_to'
@@ -8158,7 +8256,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 seshat_private_comment_part.private_comment_reader.add(*suggested_experts) 
             
             new_object.expert_reviewed = False
+            # Save ManyToMany relationships
             new_object.save()  # Save the object to persist the association
+            my_form.save_m2m()
 
             
             action = request.POST.get('action')
@@ -8233,6 +8333,33 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
             })
+        elif x_name in ['lux_precious_metal'] and db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+            })
+        elif db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+            })
         elif coded_value in ['suprapolity_relations']:
             context.update({
                 'extra_var': my_form['supra_polity_relations'],
@@ -8303,6 +8430,33 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
 
+            })
+        elif x_name in ['lux_precious_metal'] and db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+                'extra_var11': my_form[x_name_11],
+            })
+        elif db_section == 'ec':
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
             })
         elif coded_value in ['suprapolity_relations']:
             context.update({
@@ -8402,6 +8556,10 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
     if coded_value == "suprapolity_relations":
         extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
+    elif var_name == "lux_precious_metal":
+        extra_var_dict = {obj.id: obj.display_table_value() for obj in object_list}
+    elif db_section == "ec":
+        extra_var_dict = {obj.id: obj.display_table_value() for obj in object_list}
     elif coded_value == "preceding_entity":
         extra_var_dict = {obj.id: obj.display_value() for obj in object_list}
     else:
@@ -8530,6 +8688,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         'general': 'general',
         'sc': 'social_complexity',
         'wf': 'warfare',
+        'ec': 'Economy',
         'rt': 'religion_tolerance',
         'crisisdb': 'crisisdb',
     }
@@ -8556,6 +8715,10 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 
         elif coded_value == "widespread_religion":
             x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
+        elif x_name == "lux_precious_metal":
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+        elif db_section == 'ec':
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
             x_name_with_from = f'{x_name}_from'
             x_name_with_to = f'{x_name}_to'

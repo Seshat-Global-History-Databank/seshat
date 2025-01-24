@@ -188,7 +188,7 @@
     }
 
     .mainform {
-        background:rgba(255, 235, 205, 0.464); 
+        background: rgba(255, 235, 205, 0.464); 
         border-left: 3px #ddd solid;
         border-top: 1px gray solid;
         border-radius: 5px;
@@ -323,7 +323,7 @@
                                 <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
                                     <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
                                         {% for curator in form.instance.curator.all %}
-                                            <span class="fw-bold">{{ curator }}</span>
+                                            *<span class="fw-bold">{{ curator }} </span>
                                         {% endfor %}            
                                 </div>
         

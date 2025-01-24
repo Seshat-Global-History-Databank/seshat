@@ -5,6 +5,20 @@
 
 {% block extra_vars %}
 
+<style>
+    .form-check {
+        display: block;
+        min-height: 1.5rem;
+        padding-left: 0.5em;
+        margin-bottom: .125rem;
+    }
+
+    .checkbox-majid {
+        margin-right: 3px;
+    }
+
+</style>
+
 {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions and 'core.add_seshatprivatecommentpart' in request.user.get_all_permissions %}
 {% if extra_var and extra_var2 and extra_var3 and extra_var4 and extra_var5 and extra_var6 and extra_var7 and extra_var8 and extra_var9 and extra_var10 and extra_var11 and extra_var12 and extra_var13 and extra_var14 and extra_var4.name == 'contested' %}
 <div class="col-md-4 pb-3">
@@ -46,6 +60,261 @@
 <div class="col-md-12 pb-3">
     {{ extra_var13|as_crispy_field }}
 </div>
+{% elif extra_var and extra_var2 and extra_var3 and extra_var4 and extra_var5 and extra_var6 and extra_var7 and extra_var8 and extra_var9 and extra_var10 and extra_var11 and extra_var3.name == 'place_of_provenance_str' %}
+<div class="col-md-4 pb-3" style="display: none;">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-3" style="font-family: Roboto Mono;">
+    {{ extra_var10|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-3" style="font-family: Roboto Mono;">
+    {{ extra_var11|as_crispy_field }}
+</div>
+
+<div class="col-md-4 pb-1">
+    {{ extra_var4|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.ruler_consumption_tag %}
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+    {% endfor %}
+</div>
+
+<div class="col-md-4 pb-1 ">
+    {{ extra_var6|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.elite_consumption_tag %}
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+    {% endfor %}
+</div>
+<div class="col-md-4 pb-1 ">
+    {{ extra_var8|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.common_people_consumption_tag %}
+
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+
+    {% endfor %}
+
+</div>
+
+{% elif extra_var and extra_var2 and extra_var3 and extra_var4 and extra_var5 and extra_var6 and extra_var7 and extra_var8 and extra_var9 and extra_var10 and extra_var3.name == 'place_of_provenance_str' %}
+<div class="col-md-4 pb-3" style="display: none;">
+    {{ extra_var|as_crispy_field }}
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var2|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-3" style="font-family: Roboto Mono;">
+</div>
+<div class="col-md-4 pb-3">
+    {{ extra_var3|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-3" style="font-family: Roboto Mono;">
+    {{ extra_var10|as_crispy_field }}
+</div>
+
+<div class="col-md-4 pb-1">
+    {{ extra_var4|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.ruler_consumption_tag %}
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+    {% endfor %}
+</div>
+
+<div class="col-md-4 pb-1 ">
+    {{ extra_var6|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.elite_consumption_tag %}
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+    {% endfor %}
+</div>
+<div class="col-md-4 pb-1 ">
+    {{ extra_var8|as_crispy_field }}
+</div>
+<div class="col-md-8 pb-1  d-flex align-items-center" style="flex-wrap: wrap; gap: 2px;">
+    {% for radio in form.common_people_consumption_tag %}
+
+            <span class="form-check" style="display: inline-flex; align-items: center;">
+
+                <label class="form-check-label" for="{{ radio.id_for_label }}">
+
+                    <span class="badge" 
+                        {% if radio.choice_label == 'Confident' %}
+                        style="font-family: 'Roboto Mono', monospace; color:#163832; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #bee3ba; width: 100px;"
+                        {% elif radio.choice_label == 'Inferred' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #add8e6; color:#324366; width: 100px;"  
+                        {% elif radio.choice_label == 'Suspected' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid #edd0e7; color:#8f2d56; width: 100px;"
+                        {% elif radio.choice_label == 'Undecided' %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;  border-bottom:5px solid  #d4d4d4; color:#272729; width: 100px;"  
+                        {% else %}
+                        style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; color:#e3814d; width: 70px;"  
+                        {% endif %}
+                    >  
+                    {{ radio.tag }}
+                    {% if radio.choice_label != '---------' %} <!-- Exclude the placeholder option -->
+
+                        {{ radio.choice_label }}
+                    {% else %}
+                    <span style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700;">None</span>
+                        
+                    {% endif %}
+
+                    </span>
+                </label>
+            </span>
+
+    {% endfor %}
+
+</div>
+
 {% elif extra_var and extra_var2 and extra_var3 and extra_var.name == 'other_polity' %}
 <div class="col-md-6 pb-3">
     {{ extra_var|as_crispy_field }}
@@ -103,3 +372,11 @@
     <!-- Render the delete button for the specified object ID -->
     <a href="{% url delete_url object.id %}" type="cancel" class="btn py-2 btn-outline-danger my-auto btn-block" style="font-family: 'Roboto Mono', monospace;">Delete</a>
 {% endblock delete_button %}
+
+<script>
+    function toggleRadio(radio) {
+        if (radio.checked) {
+            radio.checked = false; // Deselect the radio button if it's clicked again
+        }
+    }
+</script>

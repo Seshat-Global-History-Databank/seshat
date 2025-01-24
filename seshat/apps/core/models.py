@@ -241,7 +241,14 @@ def return_number_of_citations_plus_for_comments(self):
     return 0
 
 
-        
+
+
+class Prec_met_instance(models.Model):
+    name = models.CharField(max_length=100, default="precious_metal_instance")
+    metal = models.CharField(max_length=100,)
+
+    def __str__(self) -> str:
+        return self.metal
 
 class SeshatPrivateComment(models.Model):
     """

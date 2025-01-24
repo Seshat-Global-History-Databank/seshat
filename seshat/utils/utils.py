@@ -592,6 +592,74 @@ def get_all_wf_data_for_a_polity(polity_id):
 
     return all_vars_grouped_wf, has_any_data
 
+def get_all_ec_data_for_a_polity(polity_id):
+    """
+    Gets all data for a given polity ID from the "ec" app.
+
+    Args:
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
+    """
+    app_name = 'ec'  # Replace with your app name
+    models_1 = apps.get_app_config(app_name).get_models()
+
+    has_any_data = False
+
+    all_vars_grouped_ec = {}
+    for model in models_1:
+        model_name = model.__name__
+
+        s_value = "Luxury Goods"
+        ss_value = None
+
+        if s_value not in all_vars_grouped_ec:
+            all_vars_grouped_ec[s_value] = {}
+            if ss_value:
+                all_vars_grouped_ec[s_value][ss_value] = {}
+            else:
+                all_vars_grouped_ec[s_value]["None"] = {}
+        else:
+            if ss_value:
+                all_vars_grouped_ec[s_value][ss_value] = {}
+            else:
+                all_vars_grouped_ec[s_value]["None"] = {}
+    #print(all_vars_grouped_ec)
+    #########
+    #ll_vars_grouped = {}
+    for ct in ContentType.objects.all():
+        m = ct.model_class()
+        if m and m.__module__ == "seshat.apps.ec.models":
+            my_data = m.objects.filter(polity = polity_id)
+            print('mmmmmmmmmmmmmmmmm:', m.__name__ )
+            if m.__name__ == 'Precious_metal':
+                print('Hooooooooooooooo')
+                continue
+
+            #print(f"--------xxxxxxxxxxxxx-----{m.__name__}, ")
+            if my_data:
+                has_any_data = True
+                my_s = "Luxury Goods"
+                #print(f"-------------{my_s}, ")
+
+                if my_s:
+                    all_vars_grouped_ec[my_s]["None"][m.__name__] = my_data
+                else:
+                    print(f"-------------{my_s},")
+            else:
+                my_s = "Luxury Goods"
+
+                if my_s:
+                    all_vars_grouped_ec[my_s]["None"][m.__name__] = None
+                else:
+                    print(f"--------xxx-----{my_s},")
+                #if "ra" not in m.__name__.lower() or "paper" not in m.__name__.lower():
+                #    print(f"------{m.subsection()}-------")
+    #print(all_vars_grouped_ec)
+
+    return all_vars_grouped_ec, has_any_data
+
 
 def get_all_rt_data_for_a_polity(polity_id):
     """
