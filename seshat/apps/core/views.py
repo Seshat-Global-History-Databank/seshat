@@ -4156,7 +4156,10 @@ def tick_centuries(earliest_year, latest_year):
     Returns:
         str: The JSON representation of the tick years.
     """
-    return json.dumps([year for year in range(earliest_year, latest_year + 1, 100)])
+    ticks = [year for year in range(earliest_year, latest_year + 1, 100)]
+    if ticks[-1] != latest_year:  # We assume that the first year in Cliopatria is a century, but the last year may not be
+        ticks.append(latest_year)
+    return json.dumps(ticks)
 
 def get_all_polity_capitals():
     """
