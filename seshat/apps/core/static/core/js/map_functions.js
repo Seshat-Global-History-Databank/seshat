@@ -836,7 +836,7 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function toggleSettings() {
+function toggleSettings(worldMap=true) {
     var settings = document.getElementById("settings");
     var selectedMap = document.getElementById("baseMap").value;
     var variableLegend = document.getElementById('variableLegend');
@@ -845,9 +845,11 @@ function toggleSettings() {
     if (settings.style.display === "none" || settings.style.display === "") {
         settings.style.display = "block";
         // Disable the map controls when the settings are open
-        map.dragging.disable();
-        map.zoomControl.disable();
-        map.scrollWheelZoom.disable();
+        if (worldMap) {
+            map.dragging.disable();
+            map.zoomControl.disable();
+            map.scrollWheelZoom.disable();
+        }
         // Temporarily hide the legend and popup when the settings are open
         if (selectedMap === 'cesium' && variableLegend !== null) {
             variableLegend.style.display = 'none';
@@ -860,9 +862,11 @@ function toggleSettings() {
     } else {
         settings.style.display = "none";
         // Enable the map controls when the settings are closed
-        map.dragging.enable();
-        map.zoomControl.enable();
-        map.scrollWheelZoom.enable();
+        if (worldMap) {
+            map.dragging.enable();
+            map.zoomControl.enable();
+            map.scrollWheelZoom.enable();
+        }
         // Show the legend and popup when the settings are closed
         if (variableLegend !== null) {
             if (variableLegend.innerHTML != '') {
