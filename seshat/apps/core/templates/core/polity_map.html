@@ -28,6 +28,12 @@
         justify-content: space-between;
     }
 
+    #globeButtonDiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     #polityMapAndGlobe {
         position: relative;
         height: 55vh;
@@ -157,28 +163,28 @@
                 </div>
             </div>
             <div class="settings" id="settings">
-                <div id="baseMapControls">
+                <div id="globeButtonDiv">
                     <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
-                    <fieldset>
-                        <label for="baseMap">Map:</label>
-                        <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
-                            <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
-                            <option value="cesium">Globe (Cesium)</option>
-                            <option value="osm">Street Maps (OSM)</option>
-                            <option value="carto">Basic unlabelled (CARTO)</option>
-                            <option value="gadm" disabled>Clickable borders (GADM)</option>
-                        </select><br>
-                    </fieldset>
-                    <fieldset id="baseMapGADMFieldset">
-                        <label for="baseMapGADM">Current borders:</label>
-                        <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
-                            <option value="country">Countries</option>
-                            <option value="province">Provinces</option>
-                        </select><br>
-                        <label for="baseMapOnly">Base map only</label>
-                        <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                    </fieldset>
-                </div>
+                </div><br><br>
+                <fieldset>
+                    <label for="baseMap">Map:</label>
+                    <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
+                        <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                        <option value="cesium">Globe (Cesium)</option>
+                        <option value="osm">Street Maps (OSM)</option>
+                        <option value="carto">Basic unlabelled (CARTO)</option>
+                        <option value="gadm" disabled>Clickable borders (GADM)</option>
+                    </select><br>
+                </fieldset>
+                <fieldset id="baseMapGADMFieldset">
+                    <label for="baseMapGADM">Current borders:</label>
+                    <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
+                        <option value="country">Countries</option>
+                        <option value="province">Provinces</option>
+                    </select><br>
+                    <label for="baseMapOnly">Base map only</label>
+                    <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
+                </fieldset>
                 <fieldset>
                     <fieldset id="supraPolityRelationsFieldset" style="display: block">
                         <div id="supraPolityRelationsDiv" style="display: none;">
