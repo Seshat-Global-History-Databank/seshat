@@ -111,14 +111,6 @@
         opacity: 1;
     }
 
-    #polityMapControlPanel {
-        width: auto;
-        position: relative;
-        height: 55vh;
-        overflow: hidden;
-        padding: 10px;
-    }
-
     .settings {
         display: none;
         position: relative;
@@ -149,16 +141,6 @@
             <span id="sliderDate"></span>
         </h2>
         <div id="controls-and-maps">
-            <div id="polityMapControlPanel">
-                <div id="playBackControls">
-                    <button class="friendly-button-small" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button><br><br>
-                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
-                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
-                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
-                </div>
-            </div>
             <div id="polityMapAndGlobe">
                 <div id="map">
                     <div id="componentLegend"></div>
@@ -169,6 +151,7 @@
                 </div>
             </div>
             <div class="settings" id="settings">
+                <button class="friendly-button-small" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
                 <fieldset>
                     <fieldset id="supraPolityRelationsFieldset" style="display: block">
                         <div id="supraPolityRelationsDiv" style="display: none;">
@@ -213,6 +196,11 @@
                 <p>
                     <b><a href="../cliopatria" target="_blank">Learn more about the polity border choices.</a></b>
                 </p>
+                <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
+                <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
             </div>
             <div id="help"></div>
         </div>
