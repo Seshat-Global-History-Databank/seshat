@@ -115,7 +115,7 @@ function playRateValue() {
     plotPolities();
 }
 
-function setSliderTicks (tickYears) {
+function setSliderTicks (tickYears, worldMap=true) {
     var datalist = document.getElementById('yearTickmarks');
     var tickmarkValuesDiv = document.getElementById('yearTickmarkValues');
 
@@ -127,6 +127,17 @@ function setSliderTicks (tickYears) {
     while (tickmarkValuesDiv.firstChild) {
         tickmarkValuesDiv.removeChild(tickmarkValuesDiv.firstChild);
     };
+
+    var extraCenturyProportion = 0;
+    if (worldMap) {
+        // If the last tickmark is not a century, remove it from the list
+        var lastTick = tickYears[tickYears.length - 1];
+        if (lastTick % 100 !== 0) {
+            tickYears.pop();
+        }
+        // Calculate number of years over the last century the last tickmark represents
+        extraCenturyProportion = (lastTick - tickYears[tickYears.length - 1]) / 100;
+    }
 
     // Loop to add tickmarks
     i = 0;
@@ -142,7 +153,7 @@ function setSliderTicks (tickYears) {
         span.style.textAlign = 'center';
 
         // Use transform to center the span over the tickmark, with special handling for the first and last span
-        var leftPercentage = (i / (tickYears.length - 1) * 100);
+        var leftPercentage = (i / (tickYears.length + extraCenturyProportion - 1) * 100);
         span.style.left = `${leftPercentage}%`;
         if (i === 0) {
             span.style.transform = 'translateX(0%)'; // No translation for the first span
