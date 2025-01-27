@@ -115,7 +115,7 @@ function playRateValue() {
     plotPolities();
 }
 
-function setSliderTicks (tickYears) {
+function setSliderTicks (tickYears, worldMap=true) {
     var datalist = document.getElementById('yearTickmarks');
     var tickmarkValuesDiv = document.getElementById('yearTickmarkValues');
 
@@ -128,13 +128,16 @@ function setSliderTicks (tickYears) {
         tickmarkValuesDiv.removeChild(tickmarkValuesDiv.firstChild);
     };
 
-    // If the last tickmark is not a century, remove it from the list
-    var lastTick = tickYears[tickYears.length - 1];
-    if (lastTick % 100 !== 0) {
-        tickYears.pop();
+    var extraCenturyProportion = 0;
+    if (worldMap) {
+        // If the last tickmark is not a century, remove it from the list
+        var lastTick = tickYears[tickYears.length - 1];
+        if (lastTick % 100 !== 0) {
+            tickYears.pop();
+        }
+        // Calculate number of years over the last century the last tickmark represents
+        extraCenturyProportion = (lastTick - tickYears[tickYears.length - 1]) / 100;
     }
-    // Calculate number of years over the last century the last tickmark represents
-    var extraCenturyProportion = (lastTick - tickYears[tickYears.length - 1]) / 100;
 
     // Loop to add tickmarks
     i = 0;
