@@ -22,6 +22,12 @@
         align-items: center;
     }
 
+    #playButtons {
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
     #polityMapAndGlobe {
         position: relative;
         height: 55vh;
@@ -172,7 +178,7 @@
                     <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
                     <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter.</i></p><br><br>
                 </fieldset>
-                <div class="playButtons" style="width: 100%; text-align: center;">
+                <div id="playButtons">
                     <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
                     <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
                     <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
