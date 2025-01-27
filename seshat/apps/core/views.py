@@ -4145,6 +4145,19 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
 
     return content
 
+def tick_centuries(earliest_year, latest_year):
+    """
+    Get the years for the tick marks on the year slider. This is used on the world map.
+
+    Args:
+        earliest_year (int): The earliest year.
+        latest_year (int): The latest year.
+
+    Returns:
+        str: The JSON representation of the tick years.
+    """
+    return json.dumps([year for year in range(earliest_year, latest_year + 1, 100)])
+
 def get_all_polity_capitals():
     """
     Get capital cities for polities that have them.
@@ -4663,6 +4676,9 @@ def map_view_initial(request):
     # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
     # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
 
+    # On the world map, replace the default tickmarks with centuries
+    content['tick_years'] = tick_centuries(content['earliest_year'], content['latest_year'])
+
     return render(request,
                   'core/world_map.html',
                   content
@@ -4701,6 +4717,9 @@ def map_view_all(request):
 
     # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
     # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
+
+    # On the world map, replace the default tickmarks with centuries
+    content['tick_years'] = tick_centuries(content['earliest_year'], content['latest_year'])
 
     return JsonResponse(content)
 
@@ -4749,6 +4768,9 @@ def map_view_all_with_vars(request):
 
     # Add suprapolity relations to the shapes TODO: This is disabled for now as it is not used in the frontend
     # content['shapes'] = add_suprapolity_relations_to_shapes(content['shapes'], content['seshat_id_page_id'])
+
+    # On the world map, replace the default tickmarks with centuries
+    content['tick_years'] = tick_centuries(content['earliest_year'], content['latest_year'])
 
     return JsonResponse(content)
 
