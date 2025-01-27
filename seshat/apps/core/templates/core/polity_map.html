@@ -157,7 +157,28 @@
                 </div>
             </div>
             <div class="settings" id="settings">
-                <button class="friendly-button-small" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
+                <div id="baseMapControls">
+                    <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
+                    <fieldset>
+                        <label for="baseMap">Map:</label>
+                        <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
+                            <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                            <option value="cesium">Globe (Cesium)</option>
+                            <option value="osm">Street Maps (OSM)</option>
+                            <option value="carto">Basic unlabelled (CARTO)</option>
+                            <option value="gadm" disabled>Clickable borders (GADM)</option>
+                        </select><br>
+                    </fieldset>
+                    <fieldset id="baseMapGADMFieldset">
+                        <label for="baseMapGADM">Current borders:</label>
+                        <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
+                            <option value="country">Countries</option>
+                            <option value="province">Provinces</option>
+                        </select><br>
+                        <label for="baseMapOnly">Base map only</label>
+                        <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
+                    </fieldset>
+                </div>
                 <fieldset>
                     <fieldset id="supraPolityRelationsFieldset" style="display: block">
                         <div id="supraPolityRelationsDiv" style="display: none;">
@@ -184,27 +205,6 @@
                     <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
                     <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
                     <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
-                </div>
-                <div id="baseMapControls">
-                    <fieldset>
-                        <label for="baseMap">Map:</label>
-                        <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
-                            <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
-                            <option value="cesium">Globe (Cesium)</option>
-                            <option value="osm">Street Maps (OSM)</option>
-                            <option value="carto">Basic unlabelled (CARTO)</option>
-                            <option value="gadm" disabled>Clickable borders (GADM)</option>
-                        </select><br>
-                    </fieldset>
-                    <fieldset id="baseMapGADMFieldset">
-                        <label for="baseMapGADM">Current borders:</label>
-                        <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
-                            <option value="country">Countries</option>
-                            <option value="province">Provinces</option>
-                        </select><br>
-                        <label for="baseMapOnly">Base map only</label>
-                        <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                    </fieldset>
                 </div>
                 <p>
                     <b><a href="../cliopatria" target="_blank">Polity border choices.</a></b>
