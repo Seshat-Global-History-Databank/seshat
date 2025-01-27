@@ -212,9 +212,6 @@
                     <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
                     <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
                 </div><br>
-                <p>
-                    <b><a href="../cliopatria" target="_blank">Polity border choices.</a></b>
-                </p>
             </div>
             <div id="help"></div>
         </div>
@@ -223,8 +220,11 @@
             <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
                 max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
                 style="width: 100%;" list="yearTickmarks">
-            <div id="yearTickmarkValues"></div><br>
-        </div>
+            <div id="yearTickmarkValues"></div>
+        </div><br><br>
+        <p>
+            <b><a href="../cliopatria" target="_blank">Learn more about polity border choices.</a></b>
+        </p>
         <script src="{% static 'core/js/map_functions.js' %}?v={{ version }}"></script>
         <script>
 
