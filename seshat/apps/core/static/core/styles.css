@@ -241,7 +241,7 @@ hr.bg-fading {
 
 .friendly-button-small {
     width: 1.5em;
-    background-color: rgba(255, 253, 242, 1);
+    background-color: rgba(255, 253, 242, 0.5);
     border: 0px;
     border-radius: 5px;
     cursor: pointer;
