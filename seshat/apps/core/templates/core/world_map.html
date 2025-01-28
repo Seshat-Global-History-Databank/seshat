@@ -306,12 +306,9 @@
     }
 
     #playButtons {
-        height: 80%;
+        /* height: 80%; */
         text-align: center;
-    }
-
-    #playButtons button {
-        height: 15%;
+        z-index: 9999999999999;
     }
 
     #worldMapControlPanel {
@@ -425,16 +422,16 @@
                     </div>
                     <button class="friendly-button-big" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
                     <button class="friendly-button-big" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
-                    <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button><br><br>
-                    <div id="playButtons">
-                        <button class="friendly-button" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                        <button class="friendly-button" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
-                        <button class="friendly-button" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
-                        <button class="friendly-button" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                        <button class="friendly-button" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
-                    </div>
+                    <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
                 </div>
                 <div id="mapAndGlobe">
+                    <div id="playButtons">
+                        <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                        <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                        <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
+                        <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                        <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                    </div>
                     <div id="map">
                         <div class="topleftcontainer">
                             <div id="popup" class="p-1"></div>

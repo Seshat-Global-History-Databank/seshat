@@ -219,8 +219,9 @@ hr.bg-fading {
     }
 }
 
-.friendly-button {
+/* .friendly-button {
     width: 40px;
+    height: 15%;
     background-color: rgba(255, 253, 242, 1);
     border: 0px;
     border-radius: 5px;
@@ -232,7 +233,7 @@ hr.bg-fading {
     padding: 5%;
     font-size: 1.75em;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .friendly-button.collapsed {
     transform: rotate(180deg);
