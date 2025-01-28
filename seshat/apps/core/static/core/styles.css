@@ -268,7 +268,6 @@ hr.bg-fading {
     transition: transform 0.3s ease;
     padding: 5%;
     font-size: 4em;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .friendly-button-small.collapsed {
