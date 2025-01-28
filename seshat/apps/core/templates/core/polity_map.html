@@ -128,6 +128,34 @@
         opacity: 1;
     }
 
+    .year-info-container {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .year-info-container::after {
+        content: "Hit enter after changing the year or setting the play rate.";
+        visibility: hidden;
+        width: 125px;
+        background-color: #782823;
+        color: #fff;
+        border-radius: 5px;
+        padding: 10px;
+        position: absolute;
+        z-index: 9999;
+        top: 10%;
+        right: 1%;
+        margin-top: -20px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .year-info-container:hover::after {
+        visibility: visible;
+        opacity: 1;
+    }
+
     .settings {
         display: none;
         position: relative;
@@ -194,7 +222,10 @@
                     <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
                         class="slider" onchange="plotPolities()"><br><br>
                     <label for="enterYear">Year:</label>
-                    <input type="number" id="enterYear" name="enterYear" value="{{ content.display_year }}" style="width: 75px;"><br>
+                    <input type="number" id="enterYear" name="enterYear" value="{{ content.display_year }}" style="width: 75px;">
+                    <div class="year-info-container">
+                        ℹ️
+                    </div><br>
                     <label for="increment">Play rate:</label>
                     <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()"><br><br>
                 </fieldset>
