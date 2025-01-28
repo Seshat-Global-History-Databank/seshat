@@ -57,6 +57,7 @@
         margin: 0;
         padding: 0;
         font-family: 'Nunito Sans', sans-serif;
+        display: flex;
     }
 
     .wrapper {
@@ -94,7 +95,7 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
         background-color: rgba(255, 253, 242, 1);
-        padding: 10px;
+        padding: 2px;
         display: block;
         position: absolute;
         bottom: 0;
@@ -327,7 +328,7 @@
 
     #mapAndGlobe {
         position: relative;
-        height: 85vh;
+        height: 100%;
         width: 100%;
         overflow: hidden; /* Ensure child elements do not overflow */
     }
@@ -352,6 +353,15 @@
         position: relative;
         width: 600%;
         display: block;
+        max-height: 10%;
+        bottom: 0%;
+    }
+
+    #controls-and-maps {
+        height: 90%;
+        display: flex;
+        position: relative;
+        overflow: hidden; /* Ensure child elements do not overflow */
     }
 
     /* Media Queries for Responsiveness */
@@ -414,153 +424,151 @@
 
 </style>
 <body style="background-color: #fffdf2;">
-    <div class="wrapper">
-        <div class="inner-content">
-            {% include "core/partials/_navbar_home.html" %}
-            {% block content %}
-            <div style="display: flex; height: 85vh;" id="controls-and-maps">
-                <div id="worldMapControlPanel">
-                    <div id="loadingIndicator">
-                        <div class="spinner"></div><br>
-                    </div>
-                    <button class="friendly-button-big" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
-                    <button class="friendly-button-big" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
-                    <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
+    <div class="inner-content">
+        {% include "core/partials/_navbar_home.html" %}
+        {% block content %}
+        <div id="controls-and-maps">
+            <div id="worldMapControlPanel">
+                <div id="loadingIndicator">
+                    <div class="spinner"></div><br>
                 </div>
-                <div id="mapAndGlobe">
-                    <div id="playButtons">
-                        <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                        <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                        <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
-                        <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                        <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                <button class="friendly-button-big" id="toggleSettingsButton" onclick="toggleSettings()">⚙️</button><br><br>
+                <button class="friendly-button-big" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
+                <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
+            </div>
+            <div id="mapAndGlobe">
+                <div id="playButtons">
+                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
+                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                </div>
+                <div id="map">
+                    <div class="topleftcontainer">
+                        <div id="popup" class="p-1"></div>
                     </div>
-                    <div id="map">
-                        <div class="topleftcontainer">
-                            <div id="popup" class="p-1"></div>
+                    <h1 class="text-teal sliderDate" id="sliderDate"></h1>
+                </div>
+                <div id="globe">
+                    <h1 class="text-teal sliderDate" id="sliderDate2"></h1>
+                    <div class="enterYearMobileContainer" id="enterYearMobileContainer" style="display: none; width: 100%; padding: 5px;">
+                        <label for="enterYearMobile">Enter year:</label>
+                        <input type="number" id="enterYearMobile" name="enterYearMobile" value="{{ display_year }}" onchange="storeYearMobile()" style="width: 30%">
+                        <button id="switchToBCE" onclick="switchToBCE()">To BCE</button>
+                    </div>
+                </div>
+                <div class="settings" id="settings">
+                    <button class="crossButton" onclick="toggleSettings()">❌</button>
+                    <fieldset>
+                        <label for="chooseVariable">Variable: </label>
+                        <select name="chooseVariable" id="chooseVariable" onchange="plotPolities();"
+                            style="width: 300px; text-overflow: ellipsis;" disabled>
+                            <option value="polity">Political boundaries</option>
+                        </select>
+                        <div class="info-container" id="variable-info-container">
+                            ℹ️
                         </div>
-                        <h1 class="text-teal sliderDate" id="sliderDate"></h1>
-                    </div>
-                    <div id="globe">
-                        <h1 class="text-teal sliderDate" id="sliderDate2"></h1>
-                        <div class="enterYearMobileContainer" id="enterYearMobileContainer" style="display: none; width: 100%; padding: 5px;">
-                            <label for="enterYearMobile">Enter year:</label>
-                            <input type="number" id="enterYearMobile" name="enterYearMobile" value="{{ display_year }}" onchange="storeYearMobile()" style="width: 30%">
-                            <button id="switchToBCE" onclick="switchToBCE()">To BCE</button>
-                        </div>
-                    </div>
-                    <div class="settings" id="settings">
-                        <button class="crossButton" onclick="toggleSettings()">❌</button>
-                        <fieldset>
-                            <label for="chooseVariable">Variable: </label>
-                            <select name="chooseVariable" id="chooseVariable" onchange="plotPolities();"
-                                style="width: 300px; text-overflow: ellipsis;" disabled>
-                                <option value="polity">Political boundaries</option>
-                            </select>
-                            <div class="info-container" id="variable-info-container">
-                                ℹ️
-                            </div>
-                            <div class="previouslySelectedVariable-container">
-                                <button id="previouslySelectedVariable" type="button"
-                                    onclick="previouslySelectedVariableButton()">🔄</button>
-                            </div><br>
-                            <fieldset id="chooseCategoricalVariableSelectionFieldset">
-                                <label for="chooseCategoricalVariableSelection"></label>
-                                <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
-                                    onchange="plotPolities()" style="width: 300px; text-overflow: ellipsis;">
-                                </select>
-                            </fieldset>
-                            <div id="variablesLoadingIndicator">
-                                <p>Loading Seshat variables...</p>
-                            </div>
-                            <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
-                                <label for="switchPolitiesComponents">One color per </label>
-                                <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
-                                    <option value="components">Sub-polity (component)</option>
-                                    <option value="polities" selected>Polity</option>
-                                    <option style="display: none;" value="supra-polities">Supra-polity relation</option>
-                                    <!-- TODO: when working on issue #224 remove the above style tag so supra-polities can be selected -->
-                                </select>
-                                <div class="display-info-container">
-                                    ℹ️
-                                </div><br>
-                                <div id="suprapolitiesOnlyDiv" style="display: none;">
-                                    <label for="suprapolitiesOnly">Show polities with Supra-polity relations only</label>
-                                    <input type="checkbox" id="suprapolitiesOnly" name="suprapolitiesOnly" onclick=plotPolities()><br>
-                                </div>
-                                <label for="baseMapOnly">Hide unselected</label>
-                                <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
-                                <label for="selectAll">Select all</label>
-                                <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked>
-                                <div class="info-container" id="selection-info-container">
-                                    ℹ️
-                                </div><br>
-                                <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button><br><br>
-                            </fieldset>
-                            <label for="opacitySlide">Opacity:</label>
-                            <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
-                                class="slider" onchange="plotPolities()" style="width: 300px;"><br><br>
-                            <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
-                            <!-- <label for="showCapitals">Show capital cities</label>
-                                                                                                                <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
-                            <label for="enterYear">Enter year:</label>
-                            <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
-                            <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
-                            <label for="increment">Play rate (years/second):</label>
-                            <input type="number" id="increment" name="increment" value="50" style="width: 50px;" onchange="playRateValue()">
-                            <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter to set play rate.</i></p><br><br>
-                        </fieldset>
-                        <div id="baseMapControls">
-                            <fieldset>
-                                <label for="baseMap">Choose base map:</label>
-                                <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
-                                    <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
-                                    <option value="cesium">Globe (Cesium)</option>
-                                    <option value="osm">Street Maps (OSM)</option>
-                                    <option value="carto">Basic unlabelled (CARTO)</option>
-                                    <option value="gadm" disabled>Clickable borders (GADM)</option>
-                                </select><br>
-                            </fieldset>
-                            <fieldset id="baseMapGADMFieldset">
-                                <label for="baseMapGADM">Current borders:</label>
-                                <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
-                                    <option value="country">Countries</option>
-                                    <option value="province">Provinces</option>
-                                </select><br>
-                                <label for="baseMapOnly">Base map only</label>
-                                <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                            </fieldset>
+                        <div class="previouslySelectedVariable-container">
+                            <button id="previouslySelectedVariable" type="button"
+                                onclick="previouslySelectedVariableButton()">🔄</button>
                         </div><br>
-                        <p>🚨 <b>Close this window to enable zooming on the map.</b></p>
-                    </div>
-                    <div class="help" id="help">
-                        <button class="crossButton" onclick="toggleHelp()">❌</button>
-                        <h2>🎉 Welcome to the Seshat World Map! 🎉</h2>
-                        <p><b>Take a moment to familiarise yourself with the controls, then close this popup window.</b></p><br>
-                        <p><b>🔹 Use the slider at the bottom of the page to adjust the displayed year.</b></p>
-                        <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
-                        <p><b>🔹 Switch between a Globe and a Mercator map projection with 🌍.</b></p>
-                        <p><b>🔹 Click polities on the map to add them to or remove them from the legend.</b></p>
-                        <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
-                        <p><b>🔹The settings gear (⚙️) can be used to access additional controls</b></p>
-                        <p>
-                            <b><a href="../cliopatria" target="_blank">🔹 Learn more about the polity border choices.</a></b>
-                        </p>
-                        <p>🚨 <b>Close this window to enable zooming on the map.</b></p><br>
-                    </div>
-                    <div id="sliderdiv">
-                        <fieldset>
-                            <div class="slider-container" id="slider-container">
-                                <datalist id="yearTickmarks"></datalist>
-                                <div id="yearTickmarkValues"></div><br>
-                                <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
-                                    value="{{ display_year }}" class="slider" onchange="plotPolities(); adjustScroll(); closeSettings(); closeHelp();"
-                                    style="width: 100%;" list="yearTickmarks">
-                            </div>
+                        <fieldset id="chooseCategoricalVariableSelectionFieldset">
+                            <label for="chooseCategoricalVariableSelection"></label>
+                            <select name="chooseCategoricalVariableSelection" id="chooseCategoricalVariableSelection"
+                                onchange="plotPolities()" style="width: 300px; text-overflow: ellipsis;">
+                            </select>
                         </fieldset>
-                    </div>
-                    <div id="variableLegend"></div>
+                        <div id="variablesLoadingIndicator">
+                            <p>Loading Seshat variables...</p>
+                        </div>
+                        <fieldset id="switchPoliticalBoundariesFieldset" style="display: block">
+                            <label for="switchPolitiesComponents">One color per </label>
+                            <select name="switchPolitiesComponents" id="switchPolitiesComponents" onchange="plotPolities()">
+                                <option value="components">Sub-polity (component)</option>
+                                <option value="polities" selected>Polity</option>
+                                <option style="display: none;" value="supra-polities">Supra-polity relation</option>
+                                <!-- TODO: when working on issue #224 remove the above style tag so supra-polities can be selected -->
+                            </select>
+                            <div class="display-info-container">
+                                ℹ️
+                            </div><br>
+                            <div id="suprapolitiesOnlyDiv" style="display: none;">
+                                <label for="suprapolitiesOnly">Show polities with Supra-polity relations only</label>
+                                <input type="checkbox" id="suprapolitiesOnly" name="suprapolitiesOnly" onclick=plotPolities()><br>
+                            </div>
+                            <label for="baseMapOnly">Hide unselected</label>
+                            <input type="checkbox" id="hideUnselected" name="hideUnselected" onclick=plotPolities() disabled>
+                            <label for="selectAll">Select all</label>
+                            <input type="checkbox" id="selectAll" name="selectAll" onclick="plotPolities(); selectAllCheckbox()" checked>
+                            <div class="info-container" id="selection-info-container">
+                                ℹ️
+                            </div><br>
+                            <button id="clearSelectionButton" type="button" onclick="clearSelection()">Clear selection</button><br><br>
+                        </fieldset>
+                        <label for="opacitySlide">Opacity:</label>
+                        <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
+                            class="slider" onchange="plotPolities()" style="width: 300px;"><br><br>
+                        <!-- TODO: Uncomment this when there are more capitals with coordinates in the database -->
+                        <!-- <label for="showCapitals">Show capital cities</label>
+                                                                                                            <input type="checkbox" id="showCapitals" name="showCapitals" onclick=plotPolities()><br><br> -->
+                        <label for="enterYear">Enter year:</label>
+                        <input type="number" id="enterYear" name="enterYear" value="{{ display_year }}" style="width: 75px;" onchange="storeYear()">
+                        <p style="display: inline; margin-left: 5px;">🗣️ <i>Hit enter to set year.</i></p><br>
+                        <label for="increment">Play rate (years/second):</label>
+                        <input type="number" id="increment" name="increment" value="50" style="width: 50px;" onchange="playRateValue()">
+                        <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter to set play rate.</i></p><br><br>
+                    </fieldset>
+                    <div id="baseMapControls">
+                        <fieldset>
+                            <label for="baseMap">Choose base map:</label>
+                            <select name="baseMap" id="baseMap" onchange="switchBaseMapWorldMap()">
+                                <option value="arcgis" selected>Satellite (Esri World Imagery)</option>
+                                <option value="cesium">Globe (Cesium)</option>
+                                <option value="osm">Street Maps (OSM)</option>
+                                <option value="carto">Basic unlabelled (CARTO)</option>
+                                <option value="gadm" disabled>Clickable borders (GADM)</option>
+                            </select><br>
+                        </fieldset>
+                        <fieldset id="baseMapGADMFieldset">
+                            <label for="baseMapGADM">Current borders:</label>
+                            <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMapWorldMap()">
+                                <option value="country">Countries</option>
+                                <option value="province">Provinces</option>
+                            </select><br>
+                            <label for="baseMapOnly">Base map only</label>
+                            <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
+                        </fieldset>
+                    </div><br>
+                    <p>🚨 <b>Close this window to enable zooming on the map.</b></p>
                 </div>
+                <div class="help" id="help">
+                    <button class="crossButton" onclick="toggleHelp()">❌</button>
+                    <h2>🎉 Welcome to the Seshat World Map! 🎉</h2>
+                    <p><b>Take a moment to familiarise yourself with the controls, then close this popup window.</b></p><br>
+                    <p><b>🔹 Use the slider at the bottom of the page to adjust the displayed year.</b></p>
+                    <p><b>🔹 Use the play controls to quickly increment the year and animate the map through time.</b></p>
+                    <p><b>🔹 Switch between a Globe and a Mercator map projection with 🌍.</b></p>
+                    <p><b>🔹 Click polities on the map to add them to or remove them from the legend.</b></p>
+                    <p><b>🔹 Some polities have Seshat pages reachable with double click.</b></p>
+                    <p><b>🔹The settings gear (⚙️) can be used to access additional controls</b></p>
+                    <p>
+                        <b><a href="../cliopatria" target="_blank">🔹 Learn more about the polity border choices.</a></b>
+                    </p>
+                    <p>🚨 <b>Close this window to enable zooming on the map.</b></p><br>
+                </div>
+                <div id="sliderdiv">
+                    <fieldset>
+                        <div class="slider-container" id="slider-container">
+                            <datalist id="yearTickmarks"></datalist>
+                            <div id="yearTickmarkValues"></div><br>
+                            <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
+                                value="{{ display_year }}" class="slider" onchange="plotPolities(); adjustScroll(); closeSettings(); closeHelp();"
+                                style="width: 100%;" list="yearTickmarks">
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="variableLegend"></div>
             </div>
         </div>
     </div>
@@ -1698,7 +1706,4 @@
 
     </script>
     {% endblock %}
-    </div>
-    {% include "core/partials/_footer_bar.html" %}
-    </div>
 </body>
