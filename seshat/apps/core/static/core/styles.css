@@ -283,3 +283,10 @@ hr.bg-fading {
     position: absolute;
     border-color: rgba(255, 253, 242, 1);
 }
+
+.minButton {
+    background-color: rgba(255, 253, 242, 1);
+    padding-left: 1%;
+    position: relative;
+    border-color: rgba(255, 253, 242, 1);
+}
