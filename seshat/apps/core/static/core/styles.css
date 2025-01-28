@@ -289,4 +289,14 @@ hr.bg-fading {
     padding-left: 1%;
     position: relative;
     border-color: rgba(255, 253, 242, 1);
+    max-height: 25px;
+}
+
+.popup-container {
+    display: flex;
+    align-items: left;
+}
+
+.popup-container table {
+    margin-right: 10px;
 }

@@ -1091,12 +1091,6 @@
 
                         // Create the popup content
                         var popupContent = ``;
-                        // If minimised, popupcontent will only show the polity name
-                        if (fullPopupContent){
-                            popupContent = popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button>`;
-                        } else {
-                            popupContent = popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button>`;
-                        }
                         popupContent = popupContent + `
                             <table>
                                 <tr>
@@ -1398,6 +1392,12 @@
                             };
                         }
                         popupContent = popupContent + `</table>`;
+                        // If minimised, popupcontent will only show the polity name
+                        if (fullPopupContent) {
+                            popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button></div>`;
+                        } else {
+                            popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button></div>`;
+                        }
 
                         if (selectedMap === 'cesium') {
 
