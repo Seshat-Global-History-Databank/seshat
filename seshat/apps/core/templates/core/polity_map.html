@@ -25,9 +25,11 @@
 
     #playButtons {
         text-align: center;
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
+        position: absolute;
+        bottom: 5%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
     }
 
     #globeButtonDiv {
@@ -39,7 +41,7 @@
     #polityMapAndGlobe {
         position: relative;
         height: 55vh;
-        width: 75%;
+        width: 70%;
         overflow: hidden; /* Ensure child elements do not overflow */
     }
 
@@ -157,6 +159,13 @@
         </h2>
         <div id="controls-and-maps">
             <div id="polityMapAndGlobe">
+                <div id="playButtons">
+                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
+                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                </div>
                 <div id="map">
                     <div id="componentLegend"></div>
                 </div>
@@ -208,13 +217,6 @@
                     <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
                     <p style="display: inline; margin-left: 5px; width: 250px;">🗣️ <i>Hit enter.</i></p><br><br>
                 </fieldset>
-                <div id="playButtons">
-                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
-                    <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
-                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
-                </div><br>
             </div>
             <div id="help"></div>
         </div>
