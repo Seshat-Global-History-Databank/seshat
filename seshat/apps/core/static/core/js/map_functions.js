@@ -992,3 +992,12 @@ function hierarchicalComplexityColour(maxValue, value) {
 
     return `rgb(${r}, ${g}, ${b})`;
 }
+
+function minimisePopup () {
+    if (fullPopupContent){
+        fullPopupContent = false;
+    } else {
+        fullPopupContent = true;
+    }
+    plotPolities();
+}
