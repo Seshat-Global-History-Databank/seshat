@@ -258,7 +258,6 @@ hr.bg-fading {
 }
 
 .friendly-button-big {
-    width: 50%;
     background-color: rgba(255, 253, 242, 1);
     border: 0px;
     border-radius: 5px;
@@ -269,6 +268,7 @@ hr.bg-fading {
     transition: transform 0.3s ease;
     padding: 5%;
     font-size: 4em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 .friendly-button-small.collapsed {
