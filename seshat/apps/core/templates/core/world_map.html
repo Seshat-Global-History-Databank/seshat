@@ -817,8 +817,6 @@
         var currentLayer = baseLayers.arcgis.addTo(map);
         var provinceLayers = []; // Keep track of province layers to remove them later
 
-        var fullPopupContent = false;
-
         // Set the default base map to Esri World Imagery
         switchBaseMap();
 
@@ -1101,306 +1099,307 @@
                                     <th></th>
                                 </tr>
                         `;
-                        if (fullPopupContent){
-                            if (shape.seshat_id in seshat_id_page_id) {
-                                var polityId = seshat_id_page_id[shape.seshat_id]['id'];
-                                longName = seshat_id_page_id[shape.seshat_id]['long_name'];
-                                if (longName == '') {
-                                    longName = '[Page empty]'
-                                }
-                                if (selectedMap == 'cesium'){
-                                    popupContent = popupContent + `
+                        var popupContentMini = popupContent;
+                        popupContentMini = popupContentMini + `
+                            </table>
+                        `;
+
+                        if (shape.seshat_id in seshat_id_page_id) {
+                            var polityId = seshat_id_page_id[shape.seshat_id]['id'];
+                            longName = seshat_id_page_id[shape.seshat_id]['long_name'];
+                            if (longName == '') {
+                                longName = '[Page empty]'
+                            }
+                            if (selectedMap == 'cesium'){
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Seshat page</td>
+                                        <td>${longName} (${shape.seshat_id})</td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
                                         <tr>
                                             <td>Seshat page</td>
-                                            <td>${longName} (${shape.seshat_id})</td>
+                                            <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
                                         </tr>
                                     `;
-                                } else {
-                                    popupContent = popupContent + `
+                            }
+                        }
+
+                        // This code is commented out because Supra-polities from the Cliopatria GeoJSON with multiple Seshat IDs are not currently being loaded into the database
+
+                        // } else if (shape.seshat_id.includes(';')) {
+                        //     var polityIds = shape.seshat_id.split(';');
+                        //     var polityLinks = '';
+                        //     for (var i = 0; i < polityIds.length; i++) {
+                        //         if (polityIds[i] in seshat_id_page_id) {
+                        //             var polityId = seshat_id_page_id[polityIds[i]]['id'];
+                        //             longName = seshat_id_page_id[polityIds[i]]['long_name'];
+                        //             if (longName == '') {
+                        //                 longName = '[Page empty]'
+                        //             }
+                        //             if (selectedMap == 'cesium') {
+                        //                 polityLinks = polityLinks + `${longName} (${polityIds[i]})<br>`;
+                        //             } else {
+                        //                 polityLinks = polityLinks + `<a href="/core/polity/${polityId}" target="_blank">${longName} (${polityIds[i]})</a><br>`;
+                        //             }
+                        //         }
+                        //     }
+                        //     popupContent = popupContent + `
+                        //             <tr>
+                        //                 <td>Seshat pages</td>
+                        //                 <td>${polityLinks}</td>
+                        //             </tr>
+                        //         `;
+                        // }
+
+                        let wiki_page = 'https://en.wikipedia.org/wiki/' + shape.wikipedia_name.replace(/ /g, '_');
+                        popupContent = popupContent + `
+                            <tr>
+                                <td>Wikipedia page</td>
+                                <td><a href="${wiki_page}" target="_blank">${shape.wikipedia_name}</a></td>
+                            </tr>
+                        `;
+
+                        popupContent = popupContent + `
+                                <tr>
+                                    <td>Duration</td>
+                                    <td>${displaystart_year} to ${displayend_year}</td>
+                                </tr>
+                                <tr>
+                                    <td>Area (est.)</td>
+                                    <td>${formattedArea} Km<sup>2</sup></td>
+                                </tr>
+                        `;
+                        // Absent/present variables
+                        if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable) && !hierarchicalComplexityVariablesFull.includes(variable)) {
+                            if (shape[variable + '_dict']) {
+                                // Iterate through key/values in the dictionary
+                                var counter = 0;
+                                for (const [key, value] of Object.entries(shape[variable + '_dict'])) {
+                                    let variableStartYear = value[0];
+                                    let variableEndYear = value[1];
+                                    let variable_value = longAbsentPresentVarName(key);
+                                    // If startYear or endYear are None, set them to the polity start year or end year
+                                    // Format the years to BCE/CE
+                                    if (variableStartYear == 'None' || variableStartYear == null) {
+                                        variableStartYear = displaystart_year;
+                                    } else {
+                                        if (variableStartYear < 0) {
+                                            variableStartYear = Math.abs(variableStartYear) + ' BCE';
+                                        } else {
+                                            variableStartYear = variableStartYear + ' CE';
+                                        }
+                                    }
+                                    if (variableEndYear == 'None' || variableEndYear == null) {
+                                        variableEndYear = displayend_year;
+                                    } else {
+                                        if (variableEndYear == {{ last_history_year }}) {
+                                            variableEndYear = 'Present';
+                                        } else {
+                                            if (variableEndYear < 0) {
+                                                variableEndYear = Math.abs(variableEndYear) + ' BCE';
+                                            } else {
+                                                variableEndYear = variableEndYear + ' CE';
+                                            }
+                                        }
+                                    }
+                                    if (counter == 0) {
+                                        popupContent = popupContent + `
                                             <tr>
-                                                <td>Seshat page</td>
-                                                <td><a href="/core/polity/${polityId}" target="_blank">${longName} (${shape.seshat_id})</a></td>
+                                                <td>${variable}</td>
+                                                <td>${variable_value} from ${variableStartYear} to ${variableEndYear}</td>
                                             </tr>
                                         `;
-                                }
-                            }
-
-                            // This code is commented out because Supra-polities from the Cliopatria GeoJSON with multiple Seshat IDs are not currently being loaded into the database
-
-                            // } else if (shape.seshat_id.includes(';')) {
-                            //     var polityIds = shape.seshat_id.split(';');
-                            //     var polityLinks = '';
-                            //     for (var i = 0; i < polityIds.length; i++) {
-                            //         if (polityIds[i] in seshat_id_page_id) {
-                            //             var polityId = seshat_id_page_id[polityIds[i]]['id'];
-                            //             longName = seshat_id_page_id[polityIds[i]]['long_name'];
-                            //             if (longName == '') {
-                            //                 longName = '[Page empty]'
-                            //             }
-                            //             if (selectedMap == 'cesium') {
-                            //                 polityLinks = polityLinks + `${longName} (${polityIds[i]})<br>`;
-                            //             } else {
-                            //                 polityLinks = polityLinks + `<a href="/core/polity/${polityId}" target="_blank">${longName} (${polityIds[i]})</a><br>`;
-                            //             }
-                            //         }
-                            //     }
-                            //     popupContent = popupContent + `
-                            //             <tr>
-                            //                 <td>Seshat pages</td>
-                            //                 <td>${polityLinks}</td>
-                            //             </tr>
-                            //         `;
-                            // }
-
-                            let wiki_page = 'https://en.wikipedia.org/wiki/' + shape.wikipedia_name.replace(/ /g, '_');
-                            popupContent = popupContent + `
-                                <tr>
-                                    <td>Wikipedia page</td>
-                                    <td><a href="${wiki_page}" target="_blank">${shape.wikipedia_name}</a></td>
-                                </tr>
-                            `;
-
-                            popupContent = popupContent + `
-                                    <tr>
-                                        <td>Duration</td>
-                                        <td>${displaystart_year} to ${displayend_year}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Area (est.)</td>
-                                        <td>${formattedArea} Km<sup>2</sup></td>
-                                    </tr>
-                            `;
-                            // Absent/present variables
-                            if (variable != 'polity' && !categorical_variables.hasOwnProperty(variable) && !hierarchicalComplexityVariablesFull.includes(variable)) {
-                                if (shape[variable + '_dict']) {
-                                    // Iterate through key/values in the dictionary
-                                    var counter = 0;
-                                    for (const [key, value] of Object.entries(shape[variable + '_dict'])) {
-                                        let variableStartYear = value[0];
-                                        let variableEndYear = value[1];
-                                        let variable_value = longAbsentPresentVarName(key);
-                                        // If startYear or endYear are None, set them to the polity start year or end year
-                                        // Format the years to BCE/CE
-                                        if (variableStartYear == 'None' || variableStartYear == null) {
-                                            variableStartYear = displaystart_year;
-                                        } else {
-                                            if (variableStartYear < 0) {
-                                                variableStartYear = Math.abs(variableStartYear) + ' BCE';
-                                            } else {
-                                                variableStartYear = variableStartYear + ' CE';
-                                            }
-                                        }
-                                        if (variableEndYear == 'None' || variableEndYear == null) {
-                                            variableEndYear = displayend_year;
-                                        } else {
-                                            if (variableEndYear == {{ last_history_year }}) {
-                                                variableEndYear = 'Present';
-                                            } else {
-                                                if (variableEndYear < 0) {
-                                                    variableEndYear = Math.abs(variableEndYear) + ' BCE';
-                                                } else {
-                                                    variableEndYear = variableEndYear + ' CE';
-                                                }
-                                            }
-                                        }
-                                        if (counter == 0) {
-                                            popupContent = popupContent + `
-                                                <tr>
-                                                    <td>${variable}</td>
-                                                    <td>${variable_value} from ${variableStartYear} to ${variableEndYear}</td>
-                                                </tr>
-                                            `;
-                                        } else {
-                                            popupContent = popupContent + `
-                                                <tr>
-                                                    <td></td>
-                                                    <td>${variable_value} from ${variableStartYear} to ${variableEndYear}</td>
-                                                </tr>
-                                            `;
-                                        }
-                                        counter++;
+                                    } else {
+                                        popupContent = popupContent + `
+                                            <tr>
+                                                <td></td>
+                                                <td>${variable_value} from ${variableStartYear} to ${variableEndYear}</td>
+                                            </tr>
+                                        `;
                                     }
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td><span style="text-transform: capitalize;">${variable}</span></td>
-                                            <td><span style="text-transform: capitalize;">${shape[variable]}</span></td>
-                                        </tr>
-                                    `;
+                                    counter++;
                                 }
-                            }
-                            if (variable == 'language' || variable == 'linguistic_family' || variable == 'language_genus') {
-                                // TODO: if these variables are populated start to get entries for years,
-                                // this will need to be updated to use shape[variable + '_dict'] as done above for absent/present variables
-                                // Note: the actual colouring of the shapes is done in the style function above and this is already set up to handle the dictionaries
-                                popupContent = popupContent + `
-                                        <tr>
-                                            <td>Languages</td>
-                                            <td><span style="text-transform: capitalize;">${shape.language.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Language Genus</td>
-                                            <td><span style="text-transform: capitalize;">${shape.language_genus.join(', ')}</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Linguistic Family</td>
-                                            <td><span style="text-transform: capitalize;">${shape.linguistic_family.join(', ')}</span></td>
-                                        </tr>
-                                    `;
-                            }
-                            if (variable == 'religious_tradition' || variable == 'religion' || variable == 'religion_family' || variable == 'religion_genus' || variable == 'alternate_religion' || variable == 'alternate_religion_family' || variable == 'alternate_religion_genus') {
+                            } else {
                                 popupContent = popupContent + `
                                     <tr>
-                                        <td>Religious Traditions</td>
-                                        <td><span style="text-transform: capitalize;">${shape.religious_tradition}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Religions</td>
-                                        <td><span style="text-transform: capitalize;">${shape.religion.join(', ')}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Religion Genus</td>
-                                        <td><span style="text-transform: capitalize;">${shape.religion_genus.join(', ')}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Religion Family</td>
-                                        <td><span style="text-transform: capitalize;">${shape.religion_family.join(', ')}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Alternate Religions</td>
-                                        <td><span style="text-transform: capitalize;">${shape.alternate_religion.join(', ')}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Alternate Religion Genus</td>
-                                        <td><span style="text-transform: capitalize;">${shape.alternate_religion_genus.join(', ')}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Alternate Religion Family</td>
-                                        <td><span style="text-transform: capitalize;">${shape.alternate_religion_family.join(', ')}</span></td>
+                                        <td><span style="text-transform: capitalize;">${variable}</span></td>
+                                        <td><span style="text-transform: capitalize;">${shape[variable]}</span></td>
                                     </tr>
                                 `;
                             }
-                            if (variable == 'Settlement Hierarchy') {
-                                if (shape.settlement_hierarchy.length == 0 || ((shape.settlement_hierarchy[0] == 'None' || shape.settlement_hierarchy[0] == null) && (shape.settlement_hierarchy[1] == 'None' || shape.settlement_hierarchy[1] == null))) { 
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Settlement Hierarchy</td>
-                                            <td><span>Uncoded</span></td>
-                                        </tr>
-                                    `;
-                                } else if (shape.settlement_hierarchy[0] == shape.settlement_hierarchy[1] || shape.settlement_hierarchy[1] == 'None' || shape.settlement_hierarchy[1] == null) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Settlement Hierarchy</td>
-                                            <td><span">${shape.settlement_hierarchy[0]}</span></td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Settlement Hierarchy</td>
-                                            <td><span">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                            }
-                            if (variable == 'Religious Level') {
-                                if (shape.religious_level.length == 0 || ((shape.religious_level[0] == 'None' || shape.religious_level[0] == null) && (shape.religious_level[1] == 'None' || shape.religious_level[1] == null))) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Religious Level</td>
-                                            <td><span>Uncoded</span></td>
-                                        </tr>
-                                    `;
-                                } else if (shape.religious_level[0] == shape.religious_level[1] || shape.religious_level[1] == 'None' || shape.religious_level[1] == null) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Religious Level</td>
-                                            <td><span>${shape.religious_level[0]}</span></td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Religious Level</td>
-                                            <td><span>${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                            }
-                            if (variable == 'Military Level') {
-                                if (shape.military_level.length == 0 || ((shape.military_level[0] == 'None' || shape.military_level[0] == null) && (shape.military_level[1] == 'None' || shape.military_level[1] == null))) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Military Level</td>
-                                            <td><span>Uncoded</span></td>
-                                        </tr>
-                                    `;
-                                } else if (shape.military_level[0] == shape.military_level[1] || shape.military_level[1] == 'None' || shape.military_level[1] == null) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Military Level</td>
-                                            <td><span>${shape.military_level[0]}</span></td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Military Level</td>
-                                            <td><span>${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                            }
-                            if (variable == 'Administrative Level') {
-                                if (shape.administrative_level.length == 0 || ((shape.administrative_level[0] == 'None' || shape.administrative_level[0] == null) && (shape.administrative_level[1] == 'None' || shape.administrative_level[1] == null))) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Administrative Level</td>
-                                            <td><span>Uncoded</span></td>
-                                        </tr>
-                                    `;
-                                } else if (shape.administrative_level[0] == shape.administrative_level[1] || shape.administrative_level[1] == 'None' || shape.administrative_level[1] == null) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Administrative Level</td>
-                                            <td><span>${shape.administrative_level[0]}</span></td>
-                                        </tr>
-                                    `;
-                                } else {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Administrative Level</td>
-                                            <td><span>${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
-                                        </tr>
-                                    `;
-                                }
-                            }
-                            if (allCapitalsInfo[shape.seshat_id]) {
-                                if (allCapitalsInfo[shape.seshat_id]['year_from'] <= selectedYearInt && allCapitalsInfo[shape.seshat_id]['year_to'] >= selectedYearInt) {
-                                    popupContent = popupContent + `
-                                        <tr>
-                                            <td>Capital: </td>
-                                            <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
-                                        </tr>
-                                    `;
-
-                                    popupContent = popupContent + `
-                                                    <tr>
-                                                        <td>Capital: </td>
-                                                        <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
-                                                    </tr>
-                                                `;
-                                };
-                            };
                         }
+                        if (variable == 'language' || variable == 'linguistic_family' || variable == 'language_genus') {
+                            // TODO: if these variables are populated start to get entries for years,
+                            // this will need to be updated to use shape[variable + '_dict'] as done above for absent/present variables
+                            // Note: the actual colouring of the shapes is done in the style function above and this is already set up to handle the dictionaries
+                            popupContent = popupContent + `
+                                    <tr>
+                                        <td>Languages</td>
+                                        <td><span style="text-transform: capitalize;">${shape.language.join(', ')}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Language Genus</td>
+                                        <td><span style="text-transform: capitalize;">${shape.language_genus.join(', ')}</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Linguistic Family</td>
+                                        <td><span style="text-transform: capitalize;">${shape.linguistic_family.join(', ')}</span></td>
+                                    </tr>
+                                `;
+                        }
+                        if (variable == 'religious_tradition' || variable == 'religion' || variable == 'religion_family' || variable == 'religion_genus' || variable == 'alternate_religion' || variable == 'alternate_religion_family' || variable == 'alternate_religion_genus') {
+                            popupContent = popupContent + `
+                                <tr>
+                                    <td>Religious Traditions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religious_tradition}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religion Genus</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion_genus.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Religion Family</td>
+                                    <td><span style="text-transform: capitalize;">${shape.religion_family.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religions</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religion Genus</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion_genus.join(', ')}</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Alternate Religion Family</td>
+                                    <td><span style="text-transform: capitalize;">${shape.alternate_religion_family.join(', ')}</span></td>
+                                </tr>
+                            `;
+                        }
+                        if (variable == 'Settlement Hierarchy') {
+                            if (shape.settlement_hierarchy.length == 0 || ((shape.settlement_hierarchy[0] == 'None' || shape.settlement_hierarchy[0] == null) && (shape.settlement_hierarchy[1] == 'None' || shape.settlement_hierarchy[1] == null))) { 
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.settlement_hierarchy[0] == shape.settlement_hierarchy[1] || shape.settlement_hierarchy[1] == 'None' || shape.settlement_hierarchy[1] == null) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span">${shape.settlement_hierarchy[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Settlement Hierarchy</td>
+                                        <td><span">${shape.settlement_hierarchy[0]} to ${shape.settlement_hierarchy[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                        if (variable == 'Religious Level') {
+                            if (shape.religious_level.length == 0 || ((shape.religious_level[0] == 'None' || shape.religious_level[0] == null) && (shape.religious_level[1] == 'None' || shape.religious_level[1] == null))) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.religious_level[0] == shape.religious_level[1] || shape.religious_level[1] == 'None' || shape.religious_level[1] == null) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>${shape.religious_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Religious Level</td>
+                                        <td><span>${shape.religious_level[0]} to ${shape.religious_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                        if (variable == 'Military Level') {
+                            if (shape.military_level.length == 0 || ((shape.military_level[0] == 'None' || shape.military_level[0] == null) && (shape.military_level[1] == 'None' || shape.military_level[1] == null))) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.military_level[0] == shape.military_level[1] || shape.military_level[1] == 'None' || shape.military_level[1] == null) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>${shape.military_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Military Level</td>
+                                        <td><span>${shape.military_level[0]} to ${shape.military_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                        if (variable == 'Administrative Level') {
+                            if (shape.administrative_level.length == 0 || ((shape.administrative_level[0] == 'None' || shape.administrative_level[0] == null) && (shape.administrative_level[1] == 'None' || shape.administrative_level[1] == null))) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>Uncoded</span></td>
+                                    </tr>
+                                `;
+                            } else if (shape.administrative_level[0] == shape.administrative_level[1] || shape.administrative_level[1] == 'None' || shape.administrative_level[1] == null) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>${shape.administrative_level[0]}</span></td>
+                                    </tr>
+                                `;
+                            } else {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Administrative Level</td>
+                                        <td><span>${shape.administrative_level[0]} to ${shape.administrative_level[1]}</span></td>
+                                    </tr>
+                                `;
+                            }
+                        }
+                        if (allCapitalsInfo[shape.seshat_id]) {
+                            if (allCapitalsInfo[shape.seshat_id]['year_from'] <= selectedYearInt && allCapitalsInfo[shape.seshat_id]['year_to'] >= selectedYearInt) {
+                                popupContent = popupContent + `
+                                    <tr>
+                                        <td>Capital: </td>
+                                        <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
+                                    </tr>
+                                `;
+
+                                popupContent = popupContent + `
+                                                <tr>
+                                                    <td>Capital: </td>
+                                                    <td>${allCapitalsInfo[shape.seshat_id].map(capital => capital.capital).join(', ')}</td>
+                                                </tr>
+                                            `;
+                            };
+                        };
                         popupContent = popupContent + `</table>`;
                         // If minimised, popupcontent will only show the polity name
-                        if (fullPopupContent) {
-                            popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button></div>`;
-                        } else {
-                            popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button></div>`;
-                        }
+                        popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button></div>`;
+                        popupContentMini = `<div class="popup-container">` + popupContentMini + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button></div>`;
+                        popup.altContent = popupContentMini;
 
                         if (selectedMap === 'cesium') {
 

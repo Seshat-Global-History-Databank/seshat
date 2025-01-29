@@ -994,10 +994,9 @@ function hierarchicalComplexityColour(maxValue, value) {
 }
 
 function minimisePopup () {
-    if (fullPopupContent){
-        fullPopupContent = false;
-    } else {
-        fullPopupContent = true;
-    }
-    plotPolities();
+    var popup = document.getElementById('popup');
+    var content = popup.innerHTML;
+    var altContent = popup.altContent;
+    popup.innerHTML = altContent;
+    popup.altContent = content;
 }
