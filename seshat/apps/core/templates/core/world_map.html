@@ -58,6 +58,9 @@
         padding: 0;
         font-family: 'Nunito Sans', sans-serif;
         display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: #fffdf2;
     }
 
     .wrapper {
@@ -68,6 +71,9 @@
 
     .inner-content {
         flex-grow: 1;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
     }
     .leaflet-popup-content-wrapper {
         width: 320px;
@@ -317,8 +323,8 @@
 
     #worldMapControlPanel {
         width: auto;
-        position: relative;
-        height: 100%;
+        position: absolute;
+        z-index: 999;
         padding-top: 5%;
         padding-bottom: 14%;
         padding-left: 0.4%;
@@ -358,10 +364,8 @@
     }
 
     #controls-and-maps {
-        height: 90%;
-        display: flex;
-        position: relative;
-        overflow: hidden; /* Ensure child elements do not overflow */
+        flex-grow: 1;
+        overflow: hidden;
     }
 
     /* Media Queries for Responsiveness */
@@ -423,7 +427,7 @@
     }
 
 </style>
-<body style="background-color: #fffdf2;">
+<body>
     <div class="inner-content">
         {% include "core/partials/_navbar_home.html" %}
         {% block content %}
@@ -557,18 +561,19 @@
                     </p>
                     <p>🚨 <b>Close this window to enable zooming on the map.</b></p><br>
                 </div>
-                <div id="sliderdiv">
-                    <fieldset>
-                        <div class="slider-container" id="slider-container">
-                            <datalist id="yearTickmarks"></datalist>
-                            <div id="yearTickmarkValues"></div><br>
-                            <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
-                                value="{{ display_year }}" class="slider" onchange="plotPolities(); adjustScroll(); closeSettings(); closeHelp();"
-                                style="width: 100%;" list="yearTickmarks">
-                        </div>
-                    </fieldset>
-                </div>
                 <div id="variableLegend"></div>
+            </div>
+            <div id="sliderdiv">
+                <fieldset>
+                    <div class="slider-container" id="slider-container">
+                        <datalist id="yearTickmarks"></datalist>
+                        <div id="yearTickmarkValues"></div><br>
+                        <input type="range" name="dateSlide" id="dateSlide" min="{{ earliest_year }}" max="{{ latest_year }}"
+                            value="{{ display_year }}" class="slider"
+                            onchange="plotPolities(); adjustScroll(); closeSettings(); closeHelp();" style="width: 100%;"
+                            list="yearTickmarks">
+                    </div>
+                </fieldset>
             </div>
         </div>
     </div>
