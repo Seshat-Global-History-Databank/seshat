@@ -1479,6 +1479,7 @@
                                             popup.style.display = 'block';
                                             // Add the popup to the popup div
                                             popup.innerHTML = popupContent;
+                                            popup.altContent = popupContentMini;
                                             // Set the border colour of the popup div
                                             popup.style.borderColor = layer.feature.properties.colour;
                                             // Increase the border width of the popup div
@@ -1487,12 +1488,14 @@
 
                                         var isClicked = false; // Flag to track if the layer was clicked
                                         var previousPopupContent = '';
+                                        var previousPopupContentMini = '';
                                         var previousPopupBorderColor = '';
                                         var previousPopupBorderWidth = '';
 
-                                        function handleMouseover(e, layer, popupContent) {
+                                        function handleMouseover(e, layer, popupContent, popupContentMini) {
                                             // Store the previous state of the popup
                                             previousPopupContent = popup.innerHTML;
+                                            previousPopupContentMini = popup.altContent;
                                             previousPopupBorderColor = popup.style.borderColor;
                                             previousPopupBorderWidth = popup.style.borderWidth;
 
@@ -1501,6 +1504,7 @@
                                                 popup.style.display = 'block';
                                             }
                                             popup.innerHTML = popupContent;
+                                            popup.altContent = popupContentMini;
                                             popup.style.borderColor = layer.feature.properties.colour;
                                             popup.style.borderWidth = '4px';
                                         }
@@ -1509,12 +1513,13 @@
                                             // Revert the popup to the previous state only if the layer was not clicked
                                             if (!isClicked) {
                                                 popup.innerHTML = previousPopupContent;
+                                                popup.altContent = previousPopupContentMini;
                                                 popup.style.borderColor = previousPopupBorderColor;
                                                 popup.style.borderWidth = previousPopupBorderWidth;
                                             }
                                         }
 
-                                        function handleLayerInteraction(e, layer, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
+                                        function handleLayerInteraction(e, layer, shape, variable, popupContent, popupContentMini, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
                                             let newWeight;
                                             document.getElementById('variableLegend').style.display = 'block';
                                             if (variable == 'polity') {
@@ -1531,6 +1536,7 @@
                                                     }
                                                     // Add the popup to the popup div
                                                     popup.innerHTML = popupContent;
+                                                    popup.altContent = popupContentMini;
                                                     // Set the border colour of the popup div
                                                     popup.style.borderColor = layer.feature.properties.colour;
                                                     // Increase the border width of the popup div
@@ -1567,6 +1573,7 @@
                                                 }
                                                 // Add the popup to the popup div
                                                 popup.innerHTML = popupContent;
+                                                popup.altContent = popupContentMini;
                                                 // Set the border colour of the popup div
                                                 popup.style.borderColor = layer.feature.properties.colour;
                                                 // Increase the border width of the popup div
@@ -1579,11 +1586,11 @@
                                         }
 
                                         layer.on('click', function (e) {
-                                            handleLayerInteraction(e, this, shape, variable, popupContent, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, true);
+                                            handleLayerInteraction(e, this, shape, variable, popupContent, popupContentMini, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, true);
                                         });
 
                                         layer.on('mouseover', function (e) {
-                                            handleMouseover(e, this, popupContent);
+                                            handleMouseover(e, this, popupContent, popupContentMini);
                                         });
 
                                         layer.on('mouseout', function () {
