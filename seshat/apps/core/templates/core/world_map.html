@@ -1397,10 +1397,6 @@
                             };
                         };
                         popupContent = popupContent + `</table>`;
-                        // If minimised, popupcontent will only show the polity name
-                        popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button></div>`;
-                        popupContentMini = `<div class="popup-container">` + popupContentMini + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button></div>`;
-                        popup.innerHTML = popupContentMini;
 
                         if (selectedMap === 'cesium') {
 
@@ -1448,6 +1444,11 @@
                             });
                         
                         } else {
+
+                            // If minimised, popupcontent will only show the polity name
+                            popupContent = `<div class="popup-container">` + popupContent + `<button id="minbutton" class="minButton" onclick="minimisePopup()">➖</button></div>`;
+                            popupContentMini = `<div class="popup-container">` + popupContentMini + `<button id="minbutton" class="minButton" onclick="minimisePopup()">▼</button></div>`;
+                            popup.innerHTML = popupContentMini;
                         
                             // Add shape
                             if(shape.weight > 0 || !hideUnselected){
