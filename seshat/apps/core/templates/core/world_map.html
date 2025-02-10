@@ -587,6 +587,10 @@
                 document.getElementById("baseMap").value = "cesium";
                 // Ensure selectAll is unchecked by default
                 document.getElementById("selectAll").checked = false;
+                // Hide the controls
+                document.getElementById("controlButtons").style.display = "none";
+                // Make sure help is not displayed by default
+                closeHelp();
             } else {
                 // It might have made more sense to set Esri/arcgis as default and change to Cesium on mobile, but...
                 // the above if statement bizzarely won't let me update the sliderdiv *and* set document.getElementById("cesium").checked = true;
