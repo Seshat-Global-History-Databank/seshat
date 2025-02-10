@@ -1517,7 +1517,6 @@
                                             popup.innerHTML = popupContentMini;
                                             popup.style.borderColor = layer.feature.properties.colour;
                                             popup.style.borderWidth = '4px';
-                                            popup.style.visibility = 'visible';
                                         }
 
                                         function handleMouseout() {
@@ -1528,10 +1527,6 @@
                                             //     popup.style.borderColor = previousPopupBorderColor;
                                             //     popup.style.borderWidth = previousPopupBorderWidth;
                                             // }
-                                            // popup.style.display = 'none';
-                                            // popup.altContent = '';
-                                            // popup.innerHTML = '';
-                                            popup.style.visibility = 'hidden';
                                         }
 
                                         function handleLayerInteraction(e, layer, shape, variable, popupContent, popupContentMini, polityBorderWeightSelected, polityBorderWeight, shapesData, updateLegend, isClick) {
