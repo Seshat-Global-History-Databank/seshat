@@ -428,14 +428,6 @@ function updateLegend() {
         // Add a legend for highlighted polities
         if (addedPolities.length > 0) {
 
-            if (baseMap != 'cesium') {
-                // Add clear selection button
-                var clearSelectionButton = document.createElement('button');
-                clearSelectionButton.textContent = 'Clear selection';
-                clearSelectionButton.onclick = clearSelection;
-                legendDiv.appendChild(clearSelectionButton);
-            }
-
             var legendTitle = document.createElement('h3');
             legendDiv.appendChild(legendTitle);
             // Create a container for polity items
