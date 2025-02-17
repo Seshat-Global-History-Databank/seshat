@@ -1,0 +1,30 @@
+seshat.apps.core.management.commands.list_tables
+================================================
+
+.. py:module:: seshat.apps.core.management.commands.list_tables
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.management.commands.list_tables.Command
+
+
+Module Contents
+---------------
+
+.. py:class:: Command
+
+   Bases: :py:obj:`django.core.management.base.BaseCommand`
+
+
+   .. py:method:: handle(*args, **kwargs)
+
+
+   .. py:attribute:: help
+      :value: "List all database tables associated with the 'general' app models."
+
+
+

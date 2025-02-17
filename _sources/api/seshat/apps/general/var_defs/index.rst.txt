@@ -1,0 +1,22 @@
+seshat.apps.general.var_defs
+============================
+
+.. py:module:: seshat.apps.general.var_defs
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.general.var_defs.general_var_defs
+   seshat.apps.general.var_defs.swapped_dict
+
+
+Module Contents
+---------------
+
+.. py:data:: general_var_defs
+
+.. py:data:: swapped_dict
+

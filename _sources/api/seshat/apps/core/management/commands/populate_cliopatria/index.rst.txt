@@ -1,0 +1,33 @@
+seshat.apps.core.management.commands.populate_cliopatria
+========================================================
+
+.. py:module:: seshat.apps.core.management.commands.populate_cliopatria
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.management.commands.populate_cliopatria.Command
+
+
+Module Contents
+---------------
+
+.. py:class:: Command
+
+   Bases: :py:obj:`django.core.management.base.BaseCommand`
+
+
+   .. py:method:: add_arguments(parser)
+
+
+   .. py:method:: handle(*args, **options)
+
+
+   .. py:attribute:: help
+      :value: 'Populates the database with Shapefiles'
+
+
+

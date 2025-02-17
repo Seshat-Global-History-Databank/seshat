@@ -1,0 +1,6 @@
+seshat.apps.ec.tests
+====================
+
+.. py:module:: seshat.apps.ec.tests
+
+

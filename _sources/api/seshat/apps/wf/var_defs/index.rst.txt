@@ -1,0 +1,19 @@
+seshat.apps.wf.var_defs
+=======================
+
+.. py:module:: seshat.apps.wf.var_defs
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.wf.var_defs.wf_var_defs
+
+
+Module Contents
+---------------
+
+.. py:data:: wf_var_defs
+

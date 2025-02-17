@@ -1,0 +1,130 @@
+seshat.apps.accounts.admin
+==========================
+
+.. py:module:: seshat.apps.accounts.admin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.accounts.admin.CustomUserAdmin
+   seshat.apps.accounts.admin.ProfileInline
+   seshat.apps.accounts.admin.SeshatExpertAdmin
+
+
+Module Contents
+---------------
+
+.. py:class:: CustomUserAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:method:: get_email_confirmed(instance)
+
+
+   .. py:method:: get_inline_instances(request, obj=None)
+
+
+   .. py:method:: get_location(instance)
+
+
+   .. py:attribute:: inlines
+
+
+   .. py:attribute:: list_display
+      :value: ('username', 'email', 'first_name', 'last_name', 'is_staff', 'date_joined', 'last_login',...
+
+
+
+   .. py:attribute:: list_select_related
+      :value: ('profile',)
+
+
+
+.. py:class:: ProfileInline
+
+   Bases: :py:obj:`django.contrib.admin.StackedInline`
+
+
+   .. py:attribute:: can_delete
+      :value: False
+
+
+
+   .. py:attribute:: fk_name
+      :value: 'user'
+
+
+
+   .. py:attribute:: model
+
+
+   .. py:attribute:: verbose_name_plural
+      :value: 'Profile'
+
+
+
+.. py:class:: SeshatExpertAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   Custom admin for Seshat_Expert model.
+
+
+   .. py:method:: date_joined(obj)
+
+
+   .. py:method:: email(obj)
+
+      Returns the email of the user.
+
+
+
+   .. py:method:: get_full_name(obj)
+
+      Returns the full name of the user.
+
+
+
+   .. py:method:: get_username(obj)
+
+      Returns the username of the user.
+
+
+
+   .. py:method:: is_active(obj)
+
+
+   .. py:method:: is_staff(obj)
+
+
+   .. py:method:: last_login(obj)
+
+
+   .. py:attribute:: form
+
+
+   .. py:attribute:: list_display
+      :value: ('id', 'get_full_name', 'role', 'get_username', 'email', 'is_staff', 'is_active', 'last_login',...
+
+
+
+   .. py:attribute:: list_filter
+      :value: ('role',)
+
+
+
+   .. py:attribute:: ordering
+      :value: ('user__last_name', 'user__first_name')
+
+
+
+   .. py:attribute:: search_fields
+      :value: ('user__username', 'user__first_name', 'user__last_name', 'user__email')
+
+
+

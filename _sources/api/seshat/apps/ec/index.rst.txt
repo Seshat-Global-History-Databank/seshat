@@ -1,0 +1,22 @@
+seshat.apps.ec
+==============
+
+.. py:module:: seshat.apps.ec
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /api/seshat/apps/ec/admin/index
+   /api/seshat/apps/ec/apps/index
+   /api/seshat/apps/ec/forms/index
+   /api/seshat/apps/ec/models/index
+   /api/seshat/apps/ec/tests/index
+   /api/seshat/apps/ec/urls/index
+   /api/seshat/apps/ec/var_defs/index
+   /api/seshat/apps/ec/views/index
+
+

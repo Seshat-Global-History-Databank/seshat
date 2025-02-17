@@ -1,0 +1,19 @@
+seshat.apps.crisisdb.var_defs
+=============================
+
+.. py:module:: seshat.apps.crisisdb.var_defs
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.crisisdb.var_defs.crisisdb_var_defs
+
+
+Module Contents
+---------------
+
+.. py:data:: crisisdb_var_defs
+

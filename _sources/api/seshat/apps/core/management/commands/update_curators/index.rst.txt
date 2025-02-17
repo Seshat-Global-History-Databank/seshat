@@ -1,0 +1,44 @@
+seshat.apps.core.management.commands.update_curators
+====================================================
+
+.. py:module:: seshat.apps.core.management.commands.update_curators
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.management.commands.update_curators.Command
+   seshat.apps.core.management.commands.update_curators.Command
+
+
+Module Contents
+---------------
+
+.. py:class:: Command
+
+   Bases: :py:obj:`django.core.management.base.BaseCommand`
+
+
+   .. py:method:: handle(*args, **kwargs)
+
+
+   .. py:attribute:: help
+      :value: 'Update curators table with coded records based on polity experts'
+
+
+
+.. py:class:: Command
+
+   Bases: :py:obj:`django.core.management.base.BaseCommand`
+
+
+   .. py:method:: handle(*args, **kwargs)
+
+
+   .. py:attribute:: help
+      :value: 'Update curators table with coded records based on polity experts for all general app models'
+
+
+

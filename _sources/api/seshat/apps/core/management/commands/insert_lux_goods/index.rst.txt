@@ -1,0 +1,30 @@
+seshat.apps.core.management.commands.insert_lux_goods
+=====================================================
+
+.. py:module:: seshat.apps.core.management.commands.insert_lux_goods
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.management.commands.insert_lux_goods.Command
+
+
+Module Contents
+---------------
+
+.. py:class:: Command
+
+   Bases: :py:obj:`django.core.management.base.BaseCommand`
+
+
+   .. py:method:: handle(*args, **kwargs)
+
+
+   .. py:attribute:: help
+      :value: 'Update curators table with coded records based on polity experts for all general app models'
+
+
+

@@ -1,0 +1,376 @@
+seshat.apps.ec.models
+=====================
+
+.. py:module:: seshat.apps.ec.models
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.ec.models.LuxAttributes
+   seshat.apps.ec.models.Lux_fine_ceramic_wares
+   seshat.apps.ec.models.Lux_precious_metal
+   seshat.apps.ec.models.Lux_precious_stone
+   seshat.apps.ec.models.Lux_statuary
+   seshat.apps.ec.models.Luxury_drink_alcohol
+   seshat.apps.ec.models.Luxury_fabrics
+   seshat.apps.ec.models.Luxury_food
+   seshat.apps.ec.models.Luxury_glass_goods
+   seshat.apps.ec.models.Luxury_manufactured_goods
+   seshat.apps.ec.models.Luxury_spices_incense_and_dyes
+   seshat.apps.ec.models.Other_luxury_personal_items
+   seshat.apps.ec.models.Precious_metal
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   seshat.apps.ec.models.template_display_table_value
+
+
+Module Contents
+---------------
+
+.. py:class:: LuxAttributes
+
+   Bases: :py:obj:`django.db.models.Model`
+
+
+   Abstract base class for consumption-related attributes.
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: abstract
+         :value: True
+
+
+
+
+   .. py:method:: all_places()
+
+
+   .. py:method:: display_table_value()
+
+
+   .. py:method:: show_value()
+
+
+   .. py:attribute:: coded_value
+
+
+   .. py:attribute:: common_people_consumption
+
+
+   .. py:attribute:: common_people_consumption_tag
+
+
+   .. py:attribute:: elite_consumption
+
+
+   .. py:attribute:: elite_consumption_tag
+
+
+   .. py:attribute:: place_of_provenance_pol
+
+
+   .. py:attribute:: place_of_provenance_str
+
+
+   .. py:attribute:: ruler_consumption
+
+
+   .. py:attribute:: ruler_consumption_tag
+
+
+   .. py:attribute:: which_metals
+
+
+.. py:class:: Lux_fine_ceramic_wares
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Lux_precious_metal
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: which_metals
+
+
+.. py:class:: Lux_precious_stone
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Lux_statuary
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_drink_alcohol
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_fabrics
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_food
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_glass_goods
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_manufactured_goods
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Luxury_spices_incense_and_dyes
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Other_luxury_personal_items
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`, :py:obj:`LuxAttributes`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: clean_name()
+
+
+   .. py:method:: clean_name_spaced()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:attribute:: name
+
+
+.. py:class:: Precious_metal
+
+   Bases: :py:obj:`seshat.apps.core.models.SeshatCommon`
+
+
+   Model representing a common Seshat model.
+
+
+   .. py:method:: all_places()
+
+
+   .. py:method:: clean_name()
+
+      Return the name of the model instance.
+
+
+
+   .. py:method:: display_table_value()
+
+
+   .. py:method:: get_absolute_url()
+
+
+   .. py:method:: show_value()
+
+
+   .. py:attribute:: coded_value
+
+
+   .. py:attribute:: common_people_consumption
+
+
+   .. py:attribute:: common_people_consumption_tag
+
+
+   .. py:attribute:: elite_consumption
+
+
+   .. py:attribute:: elite_consumption_tag
+
+
+   .. py:attribute:: name
+
+
+   .. py:attribute:: place_of_provenance_pol
+
+
+   .. py:attribute:: place_of_provenance_str
+
+
+   .. py:attribute:: ruler_consumption
+
+
+   .. py:attribute:: ruler_consumption_tag
+
+
+   .. py:attribute:: which_metals
+
+
+.. py:function:: template_display_table_value(self)
+

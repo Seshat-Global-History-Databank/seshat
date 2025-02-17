@@ -1,0 +1,2356 @@
+seshat.apps.sc.forms
+====================
+
+.. py:module:: seshat.apps.sc.forms
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.sc.forms.Administrative_levelForm
+   seshat.apps.sc.forms.Area_measurement_systemForm
+   seshat.apps.sc.forms.ArticleForm
+   seshat.apps.sc.forms.BridgeForm
+   seshat.apps.sc.forms.Burial_siteForm
+   seshat.apps.sc.forms.CalendarForm
+   seshat.apps.sc.forms.CanalForm
+   seshat.apps.sc.forms.Ceremonial_siteForm
+   seshat.apps.sc.forms.Communal_buildingForm
+   seshat.apps.sc.forms.CourierForm
+   seshat.apps.sc.forms.CourtForm
+   seshat.apps.sc.forms.Debt_and_credit_structureForm
+   seshat.apps.sc.forms.Drinking_water_supply_systemForm
+   seshat.apps.sc.forms.EnclosureForm
+   seshat.apps.sc.forms.Entertainment_buildingForm
+   seshat.apps.sc.forms.Examination_systemForm
+   seshat.apps.sc.forms.Fastest_individual_communicationForm
+   seshat.apps.sc.forms.FictionForm
+   seshat.apps.sc.forms.Food_storage_siteForm
+   seshat.apps.sc.forms.Foreign_coinForm
+   seshat.apps.sc.forms.Formal_legal_codeForm
+   seshat.apps.sc.forms.Full_time_bureaucratForm
+   seshat.apps.sc.forms.General_postal_serviceForm
+   seshat.apps.sc.forms.Geometrical_measurement_systemForm
+   seshat.apps.sc.forms.HistoryForm
+   seshat.apps.sc.forms.Indigenous_coinForm
+   seshat.apps.sc.forms.Irrigation_systemForm
+   seshat.apps.sc.forms.JudgeForm
+   seshat.apps.sc.forms.Knowledge_or_information_buildingForm
+   seshat.apps.sc.forms.Largest_communication_distanceForm
+   seshat.apps.sc.forms.Length_measurement_systemForm
+   seshat.apps.sc.forms.Lists_tables_and_classificationForm
+   seshat.apps.sc.forms.MarketForm
+   seshat.apps.sc.forms.Merit_promotionForm
+   seshat.apps.sc.forms.Military_levelForm
+   seshat.apps.sc.forms.Mines_or_quarryForm
+   seshat.apps.sc.forms.Mnemonic_deviceForm
+   seshat.apps.sc.forms.Non_phonetic_writingForm
+   seshat.apps.sc.forms.Nonwritten_recordForm
+   seshat.apps.sc.forms.Occupational_complexityForm
+   seshat.apps.sc.forms.Other_measurement_systemForm
+   seshat.apps.sc.forms.Other_special_purpose_siteForm
+   seshat.apps.sc.forms.Other_utilitarian_public_buildingForm
+   seshat.apps.sc.forms.Paper_currencyForm
+   seshat.apps.sc.forms.PhilosophyForm
+   seshat.apps.sc.forms.Phonetic_alphabetic_writingForm
+   seshat.apps.sc.forms.Polity_populationForm
+   seshat.apps.sc.forms.Polity_territoryForm
+   seshat.apps.sc.forms.Population_of_the_largest_settlementForm
+   seshat.apps.sc.forms.PortForm
+   seshat.apps.sc.forms.Postal_stationForm
+   seshat.apps.sc.forms.Practical_literatureForm
+   seshat.apps.sc.forms.Precious_metalForm
+   seshat.apps.sc.forms.Professional_lawyerForm
+   seshat.apps.sc.forms.Professional_military_officerForm
+   seshat.apps.sc.forms.Professional_priesthoodForm
+   seshat.apps.sc.forms.Professional_soldierForm
+   seshat.apps.sc.forms.RaForm
+   seshat.apps.sc.forms.Religious_levelForm
+   seshat.apps.sc.forms.Religious_literatureForm
+   seshat.apps.sc.forms.RoadForm
+   seshat.apps.sc.forms.Sacred_textForm
+   seshat.apps.sc.forms.Scientific_literatureForm
+   seshat.apps.sc.forms.ScriptForm
+   seshat.apps.sc.forms.Settlement_hierarchyForm
+   seshat.apps.sc.forms.Source_of_supportForm
+   seshat.apps.sc.forms.Special_purpose_houseForm
+   seshat.apps.sc.forms.Special_purpose_siteForm
+   seshat.apps.sc.forms.Specialized_government_buildingForm
+   seshat.apps.sc.forms.Store_of_wealthForm
+   seshat.apps.sc.forms.Symbolic_buildingForm
+   seshat.apps.sc.forms.Time_measurement_systemForm
+   seshat.apps.sc.forms.TokenForm
+   seshat.apps.sc.forms.Trading_emporiaForm
+   seshat.apps.sc.forms.Utilitarian_public_buildingForm
+   seshat.apps.sc.forms.Volume_measurement_systemForm
+   seshat.apps.sc.forms.Weight_measurement_systemForm
+   seshat.apps.sc.forms.Written_recordForm
+
+
+Module Contents
+---------------
+
+.. py:class:: Administrative_levelForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Area_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ArticleForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: BridgeForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Burial_siteForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CalendarForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CanalForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Ceremonial_siteForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Communal_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CourierForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: CourtForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Debt_and_credit_structureForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Drinking_water_supply_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: EnclosureForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Entertainment_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Examination_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Fastest_individual_communicationForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: FictionForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Food_storage_siteForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Foreign_coinForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Formal_legal_codeForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Full_time_bureaucratForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: General_postal_serviceForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Geometrical_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: HistoryForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Indigenous_coinForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Irrigation_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: JudgeForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Knowledge_or_information_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Largest_communication_distanceForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Length_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Lists_tables_and_classificationForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: MarketForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Merit_promotionForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Military_levelForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Mines_or_quarryForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Mnemonic_deviceForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Non_phonetic_writingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Nonwritten_recordForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Occupational_complexityForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_special_purpose_siteForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Other_utilitarian_public_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Paper_currencyForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: PhilosophyForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Phonetic_alphabetic_writingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Polity_populationForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Polity_territoryForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Population_of_the_largest_settlementForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: PortForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Postal_stationForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Practical_literatureForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Precious_metalForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_lawyerForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_military_officerForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_priesthoodForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Professional_soldierForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: RaForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Religious_levelForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Religious_literatureForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: RoadForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Sacred_textForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Scientific_literatureForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: ScriptForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Settlement_hierarchyForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Source_of_supportForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Special_purpose_houseForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Special_purpose_siteForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Specialized_government_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Store_of_wealthForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Symbolic_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Time_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: TokenForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Trading_emporiaForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Utilitarian_public_buildingForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Volume_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Weight_measurement_systemForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Written_recordForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   
+
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+

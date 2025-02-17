@@ -1,0 +1,20 @@
+seshat
+======
+
+.. py:module:: seshat
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /api/seshat/apps/index
+   /api/seshat/asgi/index
+   /api/seshat/settings/index
+   /api/seshat/urls/index
+   /api/seshat/utils/index
+   /api/seshat/wsgi/index
+
+

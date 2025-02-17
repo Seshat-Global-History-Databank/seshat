@@ -1,0 +1,22 @@
+seshat.apps.ec.views
+====================
+
+.. py:module:: seshat.apps.ec.views
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   seshat.apps.ec.views.download_csv_luxury_goods
+   seshat.apps.ec.views.ecvars
+
+
+Module Contents
+---------------
+
+.. py:function:: download_csv_luxury_goods(request)
+
+.. py:function:: ecvars(request)
+

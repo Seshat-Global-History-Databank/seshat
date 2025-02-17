@@ -1,0 +1,878 @@
+seshat.apps.rt.forms
+====================
+
+.. py:module:: seshat.apps.rt.forms
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.rt.forms.Elites_religionForm
+   seshat.apps.rt.forms.Gov_dis_rel_grp_occ_funForm
+   seshat.apps.rt.forms.Gov_obl_rel_grp_ofc_recoForm
+   seshat.apps.rt.forms.Gov_press_convForm
+   seshat.apps.rt.forms.Gov_press_conv_for_agaForm
+   seshat.apps.rt.forms.Gov_res_cir_rel_litForm
+   seshat.apps.rt.forms.Gov_res_cons_rel_builForm
+   seshat.apps.rt.forms.Gov_res_convForm
+   seshat.apps.rt.forms.Gov_res_prop_own_for_rel_grpForm
+   seshat.apps.rt.forms.Gov_res_pub_prosForm
+   seshat.apps.rt.forms.Gov_res_pub_worForm
+   seshat.apps.rt.forms.Gov_res_rel_eduForm
+   seshat.apps.rt.forms.Gov_vio_freq_rel_grpForm
+   seshat.apps.rt.forms.Moralizing_enforcement_in_afterlifeForm
+   seshat.apps.rt.forms.Moralizing_enforcement_in_this_lifeForm
+   seshat.apps.rt.forms.Moralizing_enforcement_is_agenticForm
+   seshat.apps.rt.forms.Moralizing_enforcement_is_broadForm
+   seshat.apps.rt.forms.Moralizing_enforcement_is_certainForm
+   seshat.apps.rt.forms.Moralizing_enforcement_is_targetedForm
+   seshat.apps.rt.forms.Moralizing_enforcement_of_rulersForm
+   seshat.apps.rt.forms.Moralizing_religion_adopted_by_commonersForm
+   seshat.apps.rt.forms.Moralizing_religion_adopted_by_elitesForm
+   seshat.apps.rt.forms.Moralizing_supernatural_concern_is_primaryForm
+   seshat.apps.rt.forms.Moralizing_supernatural_punishment_and_rewardForm
+   seshat.apps.rt.forms.Official_religionForm
+   seshat.apps.rt.forms.Religious_fragmentationForm
+   seshat.apps.rt.forms.Soc_dis_rel_grp_occ_funForm
+   seshat.apps.rt.forms.Soc_vio_freq_rel_grpForm
+   seshat.apps.rt.forms.Sync_rel_pra_ind_beliForm
+   seshat.apps.rt.forms.Tax_rel_adh_act_insForm
+   seshat.apps.rt.forms.Theo_sync_dif_relForm
+   seshat.apps.rt.forms.Widespread_religionForm
+
+
+Module Contents
+---------------
+
+.. py:class:: Elites_religionForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Elites_religion model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_dis_rel_grp_occ_funForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_dis_rel_grp_occ_fun model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_obl_rel_grp_ofc_recoForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_obl_rel_grp_ofc_reco model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_press_convForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_press_conv model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_press_conv_for_agaForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_press_conv_for_aga model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_cir_rel_litForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_cir_rel_lit model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_cons_rel_builForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_cons_rel_buil model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_convForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_conv model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_prop_own_for_rel_grpForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_prop_own_for_rel_grp model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_pub_prosForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_pub_pros model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_pub_worForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_pub_wor model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_res_rel_eduForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_res_rel_edu model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Gov_vio_freq_rel_grpForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Gov_vio_freq_rel_grp model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_in_afterlifeForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_in_this_lifeForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_is_agenticForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_is_broadForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_is_certainForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_is_targetedForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_enforcement_of_rulersForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_religion_adopted_by_commonersForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_religion_adopted_by_elitesForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_supernatural_concern_is_primaryForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Moralizing_supernatural_punishment_and_rewardForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Official_religionForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating creating and updating the Official_religion model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Religious_fragmentationForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Religious_fragmentation model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Soc_dis_rel_grp_occ_funForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Soc_dis_rel_grp_occ_fun model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Soc_vio_freq_rel_grpForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Soc_vio_freq_rel_grp model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Sync_rel_pra_ind_beliForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Sync_rel_pra_ind_beli model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Tax_rel_adh_act_insForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Tax_rel_adh_act_ins model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Theo_sync_dif_relForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Theo_sync_dif_rel model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: Widespread_religionForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   Form for creating and updating the Widespread_religion model.
+
+
+   .. py:class:: Meta
+
+      :noindex:
+
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+

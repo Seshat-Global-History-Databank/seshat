@@ -1,0 +1,25 @@
+seshat.apps.wf.urls
+===================
+
+.. py:module:: seshat.apps.wf.urls
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.wf.urls.model_form_pairs
+   seshat.apps.wf.urls.model_form_pairs_qugmented
+   seshat.apps.wf.urls.urlpatterns
+
+
+Module Contents
+---------------
+
+.. py:data:: model_form_pairs
+
+.. py:data:: model_form_pairs_qugmented
+
+.. py:data:: urlpatterns
+

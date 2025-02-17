@@ -1,0 +1,19 @@
+seshat.apps.ec.var_defs
+=======================
+
+.. py:module:: seshat.apps.ec.var_defs
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.ec.var_defs.ec_var_defs
+
+
+Module Contents
+---------------
+
+.. py:data:: ec_var_defs
+

@@ -1,0 +1,27 @@
+seshat.apps.ec.admin
+====================
+
+.. py:module:: seshat.apps.ec.admin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.ec.admin.Lux_preciousMetalAdmin
+
+
+Module Contents
+---------------
+
+.. py:class:: Lux_preciousMetalAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:attribute:: exclude
+      :value: ('citations', 'comment', 'private_comment')
+
+
+

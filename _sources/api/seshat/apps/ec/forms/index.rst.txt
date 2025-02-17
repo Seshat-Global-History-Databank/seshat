@@ -1,0 +1,245 @@
+seshat.apps.ec.forms
+====================
+
+.. py:module:: seshat.apps.ec.forms
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.ec.forms.COMMON_FIELDS_LUX
+   seshat.apps.ec.forms.COMMON_LABELS_LUX
+   seshat.apps.ec.forms.COMMON_WIDGETS_LUX
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.ec.forms.BaseReusableForm
+   seshat.apps.ec.forms.LuxPreciousMetalForm
+   seshat.apps.ec.forms.Lux_fine_ceramic_waresForm
+   seshat.apps.ec.forms.Lux_precious_metalForm
+   seshat.apps.ec.forms.Lux_precious_stoneForm
+   seshat.apps.ec.forms.Lux_statuaryForm
+   seshat.apps.ec.forms.Luxury_drink_alcoholForm
+   seshat.apps.ec.forms.Luxury_fabricsForm
+   seshat.apps.ec.forms.Luxury_foodForm
+   seshat.apps.ec.forms.Luxury_glass_goodsForm
+   seshat.apps.ec.forms.Luxury_manufactured_goodsForm
+   seshat.apps.ec.forms.Luxury_spices_incense_and_dyesForm
+   seshat.apps.ec.forms.Other_luxury_personal_itemsForm
+
+
+Module Contents
+---------------
+
+.. py:class:: BaseReusableForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['name', 'coded_value', 'place_of_provenance_pol', 'place_of_provenance_str',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: widgets
+
+
+
+.. py:class:: LuxPreciousMetalForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Lux_fine_ceramic_waresForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Lux_precious_metalForm(*args, **kwargs)
+
+   Bases: :py:obj:`seshat.apps.general.forms.ExpertReviewedForm`
+
+
+   .. py:class:: Meta
+
+      .. py:attribute:: fields
+         :value: ['polity', 'year_from', 'year_to', 'description', 'tag', 'is_disputed', 'is_uncertain',...
+
+
+
+      .. py:attribute:: labels
+
+
+      .. py:attribute:: model
+
+
+      .. py:attribute:: widgets
+
+
+
+   .. py:attribute:: which_metals
+
+
+.. py:class:: Lux_precious_stoneForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Lux_statuaryForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_drink_alcoholForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_fabricsForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_foodForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_glass_goodsForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_manufactured_goodsForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Luxury_spices_incense_and_dyesForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:class:: Other_luxury_personal_itemsForm(*args, **kwargs)
+
+   Bases: :py:obj:`BaseReusableForm`
+
+
+   .. py:class:: Meta
+
+      Bases: :py:obj:`BaseReusableForm`
+
+
+      .. py:attribute:: model
+
+
+
+.. py:data:: COMMON_FIELDS_LUX
+   :value: ['name', 'coded_value', 'place_of_provenance_pol', 'place_of_provenance_str',...
+
+
+.. py:data:: COMMON_LABELS_LUX
+
+.. py:data:: COMMON_WIDGETS_LUX
+

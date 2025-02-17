@@ -1,0 +1,22 @@
+seshat.apps.general.urls
+========================
+
+.. py:module:: seshat.apps.general.urls
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   seshat.apps.general.urls.model_form_pairs
+   seshat.apps.general.urls.urlpatterns
+
+
+Module Contents
+---------------
+
+.. py:data:: model_form_pairs
+
+.. py:data:: urlpatterns
+

@@ -1,0 +1,27 @@
+seshat.apps.core.admin
+======================
+
+.. py:module:: seshat.apps.core.admin
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   seshat.apps.core.admin.CustomReferenceAdmin
+
+
+Module Contents
+---------------
+
+.. py:class:: CustomReferenceAdmin
+
+   Bases: :py:obj:`django.contrib.admin.ModelAdmin`
+
+
+   .. py:attribute:: list_display
+      :value: ('title', 'created_date', 'creator')
+
+
+
