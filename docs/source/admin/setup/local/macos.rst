@@ -163,7 +163,7 @@ Restore Seshat database from dump file:
 
 .. code-block:: bash
 
-    $ pg_restore -U postgres -d <seshat_db_name> /path/to/file.dump
+    $ psql -U postgres -d <seshat_db_name> -f /path/to/file.dump
 
 
 Step 7: Secure the database
