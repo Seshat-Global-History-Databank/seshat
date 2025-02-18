@@ -222,7 +222,64 @@
 <!-- showcase for index -->
 
 <div class="container">
-    <p>City page</p>
+    <!-- Display the data from the city_data var from the Django context -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center federicka-bigger">{{ city_data.name }}</h1>
+            <h3 class="text-center">{{ city_data.country.name }}</h3>
+            <hr class="light-heavy-hr">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>{{ city_data.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Alternative Names</td>
+                        <td>{{ city_data.alternative_names }}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Country</td>
+                        <td>{{ city_data.current_country }}</td>
+                    </tr>
+                    <tr>
+                        <td>Latitude</td>
+                        <td>{{ city_data.latitude }}</td>
+                    </tr>
+                    <tr>
+                        <td>Longitude</td>
+                        <td>{{ city_data.longitude }}</td>
+                    </tr>
+                    <tr>
+                        <td>Year From</td>
+                        <td>{{ city_data.year_from }}</td>
+                    </tr>
+                    <tr>
+                        <td>Year To</td>
+                        <td>{{ city_data.year_to }}</td>
+                    </tr>
+                    <tr>
+                        <td>URL on the Map</td>
+                        <td><a href="{{ city_data.url_on_the_map }}">{{ city_data.url_on_the_map }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>Is Verified</td>
+                        <td>{{ city_data.is_verified }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <script>

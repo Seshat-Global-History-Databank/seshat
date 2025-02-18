@@ -2806,7 +2806,7 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
     """
     Show details of a City.
     """
-    model = Polity
+    model = Capital  # City
     template_name = "core/capital/city_detail.html"
 
     def get_object(self, queryset=None):
@@ -2817,27 +2817,27 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
             queryset: The queryset to use.
 
         Returns:
-            Polity: The object of the view.
+            Capital: The object of the view.
 
         Raises:
-            Http404: If no polity matches the given name.
-            Http404: If multiple polities are found with the same name.
+            Http404: If no city matches the given name.
+            Http404: If multiple cities are found with the same name.
         """
         if 'pk' in self.kwargs:
-            return get_object_or_404(Polity, pk=self.kwargs['pk'])
-        elif 'new_name' in self.kwargs:
-            new_name = self.kwargs['new_name']
+            return get_object_or_404(Capital, pk=self.kwargs['pk'])
+        elif 'name' in self.kwargs:
+            name = self.kwargs['name']
             try:
-                # Attempt to get the object by new_name, handle multiple objects returned
-                return Polity.objects.get(new_name=new_name)
-            except Polity.MultipleObjectsReturned:
-                # Handle the case of multiple objects with the same new_name
-                raise Http404("Multiple objects with the same new_name")
-            except Polity.DoesNotExist:
-                # Handle the case where no object with the given new_name is found
-                raise Http404("No Polity matches the given new_name")
+                # Attempt to get the object by name, handle multiple objects returned
+                return Capital.objects.get(name=name)
+            except Capital.MultipleObjectsReturned:
+                # Handle the case of multiple objects with the same name
+                raise Http404("Multiple objects with the same name")
+            except Capital.DoesNotExist:
+                # Handle the case where no object with the given name is found
+                raise Http404("No Capital matches the given name")
         else:
-            # Handle the case where neither pk nor new_name is provided
+            # Handle the case where neither pk nor name is provided
             return None
 
     def get_context_data(self, **kwargs):
@@ -2854,159 +2854,8 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
         """
         context = super().get_context_data(**kwargs)
         context['pk'] = self.kwargs['pk']
-        try:
-            context["all_data"] = get_all_data_for_a_polity(self.object.pk, "crisisdb") 
-            context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
-            context["all_sc_data"], context["has_any_sc_data"] = get_all_sc_data_for_a_polity(self.object.pk)
-            context["all_wf_data"], context["has_any_wf_data"] = get_all_wf_data_for_a_polity(self.object.pk)
-            context["all_ec_data"], context["has_any_ec_data"] = get_all_ec_data_for_a_polity(self.object.pk)
-            context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.object.pk)
-            context["all_crisis_cases_data"] = get_all_crisis_cases_data_for_a_polity(self.object.pk)
-            context["all_power_transitions_data"] = get_all_power_transitions_data_for_a_polity(self.object.pk)
-            all_Ras = Polity_research_assistant.objects.filter(polity_id=self.object.pk)
-            all_Ras_ids = all_Ras.values_list('polity_ra_id', flat=True)
-            experts = Seshat_Expert.objects.filter(id__in=all_Ras_ids)
-            
-            all_general_ras = []
-            for xx in experts:
-                an_ra = xx.user.first_name + " " + xx.user.last_name
-                if an_ra not in all_general_ras:
-                    all_general_ras.append(an_ra)
-
-            all_general_ras_string = ", ".join(all_general_ras)
-
-            
-
-            #my_users_general = [User.objects.get(pk=aa.polity_ra_id) for aa in all_Ras]
-            context["majid"] = {"utm_zone": "benam"}
-            context["all_Ras"] = all_general_ras_string
-
-        except:
-            context["all_data"] = None
-            context["all_general_data"] = None
-            context["all_sc_data"] = None
-            context["all_wf_data"] = None
-            context["all_ec_data"] = None
-            context["all_rt_data"] = None
-        ################# NEW
-        Polity_object = Polity.objects.get(id=self.object.pk)
-
-        # Get the related data
-        all_durations = {
-            "intr": [],
-            "gv": [],
-            "pt": [],
-            "color": "xyz",
-        }
-        try:
-            intrinsic_duration = f'Polity Intrinsic Duration: {Polity_object.start_year}, {Polity_object.end_year}'
-            all_durations["intr"] = [Polity_object.start_year, Polity_object.end_year]
-        except:
-            intrinsic_duration = [-10000, 2000]
-        # Pol_dur object
-        try:
-            Polity_duration_object = Polity_duration.objects.get(polity_id=self.object.pk)
-
-            polity_duration_coded = []
-            polity_duration_coded.extend([f'{Polity_duration_object.polity_year_from}, {Polity_duration_object.polity_year_to}'])
-            all_durations["gv"] = [Polity_duration_object.polity_year_from, Polity_duration_object.polity_year_to]
-        except:
-            polity_duration_coded = [-10000, 2000]
-
-        # Pow Trans Data
-        try:
-            Polity_pt_objects = Power_transition.objects.filter(polity_id=self.object.pk)
-
-            polity_duration_implied = []
-            pol_dur_min_list = []
-            pol_dur_max_list = []
-
-            for a_pt in Polity_pt_objects:
-                if a_pt.year_from is not None:
-                    pol_dur_min_list.append(a_pt.year_from)
-                if a_pt.year_to is not None:
-                    pol_dur_max_list.append(a_pt.year_to)
-
-            polity_duration_implied = [min(pol_dur_min_list), max(pol_dur_max_list)]
-            all_durations["pt"] = polity_duration_implied
-        except:
-            polity_duration_implied = [-10000, 2000]
-
-        if all_durations["intr"] and all_durations["gv"] and all_durations["pt"]:
-            if (all_durations["intr"] == all_durations["gv"] == all_durations["pt"]):
-               all_durations['color'] = "ggg"
-            elif (all_durations["intr"] == all_durations["gv"]):
-               all_durations['color'] = "ggr"
-            elif (all_durations["intr"] == all_durations["pt"]):
-               all_durations['color'] = "grg"
-            elif (all_durations["gv"] == all_durations["pt"]):
-               all_durations['color'] = "rgg"
-        elif all_durations["intr"] and all_durations["gv"]:
-            if (all_durations["intr"] == all_durations["gv"]):
-               all_durations['color'] = "ggm"
-            else:
-               all_durations['color'] = "grm"
-        elif all_durations["intr"] and all_durations["pt"]:
-            if (all_durations["intr"] == all_durations["pt"]):
-               all_durations['color'] = "gmg"
-            elif all_durations["intr"][0] == -10000:
-               all_durations['color'] = "rmr"
-            else:
-               all_durations['color'] = "gmr"
-        elif all_durations["intr"] and all_durations["intr"][0] == -10000:
-           all_durations['color'] = "rmm"
-        elif all_durations["intr"]:
-           all_durations['color'] = "gmm"
-
-        context["all_durations"] = all_durations
-        #####################
-
-
-        #x = polity_detail_data_collector(self.object.pk)
-        #context["all_data"] = dict(x)
-        #print(self.object.pk)
-        context["all_vars"] = {
-            "arable_land": "arable_land",
-            "agricultural_population": "agricultural_population",
-        }
-        try:
-            my_pol = Polity.objects.get(pk=self.object.pk)
-            nga_pol_rels = my_pol.polity_sides.all()
-            time_deltas = []
-            for nga_pol_rel in nga_pol_rels:
-                if (nga_pol_rel.year_from, nga_pol_rel.year_to) not in time_deltas:
-                    time_deltas.append((nga_pol_rel.year_from, nga_pol_rel.year_to))
-
-            concise_rels = {}
-            for time_delta in time_deltas:
-                nga_list = []
-                for nga_pol_rel in nga_pol_rels:
-                    if time_delta[0] == nga_pol_rel.year_from and time_delta[1] == nga_pol_rel.year_to:
-                        nga_list.append(nga_pol_rel.nga_party)
-                
-                concise_rels[time_delta] = nga_list # "  ~~~   ".join(nga_list)
-            context["nga_pol_rel"] = concise_rels
-            #print("__________________________")
-        except:
-            context["nga_pol_rel"] = None
-            #print("*************")
-        #import django
-        #print(django.get_version())
-
-        preceding_data = []
-        succeeding_data = []
-
-        prec_data = Polity_preceding_entity.objects.filter(
-                    Q(polity_id=self.object.pk) | Q(other_polity_id=self.object.pk))
-        for vv in prec_data:
-            if vv.polity and vv.polity.id == self.object.pk:
-                preceding_data.append(vv)
-            elif vv.other_polity and vv.other_polity.id == self.object.pk:
-                succeeding_data.append(vv)
-
-        # Pass the data to the template
-        context['preceding_data'] = preceding_data
-        context['succeeding_data'] = succeeding_data
+        City_object = Capital.objects.get(id=self.kwargs['pk'])
+        context['city_data'] = City_object
 
         return context
 
