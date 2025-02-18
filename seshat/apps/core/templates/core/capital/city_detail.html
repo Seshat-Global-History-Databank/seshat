@@ -245,6 +245,24 @@
                         <td>{{ city_data.alternative_names }}</td>
                     </tr>
                     <tr>
+                        <td>Polities (capital of)</td>
+                        <td>  
+                            {% for x in city_data.polity_caps.all %}
+                                {% if x.polity.long_name %}
+                                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
+                                        href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.long_name}}</a><br>
+                                {% else %}
+                                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
+                                        href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.new_name}}</a><br>
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Polities (city within)</td>
+                        <td></td>
+                    </tr>
+                    <tr>
                         <td>Current Country</td>
                         <td>{{ city_data.current_country }}</td>
                     </tr>
