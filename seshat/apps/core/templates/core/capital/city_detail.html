@@ -240,10 +240,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% if city_data.alternative_names %}
                     <tr>
                         <td>Alternative Names</td>
                         <td>{{ city_data.alternative_names }}</td>
                     </tr>
+                    {% endif %}
                     <tr>
                         <td>Polities (capital of)</td>
                         <td>  
