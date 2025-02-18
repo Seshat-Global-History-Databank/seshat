@@ -266,7 +266,11 @@
                     </tr>
                     <tr>
                         <td>Current Country</td>
-                        <td>{{ city_data.current_country }}</td>
+                        {% if object.current_country == "NO_COUNTRY_FROM_GOOGLE" or object.current_country == "No_country_from_google" %}
+                            <td> - </td>
+                        {% else %}
+                            <td>{{ object.current_country }}</td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</td>
@@ -290,7 +294,11 @@
                     </tr> -->
                     <tr>
                         <td>Is Verified</td>
-                        <td>{{ city_data.is_verified }}</td>
+                        {% if object.is_verified %}
+                            <td class="text-success"><i class="fas fa-check-circle"></i></td>
+                        {% else %}
+                            <td class="text-danger"><i class="fas fa-times"></i></td>
+                        {% endif %}
                     </tr>
                 </tbody>
             </table>
