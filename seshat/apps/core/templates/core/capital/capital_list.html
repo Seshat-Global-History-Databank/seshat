@@ -65,7 +65,8 @@
 
             <th scope="col" class="text-secondary">#</th>
             <th>Name [Alternative Names]</th>
-            <th>Polities</th>
+            <th>Polities (capital of)</th>
+            <th>Polities (city within)</th>
             <th>Current Country</th>
             <th style="text-align: center;"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</th>
             <th style="text-align: center;">Verified?</th>
@@ -96,6 +97,7 @@
                     {% endfor %}
 
                 </td>
+                <td>...</td>
                 {% if object.current_country == "NO_COUNTRY_FROM_GOOGLE" or object.current_country == "No_country_from_google" %}
                 <td> - </td>
                 {% else %}
