@@ -300,6 +300,19 @@
                             <td class="text-danger"><i class="fas fa-times"></i></td>
                         {% endif %}
                     </tr>
+                    <tr>
+                        <td>Update?</th>
+                        <td>
+                            <a href="{% url 'capital-update' city_data.id %}"><button class="btn btn-warning btn-sm"> Update</button></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa-solid fa-trash-can"></i></th>
+                        <td>
+                            <a href="{% url 'capital-delete' city_data.id %}"><button class="btn btn-danger btn-sm"> <i
+                                        class="fa-solid fa-trash-can"></i></button></a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
