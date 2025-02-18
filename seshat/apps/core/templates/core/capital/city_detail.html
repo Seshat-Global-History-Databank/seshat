@@ -1,0 +1,278 @@
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+{% load core_tags %}
+
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<style>
+    br {
+        display: block;
+        margin: 10px 0;
+        /* Adjust the value as per your requirement */
+        content: "";
+    }
+
+    .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216), rgb(242, 199, 119, 0.216), rgb(151, 230, 151, 0.216));
+
+    }
+
+    .bg-colorful:hover {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616), rgb(242, 199, 119, 0.616), rgb(151, 230, 151, 0.616));
+        color: black;
+    }
+
+    .custom-left-border-shadowed {
+        border-left: none;
+        /* Adjust the border color and thickness as desired */
+        box-shadow: 0 0 4px teal;
+        padding-right: 10px;
+        padding-top: 10px;
+        margin-top: 5px;
+        padding-bottom: 10px;
+        border-radius: 15px;
+        padding-left: 10px;
+        /* Adjust the padding to create spacing between the border and content */
+        text-align: justify;
+    }
+
+    .custom-left-border-shadowed_2 {
+        border-left: none;
+        /* Adjust the border color and thickness as desired */
+        box-shadow: 0 0 2px teal;
+        padding-right: 10px;
+        padding-top: 10px;
+        margin-top: 5px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        /* Adjust the padding to create spacing between the border and content */
+        text-align: justify;
+    }
+
+    .custom-top-border {
+        border-top: 2px solid teal;
+        /* Adjust the border color and thickness as desired */
+        padding-top: 2px;
+        /* Adjust the padding to create spacing between the border and content */
+    }
+
+
+    .custom-border-tight {
+        border-left: 10px solid teal;
+        /* Adjust the border color and thickness as desired */
+        padding-left: 5px;
+        /* Adjust the padding to create spacing between the border and content */
+    }
+
+    .highlighted-value-title {
+        display: inline-block;
+        border: 1px solid rgba(78, 28, 23, 0.25);
+        padding: 5px;
+        border-radius: 5px;
+        margin: 0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color: #fefae6;
+        /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216), rgb(242, 199, 119, 0.216), rgb(151, 230, 151, 0.216));
+    }
+
+    .highlighted-value {
+        display: inline-block;
+        border-bottom: 1px solid rgba(78, 28, 23, 0.15);
+        padding: 5px;
+        border-radius: 1px;
+        background-color: #fffdf2;
+        /* fffdf2   fefae6*/
+    }
+
+    .montserrat-font {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .oswald-font {
+        font-family: 'Ubuntu', serif;
+    }
+
+    .light-narrow-hr {
+        border: none;
+        border-top: 1px solid #f0ecec;
+        height: 0.25px;
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    .light-heavy-hr {
+        border: none;
+        border-top: 5px solid #82c5c5;
+        height: 0.75px;
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    .tag-border {
+        border: 1px solid #82c5c5;
+        /* Adjust the border color and thickness as desired */
+    }
+
+    .text-teal-light {
+        color: #82c5c5;
+    }
+
+    .tag-border2 {
+        border: 1px solid teal;
+        /* Adjust the border color and thickness as desired */
+        border-radius: 5px;
+        background-color: #fefae6;
+    }
+
+    .text-success2 {
+        background-color: #acd2cc;
+        ;
+    }
+
+    .shadowed_text {
+        text-shadow: 0 0 4px gray;
+        color: gray;
+        /* Text color */
+    }
+
+    .card-text-spaced {
+        font-size: 16px;
+        color: #782823;
+        display: flex;
+        padding-top: 5px;
+        justify-content: space-between;
+    }
+
+    .left-span {
+        font-size: 16px;
+        color: #782823;
+    }
+
+    .right-span {
+        text-align: right;
+        font-size: 16px;
+        color: #782823;
+    }
+
+    .center-span {
+        text-align: center;
+        font-size: 16px;
+        color: #782823;
+    }
+
+    .off-vars {
+        color: rgba(125, 125, 125, 0.734);
+    }
+
+    .federicka-huge {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 78px;
+    }
+
+    .federicka-bigger {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 48px;
+    }
+
+    .federicka-big {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 32px;
+    }
+
+    .federicka-medium {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 24px;
+    }
+
+    .federicka-small {
+        font-family: 'Fredericka the Great', serif;
+        font-size: 16px;
+    }
+
+    .hover-text {
+        display: inline-block;
+        overflow: hidden;
+        width: 0;
+    }
+
+    a:hover .hover-text {
+        width: auto;
+        /* Set width to 'auto' to allow it to grow to fit the content */
+    }
+
+    .shadow-box {
+        /* Light gray shadow */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        /* Optional: Add a border if you like */
+        border: 1px solid #acd2cc;
+        padding: 20px;
+        /* Adjust as needed */
+        background-color: white;
+        /* Optional */
+    }
+</style>
+
+<!-- showcase for index -->
+
+<div class="container">
+    <p>City page</p>
+</div>
+
+<script>
+
+    // Don't show map template if on mobile
+    if (window.innerWidth < 768) {
+        document.getElementById('polityMap').style.display = 'none';
+    }
+
+    // Function to handle smooth scrolling to an element with offset
+    function scrollToElementWithOffset(elementId, offset) {
+        var targetElement = $(elementId);
+
+        if (targetElement.length) {
+            // Calculate the offset, considering the height of your fixed navbar
+            var targetOffset = targetElement.offset().top - offset * 1.5;
+
+            // Scroll to the target element with a smooth animation
+            $('html, body').animate({
+                scrollTop: targetOffset
+            }, 100); // Adjust the duration as needed
+        } else {
+            // Log an error if the target element is not found
+            console.error('Target Element not found:', elementId);
+        }
+    }
+
+    // Trigger the scroll action for any link with an href that starts with #
+    $(document).ready(function () {
+        $('a[href^="#"]').on('click', function (event) {
+            event.preventDefault();
+            // Set the offset based on your fixed navbar's height
+            var offset = $('#my_seshat_navbar').height(); // Replace 'my_navbar_id' with the actual ID of your navbar
+
+            // Get the value from the id attribute
+            var elementId = $(this).attr('href');
+
+            // Call the function to scroll to the element with the calculated offset
+            scrollToElementWithOffset(elementId, offset);
+        });
+
+        // Check if there's a hash in the URL on page load
+        if (window.location.hash) {
+            var targetElementId = window.location.hash;
+            var offset = $('#my_seshat_navbar').height();
+            scrollToElementWithOffset(targetElementId, offset);
+        }
+    });
+</script>
+
+
+
+{% endblock content%}

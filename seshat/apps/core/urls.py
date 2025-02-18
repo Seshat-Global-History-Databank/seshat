@@ -187,3 +187,6 @@ urlpatterns += [path('core/provinces_and_countries', views.provinces_and_countri
 
 # Cliopatria page
 urlpatterns += [path('core/cliopatria/', views.cliopatria, name='cliopatria'),]
+
+# City pages
+urlpatterns += [path('core/city/<int:pk>', views.CityDetailView.as_view(), name='city-detail-main'),]
