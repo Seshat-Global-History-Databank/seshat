@@ -249,12 +249,16 @@
                         <td>{{ city_data.current_country }}</td>
                     </tr>
                     <tr>
-                        <td>Latitude</td>
-                        <td>{{ city_data.latitude }}</td>
-                    </tr>
-                    <tr>
-                        <td>Longitude</td>
-                        <td>{{ city_data.longitude }}</td>
+                        <td><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</td>
+                            {% if not city_data.url_on_the_map or city_data.url_on_the_map == "#" %}
+                                <td>-
+                            {% else %}
+                                <td>
+                                    <a href="{{ city_data.url_on_the_map }}" target="_blank">
+                                        <img width="24" height="24" src="https://img.icons8.com/color/48/google-maps-new.png" alt="google-maps-new" />
+                            {% endif %}
+                            ({{ city_data.longitude|floatformat:2 }}, {{ city_data.latitude|floatformat:2 }})</a>
+                        </td>
                     </tr>
                     <tr>
                         <td>Year From</td>
@@ -263,10 +267,6 @@
                     <tr>
                         <td>Year To</td>
                         <td>{{ city_data.year_to }}</td>
-                    </tr>
-                    <tr>
-                        <td>URL on the Map</td>
-                        <td><a href="{{ city_data.url_on_the_map }}">{{ city_data.url_on_the_map }}</a></td>
                     </tr>
                     <tr>
                         <td>Is Verified</td>
