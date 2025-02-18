@@ -222,16 +222,17 @@
 <!-- showcase for index -->
 
 <div class="container">
-    <!-- Display the data from the city_data var from the Django context -->
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center federicka-bigger">{{ city_data.name }}</h1>
-            <h3 class="text-center">{{ city_data.country.name }}</h3>
-            <hr class="light-heavy-hr">
+    <div class="row mt-1">
+        <h1 class="text-center federicka-bigger">{{ city_data.name }}</h1>
+        <hr class="light-heavy-hr">
+        <div class="col-md-12 m-0 p-0">
+            <span class="h2 fw-bold m-0 p-0 ">
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc1071d;">
+                    General City Variables
+                </span>
+            </span>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
+        <div class="row">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -315,6 +316,20 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="col-md-12 m-0 p-0">
+            <span class="h2 fw-bold m-0 p-0 ">
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #0d6dfd3b;">
+                    City Scale Variables
+                </span>
+            </span>
+        </div>
+        <div class="col-md-12 m-0 p-0">
+            <span class="h2 fw-bold m-0 p-0 ">
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #dc35453b;">
+                    City Structure Variables
+                </span>
+            </span>
         </div>
     </div>
 </div>
