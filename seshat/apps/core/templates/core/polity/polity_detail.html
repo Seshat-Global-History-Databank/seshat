@@ -2108,21 +2108,26 @@
                             {% for value in values %}
                             <div class="col-md-9" id="{{key}}">
                                 <span class="h6 text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">
-                                    {% include "core/partials/_year_block_value_inline.html" %}
+                                    <span class="h5">
+                                        {% include "core/partials/_year_block_value_inline.html" %}
+                                    </span>
+                               
 
                                     <span class="h6 fw-bold" >
                                          {{ value.show_value }}
                                     </span>
+                                    {% if value.is_disputed or value.is_uncertain or value.curators_list %}
                                     <br>
                                     <div style="display: block; padding: 0;">
                                         <div style="display: inline-flex; flex-direction: row;">
-                                            {% include "core/partials/_tag_value_inline.html" %}
                                             {% include "core/partials/_disputed_value_inline.html" %}
                                             {% include "core/partials/_uncertain_value_inline.html" %}
                                             {% include "core/partials/_expert_checked_value_inline.html" %}
                                             </a> 
                                         </div>
                                     </div>
+                                    {% endif %}
+
                                 </span>
 
                                 {% with my_app_name='ec' %}

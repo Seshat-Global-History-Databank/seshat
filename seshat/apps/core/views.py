@@ -2644,7 +2644,11 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             dict: The context data of the view.
         """
         context = super().get_context_data(**kwargs)
-        context['pk'] = self.kwargs['pk']
+        if 'pk' in self.kwargs:
+            context['pk'] = self.kwargs['pk']
+        elif 'new_name' in self.kwargs:
+            my_pol = Polity.objects.get(new_name=self.kwargs['new_name'])
+            context['pk'] = my_pol.pk
         try:
             context["all_data"] = get_all_data_for_a_polity(self.object.pk, "crisisdb") 
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
@@ -3838,7 +3842,7 @@ def download_csv_all_polities(request):
     writer = csv.writer(response, delimiter='|')
 
     # type the headers
-    writer.writerow(['macro_region', 'home_seshat_region',  'polity_new_ID', 'polity_old_ID', 'polity_long_name', 'start_year', 'end_year', 'home_nga', 'G', "SC", "WF", "RT", "HS", "CC", "PT", 'polity_tag', 'shapefile_name'])
+    writer.writerow(['id', 'url', 'macro_region', 'home_seshat_region',  'polity_new_ID', 'polity_old_ID', 'polity_long_name', 'start_year', 'end_year', 'home_nga', 'G', "SC", "WF", "RT", "HS", "CC", "PT", 'polity_tag', 'shapefile_name'])
 
     items = Polity.objects.all()
     coded_value_data, freq_data = give_polity_app_data()
@@ -3848,9 +3852,9 @@ def download_csv_all_polities(request):
         #print(obj.id)
         #print(type(obj))
         if obj.home_seshat_region:
-            writer.writerow([obj.home_seshat_region.mac_region.name, obj.home_seshat_region.name, obj.new_name, obj.name, obj.long_name, obj.start_year, obj.end_year, obj.home_nga,  coded_value_data[obj.id]['g'], coded_value_data[obj.id]['sc'], coded_value_data[obj.id]['wf'], coded_value_data[obj.id]['rt'], coded_value_data[obj.id]['hs'], coded_value_data[obj.id]['cc'], coded_value_data[obj.id]['pt'], obj.get_polity_tag_display(), obj.shapefile_name])
+            writer.writerow([obj.id, f'https://seshat-db.com/core/polity/{obj.id}', obj.home_seshat_region.mac_region.name, obj.home_seshat_region.name, obj.new_name, obj.name, obj.long_name, obj.start_year, obj.end_year, obj.home_nga,  coded_value_data[obj.id]['g'], coded_value_data[obj.id]['sc'], coded_value_data[obj.id]['wf'], coded_value_data[obj.id]['rt'], coded_value_data[obj.id]['hs'], coded_value_data[obj.id]['cc'], coded_value_data[obj.id]['pt'], obj.get_polity_tag_display(), obj.shapefile_name])
         else:
-            writer.writerow(["None", "None", obj.new_name, obj.name, obj.long_name, obj.start_year, obj.end_year, obj.home_nga,  coded_value_data[obj.id]['g'], coded_value_data[obj.id]['sc'], coded_value_data[obj.id]['wf'], coded_value_data[obj.id]['rt'], coded_value_data[obj.id]['hs'], coded_value_data[obj.id]['cc'], coded_value_data[obj.id]['pt'], obj.get_polity_tag_display(), obj.shapefile_name])
+            writer.writerow([obj.id,f'https://seshat-db.com/core/polity/{obj.id}', "None", "None", obj.new_name, obj.name, obj.long_name, obj.start_year, obj.end_year, obj.home_nga,  coded_value_data[obj.id]['g'], coded_value_data[obj.id]['sc'], coded_value_data[obj.id]['wf'], coded_value_data[obj.id]['rt'], coded_value_data[obj.id]['hs'], coded_value_data[obj.id]['cc'], coded_value_data[obj.id]['pt'], obj.get_polity_tag_display(), obj.shapefile_name])
 
     return response
 
