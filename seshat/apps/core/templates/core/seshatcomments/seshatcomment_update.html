@@ -166,29 +166,29 @@
                     <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}" class="text-teal" >{{my_inst.my_polity}}</a></span>
                     
                     </td>
-                    {% if my_inst.year_from == None %}
+                    {% if my_inst.my_year_from == None %}
                         <td style="text-align: center;"> - </td>
-                    {% elif my_inst.year_from == my_inst.year_to %}
-                        {% if my_inst.year_from < 0 %}
-                        <td style="text-align: center;">{{ my_inst.year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </td>
+                    {% elif my_inst.my_year_from == my_inst.my_year_to %}
+                        {% if my_inst.my_year_from < 0 %}
+                        <td style="text-align: center;">{{ my_inst.my_year_from|abs|intcomma }} <span class="text-secondary">BCE</span> </td>
                         {% else %}
-                        <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span></td>
+                        <td style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></td>
                         {% endif %}
-                    {% elif my_inst.year_to == None %}
-                        {% if my_inst.year_from < 0 %}
-                        <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span></td>
+                    {% elif my_inst.my_year_to == None %}
+                        {% if my_inst.my_year_from < 0 %}
+                        <td style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span></td>
                         {% else %}
-                        <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span></td>
+                        <td style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span></td>
                         {% endif %}
-                    {% elif my_inst.year_to == None and my_inst.year_from == None %}
+                    {% elif my_inst.my_year_to == None and my_inst.my_year_from == None %}
                         <td style="text-align: center;"> <i class="fa-solid fa-minus"></i> </td>
                     {% else %}
-                        {% if my_inst.year_from < 0 and my_inst.year_to < 0 %}
-                        <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to|abs }} <span class="text-secondary">BCE</span></td>
-                        {% elif my_inst.year_from < 0 and my_inst.year_to >= 0 %}
-                        <td style="text-align: center;">{{ my_inst.year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to }} <span class="text-secondary">CE</span></td>
+                        {% if my_inst.my_year_from < 0 and my_inst.my_year_to < 0 %}
+                        <td style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to|abs }} <span class="text-secondary">BCE</span></td>
+                        {% elif my_inst.my_year_from < 0 and my_inst.my_year_to >= 0 %}
+                        <td style="text-align: center;">{{ my_inst.my_year_from|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></td>
                         {% else %}
-                        <td style="text-align: center;">{{ my_inst.year_from }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.year_to }} <span class="text-secondary">CE</span></td>
+                        <td style="text-align: center;">{{ my_inst.my_year_from }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ my_inst.my_year_to }} <span class="text-secondary">CE</span></td>
                         {% endif %}
                     {% endif %}
                                       

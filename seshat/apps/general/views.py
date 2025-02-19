@@ -8549,6 +8549,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 
 def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, db_section, var_main_desc):
+    # Only enforce authentication and permissions if db_section is not 'rt'
+    # special case of RT:
+    rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
+
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     else:
@@ -8570,6 +8574,9 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     # Apply sorting if orderby is provided and is a valid field name
     if orderby and hasattr(model_class, orderby):
         object_list = object_list.order_by(orderby)
+
+    if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
+        object_list = object_list.filter(polity__new_name__in=rt_allowed_polities)
 
     var_name_with_from = var_name
     var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
@@ -8672,6 +8679,8 @@ def delete_object_view(request, model_class, pk, var_name):
 
 def generic_download(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
+    if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
+        return HttpResponseForbidden("You don't have permission to View this.")
     items = model_class.objects.all()
 
 
@@ -8778,7 +8787,55 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_11: obj[x_name_11],
                 x_name_12: obj[x_name_12],
                 x_name_1: obj[x_name_1],
+            })
+        elif x_name == "lux_precious_metal":
+            place_pols = []
+            if obj[x_name_11]:
+                for item in obj[x_name_11]:
+                    place_pols.append(item.new_name)
+            
+            place_pols_str = ";".join(place_pols)
 
+            metals_str = []
+            if obj[x_name_10]:
+                for my_item in obj[x_name_10]:
+                    metals_str.append(my_item.metal)
+            
+            metals_str_str = ";".join(metals_str)
+
+
+            coded_cols.update({
+                x_name_2: obj[x_name_2],
+                x_name_10: metals_str_str,
+                x_name_3: obj[x_name_3],
+                x_name_11: place_pols_str,
+                x_name_4: obj[x_name_4],
+                x_name_5: obj[x_name_5],
+                x_name_6: obj[x_name_6],
+                x_name_7: obj[x_name_7],
+                x_name_8: obj[x_name_8],
+                x_name_9: obj[x_name_9],
+            })
+        elif db_section == 'ec':
+            place_pols = []
+            if obj[x_name_10]:
+                for item in obj[x_name_10]:
+                    place_pols.append(item.new_name)
+            
+            place_pols_str = ";".join(place_pols)
+
+
+            coded_cols.update({
+                x_name_2: obj[x_name_2],
+                x_name_3: obj[x_name_3],
+                x_name_10: place_pols_str,
+                x_name_4: obj[x_name_4],
+                x_name_5: obj[x_name_5],
+                x_name_6: obj[x_name_6],
+                x_name_7: obj[x_name_7],
+                x_name_8: obj[x_name_8],
+                x_name_9: obj[x_name_9],
+                #x_name_1: obj[x_name_1],
             })
         elif coded_value in ['suprapolity_relations']:
             coded_cols.update({

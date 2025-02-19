@@ -25,9 +25,29 @@ from ..models import (
 from django_filters import rest_framework as django_filters
 from ._mixins import SeshatCommonFilter
 
+class RestrictedPolityFilter(SeshatCommonFilter, django_filters.FilterSet):
+    """
+    A reusable filter that restricts queryset based on allowed polities.
+    If the user has 'add_capital' permission, they get the full dataset.
+    """
 
-class WidespreadReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> widespread_religion [Religion]
+    ALLOWED_POLITIES = [
+        "kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp",
+        "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid",
+        "ni_sokoto", "gm_kaabu_emp"
+    ]
+
+    def filter_queryset(self, queryset):
+        request = getattr(self, "request", None)  # Access request safely
+
+        # Allow full queryset if user has permission
+        if request and request.user.is_authenticated and request.user.has_perm("core.add_capital"):
+            return queryset  
+
+        # Otherwise, apply filtering
+        return queryset.filter(polity__new_name__in=self.ALLOWED_POLITIES)
+
+class WidespreadReligionFilter(RestrictedPolityFilter):
 
     class Meta:
         model = Widespread_religion
@@ -37,8 +57,7 @@ class WidespreadReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class OfficialReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> coded_value [Religion]
+class OfficialReligionFilter(RestrictedPolityFilter):
 
     class Meta:
         model = Official_religion
@@ -46,15 +65,14 @@ class OfficialReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class ElitesReligionFilter(SeshatCommonFilter, django_filters.FilterSet):
-    # <> coded_value [Religion]
+class ElitesReligionFilter(RestrictedPolityFilter):
 
     class Meta:
         model = Elites_religion
         fields = {}
 
 
-class TheoSyncDifRelFilter(SeshatCommonFilter, django_filters.FilterSet):
+class TheoSyncDifRelFilter(RestrictedPolityFilter):
     class Meta:
         model = Theo_sync_dif_rel
         fields = {
@@ -62,7 +80,7 @@ class TheoSyncDifRelFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class SyncRelPraIndBeliFilter(SeshatCommonFilter, django_filters.FilterSet):
+class SyncRelPraIndBeliFilter(RestrictedPolityFilter):
     class Meta:
         model = Sync_rel_pra_ind_beli
         fields = {
@@ -71,7 +89,7 @@ class SyncRelPraIndBeliFilter(SeshatCommonFilter, django_filters.FilterSet):
 
 
 class ReligiousFragmentationFilter(
-    SeshatCommonFilter, django_filters.FilterSet
+    RestrictedPolityFilter
 ):
     class Meta:
         model = Religious_fragmentation
@@ -80,7 +98,7 @@ class ReligiousFragmentationFilter(
         }
 
 
-class GovVioFreqRelGrpFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovVioFreqRelGrpFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_vio_freq_rel_grp
         fields = {
@@ -88,7 +106,7 @@ class GovVioFreqRelGrpFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResPubWorFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResPubWorFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_pub_wor
         fields = {
@@ -96,7 +114,7 @@ class GovResPubWorFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResPubProsFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResPubProsFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_pub_pros
         fields = {
@@ -104,7 +122,7 @@ class GovResPubProsFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResConvFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResConvFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_conv
         fields = {
@@ -112,7 +130,7 @@ class GovResConvFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovPressConvFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovPressConvFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_press_conv
         fields = {
@@ -121,7 +139,7 @@ class GovPressConvFilter(SeshatCommonFilter, django_filters.FilterSet):
 
 
 class GovResPropOwnForRelGrpFilter(
-    SeshatCommonFilter, django_filters.FilterSet
+    RestrictedPolityFilter
 ):
     class Meta:
         model = Gov_res_prop_own_for_rel_grp
@@ -130,7 +148,7 @@ class GovResPropOwnForRelGrpFilter(
         }
 
 
-class TaxRelAdhActInsFilter(SeshatCommonFilter, django_filters.FilterSet):
+class TaxRelAdhActInsFilter(RestrictedPolityFilter):
     class Meta:
         model = Tax_rel_adh_act_ins
         fields = {
@@ -138,7 +156,7 @@ class TaxRelAdhActInsFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovOblRelGrpOfcRecoFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovOblRelGrpOfcRecoFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_obl_rel_grp_ofc_reco
         fields = {
@@ -146,7 +164,7 @@ class GovOblRelGrpOfcRecoFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResConsRelBuilFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResConsRelBuilFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_cons_rel_buil
         fields = {
@@ -154,7 +172,7 @@ class GovResConsRelBuilFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResRelEduFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResRelEduFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_rel_edu
         fields = {
@@ -162,7 +180,7 @@ class GovResRelEduFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovResCirRelLitFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovResCirRelLitFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_res_cir_rel_lit
         fields = {
@@ -170,7 +188,7 @@ class GovResCirRelLitFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovDisRelGrpOccFunFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovDisRelGrpOccFunFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_dis_rel_grp_occ_fun
         fields = {
@@ -178,7 +196,7 @@ class GovDisRelGrpOccFunFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class SocVioFreqRelGrpFilter(SeshatCommonFilter, django_filters.FilterSet):
+class SocVioFreqRelGrpFilter(RestrictedPolityFilter):
     class Meta:
         model = Soc_vio_freq_rel_grp
         fields = {
@@ -186,7 +204,7 @@ class SocVioFreqRelGrpFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class SocDisRelGrpOccFunFilter(SeshatCommonFilter, django_filters.FilterSet):
+class SocDisRelGrpOccFunFilter(RestrictedPolityFilter):
     class Meta:
         model = Soc_dis_rel_grp_occ_fun
         fields = {
@@ -194,7 +212,7 @@ class SocDisRelGrpOccFunFilter(SeshatCommonFilter, django_filters.FilterSet):
         }
 
 
-class GovPressConvForAgaFilter(SeshatCommonFilter, django_filters.FilterSet):
+class GovPressConvForAgaFilter(RestrictedPolityFilter):
     class Meta:
         model = Gov_press_conv_for_aga
         fields = {

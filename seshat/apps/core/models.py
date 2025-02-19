@@ -204,7 +204,7 @@ def return_citations_for_comments(self):
         str: The citations of the model instance, separated by comma.
     """
     if self.comment_citations.all():
-        return ', '.join([' <a href="' + citation.zoteroer() + '">' + citation.citation_short_title + '</a>' for citation in self.comment_citations.all()])
+        return ', '.join([' <a class="fw-bold" href="' + citation.zoteroer() + '">' + citation.citation_short_title + '</a>' for citation in self.comment_citations.all()])
     
 def return_number_of_citations_for_comments(self):
     """
@@ -226,7 +226,7 @@ def return_citations_plus_for_comments(self):
     """
     get_scp_tr = ScpThroughCtn.objects.filter(seshatcommentpart=self.id)
     if get_scp_tr:
-        return ', '.join([' <a href="' + x.citation.zoteroer() + '">' + x.citation.citation_short_title + '</a>' for x in get_scp_tr])
+        return ', '.join([' <a class="fw-bold" href="' + x.citation.zoteroer() + '">' + x.citation.citation_short_title + '</a>' for x in get_scp_tr])
     
 def return_number_of_citations_plus_for_comments(self):
     """
