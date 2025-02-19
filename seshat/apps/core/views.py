@@ -4129,14 +4129,9 @@ def get_polity_shape_content(displayed_year="all", seshat_id="all", tick_number=
         displayed_year = initial_displayed_year 
 
     if seshat_id != "all":  # Used in the polity pages
-        try:
-            earliest_year = min([shape['start_year'] for shape in shapes])
-            displayed_year = earliest_year
-            latest_year = max([shape['end_year'] for shape in shapes])
-        except:
-            earliest_year = 400
-            displayed_year = earliest_year
-            latest_year = 500
+        earliest_year = min([shape['start_year'] for shape in shapes])
+        displayed_year = earliest_year
+        latest_year = max([shape['end_year'] for shape in shapes])
 
     # Get the years for the tick marks on the year slider
     tick_years = [round(year) for year in np.linspace(earliest_year, latest_year, num=tick_number)]
