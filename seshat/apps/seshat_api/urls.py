@@ -9,26 +9,26 @@ router = routers.DefaultRouter()
 
 # Register viewsets for "account" app
 
-from .views.accounts import (
-    ProfileViewSet,
-    SeshatExpertViewSet,
-    SeshatTaskViewSet,
-)
+# from .views.accounts import (
+#     ProfileViewSet,
+#     SeshatExpertViewSet,
+#     SeshatTaskViewSet,
+# )
 
-router.register(r"account/profiles", ProfileViewSet, basename="api_profile")
-router.register(
-    r"account/seshat-experts",
-    SeshatExpertViewSet,
-    basename="api_seshat-expert",
-)
-router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="api_seshat-task")
+# router.register(r"account/profiles", ProfileViewSet, basename="api_profile")
+# router.register(
+#     r"account/seshat-experts",
+#     SeshatExpertViewSet,
+#     basename="api_seshat-expert",
+# )
+# router.register(r"account/seshat-tasks", SeshatTaskViewSet, basename="api_seshat-task")
 
 
 # Register views for "core" app
 
 from .views.core import (
-    PrivateCommentsViewSet,
-    PrivateCommentsPartsViewSet,
+    #PrivateCommentsViewSet,
+    #PrivateCommentsPartsViewSet,
     MacroRegionViewSet,
     RegionViewSet,
     NGAViewSet,
@@ -46,21 +46,21 @@ from .views.core import (
     ScpThroughCtnViewSet,
     ReligionViewSet,
     CliopatriaViewSet,
-    GADMShapefileViewSet,
+    #GADMShapefileViewSet,
     GADMCountriesViewSet,
     GADMProvincesViewSet,
 )
 
-router.register(
-    r"core/private-comments",
-    PrivateCommentsViewSet,
-    basename="api_private-comment",
-)
-router.register(
-    r"core/private-comments-parts",
-    PrivateCommentsPartsViewSet,
-    basename="api_private-comment-part",
-)
+# router.register(
+#     r"core/private-comments",
+#     PrivateCommentsViewSet,
+#     basename="api_private-comment",
+# )
+# router.register(
+#     r"core/private-comments-parts",
+#     PrivateCommentsPartsViewSet,
+#     basename="api_private-comment-part",
+# )
 router.register(r"core/macro-regions", MacroRegionViewSet, basename="api_macro-region")
 router.register(r"core/regions", RegionViewSet, basename="api_region")
 router.register(r"core/ngas", NGAViewSet, basename="api_nga")
@@ -99,11 +99,11 @@ router.register(
     CliopatriaViewSet,
     basename="api_cliopatria-shapefile",
 )
-router.register(
-    r"core/gadm-shapefiles",
-    GADMShapefileViewSet,
-    basename="api_gadm-shapefile",
-)
+# router.register(
+#     r"core/gadm-shapefiles",
+#     GADMShapefileViewSet,
+#     basename="api_gadm-shapefile",
+# )
 router.register(
     r"core/gadm-countries", GADMCountriesViewSet, basename="api_gadm-country"
 )
@@ -122,8 +122,8 @@ from .views.crisisdb import (
     USViolenceDataSourceViewSet,
     USViolenceViewSet,
     CrisisConsequenceViewSet,
-    PowerTransitionViewSet,
-    HumanSacrificeViewSet,
+    #PowerTransitionViewSet,
+    #HumanSacrificeViewSet,
     ExternalConflictViewSet,
     ExternalConflictSideViewSet,
     AgriculturalPopulationViewSet,
@@ -162,17 +162,17 @@ router.register(
     CrisisConsequenceViewSet,
     basename="api_crisis-consequence",
 )
-router.register(
-    r"crisisdb/power-transitions",
-    PowerTransitionViewSet,
-    basename="api_power-transition",
-)
+# router.register(
+#     r"crisisdb/power-transitions",
+#     PowerTransitionViewSet,
+#     basename="api_power-transition",
+# )
 
-router.register(
-    r"crisisdb/human-sacrifices",
-    HumanSacrificeViewSet,
-    basename="api_human-sacrifice",
-)
+# router.register(
+#     r"crisisdb/human-sacrifices",
+#     HumanSacrificeViewSet,
+#     basename="api_human-sacrifice",
+# )
 router.register(
     r"crisisdb/external-conflicts",
     ExternalConflictViewSet,

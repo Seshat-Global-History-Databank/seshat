@@ -142,34 +142,34 @@ class CrisisConsequenceViewSet(
     filterset_class = CrisisConsequenceFilter
 
 
-class PowerTransitionViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Power Transitions.
-    """
+# class PowerTransitionViewSet(
+#     FilterBackends,
+#     MixinSeshatAPISerializer,
+#     MixinSeshatAPIAuth,
+#     viewsets.ModelViewSet,
+# ):
+#     """
+#     A viewset for viewing and editing Power Transitions.
+#     """
 
-    model = Power_transition
-    pagination_class = SeshatAPIPagination
-    filterset_class = PowerTransitionFilter
+#     model = Power_transition
+#     pagination_class = SeshatAPIPagination
+#     filterset_class = PowerTransitionFilter
 
 
-class HumanSacrificeViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Human Sacrifices.
-    """
+# class HumanSacrificeViewSet(
+#     FilterBackends,
+#     MixinSeshatAPISerializer,
+#     MixinSeshatAPIAuth,
+#     viewsets.ModelViewSet,
+# ):
+#     """
+#     A viewset for viewing and editing Human Sacrifices.
+#     """
 
-    model = Human_sacrifice
-    pagination_class = SeshatAPIPagination
-    filterset_class = HumanSacrificeFilter
+#     model = Human_sacrifice
+#     pagination_class = SeshatAPIPagination
+#     filterset_class = HumanSacrificeFilter
 
 
 class ExternalConflictViewSet(
