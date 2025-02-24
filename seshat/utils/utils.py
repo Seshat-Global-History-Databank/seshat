@@ -592,7 +592,7 @@ def get_all_wf_data_for_a_polity(polity_id):
 
     return all_vars_grouped_wf, has_any_data
 
-def get_all_ec_data_for_a_polity(polity_id):
+def get_all_ec_data_for_a_polity(polity_id, user):
     """
     Gets all data for a given polity ID from the "ec" app.
 
@@ -602,6 +602,9 @@ def get_all_ec_data_for_a_polity(polity_id):
     Returns:
         tuple: A tuple containing a dictionary of all data for the polity and a boolean value indicating whether the polity has any data.
     """
+
+    if not user.has_perm('core.add_capital'):
+        return {}, False  # Return empty data if user lacks permission
     app_name = 'ec'  # Replace with your app name
     models_1 = apps.get_app_config(app_name).get_models()
 

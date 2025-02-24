@@ -802,13 +802,13 @@ class Power_transitionListView(PermissionRequiredMixin, generic.ListView):
 
         return context
     
-class Power_transitionListViewAll(generic.ListView):
+class Power_transitionListViewAll(PermissionRequiredMixin, generic.ListView):
     """
     View for listing all Power_transition instances.
     """
     model = Power_transition
     template_name = "crisisdb/power_transition/power_transition_list_all_new.html"
-    #permission_required = 'core.add_capital'
+    permission_required = 'core.add_capital'
     #paginate_by = 50
 
     def get_absolute_url(self):
@@ -904,6 +904,12 @@ class Power_transitionListViewAll(generic.ListView):
         context['orderby'] = self.request.GET.get('orderby', 'year_from')
 
         return context
+    
+    # Override the method to render the custom permission denied page
+    def handle_no_permission(self):
+        if not self.request.user.has_perm(self.permission_required):
+            return render(self.request, 'core/permission_denied.html', status=403)
+        return super().handle_no_permission()
 
 class Power_transitionDetailView(PermissionRequiredMixin, generic.DetailView):
     """

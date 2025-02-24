@@ -150,6 +150,11 @@
                             <a  class="dropdown-item fw-bold" href="{% url 'seshat-research-network' %}"><i class="fa-solid fa-people-group text-secondary"></i> &nbsp;Research Network</a>
                         </li>
                         {% endif %}
+                        {%  if 'core.add_seshatprivatecommentpart' in user.get_all_permissions and 'core.add_capital' in user.get_all_permissions %}
+                        <li>
+                            <a  class="dropdown-item fw-bold" href="{% url 'seshat-permission-discussion' %}"><i class="fa-solid fa-lock text-secondary"></i> &nbsp;Permissions</a>
+                        </li>
+                        {% endif %}
 
                      </ul>
                 </li>

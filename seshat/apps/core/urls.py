@@ -14,6 +14,7 @@ urlpatterns += [
 ]
 urlpatterns += [path('download_oldcsv/<str:file_name>/', views.download_oldcsv, name='download_oldcsv'),]
 urlpatterns += [path('seshat-research-network/', views.SeshatExpertListView.as_view(), name='seshat-research-network'),]
+urlpatterns += [path('seshat-permission-discussion/', views.seshat_permission_discussion, name='seshat-permission-discussion'),]
 
 urlpatterns += [path('code_book_new_1', views.seshatcodebooknew1, name='code_book_1'),]
 #urlpatterns += [path('code_book_new_2', views.download_oldcsv, name='code_book_2'),]
