@@ -2654,7 +2654,7 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_general_data"], context["has_any_general_data"] = get_all_general_data_for_a_polity(self.object.pk)
             context["all_sc_data"], context["has_any_sc_data"] = get_all_sc_data_for_a_polity(self.object.pk)
             context["all_wf_data"], context["has_any_wf_data"] = get_all_wf_data_for_a_polity(self.object.pk)
-            context["all_ec_data"], context["has_any_ec_data"] = get_all_ec_data_for_a_polity(self.object.pk)
+            context["all_ec_data"], context["has_any_ec_data"] = get_all_ec_data_for_a_polity(self.object.pk, self.request.user)
             context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.object.pk)
             context["all_crisis_cases_data"] = get_all_crisis_cases_data_for_a_polity(self.object.pk)
             context["all_power_transitions_data"] = get_all_power_transitions_data_for_a_polity(self.object.pk)
@@ -5752,7 +5752,11 @@ class SeshatExpertListView(ListView):
             .order_by(F('user__last_login').desc(nulls_last=True))
         )
     
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def seshat_permission_discussion(request):
+    return render(request, 'core/permissions_discussion.html',)
 
+    
 def get_description_old(request, obj_id):
     obj = get_object_or_404(Human_sacrifice, id=obj_id)
     content = render_to_string('core/description_snippet.html', {'obj': obj})

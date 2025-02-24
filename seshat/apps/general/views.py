@@ -8560,8 +8560,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
     if coded_value == "suprapolity_relations":
         extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
-    elif var_name == "lux_precious_metal":
-        extra_var_dict = {obj.id: obj.display_table_value() for obj in object_list}
+    #elif var_name == "lux_precious_metal":
+    #    extra_var_dict = {obj.id: obj.display_table_value() for obj in #object_list}
     elif db_section == "ec":
         extra_var_dict = {obj.id: obj.display_table_value() for obj in object_list}
     elif coded_value == "preceding_entity":
@@ -8578,6 +8578,14 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
         object_list = object_list.filter(polity__new_name__in=rt_allowed_polities)
 
+    if db_section == 'ec' and not request.user.has_perm('core.add_capital'):
+        #return HttpResponseForbidden("You do not have permission to access this data.")
+        return render(request, 'core/permission_denied.html', status=403)
+
+    if var_name in ['human_sacrifice', 'power_transition'] and not request.user.has_perm('core.add_capital'):
+        #return HttpResponseForbidden("You do not have permission to access this data.")
+        return render(request, 'core/permission_denied.html', status=403)
+    
     var_name_with_from = var_name
     var_exp_new = f'The absence or presence of "{var_name_display}" for a polity.'
 

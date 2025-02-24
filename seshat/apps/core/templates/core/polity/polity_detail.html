@@ -247,12 +247,6 @@
                         </span>
                         {% endif %}
 
-                        {% if "Human_sacrifice" in all_data.keys and all_data.Human_sacrifice %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Human Sacrifice Data" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#hs_var"><span class="badge bg-success text-light p-1 mx-0 fs-5 ">HS</span></a>
-                        </span>
-                        {% endif %}
-
                         {% if all_crisis_cases_data %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Crisis Consequences" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#crisis_case_var"><span class="badge bg-dark p-1 mx-0 fs-5 ">CC</span></a>
@@ -1416,6 +1410,7 @@
 
 
 <!-- HS -->
+{% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
             {% for key, values in all_data.items %}
             {% if "Human_sacrifice" == key  %}
                 {% if values and 'core.view_capital' in user.get_all_permissions %}
@@ -1484,6 +1479,8 @@
             {% endif %}
 
             {% endfor %}  
+{% endif %}
+
         
 <!-- CC -->
 
@@ -2275,6 +2272,7 @@
 
             {% endautoescape  %}
 <!-- HS -->
+{% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
 <div>
     {% autoescape off %}
 
@@ -2342,6 +2340,8 @@
     {% endautoescape %}
 
 </div>
+{% endif %}
+
 <!-- Crisis Cases -->
 
 {% autoescape off %}
