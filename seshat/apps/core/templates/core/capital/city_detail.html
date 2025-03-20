@@ -231,80 +231,89 @@
                     General City Variables
                 </span>
             </span>
-            <span style="float: right;">
-                Verified:
-                {% if object.is_verified %}
-                <span class="text-success"><i class="fas fa-check-circle"></i></span>
-                {% else %}
-                <span class="text-danger"><i class="fas fa-times"></i></span>
-                {% endif %}
-                <a href="{% url 'capital-update' city_data.id %}"><button class="btn btn-warning btn-sm"> Update</button></a>
-                <a href="{% url 'capital-delete' city_data.id %}"><button class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button></a>
-            </span>
         </div>
         <div class="row">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Canonical name</th>
-                        <th>{{ city_data.name }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if city_data.alternative_names %}
-                    <tr>
-                        <td>Alternative Names</td>
-                        <td>{{ city_data.alternative_names }}</td>
-                    </tr>
+            <div class="col-md-2 mt-2 pt-1 border-top border-1 border-danger d-flex align-items-top">
+                <span class=" fs-6 text-dark border-danger" style="text-align: left;">
+                    <i class="fa-solid fa-circle fa-2xs text-danger"></i>
+                    <span class="fw-bold">Identity and location</span>
+                </span>
+            </div>
+            <div class="col-md-10 py-2" id="table_id_sc">
+                <span style="float: right;">
+                    Verified:
+                    {% if object.is_verified %}
+                    <span class="text-success"><i class="fas fa-check-circle"></i></span>
+                    {% else %}
+                    <span class="text-danger"><i class="fas fa-times"></i></span>
                     {% endif %}
-                    <tr>
-                        <td>Polities (capital of)</td>
-                        <td>  
-                            {% for x in city_data.polity_caps.all %}
-                                {% if x.polity.long_name %}
-                                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
-                                        href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.long_name}}</a><br>
-                                {% else %}
-                                    <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
-                                        href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.new_name}}</a><br>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Polities (city within)</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Current Country</td>
-                        {% if object.current_country == "NO_COUNTRY_FROM_GOOGLE" or object.current_country == "No_country_from_google" %}
-                            <td> - </td>
-                        {% else %}
-                            <td>{{ object.current_country }}</td>
+                    <a href="{% url 'capital-update' city_data.id %}"><button class="btn btn-warning btn-sm"> Update</button></a>
+                    <a href="{% url 'capital-delete' city_data.id %}"><button class="btn btn-danger btn-sm"> <i
+                                class="fa-solid fa-trash-can"></i></button></a>
+                </span>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Canonical name</th>
+                            <th>{{ city_data.name }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if city_data.alternative_names %}
+                        <tr>
+                            <td>Alternative Names</td>
+                            <td>{{ city_data.alternative_names }}</td>
+                        </tr>
                         {% endif %}
-                    </tr>
-                    <tr>
-                        <td><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</td>
-                            {% if not city_data.url_on_the_map or city_data.url_on_the_map == "#" %}
-                                <td>-
+                        <tr>
+                            <td>Polities (capital of)</td>
+                            <td>  
+                                {% for x in city_data.polity_caps.all %}
+                                    {% if x.polity.long_name %}
+                                        <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
+                                            href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.long_name}}</a><br>
+                                    {% else %}
+                                        <a data-bs-toggle='tooltip' data-bs-html='true' class="fw-bold" title='{{x.polity.new_name}}'
+                                            href="{% url 'polity-detail-main' x.polity.id %}">{{x.polity.new_name}}</a><br>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Polities (city within)</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Current Country</td>
+                            {% if object.current_country == "NO_COUNTRY_FROM_GOOGLE" or object.current_country == "No_country_from_google" %}
+                                <td> - </td>
                             {% else %}
-                                <td>
-                                    <a href="{{ city_data.url_on_the_map }}" target="_blank">
-                                        <img width="24" height="24" src="https://img.icons8.com/color/48/google-maps-new.png" alt="google-maps-new" />
+                                <td>{{ object.current_country }}</td>
                             {% endif %}
-                            ({{ city_data.longitude|floatformat:2 }}, {{ city_data.latitude|floatformat:2 }})</a>
-                        </td>
-                    </tr>
-                    <!-- <tr>
-                        <td>Year From</td>
-                        <td>{{ city_data.year_from }}</td>
-                    </tr>
-                    <tr>
-                        <td>Year To</td>
-                        <td>{{ city_data.year_to }}</td>
-                    </tr> -->
-                </tbody>
-            </table>
+                        </tr>
+                        <tr>
+                            <td><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</td>
+                                {% if not city_data.url_on_the_map or city_data.url_on_the_map == "#" %}
+                                    <td>-
+                                {% else %}
+                                    <td>
+                                        <a href="{{ city_data.url_on_the_map }}" target="_blank">
+                                            <img width="24" height="24" src="https://img.icons8.com/color/48/google-maps-new.png" alt="google-maps-new" />
+                                {% endif %}
+                                ({{ city_data.longitude|floatformat:2 }}, {{ city_data.latitude|floatformat:2 }})</a>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>Year From</td>
+                            <td>{{ city_data.year_from }}</td>
+                        </tr>
+                        <tr>
+                            <td>Year To</td>
+                            <td>{{ city_data.year_to }}</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div class="col-md-12 m-0 p-0">
             <span class="h2 fw-bold m-0 p-0 ">
