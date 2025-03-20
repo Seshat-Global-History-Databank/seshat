@@ -1873,6 +1873,146 @@ class Polity_capital(SeshatCommon):
             return call_my_name(self)
 
 
+class Polity_city(SeshatCommon):
+    """
+    This model is used to store the information about non-capital cities within polities.
+    """
+    name = models.CharField(max_length=100, default="Polity_city")
+    city = models.CharField(max_length=500, blank=True, null=True)
+    # The City model is named Capital for backwards compatibility, but includes non-capital cities
+    polity_city = models.ForeignKey(Capital, on_delete=models.SET_NULL, null=True, related_name="polity_city")
+
+    class Meta:
+        """
+        :noindex:
+        """
+        verbose_name = 'Polity_city'
+        verbose_name_plural = 'Polity_cities'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
+        return return_citations(self)
+
+    def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
+        clean_times(self)
+
+    def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
+        return "polity_city"
+
+    def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
+        return "Polity City"
+
+    def show_value(self):
+        """
+        Return the city linked to the polity (if it exists on the instance,
+        otherwise return a dash).
+
+        Returns:
+            str: A city within the polity (or " - " if it does not exist on the instance).
+        """
+        if self.polity_city:
+            return self.polity_city
+        elif self.city:
+            return self.city
+        else:
+            return call_my_name(self)
+
+    def subsection(self):
+        """
+        Return the subsection of the model instance.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The subsection of the model instance.
+        """
+        return "Identity and Location"
+
+    def sub_subsection(self):
+        """
+        Return the subsection's subsection of the model instance.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            None
+        """
+        return None
+
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
+        return reverse('polity_city-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        if self.polity_city:
+            return self.polity_city.name
+        elif self.city:
+            return self.city
+        else:
+            return call_my_name(self)
+
+
 class Polity_language(SeshatCommon):
     """
     This model is used to store the information about the languages of the
