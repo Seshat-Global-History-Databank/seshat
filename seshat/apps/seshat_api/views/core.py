@@ -29,14 +29,14 @@ from ..filters.core import (
     ScpThroughCtnFilter,
     ReligionFilter,
     CliopatriaFilter,
-    GADMShapefileFilter,
+    #GADMShapefileFilter,
     GADMCountriesFilter,
     GADMProvincesFilter,
 )
 
 from ..models import (
-    SeshatPrivateComment,
-    SeshatPrivateCommentPart,
+    #SeshatPrivateComment,
+    #SeshatPrivateCommentPart,
     Macro_region,
     Seshat_region,
     Nga,
@@ -54,42 +54,42 @@ from ..models import (
     ScpThroughCtn,
     Religion,
     Cliopatria,
-    GADMShapefile,
+    #GADMShapefile,
     GADMCountries,
     GADMProvinces,
 )
 
 
-class PrivateCommentsViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Private Comments.
-    """
+# class PrivateCommentsViewSet(
+#     FilterBackends,
+#     MixinSeshatAPISerializer,
+#     MixinSeshatAPIAuth,
+#     viewsets.ModelViewSet,
+# ):
+#     """
+#     A viewset for viewing and editing Seshat Private Comments.
+#     """
 
-    model = SeshatPrivateComment
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = PrivateCommentFilter
+#     model = SeshatPrivateComment
+#     pagination_class = SeshatAPIPagination
+#     permissions_dict = ONLY_ADMIN_PERMISSIONS
+#     filterset_class = PrivateCommentFilter
 
 
-class PrivateCommentsPartsViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing Seshat Private Comment Parts.
-    """
+# class PrivateCommentsPartsViewSet(
+#     FilterBackends,
+#     MixinSeshatAPISerializer,
+#     MixinSeshatAPIAuth,
+#     viewsets.ModelViewSet,
+# ):
+#     """
+#     A viewset for viewing and editing Seshat Private Comment Parts.
+#     """
 
-    model = SeshatPrivateCommentPart
-    pagination_class = SeshatAPIPagination
-    permissions_dict = ONLY_ADMIN_PERMISSIONS
-    filterset_class = PrivateCommentsPartFilter
+#     model = SeshatPrivateCommentPart
+#     pagination_class = SeshatAPIPagination
+#     permissions_dict = ONLY_ADMIN_PERMISSIONS
+#     filterset_class = PrivateCommentsPartFilter
 
 
 class MacroRegionViewSet(
@@ -352,19 +352,19 @@ class CliopatriaViewSet(
     filterset_class = CliopatriaFilter
 
 
-class GADMShapefileViewSet(
-    FilterBackends,
-    MixinSeshatAPISerializer,
-    MixinSeshatAPIAuth,
-    viewsets.ModelViewSet,
-):
-    """
-    A viewset for viewing and editing GADM Shapefiles.
-    """
+# class GADMShapefileViewSet(
+#     FilterBackends,
+#     MixinSeshatAPISerializer,
+#     MixinSeshatAPIAuth,
+#     viewsets.ModelViewSet,
+# ):
+#     """
+#     A viewset for viewing and editing GADM Shapefiles.
+#     """
 
-    model = GADMShapefile
-    pagination_class = SeshatAPIRestrictedPagination
-    filterset_class = GADMShapefileFilter
+#     model = GADMShapefile
+#     pagination_class = SeshatAPIRestrictedPagination
+#     filterset_class = GADMShapefileFilter
 
 
 class GADMCountriesViewSet(

@@ -32,13 +32,18 @@ def template_display_table_value(self) -> str:
 
             polity_url = reverse('polity-detail-main', args=[pol.id]) 
             a_str = f"""
-<a href='{polity_url}'>{pol.long_name}</a>
+<a href='{polity_url}'>{pol.long_name}</a>  
             """
             
             all_pols_connected.append(a_str)
-            all_pols_connected_str = "; ".join(all_pols_connected)
+            all_pols_connected_str = "<br>".join(all_pols_connected)
     else:
         all_pols_connected_str=""
+
+    if self.place_of_provenance_str:
+        places_str = self.place_of_provenance_str.replace(';', '<br>')
+    else:
+        places_str = ""
     # Conditionally add rows if values are not None
     if self.coded_value:
         if self.coded_value in ['present']:
@@ -53,13 +58,13 @@ def template_display_table_value(self) -> str:
         if self.tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
                         {self.clean_name_spaced()}:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
 
         <span class="badge bg-success-light small-knopf text-dark" style="
-        font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
+        font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
         {self.get_coded_value_display()}</span> 
                         
                     </td>
@@ -68,13 +73,13 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
                         {self.clean_name_spaced()}:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
 
         <span class="badge bg-success-light small-knopf text-dark" style="
-        font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem;  background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
+        font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px;  background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
         
                     {self.get_tag_display()}
                     {self.get_coded_value_display()}
@@ -89,33 +94,41 @@ def template_display_table_value(self) -> str:
     if self.place_of_provenance_str and all_pols_connected_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
                     Place(s) of Provenance:
                 </td>
                 <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
-                   {all_pols_connected_str}; {self.place_of_provenance_str} 
+                    <span>    
+                   {all_pols_connected_str} <br> {places_str} 
+                   </span>
                 </td>
             </tr>
         """)
     elif all_pols_connected_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
                     Place(s) of Provenance:
                 </td>
                 <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
+                <span>    
                    {all_pols_connected_str}
+                </span>    
+
                 </td>
             </tr>
         """)
-    elif self.place_of_provenance_str :
+    elif self.place_of_provenance_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
                     Place(s) of Provenance:
                 </td>
                 <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
-                   {self.place_of_provenance_str}
+                    <span>    
+
+                   {places_str}
+                    </span>    
                 </td>
             </tr>
         """)
@@ -133,11 +146,11 @@ def template_display_table_value(self) -> str:
         if self.ruler_consumption_tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Ruler:
+                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
+                        Consumption by <b> Ruler</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_ruler_consumption_display()}
                         </span> 
 
@@ -147,11 +160,11 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Ruler:
+                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
+                        Consumption by <b> Ruler</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_ruler_consumption_tag_display()}
                         {self.get_ruler_consumption_display()}
 
@@ -174,11 +187,11 @@ def template_display_table_value(self) -> str:
         if self.elite_consumption_tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Elite:
+                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
+                        Consumption by <b> Elite</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_elite_consumption_display()}
                         </span> 
 
@@ -188,11 +201,11 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Elite:
+                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
+                        Consumption by <b> Elite</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_elite_consumption_tag_display()}
                         {self.get_elite_consumption_display()}
 
@@ -216,10 +229,10 @@ def template_display_table_value(self) -> str:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
                     <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Common People:
+                        Consumption by <b> Common People</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_common_people_consumption_display()}
                         </span> 
 
@@ -230,10 +243,10 @@ def template_display_table_value(self) -> str:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
                     <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by Common People:
+                        Consumption by <b> Common People</b>:
                     </td>
                     <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
-                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 14px;padding-left:5px;padding-right:5px;padding-top:1px;padding-bottom:1px;margin:0px;padding-bottom:0px;line-height:1rem; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
+                        <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_common_people_consumption_tag_display()}
                         {self.get_common_people_consumption_display()}
 
@@ -258,7 +271,7 @@ class LuxAttributes(models.Model):
     Abstract base class for consumption-related attributes.
     """
     coded_value = models.CharField(max_length=50, choices=ABSENT_PRESENT_CHOICES)
-    which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
+    #which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
     place_of_provenance_pol = models.ManyToManyField(Polity, related_name="%(app_label)s_%(class)s_related_places", related_query_name="%(app_label)s_%(class)ss", blank=True)
     place_of_provenance_str = models.CharField(max_length=500, blank=True, null=True)
     ruler_consumption = models.CharField(max_length=50, choices=ABSENT_PRESENT_CHOICES, blank=True, null=True)
@@ -291,7 +304,7 @@ class Precious_metal(SeshatCommon):
     name = models.CharField(max_length=100, default="precious_metal")
     # this will use the normal tag for confidence
     coded_value = models.CharField(max_length=50, choices=ABSENT_PRESENT_CHOICES)
-    which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
+    #which_metals = models.ManyToManyField(Prec_met_instance, related_name="%(app_label)s_%(class)s_related_metals", related_query_name="%(app_label)s_%(class)ss", blank=True)
     place_of_provenance_pol = models.ManyToManyField(Polity, related_name="%(app_label)s_%(class)s_related_places", related_query_name="%(app_label)s_%(class)ss", blank=True)
     place_of_provenance_str = models.CharField(max_length=500, blank=True, null=True)
     ruler_consumption = models.CharField(max_length=50, choices=ABSENT_PRESENT_CHOICES, blank=True)

@@ -1,0 +1,860 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+{% load mathfilters %}
+{% load custom_filters %}
+
+{% load humanize %}
+
+
+{% block content %}
+<style>
+    .text-secondary-light {
+        color: rgb(193, 189, 189);
+    }
+
+    h4 {
+        color: #2c3e50;
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 5px;
+    }
+    h5 {
+        color: #16a085;
+    }
+
+    ul li.duscuss {
+        background: #fffdf2;
+        margin: 5px 0;
+        padding: 10px;
+        border-left: 5px solid #16a085;
+        border-radius: 5px;
+    }
+    .question {
+        font-weight: bold;
+        color: #c0392b;
+        margin-top: 15px;
+    }
+
+    .peter {
+        background-color: #b6dbf4 ;
+    }
+
+    .jenny {
+        background-color: pink ;
+    }
+
+    .pieter {
+        background-color: #a6da9d ;
+    }
+
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .right-aligned {
+        white-space: nowrap; /* Prevents names from breaking into a new line */
+    }
+    
+</style>
+<div class="container">
+    <h2 class="py-4">Seshat Permissions Discussion Room</h2>
+
+    <table class="table table-hover">
+        <tbody>
+            <tr style="text-align: left; border-top: 1px black solid;  border-left: 1px black solid;  border-right: 1px black solid;">
+                <td>&nbsp;&nbsp;<i class="fa-solid fa-eye"></i> View </td>
+                <td><i class="fa-solid fa-download"></i> Download </td>
+                <td><i class="fa-regular fa-square-plus"></i> Add </td>
+                <td><i class="fa-solid fa-pen-to-square"></i> Modify </td>
+                <td><i class="fa-regular fa-trash-can"></i> Delete </td>
+                <td><i class="fa-solid fa-comment"></i> Private Comment </td>
+                <td><i class="fa-solid fa-gear"></i> API  </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-hover table-borderless">
+        <tbody>
+            <tr style="text-align: left; border-bottom: 1px black solid;  border-left: 1px black solid;  border-right: 1px black solid;">
+                <td>&nbsp;&nbsp;<i class="fa-solid fa-square text-success"></i>&nbsp;Full Permission </td>
+                <td><i class="fa-solid fa-square text-warning"></i> Partial Permission (Only for some polities) </td>
+                <td><i class="fa-solid fa-square text-danger"></i> Partial Permission (Only for some attributes) </td>
+                <td><i class="fa-solid fa-square text-secondary-light"></i> No Permissions </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-hover mb-5">
+        <thead>
+            <tr class="border-bottom" style="background:#b3e0db">
+                <th class="border-end">Variable Set</th>
+                <th class="border-end" style="text-align: center">Seshat Admin <br> (Majid, Ed)</th>
+                <th class="border-end" style="text-align: center">Seshat Researcher <br> (Peter, Jenny, Jakob, Enrico)</th>
+                <th  class="border-end" style="text-align: center">Seshat Experts <br> (Johannes)</th>
+                <th  class="border-end" style="text-align: center">An interested Researcher <br> (logged_in user)</th>
+                <th style="text-align: center">Anyone <br> (Anonymous)</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            
+            <tr class="border-bottom">
+                <td>Polities</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-danger"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>General (all)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Social Complexity (all)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Warfare (all)
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Religion (RelTol)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-warning"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Religion (Religious Demography)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-warning"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Religion (MSP)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-warning"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Religion (Human Sacrifice)</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-warning"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-warning"></i>
+                    <i class="fa-solid fa-download text-warning"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <span tabindex="0" data-bs-toggle="popover" title="Only for these 10 polities: [kh_chenla, pe_wari_emp, in_kampili_k, in_kalyani_chalukya_emp, in_hoysala_k, et_aksum_emp_3, et_aksum_emp_2, ni_proto_yoruboid, ni_sokoto, gm_kaabu_emp]" data-bs-html="true" data-bs-trigger="focus" style="cursor: pointer;"><i class="fa-solid fa-gear text-warning"></i></span>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Economy</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Power Transitions</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Crisis Consequences</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Qing Crisis</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-success"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>USPVDB</td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-solid fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+                <td style="text-align: center"><i class="fa-solid fa-eye text-success"></i>
+                    <i class="fa-solid fa-download text-success"></i>
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-solid fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                    <i class="fa-solid fa-comment text-secondary-light"></i>
+                    <i class="fa-solid fa-gear text-success"></i>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Agricultural Productivity
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+               <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Axial Age
+
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+               <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+            </tr>
+
+            <tr class="border-bottom">
+                <td>Cliopatria
+
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+               <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+                <td style="text-align: center">
+                -
+                </td>
+            </tr>
+
+            <tr class="border-bottom">
+                <td>New Variables (Tables)</td>
+                <td style="text-align: center">
+                    <i class="fa-regular fa-square-plus text-success"></i>
+                    <i class="fa-regular fa-pen-to-square text-success"></i>
+                    <i class="fa-regular fa-trash-can text-success"></i>
+
+                </td>
+                <td style="text-align: center">
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-regular fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                </td>
+                <td style="text-align: center">
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-regular fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                </td>
+                <td style="text-align: center">
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-regular fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                </td>
+                <td style="text-align: center">
+                    <i class="fa-regular fa-square-plus text-secondary-light"></i>
+                    <i class="fa-regular fa-pen-to-square text-secondary-light"></i>
+                    <i class="fa-regular fa-trash-can text-secondary-light"></i>
+                </td>
+            </tr>
+            
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-secondary" colspan="2">* Hover over the yellow items to see more details.</small></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+
+    <div>
+        Extremely Important Questions and points for discussion:
+    </div>
+
+    <div>
+
+        
+        <h4 class="heading">Public vs. Not Public Data: Definitions and Criteria
+             <span  class="right-aligned">
+                <span class="peter">&nbsp;Peter&nbsp;</span>
+                <span class="jenny">&nbsp;Jenny&nbsp;</span>
+                <span class="pieter">&nbsp;Pieter&nbsp;</span>
+            </span>   
+        </h4>
+    
+        <h5>Public Data</h5>
+        <ul>
+            <li>Visible and accessible to anyone. <span class="peter">Yes</span></li>
+            <li>Can be downloaded in CSV format or accessed via API. <span class="peter">Yes</span></li>
+            <li>Free to use without restrictions. <span>No, anybody using our data mus follow the citations procedure.</span></li>
+            <li>
+                <span class="pieter">
+                    Seshat Experts can see and download it but cannot share it publicly.  After signing the form. The wording should be broader than just ‘sharing’. They should also not yet use it for their own publications and we need to make clear to them that these data are still under construction.
+                </span>
+            </li>
+        </ul>
+    
+        <h5>Not Public Data</h5>
+        <ul>
+            <li>Visible and accessible only to the internal team.</li>
+            <li>Can be downloaded in CSV format and used by us.</li>
+            <li>Seshat Experts can see and download it but cannot share it publicly.</li>
+            <li class="peter">Not public data are those on which our team currently works.
+            </li>
+        </ul>
+    
+        <h5>What Defines Public Data?</h5>
+        <span class="peter">Seshat data becomes public when an article using these variables is published (typically, initially as a SocArxiv preprint). At the same time, we publish the replication dataset <a href="https://seshat-db.com/downloads_page/"><b>here</b></a>.
+        <span class="peter">Public data may include instances, which have not yet been well coded and/or expert reviewed, because we want to get feedback on them. But this should be clearly marked. </span>
+ 
+<br> </span>
+<p>
+    <br>
+            Some key questions:</p>
+    
+        <p class="question">1. Is public data defined by expert review? </p>
+        <span class="peter">No</span> <span class="jenny">
+            Maybe it's better to think about it as being defined by our own "curation". I don't think we could claim every code and description in the Equinox-2020 dataset has been reviewed by experts, but we underwent our own review and cleaning process before making the decision to release the data. Likewise, the Cliopatria shapes are publicly available but haven't yet been through expert review.
+        </span>
+    
+        <p class="question">2. Should public data be limited to what has been used in our publications? </p>
+        <span class="peter">Yes</span>
+        <span class="jenny">
+            No, I don't think so. @Turchin, Peter the Equinox-2020 dataset includes data that haven't been used in specific publications, right? And for the upcoming Polaris release, we don't have to be constrained by which data have gone into our articles.
+        </span>
+        <p>If so, does that mean all unpublished data remains private indefinitely? </p>
+        <span class="peter">Unless we decide to release it, but the general rule is that only data used in publications becomes public.</span>
+    
+        <p class="question">3. What happens when new data is added to public sections?</p>
+        <span class="jenny">
+            This is a question I also have. Ideally, I think they would be default private, and we can decide to publish them using a button.
+<br>
+So we'll need to clearly mark public and private data. How about a small coloured badge like the current ones indicating "Confident", "Inferred"?
+        </span>
+        <ul>
+            <li>If Jakob enters new data into the public parts of the database, does it automatically become public?</li>
+            <li> Do we want it to become public only after Experts review it? </li><span class="peter">
+               If it is a variable that was marked as public, then new data points added are also public.
+            </span>
+            <li>
+                Do we need an approval process before making newly added data publicly accessible? <span class="peter">This is done at the same time when we post the article on these data.</span> 
+            </li>
+        </ul>
+    
+        <p>We need to clarify these points to ensure consistent data-sharing policies.</p>
+
+            <table class="table peter mb-5">
+                <thead>
+                    <tr>                    
+                        <th>Open Access</th>
+                        <th>Not Open Access</th>
+                    </tr>
+
+
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>- Polities <br>- General (all) <br>- Social Complexity (all) <br>- Warfare (all) <br>- Religion (MSP) <br>- Axial Age (it’s a replication dataset,  should be uploaded to main Seshat) <br>- Crisis Consequences (all) <br>- Cliopatria <br>- Agricultural Productivity (needs to be uploaded to main Seshat) <br>- USPVDB <br>- Qing Crisis
+                           </td>
+                        <td>- Religion (RelTol) <br> - Religion (Religious Demography) <br> - Religion (Human Sacrifice) <br> - Economy (all) <br> - Power Transitions (all)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+    </div>
+</div>
+
+{% endblock %}

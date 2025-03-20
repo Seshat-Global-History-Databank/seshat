@@ -8,7 +8,10 @@ from seshat.apps.core.models import Polity, ScpThroughCtn, Reference, Citation, 
 from seshat.apps.general.models import Polity_expert, Polity_original_name, Polity_alternative_name
 from seshat.apps.ec.models import Lux_precious_metal, Luxury_fabrics, Luxury_manufactured_goods, Luxury_spices_incense_and_dyes, Luxury_drink_alcohol, Luxury_glass_goods, Lux_fine_ceramic_wares, Lux_precious_stone, Lux_statuary, Luxury_food, Other_luxury_personal_items
 
-from seshat.apps.ec.final_dic_insert import my_final_dic_with_citations_stripped
+
+from seshat.apps.ec.final_dic_extra_insert import my_final_dic_extra_with_citations_stripped
+
+#from seshat.apps.ec.final_dic_insert import my_final_dic_with_citations_stripped
 
 
 
@@ -23,8 +26,11 @@ class Command(BaseCommand):
         # Convert the queryset to a list (if needed)
         unique_polity_new_ids_list = list(unique_polity_new_ids)
 
-        for pol_var_tuple, coded_cols in my_final_dic_with_citations_stripped.items():
-            polity_new_id, var_name = pol_var_tuple
+        for pol_var_tuple, coded_cols in my_final_dic_extra_with_citations_stripped.items():
+            if coded_cols['coded_value'] is None:
+                print(f'IIIIIIIIIIIIIignored: {pol_var_tuple}')
+                continue
+            polity_new_id, var_name, year_from, year_to = pol_var_tuple
             print(polity_new_id)
             pol_maps = {
             'af_ghurid_principality' : 'af_ghur_principality',
@@ -134,7 +140,21 @@ class Command(BaseCommand):
 
             #model_class = apps.get_model(app_label='ec', model_name=Lux_precious_metal)
 
-            model_instance = var_to_model[var_name].objects.create(
+            # model_instance, created = var_to_model[var_name].objects.get_or_create(
+            #     coded_value=coded_cols['coded_value'], 
+            #     tag=coded_cols['tag'], 
+            #     ruler_consumption=coded_cols['ruler'], 
+            #     ruler_consumption_tag=coded_cols['ruler_tag'], 
+            #     elite_consumption=coded_cols['elite'], 
+            #     elite_consumption_tag=coded_cols['elite_tag'], 
+            #     common_people_consumption=coded_cols['cp'], 
+            #     common_people_consumption_tag=coded_cols['cp_tag'], 
+            #     #place_of_provenance_str=all_places_str_str, 
+            #     polity_id=my_polity_id
+            #     )
+
+
+            model_instance = var_to_model[var_name].objects.filter(
                 coded_value=coded_cols['coded_value'], 
                 tag=coded_cols['tag'], 
                 ruler_consumption=coded_cols['ruler'], 
@@ -143,11 +163,35 @@ class Command(BaseCommand):
                 elite_consumption_tag=coded_cols['elite_tag'], 
                 common_people_consumption=coded_cols['cp'], 
                 common_people_consumption_tag=coded_cols['cp_tag'], 
-                place_of_provenance_str=all_places_str_str, 
+                #place_of_provenance_str=all_places_str_str, 
                 polity_id=my_polity_id
-                )
+            ).first()  #
             # create model_instance
-            model_instance.comment = big_father
+
+            #if not created:
+                # If the instance already exists, add the `year_from` attribute
+            if model_instance:
+                model_instance.year_from = int(year_from.replace("CE", ""))
+                model_instance.year_to = int(year_to.replace("CE", ""))
+                #model_instance.place_of_provenance_str=all_places_str_str
+            else:
+                # If no instance exists, create a new one
+                model_instance = var_to_model[var_name].objects.create(
+                    coded_value=coded_cols['coded_value'], 
+                    tag=coded_cols['tag'], 
+                    ruler_consumption=coded_cols['ruler'], 
+                    ruler_consumption_tag=coded_cols['ruler_tag'], 
+                    elite_consumption=coded_cols['elite'], 
+                    elite_consumption_tag=coded_cols['elite_tag'], 
+                    common_people_consumption=coded_cols['cp'], 
+                    common_people_consumption_tag=coded_cols['cp_tag'], 
+                    place_of_provenance_str=all_places_str_str, 
+                    polity_id=my_polity_id, 
+                    #comment=big_father
+                )
+                model_instance.year_from = int(year_from.replace("CE", ""))
+                model_instance.year_to = int(year_to.replace("CE", ""))
+                model_instance.comment = big_father
 
             model_instance.save()
 
