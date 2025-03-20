@@ -303,16 +303,28 @@
                                 ({{ city_data.longitude|floatformat:2 }}, {{ city_data.latitude|floatformat:2 }})</a>
                             </td>
                         </tr>
-                        <!-- <tr>
-                            <td>Year From</td>
-                            <td>{{ city_data.year_from }}</td>
-                        </tr>
-                        <tr>
-                            <td>Year To</td>
-                            <td>{{ city_data.year_to }}</td>
-                        </tr> -->
                     </tbody>
                 </table>
+            </div>
+            <div class="col-md-2 mt-2 pt-1 border-top border-1 border-danger d-flex align-items-top">
+                <span class=" fs-6 text-dark border-danger" style="text-align: left;">
+                    <i class="fa-solid fa-circle fa-2xs text-danger"></i>
+                    <span class="fw-bold">Temporal bounds</span>
+                </span>
+            </div>
+            <div class="col-md-10 py-2" id="table_id_sc">
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Duration
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
             </div>
         </div>
         <div class="col-md-12 m-0 p-0">
@@ -334,13 +346,25 @@
                     <div class="fs-6 pb-1">
                         <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true'
                             title='See more details'>
-                            Test
+                            Population
                         </a>
                     </div>
                 </span>
                 <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
                     <a class="fs-6" href="" data-bs-toggle='tooltip'
                         data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Area (ha)
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
                             class="fa-solid fa-plus text-secondary"></i>
                     </a>
                 </div>
@@ -352,6 +376,56 @@
                     <i class="fa-solid fa-circle fa-2xs text-danger"></i>
                     <span class="fw-bold">Structure Variables</span>
                 </span>
+            </div>
+            <div class="col-md-10 py-2" id="table_id_sc">
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Defensive walls
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Religious building
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Elite residence
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#acd2cc62;">
+                    <div class="fs-6 pb-1">
+                        <a class="h6 text-dark" href="" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                            Ziggurats
+                        </a>
+                    </div>
+                </span>
+                <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                    <a class="fs-6" href="" data-bs-toggle='tooltip' data-bs-html='true' title='Add a new Record'> &nbsp;<i
+                            class="fa-solid fa-plus text-secondary"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
