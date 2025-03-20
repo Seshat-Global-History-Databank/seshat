@@ -79,7 +79,7 @@
                 {% for object in object_list %}
                 <tr>
                 <td class="text-secondary" scope="row">{{ forloop.counter }}</td>
-                <td>{{ object.name }}
+                <td><a href="{% url 'city-detail-main' object.id %}">{{ object.name }}</a>
                     {% if object.alternative_names %}
                     [{{ object.alternative_names }}]
                     {% endif %}
