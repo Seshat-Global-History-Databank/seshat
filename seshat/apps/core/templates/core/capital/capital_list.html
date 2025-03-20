@@ -43,7 +43,7 @@
 
             <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; border-bottom:1px solid #782823;  top: 55px; z-index:900;">Cities 
                 <!-- Add Another Fact Button -->
-                <a href="{% url 'capital-create' %}" 
+                <a href="{% url 'city-create' %}" 
                 class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
                 data-bs-toggle="tooltip" 
                 data-bs-placement="top" 
@@ -52,7 +52,7 @@
                 </a>
                 
                 <!-- See All Such Facts Button -->
-                <a href="{% url 'capital-download' %}"
+                <a href="{% url 'city-download' %}"
                 class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
                 data-bs-toggle="tooltip" 
                 data-bs-placement="top" 
@@ -120,10 +120,10 @@
                     <td class="text-danger" style="text-align: center;"><i class="fas fa-times"></i></td>
                 {% endif %}
                 <td style="text-align: center;">
-                    <a href="{% url 'capital-update' object.id %}" ><button class="btn btn-warning btn-sm"> Update</button></a>
+                    <a href="{% url 'city-update' object.id %}" ><button class="btn btn-warning btn-sm"> Update</button></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{% url 'capital-delete' object.id %}" ><button class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button></a>
+                    <a href="{% url 'city-delete' object.id %}" ><button class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button></a>
                 </td>                          
             </tr>
 
@@ -133,7 +133,7 @@
       {% else %}
       <div class="row">
           <div class="col-md-12 mt-4">
-              <h3> <i class="fa-solid fa-triangle-exclamation"></i> There are no Capitals in the Database.</h3>
+              <h3> <i class="fa-solid fa-triangle-exclamation"></i> There are no Cities in the Database.</h3>
           </div>
       </div>
       {% endif %}
