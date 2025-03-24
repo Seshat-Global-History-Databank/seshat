@@ -346,6 +346,12 @@
             Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'city-create' %}" >here</a> first.
         </span>
         {% endif %}
+        {% if extra_var.name == 'polity_city' %}
+        <span class="text-secondary">
+            Do not see your desired city? Add it <a class="fw-bold text-decoration-underline"
+                href="{% url 'city-create' %}">here</a> first.
+        </span>
+        {% endif %}
     </div>
     <div class="col-md-6 pb-3">
         {{ extra_var2|as_crispy_field }}
@@ -356,6 +362,12 @@
     {% if extra_var.name == 'polity_cap'  %}
     <span class="text-secondary">
         Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'city-create' %}" >here</a> first.
+    </span>
+    {% endif %}
+    {% if extra_var.name == 'polity_city' %}
+    <span class="text-secondary">
+        Do not see your desired city? Add it <a class="fw-bold text-decoration-underline"
+            href="{% url 'city-create' %}">here</a> first.
     </span>
     {% endif %}
 </div>
