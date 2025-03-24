@@ -8139,6 +8139,10 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         context.update({
             'extra_var': my_form['polity_cap'], 
         })
+    elif coded_value in ['city',]:
+        context.update({
+            'extra_var': my_form['polity_city'], 
+        })
     else:
         context.update({
             'extra_var': my_form[coded_value],
