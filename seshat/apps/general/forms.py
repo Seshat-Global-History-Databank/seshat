@@ -274,7 +274,6 @@ class Polity_cityForm(ExpertReviewedForm):
         fields.append('polity_city')
         labels = commonlabels
 
-        labels['city'] = 'Coded City (Obsolete)'
         labels['polity_city'] = 'Polity City'
 
         
