@@ -48,10 +48,10 @@ from .mixins import PolityIdMixin
 from .var_defs import swapped_dict
 
 
-from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
+from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_city, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
 
 
-from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
+from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_cityForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
 
 
@@ -2458,6 +2458,263 @@ def polity_capital_meta_download(request):
     return response
 
         
+class Polity_cityCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
+    """
+    View for creating a new Polity_city.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
+    model = Polity_city
+    form_class = Polity_cityForm
+    template_name = "general/polity_city/polity_city_form.html"
+    permission_required = 'core.add_capital'
+
+    def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
+        return reverse('polity_city-create')
+    
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        # get the explanattion:
+        context["mysection"] = "General Variables"
+        context["mysubsection"] = "General Variables"
+        context["myvar"] = "Polity City"
+        context["my_exp"] = "A city of a polity is connection point between an existing Polity instance and an existing City instance. Optionally, year range associations can be specified. If not provided, it implies that the city remains constant throughout the entire duration of the polity's existence."
+        context["var_null_meaning"] = "The value is not available."
+        context["inner_vars"] = {'city': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'A city within a polity.', 'units': None, 'choices': None, 'null_meaning': 'This polity did not have a city.'}}
+        context["potential_cols"] = []
+        return context
+
+
+class Polity_cityUpdate(PermissionRequiredMixin, UpdateView):
+    """
+    View for updating an existing Polity_city.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
+    model = Polity_city
+    form_class = Polity_cityForm
+    template_name = "general/polity_city/polity_city_update.html"
+    permission_required = 'core.add_capital'
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context["myvar"] = "Polity City"
+        context["my_exp"] = "A city of a polity is connection point between an existing Polity instance and an existing City instance. Optionally, year range associations can be specified. If not provided, it implies that the city remains constant throughout the entire duration of the polity's existence."
+
+        return context
+
+class Polity_cityDelete(PermissionRequiredMixin, DeleteView):
+    """
+    View for deleting an existing Polity_city.
+
+    Note:
+        This view is restricted to users with the 'add_capital' permission.
+    """
+    model = Polity_city
+    success_url = reverse_lazy('polity_cities')
+    template_name = "core/delete_general.html"
+    permission_required = 'core.add_capital'
+
+
+class Polity_cityListView(generic.ListView):
+    """
+    Paginated view for listing all Polity_city instances.
+    """
+    model = Polity_city
+    template_name = "general/polity_city/polity_city_list.html"
+    paginate_by = 10
+
+    def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
+        return reverse('polity_cities')
+    
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context["myvar"] = "Polity City"
+        context["var_main_desc"] = "A city of a polity is connection point between an existing Polity instance and an existing City instance. Optionally, year range associations can be specified. If not provided, it implies that the city remains constant throughout the entire duration of the polity's existence."
+        context["var_main_desc_source"] = "None"
+        context["var_section"] = "General Variables"
+        context["var_subsection"] = "General"
+        context["inner_vars"] = {'city': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'A city within a polity.', 'units': None, 'choices': None, 'null_meaning': 'This polity did not have a city.'}}
+        context["potential_cols"] = []
+
+        return context
+
+
+class Polity_cityListViewAll(generic.ListView):
+    """
+    View for listing all Polity_city instances.
+    """
+    model = Polity_city
+    template_name = "general/polity_city/polity_city_list_all.html"
+
+    def get_absolute_url(self):
+        """
+        Get the absolute URL of the view.
+
+        Returns:
+            str: The absolute URL of the view.
+        """
+        return reverse('polity_cities_all')
+
+    def get_queryset(self):
+        """
+        Get the queryset of Polity_city instances.
+
+        Returns:
+            QuerySet: The queryset of Polity_city instances.
+        """
+        order = self.request.GET.get('orderby', 'year_from')
+        order2 = self.request.GET.get('orderby2', 'year_to')
+        #orders = [order, order2]
+        new_context = Polity_city.objects.all().order_by(order, order2)
+        return new_context
+    
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context["myvar"] = "Polity City"
+        context["var_main_desc"] = "A city of a polity is connection point between an existing Polity instance and an existing City instance. Optionally, year range associations can be specified. If not provided, it implies that the city remains constant throughout the entire duration of the polity's existence."
+        context["var_main_desc_source"] = "None"
+        context["var_section"] = "General Variables"
+        context["var_subsection"] = "General"
+        context["inner_vars"] = {'city': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'A city within of a polity.', 'units': None, 'choices': None, 'null_meaning': 'This polity did not have a city.'}}
+        context["potential_cols"] = []
+        context['orderby'] = self.request.GET.get('orderby', 'year_from')
+
+        return context
+        
+class Polity_cityDetailView(generic.DetailView):
+    """
+    View for displaying a single Polity_city instance.
+    """
+    model = Polity_city
+    template_name = "general/polity_city/polity_city_detail.html"
+
+
+@permission_required('core.view_city')
+def polity_city_download(request):
+    """
+    Download a CSV file of all Polity_city instances.
+
+    Note:
+        This view is restricted to users with the 'view_city' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
+    items = Polity_city.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="polity_cities.csv"'
+
+    writer = csv.writer(response, delimiter='|')
+    writer.writerow(['variable_name', 'year_from', 'year_to', 'polity_name', 'polity_new_ID', 'polity_old_ID',
+                    'city', 'confidence', 'is_disputed', 'expert_checked', 'DRB_reviewed'])
+
+    for obj in items:
+        if obj.polity_cap:
+            writer.writerow([obj.name, obj.year_from, obj.year_to,
+                         obj.polity, obj.polity.new_name, obj.polity.name, str(obj.polity_cap), obj.get_tag_display(), obj.is_disputed,
+                         obj.expert_reviewed, obj.drb_reviewed,])
+        else:
+            writer.writerow([obj.name, obj.year_from, obj.year_to,
+                         obj.polity, obj.polity.new_name, obj.polity.name, obj.city, obj.get_tag_display(), obj.is_disputed,
+                         obj.expert_reviewed, obj.drb_reviewed,])
+
+    return response
+
+@permission_required('core.view_city')
+def polity_city_meta_download(request):
+    """
+    Download a CSV file of the meta data for Polity_city instances.
+
+    Note:
+        This view is restricted to users with the 'view_city' permission.
+
+    Args:
+        request: The request object.
+
+    Returns:
+        HttpResponse: The response object.
+    """
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="polity_cities.csv"'
+    
+    my_meta_data_dic = {'notes': None, 'main_desc': 'A city within a polity.', 'main_desc_source': None, 'section': 'General Variables', 'subsection': 'General'}
+    my_meta_data_dic_inner_vars = {'city': {'min': None, 'max': None, 'scale': None, 'var_exp_source': None, 'var_exp': 'A city within of a polity.', 'units': None, 'choices': None, 'null_meaning': 'This polity did not have a capital.'}}
+    writer = csv.writer(response, delimiter='|')
+    # bring in the meta data nedded
+    for k, v in my_meta_data_dic.items():
+        writer.writerow([k, v])
+
+    for k_in, v_in in my_meta_data_dic_inner_vars.items():
+        writer.writerow([k_in,])
+        for inner_key, inner_value in v_in.items():
+            if inner_value:
+                writer.writerow([inner_key, inner_value])
+
+    return response
+
 
 class Polity_languageCreate(PermissionRequiredMixin, PolityIdMixin, CreateView):
     """

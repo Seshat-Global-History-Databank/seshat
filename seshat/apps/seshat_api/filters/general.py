@@ -8,6 +8,7 @@ from ..models import (
     Polity_suprapolity_relations,
     Polity_utm_zone,
     Polity_capital,
+    Polity_city,
     Polity_language,
     Polity_linguistic_family,
     Polity_language_genus,
@@ -110,6 +111,15 @@ class PolityCapitalFilter(SeshatCommonFilter, django_filters.FilterSet):
         model = Polity_capital
         fields = {
             "capital": ["exact", "icontains"],
+        }
+
+
+class PolityCitylFilter(SeshatCommonFilter, django_filters.FilterSet):
+    
+    class Meta:
+        model = Polity_city
+        fields = {
+            "city": ["exact", "icontains"],
         }
 
 
