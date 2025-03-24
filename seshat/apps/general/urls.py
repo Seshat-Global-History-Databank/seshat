@@ -622,8 +622,9 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
           'db_section': db_section,
         }, name=f'{x_name}-detail')
      )
-    urlpatterns.append(
-        path(f'{x_name}s_all/', views.generic_list_view, {
+    if x_name == 'polity_city':  # This is a temporary fix, we should fix the pluralisation of all urls
+        urlpatterns.append(
+        path('polity_cities_all/', views.generic_list_view, {
             'model_class': model_class,
             'var_name': x_name,
             'var_name_display': myvar,
@@ -635,6 +636,20 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
 
         }, name=f'{x_name}s_all')
      )
+    else:
+        urlpatterns.append(
+            path(f'{x_name}s_all/', views.generic_list_view, {
+                'model_class': model_class,
+                'var_name': x_name,
+                'var_name_display': myvar,
+                'coded_value': coded_value,
+                'var_section': sec,
+                'var_subsection': subsec,
+                'db_section': db_section,
+                'var_main_desc': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
+
+            }, name=f'{x_name}s_all')
+        )
     urlpatterns.append(
         path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
           'model_class': model_class,
