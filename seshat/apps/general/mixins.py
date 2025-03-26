@@ -21,3 +21,22 @@ class PolityIdMixin:
         return initial
 
     
+class CityIdMixin:
+    """
+    Mixin to add the get_initial method to a view that sets the initial value of the city field.
+    """
+    def get_initial(self):
+        """
+        Get the initial value of the city field from the query string.
+
+        Returns:
+            dict: The initial value of the city field.
+        """
+        initial = super().get_initial()
+        city_id_x = self.request.GET.get('city_id_x')
+        other_city_id_x = self.request.GET.get('other_city_id_x')
+        if city_id_x:
+            initial['city'] = city_id_x
+        if other_city_id_x:
+            initial['other_city'] = other_city_id_x
+        return initial
