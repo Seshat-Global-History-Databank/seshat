@@ -709,34 +709,8 @@
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
                         </span></span> {{object.general_description|make_references_look_nicer|safe}}
                     </p>
-                    {% else %}
-                    <p> No General Descriptions provided.
-                    </p>
+
                     {% endif %}
-                    <div class="accordion accordion-flush  border border-2 border-success rounded" id="accordionFlushExample">
-                        <div class="accordion-item" style="background-color:#fefae6;">
-                        <h5 class="accordion-header" id="flush-headingOne">
-                            
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="background-color:#fefae6;"> 
-                                <span class="fs-4 text-teal fw-bold"><i class="fa-solid fa-bars fa-xs"></i> &nbsp; General Description     
-                                <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                                <a href="#"><span class="badge text-dark p-1  me-2 fs-4" style="background-color: rgb(195, 195, 195);">D</span></a>
-                                </span></span> 
-                            </button>
-                        </h5>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                            <div class="accordion-body pt-3 ps-3"  id="general_desc">
-                                {% if object.general_description %}
-                                <p> {{object.general_description|make_references_look_nicer|safe}}
-                                </p>
-                                {% else %}
-                                <p> No General Descriptions provided.
-                                </p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        </div>
-                    </div>
                 </div>
 
             </div>
