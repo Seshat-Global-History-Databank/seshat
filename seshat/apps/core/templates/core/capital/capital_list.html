@@ -41,32 +41,32 @@
         <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important;">
         <thead>
 
-            <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; border-bottom:1px solid #782823;  top: 55px; z-index:900;">Capitals 
-    <!-- Add Another Fact Button -->
-    <a href="{% url 'capital-create' %}" 
-    class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
-    data-bs-toggle="tooltip" 
-    data-bs-placement="top" 
-    title="Click to add a new coded record">
-    <i class="fas fa-plus"></i>
-    </a>
-    
-    <!-- See All Such Facts Button -->
-    <a href="{% url 'capital-download' %}"
-    class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
-    data-bs-toggle="tooltip" 
-    data-bs-placement="top" 
-    title="Click to Download all such coded records">
-    <i class="fas fa-download"></i>
-    </a>
-
+            <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; border-bottom:1px solid #782823;  top: 55px; z-index:900;">Cities 
+                <!-- Add Another Fact Button -->
+                <a href="{% url 'city-create' %}" 
+                class="btn btn-outline-success btn-sm float-end mt-1 ms-1" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Click to add a new coded record">
+                <i class="fas fa-plus"></i>
+                </a>
+                
+                <!-- See All Such Facts Button -->
+                <a href="{% url 'city-download' %}"
+                class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+                data-bs-toggle="tooltip" 
+                data-bs-placement="top" 
+                title="Click to Download all such coded records">
+                <i class="fas fa-download"></i>
+                </a>
             </legend>
             <thead> 
             <tr  class="sticky-top"  style="background-color:#fffdf2; height:40px; top: 92px; z-index:900; border:1px solid #782823;">
 
             <th scope="col" class="text-secondary">#</th>
             <th>Name [Alternative Names]</th>
-            <th>Polities</th>
+            <th>Polities (capital of)</th>
+            <th>Polities (city within)</th>
             <th>Current Country</th>
             <th style="text-align: center;"><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;(Coordinates)</th>
             <th style="text-align: center;">Verified?</th>
@@ -79,7 +79,7 @@
                 {% for object in object_list %}
                 <tr>
                 <td class="text-secondary" scope="row">{{ forloop.counter }}</td>
-                <td>{{ object.name }}
+                <td><a href="{% url 'city-detail-main' object.id %}">{{ object.name }}</a>
                     {% if object.alternative_names %}
                     [{{ object.alternative_names }}]
                     {% endif %}
@@ -97,6 +97,7 @@
                     {% endfor %}
 
                 </td>
+                <td>...</td>
                 {% if object.current_country == "NO_COUNTRY_FROM_GOOGLE" or object.current_country == "No_country_from_google" %}
                 <td> - </td>
                 {% else %}
@@ -119,10 +120,10 @@
                     <td class="text-danger" style="text-align: center;"><i class="fas fa-times"></i></td>
                 {% endif %}
                 <td style="text-align: center;">
-                    <a href="{% url 'capital-update' object.id %}" ><button class="btn btn-warning btn-sm"> Update</button></a>
+                    <a href="{% url 'city-update' object.id %}" ><button class="btn btn-warning btn-sm"> Update</button></a>
                 </td>
                 <td style="text-align: center;">
-                    <a href="{% url 'capital-delete' object.id %}" ><button class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button></a>
+                    <a href="{% url 'city-delete' object.id %}" ><button class="btn btn-danger btn-sm"> <i class="fa-solid fa-trash-can"></i></button></a>
                 </td>                          
             </tr>
 
@@ -132,7 +133,7 @@
       {% else %}
       <div class="row">
           <div class="col-md-12 mt-4">
-              <h3> <i class="fa-solid fa-triangle-exclamation"></i> There are no Capitals in the Database.</h3>
+              <h3> <i class="fa-solid fa-triangle-exclamation"></i> There are no Cities in the Database.</h3>
           </div>
       </div>
       {% endif %}

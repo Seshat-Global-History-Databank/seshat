@@ -549,9 +549,14 @@ class Polity(models.Model):
             return self.name
 
 
-class Capital(models.Model):
+class Capital(models.Model):  # City model (we may want to change the name of the model at a later date)
     """
-    Model representing a capital.
+    Model representing a city, including but not limited to capital cities.
+    This model was originally created to store information about capitals.
+    It is now used to store information about cities in general.
+    We have kept the name of the model as Capital for backward compatibility.
+    Each city could be a capital of a polity or a non-capital city.
+    The Polity_capital and Polity_city models in the general app encode the relationship between a polity and a city.
     """
     name = models.CharField(max_length=100)
     alternative_names =  models.CharField(max_length=300, blank=True, null=True)

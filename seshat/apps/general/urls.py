@@ -1,6 +1,6 @@
-from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
+from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_city, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition, City_duration
 
-from .forms import Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_religious_traditionForm
+from .forms import Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, City_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_cityForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_religious_traditionForm
 
 from django.urls import path
 from .var_defs import general_var_defs
@@ -23,6 +23,7 @@ model_form_pairs = [
 (Polity_degree_of_centralization, Polity_degree_of_centralizationForm, 'polity_degree_of_centralization', 'degree_of_centralization', 'Polity Degree Of Centralization', 'Political and Cultural Relations', None, 'general'),
 (Polity_suprapolity_relations, Polity_suprapolity_relationsForm, 'polity_suprapolity_relations', 'suprapolity_relations', 'Polity Suprapolity Relations', 'Language', None, 'general'),
 (Polity_capital, Polity_capitalForm, 'polity_capital', 'capital', 'Polity Capital', 'Identity and Location', None, 'general'),
+(Polity_city, Polity_cityForm, 'polity_city', 'city', 'City within polity', 'Identity and Location', None, 'general'),
 (Polity_language, Polity_languageForm, 'polity_language', 'language', 'Polity Language', 'Language', None, 'general'),
 (Polity_linguistic_family, Polity_linguistic_familyForm, 'polity_linguistic_family', 'linguistic_family', 'Polity Linguistic Family', 'Language', None, 'general'),
 (Polity_language_genus, Polity_language_genusForm, 'polity_language_genus', 'language_genus', 'Polity Language Genus', 'Language', None, 'general'),
@@ -38,6 +39,7 @@ model_form_pairs = [
 (Polity_alternate_religion_family, Polity_alternate_religion_familyForm, 'polity_alternate_religion_family', 'alternate_religion_family', 'Polity Alternate Religion Family', 'Religion', None, 'general'),
 (Polity_alternate_religion, Polity_alternate_religionForm, 'polity_alternate_religion', 'alternate_religion', 'Polity Alternate Religion', 'Religion', None, 'general'),
 (Polity_religious_tradition, Polity_religious_traditionForm, 'polity_religious_tradition', 'religious_tradition', 'Polity Religious Tradition', 'Religion', None, 'general'),
+(City_duration, City_durationForm, 'city_duration', 'duration', 'City Duration', 'Temporal Bounds', None, 'general'),
 
 ]
 
@@ -101,8 +103,9 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
           'db_section': db_section,
         }, name=f'{x_name}-detail')
      )
-    urlpatterns.append(
-        path(f'{x_name}s_all/', views.generic_list_view, {
+    if x_name == 'polity_city':  # This is a temporary fix, we should fix the pluralisation of all urls
+        urlpatterns.append(
+        path('polity_cities_all/', views.generic_list_view, {
             'model_class': model_class,
             'var_name': x_name,
             'var_name_display': myvar,
@@ -114,6 +117,20 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
 
         }, name=f'{x_name}s_all')
      )
+    else:
+        urlpatterns.append(
+            path(f'{x_name}s_all/', views.generic_list_view, {
+                'model_class': model_class,
+                'var_name': x_name,
+                'var_name_display': myvar,
+                'coded_value': coded_value,
+                'var_section': sec,
+                'var_subsection': subsec,
+                'db_section': db_section,
+                'var_main_desc': general_var_defs.get(x_name, f"NO Desc: {myvar.lower().capitalize()}"),
+
+            }, name=f'{x_name}s_all')
+        )
     urlpatterns.append(
         path(f'{x_name}/<int:pk>/confirm-delete/', views.confirm_delete_view, {
           'model_class': model_class,

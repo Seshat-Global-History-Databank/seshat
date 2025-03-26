@@ -65,15 +65,15 @@ urlpatterns += [
      path('core/ngas/<int:pk>/update/',
          views.NgaUpdate.as_view(), name="nga-update"),
 
-    path('core/capitals/create/', views.CapitalCreate.as_view(),
-         name="capital-create"),
-    path('core/capitals/', views.CapitalListView.as_view(), name='capitals'),
-     path('core/capitals/<int:pk>/update/',
-         views.CapitalUpdate.as_view(), name="capital-update"),
-    path('core/capitals/<int:pk>/delete/',
-         views.CapitalDelete.as_view(), name="capital-delete"),
-     path('capitaldownload/', views.capital_download,
-         name="capital-download"),
+    path('core/cities/create/', views.CapitalCreate.as_view(),
+         name="city-create"),
+    path('core/cities/', views.CapitalListView.as_view(), name='cities'),
+     path('core/cities/<int:pk>/update/',
+         views.CapitalUpdate.as_view(), name="city-update"),
+    path('core/cities/<int:pk>/delete/',
+         views.CapitalDelete.as_view(), name="city-delete"),
+     path('citydownload/', views.capital_download,
+         name="city-download"),
 
 
     path('search/', views.search_view, name='search'),
@@ -188,3 +188,6 @@ urlpatterns += [path('core/provinces_and_countries', views.provinces_and_countri
 
 # Cliopatria page
 urlpatterns += [path('core/cliopatria/', views.cliopatria, name='cliopatria'),]
+
+# City pages
+urlpatterns += [path('core/city/<int:pk>', views.CityDetailView.as_view(), name='city-detail-main'),]

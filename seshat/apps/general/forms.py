@@ -1,4 +1,4 @@
-from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
+from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_city, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition, City_duration
 
 from seshat.apps.accounts.models import Seshat_Expert
 import datetime
@@ -258,6 +258,28 @@ class Polity_capitalForm(ExpertReviewedForm):
         widgets['capital'] = forms.TextInput(attrs={'class': 'form-control  mb-1', 'readonly': "True" })
         widgets['polity_cap'] = forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity_cap', 'name': 'polity_cap'})    
 
+
+
+class Polity_cityForm(ExpertReviewedForm):
+    """
+    Form for creating and updating Polity_city model.
+    """
+    class Meta:
+        """
+        :noindex:
+        """
+        model = Polity_city
+        fields = commonfields.copy()
+        fields.append('city')
+        fields.append('polity_city')
+        labels = commonlabels
+
+        labels['polity_city'] = 'Polity City'
+
+        
+        widgets = dict(commonwidgets)
+        widgets['city'] = forms.TextInput(attrs={'class': 'form-control  mb-1', 'readonly': "True" })
+        widgets['polity_city'] = forms.Select(attrs={'class': 'form-control  mb-1 js-example-basic-single', 'id': 'id_polity_city', 'name': 'polity_city'})   
         
 
 class Polity_languageForm(ExpertReviewedForm):
@@ -562,3 +584,27 @@ class Polity_religious_traditionForm(ExpertReviewedForm):
         widgets = dict(commonwidgets)
         widgets['religious_tradition'] = forms.TextInput(attrs={'class': 'form-control  mb-3', })
         
+
+class City_durationForm(ExpertReviewedForm):
+    """
+    Form for creating and updating City_duration model.
+    """
+    class Meta:
+        """
+        :noindex:
+        """
+        model = City_duration
+        fields = ['city', 'city_year_from', 'city_year_to',
+                'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations', 'curator',]
+        # fields = commonfields.copy()
+        # fields.append('city')
+        # fields.append('city_year_from')
+        # fields.append('city_year_to')
+        labels = commonlabels
+        labels['city_year_from'] = "City Start Year"
+        labels['city_year_to'] = "City End Year"
+        
+        widgets = dict(commonwidgets)
+        widgets['city'] = forms.Select(attrs={'class': 'form-control  mb-2 js-example-basic-single', 'id': 'id_city', 'name': 'city'})
+        widgets['city_year_from'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
+        widgets['city_year_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })

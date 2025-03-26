@@ -12,15 +12,18 @@
               <div class="row d-flex align-items-center mb-1">
                 <div class="col-md-6">
                   <h6 class="lead-2 text-secondary">Enter new data for:</h6>
-                  <h6><span class="display-6">Capital</span></h6>
+                  <h6><span class="display-6">City: Identity and location</span></h6>
                 </div>
                 <div class="col-md-6">      
-                    <a href="{% url 'capitals' %}" class="btn btn-outline-success my-2 float-end"><i class="fa-solid fa-table-list"></i> &nbsp; All Capitals</a>
+                    <a href="{% url 'cities' %}" class="btn btn-outline-success my-2 float-end"><i class="fa-solid fa-table-list"></i> &nbsp; All Cities</a>
                 </div>
             </div>
             <div>
               <p class="fs-6">
-                * Keep in mind that this is a separate entity and does not have any connection to the polity (no polity dropdown menus here). Instead, once you create a capital instance here, it will be available in the polity_capital dropdown menu, e.g. <a href="{% url 'polity_capital-create' %}">here</a>.
+                * Keep in mind that this is a separate entity and does not have any connection to the polity (no polity dropdown menus here). Instead, once you create a city instance here, it will be available in the 'Polity_capital' and 'Polity_city' dropdown menus, e.g. <a href="{% url 'polity_capital-create' %}">here</a>.
+              </p>
+              <p class="fs-6">
+                * You can find the full City page with additional editable variables <a href="{% url 'city-detail-main' request.resolver_match.kwargs.pk %}">here</a>.
               </p>
             </div>
             </div> 
@@ -89,7 +92,7 @@
             </div>
             {% block delete_button %}
             <div class="col-md-4 mb-2 py-2 d-grid mx-auto">
-            <a href="{% url 'capital-delete' object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete </a>
+            <a href="{% url 'city-delete' object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete </a>
             {% endblock delete_button %}
           </div>
         </div>

@@ -4,13 +4,13 @@
 
 {% block extra_vars %}
 <div class="col-md-4 mb-2">
-    {{ form.polity_cap|as_crispy_field }}
+    {{ form.polity_city|as_crispy_field }}
     <span class="text-secondary">
-        Do not see your desired capital? Add it <a class="fw-bold text-decoration-underline" href="{% url 'city-create' %}" >here</a> first.
+        Do not see your desired city? Add it <a class="fw-bold text-decoration-underline" href="{% url 'city-create' %}" >here</a> first.
     </span>
 </div>
 <div class="col-md-4 mb-2">
-    {{ form.capital|as_crispy_field }}
+    {{ form.city|as_crispy_field }}
     <span class="text-secondary">
         This is the old coded value and should only be used as a hint (if it exists).
     </span>

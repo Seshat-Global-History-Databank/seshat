@@ -1,0 +1,20 @@
+{% extends "core/form_base_city_durations.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block extra_vars %}
+    
+    <div class="col-md-6 mb-2">
+        {{ form.city_year_from|as_crispy_field }}
+    </div>
+                
+    
+<div class="col-md-6 mb-2">
+{{ form.city_year_to|as_crispy_field }}
+</div>
+{% endblock extra_vars %}
+
+{% block delete_button %}
+    <a href="{% url 'city_duration-delete' object.id %}" type="cancel" class="btn btn-outline-danger my-auto btn-block btn-lg">Delete </a>
+{% endblock delete_button %}
+        

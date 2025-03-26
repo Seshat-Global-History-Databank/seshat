@@ -2806,6 +2806,99 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
         context['succeeding_data'] = succeeding_data
 
         return context
+    
+
+class CityDetailView(SuccessMessageMixin, generic.DetailView):
+    """
+    Show details of a City.
+    """
+    model = Capital  # City
+    template_name = "core/capital/city_detail.html"
+
+    def get_object(self, queryset=None):
+        """
+        Get the object of the view.
+
+        Args:
+            queryset: The queryset to use.
+
+        Returns:
+            Capital: The object of the view.
+
+        Raises:
+            Http404: If no city matches the given name.
+            Http404: If multiple cities are found with the same name.
+        """
+        if 'pk' in self.kwargs:
+            return get_object_or_404(Capital, pk=self.kwargs['pk'])
+        elif 'name' in self.kwargs:
+            name = self.kwargs['name']
+            try:
+                # Attempt to get the object by name, handle multiple objects returned
+                return Capital.objects.get(name=name)
+            except Capital.MultipleObjectsReturned:
+                # Handle the case of multiple objects with the same name
+                raise Http404("Multiple objects with the same name")
+            except Capital.DoesNotExist:
+                # Handle the case where no object with the given name is found
+                raise Http404("No Capital matches the given name")
+        else:
+            # Handle the case where neither pk nor name is provided
+            return None
+
+    def get_context_data(self, **kwargs):
+        """
+        Get the context data of the view.
+
+        :noindex:
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            dict: The context data of the view.
+        """
+        context = super().get_context_data(**kwargs)
+        context['pk'] = self.kwargs['pk']
+        City_object = Capital.objects.get(id=self.kwargs['pk'])
+        context['city_data'] = City_object
+
+        # Duration data
+        City_object = Capital.objects.get(id=self.object.pk)
+
+        # Get the related data
+        all_durations = {
+            "intr": [],
+            "gv": [],
+            "color": "xyz",
+        }
+        try:
+            all_durations["intr"] = [City_object.start_year, City_object.end_year]
+        except:
+            pass
+
+        # Pol_dur object
+        try:
+            City_duration_object = City_duration.objects.get(city_id=self.object.pk)
+            city_duration_coded = []
+            city_duration_coded.extend([f'{City_duration_object.city}, {City_duration_object.city_year_to}'])
+            all_durations["gv"] = [City_duration_object.city_year_from, City_duration_object.city_year_to]
+        except:
+            city_duration_coded = [-10000, 2000]
+
+        if all_durations["intr"] and all_durations["gv"]:
+            if (all_durations["intr"] == all_durations["gv"]):
+               all_durations['color'] = "ggm"
+            else:
+               all_durations['color'] = "grm"
+        elif all_durations["intr"] and all_durations["intr"][0] == -10000:
+           all_durations['color'] = "rmm"
+        elif all_durations["intr"]:
+           all_durations['color'] = "gmm"
+
+        context["all_durations"] = all_durations
+
+        return context
 
 
     
@@ -3650,7 +3743,8 @@ def seshatindex(request):
         'sr_data': [],
         'general_examples': [('Alternative Name', 'polity_alternative_names_all', 'Identity and Location'),
                             ('Polity Peak Years', 'polity_peak_yearss_all', 'Temporal Bounds'), 
-                            ('Polity Capital', 'polity_capitals_all', 'Identity and Location'), 
+                            ('Polity Capital', 'polity_capitals_all', 'Identity and Location'),
+                            ('Polity City', 'polity_cities_all', 'Identity and Location'), 
                             ('Polity Language', 'polity_languages_all', 'Language'),
                             ('Polity Religion', 'polity_religions_all', 'Religion'),
                             ('Degree of Centralization', 'polity_degree_of_centralizations_all', 'Temporal Bounds'),

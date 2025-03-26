@@ -302,6 +302,10 @@
                         <div class="col-sm-4 pb-0">
                             {{ form.year_to|as_crispy_field }}
                         </div>
+                        {% elif myvar == 'City Duration' %}
+                        <div class="col-sm-8 pb-0">
+                            {{ form.city|as_crispy_field }}
+                        </div>
                         {% else %}
         
                         <div class="col-sm-6 pb-0">
