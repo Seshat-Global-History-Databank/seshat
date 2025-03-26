@@ -4273,6 +4273,8 @@ class City_duration(SeshatCommon):
     cities.
     """
     name = models.CharField(max_length=100, default="City_duration")
+    city = models.ForeignKey(Capital, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
+                               related_query_name="%(app_label)s_%(class)s", null=True,)
     city_year_from = models.IntegerField(blank=True, null=True)
     city_year_to = models.IntegerField(blank=True, null=True)
 
