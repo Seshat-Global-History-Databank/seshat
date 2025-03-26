@@ -115,7 +115,7 @@ function playRateValue() {
     plotPolities();
 }
 
-function setSliderTicks (tickYears) {
+function setSliderTicks (tickYears, worldMap=true) {
     var datalist = document.getElementById('yearTickmarks');
     var tickmarkValuesDiv = document.getElementById('yearTickmarkValues');
 
@@ -127,6 +127,17 @@ function setSliderTicks (tickYears) {
     while (tickmarkValuesDiv.firstChild) {
         tickmarkValuesDiv.removeChild(tickmarkValuesDiv.firstChild);
     };
+
+    var extraCenturyProportion = 0;
+    if (worldMap) {
+        // If the last tickmark is not a century, remove it from the list
+        var lastTick = tickYears[tickYears.length - 1];
+        if (lastTick % 100 !== 0) {
+            tickYears.pop();
+        }
+        // Calculate number of years over the last century the last tickmark represents
+        extraCenturyProportion = (lastTick - tickYears[tickYears.length - 1]) / 100;
+    }
 
     // Loop to add tickmarks
     i = 0;
@@ -142,7 +153,7 @@ function setSliderTicks (tickYears) {
         span.style.textAlign = 'center';
 
         // Use transform to center the span over the tickmark, with special handling for the first and last span
-        var leftPercentage = (i / (tickYears.length - 1) * 100);
+        var leftPercentage = (i / (tickYears.length + extraCenturyProportion - 1) * 100);
         span.style.left = `${leftPercentage}%`;
         if (i === 0) {
             span.style.transform = 'translateX(0%)'; // No translation for the first span
@@ -416,14 +427,6 @@ function updateLegend() {
 
         // Add a legend for highlighted polities
         if (addedPolities.length > 0) {
-
-            if (baseMap != 'cesium') {
-                // Add clear selection button
-                var clearSelectionButton = document.createElement('button');
-                clearSelectionButton.textContent = 'Clear selection';
-                clearSelectionButton.onclick = clearSelection;
-                legendDiv.appendChild(clearSelectionButton);
-            }
 
             var legendTitle = document.createElement('h3');
             legendDiv.appendChild(legendTitle);
@@ -825,7 +828,7 @@ function populateVariableDropdown(variables) {
     });
 }
 
-function toggleSettings() {
+function toggleSettings(worldMap=true) {
     var settings = document.getElementById("settings");
     var selectedMap = document.getElementById("baseMap").value;
     var variableLegend = document.getElementById('variableLegend');
@@ -834,9 +837,11 @@ function toggleSettings() {
     if (settings.style.display === "none" || settings.style.display === "") {
         settings.style.display = "block";
         // Disable the map controls when the settings are open
-        map.dragging.disable();
-        map.zoomControl.disable();
-        map.scrollWheelZoom.disable();
+        if (worldMap) {
+            map.dragging.disable();
+            map.zoomControl.disable();
+            map.scrollWheelZoom.disable();
+        }
         // Temporarily hide the legend and popup when the settings are open
         if (selectedMap === 'cesium' && variableLegend !== null) {
             variableLegend.style.display = 'none';
@@ -849,9 +854,11 @@ function toggleSettings() {
     } else {
         settings.style.display = "none";
         // Enable the map controls when the settings are closed
-        map.dragging.enable();
-        map.zoomControl.enable();
-        map.scrollWheelZoom.enable();
+        if (worldMap) {
+            map.dragging.enable();
+            map.zoomControl.enable();
+            map.scrollWheelZoom.enable();
+        }
         // Show the legend and popup when the settings are closed
         if (variableLegend !== null) {
             if (variableLegend.innerHTML != '') {
@@ -976,4 +983,12 @@ function hierarchicalComplexityColour(maxValue, value) {
     let b = Math.round(startColor.b + ratio * (endColor.b - startColor.b));
 
     return `rgb(${r}, ${g}, ${b})`;
+}
+
+function minimisePopup () {
+    var popup = document.getElementById('popup');
+    var content = popup.innerHTML;
+    var altContent = popup.altContent;
+    popup.innerHTML = altContent;
+    popup.altContent = content;
 }

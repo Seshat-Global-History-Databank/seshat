@@ -219,27 +219,29 @@ hr.bg-fading {
     }
 }
 
-.friendly-button {
-    width: 40px;
-    background-color: rgba(255, 253, 242, 1);
-    border: 0px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-    padding: 5%;
-    font-size: 1.75em;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
 .friendly-button.collapsed {
     transform: rotate(180deg);
 }
 
 .friendly-button-small {
-    width: 25px;
+    width: 1.5em;
+    background-color: rgba(255, 253, 242, 0.8);
+    border: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    font-size: 1.8em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.friendly-button-small.collapsed {
+    transform: rotate(180deg);
+}
+
+.friendly-button-big {
     background-color: rgba(255, 253, 242, 1);
     border: 0px;
     border-radius: 5px;
@@ -249,8 +251,8 @@ hr.bg-fading {
     justify-content: center;
     transition: transform 0.3s ease;
     padding: 5%;
-    font-size: 1.2em;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-size: 3em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 .friendly-button-small.collapsed {
@@ -264,4 +266,21 @@ hr.bg-fading {
     padding-left: 1%;
     position: absolute;
     border-color: rgba(255, 253, 242, 1);
+}
+
+.minButton {
+    background-color: rgba(255, 253, 242, 1);
+    padding-left: 1%;
+    position: relative;
+    border-color: rgba(255, 253, 242, 1);
+    max-height: 25px;
+}
+
+.popup-container {
+    display: flex;
+    align-items: left;
+}
+
+.popup-container table {
+    margin-right: 10px;
 }

@@ -24,7 +24,7 @@ def polity_map(pk, test=False):
     """
     page_id = str(pk)
     polity = Polity.objects.get(id=page_id)
-    try:
+    try:  # Get polity shape content if it exists, but otherwise set include_polity_map to false
         if test:
             content = get_polity_shape_content(seshat_id=polity.new_name, tick_number=3)
         else:
@@ -65,7 +65,10 @@ def polity_map(pk, test=False):
             
             for spr in suprapolity_relations:
                 polity = relation_polity_info[spr['other_polity_id']]
-                spr['shapes'] = get_polity_shape_content(seshat_id=polity['new_name'])['shapes']
+                try:  # Get suprapolity relation shape content if it exists, otherwise create an empty list
+                    spr['shapes'] = get_polity_shape_content(seshat_id=polity['new_name'])['shapes']
+                except:
+                    spr['shapes'] = []
                 for shape in spr['shapes']:
                     if spr['year_from']:
                         shape['relation_start_year'] = spr['year_from']
