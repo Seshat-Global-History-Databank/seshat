@@ -4,7 +4,7 @@ from django.urls import path
 
 from .forms import Polity_territoryForm, Polity_populationForm, Population_of_the_largest_settlementForm, Settlement_hierarchyForm, Administrative_levelForm, Religious_levelForm, Military_levelForm, Professional_military_officerForm, Professional_soldierForm, Professional_priesthoodForm, Full_time_bureaucratForm, Examination_systemForm, Merit_promotionForm, Specialized_government_buildingForm, Formal_legal_codeForm, JudgeForm, CourtForm, Professional_lawyerForm, Irrigation_systemForm, Drinking_water_supply_systemForm, MarketForm, Food_storage_siteForm, RoadForm, BridgeForm, CanalForm, PortForm, Mines_or_quarryForm, Mnemonic_deviceForm, Nonwritten_recordForm, Written_recordForm, ScriptForm, Non_phonetic_writingForm, Phonetic_alphabetic_writingForm, Lists_tables_and_classificationForm, CalendarForm, Sacred_textForm, Religious_literatureForm, Practical_literatureForm, HistoryForm, PhilosophyForm, Scientific_literatureForm, FictionForm, ArticleForm, TokenForm, Precious_metalForm, Foreign_coinForm, Indigenous_coinForm, Paper_currencyForm, CourierForm, Postal_stationForm, General_postal_serviceForm, Communal_buildingForm, Utilitarian_public_buildingForm, Symbolic_buildingForm, Entertainment_buildingForm, Knowledge_or_information_buildingForm, Other_utilitarian_public_buildingForm, Special_purpose_siteForm, Ceremonial_siteForm, Burial_siteForm, Trading_emporiaForm, EnclosureForm, Length_measurement_systemForm, Area_measurement_systemForm, Volume_measurement_systemForm, Weight_measurement_systemForm, Time_measurement_systemForm, Geometrical_measurement_systemForm, Other_measurement_systemForm, Debt_and_credit_structureForm, Store_of_wealthForm, Source_of_supportForm, Occupational_complexityForm, Special_purpose_houseForm, Other_special_purpose_siteForm, Largest_communication_distanceForm, Fastest_individual_communicationForm 
 
-from seshat.apps.general.views import dynamic_create_view, dynamic_update_view,  dynamic_update_view_old, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
+from seshat.apps.general.views import dynamic_create_view, dynamic_update_view,  dynamic_update_view_old, generic_list_view, generic_download, generic_json_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
 
 from .var_defs import sc_var_defs
 
@@ -197,6 +197,17 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'var_subsection': subsec,
             'db_section': db_section,
         }, name=f'{x_name}-download')
+     )
+    urlpatterns.append(
+        path(f'{x_name}jsondownload/', generic_json_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,
+        }, name=f'{x_name}-json-download')
      )
     urlpatterns.append(
         path(f'{x_name}metadownload/', generic_metadata_download, {

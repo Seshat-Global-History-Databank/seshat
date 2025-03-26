@@ -207,25 +207,25 @@
             </p>
             <p>🚨 <b>Close this window to enable zooming on the map.</b></p><br>
         </div>
-        <h2 class="h2 text-dark federicka-medium">
+        <h2 class="h2 text-dark federicka-medium pt-2">
             <span>Displayed: </span>
             <span id="sliderDate"></span>
         </h2>
-        <div style="display: flex;" id="controls-and-maps">
+        <div style="display: flex; " id="controls-and-maps">
             <div id="polityMapControlPanel">
                 <button style="height: 10%" class="friendly-button-small" id="toggleSettingsButton"
-                    onclick="toggleSettings()">⚙️</button><br><br>
-                <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()">❓</button><br><br>
+                    onclick="toggleSettings()"><i class="fa-solid fa-gear text-secondary"></i></button><br><br>
+                <button style="height: 10%" class="friendly-button-small" id="toggleHelpButton" onclick="toggleHelp()"><i class="fa-solid fa-question text-secondary"></i></button><br><br>
                 <div id="playBackControls">
                     <button class="friendly-button-small" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button><br><br>
-                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button><br><br>
-                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button><br><br>
+                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()"><i class="fa-solid fa-backward-fast text-secondary"></i></button><br><br>
+                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()"><i class="fa-solid fa-backward text-secondary"></i></button><br><br>
                     <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button><br><br>
-                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button><br><br>
-                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()"><i class="fa-solid fa-forward text-secondary"></i></button><br><br>
+                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()"><i class="fa-solid fa-forward-fast text-secondary"></i></button>
                 </div>
             </div>
-            <div id="polityMapAndGlobe">
+            <div id="polityMapAndGlobe" style="border-radius:15px;">
                 <div id="map">
                     <div id="componentLegend"></div>
                 </div>
@@ -239,7 +239,7 @@
             <datalist id="yearTickmarks"></datalist>
             <input type="range" name="dateSlide" id="dateSlide" min="{{ content.earliest_year }}"
                 max="{{ content.latest_year }}" value="{{ content.display_year }}" class="slider" onchange="plotPolities()"
-                style="width: 100%;" list="yearTickmarks">
+                style="width: 100%; accent-color:#782823;" list="yearTickmarks">
             <div id="yearTickmarkValues"></div><br>
         </div>
         <script src="{% static 'core/js/map_functions.js' %}?v={{ version }}"></script>

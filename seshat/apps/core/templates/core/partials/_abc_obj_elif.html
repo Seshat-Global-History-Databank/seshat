@@ -1,0 +1,29 @@
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+<tr>
+    <td class="text-secondary">                    
+        {{ good_key|replace_underscore_and_capitalize }} 
+    </td>
+    <td>
+        <span class="highlighted-value-title-empty">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </span>
+    </td>
+    <td></td>
+    <td></td>
+    <td style="text-align: right;">   <a class="p-0 m-0"  
+        style="overflow: hidden;" 
+        href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}">
+        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed4c" data-bs-toggle="popover" title="Add a new row of Data" >
+            <i class="fa-solid fa-plus"></i>
+        </span>
+        </a> 
+        <a class="pt-1 m-0"  
+            style="overflow: hidden;" 
+            href="{% url key|lower|add:'s_all' %}?polity_id_x={{object.id}}">
+            <span class="badge" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:BlanchedAlmond; color:black;" data-bs-toggle="popover" title="See all Such Values" >
+                <i class="fa-solid fa-list-ul"></i>        </span>
+            </a> 
+    </td>
+</tr>

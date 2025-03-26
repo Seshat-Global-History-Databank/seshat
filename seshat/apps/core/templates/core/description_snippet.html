@@ -1,19 +1,62 @@
 {% load custom_filters %}
 
 {% autoescape off %}
-{% if obj.description %}
+{% if obj.description and obj.llm_description %}
     {{ obj.description|make_references_look_nicer }}
     <br>
+    {{ obj.llm_description }}
+    <br>
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+{% elif obj.description  %}
+    {{ obj.description|make_references_look_nicer }}
+    <br>
+{% elif obj.llm_description  %}
+<div class="row">
+    <div class="col-md-6">
+        {{ obj.llm_description }}
+        <br>
+        <b>LLM References: </b>
+        <br>
+        {{ obj.get_instability_refs }}
+        <hr>
+    </div>
+    <div class="col-md-6">
+        <b>Sorokin Rationale:</b>
+        {{ obj.sorokin_rationale }}
+    </div>
+    <div class="col-md-6">
+        <small>
+            <b>General Chain of Thought: </b>
+            {{ obj.general_cot }}
+        </small>
+     
+    </div>
+    <div class="col-md-6">
+        <small>
+            <b>Classification Chain of Thought: </b>
+            {{ obj.classification_cot }}
+        </small>
+
+    </div>
+
+
+
+</div>
+
+
+    
 {% else %}
     -
 {% endif %}
 {% if obj.comment and obj.comment.id > 1 %}
     {{ obj.comment }}
-    <a class="p-0 m-0" style="display:block; overflow: hidden;" 
-       href="{% url 'seshatcomment-update' obj.comment.id %}">
-        <span class="badge bg-teal text-dark">
-            <i class="fa-solid fa-pen-to-square"></i> EDIT
+    <a class="p-0 m-0 float-end" 
+    style=" overflow: hidden;" 
+    href="{% url 'seshatcomment-update' obj.comment.id %}">
+        <span class="badge text-dark fs-6 " style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
+            <i class="fa-solid fa-pen-to-square"></i>
         </span>
     </a>
 {% endif %}
 {% endautoescape %}
+

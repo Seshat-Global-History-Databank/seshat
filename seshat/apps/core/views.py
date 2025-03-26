@@ -80,7 +80,7 @@ from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Re
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
+from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, get_all_instability_data_for_a_polity, give_polity_app_data
 
 
 from django.shortcuts import HttpResponse
@@ -1712,9 +1712,8 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
 
             seshat_private_comment_part.private_comment_reader.add(*my_private_comment_readers) 
 
-            #print("4444444444444444444444444444444444444")
-
-            return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id}))
+            return redirect(request.META.get('HTTP_REFERER', reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id})))
+            #return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id}))
 
     else:
         form = SeshatPrivateCommentPartForm()
@@ -2655,9 +2654,10 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_sc_data"], context["has_any_sc_data"] = get_all_sc_data_for_a_polity(self.object.pk)
             context["all_wf_data"], context["has_any_wf_data"] = get_all_wf_data_for_a_polity(self.object.pk)
             context["all_ec_data"], context["has_any_ec_data"] = get_all_ec_data_for_a_polity(self.object.pk, self.request.user)
-            context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.object.pk)
+            context["all_rt_data"], context["has_any_rt_data"] = get_all_rt_data_for_a_polity(self.request, self.object.pk)
             context["all_crisis_cases_data"] = get_all_crisis_cases_data_for_a_polity(self.object.pk)
             context["all_power_transitions_data"] = get_all_power_transitions_data_for_a_polity(self.object.pk)
+            context["all_instability_data"] = get_all_instability_data_for_a_polity(self.object.pk)
             all_Ras = Polity_research_assistant.objects.filter(polity_id=self.object.pk)
             all_Ras_ids = all_Ras.values_list('polity_ra_id', flat=True)
             experts = Seshat_Expert.objects.filter(id__in=all_Ras_ids)
@@ -2683,6 +2683,8 @@ class PolityDetailView(SuccessMessageMixin, generic.DetailView):
             context["all_wf_data"] = None
             context["all_ec_data"] = None
             context["all_rt_data"] = None
+            context["all_instability_data"] = None
+
         ################# NEW
         Polity_object = Polity.objects.get(id=self.object.pk)
 
@@ -3724,7 +3726,7 @@ def seshatindex(request):
             if  model_name.startswith("Power_transition"):
                 queryset_count = model.objects.count()
 
-                queryset = model.objects.all()
+                queryset = model.objects.exclude(polity_id__isnull=True)
                 politys = queryset.values_list('polity', flat=True).distinct()
 
                 to_be_appended_x = [queryset_count, 1, len(set(politys)),]
@@ -3735,7 +3737,7 @@ def seshatindex(request):
             if  model_name.startswith("Crisis_consequence"):
                 queryset_count = model.objects.count()
 
-                queryset = model.objects.all()
+                queryset = model.objects.exclude(polity_id__isnull=True)
                 politys = queryset.values_list('polity', flat=True).distinct()
 
                 to_be_appended_xx = [queryset_count, 1, len(set(politys)),]
@@ -3746,7 +3748,7 @@ def seshatindex(request):
             if  model_name.startswith("Human_sacrifice"):
                 queryset_count = model.objects.count()
 
-                queryset = model.objects.all()
+                queryset = model.objects.exclude(polity_id__isnull=True)
                 politys = queryset.values_list('polity', flat=True).distinct()
 
                 to_be_appended_xxx = [queryset_count, 1, len(set(politys)),]
@@ -3754,10 +3756,14 @@ def seshatindex(request):
                 eight_hss = queryset.order_by('?')[:8]
                 context['eight_hss'] = eight_hss
                 continue
+            if  model_name.startswith("Instability"):
+                continue
+            if  model_name.startswith("Check_choi"):
+                continue
 
             queryset_count = model.objects.count()
 
-            queryset = model.objects.all()
+            queryset = model.objects.exclude(polity_id__isnull=True)
             politys = queryset.values_list('polity', flat=True).distinct()
             unique_politys.update(politys)
             number_of_variables += 1
@@ -5380,7 +5386,7 @@ class SeshatPrivateCommentUpdate(PermissionRequiredMixin, UpdateView, FormMixin)
         for myapp, mymodels in my_app_models.items():
             if myapp != 'core':
                 for mm, mymodel in mymodels.items():
-                    if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(private_comment=self.object.id):
+                    if '_citations' not in mm and 'instability_event_ra_check' not in mm and 'instability_event_inst_type' not in mm and 'instability_event_inst_llm_ref' not in mm  and    '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and not mm.startswith('check_') and not mm.startswith('instability_ref') and not mm.startswith('instability_type') and mymodel.objects.filter(private_comment=self.object.id):
                         my_instance = mymodel.objects.get(private_comment=self.object.id)
                         my_polity = my_instance.polity
                         my_polity_id = my_instance.polity.id
@@ -5600,7 +5606,7 @@ def search_suggestions(request):
     return render(request, 'core/partials/_search_suggestions.html', {'polities': polities})
 
 
-def xxyyzz(request, com_id):
+def xxyyzz_working(request, com_id):
     if request.method == 'POST':
         my_items = request.POST.getlist('selected_items')
         for item in my_items:
@@ -5610,6 +5616,21 @@ def xxyyzz(request, com_id):
         return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
 
     return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': com_id}))
+
+
+
+def xxyyzz(request, com_id):
+    if request.method == 'POST':
+        my_items = request.POST.getlist('selected_items')
+        
+        if my_items:  # Ensure there are items before processing
+            # Bulk update for efficiency
+            SeshatPrivateCommentPart.objects.filter(id__in=[int(item) for item in my_items]).update(is_done=True)
+    
+    # Redirect to sender (previous page) or fallback if unavailable
+    return redirect(request.META.get('HTTP_REFERER', reverse('seshatprivatecomment-update', kwargs={'pk': com_id})))
+
+
 
 
 def cliopatria(request):

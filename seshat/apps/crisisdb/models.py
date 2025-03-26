@@ -29,6 +29,38 @@ HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
 ('P~A', 'Transitional (Present -> Absent)'),
 )
 
+INST_INTENSITY_CHOICES = (
+('0', 'Nobody is killed'),
+('1',	'One or few individuals killed'),
+('2',	'Tens killed'),
+('3',	'Tens or Hundreds killed'),
+('4',	'Hundreds killed'),
+('5',	'Hundreds or Thousands killed'),
+('6',	'Thousands killed'),
+('7',	'Thousands or Tens of thousands killed'),
+('8',	'Tens of thousands killed'),
+('9', 'Tens of thousands or Hundreds of thousands killed'),
+('10', 'Hundreds of thousands killed'), 
+('11', 'Hundreds of thousands or Millions killed'),
+('12', 'Millions killed'),
+)
+
+REAL_EVENT_CHECK_CHOICES = (
+('Real', 'Real'),
+('Uncertain', 'Uncertain'),
+)
+
+
+INST_EXTENT_CHOICES = (
+('1',	'Highly localized: a neighborhood within a town'),
+('2',	'A small town or rural location'),
+('4',	'One or few districts within a single province'),
+('6',	'One or two provinces, or only the capital'),
+('8',	'Several provinces, including the capital'),
+('10',  'Whole polity'),
+)
+
+
 CRISIS_CONSEQUENCE_CHOICES = (
 ('U', 'Unknown'),
 ('SU', 'Suspected Unknown'),
@@ -272,7 +304,123 @@ def has_a_polity(self):
             'polity':  mark_safe('<span class="text-danger"> <i class="fa-solid fa-triangle-exclamation"></i> There is no selected Polity!</span>'),
         })
 
+
+
 ########## End of Function Definitions for CrisisDB Models
+
+    
+################# INSATABILITY
+class Instability_ref(models.Model):
+    name = models.CharField(max_length=300)
+    is_real = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.name:
+            if self.is_real:
+                return mark_safe(f'<i class="fa-solid fa-check text-success"></i> {self.name}')
+            else:
+                return (self.name)
+
+class Instability_type(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        if self.name:
+            return mark_safe(f'<small class="badge bg-absent-light small-knopf">{self.name}</small>')
+
+class Check_choice(models.Model):
+    name = models.CharField(max_length=50, null=True, blank=True)
+    check_description = models.CharField(max_length=300)
+
+    def __str__(self):
+        if self.name:
+            if self.check_description and self.name == "Good":
+                return mark_safe(f'<small class="badge bg-success-light small-knopf"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small> { self.check_description }')
+            elif self.check_description:
+                return mark_safe(f'<small class="badge bg-secondary-light small-knopf"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small> { self.check_description }')
+            else:
+                return mark_safe(f'<small class="badge bg-secondary-light small-knopf"> {self.name} </small>')
+
+    def compact_str(self):
+        if self.name:
+            if self.check_description and self.name == "Good":
+                return mark_safe(f'<small class="badge bg-success-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small>')
+            elif self.check_description:
+                return mark_safe(f'<small class="badge bg-secondary-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small>')
+            else:
+                return mark_safe(f'<small class="badge bg-secondary-light small-knopf"> {self.name} </small>')
+
+# Bad Row	The entire row is false, has multiple issues, or the Event has been made up by AI
+# Event	Event name is inaccurate or Event itself is uncertain
+# Year	Date(s) are incorrect
+# Description	Event Description is incorrect or doesn't make sense
+# Type	Type of Event does not match up with actual Event
+# Reference	No such source, or the source is irrelevant
+# Page	Reference is correct, but page is wrong
+# Extent	Geographic extent has been incorrectly generated
+# Intensity	Violence intensity extent has been incorrectly generated
+# Good	Everything is correct
+
+class Instability_event(SeshatCommon):
+    name = models.CharField(max_length=200)
+    inst_type = models.ManyToManyField(Instability_type, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
+    ra_check = models.ManyToManyField(Check_choice, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
+    inst_llm_ref = models.ManyToManyField(Instability_ref, related_name="%(app_label)s_%(class)s_related",related_query_name="%(app_label)s_%(class)ss", blank=True,)
+    inst_extent = models.CharField(max_length=5, choices=INST_EXTENT_CHOICES, null=True, blank=True)
+    inst_intensity = models.CharField(max_length=5, choices=INST_INTENSITY_CHOICES, null=True, blank=True)
+    general_cot = models.TextField(blank=True, null=True,)
+    classification_cot = models.TextField(blank=True, null=True,)
+    sorokin_rationale = models.TextField(blank=True, null=True,)
+    real_event_check = models.CharField(max_length=20, choices=REAL_EVENT_CHECK_CHOICES, null=True, blank=True)
+    llm_description = models.TextField(blank=True, null=True,)
+
+    def clean_name_spaced(self):
+        return "Instability Event"
+
+    def clean_name(self):
+        return "instability_event"
+    
+    def show_value(self):
+        return f"instability_event {self.name} - {self.inst_intensity}, {self.inst_extent}..."
+    
+    def get_instability_types(self):
+        return " ".join(str(t) for t in self.inst_type.all())
+    
+    def get_instability_checks(self):
+        return " ".join(ch.compact_str() for ch in self.ra_check.all())
+    
+    def get_instability_refs(self):
+        #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
+        return "<br>".join(str(ref) for ref in self.inst_llm_ref.all())
+
+    def __str__(self) -> str:
+        return f"{self.name}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ################American Violence Models:
 class Us_location(models.Model):
@@ -806,6 +954,9 @@ class Human_sacrifice(SeshatCommon):
             str: The name of the model instance.
         """
         return "human_sacrifice"
+    
+    def clean_name_spaced(self):
+        return "Human Sacrifice"
     
     def show_value(self):
         return self.get_human_sacrifice_display()

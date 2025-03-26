@@ -75,26 +75,14 @@
 </style>
 <div class="container">
     {% if object_list %}
-    <div class="row d-flex mt-3">
+    <div class="row d-flex mt-1">
         <div class="row">
-            <div class="col-md-10 px-0 pt-3 pe-3">
-              <span class="h2 py-3 ps-0">
+            <div class="col-md-10 pt-3 px-0 pe-3">
+              <div class="h2 pb-2 ps-0">
                 <span class="text-dark">Power Transitions</span> 
                 {% block download_button %}
                 {% endblock download_button %}
-              </span>  
-              <h5 class="pt-2">
-                <span class="h6 text-secondary"><i class="fa-solid fa-database"></i> We have coded a total of  
-                  <b class="h5 text-dark">
-                  </b>
-                  yyy different values for 
-                  <b class="h5 text-dark">
-                  xx</b>
-                  variables in 
-                  <b class="h5 text-dark">
-                    {{object_list|length}}</b>
-                  polities.</span>
-              </h5>
+              </div>  
               <h6 class="fw-normal">
                 We are interested in cataloguing the relative stability of past societies as proxied by the transition of power from one ruler to the next. In particular, we identify each transition of power (from named predecessor to named successor) and record whether it took place through normal succession mechanisms (whether legal/institutionalized means or customary/de facto procedures) or as the result of a conflict. We are seeking to record this information across the Seshat sample of polities, subject to availability of evidence. We are particularly interested in documenting the ebb and flow of stability in particular regions over time.
               </h6>

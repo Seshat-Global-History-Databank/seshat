@@ -36,12 +36,12 @@ def template_display_table_value(self) -> str:
             """
             
             all_pols_connected.append(a_str)
-            all_pols_connected_str = "<br>".join(all_pols_connected)
+            all_pols_connected_str =  '<span style="display: block; width: 5px;"></span>'.join(all_pols_connected)
     else:
         all_pols_connected_str=""
 
     if self.place_of_provenance_str:
-        places_str = self.place_of_provenance_str.replace(';', '<br>')
+        places_str = self.place_of_provenance_str.replace(';',  '<span style="display: block; width: 5px;"></span>')
     else:
         places_str = ""
     # Conditionally add rows if values are not None
@@ -58,10 +58,10 @@ def template_display_table_value(self) -> str:
         if self.tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        {self.clean_name_spaced()}:
+                    <td class="ps-0 pe-4" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                        {self.clean_name_spaced()}
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
 
         <span class="badge bg-success-light small-knopf text-dark" style="
         font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
@@ -73,10 +73,10 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        {self.clean_name_spaced()}:
+                    <td class="ps-0 pe-4" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                        {self.clean_name_spaced()}
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
 
         <span class="badge bg-success-light small-knopf text-dark" style="
         font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px;  background: #fffdf2; color: {my_color}; border: 1px solid {my_color};">
@@ -94,12 +94,12 @@ def template_display_table_value(self) -> str:
     if self.place_of_provenance_str and all_pols_connected_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                    Place(s) of Provenance:
+                <td class="ps-0 pe-4" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                    Place(s) of Provenance
                 </td>
-                <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
+                <td class="ps-1 align-right fw-normal" style="padding-right: 8px; text-align: right; color: #555;">
                     <span>    
-                   {all_pols_connected_str} <br> {places_str} 
+                   {all_pols_connected_str} <span style="display: block; width: 5px;"></span>{places_str} 
                    </span>
                 </td>
             </tr>
@@ -107,10 +107,10 @@ def template_display_table_value(self) -> str:
     elif all_pols_connected_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                    Place(s) of Provenance:
+                <td class="ps-0 pe-4" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                    Place(s) of Provenance
                 </td>
-                <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
+                <td class="ps-1 align-right fw-normal" style="padding-right: 8px; text-align: right; color: #555;">
                 <span>    
                    {all_pols_connected_str}
                 </span>    
@@ -121,10 +121,10 @@ def template_display_table_value(self) -> str:
     elif self.place_of_provenance_str:
         rows.append(f"""
             <tr style="border-bottom:1px solid #FFFDF2;">
-                <td class="ps-1 text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                    Place(s) of Provenance:
+                <td class="ps-0 pe-4" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                    Place(s) of Provenance
                 </td>
-                <td class="ps-4 align-right fw-normal" style="padding: 4px; text-align: right; color: #555;">
+                <td class="ps-1 align-right fw-normal" style="padding-right: 8px; text-align: right; color: #555;">
                     <span>    
 
                    {places_str}
@@ -146,10 +146,10 @@ def template_display_table_value(self) -> str:
         if self.ruler_consumption_tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
-                        Consumption by <b> Ruler</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; color: #888;">
+                        Consumption by <b> Ruler</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_ruler_consumption_display()}
                         </span> 
@@ -160,10 +160,10 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
-                        Consumption by <b> Ruler</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; color: #888;">
+                        Consumption by <b> Ruler</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_ruler_consumption_tag_display()}
                         {self.get_ruler_consumption_display()}
@@ -187,10 +187,10 @@ def template_display_table_value(self) -> str:
         if self.elite_consumption_tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
-                        Consumption by <b> Elite</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; color: #888;">
+                        Consumption by <b> Elite</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_elite_consumption_display()}
                         </span> 
@@ -201,10 +201,10 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; color: #333;">
-                        Consumption by <b> Elite</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; color: #888;">
+                        Consumption by <b> Elite</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_elite_consumption_tag_display()}
                         {self.get_elite_consumption_display()}
@@ -228,10 +228,10 @@ def template_display_table_value(self) -> str:
         if self.common_people_consumption_tag in ["TRS", "UND", None]:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by <b> Common People</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                        Consumption by <b> Common People</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_common_people_consumption_display()}
                         </span> 
@@ -242,10 +242,10 @@ def template_display_table_value(self) -> str:
         else:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
-                        Consumption by <b> Common People</b>:
+                    <td class="ps-0 pe-4 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
+                        Consumption by <b> Common People</b>
                     </td>
-                    <td class="ps-4 align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="ps-1 align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         <span class="badge bg-success-light small-knopf text-dark" style="font-size: 16px;padding-left:5px;padding-right:5px;padding-top:3px;padding-bottom:3px;margin:0px; background: #fffdf2; color: {my_cons_color}; border: 1px solid {my_cons_color};">
                         {self.get_common_people_consumption_tag_display()}
                         {self.get_common_people_consumption_display()}
@@ -258,8 +258,11 @@ def template_display_table_value(self) -> str:
 
     # Combine rows into a table
     table_html = f"""
-        <table class="table" style="width: 100%; border-collapse: collapse; border: none; margin: 0px;">
+        <table class="table p-0" style="width: 100%; border-collapse: collapse; border: none; margin: 0px;">
+        <tbody class="p-0">
             {''.join(rows)}
+        </tbody>
+
         </table>
     """
     return table_html
@@ -338,10 +341,10 @@ class Precious_metal(SeshatCommon):
         if self.coded_value:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
                         Precious Metal
                     </td>
-                    <td class="align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         {self.coded_value}
                     </td>
                 </tr>
@@ -350,10 +353,10 @@ class Precious_metal(SeshatCommon):
         if self.place_of_provenance_str:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
                         Place of Provenance
                     </td>
-                    <td class="align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         {self.place_of_provenance_str}
                     </td>
                 </tr>
@@ -362,10 +365,10 @@ class Precious_metal(SeshatCommon):
         if self.ruler_consumption:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
                         Consumption by Ruler
                     </td>
-                    <td class="align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         {self.ruler_consumption}
                     </td>
                 </tr>
@@ -374,10 +377,10 @@ class Precious_metal(SeshatCommon):
         if self.elite_consumption:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
                         Consumption by Elites
                     </td>
-                    <td class="align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         {self.elite_consumption}
                     </td>
                 </tr>
@@ -386,10 +389,10 @@ class Precious_metal(SeshatCommon):
         if self.common_people_consumption:
             rows.append(f"""
                 <tr style="border-bottom:1px solid #FFFDF2;">
-                    <td class="ps-1 fw-normal text-secondary" style="padding: 4px; text-align: left; font-weight: bold; color: #333;">
+                    <td class="ps-1 fw-normal" style="padding-right: 8px; text-align: left; font-weight: bold; color: #888;">
                         Consumption by Common People
                     </td>
-                    <td class="align-right" style="padding: 4px; text-align: right; color: #555;">
+                    <td class="align-right" style="padding-right: 8px; text-align: right; color: #555;">
                         {self.common_people_consumption}
                     </td>
                 </tr>

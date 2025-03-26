@@ -11962,7 +11962,7 @@ def scvars(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         filtered_queryset_pres = 0
         filtered_queryset_abs = 0
         filtered_queryset_unk = 0
@@ -12122,7 +12122,7 @@ def show_problematic_sc_data_table(request):
     # Collect data from all models
     data = []
     for model in app_models:
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
         for obj in items:
             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
                 data.append(obj)
@@ -12154,7 +12154,7 @@ def download_csv_all_sc(request):
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
 
         for obj in items:
             if obj.polity:
@@ -12197,7 +12197,7 @@ def download_csv_social_scale(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Social Scale":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 if obj.polity:
                     writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
@@ -12238,7 +12238,7 @@ def generate_csv_response(subsection_filter, file_suffix):
         if model.__name__ == "Ra":
             continue
         if str(model().subsection()) == subsection_filter:
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 if obj.polity:
                     writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,

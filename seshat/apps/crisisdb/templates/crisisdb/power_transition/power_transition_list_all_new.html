@@ -6,9 +6,9 @@
 {% load custom_filters %}
 
 {% block download_button %}
-    <a href="{% url 'power_transition-create' %}" class="btn btn-outline-success mx-1 my-1 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
-    <a href="{% url 'power_transition-download' %}" class="btn btn-outline-primary mx-1 my-1 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
-    <a href="{% url 'power_transition-metadownload' %}" class="btn btn-outline-info mx-1 my-1 float-end"><i class="fas fa-download"></i> &nbsp; Download MetaData</a>
+    <a href="{% url 'power_transition-create' %}" class="btn btn-outline-success mx-1 my-1 float-end"><i class="fas fa-plus"></i> &nbsp; Add </a>
+    <a href="{% url 'power_transition-download' %}" class="btn btn-outline-primary mx-1 my-1 float-end"><i class="fa-solid fa-file-arrow-down"></i> &nbsp; <b>.</b>CSV </a>
+    <a href="{% url 'power_transition-json-download' %}" class="btn btn-outline-info mx-1 my-1 float-end"> <i class="fa-solid fa-download"></i> &nbsp; <b>{ </b>JSON<b> }</b> </a>
 {% endblock download_button %}
 
 

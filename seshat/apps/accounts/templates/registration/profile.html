@@ -39,9 +39,21 @@
     .expert_name {
       border-radius: 5px;
   }
-      
+  .comment-box {
+    padding: 5px;
+    margin-top: 0px;
+    border: 1px solid gray;
+    display: inline-block; /* Adjusts width based on content */
+    border-radius: 0 5px 10px 10px; /* Sharp top-left, rounded others */
+}
+.extra-small {
+  font-size: 12px; /* Adjust to desired size */
+  color: gray; /* Optional: makes it less prominent */
+}
+
 </style>
 <div class="container">
+
     <div class="main-body pt-3">
     <!-- source: https://www.bootdey.com/snippets/view/profile-with-data-and-skills#css -->
 
@@ -118,7 +130,7 @@
                             <div class="tab-pane fade show active row gutters-sm" id="table1" role="tabpanel" aria-labelledby="table1-tab">
                               {% if all_their_private_comments %}
                               <div class="table-responsive">
-                                  <table id="table_id" class="table table-hover align-middle pt-0" style="padding: 0.25 rem !important;">
+                                  <table id="table_id" class="table table-hover table-borderless align-middle pt-0" style="padding: 0.25 rem !important;">
 
                                       <tbody>
             
@@ -127,32 +139,33 @@
                                           <tr style="background:lightgray">
                                             <td  class="col-md-12" scope="col">
                                                 {% autoescape off %}
-                                                <span class="fw-light">
+                                                <div class="fw-light">
                                                   <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
                                                   
-                                                  &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>
-                                                  <span>
-                                                    <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                  &nbsp; <small class="extra-small">{{a_private_comment_part.last_modified_date|naturaltime}}</small>
+                                                  <div>
+                                                    <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-secondary text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
                                                     </span></a>
      
                            
                                                   <br> 
                                                   
-                                                  {{a_private_comment_part.private_comment_part_text}}</span>
+                                                  {{a_private_comment_part.private_comment_part_text}}
+                                                </div>
                                                 {% endautoescape %}
             
                                             </td>                                    
                                         </tr>
                                           {% else %}
                                           <tr>
-                                              <td  class="col-md-12" scope="col">
+                                              <td  class="col-md-12 pt-2" scope="col">
                                                   {% autoescape off %}
-                                                  <span class="fw-light">
-                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                  <span class="fw-normal">
+                                                    <span class="fs-6 fw-bold expert_name" style="border-bottom: 4px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};  border-radius: 5px 5px 0 0; color: {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; ">{{a_private_comment_part.private_comment_owner}}</span>
                                                     
-                                                    &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>
+                                                    &nbsp; <small class="extra-small">{{a_private_comment_part.last_modified_date|naturaltime}}</small>
                                                     <span>
-                                                      <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-dark text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
+                                                      <a class="p-0 m-0 float-end" href="{% url 'seshatprivatecomment-update' a_private_comment_part.private_comment_id %}"><span class="badge border border-secondary text-dark bg-colorful"><span style="vertical-align:bottom;"> Full Discussion</span>
                                                       </span></a>
                                                     </span>
                              
@@ -162,9 +175,10 @@
                                                       {% endif %}
 
                                                     </span>
-                                                  </span>
-                                                    
-                                                    {{a_private_comment_part.private_comment_part_text}}</span>
+                                                    <div class="comment-box" style="border-color:  {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}22; background:{{a_private_comment_part.private_comment_owner.id|give_me_a_color}}11;">
+                                                      {{a_private_comment_part.private_comment_part_text}}
+                                                    </div>  
+                                                    </span>
                                                   {% endautoescape %}
             
                                               </td>                                    
@@ -198,7 +212,7 @@
                                           <tr style="background:lightgray">
                                             <td  class="col-md-12" scope="col">
                                                 {% autoescape off %}
-                                                <span class="fw-light">
+                                                <div class="fw-light">
                                                   <span class="badge text-dark border border-dark" style="background: lightgray">{{a_private_comment_part.private_comment_owner}}</span>
                                                   
                                                   &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small>            <span>
@@ -206,7 +220,7 @@
                                                     </span></a>
                                                   </span>
                            
-                                                  <br>                                                 {{a_private_comment_part.private_comment_part_text}}</span>
+                                                  <br>                                                 {{a_private_comment_part.private_comment_part_text}}</div>
                                                 {% endautoescape %}
 
             
@@ -217,7 +231,7 @@
                                               <td  class="col-md-12" scope="col">
                                                   {% autoescape off %}
                                                   <span class="fw-light">
-                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 2px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
+                                                    <span class="text-dark fs-6 fw-normal expert_name p-1" style="border: 1px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}}; border-left: 10px solid {{a_private_comment_part.private_comment_owner.id|give_me_a_color}};">{{a_private_comment_part.private_comment_owner}}</span>
                                                     
                                                     &nbsp; <small>{{a_private_comment_part.last_modified_date|naturaltime}}</small> 
                                                     <span>

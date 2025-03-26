@@ -1,0 +1,40 @@
+{% extends "core/form_base_llm.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block extra_vars %}
+
+<style>
+    .form-check {
+        display: block;
+        min-height: 1.5rem;
+        padding-left: 0.5em;
+        margin-bottom: .125rem;
+    }
+
+    .checkbox-majid {
+        margin-right: 3px;
+    }
+
+</style>
+
+
+{% if extra_var and extra_var2 and extra_var3 and extra_var2.name == 'inst_intensity' %}
+
+{% endif %}
+
+{% endblock extra_vars %}
+
+{% block delete_button %}
+    <!-- Render the delete button for the specified object ID -->
+    <a href="{% url delete_url object.id %}" type="cancel" class="btn py-2 btn-outline-danger my-auto btn-block" style="font-family: 'Roboto Mono', monospace;">Deleeeeeete</a>
+{% endblock delete_button %}
+
+<script>
+    function toggleRadio(radio) {
+        if (radio.checked) {
+            radio.checked = false; // Deselect the radio button if it's clicked again
+        }
+    }
+</script>

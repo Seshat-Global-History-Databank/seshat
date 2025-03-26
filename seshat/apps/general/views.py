@@ -17,6 +17,7 @@ from ..core.models import Citation, Reference, Polity, Section, Subsection, Coun
 from seshat.apps.accounts.models import Seshat_Expert
 
 
+from seshat.apps.core.forms import SeshatPrivateCommentPartForm
 from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
 # from .mycodes import *
 from django.conf import settings
@@ -53,6 +54,9 @@ from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_
 
 from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
+
+
+from ..rt.models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
 
 
 # Define a custom test function to check for the 'core.add_capital' permission
@@ -7211,7 +7215,7 @@ def generalvars(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         filtered_queryset_pres = 0
         filtered_queryset_abs = 0
         filtered_queryset_unk = 0
@@ -7556,7 +7560,7 @@ def generalvarsold(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         politys = queryset.values_list('polity', flat=True).distinct()
         unique_politys.update(politys)
         number_of_variables += 1
@@ -7617,7 +7621,7 @@ def download_csv_all_general(request):
         # Get all rows of data from the model
         if model in [Polity_research_assistant, Polity_editor, Polity_expert]:
             continue
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
 
 
         for obj in items:
@@ -8192,6 +8196,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         'crisisdb': 'Crisisdb',
     }
 
+    another_form = SeshatPrivateCommentPartForm(request.POST)
+
     
     if coded_value == "power_transition":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
@@ -8199,6 +8205,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+    elif x_name == "instability_event":
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'note'
     elif db_section == 'ec':
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -8241,7 +8249,14 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 # create a Prvate Comment to attach parts to it:
                     father_private_comment = SeshatPrivateComment.objects.create(text="")
                     new_object.private_comment = father_private_comment
-                seshat_private_comment_part = SeshatPrivateCommentPart(
+                if x_name == "instability_event":
+                    seshat_private_comment_part = SeshatPrivateCommentPart(
+                        private_comment_part_text=f"We have used LLM to generate a new Instability Event: '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
+                        private_comment_owner=logged_in_expert, 
+                        private_comment= father_private_comment
+                    )
+                else:
+                    seshat_private_comment_part = SeshatPrivateCommentPart(
                     private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
                     private_comment_owner=logged_in_expert, 
                     private_comment= father_private_comment
@@ -8284,7 +8299,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
             #     new_object.curator.add(seshat_expert_instance)
             #return redirect(f"{x_name}-detail", pk=my_object.id)
-        
+
         # Prepare the context for invalid form
         context = {
             'form': my_form,
@@ -8295,6 +8310,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'var_subsection': var_subsection,
             'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
+            'another_form': another_form,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
@@ -8332,6 +8348,20 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var12': my_form[x_name_12],
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
+            })
+        elif coded_value in ['instability_event']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
+
             })
         elif x_name in ['lux_precious_metal'] and db_section == 'ec':
             context.update({
@@ -8392,6 +8422,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'var_subsection': var_subsection,
             'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
+            'another_form': another_form,
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
@@ -8430,6 +8461,19 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var13': my_form[x_name_13],
                 'extra_var14': my_form[x_name_14],
 
+            })
+        elif coded_value in ['instability_event']:
+            context.update({
+                'extra_var': my_form[x_name_1],
+                'extra_var2': my_form[x_name_2],
+                'extra_var3': my_form[x_name_3],
+                'extra_var4': my_form[x_name_4],
+                'extra_var5': my_form[x_name_5],
+                'extra_var6': my_form[x_name_6],
+                'extra_var7': my_form[x_name_7],
+                'extra_var8': my_form[x_name_8],
+                'extra_var9': my_form[x_name_9],
+                'extra_var10': my_form[x_name_10],
             })
         elif x_name in ['lux_precious_metal'] and db_section == 'ec':
             context.update({
@@ -8478,8 +8522,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             context.update({
                 'extra_var': my_form[coded_value],
             })
-
-    return render(request, 'core/generic_templates/generic_update.html', context)
+    if coded_value in ['instability_event']:
+        return render(request, 'core/generic_templates/generic_update_llm.html', context)
+    else:
+        return render(request, 'core/generic_templates/generic_update.html', context)
 
 
 # def generic_list_view_old(request, model_class, var_name, var_name_display, var_section, var_subsection, db_section, var_main_desc):
@@ -8576,13 +8622,16 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         object_list = object_list.order_by(orderby)
 
     if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
-        object_list = object_list.filter(polity__new_name__in=rt_allowed_polities)
+        if model_class in {Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga}:
+            object_list = object_list.filter(polity__new_name__in=rt_allowed_polities)
+
 
     if db_section == 'ec' and not request.user.has_perm('core.add_capital'):
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
 
     if var_name in ['human_sacrifice', 'power_transition'] and not request.user.has_perm('core.add_capital'):
+
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
     
@@ -8605,6 +8654,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         'update_url': f'{var_name}-update',
         'update_url_new': f'{var_name}-updatenew',
         'download_url': f'{var_name}-download',
+        'json_download_url': f'{var_name}-json-download',
         'pagination_url': f'{var_name}s',
         'metadownload_url':  f'{var_name}-metadownload',
         'list_all_url':  f'{var_name}s_all',
@@ -8687,16 +8737,14 @@ def delete_object_view(request, model_class, pk, var_name):
 
 def generic_download(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
     # Fetch all objects for the specified model
-    if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
-        return HttpResponseForbidden("You don't have permission to View this.")
     items = model_class.objects.all()
-
 
     # special case of RT:
     rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
 
     if db_section == 'rt' and not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
-        items = items.filter(polity__new_name__in=rt_allowed_polities)
+        if model_class in {Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga}:
+            items = items.filter(polity__new_name__in=rt_allowed_polities)
 
     response = HttpResponse(content_type='text/csv')
     current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -8915,19 +8963,155 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         else:
             writer.writerow(sublist_1 + sublist_2 + sublist_3)
 
+    return response
 
-        # if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
-        #     dynamic_value_from = getattr(obj, var_name_with_from, '')
-        #     dynamic_value_to = getattr(obj, var_name_with_to, '')
-        #     writer.writerow([obj.name, obj.year_from, obj.year_to,
-        #                     obj.polity.long_name, obj.polity.new_name, obj.polity.name, dynamic_value_from, dynamic_value_to, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-        #                     obj.expert_reviewed, obj.drb_reviewed,])
-        # else:
-        #     dynamic_value = getattr(obj, var_name, '')
-        #     writer.writerow([obj.name, obj.year_from, obj.year_to,
-        #                     obj.polity.long_name, obj.polity.new_name, obj.polity.name, dynamic_value, obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
-        #                     obj.expert_reviewed, obj.drb_reviewed,])
 
+def generic_json_download(request, model_class, var_name, x_name, var_section, var_subsection, coded_value, db_section):
+    items = model_class.objects.all()
+
+    # Special case of RT filtering
+    rt_allowed_polities = [
+        "kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", 
+        "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", 
+        "ni_sokoto", "gm_kaabu_emp"
+    ]
+
+    if db_section == 'rt' and not request.user.has_perm('core.add_capital'):  # Assuming 'view_all_polities' is the relevant permission
+        if model_class in {Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga}:
+            items = items.filter(polity__new_name__in=rt_allowed_polities)
+
+    # Map database sections
+    db_section_mapper = {
+        'general': 'general',
+        'sc': 'social_complexity',
+        'wf': 'warfare',
+        'ec': 'Economy',
+        'rt': 'religion_tolerance',
+        'crisisdb': 'crisisdb',
+    }
+
+    data_list = []
+
+    for objj in items:
+        obj = model_to_dict(objj)  # Convert model instance to dictionary
+
+        coded_cols = {}
+
+        if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', 
+                           "administrative_level", "settlement_hierarchy", "religious_level", 
+                           "military_level", "largest_communication_distance", "fastest_individual_communication", 
+                           'long_wall']:
+            coded_cols.update({
+                f"{x_name}_from": obj.get(f"{x_name}_from"),
+                f"{x_name}_to": obj.get(f"{x_name}_to"),
+            })
+        elif coded_value == "power_transition":
+            coded_cols.update({
+                "name": obj.get("name"),
+                "predecessor": obj.get("predecessor"),
+                "successor": obj.get("successor"),
+                "contested": obj.get("contested"),
+                "overturn": obj.get("overturn"),
+                "predecessor_assassination": obj.get("predecessor_assassination"),
+                "intra_elite": obj.get("intra_elite"),
+                "military_revolt": obj.get("military_revolt"),
+                "popular_uprising": obj.get("popular_uprising"),
+                "separatist_rebellion": obj.get("separatist_rebellion"),
+                "external_invasion": obj.get("external_invasion"),
+                "external_interference": obj.get("external_interference"),
+            })
+        elif coded_value == "widespread_religion":
+            coded_cols.update({
+                "order": obj.get("order"),
+                "widespread_religion": obj.get("widespread_religion"),
+                "degree_of_prevalence": obj.get("degree_of_prevalence"),
+            })
+        elif coded_value in ['duration', 'peak_years', 'scale_of_supracultural_interaction']:
+            coded_cols.update({
+                "from": obj.get(f"{coded_value}_from"),
+                "to": obj.get(f"{coded_value}_to"),
+            })
+        elif coded_value == "capital":
+            coded_cols.update({
+                "polity_cap": obj.get("polity_cap"),
+                "capital": obj.get("capital"),
+            })
+        else:
+            coded_cols[x_name] = obj.get(coded_value)
+
+        # Additional metadata
+        data_entry = {
+            "variable_set": db_section_mapper[db_section].replace('_', ' ').title(),
+            "section": var_section,
+            "subsection": var_subsection,
+            "variable_name": var_name.replace('_', ' ').title(),
+            "polity_name": objj.polity.long_name,
+            "polity_new_ID": objj.polity.new_name,
+            "polity_old_ID": objj.polity.name,
+            "year_from": objj.year_from,
+            "year_to": objj.year_to,
+            "confidence": objj.get_tag_display(),
+            "is_disputed": objj.is_disputed,
+            "is_uncertain": objj.is_uncertain,
+            "expert_checked": bool(objj.curators_list()),  # Check if it has been reviewed
+            "coded_values": coded_cols
+        }
+
+        # Exclude invalid entries
+        if objj.show_value() not in ["NO_VALUE_ON_WIKI", "NO_VALID_VALUE"] and "O_VALUE_ON_WIKI" not in str(objj.show_value()):
+            data_list.append(data_entry)
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"{db_section_mapper[db_section]}_{var_name}_{current_datetime}_goooooo.json"
+    response = JsonResponse(data_list, safe=False)
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+    return response
+
+    # Return JSON response in browser
+    #return JsonResponse(data_list, safe=False)
+
+
+def generic_json_download_simple(request, model_class, var_name, x_name, var_section, var_subsection,coded_value, db_section):
+    # Fetch all objects for the specified model
+    items = model_class.objects.all()
+
+    current_datetime = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    file_name = f"social_complexity_{var_name}_{current_datetime}.json"
+
+    if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+        var_name_with_from = var_name + "_from"
+        var_name_with_to = var_name + "_to"
+    else:
+        var_name_with_from = var_name
+        var_name_with_to = None
+
+    data_list = []
+    
+    for obj in items:
+        entry = {
+            "variable_name": obj.name,
+            "year_from": obj.year_from,
+            "year_to": obj.year_to,
+            "polity_name": obj.polity.long_name,
+            "polity_new_ID": obj.polity.new_name,
+            "polity_old_ID": obj.polity.name,
+            "confidence": obj.get_tag_display(),
+            "is_disputed": obj.is_disputed,
+            "is_uncertain": obj.is_uncertain,
+            "expert_checked": obj.expert_reviewed,
+            "DRB_reviewed": obj.drb_reviewed,
+        }
+
+        if var_name in ["largest_communication_distance", "fastest_individual_communication", "military_level"]:
+            entry[var_name_with_from] = getattr(obj, var_name_with_from, '')
+            entry[var_name_with_to] = getattr(obj, var_name_with_to, '')
+        else:
+            entry[var_name] = getattr(obj, var_name, '')
+
+        data_list.append(entry)
+
+    response = JsonResponse(data_list, safe=False)
+    response['Content-Disposition'] = f'attachment; filename="{file_name}"'
     return response
 
 

@@ -1,0 +1,115 @@
+<span class="right-span fw-normal">   
+    {% if  obj.overturn == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Overturn</span> 
+    {% elif  obj.overturn == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Overturn</span> 
+    {% elif  obj.overturn == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Overturn</span> 
+    {% elif  obj.overturn == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Overturn</span> 
+    {% elif  obj.overturn == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Overturn</span> 
+    {% elif  obj.overturn == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Overturn</span>
+    {% endif %}
+
+    {% if  obj.intra_elite == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Intra-Elite</span> 
+    {% elif  obj.intra_elite == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Intra-Elite</span> 
+    {% elif  obj.intra_elite == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Intra-Elite</span> 
+    {% elif  obj.intra_elite == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Intra-Elite</span> 
+    {% elif  obj.intra_elite == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Intra-Elite</span> 
+    {% elif  obj.intra_elite == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Intra-Elite</span>
+    {% endif %}
+
+    {% if  obj.military_revolt == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Military Revolt</span> 
+    {% elif  obj.military_revolt == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Military Revolt</span> 
+    {% elif  obj.military_revolt == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Military Revolt</span> 
+    {% elif  obj.military_revolt == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Military Revolt</span> 
+    {% elif  obj.military_revolt == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Military Revolt</span> 
+    {% elif  obj.military_revolt == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Military Revolt</span>
+    {% endif %}
+
+    {% if  obj.popular_uprising == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Popular Uprising</span> 
+    {% elif  obj.popular_uprising == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Popular Uprising</span> 
+    {% elif  obj.popular_uprising == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Popular Uprising</span> 
+    {% elif  obj.popular_uprising == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Popular Uprising</span> 
+    {% elif  obj.popular_uprising == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Popular Uprising</span> 
+    {% elif  obj.popular_uprising == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Popular Uprising</span>
+    {% endif %}
+
+    {% if  obj.separatist_rebellion == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Separatist Rebellion</span> 
+    {% elif  obj.separatist_rebellion == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Separatist Rebellion</span> 
+    {% elif  obj.separatist_rebellion == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Separatist Rebellion</span> 
+    {% elif  obj.separatist_rebellion == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Separatist Rebellion</span> 
+    {% elif  obj.separatist_rebellion == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Separatist Rebellion</span> 
+    {% elif  obj.separatist_rebellion == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Separatist Rebellion</span>
+    {% endif %}
+
+    {% if  obj.external_invasion == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Invasion</span> 
+    {% elif  obj.external_invasion == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Invasion</span> 
+    {% elif  obj.external_invasion == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">External Invasion</span> 
+    {% elif  obj.external_invasion == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">External Invasion</span> 
+    {% elif  obj.external_invasion == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">External Invasion</span> 
+    {% elif  obj.external_invasion == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">External Invasion</span>
+    {% endif %}
+
+    {% if  obj.external_interference == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Inteference</span> 
+    {% elif  obj.external_interference == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Inteference</span> 
+    {% elif  obj.external_interference == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">External Inteference</span> 
+    {% elif  obj.external_interference == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">External Inteference</span> 
+    {% elif  obj.external_interference == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">External Inteference</span> 
+    {% elif  obj.external_interference == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">External Inteference</span>
+    {% endif %}
+
+
+    {% if  obj.predecessor_assassination == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Predecessor Assassination</span> 
+    {% elif  obj.predecessor_assassination == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Predecessor Assassination</span> 
+    {% elif  obj.predecessor_assassination == "A" %}
+    <span class="badge bg-absent-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="absent">Predecessor Assassination</span> 
+    {% elif  obj.predecessor_assassination == "IA" %}
+    <span class="badge bg-secondary-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred absent">Predecessor Assassination</span> 
+    {% elif  obj.predecessor_assassination == "U" %}
+    <span class="badge bg-unknown-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="unknown">Predecessor Assassination</span> 
+    {% elif  obj.predecessor_assassination == "SU" %}
+    <span class="badge bg-warning-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="suspected unknown">Predecessor Assassination</span>
+    {% endif %}
+
+</span>

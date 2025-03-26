@@ -133,20 +133,7 @@
                 
                 <!-- Tag tag (Disputed/Suspected etc.) -->
             </tr>
-            <tr class="py-0 mt-0 mb-2">
-                <td class="col-sm-12 py-0 mt-0" scope="row">
-                {% autoescape off %}
 
-                <span class="fs-6 highlighted-value mb-2">
-                    {% if value.description %}
-                    {{ value.description|make_references_look_nicer }}
-                    {% endif %}
-
-                </span>
-                {% endautoescape %}
-
-                </td>
-                </tr>
         </tbody>
       </table>
     </div>

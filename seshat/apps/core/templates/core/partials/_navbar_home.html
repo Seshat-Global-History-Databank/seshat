@@ -96,9 +96,15 @@
                                 <li>
                                     <a class="dropdown-item fw-bold" href="{% url 'crisis_consequences_all' %}">Crisis Consequences</a>
                                 </li>
+
+                                <li>
+                                    <a class="dropdown-item fw-bold" href="{% url 'instability_events_all' %}">Instability Events</a>
+                                </li>
+
                                 <li>
                                     <a class="dropdown-item fw-bold" href="{% url 'power_transitions_all' %}">Power Transitions</a>
                                 </li>
+
                                 <li>
                                     <a class="dropdown-item fw-bold" href="{% url 'us_violence_paginated' %}">&#127482;&#127480; US Political Violence Database </a>
                                 </li>
@@ -152,7 +158,7 @@
                         {% endif %}
                         {%  if 'core.add_seshatprivatecommentpart' in user.get_all_permissions and 'core.add_capital' in user.get_all_permissions %}
                         <li>
-                            <a  class="dropdown-item fw-bold" href="{% url 'seshat-permission-discussion' %}"><i class="fa-solid fa-lock text-secondary"></i> &nbsp;Permissions</a>
+                            <a  class="dropdown-item fw-bold" href="{% url 'seshat-permission-discussion' %}"><i class="fa-solid fa-lock text-secondary"></i> &nbsp;&nbsp;Permissions</a>
                         </li>
                         {% endif %}
 

@@ -9604,7 +9604,7 @@ def wfvarsold(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         politys = queryset.values_list('polity', flat=True).distinct()
         unique_politys.update(politys)
         number_of_variables += 1
@@ -9682,7 +9682,7 @@ def wfvars(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         filtered_queryset_pres = 0
         filtered_queryset_abs = 0
         filtered_queryset_unk = 0
@@ -9841,7 +9841,7 @@ def show_problematic_wf_data_table(request):
     # Collect data from all models
     data = []
     for model in app_models:
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
         for obj in items:
             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
                 data.append(obj)
@@ -9859,7 +9859,7 @@ def show_problematic_wf_data_table(request):
 #     # Collect data from all models
 #     data = []
 #     for model in app_models:
-#         items = model.objects.all()
+#         items = model.objects.exclude(polity_id__isnull=True)
 #         for obj in items:
 #             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
 #                 data.append(obj)
@@ -9892,7 +9892,7 @@ def download_csv_all_wf(request):
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
 
 
         for obj in items:
@@ -9937,7 +9937,7 @@ def download_csv_fortifications(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Fortifications":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -9973,7 +9973,7 @@ def download_csv_military_use_of_metals(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Military use of Metals":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -10009,7 +10009,7 @@ def download_csv_projectiles(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Projectiles":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -10045,7 +10045,7 @@ def download_csv_handheld_weapons(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Handheld weapons":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -10081,7 +10081,7 @@ def download_csv_animals_used_in_warfare(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Animals used in warfare":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -10118,7 +10118,7 @@ def download_csv_armor(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Armor":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -10155,7 +10155,7 @@ def download_csv_naval_technology(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Naval technology":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
