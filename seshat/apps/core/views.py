@@ -2861,6 +2861,41 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
         City_object = Capital.objects.get(id=self.kwargs['pk'])
         context['city_data'] = City_object
 
+        # Duration data
+        City_object = Capital.objects.get(id=self.object.pk)
+
+        # Get the related data
+        all_durations = {
+            "intr": [],
+            "gv": [],
+            "color": "xyz",
+        }
+        try:
+            all_durations["intr"] = [City_object.start_year, City_object.end_year]
+        except:
+            pass
+
+        # Pol_dur object
+        try:
+            City_duration_object = City_duration.objects.get(city_id=self.object.pk)
+            city_duration_coded = []
+            city_duration_coded.extend([f'{City_duration_object.city}, {City_duration_object.city_year_to}'])
+            all_durations["gv"] = [City_duration_object.city_year_from, City_duration_object.city_year_to]
+        except:
+            city_duration_coded = [-10000, 2000]
+
+        if all_durations["intr"] and all_durations["gv"]:
+            if (all_durations["intr"] == all_durations["gv"]):
+               all_durations['color'] = "ggm"
+            else:
+               all_durations['color'] = "grm"
+        elif all_durations["intr"] and all_durations["intr"][0] == -10000:
+           all_durations['color'] = "rmm"
+        elif all_durations["intr"]:
+           all_durations['color'] = "gmm"
+
+        context["all_durations"] = all_durations
+
         return context
 
 
