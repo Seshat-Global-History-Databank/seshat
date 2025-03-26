@@ -28,7 +28,7 @@
         bottom: 5%;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 1000;
+        z-index: 988;
     }
 
     #globeButtonDiv {
@@ -40,7 +40,7 @@
     #polityMapAndGlobe {
         position: relative;
         height: 55vh;
-        width: 75%;
+        width: 100%;
         overflow: hidden; /* Ensure child elements do not overflow */
     }
 
@@ -157,22 +157,35 @@
     }
 
     .settings {
-        display: none;
-        position: relative;
-        max-height: 100%; /* Ensure it doesn't exceed the parent div height */
-        height: auto;
-        margin-top: 10px;
-        background-color: rgba(255, 253, 242, 1);
-        border-color: rgba(255, 253, 242, 1);
-        border-radius: 5px;
-        border-style: solid;
-        border-width: 4px;
-        padding: 10px;
+        display: flex;
+        flex-wrap: wrap; /* Allows wrapping if content overflows */
+        gap: 15px; /* Adds spacing between spans */
+        align-items: center; /* Aligns items vertically */
     }
 
     .help {
         display: none;
     }
+
+    label {
+        color: gray;
+        font-size:14px;
+    }
+
+
+.friendly-button-smaller {
+    width: 1.5em;
+    background-color: rgba(255, 253, 242, 0.8);
+    border: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    font-size: 1.2em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
 
 </style>
 
@@ -184,61 +197,21 @@
             <span id="sliderDate"></span>
         </h2>
         <div id="controls-and-maps">
-            <div class="settings" id="settings">
-                <div id="globeButtonDiv">
-                    <button class="friendly-button-big" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
-                </div><br><br>
-                <fieldset>
-                    <label for="baseMap">Map:</label>
-                    <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
-                        <option value="arcgis" selected>Satellite</option>
-                        <option value="cesium">Globe</option>
-                        <option value="osm">Street Maps</option>
-                        <option value="carto">Basic</option>
-                        <option value="gadm" disabled>Clickable</option>
-                    </select><br>
-                </fieldset>
-                <fieldset id="baseMapGADMFieldset">
-                    <label for="baseMapGADM">Modern</label>
-                    <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
-                        <option value="country">Countries</option>
-                        <option value="province">Provinces</option>
-                    </select><br>
-                    <label for="baseMapOnly">Map only</label>
-                    <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()><br>
-                </fieldset>
-                <fieldset>
-                    <fieldset id="supraPolityRelationsFieldset" style="display: block">
-                        <div id="supraPolityRelationsDiv" style="display: none;">
-                            <label for="supraPolityRelations">Suprapolity Relations</label>
-                            <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();">
-                            <div class="display-info-container">
-                                ℹ️
-                            </div>
-                        </div><br><br>
-                    </fieldset>
-                    <label for="opacitySlide">Opacity:</label>
-                    <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
-                        class="slider" onchange="plotPolities()"><br><br>
-                    <label for="enterYear">Year:</label>
-                    <input type="number" id="enterYear" name="enterYear" value="{{ content.display_year }}" style="width: 75px;">
-                    <div class="year-info-container">
-                        ℹ️
-                    </div><br>
-                    <label for="increment">Play rate (y/s):</label>
-                    <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()"><br><br>
-                </fieldset>
-            </div>
+
             <div id="help"></div>
             <div id="polityMapAndGlobe">
                 <div id="playButtons">
-                    <button class="friendly-button-small" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
-                    <button class="friendly-button-small" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
+                    <span id="globeButtonDiv">
+                        <button class="friendly-button-smaller" id="globeButton" type="button" onclick="pressGlobeButton()">🌍</button>
+                    </span>
+                    <button class="friendly-button-smaller" id="startButton" type="button" onclick="adjustSliderStartYear()">⏮️</button>
+                    <button class="friendly-button-smaller" id="minusButton" type="button" onclick="adjustSliderDown()">⏪</button>
                     <button class="friendly-button-small" id="playButton" type="button" onclick="playBack()">▶️</button>
-                    <button class="friendly-button-small" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
-                    <button class="friendly-button-small" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                    <button class="friendly-button-smaller" id="plusButton" type="button" onclick="adjustSliderUp()">⏩</button>
+                    <button class="friendly-button-smaller" id="endButton" type="button" onclick="adjustSliderEndYear()">⏭️</button>
+                
                 </div>
-                <div id="map">
+                <div id="map" class="border" style="border-radius:10px;">
                     <div id="componentLegend"></div>
                 </div>
                 <div id="globeParent">
@@ -254,9 +227,55 @@
                 style="width: 100%;" list="yearTickmarks">
             <div id="yearTickmarkValues"></div>
         </div><br><br>
-        <p>
+        <span>
             <b><a href="../cliopatria" target="_blank">Learn more about polity border choices.</a></b>
-        </p>
+
+        </span>
+        <span class="settings" id="settings">
+
+            <span>
+                <label for="baseMap">Map</label>
+                <select name="baseMap" id="baseMap" onchange="switchBaseMap()">
+                    <option value="arcgis" selected>Satellite</option>
+                    <option value="cesium">Globe</option>
+                    <option value="osm">Street Maps</option>
+                    <option value="carto">Basic</option>
+                    <option value="gadm" disabled>Clickable</option>
+                </select>
+            </span>
+            <span id="baseMapGADMFieldset">
+                <label for="baseMapGADM">Modern</label>
+                <select name="baseMapGADM" id="baseMapGADM" onchange="switchBaseMap()">
+                    <option value="country">Countries</option>
+                    <option value="province">Provinces</option>
+                </select>
+                <label for="baseMapOnly">Map only</label>
+                <input type="checkbox" id="baseMapOnly" name="baseMapOnly" onclick=plotPolities()>
+            </span>
+            <span>
+                <span id="supraPolityRelationsFieldset">
+                    <div id="supraPolityRelationsDiv" style="display: none;">
+                        <label for="supraPolityRelations">Suprapolity Relations</label>
+                        <input type="checkbox" id="supraPolityRelations" name="supraPolityRelations" onclick="plotPolities();">
+                        <div class="display-info-container">
+                           <span class="border border-2 border-dark  p-2"> ℹ️</span>
+                        </div>
+                    </div>
+                </span>
+                <label for="opacitySlide">&nbsp;&nbsp;&nbsp;Opacity</label>
+                <input type="range" name="opacitySlide" id="opacitySlide" min="0.1" max="1" step="0.1" value="0.7"
+                    class="slider" onchange="plotPolities()">
+                <label for="enterYear">&nbsp;&nbsp;&nbsp;Year</label>
+                <input type="number" id="enterYear" name="enterYear" value="{{ content.display_year }}" style="width: 75px;">
+            
+                <label for="increment">&nbsp;&nbsp;&nbsp;Play rate (y/s)</label>
+                <input type="number" id="increment" name="increment" value="10" style="width: 50px;" onchange="playRateValue()">
+            </span>
+            <br>
+
+            <small > <i class="fa-solid fa-circle-info"></i>
+                Hit enter after changing the year or setting the play rate.                </small>
+        </span>
 
         <script src="{% static 'core/js/map_functions.js' %}?v={{ version }}"></script>
         <script>
