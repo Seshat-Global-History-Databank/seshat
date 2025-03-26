@@ -73,7 +73,7 @@ def ecvars(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         filtered_queryset_pres = 0
         filtered_queryset_abs = 0
         filtered_queryset_unk = 0
@@ -248,7 +248,7 @@ def download_csv_luxury_goods(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Naval technology":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,

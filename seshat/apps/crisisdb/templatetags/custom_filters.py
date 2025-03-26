@@ -22,6 +22,26 @@ def get_columns_with_value_dic(instance, value):
 
 @register.filter
 def replace_underscore_and_capitalize(value):
+    rt_dic = {
+        'Theo_sync_dif_rel': 'Theological Syncretism of Different Religions',
+        'Sync_rel_pra_ind_beli': 'Syncretism of Religious Practices at the Level of Individual Believers',
+        'Gov_vio_freq_rel_grp': 'Frequency of Governmental Violence Against Religious Groups',
+        'Gov_res_pub_wor': 'Government Restrictions on Public Worship',
+        'Gov_res_pub_pros': 'Government Restrictions on Public Proselytizing',
+        'Gov_res_conv': 'Government Restrictions on Conversion',
+        'Gov_press_conv': 'Government Pressure to Convert',
+        'Gov_res_prop_own_for_rel_grp': 'Government Restrictions on Property Ownership for Adherents of Any Religious Group',
+        'Tax_rel_adh_act_ins': 'Taxes Based on Religious Adherence or on Religious Activities and Institutions',
+        'Gov_obl_rel_grp_ofc_reco': 'Governmental Obligations for Religious Groups to Apply for Official Recognition',
+        'Gov_res_cons_rel_buil': 'Government Restrictions on Construction of Religious Buildings',
+        'Gov_res_rel_edu': 'Government Restrictions on Religious Education',
+        'Gov_res_cir_rel_lit': 'Government Restrictions on Circulation of Religious Literature',
+        'Gov_dis_rel_grp_occ_fun': 'Government Discrimination Against Religious Groups Taking up Certain Occupations or Functions',
+        'Soc_vio_freq_rel_grp': 'Frequency of Societal Violence Against Religious Groups',
+        'Soc_dis_rel_grp_occ_fun': 'Societal Discrimination Against Religious Groups Taking up Certain Occupations or Functions',
+        'Gov_press_conv_for_aga': 'Societal Pressure to Convert or Against Conversion',    }
+    if value in rt_dic:
+        value = rt_dic[value]
     value = value.replace('_', ' ')
     return value.title()
 
@@ -342,3 +362,18 @@ def get_seshat_expert(user):
         return Seshat_Expert.objects.get(user=user).id
     except Seshat_Expert.DoesNotExist:
         return None
+    
+
+@register.simple_tag(takes_context=True)
+def track_last(context, current_name):
+    """Keeps track of the last clean_name_spaced and appends '_copy' if repeated."""
+    if 'last_clean_name' not in context:
+        context['last_clean_name'] = None
+
+    if context['last_clean_name'] == current_name:
+        result = f'<span style="color: gray;">{current_name}</span>'
+    else:
+        result = current_name
+
+    context['last_clean_name'] = current_name  # Update the last seen name
+    return result

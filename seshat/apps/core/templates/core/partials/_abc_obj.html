@@ -1,0 +1,115 @@
+
+    
+{% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+<span class="px-0 pt-1 pb-0 m-0" style="vertical-align:top;line-height:normal; margin:0px !important;" data-bs-toggle="popover" title="Edit coded value" >
+    {% if obj.description and 'core.add_capital' in user.get_all_permissions  %}
+    <a class="p-0 m-0" 
+    style=" overflow: hidden;" 
+    href="{% url key|lower|add:'-update' obj.id %}">
+        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#6363634c">
+            <i class=" fa-solid fa-pen-to-square"></i>
+        </span>
+    </a>  
+
+
+    {% elif 'core.add_capital' in user.get_all_permissions  %}
+    <a class="p-0 m-0" 
+    style=" overflow: hidden;" 
+    href="{% url key|lower|add:'-updatenew' obj.id %}">
+        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:997;  background-color:#d4330e4c" data-bs-toggle="popover" title="Edit coded value" >
+            <i class=" fa-solid fa-pen-to-square"></i>
+        </span>
+    </a>  
+    {% endif %}
+
+    {% if not obj.description and 'core.add_capital' in user.get_all_permissions  %}
+        {% if obj.comment and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+            {% if obj.comment.id == 1 or obj.comment.inner_comments_related.all|length == 0 %}
+                {% with dynamic_url=obj.clean_name|add:"-detail" %}
+                    <a class="p-0 m-0" 
+                    style=" overflow: hidden;"
+                    href="{% url dynamic_url obj.id %}">
+                        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Create Description" >
+                            <i class="fa-solid fa-pen"></i>
+                    </a>
+                {% endwith %}
+            {% else  %}
+                <a class="p-0 m-0" 
+                style=" overflow: hidden;" 
+                href="{% url 'seshatcomment-update' obj.comment.id %}">
+                    <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </span>
+                </a>
+            {% endif %}  
+        {% else  %}
+        {% with dynamic_url=obj.clean_name|add:"-detail" %}
+            <a class="p-0 m-0" 
+            style=" overflow: hidden;"
+            href="{% url dynamic_url obj.id %}">
+                <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Create Description" >
+                    <i class="fa-solid fa-pen"></i>
+                </span>
+            </a>
+        {% endwith %}
+
+        {% endif %}   
+    {% endif %}  
+
+    {% if 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+    {% if not obj.private_comment or obj.private_comment.id == 1 or obj.private_comment.inner_private_comments_related.all|length == 0 %}
+        <a class="p-0 m-0"  
+        style="overflow: hidden;" 
+        href="{% url 'create_private_subcomment_new' app_name=my_app_name model_name=obj.clean_name instance_id=obj.id %}">
+            <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c" data-bs-toggle="popover" title="Add Private Comment" >
+                <i class="fa-regular fa-comment"></i>
+
+            </span>
+        </a>
+        {% else %}
+        <button  class="p-0 m-0"  
+        style="overflow: hidden; border: 0px solid white; border-radius:5px; " >
+    <span class="accordion-button collapsed badge text-dark" type="button"  style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb" 
+    title="See Private Comments" 
+    data-bs-toggle="collapse" 
+    data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
+    aria-expanded="false" 
+    aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
+    <i class="fa-solid fa-comments"></i>
+</span>
+
+</button>
+    {% endif %}  
+    {% endif %}   
+    {% if 'core.add_capital' in user.get_all_permissions  %}
+
+
+    <a class="p-0 m-0"  
+    style="overflow: hidden;" 
+    href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}">
+    <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed4c" data-bs-toggle="popover" title="Add a new row of Data" >
+        <i class="fa-solid fa-plus"></i>
+    </span>
+    </a> 
+    {% endif %}   
+    <span>
+        <a class="pt-1 m-0"  
+        style="overflow: hidden;" 
+        href="{% url key|lower|add:'s_all' %}?polity_id_x={{object.id}}">
+        <span class="badge" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:BlanchedAlmond; color:black;" data-bs-toggle="popover" title="See all Such Values" >
+            <i class="fa-solid fa-list-ul"></i>        </span>
+        </a> 
+    </span>
+
+</span>
+
+{% else %}   
+<span>
+    <a class="pt-1 m-0"  
+    style="overflow: hidden;" 
+    href="{% url key|lower|add:'s_all' %}?polity_id_x={{object.id}}">
+    <span class="badge" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:BlanchedAlmond; color:black;" data-bs-toggle="popover" title="See all Such Values" >
+        <i class="fa-solid fa-list-ul"></i>        </span>
+    </a> 
+</span>
+{% endif %}

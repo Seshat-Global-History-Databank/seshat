@@ -2,7 +2,7 @@ from .models import Lux_precious_metal, Luxury_fabrics, Luxury_manufactured_good
 
 from .forms import Lux_precious_metalForm, Luxury_fabricsForm, Luxury_manufactured_goodsForm, Luxury_spices_incense_and_dyesForm, Luxury_drink_alcoholForm, Luxury_glass_goodsForm, Lux_fine_ceramic_waresForm, Lux_precious_stoneForm, Lux_statuaryForm, Luxury_foodForm, Other_luxury_personal_itemsForm
 
-from seshat.apps.general.views import dynamic_create_view, dynamic_update_view,  dynamic_update_view_old, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
+from seshat.apps.general.views import dynamic_create_view, dynamic_update_view, dynamic_update_view_old, generic_list_view, generic_download, generic_json_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view
 
 from django.urls import path
 
@@ -119,6 +119,17 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'db_section': db_section,
         }, name=f'{x_name}-download')
      )
+    urlpatterns.append(
+        path(f'{x_name}jsondownload/', generic_json_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,
+        }, name=f'{x_name}-json-download')
+     )    
     urlpatterns.append(
         path(f'{x_name}metadownload/', generic_metadata_download, {
             'var_name': x_name,

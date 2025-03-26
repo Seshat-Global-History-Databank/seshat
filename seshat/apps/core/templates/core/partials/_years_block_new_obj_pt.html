@@ -1,0 +1,35 @@
+{% load humanize %}
+{% load mathfilters %}
+
+
+{% if obj.year_to == None and obj.year_from == None %}
+<span style="text-align: left; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+
+{% elif obj.year_from == obj.year_to %}
+    {% if obj.year_from < 0 %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+    {% else %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></span>
+    {% endif %}
+{% elif obj.year_from == None %}
+    {% if obj.year_to < 0 %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_to|abs }} <small class="text-secondary">BCE</small></span>
+    {% else %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_to }} <small class="text-secondary">CE</small></span>
+    {% endif %}
+{% elif obj.year_to == None %}
+    {% if obj.year_from < 0 %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small></span>
+    {% else %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></span>
+    {% endif %}
+
+{% else %}
+    {% if obj.year_to < 0 %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+    {% elif obj.year_to >= 0 %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+    {% else %}
+    <span style="text-align: left; border-width: 0;">{{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+    {% endif %}
+{% endif %}

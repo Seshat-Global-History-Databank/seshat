@@ -111,7 +111,7 @@ def rtvars(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         filtered_queryset_pres = 0
         filtered_queryset_abs = 0
         filtered_queryset_unk = 0
@@ -276,7 +276,7 @@ def rtvarsold(request):
         model_all = model_name.lower() + "s_all"
         model_s = model_name.lower() + "s"
 
-        queryset = model.objects.all()
+        queryset = model.objects.exclude(polity_id__isnull=True)
         politys = queryset.values_list('polity', flat=True).distinct()
         unique_politys.update(politys)
         number_of_variables += 1
@@ -949,7 +949,7 @@ def download_csv_all_rt(request):
     # Iterate over each model
     for model in app_models:
         # Get all rows of data from the model
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
 
         for obj in items:
             if obj.clean_name() == "widespread_religion":
@@ -984,7 +984,7 @@ def show_problematic_rt_data_table(request):
     # Collect data from all models
     data = []
     for model in app_models:
-        items = model.objects.all()
+        items = model.objects.exclude(polity_id__isnull=True)
         for obj in items:
             if obj.polity.start_year is not None and obj.year_from is not None and obj.polity.start_year > obj.year_from:
                 data.append(obj)
@@ -1034,7 +1034,7 @@ def download_csv_religious_demography(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Religious Demography":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1084,7 +1084,7 @@ def download_csv_government_restrictions(request):
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
         if s_value == "Religious Tolerance" and ss_value == "Government Restrictions":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1134,7 +1134,7 @@ def download_csv_societal_restrictions(request):
         s_value = str(model().subsection())
         ss_value = str(model().sub_subsection())
         if s_value == "Religious Tolerance" and ss_value == "Societal Restrictions":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1183,7 +1183,7 @@ def download_csv_moralizing_supernatural_punishment_and_reward(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Moralizing Supernatural Punishment and Reward":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1233,7 +1233,7 @@ def download_csv_religious_tolerance(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Religious Tolerance":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,
@@ -1283,7 +1283,7 @@ def download_csv_human_sacrifice(request):
             continue
         s_value = str(model().subsection())
         if s_value == "Human Sacrifice":
-            items = model.objects.all()
+            items = model.objects.exclude(polity_id__isnull=True)
             for obj in items:
                 writer.writerow([obj.subsection(), obj.clean_name(), obj.year_from, obj.year_to,
                             obj.polity.long_name, obj.polity.new_name, obj.polity.name, obj.show_value_from(), obj.show_value_to(), obj.get_tag_display(), obj.is_disputed, obj.is_uncertain,

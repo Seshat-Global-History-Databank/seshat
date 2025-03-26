@@ -2,7 +2,7 @@ from seshat.apps.core.models import Polity, Variablehierarchy, Section, Subsecti
 # from seshat.apps.crisisdb.models import *
 import django.apps
 import pprint
-from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice
+from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice, Instability_event
 # from seshat.apps.crisisdb.models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
 
 from django.contrib.contenttypes.models import ContentType
@@ -664,7 +664,95 @@ def get_all_ec_data_for_a_polity(polity_id, user):
     return all_vars_grouped_ec, has_any_data
 
 
-def get_all_rt_data_for_a_polity(polity_id):
+# Define models that should always be accessible
+PUBLIC_MODELS = {'Moralizing_supernatural_punishment_and_reward','Moralizing_supernatural_concern_is_primary','Moralizing_enforcement_is_certain','Moralizing_enforcement_is_broad','Moralizing_enforcement_is_targeted','Moralizing_enforcement_of_rulers','Moralizing_religion_adopted_by_elites','Moralizing_religion_adopted_by_commoners','Moralizing_enforcement_in_afterlife','Moralizing_enforcement_in_this_life','Moralizing_enforcement_is_agentic',} 
+RESTRICTED_MODELS = {'Widespread_religion', 'Official_religion','Elites_religion','Theo_sync_dif_rel','Sync_rel_pra_ind_beli','Religious_fragmentation','Gov_vio_freq_rel_grp','Gov_res_pub_wor','Gov_res_pub_pros','Gov_res_conv','Gov_press_conv','Gov_res_prop_own_for_rel_grp','Tax_rel_adh_act_ins','Gov_obl_rel_grp_ofc_reco','Gov_res_cons_rel_buil','Gov_res_rel_edu','Gov_res_cir_rel_lit','Gov_dis_rel_grp_occ_fun','Soc_vio_freq_rel_grp','Soc_dis_rel_grp_occ_fun','Gov_press_conv_for_aga',}  
+
+RELEASED_POLS = {"kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"}
+
+def get_all_rt_data_for_a_polity(request, polity_id):
+    """
+    Gets all data for a given polity ID from the "rt" app.
+    Some models are publicly accessible, while others require 'add_capital' permission.
+
+    Args:
+        request (HttpRequest or None): The request object to check user permissions.
+        polity_id (int): The ID of the polity.
+
+    Returns:
+        tuple: A dictionary of all data for the polity and a boolean indicating whether the polity has any data.
+    """
+    user = request.user if request else None
+    app_name = 'rt'  
+    models_1 = apps.get_app_config(app_name).get_models()
+    this_polity = Polity.objects.get(id=polity_id)
+    this_polity_new_name = this_polity.new_name
+
+    print(this_polity_new_name)
+
+    has_any_data = False
+    all_vars_grouped_rt = {}
+
+    for model in models_1:
+        model_name = model.__name__
+        #print(f"Model: {model.__name__}, Verbose Name: {model._meta.verbose_name_plural}")
+
+        # Skip restricted models if user does not have permission
+        if model_name in RESTRICTED_MODELS and this_polity_new_name not in RELEASED_POLS:
+            if not user or not user.has_perm('core.add_capital'):
+                print(model_name)
+                continue
+
+        s_value = str(model().subsection())
+
+        if s_value not in all_vars_grouped_rt:
+            all_vars_grouped_rt[s_value] = {}
+            all_vars_grouped_rt[s_value]["None"] = {}
+
+        # add HS manually
+        all_vars_grouped_rt['Human Sacrifice'] = {}
+        all_vars_grouped_rt['Human Sacrifice']["None"] = {}
+
+    for ct in ContentType.objects.filter(app_label='rt'):
+        mm = ct.model_class()
+        if mm and mm.__module__ == "seshat.apps.rt.models":
+            # Skip restricted models if user does not have permission
+            if mm.__name__ in RESTRICTED_MODELS and this_polity_new_name not in RELEASED_POLS:
+                if not user or not user.has_perm('core.add_capital'):
+                    continue
+
+            my_data = mm.objects.filter(polity=polity_id)
+
+            if my_data:
+                has_any_data = True
+                my_s = mm().subsection()
+                if my_s:
+                    all_vars_grouped_rt[my_s]["None"][mm.__name__] = my_data
+                else:
+                    print(f"Invalid subsection for model: {mm.__name__}")
+            else:
+                my_s = mm().subsection()
+                if my_s:
+                    all_vars_grouped_rt[my_s]["None"][mm.__name__] = None
+                else:
+                    print(f"--------xxx-----{my_s},")
+
+    if user and user.has_perm('core.add_capital'):
+        print("hooooy")
+        hs_data = Human_sacrifice.objects.filter(polity = polity_id)
+        if hs_data:
+            print(hs_data)
+            has_any_data = True
+            my_s = 'Human Sacrifice'
+            all_vars_grouped_rt[my_s]["None"]['Human_sacrifice'] = hs_data
+        else:
+            my_s = 'Human Sacrifice'
+            all_vars_grouped_rt[my_s]["None"]['Human_sacrifice'] = None
+
+    return all_vars_grouped_rt, has_any_data
+
+
+def get_all_rt_data_for_a_polity_old(polity_id):
     """
     Gets all data for a given polity ID from the "rt" app.
 
@@ -796,6 +884,16 @@ def get_all_power_transitions_data_for_a_polity(polity_id):
     if my_data:
         #a_data_dic["power_transitions"] = my_data
         a_data_dic["power_transition"] = my_data
+
+    #print(a_data_dic)
+    return a_data_dic
+
+def get_all_instability_data_for_a_polity(polity_id):
+    a_data_dic = {}
+    my_data = Instability_event.objects.filter(polity = polity_id)
+    if my_data:
+        #a_data_dic["power_transitions"] = my_data
+        a_data_dic["instability_event"] = my_data
 
     #print(a_data_dic)
     return a_data_dic

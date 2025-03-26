@@ -1,4 +1,4 @@
-from .models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
+from .models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Instability_event, Check_choice
 import datetime
 
 from django import forms
@@ -242,6 +242,59 @@ class Power_transitionForm(ExpertReviewedForm):
         widgets['external_invasion'] = forms.Select(attrs={'class': 'form-control  mb-1', })
         widgets['external_interference'] = forms.Select(attrs={'class': 'form-control  mb-1', })
 
+
+
+class Instability_eventForm(ExpertReviewedForm):
+
+    ra_check = forms.ModelMultipleChoiceField(
+        queryset=Check_choice.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input text-danger'}),
+        required=False  # Since it's blank=True in the model
+    )
+
+    class Meta:
+
+        model = Instability_event
+        fields = commonfields.copy()
+        fields.append('inst_intensity')
+        fields.append('inst_extent') 
+        fields.append('name')
+        fields.append('llm_description')
+        fields.append('general_cot')
+        fields.append('classification_cot') 
+        fields.append('sorokin_rationale')
+        fields.append('real_event_check')
+        fields.append('ra_check')
+        fields.append('note')
+
+
+        
+
+        labels = commonlabels.copy()
+        labels['llm_description'] = "<span class='fs-6'> LLM Description: </span>"
+        labels['name'] = "<span class='fs-6'> Event Name: </span>"
+        labels['inst_extent'] = "<span class='fs-6'> Extent: </span>"
+        labels['inst_intensity'] = "<span class='fs-6'> Intensity: </span>"
+        labels['general_cot'] = "<span class='fs-6'> General Chain of Thought: </span>"
+        labels['classification_cot'] = "<span class='fs-6'> Classification Chain of Thought </span>"
+        labels['sorokin_rationale'] = "<span class='fs-6'> Sorokin Rationale </span>"
+        labels['real_event_check'] = "<span class='fs-6'> Real Event? </span>"
+        labels['ra_check'] = "<span class='fs-6'> RA Check: </span>"
+        labels['note'] = "<span class='fs-6'>RAs Note</span>"
+
+
+        widgets = dict(commonwidgets)
+        widgets['inst_extent'] = forms.Select(attrs={'class': 'form-control  mb-1', })
+        widgets['inst_intensity'] = forms.Select(attrs={'class': 'form-control  mb-1', })
+        widgets['llm_description'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 140px'})
+        widgets['name'] = forms.TextInput(attrs={'class': 'form-control  mb-1', })
+        widgets['general_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'readonly': "True"})
+        widgets['classification_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'readonly': "True"})
+        widgets['sorokin_rationale'] = forms.Textarea(attrs={'class': 'form-control  mb-3',  'style': 'height: 100px'})
+        widgets['real_event_check'] = forms.Select(attrs={'class': 'form-control  mb-1', })
+        widgets['ra_check'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})  
+        widgets['note'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 120px', 'placeholder':'Add a note (optional)'})  
+        #widgets['inst_llm_ref'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})   
 
 
 class Human_sacrificeForm(ExpertReviewedForm):

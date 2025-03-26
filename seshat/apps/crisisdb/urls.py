@@ -1,6 +1,6 @@
-from .models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_violence, Us_location, Us_violence_subtype, Us_violence_data_source, Power_transition
+from .models import Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Us_violence, Us_location, Us_violence_subtype, Us_violence_data_source, Power_transition, Instability_event
 
-from .forms import Human_sacrificeForm, Power_transitionForm
+from .forms import Human_sacrificeForm, Power_transitionForm, Instability_eventForm
 
 from django.urls import path
 
@@ -8,11 +8,12 @@ from .views import confirm_delete_view, delete_object_view
 from .var_defs import crisisdb_var_defs
 
 from . import views
-from seshat.apps.general.views import dynamic_create_view, dynamic_detail_view, generic_list_view, dynamic_update_view, dynamic_update_view_old, generic_metadata_download, generic_download
+from seshat.apps.general.views import dynamic_create_view, dynamic_detail_view, generic_list_view, dynamic_update_view, dynamic_update_view_old, generic_metadata_download, generic_download, generic_json_download
 
 model_form_pairs_main = [
      (Human_sacrifice, Human_sacrificeForm, 'human_sacrifice', 'human_sacrifice', 'Human Sacrifice', 'Human Sacrifice', None, 'rt'),
      (Power_transition, Power_transitionForm, 'power_transition', 'power_transition', 'Power Transition', 'Power Transitions', None, 'crisisdb'),
+     (Instability_event, Instability_eventForm, 'instability_event', 'instability_event', 'Instability Event', 'Instability Events', None, 'crisisdb'),
                          ]
 
 model_form_pairs = [
@@ -91,7 +92,7 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
           'var_name_display': myvar,
         }, name=f'{x_name}-detail')
      )
-    if coded_value == 'human_sacrifice':
+    if coded_value == 'human_sacrifice' or coded_value == 'instability_event':
      urlpatterns.append(
           path(f'{x_name}s_all/', generic_list_view, {
                'model_class': model_class,
@@ -128,6 +129,17 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
             'db_section': db_section,        
         }, name=f'{x_name}-download')
      )
+    urlpatterns.append(
+        path(f'{x_name}jsondownload/', generic_json_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,
+        }, name=f'{x_name}-json-download')
+     )   
     urlpatterns.append(
         path(f'{x_name}metadownload/', generic_metadata_download, {
             'var_name': x_name,

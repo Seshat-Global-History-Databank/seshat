@@ -1,0 +1,692 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load mathfilters %}
+{% load custom_filters %}
+
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+
+
+<style>
+
+    .select2-selection__choice__remove {
+        color: red;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: darkred;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 20px;
+
+
+    }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+            color:rgb(2, 57, 2);
+            padding-left: 20px;
+            width:100%;
+
+    }
+
+
+
+    .select2-container .select2-search--inline {
+        padding-left: -40px;
+
+    }
+
+    .select2-container--default .select2-search--inline .select2-search__field {
+        background: white;
+        border: none;
+        outline: 0;
+        margin-left:-20px;
+        cursor:text;
+        box-shadow: none;
+        padding-right: 1px;
+        margin-top:10px;
+        width:100%;
+
+    }
+
+
+
+    /* Style the dropdown */
+    .select2-container .select2-selection--single {
+      height: 38px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 6px;
+    }
+
+    .select2-container .select2-results__option:hover {
+        background-color: #782823;
+        color: beige;
+
+      }
+
+      .select2-container .select2-selection--multiple {
+        box-sizing: border-box;
+        cursor: pointer;
+        display: block;
+        min-height: 32px;
+        user-select: none;
+        -webkit-user-select: none;
+        width: 300px;
+
+    }
+
+
+      .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #782823;
+        color: beige;
+        width:100%;
+
+      }
+
+      .goodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
+        border:2px solid seagreen;
+      }
+
+      .goodsubmit:hover{
+        font-weight: bold;
+      }
+  
+    /* Style the dropdown arrow */
+    .select2-container .select2-selection__arrow {
+      height: 36px;
+      margin-top: 4px; /* Adjust the margin-top as needed */
+      width:100%;
+
+    }
+
+    .form-check-inline {
+        display: flex;
+        flex-direction: row;
+        align-items: center; /* Center vertically */
+        margin-right: 10px; /* Add some spacing between radio buttons */
+    }
+    .form-check-label {
+        display: inline-block;
+        align-items: center;
+        margin-right: 15px; /* Add spacing between radio buttons */
+    }
+    
+    .form-check-label input[type="radio"] {
+        margin-right: 5px; /* Add spacing between radio circle and label */
+    }
+
+
+    /* Hide the up and down arrows */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"] {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .checkboxinput {
+        width: 18px;  /* Increase the width of the checkbox */
+        height: 18px; /* Increase the height of the checkbox */
+        cursor: pointer; /* Change the cursor to indicate interactivity */
+    }
+
+    .tab-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tab {
+        margin: 0 2px;
+        padding: 5px 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+    
+    .tab a {
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+    }
+    
+    .tab:hover {
+        background-color: #d1d1d1;
+    }
+    
+    .tab.active {
+        background-color: #4CAF50;
+        color: white;
+        border-color: #4CAF50;
+    }
+
+    .tab.done {
+        background-color: #782823;
+        color: lightgray;
+        border-color: #782823;
+    }
+    
+    .tab.waiting {
+        color: gray;
+        border-color: darkgray;
+    }
+
+    .tab.active a {
+        color: white;
+    }
+    
+    .arrow {
+        font-size: 24px;
+        margin: 0 10px;
+        color: #4CAF50;
+    }
+
+    
+    .mainform {
+        background:rgba(255, 235, 205, 0.464); 
+        border: 0px #78292366 solid;
+        border-radius: 5px;
+        box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
+    }
+    
+    .scrollable-box {
+        width: 100%; /* You can adjust this value */
+        height: 200px; /* Adjust this to set the box height */
+        overflow-y: auto; /* Enables vertical scrolling */
+        overflow-x: hidden; /* Hides horizontal overflow */
+        border: 1px solid #ddd; /* Optional: Adds a border for aesthetics */
+        padding: 10px; /* Optional: Adds some padding inside the box */
+        background-color: #f9f9f9; /* Optional: Sets background color */
+        border-radius: 5px; /* Optional: Rounds the box corners */
+    }
+
+        
+    .bg-info-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: dodgerblue;
+        border: 1px solid dodgerblue;   
+       }
+    
+       .bg-danger-light {
+        background: lightpink;
+    
+       }
+    
+        .my_small_link:hover {
+          color:navajowhite;
+        }
+    
+       .bg-success-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: teal;
+        border: 1px solid teal;   
+        }
+    
+       .bg-warning-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkorange;
+        border: 1px solid goldenrod;   
+       }
+    
+       .bg-uncoded-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkred;
+        border: 1px solid rosybrown;
+       }
+       
+       .bg-trans-light {
+        background: cadetblue;
+    
+       }
+       
+       .custom-right-align {
+        margin-left: auto !important; /* Pushes the column to the right */
+        text-align: right !important; /* Aligns inner content to the right */
+    }
+    
+       .bg-unknown-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: hotpink;
+        border: 1px solid hotpink;
+        }
+    
+       .bg-secondary-light {
+        background: #fffdf2;
+        color: lightcoral;
+        border: 1px solid lightcoral;
+    
+    
+       }
+    
+       .bg-absent-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: gray;
+        border: 1px solid lightgray;   
+    
+       }
+    
+       .highlighted-value-title {
+        display: inline-block; 
+        border: 1px solid rgba(78, 28, 23, 0.25);
+        padding: 1px; 
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 5px;
+        margin:0px;
+        font-family: 'Roboto Mono', monospace;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    }
+
+    .highlighted-value-title-empty {
+        display: inline-block; 
+        border: 1px solid rgba(78, 28, 23, 0.25);
+        padding: 1px; 
+
+        border-radius: 5px;
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to left, rgb(246, 127, 127, 0.156),rgb(242, 199, 119, 0.156),rgb(151, 230, 151, 0.156));
+    }
+
+    .highlighted-value-title-pred {
+        display: inline-block; 
+        border: 1px solid rgba(208, 154, 149, 0.639);
+        padding: 1px; 
+        padding-right: 10px;
+        padding-left: 10px;
+        border-radius: 5px;
+        margin:0px;
+        font-family: 'Roboto Mono', monospace;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+    }
+
+        .row {
+            --bs-gutter-x: 0.5rem;
+        }    
+
+        .expert_name {
+            border-radius: 5px;
+        }
+        .comment-box {
+          padding: 5px;
+          margin-top: 0px;
+          border: 1px solid gray;
+          display: inline-block; /* Adjusts width based on content */
+          border-radius: 0 5px 10px 10px; /* Sharp top-left, rounded others */
+      }
+      .extra-small {
+        font-size: 12px; /* Adjust to desired size */
+        color: gray; /* Optional: makes it less prominent */
+      }
+
+      .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+    
+      }
+
+</style>
+<!-- form-row and form-group etc are removed in Bootstrap 5 -->
+<div class="container mt-1">
+
+
+    <div class="row d-flex mt-3">
+        <div class="col-sm-4">
+            {% if db_section_mapper %}
+
+            <div class="h4 p-1" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
+                {% if var_section %}
+                <span class="p-2 m-0 fw-normal">{{var_section}} </span>
+                {% endif %}
+
+            </div>
+            {% endif %}
+
+
+
+        </div>
+        <div class="col-sm-8">
+
+            {% if form.instance.pk %}
+                {% if form.instance.curator.exists %}
+                <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
+                    <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
+                        {% for curator in form.instance.curator.all %}
+                        <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
+
+                        {% endfor %}            
+                </div>
+
+                </div>
+
+
+                {% else %}
+                <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
+                    <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                        <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                    </div>
+                </div>
+
+                {% endif %}
+            {% endif %}
+        
+        </div>
+        <div class="col-sm-12 border-dark mainform mb-4"> 
+            <form id="regForm" action="" method="post" >
+                {% csrf_token %}
+                <legend>
+        
+                </legend>
+                {% if messages %}
+                <ul class="messages mt-3">
+                    {% for message in messages %}
+                    <div class="container-fluid p-0">
+                        <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+                            <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                    <div class="container-fluid p-0">
+                      <div class="text-danger" role="alert" >
+                        <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
+                      </div>
+                    </div>
+                    {% endfor %}
+                    <hr> 
+                    {% endif %}
+                </ul>
+                <hr class="bg-colorful">
+                {% endif %}
+                <div class="row pt-2 ps-2">
+                    <div class="col-sm-12 row">
+                        <div class="col-sm-5">
+                            <b> Event Name:</b>
+                           <span class="highlighted-value-title"> {{ form.instance.name}}</span>
+                            <br>
+                            <b> Years:</b>
+
+
+                            {% if form.instance.year_from == None %}                        
+                            {% elif form.instance.year_from == form.instance.year_to %}
+                                {% if form.instance.year_from < 0 %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </td>
+                                {% else %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></td>
+                                {% endif %}
+                            {% elif form.instance.year_to == None %}
+                                {% if form.instance.year_from < 0 %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></td>
+                                {% else %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></td>
+                                {% endif %}
+                            {% elif form.instance.year_to == None and form.instance.year_from == None %}
+                            <td colspan="1" style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </td>
+                            {% else %}
+                                {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></td>
+                                {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></td>
+                                {% else %}
+                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></td>
+                                {% endif %}
+                            {% endif %}
+    
+                        </div>
+                        <div class="col-sm-5">
+                            <b> Polity:</b>
+                            {{ form.instance.polity}}
+                        </div>
+
+
+
+                        <div class="col-sm-4 pb-3"  style="display:none;">
+                            {{ extra_var|as_crispy_field }}
+                        </div>
+        
+                        <div class="col-sm-4 pb-0"  style="display:none;">
+                            {{ form.polity|as_crispy_field }}
+                        </div>
+        
+                        <div class="col-sm-1 pb-0"  style="display:none;">
+                            {{ form.year_from|as_crispy_field }}
+                          </div>
+                          <div class="col-sm-1 pb-0"  style="display:none;">
+                            {{ form.year_to|as_crispy_field }}
+                          </div>
+
+
+
+                          <div class="col-sm-2 pb-3">
+                            {{ extra_var5|as_crispy_field }}
+                        </div>
+
+
+                        <div class="col-sm-12 pb-3" style="display:none;">
+                            {{ extra_var4|as_crispy_field }}
+                        </div>
+
+                    
+                        <div class="col-sm-6 pb-1">
+                            <b class="highlighted-value-title-pred"> LLM Description:</b> 
+
+                           
+                            {{ form.instance.llm_description}}
+                            <br>
+                            <b class="highlighted-value-title-pred">LLM REFS: </b> <br>
+                            {% autoescape off %}
+
+                            {{ form.instance.get_instability_refs}}
+                            {% endautoescape %}
+                        </div>
+
+                        <div class="col-sm-6 pb-3">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                 <b>Intensity:</b>   
+                                  <b class="highlighted-value-title"> {{ form.instance.inst_intensity}}</b> <br>  {{ form.instance.get_inst_intensity_display }} 
+                                </div>
+                                <div class="col-sm-6">
+                                    <b>Extent:</b>   
+                                    <b class="highlighted-value-title"> {{ form.instance.inst_extent}}</b> <br>  {{ form.instance.get_inst_extent_display }} 
+                                  </div>
+                                <div class="col-sm-12 pt-2">
+                                    <b>Sorokin Rationale:</b>   
+
+                                    {{ form.instance.sorokin_rationale }}
+                                </div>
+          
+                            </div>
+                        </div>
+                        <div class="col-sm-8 pb-3" style="display:none">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ extra_var2|as_crispy_field }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ extra_var3|as_crispy_field }}
+                                </div>
+                                <div class="col-sm-12">
+                                    {{ extra_var9|as_crispy_field }}
+                                </div>
+          
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                   
+
+
+
+
+
+
+
+
+
+    
+
+
+                        <div class="row col-sm-6 pe-0 pt-4  d-flex flex-column">
+                     
+                            <div class="col-sm-12">
+                                <b class="pb-3">RA Checks:</b>
+                                <span class="form-check pb-4" >
+                                    {% for checkchoice in form.ra_check %}
+                                        <label class="pb-1 pe-0 form-check-label" style="display:block;" for="{{ checkchoice.id_for_label }}">
+                                            {{ checkchoice.tag }}
+                                            <span class="fw-normal">  
+                                                {{ checkchoice.choice_label }}
+                                            </span>
+                                        </label>
+            
+            
+                                    {% endfor %}
+                                </span>
+                            </div>
+                  
+                            <div class="col-sm-12 pe-4" style="vertical-align: top;" >
+                                {{ extra_var10|as_crispy_field }}
+                            </div>
+                            <div class="col-sm-6 pb-4" style="vertical-align: top;">
+                                <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit" style="font-family: 'Roboto Mono', monospace; ">
+                                    Submit Your Check
+                                </button>
+                            </div>
+
+                        
+                    </div>
+                    <div class="col-sm-6">
+
+
+                        {% include "core/partials/_private_comment_inline_accordion.html" %}
+
+
+
+                        {% autoescape off %}
+
+                        <div class="col-sm-6 pb-1" style="display:none">
+                            {{ extra_var6|as_crispy_field }}
+                        </div>
+                        <div class="row pt-3">
+                            <div class="col-sm-6 pb-1" >
+                                <b>General Chain of Thought:</b> <br>
+                                <div class="border p-1" style="height:300px; overflow: auto">
+                                    {{ form.instance.general_cot }}
+    
+                                </div>
+                            </div>
+                            <div class="col-sm-6 pb-1 ">
+                                <b>Classification Chain of Thought:</b> <br>
+                                <div class="border p-1" style="height:300px; overflow: auto">
+                                    {{ form.instance.classification_cot }}
+    
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endautoescape %}
+
+                        <div class="col-sm-6 pb-1" style="display:none"> 
+                            {{ extra_var7|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-12 mb-5 mt-3 ps-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
+        
+                            {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+                            {{ form.suggested_expert|as_crispy_field }}
+                            <small>These Seshat Experts will get Notifications to review this record.</small>
+                        
+                            {% else %}
+                            {{ form.expert_reviewed_by_me|as_crispy_field }}
+                        
+                            {% endif %}
+                        
+            
+                        </div>
+                    </div>
+
+             
+          
+        
+                          <div class="col-sm-12" style="display:none">
+                            {{ form.description }}
+                          </div>
+        
+                          <div class="col-sm-2 pb-0 pt-4" style="align-items: end; display:none;">
+                            {{ form.is_disputed|as_crispy_field }}
+                            {{ form.is_uncertain|as_crispy_field }}
+                            {{ form.tag|as_crispy_field }}
+
+                        </div>
+
+
+
+                    <div class="col-sm-12 pe-0" style="display:none" >
+
+
+                            {{ form.description|as_crispy_field }}
+                     </div>
+
+        
+                    </div>
+
+        
+                </div>
+
+                  </form>
+        </div> 
+
+    </div> 
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 with an empty dataset
+        $('.js-example-basic-single').select2();
+    });    
+
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2({
+            allowClear: true,
+        });
+    });
+    
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+    })
+
+
+</script>
+{% endblock %}

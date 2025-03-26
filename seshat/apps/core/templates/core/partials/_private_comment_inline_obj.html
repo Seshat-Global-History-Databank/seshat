@@ -1,0 +1,30 @@
+{% load custom_filters %}
+
+{% if obj.private_comment and 'core.add_seshatprivatecommentpart' in  user.get_all_permissions  %}
+
+{% if obj.private_comment.id == 1 or obj.private_comment.inner_private_comments_related.all|length == 0 %}
+{% else  %}
+<span class="p-0 m-0">
+    <div class="p-0 m-0 row" style="font-size:14px;">
+        <div class="fw-bold col-sm-2 pt-2" style="background-color:beige; border-right:6px solid darkgray; border-bottom-left-radius:20px; ">Private Comments <br>
+            <span class="text-secondary fw-light"> (Only visible to Selected Seshat Experts/RAs)</span> <br>
+    
+    </div>
+
+        <div class="p-2 mt-2 col-sm-10">
+            {% if obj.private_comment.show_inline|textincludes:"I would appreciate it if you could review it." %}
+            {{obj.private_comment.show_inline_short}}
+            {% else %}
+            {{obj.private_comment.show_inline}}
+
+            {% endif %}  
+            <span class="badge fs-6 ms-2 py-2 px-3 text-dark fw-light mb-1" style="background-color:beige; border: 1px solid gray">
+                <a class="p-1 text-dark" href="{% url 'seshatprivatecomment-update' obj.private_comment.id %}"><span> <i class=" fa-solid fa-pen-to-square text-dark"></i><span >&nbsp;&nbsp;Add your Private Comment</span></span></a>
+            </span>
+        </div>
+
+    </div>
+</span>
+
+{% endif %}  
+{% endif %}   

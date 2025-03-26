@@ -6,7 +6,7 @@ from .forms import Widespread_religionForm, Official_religionForm, Elites_religi
 
 
 
-from seshat.apps.general.views import dynamic_create_view, dynamic_update_view, dynamic_update_view_old, generic_list_view, generic_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view, delete_object_view
+from seshat.apps.general.views import dynamic_create_view, dynamic_update_view, dynamic_update_view_old, generic_list_view, generic_download, generic_json_download, generic_metadata_download, dynamic_detail_view, confirm_delete_view, delete_object_view, delete_object_view
 
 from .var_defs import rt_var_defs
 
@@ -138,6 +138,17 @@ for model_class, form_class, coded_value, x_name, myvar, sec, subsec, db_section
             'var_subsection': subsec,
             'db_section': db_section,
         }, name=f'{x_name}-download')
+     )
+    urlpatterns.append(
+        path(f'{x_name}jsondownload/', generic_json_download, {
+            'model_class': model_class,
+            'var_name': x_name,
+            'x_name': x_name,
+            'coded_value': coded_value,
+            'var_section': sec,
+            'var_subsection': subsec,
+            'db_section': db_section,
+        }, name=f'{x_name}-json-download')
      )
     urlpatterns.append(
         path(f'{x_name}metadownload/', generic_metadata_download, {

@@ -139,13 +139,13 @@
         </div>
     </div>
 
-    <div style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
+    <div style="  border-top-left-radius: 5px;  border-top-right-radius: 5px; overflow: hidden;">
     <table class="table table-borderless align-middle">
         <thead>        
-          <tr class="h6 text-secondary">
+          <tr class="h6 text-secondary" style="border-bottom: 2px solid rgba(120, 40, 35, 0.311);">
             <th style="text-align: left;" class="h6" scope="col">Variable</th>
-            <th style="text-align: left;" class="h6" scope="col">Coded Value</th>
             <th style="text-align: left;" class="h6" scope="col">Polity</th>
+            <th style="text-align: left;" class="h6" scope="col">Coded Value</th>
             <th style="text-align: center;" class="h6" scope="col">Year(s)</th>
             <th class="h6" scope="col" style="text-align: left">Tag(s)</th>
             <th class="h6" scope="col" style="text-align: center">Update</th>
@@ -153,19 +153,20 @@
         </thead>
         <tbody>
             {% for my_inst in my_app_models %}
-              <tr class="bg-colorful-light h6">
+              <tr class="h6">
                   <td  class="fw-bold"  style="text-align: left;">{{ my_inst.my_var_name }}</td>
-                  <td  class="fw-bold"   style="text-align: left;">
-                {% autoescape off %}    
-                    {{ my_inst.my_value }}
-                {% endautoescape %}    
 
-                </td>
 
                   <td style="text-align: left;">
                     <span class="fw-bold"><a href="{% url 'polity-detail-main' pk=my_inst.my_polity_id %}" class="text-teal" >{{my_inst.my_polity}}</a></span>
                     
                     </td>
+                    <td  class="fw-bold bg-colorful-light ps-2"   style="text-align: left;">
+                        {% autoescape off %}    
+                            {{ my_inst.my_value }}
+                        {% endautoescape %}    
+        
+                        </td>
                     {% if my_inst.my_year_from == None %}
                         <td style="text-align: center;"> - </td>
                     {% elif my_inst.my_year_from == my_inst.my_year_to %}
@@ -386,7 +387,7 @@
 
 
         {% if user|in_group:"Chief Seshat External Experts" %}
-        <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+        <div class="pt-3 mb-3" style="background: #daf1de; border: 2px solid #235347; border-radius:10px;">
             <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
                 {% csrf_token %}
                 <div class="h3 mb-3" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-regular fa-circle-check"></i>  Expert Review &nbsp;
@@ -464,7 +465,7 @@
                     <td class="col-md-2 pe-2" style="text-align: right">
                         {% for an_expert in  subcom.private_comment_reader.all %}
                         <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
-                        border: 2px solid {{an_expert.id|give_me_a_color}}; border-left: 10px solid {{an_expert.id|give_me_a_color}}
+                        border: 1px solid {{an_expert.id|give_me_a_color}}; border-left: 5px solid {{an_expert.id|give_me_a_color}}
                         {% endif %}; border-radius:5px; ">{{an_expert}}</span>
                         {% endfor %}
                     </td>
