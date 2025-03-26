@@ -4266,5 +4266,154 @@ class Polity_religious_tradition(SeshatCommon):
     def __str__(self) -> str:
         return call_my_name(self)
              
+
+class City_duration(SeshatCommon):
+    """
+    This model is used to store the information about the duration of the
+    cities.
+    """
+    name = models.CharField(max_length=100, default="City_duration")
+    city_year_from = models.IntegerField(blank=True, null=True)
+    city_year_to = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        """
+        :noindex:
+        """
+        verbose_name = 'City_duration'
+        verbose_name_plural = 'City_durations'
+        ordering = ['year_from', 'year_to']
+
+    @property
+    def display_citations(self):
+        """
+        Display the citations of the model instance.
+
+        :noindex:
+
+        Note:
+            The method is a property, and an alias for the return_citations
+            function.
+
+        Returns:
+            str: The citations of the model instance, separated by comma.
+        """
+        return return_citations(self)
+
+    def clean(self):
+        """
+        Validate the year_from and year_to fields of the model instance.
+
+        :noindex:
+
+        Note:
+            The method an alias for the clean_times function.
+
+        Returns:
+            None
+
+        Raises:
+            ValidationError: If the year_from is greater than the year_to.
+            ValidationError: If the year_from is out of range.
+            ValidationError: If the year_from is earlier than the start year of the corresponding polity.
+            ValidationError: If the year_to is later than the end year of the corresponding polity.
+            ValidationError: If the year_to is out of range.
+        """
+        clean_times(self)
+
+    def clean_name(self):
+        """
+        Return the name of the model instance.
+
+        :noindex:
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The name of the model instance.
+        """
+        return "city_duration"
+
+    def clean_name_spaced(self):
+        """
+        Return the name of the model instance with spaces.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+        """
+        return "Polity Duration"
+
+    def show_value(self):
+        """
+        Return the duration of the polity (if it exists on the instance,
+        otherwise return a dash).
+
+        Returns:
+            str: The duration of the polity (or " - " if it does not exist on the instance).
+        """
+        if self.city_year_from == self.city_year_to:
+            if self.city_year_from < 0:
+                return f'{abs(self.city_year_from)}' + " BCE" 
+            else:
+                return f'{abs(self.city_year_from)}' + " CE" 
+        elif self.city_year_to == None:
+            if self.city_year_from < 0:
+                return f'{abs(self.city_year_from)}' + " BCE" 
+            else:
+                return f'{abs(self.city_year_from)}' + " CE" 
+        elif self.city_year_to == None and  self.city_year_from == None:
+            return " - " 
+        else:
+            if self.city_year_from < 0 and self.city_year_to < 0:
+                return "[" + f'{abs(self.city_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.city_year_to)}' + " BCE"  + "]"
+            elif  self.city_year_from < 0 and self.city_year_to >= 0:
+                return "[" + f'{abs(self.city_year_from)}' + " BCE"  + " ➜ " + f'{abs(self.city_year_to)}' + " CE"  + "]"
+            else:
+                return "[" + f'{abs(self.city_year_from)}' + " CE"  + " ➜ " + f'{abs(self.city_year_to)}' + " CE" + "]"
+
+    def subsection(self):
+        """
+        Return the subsection of the model instance.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            str: The subsection of the model instance.
+        """
+        return "Temporal Bounds"
+
+    def sub_subsection(self):
+        """
+        Return the subsection's subsection of the model instance.
+
+        Note:
+            TODO This method should probably just be an attribute set on the
+            model instead.
+
+        Returns:
+            None
+        """
+        return None
+
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+
+        :noindex:
+
+        Returns:
+            str: A string of the url to access a particular instance of the model.
+        """
+        return reverse('city_duration-detail', args=[str(self.id)])
+
+    def __str__(self) -> str:
+        return call_my_name(self)
+
+
         
 ########## END of class Definitions for general Models
