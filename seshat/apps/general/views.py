@@ -7981,8 +7981,12 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
         x_name_with_from = f'{x_name}_from'
         x_name_with_to = f'{x_name}_to' 
     elif coded_value == 'duration':
-        x_name_with_from = 'polity_year_from'
-        x_name_with_to = 'polity_year_to'
+        if myvar == 'City Duration':
+            x_name_with_from = 'city_year_from'
+            x_name_with_to = 'city_year_to'
+        else:
+            x_name_with_from = 'polity_year_from'
+            x_name_with_to = 'polity_year_to'
     elif coded_value == 'peak_years':
         x_name_with_from = 'peak_year_from'
         x_name_with_to = 'peak_year_to'
