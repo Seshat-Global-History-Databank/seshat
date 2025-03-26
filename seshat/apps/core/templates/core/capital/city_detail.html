@@ -279,6 +279,149 @@
             
             </div>
         {% endif %}
+        {% if all_city_data %}
+            <div class="col-md-12 m-0 p-0">
+                <span class="h2 fw-bold m-0 p-0">
+                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc1071d;">
+                        General Variables
+                    </span>
+                    <span class="mt-3 fs-5">
+                        <a href="#general_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
+                    </span>
+                </span>
+            </div>
+            <div class="row">
+                {% for key_top, values_top in all_city_data.items %}
+                    {% for key_m, values_m in values_top.items %}
+                        {% if values_m %}
+                            <div class="col-md-2 mt-2 pt-1 border-top border-1 border-warning d-flex align-items-top">
+                                <span class="fs-6 fw-bold" style="text-align: left; color:#000">
+                                    <i class="fa-solid fa-circle fa-2xs text-warning"></i>
+                                    <span>{{ key_top }}</span>
+                                    {% if key_m != 'None' %}
+                                        <span class="fw-light">/ {{ key_m }}</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        {% endif %}
+                        {% if values_m %}
+                            <div class="col-md-10 py-2" id="table_id_general">
+                                {% for key, values in values_m.items %}
+                                    {% if values %}
+                                        <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background: #acd2cc62;">
+                                            <div class="fs-6 pb-1">
+                                                <a class="h6 text-dark" href="#{{ key }}" data-bs-toggle='tooltip' data-bs-html='true'
+                                                    title='See more details'>
+                                                    {{ values.0.clean_name_spaced|slice:"7:" }}
+                                                </a>
+                                                {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                                    <a class="h6" style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{ object.id }}"
+                                                        data-bs-toggle='tooltip' data-bs-html='true'
+                                                        title='Add a new Record ({{ key|replace_underscore_and_capitalize }})'>
+                                                        &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                            <table class="table mb-2 pb-2 shadow-box" style="width: auto;">
+                                                {% for vv in values %}
+                                                    <tr>
+                                                        <td class="ps-2">
+                                                            <a href="#{{ key }}" data-bs-toggle='tooltip' data-bs-html='true' title='See more details'>
+                                                                {% if vv.tag == 'IFR' %}
+                                                                    <span class="h6 text-secondary fw-bold">inferred</span>
+                                                                {% endif %}
+                                                                {% if vv.show_value == "absent" %}
+                                                                    <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span>
+                                                                {% else %}
+                                                                    <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span>
+                                                                {% endif %}
+                                                            </a>
+                                                        </td>
+                                                        {% if vv.city_year_from == None and vv.city_year_to == None %}
+                                                            <td></td>
+                                                        {% else %}
+                                                            <td class="text-end ps-5" style="padding-top:5px;">
+                                                                <span class="text-secondary fw-light fs-6" style="border-radius:5px">
+                                                                    {% if vv.city_year_from == None %}
+                                                                        &nbsp;
+                                                                    {% elif vv.city_year_from == vv.city_year_to %}
+                                                                        {% if vv.city_year_from < 0 %}
+                                                                            {{ vv.city_year_from|abs }}
+                                                                            <span class="text-secondary fw-light fs-6">BCE</span>
+                                                                        {% else %}
+                                                                            {{ vv.city_year_from }}
+                                                                            <span class="text-secondary fw-light fs-6">CE</span>
+                                                                        {% endif %}
+                                                                    {% elif vv.city_year_to == None %}
+                                                                        {% if vv.city_year_from < 0 %}
+                                                                            {{ vv.city_year_from|abs }}
+                                                                            <span class="text-secondary fw-light fs-6">BCE</span>
+                                                                        {% else %}
+                                                                            {{ vv.city_year_from }}
+                                                                            <span class="text-secondary fw-light fs-6">CE</span>
+                                                                        {% endif %}
+                                                                    {% elif vv.city_year_to == None and vv.city_year_from == None %}
+                                                                        <i class="fa-solid fa-minus"></i>
+                                                                    {% else %}
+                                                                        {% if vv.city_year_from < 0 and vv.city_year_to < 0 %}
+                                                                            {{ vv.city_year_from|abs }}
+                                                                            <span class="text-secondary fw-light fs-6">BCE</span>
+                                                                            <i class="fas fa-long-arrow-alt-right"></i>
+                                                                            {{ vv.city_year_to|abs }}
+                                                                            <span class="text-secondary fw-light fs-6">BCE</span>
+                                                                        {% elif vv.city_year_from < 0 and vv.city_year_to >= 0 %}
+                                                                            {{ vv.city_year_from|abs }}
+                                                                            <span class="text-secondary fw-light fs-6">BCE</span>
+                                                                            <i class="fas fa-long-arrow-alt-right"></i>
+                                                                            {{ vv.city_year_to }}
+                                                                            <span class="text-secondary fw-light fs-6">CE</span>
+                                                                        {% else %}
+                                                                            {{ vv.city_year_from }}
+                                                                            <span class="text-secondary fw-light fs-6">CE</span>
+                                                                            <i class="fas fa-long-arrow-alt-right"></i>
+                                                                            {{ vv.city_year_to }}
+                                                                            <span class="text-secondary fw-light fs-6">CE</span>
+                                                                        {% endif %}
+                                                                    {% endif %}
+                                                                </span>
+                                                            </td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for key, values in values_m.items %}
+                                    {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                                        <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
+                                            {{ key|slice:"7:"|replace_underscore_and_capitalize }}
+                                            <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{ object.id }}"
+                                                data-bs-toggle='tooltip' data-bs-html='true'
+                                                title='Add a new Record ({{ key|slice:"7:"|replace_underscore_and_capitalize }})'>
+                                                &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="col-md-9">
+                <span class="h3 fw-bold m-0 p-0 text-secondary">
+                    <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill"
+                        style="text-align: left; background: #ffc1073b; border:1px solid #ffc107">
+                        General Variables
+                    </span>
+                    <span class="mt-3 fs-5">
+                        Coding in Progress.
+                    </span>
+                </span>
+            </div>
+        {% endif %}
         <div class="col-md-12 m-0 p-0">
             <span class="h2 fw-bold m-0 p-0 ">
                 <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc1071d;">

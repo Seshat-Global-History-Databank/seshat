@@ -446,6 +446,74 @@ def get_all_general_data_for_a_polity(polity_id):
 
     return all_vars_grouped_g, has_any_data
 
+def get_all_data_for_a_city(city_id):
+    """
+    Gets all data for a given city ID.
+
+    Args:
+        polity_id (int): The ID of the city.
+
+    Returns:
+        tuple: A tuple containing a dictionary of all data for the city and a boolean value indicating whether the city has any data.
+    """
+    app_name = 'general'
+    models_1 = apps.get_app_config(app_name).get_models()
+    has_any_data = False
+
+    # Note: some of these models don't exist yet
+    city_model_names = ["City_duration", "City_population", "City_area", "City_defensive_walls", "City_religious_building", "City_elite_residence", "City_ziggurats"]
+
+    all_vars_grouped_g = {}
+    for model in models_1:
+        model_name = model.__name__
+
+        if model_name not in city_model_names:
+            continue
+        s_value = str(model().subsection())
+        ss_value = str(model().sub_subsection())
+
+        if s_value not in all_vars_grouped_g:
+            all_vars_grouped_g[s_value] = {}
+            if ss_value:
+                all_vars_grouped_g[s_value][ss_value] = {}
+            else:
+                all_vars_grouped_g[s_value]["None"] = {}
+        else:
+            if ss_value:
+                all_vars_grouped_g[s_value][ss_value] = {}
+            else:
+                all_vars_grouped_g[s_value]["None"] = {}
+
+    for ct in ContentType.objects.all():
+        m = ct.model_class()
+        if m and m.__module__ == "seshat.apps.general.models":
+            if hasattr(m, 'other_city'):
+                my_data = m.objects.filter(Q(city=city_id) | Q(other_city=city_id))
+            else:
+                my_data = m.objects.filter(city=city_id)
+
+            if model_name not in city_model_names:
+                continue
+
+            if my_data:
+                has_any_data = True
+
+                my_s = m().subsection()
+
+                if my_s:
+                    all_vars_grouped_g[my_s]["None"][m.__name__] = my_data
+                else:
+                    print(f"-------------{my_s},")
+            else:
+                my_s = m().subsection()
+
+                if my_s:
+                    all_vars_grouped_g[my_s]["None"][m.__name__] = None
+                else:
+                    print(f"--------xxx-----{my_s},")
+
+    return all_vars_grouped_g, has_any_data
+
 def get_all_sc_data_for_a_polity(polity_id):
     """
     Gets all data for a given polity ID from the "sc" app.

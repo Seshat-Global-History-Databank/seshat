@@ -80,7 +80,7 @@ from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Re
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
-from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data
+from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections, dic_of_all_vars_with_varhier, get_all_data_for_a_polity, polity_detail_data_collector, get_all_general_data_for_a_polity, get_all_sc_data_for_a_polity, get_all_wf_data_for_a_polity,get_all_ec_data_for_a_polity, get_all_rt_data_for_a_polity, get_all_crisis_cases_data_for_a_polity, get_all_power_transitions_data_for_a_polity, give_polity_app_data, get_all_data_for_a_city
 
 
 from django.shortcuts import HttpResponse
@@ -2860,6 +2860,13 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
         context['pk'] = self.kwargs['pk']
         City_object = Capital.objects.get(id=self.kwargs['pk'])
         context['city_data'] = City_object
+
+        try:
+            context["all_city_data"], context["has_any_city_data"] = get_all_data_for_a_city(self.object.pk)
+        except:
+            context["all_city_data"] = None
+
+        print(context["all_city_data"])
 
         # Duration data
         City_object = Capital.objects.get(id=self.object.pk)
