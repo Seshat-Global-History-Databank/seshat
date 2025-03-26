@@ -225,6 +225,60 @@
     <div class="row mt-1">
         <h1 class="text-center federicka-bigger">{{ city_data.name }}</h1>
         <hr class="light-heavy-hr">
+        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+            <div class="col-md-4 pb-3">
+                <table class="table">
+                    <tbody>
+                        <tr style="text-align: right;">
+                            <td>
+                                <span class="text-secondary"> Intrinsic Duration: &nbsp;&nbsp;</span>
+                                {% if all_durations.intr %}
+                                {{all_durations.intr}} &nbsp;&nbsp;
+                                {% else %}
+                                [-----, -----] &nbsp;&nbsp;
+                                {% endif %}
+            
+                                <a href="{% url 'city-update' object.pk  %}">
+                                    {% if all_durations.color.0 == "g" %}
+                                    <i class="fa-solid fa-circle-check text-success"></i>
+                                    {% elif all_durations.color.0 == "m" %}
+                                    <i class="fa-solid fa-circle text-secondary"></i>
+                                    {% elif all_durations.color.0 == "r" %}
+                                    <i class="fa-solid fa-circle-xmark text-danger"></i>
+                                    {% else %}
+                                    <i class="fa-solid fa-circle-exclamation text-warning"></i>
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr style="text-align: right;">
+                            <td>
+                                <span class="text-secondary">GV (coded) Duration: &nbsp;&nbsp;</span>
+                                {% if all_durations.gv %}
+                                {{all_durations.gv}} &nbsp;&nbsp;
+                                {% else %}
+                                [-----, -----] &nbsp;&nbsp;
+                                {% endif %}
+            
+            
+                                <a href="#City_duration">
+                                    {% if all_durations.color.1 == "g" %}
+                                    <i class="fa-solid fa-circle-check text-success"></i>
+                                    {% elif all_durations.color.1 == "m" %}
+                                    <i class="fa-solid fa-circle text-secondary"></i>
+                                    {% elif all_durations.color.1 == "r" %}
+                                    <i class="fa-solid fa-circle-xmark text-danger"></i>
+                                    {% else %}
+                                    <i class="fa-solid fa-circle-exclamation text-warning"></i>
+                                    {% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+            </div>
+        {% endif %}
         <div class="col-md-12 m-0 p-0">
             <span class="h2 fw-bold m-0 p-0 ">
                 <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc1071d;">
