@@ -594,15 +594,17 @@ class City_durationForm(ExpertReviewedForm):
         :noindex:
         """
         model = City_duration
-        fields = commonfields.copy()
-        fields.append('city_year_from')
-        fields.append('city_year_to')
+        fields = ['city', 'city_year_from', 'city_year_to',
+                'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations', 'curator',]
+        # fields = commonfields.copy()
+        # fields.append('city')
+        # fields.append('city_year_from')
+        # fields.append('city_year_to')
         labels = commonlabels
-
-
         labels['city_year_from'] = "City Start Year"
         labels['city_year_to'] = "City End Year"
         
         widgets = dict(commonwidgets)
+        widgets['city'] = forms.Select(attrs={'class': 'form-control  mb-2 js-example-basic-single', 'id': 'id_city', 'name': 'city'})
         widgets['city_year_from'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
         widgets['city_year_to'] = forms.NumberInput(attrs={'class': 'form-control  mb-3', })
