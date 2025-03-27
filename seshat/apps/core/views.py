@@ -1694,7 +1694,13 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
         form = SeshatPrivateCommentPartForm(request.POST)
         oopsi = request.POST.getlist('selected_items')
         #print("ooopsiiiiiiiiiiiiiiii,", oopsi)
-        big_father = SeshatPrivateComment.objects.get(id=private_com_id)
+        if private_com_id == 0:
+            big_father = SeshatPrivateComment.objects.create()
+        else:
+            big_father = SeshatPrivateComment.objects.get(id=private_com_id)
+
+        big_father_id = big_father.id
+        #print(big_father_id)
 
         if form.is_valid():
             private_comment_part_text = form.cleaned_data['private_comment_part_text']
@@ -1712,7 +1718,7 @@ def seshat_private_comment_part_create_from_null_view(request, private_com_id):
 
             seshat_private_comment_part.private_comment_reader.add(*my_private_comment_readers) 
 
-            return redirect(request.META.get('HTTP_REFERER', reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id})))
+            return redirect(request.META.get('HTTP_REFERER', reverse('seshatprivatecomment-update', kwargs={'pk': big_father_id})))
             #return redirect(reverse('seshatprivatecomment-update', kwargs={'pk': private_com_id}))
 
     else:

@@ -270,8 +270,8 @@
     
        .bg-secondary-light {
         background: #fffdf2;
-        color: lightcoral;
-        border: 1px solid lightcoral;
+        color: crimson;
+        border: 1px solid crimson;
     
     
        }
@@ -435,28 +435,37 @@
                             {% if form.instance.year_from == None %}                        
                             {% elif form.instance.year_from == form.instance.year_to %}
                                 {% if form.instance.year_from < 0 %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
                                 {% else %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
                                 {% endif %}
                             {% elif form.instance.year_to == None %}
                                 {% if form.instance.year_from < 0 %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></span>
                                 {% else %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
                                 {% endif %}
                             {% elif form.instance.year_to == None and form.instance.year_from == None %}
-                            <td colspan="1" style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </td>
+                            <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
                             {% else %}
                                 {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
                                 {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
                                 {% else %}
-                                <td colspan="1" style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></td>
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
                                 {% endif %}
                             {% endif %}
-    
+                            
+                            <!-- Types -->
+                             <br>
+                             <b>Types: </b>
+
+                            {% autoescape off %}
+
+                            {{ form.instance.get_instability_types }}
+                            {% endautoescape %}
+                            
                         </div>
                         <div class="col-sm-5">
                             <b> Polity:</b>
@@ -465,7 +474,7 @@
 
 
 
-                        <div class="col-sm-4 pb-3"  style="display:none;">
+                        <div class="col-sm-4"  style="display:none;">
                             {{ extra_var|as_crispy_field }}
                         </div>
         
@@ -492,16 +501,17 @@
                         </div>
 
                     
-                        <div class="col-sm-6 pb-1">
+                        <div class="col-sm-6 py-2 ">
                             <b class="highlighted-value-title-pred"> LLM Description:</b> 
 
                            
                             {{ form.instance.llm_description}}
                             <br>
-                            <b class="highlighted-value-title-pred">LLM REFS: </b> <br>
+                            <b class="highlighted-value-title-pred mt-2">LLM REFS: </b> <br>
                             {% autoescape off %}
-
-                            {{ form.instance.get_instability_refs}}
+                            <span class="text-secondary">
+                                {{ form.instance.get_instability_refs}}
+                            </span>
                             {% endautoescape %}
                         </div>
 
@@ -509,11 +519,14 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                  <b>Intensity:</b>   
-                                  <b class="highlighted-value-title"> {{ form.instance.inst_intensity}}</b> <br>  {{ form.instance.get_inst_intensity_display }} 
+                                  <b class="highlighted-value-title"> {{ form.instance.inst_intensity}}</b> <br> 
+                                  <span class="text-secondary">{{ form.instance.get_inst_intensity_display }} </span> 
+                                 
                                 </div>
                                 <div class="col-sm-6">
                                     <b>Extent:</b>   
-                                    <b class="highlighted-value-title"> {{ form.instance.inst_extent}}</b> <br>  {{ form.instance.get_inst_extent_display }} 
+                                    <b class="highlighted-value-title"> {{ form.instance.inst_extent}}</b> <br>  
+                                    <span class="text-secondary">{{ form.instance.get_inst_extent_display }} </span> 
                                   </div>
                                 <div class="col-sm-12 pt-2">
                                     <b>Sorokin Rationale:</b>   

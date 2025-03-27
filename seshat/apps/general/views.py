@@ -7976,7 +7976,9 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             
             action = request.POST.get('action')
             if action == 'redirect_one':
-                return redirect("polity-detail-main", pk=new_object.polity.id) 
+                url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+                return redirect(url)
+                #return redirect("polity-detail-main", pk=new_object.polity.id) 
             elif action == 'redirect_two':
                 # if the object has some description already
                 if new_object.comment:
@@ -8278,7 +8280,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             
             action = request.POST.get('action')
             if action == 'redirect_one':
-                return redirect("polity-detail-main", pk=new_object.polity.id) 
+                url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+                return redirect(url)
+                #return redirect("polity-detail-main", pk=new_object.polity.id) + "#{x_name}"
             elif action == 'redirect_two':
                 # if the object has some description already
                 if new_object.comment:
@@ -8630,7 +8634,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
 
-    if var_name in ['human_sacrifice', 'power_transition'] and not request.user.has_perm('core.add_capital'):
+    if var_name in ['human_sacrifice', 'power_transition', 'instability_event'] and not request.user.has_perm('core.add_capital'):
 
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
@@ -8684,7 +8688,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
             'choices': 'ABSENT_PRESENT_CHOICES', 
             'null_meaning': None}}
 
-    return render(request, 'core/generic_templates/generic_list_all.html', context)
+    if coded_value in ['instability_event']:
+        return render(request, 'core/generic_templates/generic_list_llm.html', context)
+    else:
+        return render(request, 'core/generic_templates/generic_list_all.html', context)
+    #return render(request, 'core/generic_templates/generic_list_all.html', context)
 
 
 

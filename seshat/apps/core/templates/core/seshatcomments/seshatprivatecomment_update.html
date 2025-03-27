@@ -564,16 +564,13 @@
                             <span class="text-secondary">(Only visible to Selected Seshat Experts/RAs) </small></span>
                         </th>
                           <th class="col-md-2" scope="col" style="text-align: right"> <small>Target Experts or Researchers</small> </th>
-
                           <th class="col-md-1" scope="col" style="text-align: right">  
-                            <small>
-
-                                                
-                            <input type="submit" class="btn border border-dark fw-normal pt-0 pb-0 px-1" 
-                            style="background:#90e6fc; color: #1c2e4a;" 
-                            value="Set Done" 
-                            title="First tick the comments and then click here to mark them as completed.">
-                        </small>  
+                            <small>                 
+                                <input type="submit" class="btn border border-dark fw-normal pt-0 pb-0 px-1" 
+                                style="background:#90e6fc; color: #1c2e4a;" 
+                                value="Set Done" 
+                                title="First tick the comments and then click here to mark them as completed.">
+                            </small>  
                         </th>
                 </tr>
               </thead>
@@ -594,17 +591,12 @@
                             <i class="fa-solid fa-minus text-danger"></i>
                             {% endif %}
                             <br>
-
                               <div class="comment-box" style="
                               {% if subcom.is_done %} font-size:12px; {% else %} border-color: {{subcom.private_comment_owner.id|give_me_a_color}}22; background: {{subcom.private_comment_owner.id|give_me_a_color}}11; {% endif %} 
                               
                               ">
                                 {{ subcom.private_comment_part_text }}  
                               </div>    
-
-
-
-
                         </td>
                         <td class="col-md-2" style="text-align: right">
                             {% for an_expert in  subcom.private_comment_reader.all %}

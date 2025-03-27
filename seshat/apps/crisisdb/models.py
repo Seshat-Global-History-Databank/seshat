@@ -381,7 +381,7 @@ class Instability_event(SeshatCommon):
         return "instability_event"
     
     def show_value(self):
-        return f"instability_event {self.name} - {self.inst_intensity}, {self.inst_extent}..."
+        return f"{self.name} {self.get_instability_types()} {self.inst_intensity}, {self.inst_extent}"
     
     def get_instability_types(self):
         return " ".join(str(t) for t in self.inst_type.all())
