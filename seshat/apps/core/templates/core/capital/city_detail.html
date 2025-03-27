@@ -378,12 +378,16 @@
                             {% if values_m %}
                                 <div class="col-md-10 py-2" id="table_id_general">
                                     {% for key, values in values_m.items %}
+                                        <script>
+                                            // Log the value of 'key' to the console
+                                            console.log("Key: {{ key|escapejs }}");
+                                        </script>
                                         {% if values %}
                                             <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background: #acd2cc62;">
                                                 <div class="fs-6 pb-1">
                                                     <a class="h6 text-dark" href="#{{ key }}" data-bs-toggle='tooltip' data-bs-html='true'
                                                         title='See more details'>
-                                                        {{ values.0.clean_name_spaced|slice:"7:" }}
+                                                        {{ values.0.clean_name_spaced }}
                                                     </a>
                                                     {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                                                         <a class="h6" style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{ object.id }}"
@@ -466,10 +470,10 @@
                                     {% for key, values in values_m.items %}
                                         {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                                             <div class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2;">
-                                                {{ key|slice:"7:"|replace_underscore_and_capitalize }}
+                                                {{ key|replace_underscore_and_capitalize }}
                                                 <a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{ object.id }}"
                                                     data-bs-toggle='tooltip' data-bs-html='true'
-                                                    title='Add a new Record ({{ key|slice:"7:"|replace_underscore_and_capitalize }})'>
+                                                    title='Add a new Record ({{ key|replace_underscore_and_capitalize }})'>
                                                     &nbsp;<i class="fa-solid fa-plus text-secondary"></i>
                                                 </a>
                                             </div>
