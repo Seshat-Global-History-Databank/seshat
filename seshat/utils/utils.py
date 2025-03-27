@@ -483,10 +483,15 @@ def get_all_data_for_a_city(city_id):
                 all_vars_grouped_g[s_value][ss_value] = {}
             else:
                 all_vars_grouped_g[s_value]["None"] = {}
+        print(model_name)
 
     for ct in ContentType.objects.all():
         m = ct.model_class()
         if m and m.__module__ == "seshat.apps.general.models":
+
+            if not any(city_model_name in str(m) for city_model_name in city_model_names):
+                continue
+
             if hasattr(m, 'other_city'):
                 my_data = m.objects.filter(Q(city=city_id) | Q(other_city=city_id))
             else:
