@@ -57,7 +57,7 @@
 
 
     .custom-border-tight {
-        border-left: 10px solid teal; /* Adjust the border color and thickness as desired */
+        border-left: 2px solid teal; /* Adjust the border color and thickness as desired */
         padding-left: 5px; /* Adjust the padding to create spacing between the border and content */
     }
 
@@ -418,6 +418,13 @@
                         {% endif %}
 
 
+                        {% if all_instability_data %}
+                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Instability Events" data-bs-html="true" data-bs-trigger="focus">
+                        <a href="#instability_event_var"><span class="badge bg-teal p-1 mx-0 fs-5 ">IN</span></a>
+                        </span>
+                        {% endif %}
+
+
                         {% if all_power_transitions_data %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Power Transition" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#power_transition_var"><span class="badge bg-info text-dark  p-1 me-2 fs-5">PT</span></a>
@@ -721,7 +728,7 @@
             {% if all_general_data %}
             <div class="col-md-12 m-0 p-0">
                 <span class="h2 fw-bold m-0 p-0 ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc10732; border-left: 10px solid #ffc10782">
+                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #ffc10732; border-left: 2px solid #ffc10782">
                        General Variables
                     </span>   
                     <span class="mt-3 fs-5">
@@ -753,7 +760,7 @@
                                 {% else %}
                                 #ffc10712
                                 {% endif %}
-                               ; border-left: 10px solid #ffc10742;">
+                               ; border-left: 2px solid #ffc10742;">
                                     <div class="fs-6 pb-1">
                                         <a class="h6 text-dark" href="#general_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                                             {% if key == "Polity_preceding_entity" %}
@@ -915,7 +922,7 @@
             {% if all_sc_data %}
             <div class="col-md-12 m-0 p-0">
                 <span class="h2 fw-bold m-0 p-0 ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #0d6dfd32; border-left: 10px solid #0d6dfd82;">
+                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #0d6dfd32; border-left: 2px solid #0d6dfd82;">
                         Social Complexity Variables
                     </span>   
                     <span class="mt-3 fs-5">
@@ -941,7 +948,7 @@
                             <div class="col-md-10 py-2" id="table_id_sc">
                             {% for key, values in values_m.items %}
                             {% if values %}
-                            <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#0d6dfd12; border-left: 10px solid #0d6dfd42;">
+                            <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#0d6dfd12; border-left: 2px solid #0d6dfd42;">
                                 <div class="fs-6 pb-1"> 
                                     <a class="h6 text-dark" href="#sc_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                                         {{ values.0.clean_name_spaced}}
@@ -1061,7 +1068,7 @@
             {% if all_wf_data %}
             <div class="col-md-12 m-0 p-0">
                 <span class=" h3 fw-bold m-0 p-0 ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #dc354532; border-left: 10px solid #dc354582;">
+                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #dc354532; border-left: 2px solid #dc354582;">
                         Warfare Variables (Military Technologies)
                     </span>   
                     <span class=" mt-3 fs-5">
@@ -1096,7 +1103,7 @@
                 
                             {% for key, values in values_m.items %}
                             {% if values %}
-                            <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#dc354512; border-left: 10px solid #dc354542;">
+                            <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#dc354512; border-left: 2px solid #dc354542;">
                                 <div class="fs-6 pb-1"> 
                                     <a class="h6 text-dark" href="#wf_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                                         {{ values.0.clean_name_spaced}}
@@ -1215,7 +1222,7 @@
 {% if all_ec_data %}
 <div class="col-md-12 m-0 p-0">
     <span class=" h3 fw-bold m-0 p-0 ">  
-        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #40e0d032; border-left: 10px solid #40e0d082;">
+        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #40e0d032; border-left: 2px solid #40e0d082;">
             Economy Variables (Luxury Goods)
         </span>   
         <span class=" mt-3 fs-5">
@@ -1250,7 +1257,7 @@
     
                 {% for key, values in values_m.items %}
                 {% if values %}
-                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#40e0d012; border-left: 10px solid #40e0d042;">
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#40e0d012; border-left: 2px solid #40e0d042;">
                     <div class="fs-6 pb-1"> 
                         <a class="h6 text-dark" href="#ec_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                             {{ values.0.clean_name_spaced}}
@@ -1375,7 +1382,7 @@
 {% if all_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
 <div class="col-md-12 m-0 p-0">
     <span class=" h3 fw-bold m-0 p-0 ">  
-        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #59007f32; border-left: 10px solid #59007f82;">
+        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #59007f32; border-left: 2px solid #59007f82;">
             Religion Variables
         </span>   
         <span class=" mt-3 fs-5">
@@ -1410,7 +1417,7 @@
     
                 {% for key, values in values_m.items %}
                 {% if values %}
-                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#59007f12; border-left: 10px solid #59007f42;">
+                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#59007f12; border-left: 2px solid #59007f42;">
                     <div class="fs-6 pb-1"> 
                         <a class="h6 text-dark" href="#rt_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
                             {{ values.0.clean_name_spaced}}
@@ -1662,7 +1669,7 @@
         <div class="table-responsive mb-2">
             <h3 class="fw-bold pb-2 pt-3"> NGA Settlements:</h3>
 
-            <table class="table table-bordered p-5">
+            <table class="table table-bordered p-1">
                 <thead>
                     <tr>
                         <th>Year Range</th>
@@ -2333,7 +2340,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <span class="pt-5 display-1" style="text-align: left; color:#017989;" >
-                        <span class="federicka-huge" id="instability_var"> Instability Data</span>
+                        <span class="federicka-huge" id="instability_event_var"> Instability Data</span>
                     </span>
         
                 </div>
@@ -2352,7 +2359,7 @@
                                 {% include 'core/partials/_table_header_polity_instability.html' %}
                                 <tbody>
                         {% for obj in values%}
-                            <span id="instability_{{obj.id}}"></span>
+                            <span id="instability_event_{{obj.id}}"></span>
                             {% if values %}
                                 <tr class="p-0 m-0" style="border-width:0;">
                                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">

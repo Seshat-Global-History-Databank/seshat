@@ -43,6 +43,77 @@
         background-color:#fefae6; /* fffdf2   fefae6*/
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
     }
+
+
+    .bg-absent-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: gray;
+        border: 1px solid lightgray;   
+       }
+
+
+
+
+    
+      .bg-info-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: dodgerblue;
+        border: 1px solid dodgerblue;   
+       }
+    
+       .bg-danger-light {
+        background: lightpink;
+    
+       }
+    
+        .my_small_link:hover {
+          color:navajowhite;
+        }
+    
+       .bg-success-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: teal;
+        border: 1px solid teal;   
+        }
+    
+       .bg-warning-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkorange;
+        border: 1px solid goldenrod;   
+       }
+    
+       .bg-uncoded-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: darkred;
+        border: 1px solid rosybrown;
+       }
+       
+       .bg-trans-light {
+        background: cadetblue;
+    
+       }
+       
+       .custom-right-align {
+        margin-left: auto !important; /* Pushes the column to the right */
+        text-align: right !important; /* Aligns inner content to the right */
+    }
+    
+       .bg-unknown-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: hotpink;
+        border: 1px solid hotpink;
+        }
+    
+       .bg-secondary-light {
+        background: #fffdf2;
+        color: lightcoral;
+        border: 1px solid lightcoral;
+    
+    
+       }
+    
+
+
 </style>
 <div class="container">
     {% if object_list %}
@@ -90,15 +161,17 @@
             <thead> 
             <tr  class="sticky-top"  style="background-color:#fffdf2; height:40px; border: 1px solid #782823; top: 95px; z-index:900;">
                 <th scope="col" class="text-secondary"  style="text-align: left; ">#</th>
-                <th scope="col" style="text-align: left" class="fw-bold"> 
+                <th scope="col" style="text-align: left; " class="fw-bold"> 
                     <a href="{% url list_all_url %}?orderby=polity_id"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Polity
                 </th>
                 <!-- headings for extra vars -->
                 {% block myheadings_list %}
                 {% endblock myheadings_list %}
+                {% if var_name_display != 'Instability Event' %}
                 <th scope="col" style="text-align: left" >Tags</th>
+                {% endif %}
 
-                {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' %}
+                {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
 
                 <th scope="col" style="text-align: left" class="fw-bold">
                     <a href="{% url list_all_url %}?orderby=year_from"><i class="fa-solid fa-arrow-up-short-wide"></i></a>
@@ -119,7 +192,7 @@
                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}">
                     <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
                       <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">
-                            <td  colspan="1">
+                            <td  colspan="1" style="border-width:0;">
                                 {{ forloop.counter }}
                                 {% if obj.comment and obj.comment.id > 1 %}
                                 *
@@ -128,7 +201,7 @@
                             </td>
 
                             {% if obj.polity %}
-                            <td  colspan="1" style="text-align: left;">
+                            <td  colspan="1" style="text-align: left; border-width:0;">
                                 {% if obj.polity.long_name %}
                                 <span class="fw-bold">
                                     <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.long_name }}</a>
@@ -147,19 +220,21 @@
                             <!-- extra vars come here -->
                             {% block extra_vars_list %}
                             {% endblock extra_vars_list %}
-                                {% include "core/partials/_all_tags_inline_obj.html" %}
+                            {% if var_name_display != 'Instability Event' %}
+                            {% include "core/partials/_all_tags_inline_obj.html" %}
+                            {% endif %}
 
                            
 
                             <!-- Years -->
-                            {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' %}
+                            {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
                             {% include "core/partials/_years_block_new_obj.html" %}
                             <!-- Tag tag (Disputed/Suspected etc.) -->
                             {% endif %}
 
                             {% block update_button %}
                             {% endblock update_button %}
-                            <td  colspan="1" class="text-secondary"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
+                            <td  class="text-secondary" style="border-width:0;"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
                                 </span>
                             </td>
 
@@ -168,7 +243,7 @@
                     </div>
                 </tr>
                 <tr class="p-0 m-0">
-                    <td colspan="7" class="p-0 my-0" style="width:100%">
+                    <td colspan="12" class="p-0 my-0" style="width:100%">
                         <div id="collapseOne_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ forloop.counter }}">
                             <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
                                 <i class="fa-solid fa-spinner fa-spin"></i> Loading...

@@ -688,7 +688,7 @@ def get_all_rt_data_for_a_polity(request, polity_id):
     this_polity = Polity.objects.get(id=polity_id)
     this_polity_new_name = this_polity.new_name
 
-    print(this_polity_new_name)
+    #print(this_polity_new_name)
 
     has_any_data = False
     all_vars_grouped_rt = {}
@@ -738,10 +738,10 @@ def get_all_rt_data_for_a_polity(request, polity_id):
                     print(f"--------xxx-----{my_s},")
 
     if user and user.has_perm('core.add_capital'):
-        print("hooooy")
+        #print("hooooy")
         hs_data = Human_sacrifice.objects.filter(polity = polity_id)
         if hs_data:
-            print(hs_data)
+            #print(hs_data)
             has_any_data = True
             my_s = 'Human Sacrifice'
             all_vars_grouped_rt[my_s]["None"]['Human_sacrifice'] = hs_data
