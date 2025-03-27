@@ -2866,8 +2866,6 @@ class CityDetailView(SuccessMessageMixin, generic.DetailView):
         except:
             context["all_city_data"] = None
 
-        print(context["all_city_data"])
-
         # Duration data
         City_object = Capital.objects.get(id=self.object.pk)
 
