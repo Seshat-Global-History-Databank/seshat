@@ -57,7 +57,7 @@ class Command(BaseCommand):
                 # Create the City instance
                 Capital.objects.create(
                     name=row['City'],
-                    alternative_names=row['OtherName'],
+                    alternative_names=row['OtherName'] if not pd.isna(row['OtherName']) else None,
                     current_country=row['Country'],
                     latitude=row['Latitude'],
                     longitude=row['Longitude'],
@@ -65,9 +65,10 @@ class Command(BaseCommand):
                 )
                 self.stdout.write(self.style.SUCCESS(f"Created City instance for {row['City']}"))
 
-                # Create the City_duration instance
-                City_duration.objects.create(
-                    city=Capital.objects.get(name=row['City']),
-                    year_from=row['year_from']
-                )
-                self.stdout.write(self.style.SUCCESS(f"Created City_duration instance for {row['City']}"))
+                # Create the City_duration instance if it doesn't already exist
+                if not City_duration.objects.filter(city__name=row['City'], year_from=row['year_from']).exists():
+                    City_duration.objects.create(
+                        city=Capital.objects.get(name=row['City']),
+                        year_from=row['year_from']
+                    )
+                    self.stdout.write(self.style.SUCCESS(f"Created City_duration instance for {row['City']}"))
