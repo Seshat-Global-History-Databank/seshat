@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         # Load the chandlerV2 cities dataset with csv
         self.stdout.write(self.style.SUCCESS(f"Loading chandlerV2 dataset from {chandlerV2_path}..."))
-        chandlerV2_data = pd.read_csv(chandlerV2_path)
+        chandlerV2_data = pd.read_csv(chandlerV2_path, encoding='Windows-1252')
         self.stdout.write(self.style.SUCCESS(f"Successfully loaded chandlerV2 dataset from {chandlerV2_path}"))
 
         # Process the chandlerV2 cities to be ready for the City model
