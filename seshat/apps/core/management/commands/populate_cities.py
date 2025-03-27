@@ -1,8 +1,6 @@
 import os
 from django.core.management.base import BaseCommand
-from django.db import connection
 import pandas as pd
-import numpy as np
 from seshat.apps.core.models import Capital
 from seshat.apps.general.models import City_duration
 
