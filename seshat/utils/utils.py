@@ -483,7 +483,6 @@ def get_all_data_for_a_city(city_id):
                 all_vars_grouped_g[s_value][ss_value] = {}
             else:
                 all_vars_grouped_g[s_value]["None"] = {}
-        print(model_name)
 
     for ct in ContentType.objects.all():
         m = ct.model_class()

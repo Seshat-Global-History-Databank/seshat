@@ -8312,7 +8312,6 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
 
     if myvar == 'City Duration':  # This might be too specific, but for now this is the only City variable that needs this
         city_id_x = request.GET.get('city_id_x')
-        print("city_id_x: ", city_id_x)
         my_form = form_class(initial= {'city': city_id_x,})
 
     # Prepare the context for invalid form
