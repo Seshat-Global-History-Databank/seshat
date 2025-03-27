@@ -65,10 +65,14 @@ class Command(BaseCommand):
                 )
                 self.stdout.write(self.style.SUCCESS(f"Created City instance for {row['City']}"))
 
-                # Create the City_duration instance if it doesn't already exist
-                if not City_duration.objects.filter(city__name=row['City'], year_from=row['year_from']).exists():
+            # Create the City_duration instance if it doesn't already exist
+            if City_duration.objects.filter(city__name=row['City'], year_from=row['year_from']).exists():
+                self.stdout.write(self.style.WARNING(f"City duration for {row['City']} already exists"))
+            else:
+                # TODO: remove the skip condition for Babylon once the duplicate has been removed from the database
+                if row['City'] != 'Babylon':
                     City_duration.objects.create(
                         city=Capital.objects.get(name=row['City']),
-                        year_from=row['year_from']
+                        city_year_from=row['year_from']
                     )
                     self.stdout.write(self.style.SUCCESS(f"Created City_duration instance for {row['City']}"))
