@@ -4346,7 +4346,7 @@ class City_duration(SeshatCommon):
             TODO This method should probably just be an attribute set on the
             model instead.
         """
-        return "Polity Duration"
+        return "City Duration"
 
     def show_value(self):
         """
