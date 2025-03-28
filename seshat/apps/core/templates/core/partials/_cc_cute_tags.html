@@ -1,0 +1,328 @@
+<span class="right-span fw-normal">   
+    {% if  obj.decline == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  data-bs-trigger="focus"  title="present">Population Decline</span> 
+    {% elif  obj.decline == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true" title="inferred present">Population Decline</span> 
+    {% elif  obj.decline == "A" %}
+    <span class="badge bg-absent-light small-knopf">Population Decline</span> 
+    {% elif  obj.decline == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Population Decline</span> 
+    {% elif  obj.decline == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Population Decline</span> 
+    {% elif  obj.decline == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Population Decline</span>
+    {% endif %}
+
+    {% if  obj.collapse == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Population Collapse</span> 
+    {% elif  obj.collapse == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Population Collapse</span> 
+    {% elif  obj.collapse == "A" %}
+    <span class="badge bg-absent-light small-knopf">Population Collapse<</span> 
+    {% elif  obj.collapse == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Population Collapse<</span> 
+    {% elif  obj.collapse == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Population Collapse<</span> 
+    {% elif  obj.collapse == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Population Collapse<</span>
+    {% endif %}
+
+    {% if  obj.epidemic == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Epidemic</span> 
+    {% elif  obj.epidemic == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Epidemic</span> 
+    {% elif  obj.epidemic == "A" %}
+    <span class="badge bg-absent-light small-knopf">Epidemic</span> 
+    {% elif  obj.epidemic == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Epidemic</span> 
+    {% elif  obj.epidemic == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Epidemic</span> 
+    {% elif  obj.epidemic == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Epidemic</span>
+    {% endif %}
+
+    {% if  obj.downward_mobility == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Elite Downward Mobility</span> 
+    {% elif  obj.downward_mobility == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Elite Downward Mobility</span> 
+    {% elif  obj.downward_mobility == "A" %}
+    <span class="badge bg-absent-light small-knopf">Elite Downward Mobility<</span> 
+    {% elif  obj.downward_mobility == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Elite Downward Mobility<</span> 
+    {% elif  obj.downward_mobility == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Elite Downward Mobility<</span> 
+    {% elif  obj.downward_mobility == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Elite Downward Mobility<</span>
+    {% endif %}
+
+    {% if  obj.extermination == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Elite Extermination</span> 
+    {% elif  obj.extermination == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Elite Extermination</span> 
+    {% elif  obj.extermination == "A" %}
+    <span class="badge bg-absent-light small-knopf">Elite Extermination</span> 
+    {% elif  obj.extermination == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Elite Extermination</span> 
+    {% elif  obj.extermination == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Elite Extermination</span> 
+    {% elif  obj.extermination == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Elite Extermination</span>
+    {% endif %}
+
+    {% if  obj.uprising == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Uprising</span> 
+    {% elif  obj.uprising == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Uprising</span> 
+    {% elif  obj.uprising == "A" %}
+    <span class="badge bg-absent-light small-knopf">Uprising</span> 
+    {% elif  obj.uprising == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Uprising</span> 
+    {% elif  obj.uprising == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Uprising</span> 
+    {% elif  obj.uprising == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Uprising</span>
+    {% endif %}
+
+    {% if  obj.revolution == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Revolution</span> 
+    {% elif  obj.revolution == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Revolution</span> 
+    {% elif  obj.revolution == "A" %}
+    <span class="badge bg-absent-light small-knopf">Revolution</span> 
+    {% elif  obj.revolution == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Revolution</span> 
+    {% elif  obj.revolution == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Revolution</span> 
+    {% elif  obj.revolution == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Revolution</span>
+    {% endif %}
+
+    {% if  obj.successful_revolution == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Successful Revolution</span> 
+    {% elif  obj.successful_revolution == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Successful Revolution</span> 
+    {% elif  obj.successful_revolution == "A" %}
+    <span class="badge bg-absent-light small-knopf">Successful Revolution</span> 
+    {% elif  obj.successful_revolution == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Successful Revolution</span> 
+    {% elif  obj.successful_revolution == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Successful Revolution</span> 
+    {% elif  obj.successful_revolution == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Successful Revolution</span>
+    {% endif %}
+
+    {% if  obj.civil_war == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Civil War</span> 
+    {% elif  obj.civil_war == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Civil War</span> 
+    {% elif  obj.civil_war == "A" %}
+    <span class="badge bg-absent-light small-knopf">Civil War</span> 
+    {% elif  obj.civil_war == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Civil War</span> 
+    {% elif  obj.civil_war == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Civil War</span> 
+    {% elif  obj.civil_war == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Civil War</span>
+    {% endif %}
+
+    {% if  obj.century_plus == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Lasted > a Century</span> 
+    {% elif  obj.century_plus == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Lasted > a Century</span> 
+    {% elif  obj.century_plus == "A" %}
+    <span class="badge bg-absent-light small-knopf">Lasted > a Century</span> 
+    {% elif  obj.century_plus == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Lasted > a Century</span> 
+    {% elif  obj.century_plus == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Lasted > a Century</span> 
+    {% elif  obj.century_plus == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Lasted > a Century</span>
+    {% endif %}
+
+    {% if  obj.fragmentation == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Fragmentation</span> 
+    {% elif  obj.fragmentation == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Fragmentation</span> 
+    {% elif  obj.fragmentation == "A" %}
+    <span class="badge bg-absent-light small-knopf">Fragmentation</span> 
+    {% elif  obj.fragmentation == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Fragmentation</span> 
+    {% elif  obj.fragmentation == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Fragmentation</span> 
+    {% elif  obj.fragmentation == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Fragmentation</span>
+    {% endif %}
+
+    {% if  obj.capital == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Capital Loss</span> 
+    {% elif  obj.capital == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Capital Loss</span> 
+    {% elif  obj.capital == "A" %}
+    <span class="badge bg-absent-light small-knopf">Capital Loss</span> 
+    {% elif  obj.capital == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Capital Loss</span> 
+    {% elif  obj.capital == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Capital Loss</span> 
+    {% elif  obj.capital == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Capital Loss</span>
+    {% endif %}
+
+    {% if  obj.conquest == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">External Conquest</span> 
+    {% elif  obj.conquest == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">External Conquest</span> 
+    {% elif  obj.conquest == "A" %}
+    <span class="badge bg-absent-light small-knopf">External Conquest</span> 
+    {% elif  obj.conquest == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">External Conquest</span> 
+    {% elif  obj.conquest == "U" %}
+    <span class="badge bg-unknown-light small-knopf">External Conquest</span> 
+    {% elif  obj.conquest == "SU" %}
+    <span class="badge bg-warning-light small-knopf">External Conquest</span>
+    {% endif %}
+
+    {% if  obj.assassination == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Ruler Assassination</span> 
+    {% elif  obj.assassination == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Ruler Assassination</span> 
+    {% elif  obj.assassination == "A" %}
+    <span class="badge bg-absent-light small-knopf">Ruler Assassination</span> 
+    {% elif  obj.assassination == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Ruler Assassination</span> 
+    {% elif  obj.assassination == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Ruler Assassination</span> 
+    {% elif  obj.assassination == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Ruler Assassination</span>
+    {% endif %}
+
+    {% if  obj.depose == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Ruler Depose</span> 
+    {% elif  obj.depose == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Ruler Depose</span> 
+    {% elif  obj.depose == "A" %}
+    <span class="badge bg-absent-light small-knopf">Ruler Depose</span> 
+    {% elif  obj.depose == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Ruler Depose</span> 
+    {% elif  obj.depose == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Ruler Depose</span> 
+    {% elif  obj.depose == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Ruler Depose</span>
+    {% endif %}
+
+    {% if  obj.constitution == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Constitution Change</span> 
+    {% elif  obj.constitution == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Constitution Change</span> 
+    {% elif  obj.constitution == "A" %}
+    <span class="badge bg-absent-light small-knopf">Constitution Change</span> 
+    {% elif  obj.constitution == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Constitution Change</span> 
+    {% elif  obj.constitution == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Constitution Change</span> 
+    {% elif  obj.constitution == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Constitution Change</span>
+    {% endif %}
+
+    {% if  obj.labor == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Labor Change</span> 
+    {% elif  obj.labor == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Labor Change</span> 
+    {% elif  obj.labor == "A" %}
+    <span class="badge bg-absent-light small-knopf">Labor Change</span> 
+    {% elif  obj.labor == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Labor Change</span> 
+    {% elif  obj.labor == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Labor Change</span> 
+    {% elif  obj.labor == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Labor Change</span>
+    {% endif %}
+
+    {% if  obj.unfree_labor == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Unfree Labor Change</span> 
+    {% elif  obj.unfree_labor == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Unfree Labor Change</span> 
+    {% elif  obj.unfree_labor == "A" %}
+    <span class="badge bg-absent-light small-knopf">Unfree Labor Change</span> 
+    {% elif  obj.unfree_labor == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Unfree Labor Change</span> 
+    {% elif  obj.unfree_labor == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Unfree Labor Change</span> 
+    {% elif  obj.unfree_labor == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Unfree Labor Change</span>
+    {% endif %}
+
+    {% if  obj.suffrage == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Suffrage</span> 
+    {% elif  obj.suffrage == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Suffrage</span> 
+    {% elif  obj.suffrage == "A" %}
+    <span class="badge bg-absent-light small-knopf">Suffrage</span> 
+    {% elif  obj.suffrage == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Suffrage</span> 
+    {% elif  obj.suffrage == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Suffrage</span> 
+    {% elif  obj.suffrage == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Suffrage</span>
+    {% endif %}
+
+    {% if  obj.public_goods == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Public Goods Change</span> 
+    {% elif  obj.public_goods == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Public Goods Change</span> 
+    {% elif  obj.public_goods == "A" %}
+    <span class="badge bg-absent-light small-knopf">Public Goods Change</span> 
+    {% elif  obj.public_goods == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Public Goods Change</span> 
+    {% elif  obj.public_goods == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Public Goods Change</span> 
+    {% elif  obj.public_goods == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Public Goods Change</span>
+    {% endif %}
+
+    {% if  obj.religion == "P" %}
+    <span class="badge bg-success-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="present">Religion Change</span> 
+    {% elif  obj.religion == "IP" %}
+    <span class="badge bg-info-light small-knopf" type="button" data-bs-toggle="tooltip" data-bs-html="true"  title="inferred present">Religion Change</span> 
+    {% elif  obj.religion == "A" %}
+    <span class="badge bg-absent-light small-knopf">Religion Change</span> 
+    {% elif  obj.religion == "IA" %}
+    <span class="badge bg-secondary-light small-knopf">Religion Change</span> 
+    {% elif  obj.religion == "U" %}
+    <span class="badge bg-unknown-light small-knopf">Religion Change</span> 
+    {% elif  obj.religion == "SU" %}
+    <span class="badge bg-warning-light small-knopf">Religion Change</span>
+    {% endif %}
+
+
+</span>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
