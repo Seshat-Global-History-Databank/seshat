@@ -418,14 +418,14 @@
                         {% endif %}
 
 
-                        {% if all_instability_data %}
+                        {% if all_instability_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Instability Events" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#instability_event_var"><span class="badge bg-teal p-1 mx-0 fs-5 ">IN</span></a>
                         </span>
                         {% endif %}
 
 
-                        {% if all_power_transitions_data %}
+                        {% if all_power_transitions_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
                         <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Power Transition" data-bs-html="true" data-bs-trigger="focus">
                         <a href="#power_transition_var"><span class="badge bg-info text-dark  p-1 me-2 fs-5">PT</span></a>
                     </span>
@@ -2235,100 +2235,144 @@
 
     {% endautoescape  %}
 
-<!-- Crisis Cases -->
 
-{% autoescape off %}
+    <!-- CC Tabular-->
 
-    <div>
-        <div class="row d-flex align-items-center justify-content-center pt-4">
-            <div class="col-md-6">
-                <span class="pt-5 display-1" style="text-align: left; color:#201d1b;" >
-                    <span class="federicka-huge" id="crisis_case_var"> Crisis Cases</span>
-                </span>
+    <div class="py-2 custom-left-border-shadtowed my-1">
 
-            </div>
-
-            <div class="col-md-6 pt-5">
-                <a href="{% url 'crisis_consequences_all' %}" class="btn float-end fw-light">View all <b> <u>Crisis Consequences</u></b>
-                </a>
-            </div>
-        </div>
-         
-        <div class="py-2 custom-left-border-shakkdowed">
-        {% if not all_crisis_cases_data %}
-        <span class="text-secondary">Coding in Progress.</span>
-        {% endif %}
-        {% for key, values in all_crisis_cases_data.items %}
-        {% if values and 'core.view_capital' in user.get_all_permissions %}
-            <div  id="{{key}}">
-
-                    {% for value in values %}
-                    <span class="h5 fw-bold text-dark pt-2 pb-2 pe-2 ps-2 mb-0 mt-0 highlighted-value-title">{{value.name}} 
-                        {% include "core/partials/_year_block_value_inline_cc.html" %}
-                        <div>
-                            <span class="text-secondary fw-light"> {{ value.crisis_case_id }}</span>
-                                <br>
-                            <span class="fs-6 text-dark">
-                                {% if value.other_polity %}
-                                Other Polities:
-                                    {% if value.other_polity.long_name %}
-                                    <span class="fs-5">
-                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.long_name }}</a>
-                                    </span>
-                                    {% else %}
-                                    <span class="text-secondary">
-                                        <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.name }}</a>
-                                    </span>
-                                    {% endif %}
-                                    {% if value.other_polity.long_name %}
-                                    <span class="fs-5">
-                                        & <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.long_name }}</a> 
-                                    </span>
-                                    {% elif value.other_polity.name %}
-                                    <span class="text-secondary">
-                                        &: <a href="{% url 'polity-detail-main' value.other_polity.id %}">{{ value.other_polity.name }}</a>  
-                                    </span>
-                                    {% else %}
-                                    <span class="fw-light">
-                                    </span>
-                                    {% endif %}
-                            
-                                {% endif %}
-                            </span>
-                        </div>
-                        {% if value.is_first_100 == True %}
-
-                        <div style="display: block; padding: 0;">
-                                <div style="display: inline-flex; flex-direction: row; padding: 0;">
-
-                                    <a type="button" class="fs-6">
-                                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#744141; color:#e7baba;"> First 100</span>
-                                    </a>
-                                </div>
-                        </div>
-                        {% endif %}
-
+        {% autoescape off %}
+        <div class=" ps-0 ms-0 ">
+            <div class="row">
+                <div class="col-md-8">
+                    <span class="pt-5 display-1" style="text-align: left; color:#017989;" >
+                        <span class="federicka-huge" id="crisis_case_var"> Crisis Cases</span>
                     </span>
-                    {% with my_app_name='crisisdb' %}
-                        {% include "core/partials/_abc_x.html" %}
-                    {% endwith %}
-
-                    {% include "core/partials/_crisis_cases_inline.html" %}
-                        {% if not forloop.last %}
-                        <hr class="light-narrow-hr">
-                        {% endif %}
-                    {% endfor %}   
-                                        
+        
                 </div>
-            {% endif %}
-            {% endfor %}
-        </div>  
+                <div class="col-md-4 pt-5 pb-4">
+                    <a href="{% url 'crisis_consequences_all' %}" class="btn float-end fw-light">View all <b> <u>Crisis Cases</u></b>
+                    </a>
+                </div>
+            </div>
+    
+            {% if all_crisis_cases_data %}
+            {% for key, values in all_crisis_cases_data.items %}
+    
+    
+            {% if values %}
+                {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
+                    <div class="py-2 ps-0 ms-0">
+                        <div class="table-container pb-3">
+                            <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                                {% include 'core/partials/_table_header_polity_cc.html' %}
+                                <tbody>
+                        {% for obj in values%}
+                            <span id="crisis_case_{{obj.id}}"></span>
+                            {% if values %}
+                                <tr class="p-0 m-0" style="border-width:0;">
+                                <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
+                                    <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
+                                        <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                            {% if obj.polity %}
+                                            <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0; width:30%;">
+                                      
+                                                <span class="highlighted-value-title-pred fw-normal" style="display:inline-block; text-align: left; vertical-align: bottom;">
+                                                    {{ obj.name }}
+                                                </span> 
+                                                <br>
+                                                
+                                                
+                                                {% if obj.year_from == None %}
+                                                {% elif obj.year_from == obj.year_to %}
+                                                    {% if obj.year_from < 0 %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+                                                    {% else %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></span>
+                                                    {% endif %}
+                                                {% elif obj.year_to == None %}
+                                                    {% if obj.year_from < 0 %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small></span>
+                                                    {% else %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></span>
+                                                    {% endif %}
+                                                {% elif obj.year_to == None and obj.year_from == None %}
+                                                <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+                                                {% else %}
+                                                    {% if obj.year_from < 0 and obj.year_to < 0 %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+                                                    {% elif obj.year_from < 0 and obj.year_to >= 0 %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+                                                    {% else %}
+                                                    <span style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+                                                    {% endif %}
+                                                {% endif %}
 
-    </div>  
-    {% endautoescape %}
-
-
-
+                                                
+    
+                                                {% if obj.description or obj.comment %}
+                                                <span class="accordion-button collapsed p-0 my-0 float-end text-info" 
+                                                        style="width: 20px; min-width: 20px; height:inherit;"
+                                                        type="button" 
+                                                        data-bs-toggle="collapse"
+                                                        title="See the Description."
+                                                        data-bs-target="#collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" 
+                                                        aria-expanded="false" 
+                                                        aria-controls="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                                </span>
+                                                {% endif %}
+                                            </td>
+                                            {% else %}
+                                            <td  style="text-align: left;">-</td>
+                                            {% endif %}
+    
+                                            <td style="border-width:0;">
+                                                {% include "core/partials/_cc_cute_tags.html" %}
+                                            </td>
+    
+     
+                                            <td style="text-align: right; vertical-align: center; border-width:0;">
+                                                {% with my_app_name='crisisdb' %}
+                                                    {% include "core/partials/_abc_obj.html" %}
+                                                {% endwith %}
+                                            </td>
+                                        </span>
+                                        </span>
+                                    </div>
+                                </tr>
+                                <tr class="p-0 m-0">
+                                    <td colspan="12" class="p-0 my-0" style="width:100%">
+                                        <div id="collapseOne_{{obj.clean_name}}_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                            <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
+                                                <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                                            </span>
+                                        </div>
+                                    </td>    
+                                </tr>
+                                <tr id="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" class="accordion-collapse collapse">
+                                    <td colspan="12" class="p-0 m-0" style="border: 1px solid gray; border-top-left-radius:opx; border-top-right-radius:10px; border-bottom-left-radius:20px; border-bottom-right-radius:20px; ">
+                                        {% include "core/partials/_private_comment_inline_obj.html" %}
+                                    </td>
+                                </tr>
+    
+    
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                {% endif %}
+                {% endif %}
+    
+                {% endfor %}
+        {% endif %}
+    
+    
+    </div>
+    
+        {% endautoescape  %}
+    
+    </div>
 
     <!-- INSTABILITY TABULAR -->
 

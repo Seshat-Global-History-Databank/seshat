@@ -253,7 +253,7 @@
                     <td style="text-align: center;">
                         {% if my_inst.my_var_name_underlined %}
 
-                            {% if my_inst.description %}
+                            {% if my_inst.my_description %}
                                 {% with my_inst.my_var_name_underlined|add:"-update" as meat %}
                                 <div class="py-1">
                                 <a href="{% url meat my_inst.my_id %}"><button class="btn btn-warning btn-sm btn-block"><i class="fa-solid fa-pen-to-square"></i></button></a>
