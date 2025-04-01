@@ -909,7 +909,7 @@ class SeshatCommentUpdate(PermissionRequiredMixin, UpdateView):
 
         for myapp, mymodels in my_app_models.items():
             for mm, mymodel in mymodels.items():
-                if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=self.object.id):
+                if '_citations' not in mm and 'instability_event_ra_check' not in mm and 'instability_event_inst_type' not in mm and 'instability_event_inst_llm_ref' not in mm  and    '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and not mm.startswith('check_') and not mm.startswith('instability_ref') and not mm.startswith('instability_type') and  mymodel.objects.filter(comment=self.object.id):
                     my_instance = mymodel.objects.get(comment=self.object.id)
                     my_polity = my_instance.polity
                     my_polity_id = my_instance.polity.id
@@ -1483,7 +1483,7 @@ def seshat_comment_part_create_from_null_view(request, com_id, subcom_order):
 
     for myapp, mymodels in my_app_models.items():
         for mm, mymodel in mymodels.items():
-            if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=big_father):
+            if '_citations' not in mm and 'instability_event_ra_check' not in mm and 'instability_event_inst_type' not in mm and 'instability_event_inst_llm_ref' not in mm  and    '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and not mm.startswith('check_') and not mm.startswith('instability_ref') and not mm.startswith('instability_type') and mymodel.objects.filter(comment=big_father):
                 my_instance = mymodel.objects.get(comment=big_father)
                 my_polity = my_instance.polity
                 my_polity_id = my_instance.polity.id
@@ -4842,7 +4842,7 @@ def update_seshat_comment_part_view(request, pk):
 
     for myapp, mymodels in my_app_models.items():
         for mm, mymodel in mymodels.items():
-            if '_citations' not in mm and '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and mymodel.objects.filter(comment=parent_comment_part):
+            if '_citations' not in mm and 'instability_event_ra_check' not in mm and 'instability_event_inst_type' not in mm and 'instability_event_inst_llm_ref' not in mm  and    '_which' not in mm and '_place_of_provenance_pol' not in mm and '_curator' not in mm and not mm.startswith('us_') and not mm.startswith('check_') and not mm.startswith('instability_ref') and not mm.startswith('instability_type') and mymodel.objects.filter(comment=parent_comment_part):
                 my_instance = mymodel.objects.get(comment=parent_comment_part)
                 my_polity = my_instance.polity
                 my_polity_id = my_instance.polity.id
@@ -5712,6 +5712,48 @@ def verify_expert(request, pk, my_app_name, my_model):
 
     # If GET request, you can redirect or show an error
     return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+def verify_expert_bulk(request, pk, my_app_name, my_model):
+    if request.method == "POST":
+        MyModel = apps.get_model(my_app_name, my_model)
+        my_inst = get_object_or_404(MyModel, pk=pk)
+
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+
+        my_inst.curator.add(seshat_expert_instance)
+        my_inst.save()
+
+        return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  
+
+    return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
+
+
+def bulk_verify_expert(request):
+    if request.method == "POST":
+        selected_items = request.POST.getlist("selected_items_experts")  # Expecting values like "app_name|model_name|pk"
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+
+        success_count = 0
+        for item in selected_items:
+            try:
+                app_name, model_name, pk = item.split("|")
+                MyModel = apps.get_model(app_name, model_name)
+                my_inst = get_object_or_404(MyModel, pk=pk)
+                
+                my_inst.curator.add(seshat_expert_instance)  # Add curator
+                my_inst.save()
+                success_count += 1
+            except Exception as e:
+                messages.error(request, f"Error processing {item}: {str(e)}")
+
+        messages.success(request, f"Successfully verified {success_count} items.")
+        
+    #return redirect(request.META.get("HTTP_REFERER", "seshat-index"))
+    url = reverse("polity-detail-main", kwargs={'pk': my_inst.polity.id}) + f"#{app_name}_{model_name}"
+    return redirect(url)
 
 
 def verify_expert2(request, my_inst):

@@ -1,4 +1,4 @@
-from .models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Instability_event, Check_choice
+from .models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, Power_transition, Crisis_consequence, Human_sacrifice, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak, Instability_event, Check_choice, Instability_type
 import datetime
 
 from django import forms
@@ -14,6 +14,11 @@ from django.template.defaulttags import register
 
 from seshat.apps.general.forms import commonlabels, commonfields, commonwidgets, ExpertReviewedForm
 from seshat.apps.accounts.models import Seshat_Expert
+from seshat.apps.core.forms import ReferenceWithPageForm, BaseReferenceFormSet
+
+
+#################
+
 
 ############## American Violence
 
@@ -244,13 +249,34 @@ class Power_transitionForm(ExpertReviewedForm):
 
 
 
+
+class CheckChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Check_choice
+        fields = ['name', 'check_description', 'color']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'check_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'color': forms.Select(attrs={'class': 'form-select'}),
+        }
+
 class Instability_eventForm(ExpertReviewedForm):
 
+    #formset = CommentPartFormSet(prefix='commentpart')  # Include formset
+    #formset.management_form  # Ensure the management form is included
+    inst_type = forms.ModelMultipleChoiceField(
+        queryset=Instability_type.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input text-danger'}),
+        label='Event Type(s):',
+        required=False  # Since it's blank=True in the model
+    )
     ra_check = forms.ModelMultipleChoiceField(
         queryset=Check_choice.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input text-danger'}),
         required=False  # Since it's blank=True in the model
     )
+
+
 
     class Meta:
 
@@ -259,13 +285,17 @@ class Instability_eventForm(ExpertReviewedForm):
         fields.append('inst_intensity')
         fields.append('inst_extent') 
         fields.append('name')
+        #fields.append('llm_inst_intensity')
+        #fields.append('llm_inst_extent') 
+        #fields.append('llm_name')
         fields.append('llm_description')
         fields.append('general_cot')
         fields.append('classification_cot') 
         fields.append('sorokin_rationale')
         fields.append('real_event_check')
+        #fields.append('llm_real_event_check')
+        fields.append('inst_type')
         fields.append('ra_check')
-        fields.append('note')
 
 
         
@@ -280,7 +310,7 @@ class Instability_eventForm(ExpertReviewedForm):
         labels['sorokin_rationale'] = "<span class='fs-6'> Sorokin Rationale </span>"
         labels['real_event_check'] = "<span class='fs-6'> Real Event? </span>"
         labels['ra_check'] = "<span class='fs-6'> RA Check: </span>"
-        labels['note'] = "<span class='fs-6'>RAs Note</span>"
+        labels['inst_type'] = "<span class='fs-6'>Event Type</span>"
 
 
         widgets = dict(commonwidgets)
@@ -288,13 +318,32 @@ class Instability_eventForm(ExpertReviewedForm):
         widgets['inst_intensity'] = forms.Select(attrs={'class': 'form-control  mb-1', })
         widgets['llm_description'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 140px'})
         widgets['name'] = forms.TextInput(attrs={'class': 'form-control  mb-1', })
-        widgets['general_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'readonly': "True"})
-        widgets['classification_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 200px', 'readonly': "True"})
+        widgets['general_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px', 'readonly': "True"})
+        widgets['classification_cot'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 150px', 'readonly': "True"})
         widgets['sorokin_rationale'] = forms.Textarea(attrs={'class': 'form-control  mb-3',  'style': 'height: 100px'})
         widgets['real_event_check'] = forms.Select(attrs={'class': 'form-control  mb-1', })
+ 
+        widgets['inst_type'] = forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple-inst-type', 'text':'inst_types[]' , 'style': 'height: 340px', 'multiple': 'multiple'})
         widgets['ra_check'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})  
-        widgets['note'] = forms.Textarea(attrs={'class': 'form-control  mb-3', 'style': 'height: 120px', 'placeholder':'Add a note (optional)'})  
         #widgets['inst_llm_ref'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})   
+
+    def save(self, commit=True):
+        """Override save() to remove unchecked items from inst_type."""
+        instance = super().save(commit=False)  # Get the model instance without saving yet
+
+        # Get the new selection from the form
+        new_inst_types = self.cleaned_data.get('inst_type', [])
+        print(new_inst_types)
+
+        if instance.pk:  # Ensure the instance already exists in the DB
+            # Remove all previously selected inst_type values that are no longer checked
+            instance.inst_type.set(new_inst_types)
+
+        if commit:
+            instance.save()
+            self.save_m2m()  # Save many-to-many relations
+
+        return instance
 
 
 class Human_sacrificeForm(ExpertReviewedForm):

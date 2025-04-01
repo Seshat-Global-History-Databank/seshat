@@ -20,6 +20,12 @@
     
       }
 
+      .bg-colorful-light {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.22),rgb(242, 199, 119, 0.22),rgb(151, 230, 151, 0.22));
+        border-radius: 10px;
+        color:#782823;
+      }
+
     .bg-colorful:hover {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.616),rgb(242, 199, 119, 0.616),rgb(151, 230, 151, 0.616));
         color:black;
@@ -343,6 +349,7 @@
         border: 1px solid lightgray;   
     
        }
+
 
 </style>
 
@@ -1963,16 +1970,63 @@
                   <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                     {% include 'core/partials/_table_header_polity.html' %}
                   <tbody>
+                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+
+                    <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                        {% csrf_token %}
+                        <div class="h6 mb-1 ps-1" style="font-family: Roboto Mono; color:#163832;"> 
+                            
+                            &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                           
+                        </div>
+                        <div class="form-check ps-1">
+                            <span class="ps-1 pe-3 py-2" style="background: #daf1de; border: 1px solid #23534766; border-radius:10px;">
+                                
+                        <label class="form-check-label ps-0 py-2 text-dark" for="id_verify_wf_{{ key_top }}" >
+                            <input 
+                            type="checkbox" 
+                            name="verify" 
+                            class="form-check-input" 
+                            style="transform: scale(1.25); margin-left: 10px; margin-right: 10px;" 
+                            id="id_verify_wf_{{ key_top }}" 
+                            onclick="toggleButton('wf', '{{ key_top }}')"
+                        >
+                            I ({{user.full_name}}) have checked and verified these coded records and would like to mark it as expert reviewed under my name. ({{ key_top }})</label>
+                            </span>
+                            <br>
+                          
+                            <button 
+                            type="submit" 
+                            class="btn btn-outline-success bg-colorful-light py-1 fw-bold" 
+                            id="saveButton_wf_{{ key_top }}" 
+                            style="display: none; vertical-align: top;"
+                        >
+                        <i class="fa-solid fa-signature"></i> Sign and Save
+                        </button>
+                        </div>
+                        {% endif %}
+
               {% for key, values in values_m.items %}
-                  <span id="wf_{{key}}"></span>
+                  <span id="wf_{{key|lower}}"></span>
                   {% if values %}
+                                    
+           
                       {% for obj in values %}
                       <tr class="p-0 m-0">
                       <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
                           <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
                               <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
                                   {% if obj.polity %}
+                                  {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
+
+                                  <td>
+                                    <input type="checkbox" name="selected_items_experts"  style="transform: scale(1.5);" value="wf|{{obj.clean_name}}|{{obj.pk}}" onclick="toggleButton('wf', '{{ key_top }}')">
+                                  </td>
+                                  {% endif %}
+
                                     <td class="fw-bold" colspan="1" style="text-align: left; vertical-align: center; border-width: 0;" id="{{key}}">
+                                        
+
                                         <span style="text-align: left; vertical-align: center;">{{ obj.clean_name_spaced }}</span> 
                                         {% if obj.description or obj.comment %}
                                         <span class="accordion-button collapsed p-0 my-0 float-end text-info" 
@@ -2027,8 +2081,12 @@
                       {% with good_key=key %}
                           {% include "core/partials/_abc_obj_elif.html" %}
                       {% endwith %}
+
                   {% endif %}
               {% endfor %}
+            {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+            </form>
+            {% endif %}
               </tbody>
           </table>
         </div>
@@ -2402,20 +2460,65 @@
                             <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                                 {% include 'core/partials/_table_header_polity_instability.html' %}
                                 <tbody>
+                                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}
+                                    <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                                        {% csrf_token %}
+                                        <div class="h3 mb-1" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                                            <button 
+                                            type="submit" 
+                                            class="btn btn-outline-success bg-colorful-light px-3 py-1 fw-bold" 
+                                            id="saveButton" 
+                                            style="display: none; vertical-align: top;"
+                                        >
+                                        <i class="fa-solid fa-signature"></i> Sign and Save
+                                        </button>
+                                        </div>
+                                        <div class="form-check pt-2 ps-5">
+                                            <input 
+                                                type="checkbox" 
+                                                name="verify" 
+                                                class="form-check-input checkboxinput" 
+                                                style="transform: scale(1.5); margin-right: 10px;" 
+                                                id="id_verify" 
+                                                onclick="toggleButton('instability_events', '{{ obj.pk }}')"
+                                            >
+                                            <label class="form-check-label" for="id_verify" style="background: #daf1de; border: 2px solid #235347; border-radius:10px;">I ({{user.full_name}}) have checked and verified these coded records and would like to mark it as expert reviewed under my name.</label>
+                                        </div>
+                                        {% endif %}
+
+
                         {% for obj in values%}
                             <span id="instability_event_{{obj.id}}"></span>
                             {% if values %}
+                            
+
+
+
                                 <tr class="p-0 m-0" style="border-width:0;">
                                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
                                     <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
                                         <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
                                             {% if obj.polity %}
                                             <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0;">
+
+                                                {% if user|in_group:"Chief Seshat Externallllllllll Experts" %}
+                                                <input type="checkbox" name="selected_items_experts" value="crisisdb|instability_event|{{obj.pk}}">
+
+                                                {% endif %}
+
                                               
                                                 <span class="fw-bold" style="display:inline-block; text-align: left; vertical-align: bottom;">
                                                     {{ obj.name }}
                                                 </span> 
                                                 <span class="bg-success-light px-1 rounded border-2" style="vertical-align: top; background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI*</span>
+                                                {% if obj.curators_list  %}
+                                                <span>
+                                                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="By: {{ obj.curators_list }}">
+                                                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
+                                                    </a>
+                                                </span>
+                                                {% endif %}
+
     
                                                 {% if obj.description or obj.comment or obj.llm_description %}
                                                 <span class="accordion-button collapsed p-0 my-0 float-end text-info" 
@@ -2480,9 +2583,14 @@
                                     </td>
                                 </tr>
     
-    
+
                             {% endif %}
                         {% endfor %}
+
+                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+                    </form>
+                    {% endif %}
+
                         </tbody>
                     </table>
                 </div>
@@ -2712,6 +2820,14 @@
             });
         });
     });
+    
+    function toggleButton(modelName, objPk) {
+        const checkbox = document.getElementById(`id_verify_${modelName}_${objPk}`);
+        const button = document.getElementById(`saveButton_${modelName}_${objPk}`);
+        if (checkbox && button) {
+            button.style.display = checkbox.checked ? 'inline-block' : 'none';
+        }
+    }
     
 
   </script>

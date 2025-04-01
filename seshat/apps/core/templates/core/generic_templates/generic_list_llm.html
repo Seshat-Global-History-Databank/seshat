@@ -9,31 +9,36 @@
 
 
 {% block myheadings_list %}
-<th class = "fw-bold" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:25%;  " scope="col">
     <span> 
     Event Name
 </span>
 
 </th>
-<th style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
     <span> 
-    Types
+    Year(s)
 </span>
 </th>
-<th style="text-align: center; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
+    <span> 
+    Type(s)
+</span>
+</th>
+<th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
     Intensity
 </span>
 </th>
-<th style="text-align: center; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
     Extent
 </span>
 </th>
 
-<th style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
     <span> 
-    Ra Checks
+    RA Checks
 </span>
 </th>
 {% endblock myheadings_list %}
@@ -44,38 +49,34 @@
     <span class="fw-bold highlighted-value-title">{{obj.name}}</span>
     {% endautoescape %}
 
-
-
+</td>
+<td  style="text-align: left; z-index:890; border-width:0;" >
     {% if obj.year_from == None %}
 
-{% elif obj.year_from == obj.year_to %}
-    {% if obj.year_from < 0 %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </small>
+    {% elif obj.year_from == obj.year_to %}
+        {% if obj.year_from < 0 %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </small>
+        {% else %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></small>
+        {% endif %}
+    {% elif obj.year_to == None %}
+        {% if obj.year_from < 0 %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small></small>
+        {% else %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></small>
+        {% endif %}
+    {% elif obj.year_to == None and obj.year_from == None %}
+    <small style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </small>
     {% else %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></small>
+        {% if obj.year_from < 0 and obj.year_to < 0 %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small>&nbsp;<i class="fa-solid fa-arrow-right-long"></i>&nbsp;{{ obj.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></small>
+        {% elif obj.year_from < 0 and obj.year_to >= 0 %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small>&nbsp;<i class="fa-solid fa-arrow-right-long"></i>&nbsp;{{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></small>
+        {% else %}
+        <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small>&nbsp;<i class="fa-solid fa-arrow-right-long"></i>&nbsp;{{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></small>
+        {% endif %}
     {% endif %}
-{% elif obj.year_to == None %}
-    {% if obj.year_from < 0 %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small></small>
-    {% else %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small></small>
-    {% endif %}
-{% elif obj.year_to == None and obj.year_from == None %}
-<small style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </small>
-{% else %}
-    {% if obj.year_from < 0 and obj.year_to < 0 %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></small>
-    {% elif obj.year_from < 0 and obj.year_to >= 0 %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></small>
-    {% else %}
-    <small style="text-align: right; border-width: 0;">{{ obj.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ obj.year_to }}&nbsp;<small class="text-secondary">CE</small></small>
-    {% endif %}
-{% endif %}
-
-
-
-
-
+    
 </td>
 
 <td  style="text-align: left; z-index:890; border-width:0;" >
@@ -86,19 +87,19 @@
 </td>
 <td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span >{{obj.inst_intensity}}</span>
+    <span class="fw-bold highlighted-value-title">{{obj.inst_intensity}}</span>
     {% endautoescape %}
 
 </td>
 <td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span >{{obj.inst_extent}}</span>
+    <span class="fw-bold highlighted-value-title">{{obj.inst_extent}}</span>
     {% endautoescape %}
 
 </td>
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span >{{obj.get_instability_checks}}</span>
+    <small >{{obj.get_instability_checks}}</small>
     {% endautoescape %}
 
 </td>

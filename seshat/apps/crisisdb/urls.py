@@ -153,7 +153,10 @@ for model_class, form_class, x_name, coded_value, myvar, sec, subsec, db_section
 
 
 
-
+urlpatterns += [
+    path('check-choice/add/', views.CheckChoiceCreateView.as_view(), name='check_choice_add'),
+    path('check-choice/edit/<int:pk>/', views.CheckChoiceUpdateView.as_view(), name='check_choice_edit'),
+]
 
 urlpatterns += [
     path('us_locations/', views.UsLocationListView.as_view(), name='us_location_list'),

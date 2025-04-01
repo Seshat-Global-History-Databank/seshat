@@ -64,6 +64,8 @@ class Command(BaseCommand):
                 continue
             #print(my_pol)
             # Create Instability_event
+            real_check = 'Real' if event_data['is_real'] else 'Uncertain'
+
             event = Instability_event.objects.create(
                 name=event_data['event'],
                 year_from=event_data['year_from'],
@@ -74,7 +76,7 @@ class Command(BaseCommand):
                 classification_cot=event_data['class_cot'],
                 sorokin_rationale=event_data['sorokin'],
                 general_cot=event_data['general_cot'],
-                real_event_check=event_data['is_real'],
+                real_event_check=real_check,
                 polity_id=my_pol.id,
                 private_comment_id=my_pc.id,
             )

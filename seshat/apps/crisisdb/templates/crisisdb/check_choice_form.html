@@ -1,0 +1,31 @@
+{% extends "core/seshat-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container">
+    <h2 class="pt-2">{% if object %}Edit{% else %}Create{% endif %} Check Choice</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-3">
+            {{ form.name|as_crispy_field }}
+            {{ form.color|as_crispy_field }}
+            <br>
+            <button type="submit" class="btn btn-primary">Save</button>
+
+          </div>
+          <div class="col-md-7">
+            {{ form.check_description|as_crispy_field }}
+    
+          </div>
+          <div class="col-md-2">
+    
+          </div>
+          <div class="col-md-2">
+        
+        </div>
+      </div>
+
+    </form>
+  </div>
+{% endblock %}

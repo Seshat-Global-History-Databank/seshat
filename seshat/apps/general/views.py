@@ -12,10 +12,12 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart
+from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart, SeshatComment, SeshatCommentPart, ScpThroughCtn
 
 from seshat.apps.accounts.models import Seshat_Expert
 
+
+from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
 
 from seshat.apps.core.forms import SeshatPrivateCommentPartForm
 from django.http import HttpResponseRedirect, response, JsonResponse, HttpResponseForbidden
@@ -7911,7 +7913,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
         'rt': 'Religion Variables',
         'crisisdb': 'Crisisdb',
     }
-    
+
     if coded_value == "power_transition":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11, x_name_12, x_name_13, x_name_14  =  'name', 'predecessor', 'successor', 'contested', 'overturn', 'predecessor_assassination', 'intra_elite', 'military_revolt', 'popular_uprising', 'separatist_rebellion', 'external_invasion', 'external_interference', 'drb_reviewed', 'description'
     elif coded_value == "widespread_religion":
@@ -8198,6 +8200,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         'crisisdb': 'Crisisdb',
     }
 
+
     another_form = SeshatPrivateCommentPartForm(request.POST)
 
     
@@ -8208,7 +8211,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     elif x_name == "lux_precious_metal":
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
     elif x_name == "instability_event":
-        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'note'
+        x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10  =  'name', 'inst_intensity', 'inst_extent', 'llm_description', 'real_event_check', 'general_cot', 'classification_cot', 'ra_check', 'sorokin_rationale', 'inst_type', #'llm_name', 'llm_inst_intensity', 'llm_inst_extent', 'llm_inst_type',
     elif db_section == 'ec':
         x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
     elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -8230,8 +8233,10 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
         my_form = form_class(request.POST, instance=my_object)
 
         if my_form.is_valid():
-            #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['expert_reviewed_by_me']}.")
+            #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['inst_type']}.")
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
+
+                
 
             logged_in_user = request.user
             new_object = my_form.save(commit=False)
@@ -8304,6 +8309,123 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #     new_object.curator.add(seshat_expert_instance)
             #return redirect(f"{x_name}-detail", pk=my_object.id)
 
+
+
+#################################   
+        if coded_value in ['instability_event'] and not my_object.comment:                  
+            form_inline_new = SeshatCommentPartForm2(request.POST)
+            big_father = SeshatComment.objects.create(text='')
+            #big_father = SeshatComment.objects.get(id=com_id)
+            com_id = big_father.pk
+            model_class = apps.get_model(app_label=db_section, model_name=x_name)
+
+            model_instance = get_object_or_404(model_class, id=object_id)
+            model_instance.comment = big_father
+
+            model_instance.save()
+            if form_inline_new.is_valid():
+                comment_text = form_inline_new.cleaned_data['comment_text']
+                comment_order = form_inline_new.cleaned_data['comment_order']
+                user_logged_in = request.user
+
+                try:
+                    seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+                except:
+                    seshat_expert_instance = None
+
+                seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_expert_instance, comment= big_father)
+
+                seshat_comment_part.save()
+
+                # Process the formset
+                reference_formset = ReferenceFormSet2(request.POST, prefix='refs')
+                if reference_formset.is_valid():
+                    to_be_added = []
+                    to_be_deleted_later = []
+                    for reference_form in reference_formset:
+                        if reference_form.is_valid():
+                            try:
+                                reference = reference_form.cleaned_data['ref']
+                                page_from = reference_form.cleaned_data['page_from']
+                                page_to = reference_form.cleaned_data['page_to']
+                                to_be_deleted = reference_form.cleaned_data['DELETE']
+                                parent_pars_inserted = reference_form.cleaned_data['parent_pars']
+
+
+                                # Get or create the Citation instance
+                                if page_from and page_to:
+                                    citation, created = Citation.objects.get_or_create(
+                                        ref=reference,
+                                        page_from=int(page_from),
+                                        page_to=int(page_to)
+                                    )
+                                elif page_from:
+                                    citation, created = Citation.objects.get_or_create(
+                                        ref=reference,
+                                        page_from=int(page_from),
+                                        page_to=int(page_from)
+                                    )
+                                elif page_to:
+                                    citation, created = Citation.objects.get_or_create(
+                                        ref=reference,
+                                        page_from=int(page_to),
+                                        page_to=int(page_to)
+                                    )
+                                    #print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
+                                else:
+                                    citation, created = Citation.objects.get_or_create(
+                                        ref=reference,
+                                        page_from=None,
+                                        page_to=None
+                                    )
+
+                                # Associate the Citation with the SeshatCommentPart
+                                if to_be_deleted:
+                                    #comment_part.comment_citations.remove(citation)
+                                    to_be_deleted_later.append((citation, parent_pars_inserted))
+                                else:
+                                    #comment_part.comment_citations.add((citation, parent_pars_inserted))
+                                    to_be_added.append((citation, parent_pars_inserted))
+                            except:
+                                # print("Formset errors:", reference_formset.errors)  # Errors per form
+                                # print("Non-form errors:", reference_formset.non_form_errors())  
+                                pass  # Handle the exception as per your requirement
+
+                    # seshat_comment_part.comment_citations.clear()
+                    # seshat_comment_part.comment_citations.add(*to_be_added)
+                    seshat_comment_part.comment_citations_plus.clear()
+                    #seshat_comment_part.comment_citations_plus.add(*to_be_added)
+
+                    for item in to_be_added:
+                        # Query for an existing row based on citation and SeshatCommentPart
+                        scp_through_ctn, created = ScpThroughCtn.objects.get_or_create(
+                            seshatcommentpart=seshat_comment_part,
+                            citation=item[0],
+                            defaults={'parent_paragraphs': item[1]}  # Set defaults including parent_paragraphs
+                        )
+
+                        # If the row already exists, update its parent_paragraphs
+                        if not created:
+                            scp_through_ctn.parent_paragraphs = item[1]
+                            scp_through_ctn.save()
+                print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
+
+                # Check which button was clicked
+                action = request.POST.get('action_comment')
+                if action == 'redirect_one':
+                    return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
+                    #return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': 2}))
+                    # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
+                    #return redirect('your_first_url_name')  # Replace with your actual URL
+                elif action == 'redirect_two':
+                    #return redirect('your_second_url_name')  # Replace with yours
+                    return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+        else:
+            form_inline_new = None
+
+
+
+#####################################################
         # Prepare the context for invalid form
         context = {
             'form': my_form,
@@ -8315,6 +8437,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
             'another_form': another_form,
+
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
@@ -8365,6 +8488,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 'extra_var8': my_form[x_name_8],
                 'extra_var9': my_form[x_name_9],
                 'extra_var10': my_form[x_name_10],
+                'form_com': form_inline_new,
 
             })
         elif x_name in ['lux_precious_metal'] and db_section == 'ec':
@@ -8417,6 +8541,20 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     else:
         # Handle GET request (initial form load)
         my_form = form_class(instance=my_object)
+
+        init_data = ReferenceFormSet2(prefix='refs')
+        if  coded_value in ['instability_event'] and not my_object.comment:
+            form_inline_new = SeshatCommentPartForm2(initial={'comment_text': my_object.llm_description})
+        else:
+            form_inline_new = None
+
+
+
+        #init_data = ReferenceFormSet2(prefix='refs')
+        #form_inline_new.formset = init_data
+
+        #print(form_inline_new.formset)
+
         context = {
             'form': my_form,
             'object': my_object,
@@ -8427,6 +8565,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             'db_section_mapper': db_section_mapper[db_section],
             "my_exp": my_exp,
             'another_form': another_form,
+            'form_com': form_inline_new,
+            #'com_id': com_id,  # Include com_id in the context
+            'subcom_order': 1,  # Include subcom_order in the context
+            #'formset': init_data, 
+            #'reference_formset': init_data, 
+
             #'expert_reviewed_by_me': my_form['expert_reviewed_by_me']
 
         }
