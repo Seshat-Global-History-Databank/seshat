@@ -222,7 +222,7 @@
     .bg-info-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: dodgerblue;
-        border: 1px solid dodgerblue;   
+        border: 1px solid rgba(30, 143, 255, 0.378);   
        }
     
        .bg-danger-light {
@@ -237,7 +237,7 @@
        .bg-success-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: teal;
-        border: 1px solid teal;   
+        border: 1px solid rgba(0, 128, 128, 0.38);   
         }
     
        .bg-warning-light {
@@ -271,7 +271,7 @@
        .bg-secondary-light {
         background: #fffdf2;
         color: crimson;
-        border: 1px solid crimson;
+        border: 1px solid rgba(220, 20, 60, 0.366);
     
     
        }
@@ -285,7 +285,6 @@
     
        .highlighted-value-title {
         display: inline-block; 
-        border: 1px solid rgba(78, 28, 23, 0.25);
         padding: 1px; 
         padding-right: 10px;
         padding-left: 10px;
@@ -349,18 +348,47 @@
     
       }
 
+      
+      .ref-dropdown {
+        max-width: 20%;  /* Ensures it doesn't exceed its container */
+        width: 300px; /* Set a fixed width, adjust as needed */
+        white-space: nowrap; /* Prevents wrapping */
+        overflow: hidden; /* Hides overflow text */
+        text-overflow: ellipsis; /* Adds '...' for long items */
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        width: 500px;
+    }
+    
+
 </style>
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-1">
-
-
     <div class="row d-flex mt-3">
-        <div class="col-sm-4">
+
+
+        <form id="regForm" action="" method="post" >
+            {% csrf_token %}
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>There were some errors in your submission:</strong>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li><strong>{{ field|title }}</strong>: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+    
+        <div class="col-sm-5">
             {% if db_section_mapper %}
 
             <div class="h4 p-1" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
                 {% if var_section %}
-                <span class="p-2 m-0 fw-normal">{{var_section}} </span>
+                <span class="p-2 m-0 fw-normal">&nbsp;&nbsp; {{var_section}} </span>
                 {% endif %}
 
             </div>
@@ -369,35 +397,278 @@
 
 
         </div>
-        <div class="col-sm-8">
-
-            {% if form.instance.pk %}
-                {% if form.instance.curator.exists %}
-                <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
-                    <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
-                        {% for curator in form.instance.curator.all %}
-                        <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
-
-                        {% endfor %}            
+        <div class="col-sm-2 mb-0 pb-0">
+            <div class="p-2 fw-bold highlighted-value-title-pred" style=" border-radius:10px;">
+                <div class="fs-6" style="font-family: Roboto Mono; color: black;">
+                    LLM Data
                 </div>
+            </div>
 
-                </div>
+        </div>
+        <div class="col-sm-6 mb-0 pb-0">
 
 
-                {% else %}
-                <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
+        </div>
+
+
+
+
+        <div class="table-container pb-0 border border-1 border-secondary" >
+            <table id="table_id" class="table align-middle table-hover" style="border-bottom:1px solid #e9ecef88;">
+                <thead> 
+                    <tr style="background-color:#fefae6;">
+                        <th class="px-2 fw-light text-secondary" style="text-align: left;">Event Name</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: left;">Polity</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: left;">Type(s)</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: center;">Intensity</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: center;">Extent</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: center;">Real?</th>
+                        <th class="px-2 fw-light text-secondary" style="text-align: left;">RA&nbsp;Checks</th>
+                    </tr>
+                </thead>
+        
+                <tbody>
+                    {% autoescape off %}
+
+                    <tr>
+
+                        <td class="fw-normal text-dark" style="text-align: left;">                           <span class="highlighted-value-title"> {{ form.instance.llm_name}}</span>
+                        </td>
+                        <td class="fw-normal text-dark" style="text-align: left;">
+                            {% if form.instance.polity.long_name %}
+                            <span class="fw-bold">
+                                <a href="{% url 'polity-detail-main' form.instance.polity.id %}#instability_event_var">{{ form.instance.polity.long_name }}</a>
+                            </span>
+                            {% else %}
+                            <span class="fw-bold">
+                                <a href="{% url 'polity-detail-main' form.instance.polity.id %}">{{ form.instance.polity.name }}</a>
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="fw-normal text-dark" style="text-align: left;">{{ form.instance.get_llm_instability_types }}
+    
+                        </td>
+                        <td class="fw-normal text-dark" style="text-align: right;">                        
+                            {% if form.instance.year_from == None %}                        
+                            {% elif form.instance.year_from == form.instance.year_to %}
+                                {% if form.instance.year_from < 0 %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+                                {% else %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
+                                {% endif %}
+                            {% elif form.instance.year_to == None %}
+                                {% if form.instance.year_from < 0 %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></span>
+                                {% else %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
+                                {% endif %}
+                            {% elif form.instance.year_to == None and form.instance.year_from == None %}
+                            <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+                            {% else %}
+                                {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+                                {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+                                {% else %}
+                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+                                {% endif %}
+                            {% endif %}
+                            </td>
+                       
+                        <td class="fw-normal text-dark" style="text-align: center;">
+                            <span class="highlighted-value-title"> {{ form.instance.llm_inst_intensity}}</span>
+                        </td>
+                        <td class="fw-normal text-dark" style="text-align: center;"><span class="highlighted-value-title"> {{ form.instance.llm_inst_extent}}</span></td>
+                        <td class="fw-normal text-dark" style="text-align: center;">
+                            {% if form.instance.real_event_check %}
+                            <i class="fa-solid fa-square-check text-success"></i>                           
+                            {% else %}
+                            <i class="fa-solid fa-square-xmark text-danger"></i>                           
+
+                            {% endif %}
+
+                        </td>
+                            <td class="fw-normal text-dark" style="text-align: left;">{{ form.instance.get_instability_checks}}
+                            </td>
+                   
+                    </tr>
+                    {% endautoescape %}
+
+
+
+                </tbody>
+            </table>
+            <div class="row">
+                        <div class="col-sm-7 p-3" >
+                            <div class="py-2">
+                                <b> LLM Description:</b> 
+                                {{ form.instance.llm_description}}
+
+                            </div>
+                            <div>
+                                <span >
+                                    <b class="mt-2">LLM References: </b>
+                                    <br>
+                            </span>
+                            <span >
+                                    {% autoescape off %}
+                                    <span class="text-secondary">
+                                        {{ form.instance.get_instability_refs}}
+                                    </span>
+                                    {% endautoescape %}
+                            </span>
+                            </div>
+                            <div>
+                                <span >
+                                    <div class="py-2">
+                                        <b> Rationale:</b> 
+                                        <small>
+                                            {{ form.instance.sorokin_rationale}}
+
+                                        </small>
+        
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="row pt-3">
+                                {% autoescape off %}
+
+                                <div class="col-sm-6 pb-1" >
+                                    <b> <small>General Chain of Thought:</small></b> <br>
+                                    <div class="border p-1" style="height:200px; overflow: auto">
+                                       <small>
+                                        {{ form.instance.general_cot }}
+                                       </small>
+        
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 pb-1 ">
+                                    <b> <small>Classification Chain of Thought:</small></b> <br>
+                                    <div class="border p-1" style="height:200px; overflow: auto">
+                                        <small>
+                                            {{ form.instance.classification_cot }}
+                                        </small>
+        
+                                    </div>
+                                </div>
+                                {% endautoescape %}
+
+                            </div>
+                        </div>
+                        <div  class="col-md-5 ps-2" >
+                   
+
+                            <div class="pe-0 pt-2 d-flex flex-column" style="display:none;">
+                                <div> <div class="pb-3">
+                                    <b class="pb-3">RA Checks:</b> 
+                                    <span class="badge bg-secondary ">
+                                        <a href="{% url 'check_choice_add' %}" class="text-white">
+                                            Create New
+                                        </a>
+                                    </span>
+                                </div>
+             
+                                    <span class="form-check pb-4" >
+                                        {% for checkchoice in form.ra_check %}
+                                            <label class="pb-1 pe-0 form-check-label" style="display:block;" for="{{ checkchoice.id_for_label }}">
+                                                {{ checkchoice.tag }}
+                                                <small class="fw-normal text-secondary">  
+                                                    {{ checkchoice.choice_label }}
+                                                </small>
+                                            </label>
+                
+                
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                                <div>
+                                    <small style="background: rgb(88, 226, 226)">     * Any RA <b>notes</b>  on the LLM or Seshat record should be added to the private comment section at the bottom of the page.</small>
+                             
+                                </div>
+                      
+
+                                <div class="pb-4" style="vertical-align: top; display:none; ">
+                                    <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit" style="font-family: 'Roboto Mono', monospace; ">
+                                        Submit Your Check
+                                    </button>
+                                </div>
+    
+                            
+                        </div>
+
+                        </div>
+                   
+                
+        
+
+
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="row pt-2 mb-0 pb-0">
+         
+            <div class="col-sm-2 mb-0 pb-0">
+                <div class="p-2 fw-bold highlighted-value-title" style=" border-radius:10px;">
                     <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
-                        <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                        Seshat Data
                     </div>
                 </div>
 
+            </div>
+            <div class="col-sm-2 mb-0 pb-0">
+
+
+            </div>
+
+            <div class="col-sm-8 mb-0 pb-0">
+
+                {% if form.instance.pk %}
+                    {% if form.instance.curator.exists %}
+                    <div class="p-2" style="background: #daf1de;  border-radius:10px;">
+                        <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
+                            {% for curator in form.instance.curator.all %}
+                            <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
+    
+                            {% endfor %}            
+                    </div>
+    
+                    </div>
+    
+    
+                    {% else %}
+                    <div class="p-2" style="background: #ffdddd; border-radius:10px;">
+                        <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                            <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                        </div>
+                    </div>
+    
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        
+            
+            </div>
         </div>
+      
+
+
+
         <div class="col-sm-12 border-dark mainform mb-4"> 
-            <form id="regForm" action="" method="post" >
-                {% csrf_token %}
                 <legend>
         
                 </legend>
@@ -423,186 +694,204 @@
                 </ul>
                 <hr class="bg-colorful">
                 {% endif %}
+
+
                 <div class="row pt-2 ps-2">
                     <div class="col-sm-12 row">
-                        <div class="col-sm-5">
-                            <b> Event Name:</b>
-                           <span class="highlighted-value-title"> {{ form.instance.name}}</span>
-                            <br>
-                            <b> Years:</b>
-
-
-                            {% if form.instance.year_from == None %}                        
-                            {% elif form.instance.year_from == form.instance.year_to %}
-                                {% if form.instance.year_from < 0 %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
-                                {% else %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
-                                {% endif %}
-                            {% elif form.instance.year_to == None %}
-                                {% if form.instance.year_from < 0 %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></span>
-                                {% else %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
-                                {% endif %}
-                            {% elif form.instance.year_to == None and form.instance.year_from == None %}
-                            <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
-                            {% else %}
-                                {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
-                                {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-                                {% else %}
-                                <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
-                                {% endif %}
-                            {% endif %}
-                            
-                            <!-- Types -->
-                             <br>
-                             <b>Types: </b>
-
-                            {% autoescape off %}
-
-                            {{ form.instance.get_instability_types }}
-                            {% endautoescape %}
-                            
-                        </div>
-                        <div class="col-sm-5">
-                            <b> Polity:</b>
-                            {{ form.instance.polity}}
-                        </div>
-
-
-
-                        <div class="col-sm-4"  style="display:none;">
+                        <div class="col-sm-4">
                             {{ extra_var|as_crispy_field }}
                         </div>
         
-                        <div class="col-sm-4 pb-0"  style="display:none;">
+                        <div class="col-sm-5 pb-0">
                             {{ form.polity|as_crispy_field }}
                         </div>
-        
-                        <div class="col-sm-1 pb-0"  style="display:none;">
+                        <div class="col-sm-1 pb-0">
                             {{ form.year_from|as_crispy_field }}
                           </div>
-                          <div class="col-sm-1 pb-0"  style="display:none;">
+                          <div class="col-sm-1 pb-0">
                             {{ form.year_to|as_crispy_field }}
                           </div>
-
-
-
-                          <div class="col-sm-2 pb-3">
-                            {{ extra_var5|as_crispy_field }}
+        
+                        <div class="col-sm-1 pb-3">
+                            {{ form.real_event_check|as_crispy_field }}
                         </div>
+
+
+
+
 
 
                         <div class="col-sm-12 pb-3" style="display:none;">
                             {{ extra_var4|as_crispy_field }}
                         </div>
 
-                    
-                        <div class="col-sm-6 py-2 ">
-                            <b class="highlighted-value-title-pred"> LLM Description:</b> 
-
-                           
-                            {{ form.instance.llm_description}}
-                            <br>
-                            <b class="highlighted-value-title-pred mt-2">LLM REFS: </b> <br>
-                            {% autoescape off %}
-                            <span class="text-secondary">
-                                {{ form.instance.get_instability_refs}}
-                            </span>
-                            {% endautoescape %}
-                        </div>
-
-                        <div class="col-sm-6 pb-3">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                 <b>Intensity:</b>   
-                                  <b class="highlighted-value-title"> {{ form.instance.inst_intensity}}</b> <br> 
-                                  <span class="text-secondary">{{ form.instance.get_inst_intensity_display }} </span> 
-                                 
-                                </div>
-                                <div class="col-sm-6">
-                                    <b>Extent:</b>   
-                                    <b class="highlighted-value-title"> {{ form.instance.inst_extent}}</b> <br>  
-                                    <span class="text-secondary">{{ form.instance.get_inst_extent_display }} </span> 
-                                  </div>
-                                <div class="col-sm-12 pt-2">
-                                    <b>Sorokin Rationale:</b>   
-
-                                    {{ form.instance.sorokin_rationale }}
-                                </div>
+                
           
-                            </div>
-                        </div>
-                        <div class="col-sm-8 pb-3" style="display:none">
-                            <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     {{ extra_var2|as_crispy_field }}
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-4">
                                     {{ extra_var3|as_crispy_field }}
                                 </div>
-                                <div class="col-sm-12">
-                                    {{ extra_var9|as_crispy_field }}
+
+                                <div class="col-sm-4" >
+                                    {{ extra_var10|as_crispy_field }}
+
                                 </div>
+
           
-                            </div>
-                        </div>
+           
+
+         
+
+<!-- Desc NEW -->
+
+{% if not form.instance.comment %}
+
+      <div class="col-sm-6">
+        <div class="mt-3 pb-0 mb-0">
+            <b > Description (Public)</b>
+        </div>
+        {{ form_com.comment_text.label_tag }} {{ form_com.comment_text }}
+
+        <div class="pt-0" >
+          <span class="text-secondary pt-0 pb-3">* Use &lt;br&gt;
+              for new paragraphs.</span>
+      </div>
+
+
+      {{ form_com.formset.management_form }}
+      {{ form_com.management_form }}
+          <div style="display: none;">
+            {{ form_com.comment_order|as_crispy_field }}
+       </div>
 
 
 
+    </div>
 
 
 
-
-                   
-
-
-
-
-
-
-
-
-
-    
-
-
-                        <div class="row col-sm-6 pe-0 pt-4  d-flex flex-column">
-                     
-                            <div class="col-sm-12">
-                                <b class="pb-3">RA Checks:</b>
-                                <span class="form-check pb-4" >
-                                    {% for checkchoice in form.ra_check %}
-                                        <label class="pb-1 pe-0 form-check-label" style="display:block;" for="{{ checkchoice.id_for_label }}">
-                                            {{ checkchoice.tag }}
-                                            <span class="fw-normal">  
-                                                {{ checkchoice.choice_label }}
-                                            </span>
-                                        </label>
-            
-            
-                                    {% endfor %}
-                                </span>
-                            </div>
-                  
-                            <div class="col-sm-12 pe-4" style="vertical-align: top;" >
-                                {{ extra_var10|as_crispy_field }}
-                            </div>
-                            <div class="col-sm-6 pb-4" style="vertical-align: top;">
-                                <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit" style="font-family: 'Roboto Mono', monospace; ">
-                                    Submit Your Check
-                                </button>
-                            </div>
-
+        <div class="col-sm-6" id="_majid-container" >
+            {% autoescape off %}
+              {% for form1 in form_com.formset %}
+  
+                    <div class="formset-item d-flex align-items-start pt-4" >
+                      <!-- Citation number on the left -->
+                      
+                      <!-- Content on the right -->
+                      <div class="formset-content flex-grow-1">
                         
+                        <div class="row ">
+                            <div class="col-md-8 mb-0 d-flex align-items-end">
+                                <span class="badge fs-6" style="background: cadetblue;  ">Citation &nbsp;{{ forloop.counter }} 
+                                  </span>  
+                            </div>
+                            <div class="col-md-2">
+                                {{ form1.page_from|as_crispy_field }}
+                              </div>
+                              <div class="col-md-2">
+                                {{ form1.page_to|as_crispy_field }}
+                              </div>
+                        
+                          <div class="col-md-12 pb-1">
+                            <div id="div_id_refs-{{ forloop.counter0 }}-ref" class="control-group">
+                              <div class="controls">
+                                <select class="ref-dropdown form-control form-select mb-1 p-1 js-example-basic-single select2-hidden-accessible"
+                                  text="ref" name="refs-{{ forloop.counter0 }}-ref"
+                                  id="id_refs-{{ forloop.counter0 }}-ref" data-select2-id="id_refs-{{ forloop.counter0 }}-ref"
+                                  tabindex="-1" aria-hidden="true" style="width:100%; white-space:normal;" 
+                                  data-selected-value="{{ form1.ref.value }}">
+                                  <option value="" selected data-select2-id="{{ forloop.counter0 }}" >Reference ...</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-8" style="display:none;">
+                            {{ form1.parent_pars|as_crispy_field }}
+                          </div>
+                        </div>
+                      </div>
+                     
                     </div>
+                    
+              {% endfor %}
+              {% endautoescape %}
+  
+            </div>
+
+
+
+            <div class="col-sm-6 mb-5" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
+        
+                {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+                {{ form.suggested_expert|as_crispy_field }}
+                <small>These Seshat Experts will get Notifications to review this record.</small>
+            
+                {% else %}
+                {{ form.expert_reviewed_by_me|as_crispy_field }}
+            
+                {% endif %}
+            
+
+            </div>
+            <div class="col-sm-1 mt-2">
+            </div>
+            <div class="col-sm-4 mt-2">
+                <button type="submit" name="action_comment" value="redirect_one" 
+                
+                type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;"
+                
+                >Submit Check & Description</button>
+            </div>
+            <div class="col-sm-1 mt-2">
+            </div>
+            <div class="col-md-6 pt-4"  style="display: none;">
+                {{ form_com.comment_order|as_crispy_field }}
+                
+           </div>
+            {% else %}
+
+                <div class="col-sm-8 pt-4" >
+                    {% autoescape off %}
+
+                    {{ form.instance.comment }}
+                    {% endautoescape %}
+                    <a class="p-0 m-0" 
+                    style=" overflow: hidden;" 
+                    href="{% url 'seshatcomment-update' form.instance.comment.id %}">
+                        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </span>
+                    </a>
+                  </div>
+                  <div class="col-sm-4 mt-2 pt-2 ">
+                    <button type="submit" name="action_comment" value="redirect_one" 
+                    
+                    type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;"
+                    
+                    >Submit Check </button>
+                </div>
+            {% endif %}
+
+
+  </div>
+
+
+
+        <div class="col-md-6 pt-4 d-grid gap-2">
+
+        </div>
+
+
+
+
+
+
                     <div class="col-sm-6">
 
 
-                        {% include "core/partials/_private_comment_inline_accordion.html" %}
 
 
 
@@ -611,7 +900,7 @@
                         <div class="col-sm-6 pb-1" style="display:none">
                             {{ extra_var6|as_crispy_field }}
                         </div>
-                        <div class="row pt-3">
+                        <div class="row pt-3"  style="display:none">
                             <div class="col-sm-6 pb-1" >
                                 <b>General Chain of Thought:</b> <br>
                                 <div class="border p-1" style="height:300px; overflow: auto">
@@ -633,27 +922,13 @@
                         <div class="col-sm-6 pb-1" style="display:none"> 
                             {{ extra_var7|as_crispy_field }}
                         </div>
-                        <div class="col-sm-12 mb-5 mt-3 ps-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
-        
-                            {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
-                            {{ form.suggested_expert|as_crispy_field }}
-                            <small>These Seshat Experts will get Notifications to review this record.</small>
-                        
-                            {% else %}
-                            {{ form.expert_reviewed_by_me|as_crispy_field }}
-                        
-                            {% endif %}
-                        
-            
-                        </div>
+
                     </div>
 
              
           
         
-                          <div class="col-sm-12" style="display:none">
-                            {{ form.description }}
-                          </div>
+
         
                           <div class="col-sm-2 pb-0 pt-4" style="align-items: end; display:none;">
                             {{ form.is_disputed|as_crispy_field }}
@@ -676,30 +951,119 @@
         
                 </div>
 
-                  </form>
         </div> 
+    </form>
+    <div class="col-sm-12 pb-5">
+        {% include "core/partials/_private_comment_inline_accordion.html" %}
+    </div>
 
     </div> 
 
-</div>
+
+
+
+
 
 <script>
     $(document).ready(function() {
         // Initialize Select2 with an empty dataset
-        $('.js-example-basic-single').select2();
-    });    
+        $(".js-example-basic-single").select2({
+            width: 'resolve',  // Keeps it within the initial width
+            dropdownAutoWidth: true,  // Ensures it doesn’t resize
+            minimumResultsForSearch: -1, // Removes search box if unnecessary
+        });    
+        $('.js-example-basic-multiple-inst-type').select2({
+            placeholder: "Select one or more",
+            allowClear: true,
+        });
 
-    $(document).ready(function() {
+
+
         $('.js-example-basic-multiple').select2({
             allowClear: true,
         });
+        $('.ref-dropdown').each(function() {
+            var selectElement = $(this);
+            var selectedValue = selectElement.data('selected-value');
+    
+            $.ajax({
+                url: '{% url "get_ref_options" %}', // Update this URL to your actual endpoint
+                method: 'GET',
+                success: function(data) {
+                    data.options.forEach(function(option) {
+                        var optionElement = $('<option></option>')
+                            .attr('value', option.value)
+                            .text(option.label);
+    
+                        if (option.value == selectedValue) {
+                            optionElement.attr('selected', 'selected');
+                        }
+    
+                        selectElement.append(optionElement);
+                    });
+    
+                    // Re-initialize Select2 to apply the new options
+                    selectElement.select2();
+                },
+                error: function(error) {
+                    console.error('Error fetching options:', error);
+                }
+            });
+        });
     });
+
     
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
     })
 
-
+// Initialize the Select2 dropdowns
+for (let i = 0; i <= 5; i++) {
+    $(`#id_refs-${i}-ref`).select2(); // Initialize Select2 for each dropdown
+    const page_from = document.getElementById(`id_refs-${i}-page_from`);
+    const page_to = document.getElementById(`id_refs-${i}-page_to`);
+  
+    // Function to update the span dynamically
+    const updateSpan = () => {
+        const dropdown = $(`#id_refs-${i}-ref`).select2('data')[0]; // Get the currently selected dropdown item
+        const pageFromValue = page_from ? page_from.value : ''; // Get the current value of the page_from input
+        const pageToValue = page_to ? page_to.value : ''; // Get the current value of the page_to input
+  
+        if (dropdown) {
+            const selectedValue = dropdown.text; // Get the selected text
+            const match = selectedValue.match(/\(([^)]+)\)/); // Extract text inside parentheses
+            if (match) {
+                const extractedText = `[${match[1]}`; // Extracted value inside parentheses
+                let finalText = extractedText; // Initialize the final text
+                
+                if (pageFromValue && !pageToValue) {
+                    // If only page_from is provided
+                    finalText += `, p. ${pageFromValue}]`;
+                } else if (pageFromValue == pageToValue) {
+                    // If both page_from and page_to are provided
+                    finalText += `, p. ${pageFromValue}]`;
+                } else if (pageFromValue && pageToValue) {
+                    // If both page_from and page_to are provided
+                    finalText += `, pp. ${pageFromValue}-${pageToValue}]`;
+                } else {
+                    // If neither is provided, close the extracted text
+                    finalText += ']';
+                }
+  
+                $(`#dynamic_span_refs_${i}`).text(finalText); // Update the corresponding span
+            } else {
+                $(`#dynamic_span_refs_${i}`).text(selectedValue); // If no match, show the full selected value
+            }
+        }
+    };
+  
+    // Attach listeners to dropdown and inputs
+    $(`#id_refs-${i}-ref`).on('select2:select', updateSpan); // Update span on dropdown change
+    if (page_from) page_from.addEventListener('input', updateSpan); // Update span on page_from input change
+    if (page_to) page_to.addEventListener('input', updateSpan); // Update span on page_to input change
+  }
+  
+  
 </script>
 {% endblock %}

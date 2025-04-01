@@ -30,19 +30,19 @@ HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
 )
 
 INST_INTENSITY_CHOICES = (
-('0', 'Nobody is killed'),
-('1',	'One or few individuals killed'),
-('2',	'Tens killed'),
-('3',	'Tens or Hundreds killed'),
-('4',	'Hundreds killed'),
-('5',	'Hundreds or Thousands killed'),
-('6',	'Thousands killed'),
-('7',	'Thousands or Tens of thousands killed'),
-('8',	'Tens of thousands killed'),
-('9', 'Tens of thousands or Hundreds of thousands killed'),
-('10', 'Hundreds of thousands killed'), 
-('11', 'Hundreds of thousands or Millions killed'),
-('12', 'Millions killed'),
+('0', '0. Nobody is killed'),
+('1',	'1. One or few individuals killed'),
+('2',	'2. Tens killed'),
+('3',	'3. Tens or Hundreds killed'),
+('4',	'4. Hundreds killed'),
+('5',	'5. Hundreds or Thousands killed'),
+('6',	'6. Thousands killed'),
+('7',	'7. Thousands or Tens of thousands killed'),
+('8',	'8. Tens of thousands killed'),
+('9', '9. Tens of thousands or Hundreds of thousands killed'),
+('10', '10. Hundreds of thousands killed'), 
+('11', '11. Hundreds of thousands or Millions killed'),
+('12', '12. Millions killed'),
 )
 
 REAL_EVENT_CHECK_CHOICES = (
@@ -52,13 +52,21 @@ REAL_EVENT_CHECK_CHOICES = (
 
 
 INST_EXTENT_CHOICES = (
-('1',	'Highly localized: a neighborhood within a town'),
-('2',	'A small town or rural location'),
-('4',	'One or few districts within a single province'),
-('6',	'One or two provinces, or only the capital'),
-('8',	'Several provinces, including the capital'),
-('10',  'Whole polity'),
+('1',	'1. Highly localized: a neighborhood within a town'),
+('2',	'2. A small town or rural location'),
+('4',	'4. One or few districts within a single province'),
+('6',	'6. One or two provinces, or only the capital'),
+('8',	'8. Several provinces, including the capital'),
+('10',  '10. Whole polity'),
 )
+
+
+COLOR_CHOICES = (
+('Red',	'Red'),
+('Blue',	'Blue'),
+('Green',	'Green'),
+)
+
 
 
 CRISIS_CONSEQUENCE_CHOICES = (
@@ -319,23 +327,26 @@ class Instability_ref(models.Model):
             if self.is_real:
                 return mark_safe(f'<i class="fa-solid fa-check text-success"></i> {self.name}')
             else:
-                return (self.name)
+                return mark_safe(f'<i class="fa-solid fa-minus"></i> {self.name}')
 
 class Instability_type(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         if self.name:
-            return mark_safe(f'<small class="badge bg-absent-light small-knopf">{self.name}</small>')
+            return mark_safe(f'<small class="badge bg-absent-light small-knopf p-1">{self.name}</small>')
 
 class Check_choice(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
-    check_description = models.CharField(max_length=300)
+    check_description = models.CharField(max_length=300) 
+    color = models.CharField(max_length=5, choices=COLOR_CHOICES, null=True, default='Red')  # Default color
 
     def __str__(self):
         if self.name:
-            if self.check_description and self.name == "Good":
+            if self.check_description and (self.color == "Green" or self.name == "Good"):
                 return mark_safe(f'<small class="badge bg-success-light small-knopf"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small> { self.check_description }')
+            elif self.check_description and self.color == "Blue":
+                return mark_safe(f'<small class="badge bg-info-light small-knopf"><i class="fa-solid fa-exclamation-triangle"></i>&nbsp; {self.name}</small> { self.check_description }')
             elif self.check_description:
                 return mark_safe(f'<small class="badge bg-secondary-light small-knopf"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small> { self.check_description }')
             else:
@@ -343,12 +354,16 @@ class Check_choice(models.Model):
 
     def compact_str(self):
         if self.name:
-            if self.check_description and self.name == "Good":
+            if self.check_description and (self.color == "Green" or self.name == "Good"):
                 return mark_safe(f'<small class="badge bg-success-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-check"></i>&nbsp; {self.name}</small>')
+            elif self.check_description and self.color == "Blue":
+                return mark_safe(f'<small class="badge bg-info-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-exclamation-triangle"></i>&nbsp; {self.name}</small>')
             elif self.check_description:
                 return mark_safe(f'<small class="badge bg-secondary-light small-knopf" data-bs-toggle="popover" title="{ self.check_description }"><i class="fa-solid fa-xmark"></i>&nbsp; {self.name}</small>')
             else:
                 return mark_safe(f'<small class="badge bg-secondary-light small-knopf"> {self.name} </small>')
+            
+
 
 # Bad Row	The entire row is false, has multiple issues, or the Event has been made up by AI
 # Event	Event name is inaccurate or Event itself is uncertain
@@ -373,6 +388,13 @@ class Instability_event(SeshatCommon):
     sorokin_rationale = models.TextField(blank=True, null=True,)
     real_event_check = models.CharField(max_length=20, choices=REAL_EVENT_CHECK_CHOICES, null=True, blank=True)
     llm_description = models.TextField(blank=True, null=True,)
+    llm_inst_type = models.CharField(max_length=150, null=True, blank=True)
+    llm_inst_extent = models.CharField(max_length=5, choices=INST_EXTENT_CHOICES, null=True, blank=True)
+    llm_inst_intensity = models.CharField(max_length=5, choices=INST_INTENSITY_CHOICES, null=True, blank=True)
+    llm_real_event_check = models.CharField(max_length=20, choices=REAL_EVENT_CHECK_CHOICES, null=True, blank=True)
+    llm_name = models.CharField(max_length=200, null=True, blank=True)
+
+
 
     def clean_name_spaced(self):
         return "Instability Event"
@@ -382,6 +404,9 @@ class Instability_event(SeshatCommon):
     
     def show_value(self):
         return f"{self.name} {self.get_instability_types()} {self.inst_intensity}, {self.inst_extent}"
+    
+    def show_llm_value(self):
+        return f"{self.llm_name} {self.get_llm_instability_types()} ({self.llm_inst_intensity}, {self.llm_inst_extent})"
     
     def get_instability_types(self):
         return " ".join(str(t) for t in self.inst_type.all())
@@ -393,8 +418,21 @@ class Instability_event(SeshatCommon):
         #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
         return "<br>".join(str(ref) for ref in self.inst_llm_ref.all())
 
+    def get_llm_instability_types(self):
+        return self.llm_inst_type
+    
+    def get_llm_instability_checks(self):
+        return " ".join(ch.compact_str() for ch in self.ra_check.all())
+    
+    def get_llm_instability_refs(self):
+        #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
+        return "<br>".join(str(ref) for ref in self.inst_llm_ref.all())
+
     def __str__(self) -> str:
-        return f"{self.name}"
+        if self.name:
+            return f"{self.name}"
+        else:
+            return f"{self.llm_name}"
 
 
 

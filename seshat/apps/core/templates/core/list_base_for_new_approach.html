@@ -161,7 +161,7 @@
             <thead> 
             <tr  class="sticky-top"  style="background-color:#fffdf2; height:40px; border: 1px solid #782823; top: 95px; z-index:900;">
                 <th scope="col" class="text-secondary"  style="text-align: left; ">#</th>
-                <th scope="col" style="text-align: left; " class="fw-bold"> 
+                <th scope="col" style="text-align: left;  width:20%; " class="fw-light"> 
                     <a href="{% url list_all_url %}?orderby=polity_id"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Polity
                 </th>
                 <!-- headings for extra vars -->
@@ -180,8 +180,8 @@
 
                 {% endif %}
 
-                <th scope="col" style="text-align: center">Edit</th>
-                <th scope="col" style="text-align: center">Desc</th>
+                <th scope="col"  class = "fw-light" style="text-align: center">Edit</th>
+                <th scope="col"  class = "fw-light"  style="text-align: center; border-left:1px solid #782823;">Description</th>
 
               </tr>
 
