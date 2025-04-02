@@ -8232,6 +8232,11 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     if request.method == 'POST':
         my_form = form_class(request.POST, instance=my_object)
 
+        # if "submit_with_formset" in request.POST:
+        #     form_inline_new = SeshatCommentPartForm2(request.POST)
+        # else:
+        #     form_inline_new = SeshatCommentPartForm2()  # Unbound formset (won't be validated)
+
         if my_form.is_valid():
             #print(f"ZARAGOOOOOOOOOOOZA (NEW): {my_form.cleaned_data['inst_type']}.")
             #my_form.instance.expert_reviewed = my_form.cleaned_data['expert_reviewed_by_me']
@@ -8285,10 +8290,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             
             action = request.POST.get('action')
             if action == 'redirect_one':
+                print('4444444444444444444')
                 url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
                 return redirect(url)
                 #return redirect("polity-detail-main", pk=new_object.polity.id) + "#{x_name}"
             elif action == 'redirect_two':
+                print('3333333333333333')
                 # if the object has some description already
                 if new_object.comment:
                     return redirect(f"seshatcomment-update", pk=new_object.comment.id) 
@@ -8312,114 +8319,126 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 
 #################################   
-        if coded_value in ['instability_event'] and not my_object.comment:                  
+        if coded_value in ['instability_event'] and not my_object.comment:
+
+            # if "submit_with_formset" in request.POST:
+            #     form_inline_new = SeshatCommentPartForm2(request.POST)
+            # else:
+            #     form_inline_new = SeshatCommentPartForm2()  # Unbound formset (won't be validated)                  
             form_inline_new = SeshatCommentPartForm2(request.POST)
-            big_father = SeshatComment.objects.create(text='')
-            #big_father = SeshatComment.objects.get(id=com_id)
-            com_id = big_father.pk
-            model_class = apps.get_model(app_label=db_section, model_name=x_name)
+            #action = request.POST.get('action_comment')
+            if "submit_with_formset" in request.POST:
+                big_father = SeshatComment.objects.create(text='')
+                #big_father = SeshatComment.objects.get(id=com_id)
+                com_id = big_father.pk
+                model_class = apps.get_model(app_label=db_section, model_name=x_name)
 
-            model_instance = get_object_or_404(model_class, id=object_id)
-            model_instance.comment = big_father
+                model_instance = get_object_or_404(model_class, id=object_id)
+                model_instance.comment = big_father
 
-            model_instance.save()
-            if form_inline_new.is_valid():
-                comment_text = form_inline_new.cleaned_data['comment_text']
-                comment_order = form_inline_new.cleaned_data['comment_order']
-                user_logged_in = request.user
+                model_instance.save()
+                if form_inline_new.is_valid():
+                    comment_text = form_inline_new.cleaned_data['comment_text']
+                    comment_order = form_inline_new.cleaned_data['comment_order']
+                    user_logged_in = request.user
 
-                try:
-                    seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
-                except:
-                    seshat_expert_instance = None
+                    try:
+                        seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
+                    except:
+                        seshat_expert_instance = None
 
-                seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_expert_instance, comment= big_father)
+                    seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_expert_instance, comment= big_father)
 
-                seshat_comment_part.save()
+                    seshat_comment_part.save()
 
-                # Process the formset
-                reference_formset = ReferenceFormSet2(request.POST, prefix='refs')
-                if reference_formset.is_valid():
-                    to_be_added = []
-                    to_be_deleted_later = []
-                    for reference_form in reference_formset:
-                        if reference_form.is_valid():
-                            try:
-                                reference = reference_form.cleaned_data['ref']
-                                page_from = reference_form.cleaned_data['page_from']
-                                page_to = reference_form.cleaned_data['page_to']
-                                to_be_deleted = reference_form.cleaned_data['DELETE']
-                                parent_pars_inserted = reference_form.cleaned_data['parent_pars']
+                    # Process the formset
+                    reference_formset = ReferenceFormSet2(request.POST, prefix='refs')
+                    if reference_formset.is_valid():
+                        to_be_added = []
+                        to_be_deleted_later = []
+                        for reference_form in reference_formset:
+                            if reference_form.is_valid():
+                                try:
+                                    reference = reference_form.cleaned_data['ref']
+                                    page_from = reference_form.cleaned_data['page_from']
+                                    page_to = reference_form.cleaned_data['page_to']
+                                    to_be_deleted = reference_form.cleaned_data['DELETE']
+                                    parent_pars_inserted = reference_form.cleaned_data['parent_pars']
 
 
-                                # Get or create the Citation instance
-                                if page_from and page_to:
-                                    citation, created = Citation.objects.get_or_create(
-                                        ref=reference,
-                                        page_from=int(page_from),
-                                        page_to=int(page_to)
-                                    )
-                                elif page_from:
-                                    citation, created = Citation.objects.get_or_create(
-                                        ref=reference,
-                                        page_from=int(page_from),
-                                        page_to=int(page_from)
-                                    )
-                                elif page_to:
-                                    citation, created = Citation.objects.get_or_create(
-                                        ref=reference,
-                                        page_from=int(page_to),
-                                        page_to=int(page_to)
-                                    )
-                                    #print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
-                                else:
-                                    citation, created = Citation.objects.get_or_create(
-                                        ref=reference,
-                                        page_from=None,
-                                        page_to=None
-                                    )
+                                    # Get or create the Citation instance
+                                    if page_from and page_to:
+                                        citation, created = Citation.objects.get_or_create(
+                                            ref=reference,
+                                            page_from=int(page_from),
+                                            page_to=int(page_to)
+                                        )
+                                    elif page_from:
+                                        citation, created = Citation.objects.get_or_create(
+                                            ref=reference,
+                                            page_from=int(page_from),
+                                            page_to=int(page_from)
+                                        )
+                                    elif page_to:
+                                        citation, created = Citation.objects.get_or_create(
+                                            ref=reference,
+                                            page_from=int(page_to),
+                                            page_to=int(page_to)
+                                        )
+                                        #print(page_from, "AAAAAAAAAAAAAAAAAAAAND ", page_to)
+                                    else:
+                                        citation, created = Citation.objects.get_or_create(
+                                            ref=reference,
+                                            page_from=None,
+                                            page_to=None
+                                        )
 
-                                # Associate the Citation with the SeshatCommentPart
-                                if to_be_deleted:
-                                    #comment_part.comment_citations.remove(citation)
-                                    to_be_deleted_later.append((citation, parent_pars_inserted))
-                                else:
-                                    #comment_part.comment_citations.add((citation, parent_pars_inserted))
-                                    to_be_added.append((citation, parent_pars_inserted))
-                            except:
-                                # print("Formset errors:", reference_formset.errors)  # Errors per form
-                                # print("Non-form errors:", reference_formset.non_form_errors())  
-                                pass  # Handle the exception as per your requirement
+                                    # Associate the Citation with the SeshatCommentPart
+                                    if to_be_deleted:
+                                        #comment_part.comment_citations.remove(citation)
+                                        to_be_deleted_later.append((citation, parent_pars_inserted))
+                                    else:
+                                        #comment_part.comment_citations.add((citation, parent_pars_inserted))
+                                        to_be_added.append((citation, parent_pars_inserted))
+                                except:
+                                    # print("Formset errors:", reference_formset.errors)  # Errors per form
+                                    # print("Non-form errors:", reference_formset.non_form_errors())  
+                                    pass  # Handle the exception as per your requirement
 
-                    # seshat_comment_part.comment_citations.clear()
-                    # seshat_comment_part.comment_citations.add(*to_be_added)
-                    seshat_comment_part.comment_citations_plus.clear()
-                    #seshat_comment_part.comment_citations_plus.add(*to_be_added)
+                        # seshat_comment_part.comment_citations.clear()
+                        # seshat_comment_part.comment_citations.add(*to_be_added)
+                        seshat_comment_part.comment_citations_plus.clear()
+                        #seshat_comment_part.comment_citations_plus.add(*to_be_added)
 
-                    for item in to_be_added:
-                        # Query for an existing row based on citation and SeshatCommentPart
-                        scp_through_ctn, created = ScpThroughCtn.objects.get_or_create(
-                            seshatcommentpart=seshat_comment_part,
-                            citation=item[0],
-                            defaults={'parent_paragraphs': item[1]}  # Set defaults including parent_paragraphs
-                        )
+                        for item in to_be_added:
+                            # Query for an existing row based on citation and SeshatCommentPart
+                            scp_through_ctn, created = ScpThroughCtn.objects.get_or_create(
+                                seshatcommentpart=seshat_comment_part,
+                                citation=item[0],
+                                defaults={'parent_paragraphs': item[1]}  # Set defaults including parent_paragraphs
+                            )
 
-                        # If the row already exists, update its parent_paragraphs
-                        if not created:
-                            scp_through_ctn.parent_paragraphs = item[1]
-                            scp_through_ctn.save()
-                print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
+                            # If the row already exists, update its parent_paragraphs
+                            if not created:
+                                scp_through_ctn.parent_paragraphs = item[1]
+                                scp_through_ctn.save()
+                    #print("ALOOOOOOOOOOOOOOOOOOO: ", len(reference_formset))
 
-                # Check which button was clicked
-                action = request.POST.get('action_comment')
-                if action == 'redirect_one':
-                    return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
-                    #return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': 2}))
-                    # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
-                    #return redirect('your_first_url_name')  # Replace with your actual URL
-                elif action == 'redirect_two':
-                    #return redirect('your_second_url_name')  # Replace with yours
-                    return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+                    # Check which button was clicked
+                    action = request.POST.get('action_comment')
+                    if action == 'redirect_one':
+                        print('11111111111111')
+                        return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
+                        #return redirect(reverse('seshatcommentpart-create2', kwargs={'com_id': com_id, 'subcom_order': 2}))
+                        # href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" 
+                        #return redirect('your_first_url_name')  # Replace with your actual URL
+                    elif action == 'redirect_two':
+                        print('222222222222222222222')
+
+                        #return redirect('your_second_url_name')  # Replace with yours
+                        return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
+            print('555555555555')
+            return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
         else:
             form_inline_new = None
 

@@ -9,8 +9,10 @@
         
         <button class="accordion-button collapsed rounded p-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="background-color:#fefae6;"> 
             <span class="fs-5 text-teal fw-bold"><i class="fa-solid fa-comments"></i> &nbsp; Private Comments 
-                
-               ({{ form.instance.private_comment.inner_private_comments_related.all|length }})
+                <span class="badge bg-success-light">
+                    {{ form.instance.private_comment.inner_private_comments_related.all|length }}
+                </span>
+
 
             <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
           
