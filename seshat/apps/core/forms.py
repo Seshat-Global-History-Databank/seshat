@@ -434,7 +434,7 @@ ReferenceFormSet10 = forms.formset_factory(ReferenceWithPageForm, formset=BaseRe
 
 
 class SeshatCommentPartForm2(forms.Form):
-    comment_text = forms.CharField(label='', widget=forms.Textarea(attrs={'class': 'form-control  mb-1 p-1', 'style': 'height: 300px', 'placeholder': 'SubDescription Text (Public)*'}))
+    comment_text = forms.CharField(label='', required=False, widget=forms.Textarea(attrs={'class': 'form-control  mb-1 p-1', 'style': 'height: 220px', 'placeholder': 'SubDescription Text (Public)*'}))
 
     formset = ReferenceFormSet2(prefix='refs')
     comment_order = forms.IntegerField(label='Do NOT Change This Number: ', required=False,)

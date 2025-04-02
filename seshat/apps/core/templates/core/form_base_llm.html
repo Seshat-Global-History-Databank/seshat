@@ -95,9 +95,21 @@
         border:2px solid seagreen;
       }
 
+      .halfgoodsubmit{
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+        border:2px solid gray;
+      }
+
       .goodsubmit:hover{
         font-weight: bold;
+        color:darkcyan;
       }
+
+      .halfgoodsubmit:hover{
+        font-weight: bold;
+        color:gray;
+      }
+  
   
     /* Style the dropdown arrow */
     .select2-container .select2-selection__arrow {
@@ -366,7 +378,33 @@
 <!-- form-row and form-group etc are removed in Bootstrap 5 -->
 <div class="container mt-1">
     <div class="row d-flex mt-3">
+        <div class="row" style="--bs-gutter-x: 0.0rem;">
+            <div class="col-sm-5">
+                {% if db_section_mapper %}
+    
+                <div class="h4 p-1" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
+                    {% if var_section %}
+                    <span class="p-2 m-0 fw-normal">&nbsp;&nbsp; {{var_section}} </span>
+                    {% endif %}
+    
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-sm-7">
+            </div>
 
+            <div class="col-sm-2 mb-0 pb-0 d-flex align-items-end">
+                <div class="fw-bold highlighted-value-title-pred" style=" border-radius:10px; vertical-align:bottom;">
+                    <div class="fs-5 p-1" style="font-family: Roboto Mono; color: black;">
+                        LLM Data
+                    </div>
+                </div>
+    
+            </div>
+            <div class="col-sm-10 pb-0">
+                {% include "core/partials/_private_comment_inline_accordion.html" %}
+            </div>
+        </div>
 
         <form id="regForm" action="" method="post" >
             {% csrf_token %}
@@ -382,29 +420,6 @@
                     </ul>
                 </div>
                 {% endif %}
-    
-        <div class="col-sm-5">
-            {% if db_section_mapper %}
-
-            <div class="h4 p-1" style="border-top-left-radius:5px; border-top-right-radius:5px; background:#84eab3; border-bottom:3px solid #27a567; font-family: 'Roboto Mono', monospace;"> {{db_section_mapper}}
-                {% if var_section %}
-                <span class="p-2 m-0 fw-normal">&nbsp;&nbsp; {{var_section}} </span>
-                {% endif %}
-
-            </div>
-            {% endif %}
-
-
-
-        </div>
-        <div class="col-sm-2 mb-0 pb-0">
-            <div class="p-2 fw-bold highlighted-value-title-pred" style=" border-radius:10px;">
-                <div class="fs-6" style="font-family: Roboto Mono; color: black;">
-                    LLM Data
-                </div>
-            </div>
-
-        </div>
         <div class="col-sm-6 mb-0 pb-0">
 
 
@@ -531,6 +546,16 @@
         
                                     </div>
                                 </span>
+                                <span >
+                                    <div class="py-2" style="display:none;">
+                                        <b> Rationale:</b> 
+                                        <small>
+                                            {{ extra_var9 }}
+
+                                        </small>
+        
+                                    </div>
+                                </span>
                             </div>
                             <div class="row pt-3">
                                 {% autoescape off %}
@@ -583,8 +608,15 @@
                                         {% endfor %}
                                     </span>
                                 </div>
+                                {% if form.instance.note %}
                                 <div>
-                                    <small style="background: rgb(88, 226, 226)">     * Any RA <b>notes</b>  on the LLM or Seshat record should be added to the private comment section at the bottom of the page.</small>
+                                    <small> RA Note:  {{ form.instance.note }}</small>
+                             
+                                </div>
+                                {% endif %}
+
+                                <div>
+                                    <small style="background: rgb(88, 226, 226)">     * Any Futre RA <b>notes</b>  on the LLM or Seshat record should be added to the private comment section at the top of the page.</small>
                              
                                 </div>
                       
@@ -626,7 +658,7 @@
          
             <div class="col-sm-2 mb-0 pb-0">
                 <div class="p-2 fw-bold highlighted-value-title" style=" border-radius:10px;">
-                    <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                    <div class="fs-5" style="font-family: Roboto Mono; color:#800000;">
                         Seshat Data
                     </div>
                 </div>
@@ -637,7 +669,7 @@
 
             </div>
 
-            <div class="col-sm-8 mb-0 pb-0">
+            <div class="col-sm-8 mb-0 pb-0 d-flex align-items-end">
 
                 {% if form.instance.pk %}
                     {% if form.instance.curator.exists %}
@@ -751,10 +783,14 @@
       <div class="col-sm-6">
         <div class="mt-3 pb-0 mb-0">
             <b > Description (Public)</b>
+            <span class="float-end" id="zotero_span">
+
+                <a href="{% url 'synczotero100' %}" class="btn btn-outline-danger px-1 py-0" onclick="return DisplayProgressMessage(this, 'Syncing with Zotero...');"><i class="fa-solid fa-arrows-rotate"></i> <b>Z</b></a>
+            </span>
         </div>
         {{ form_com.comment_text.label_tag }} {{ form_com.comment_text }}
 
-        <div class="pt-0" >
+        <div class="pt-0 pb-2" >
           <span class="text-secondary pt-0 pb-3">* Use &lt;br&gt;
               for new paragraphs.</span>
       </div>
@@ -776,7 +812,7 @@
             {% autoescape off %}
               {% for form1 in form_com.formset %}
   
-                    <div class="formset-item d-flex align-items-start pt-4" >
+                    <div class="formset-item d-flex align-items-start pt-3" >
                       <!-- Citation number on the left -->
                       
                       <!-- Content on the right -->
@@ -787,6 +823,7 @@
                                 <span class="badge fs-6" style="background: cadetblue;  ">Citation &nbsp;{{ forloop.counter }} 
                                   </span>  
                             </div>
+   
                             <div class="col-md-2">
                                 {{ form1.page_from|as_crispy_field }}
                               </div>
@@ -823,7 +860,7 @@
 
 
 
-            <div class="col-sm-6 mb-5" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
+            <div class="col-sm-4 mb-3 mt-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
         
                 {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
                 {{ form.suggested_expert|as_crispy_field }}
@@ -837,16 +874,18 @@
 
             </div>
             <div class="col-sm-1 mt-2">
+
+            </div>
+            <div class="col-sm-3 mt-2">
+                <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block halfgoodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;">Submit Check</button>
+                <small class="text-secondary">Saves everything except the Description.</small>
+
             </div>
             <div class="col-sm-4 mt-2">
-                <button type="submit" name="action_comment" value="redirect_one" 
-                
-                type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;"
-                
-                >Submit Check & Description</button>
+                <button type="submit" name="submit_with_formset" class="btn py-2 my-auto btn-block goodsubmit fs-4 fw-bold" style="font-family: 'Roboto Mono', monospace; width:100%;">Submit Check & Description</button>
+                <small class="text-secondary">Saves everything you have changed on this page.</small>
             </div>
-            <div class="col-sm-1 mt-2">
-            </div>
+
             <div class="col-md-6 pt-4"  style="display: none;">
                 {{ form_com.comment_order|as_crispy_field }}
                 
@@ -855,6 +894,7 @@
 
                 <div class="col-sm-8 pt-4" >
                     {% autoescape off %}
+                    <b>Seshat Approved Description: </b>  <br>
 
                     {{ form.instance.comment }}
                     {% endautoescape %}
@@ -872,6 +912,7 @@
                     type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;"
                     
                     >Submit Check </button>
+      
                 </div>
             {% endif %}
 
@@ -953,9 +994,7 @@
 
         </div> 
     </form>
-    <div class="col-sm-12 pb-5">
-        {% include "core/partials/_private_comment_inline_accordion.html" %}
-    </div>
+
 
     </div> 
 
@@ -1064,6 +1103,10 @@ for (let i = 0; i <= 5; i++) {
     if (page_to) page_to.addEventListener('input', updateSpan); // Update span on page_to input change
   }
   
-  
+  function DisplayProgressMessage(ctl, msg) {
+    $(ctl).prop("class", "btn btn-outline-danger px-2 disabled");
+    $(ctl).text(msg);
+    return true;
+}
 </script>
 {% endblock %}

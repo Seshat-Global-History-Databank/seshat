@@ -3552,7 +3552,7 @@ def synczotero100(request):
     if len(new_refs) > 1:
         messages.success(request, f'You successfully synchronized {len(new_refs)} new references.')
     elif len(new_refs) == 0:
-        messages.success(request, 'Our References Database is fully synchronized with the Zotero Repository and up to date.')
+        messages.success(request, 'Our References Database is now fully synchronized with the Zotero Repository and up to date.')
     if len(new_refs) == 1:
         messages.success(request, f'You successfully synchronized {len(new_refs)} new reference.')
 
@@ -3561,7 +3561,8 @@ def synczotero100(request):
     
     if referer:
         # If there is a referer URL, redirect to it
-        return HttpResponseRedirect(referer)
+        #return HttpResponseRedirect(referer)
+        return redirect(f"{referer}")
     else:
         # If there is no referer URL, render the synczotero page
         return render(request, 'core/references/synczotero.html', context)
