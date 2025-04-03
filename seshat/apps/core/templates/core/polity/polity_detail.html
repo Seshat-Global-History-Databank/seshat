@@ -2505,21 +2505,12 @@
                                                 <input type="checkbox" name="selected_items_experts" value="crisisdb|instability_event|{{obj.pk}}">
 
                                                 {% endif %}
+                                       
 
-                                              
-                                                <span class="fw-bold" style="display:inline-block; text-align: left; vertical-align: bottom;">
+                                                <span class="fw-bold ps-1" style="display:inline-block; text-align: left; vertical-align: bottom;">
                                                     {{ obj.name }}
                                                 </span> 
-                                                <span class="bg-success-light px-1 rounded border-2" style="vertical-align: top; background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI*</span>
-                                                {% if obj.curators_list  %}
-                                                <span>
-                                                    <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="By: {{ obj.curators_list }}">
-                                                        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#c3ddf9; color:#2978ce;"><i class="fas fa-check-circle p-0 m-0" style="color:#2978ce"></i> Expert</span>
-                                                    </a>
-                                                </span>
-                                                {% endif %}
 
-    
                                                 {% if obj.description or obj.comment or obj.llm_description %}
                                                 <span class="accordion-button collapsed p-0 my-0 float-end text-info" 
                                                         style="width: 20px; min-width: 20px; height:inherit;"
@@ -2554,8 +2545,30 @@
     
                                                 {% include "core/partials/_years_block_new_obj.html" %}
     
-                                            <td  style="border-width:0;">
+                                            <td  style="border-width:0; text-align: right;">
+
+                                                {% if obj.researchers_list and obj.seshat_experts_list  %}
+                                                <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
+                                                    <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                    <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+                                                    <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+                                                        <span><i class="fas fa-check-circle p-0 m-0"></i> Expert</span>
+                                                </a></span>
+                                                 
+                                                {% elif obj.researchers_list  %}
+
+                                                <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;"><a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                    <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+                                                </a></span>
+                                                 
+                                                {% else %}
+                                                <span class="badge bg-success-light px-1 rounded border-1 fw-light" style="background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
                                                 {{ obj.get_instability_checks }}
+                                                {% endif %}
+
+
+
+                                                
     
                                             </td>
      

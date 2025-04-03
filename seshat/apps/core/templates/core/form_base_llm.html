@@ -654,9 +654,9 @@
 
 
 
-        <div class="row pt-2 mb-0 pb-0">
+        <div class="row pt-2 mb-0 pb-0 d-flex align-items-end">
          
-            <div class="col-sm-2 mb-0 pb-0">
+            <div class="col-sm-2 mb-0 pb-0 " >
                 <div class="p-2 fw-bold highlighted-value-title" style=" border-radius:10px;">
                     <div class="fs-5" style="font-family: Roboto Mono; color:#800000;">
                         Seshat Data
@@ -664,36 +664,53 @@
                 </div>
 
             </div>
-            <div class="col-sm-2 mb-0 pb-0">
 
-
-            </div>
-
-            <div class="col-sm-8 mb-0 pb-0 d-flex align-items-end">
-
+            <div class="col-sm-10 mb-0 pb-0">
                 {% if form.instance.pk %}
-                    {% if form.instance.curator.exists %}
-                    <div class="p-2" style="background: #daf1de;  border-radius:10px;">
-                        <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>Expert Reviewed</b> by:
-                            {% for curator in form.instance.curator.all %}
-                            <span class="fw-bold">{{ curator }}</span>{% if not forloop.last %},{% else %}.{% endif %}
-    
-                            {% endfor %}            
-                    </div>
-    
-                    </div>
-    
-    
-                    {% else %}
-                    <div class="p-2" style="background: #ffdddd; border-radius:10px;">
-                        <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
-                            <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
+                    {% if form.instance.researchers_list %}
+                        <div class="px-2 py-0" style="background: #daf1de; border-radius:5px;">
+                            <div style="font-family: Roboto Mono; color:#163832;">
+                                <small>                               
+                                    <i class="fa-regular fa-square-check fa-lg"></i>  Researcher Checks by:
+                                </small>
+                                <small class="fw-bold">{{form.instance.researchers_list}} </small>
+                            </div>
                         </div>
-                    </div>
-    
+                    {% else %}
+                        <div class="px-2 py-0" style="background: #ffdddd; border-radius:5px;">
+                            <div style="font-family: Roboto Mono; color:#800000;">
+                                <small>                               
+                                    <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u></b> been Reviewed by a Seshat Researcher yet.
+                                </small>                                
+
+                            </div>
+                        </div>
                     {% endif %}
                 {% endif %}
-            
+
+                {% if form.instance.pk %}
+                    {% if form.instance.seshat_experts_list %}
+                        <div class="px-2 py-0" style="background: #daf1de;  border-radius:5px;">
+                            <div style="font-family: Roboto Mono; color:#163832;">
+                                <small>                               
+                                    <i class="fa-regular fa-square-check fa-lg"></i>  Expert Checked by:
+                                </small>                                
+                                <small class="fw-bold">{{form.instance.seshat_experts_list}} </small>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="px-2 py-0" style="background: #ffdddd; border-radius:5px;">
+                            <div style="font-family: Roboto Mono; color:#800000; display:inline-block;">
+                                <small>                               
+                                    <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u></b> been Expert Reviewed yet.
+                                </small>                                
+
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+        
+
             </div>
         </div>
       

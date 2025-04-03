@@ -38,7 +38,7 @@
 
 <th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
     <span> 
-    RA Checks
+    Checks
 </span>
 </th>
 {% endblock myheadings_list %}
@@ -46,7 +46,7 @@
 {% block extra_vars_list %}
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span class="fw-bold highlighted-value-title">{{obj.name}}</span>
+    <small class="fw-normal highlighted-value-title">{{obj.name}}</small>
     {% endautoescape %}
 
 </td>
@@ -85,21 +85,41 @@
     {% endautoescape %}
 
 </td>
-<td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
+<td class="fw-normal" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span class="fw-bold highlighted-value-title">{{obj.inst_intensity}}</span>
+    <span class="fw-normal highlighted-value-title">{{obj.inst_intensity}}</span>
     {% endautoescape %}
 
 </td>
-<td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
+<td class="fw-normal" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span class="fw-bold highlighted-value-title">{{obj.inst_extent}}</span>
+    <span class="fw-normal highlighted-value-title">{{obj.inst_extent}}</span>
     {% endautoescape %}
 
 </td>
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
+
+    {% if obj.researchers_list and obj.seshat_experts_list  %}
+    <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
+        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+        <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+            <span><i class="fas fa-check-circle p-0 m-0"></i> Expert</span>
+    </a></span>
+     
+    {% elif obj.researchers_list  %}
+
+    <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;"><a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+        <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+    </a></span>
+     
+    {% else %}
+    <span class="badge bg-success-light px-1 rounded border-1 fw-light" style="background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
     <small >{{obj.get_instability_checks}}</small>
+    {% endif %}
+
+
     {% endautoescape %}
 
 </td>

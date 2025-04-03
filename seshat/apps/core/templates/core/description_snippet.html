@@ -12,8 +12,9 @@
             <i class="fa-solid fa-pen-to-square"></i>
         </span>
     </a>
+    <hr>
+
 {% endif %}
-<hr>
 
 {% if obj.description and obj.llm_description %}
     {{ obj.description|make_references_look_nicer }}

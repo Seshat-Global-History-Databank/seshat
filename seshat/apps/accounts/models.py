@@ -37,6 +37,11 @@ class Profile(models.Model):
     role = models.PositiveSmallIntegerField(
         choices=ROLE_CHOICES, null=True, blank=True)
     
+    def get_initials(self):
+        if self.user.first_name and self.user.last_name:
+            return f"{self.user.first_name[0].upper()}{self.user.last_name[0].upper()}"
+        return self.user.username[:2].upper() 
+    
     def get_absolute_url(self):
         """
         Returns the url to access a particular instance of the model.
@@ -97,6 +102,11 @@ class Seshat_Expert(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=60,
         choices=ROLE_CHOICES, null=True, blank=True)
+    
+    def get_initials(self):
+        if self.user.first_name and self.user.last_name:
+            return f"{self.user.first_name[0].upper()}{self.user.last_name[0].upper()}"
+        return self.user.username[:2].upper() 
 
     def __str__(self):  # __unicode__ for Python 2
         if self.user.first_name and self.user.last_name:

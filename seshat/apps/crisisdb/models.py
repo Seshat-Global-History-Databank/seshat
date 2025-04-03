@@ -31,14 +31,14 @@ HUMAN_SACRIFICE_HUMAN_SACRIFICE_CHOICES = (
 
 INST_INTENSITY_CHOICES = (
 ('0', '0. Nobody is killed'),
-('1',	'1. One or few individuals killed'),
-('2',	'2. Tens killed'),
-('3',	'3. Tens or Hundreds killed'),
-('4',	'4. Hundreds killed'),
-('5',	'5. Hundreds or Thousands killed'),
-('6',	'6. Thousands killed'),
-('7',	'7. Thousands or Tens of thousands killed'),
-('8',	'8. Tens of thousands killed'),
+('1', '1. One or few individuals killed'),
+('2', '2. Tens killed'),
+('3', '3. Tens or Hundreds killed'),
+('4', '4. Hundreds killed'),
+('5', '5. Hundreds or Thousands killed'),
+('6', '6. Thousands killed'),
+('7', '7. Thousands or Tens of thousands killed'),
+('8', '8. Tens of thousands killed'),
 ('9', '9. Tens of thousands or Hundreds of thousands killed'),
 ('10', '10. Hundreds of thousands killed'), 
 ('11', '11. Hundreds of thousands or Millions killed'),
@@ -46,8 +46,10 @@ INST_INTENSITY_CHOICES = (
 )
 
 REAL_EVENT_CHECK_CHOICES = (
-('Real', 'Real'),
+('Real', 'Good'),
 ('Uncertain', 'Uncertain'),
+('Duplicate', 'Duplicate'),
+('Bad', 'Bad'),
 )
 
 
