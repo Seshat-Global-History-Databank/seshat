@@ -1,0 +1,93 @@
+<div class="row">
+    <div class="col-sm-7" >
+        <div>
+            <b> LLM Description:</b> 
+            {{ form.instance.llm_description}}
+        </div>
+        <div>
+        <span >
+                {% autoescape off %}
+                <span class="text-secondary">
+                    {{ form.instance.get_instability_refs}}
+                </span>
+                {% endautoescape %}
+        </span>
+        </div>
+        <div>
+            <span >
+                <div class="py-2">
+                    <b> Rationale:</b> 
+                    <small>
+                        {{ form.instance.sorokin_rationale}}
+                    </small>
+                </div>
+            </span>
+            <span >
+                <div class="py-2" style="display:none;">
+                    <b> Rationale:</b> 
+                    <small>
+                        {{ extra_var9 }}
+                    </small>
+                </div>
+            </span>
+        </div>
+        <div class="row pt-3">
+            {% autoescape off %}
+            <div class="col-sm-6 pb-1" >
+                <b> <small>General Chain of Thought:</small></b> <br>
+                <div class="border p-1" style="height:200px; overflow: auto">
+                   <small>
+                    {{ form.instance.general_cot }}
+                   </small>
+                </div>
+            </div>
+            <div class="col-sm-6 pb-1 ">
+                <b> <small>Classification Chain of Thought:</small></b> <br>
+                <div class="border p-1" style="height:200px; overflow: auto">
+                    <small>
+                        {{ form.instance.classification_cot }}
+                    </small>
+                </div>
+            </div>
+            {% endautoescape %}
+        </div>
+    </div>
+    <div  class="col-sm-5 ps-2" >
+        <div class="pe-0 pt-2 d-flex flex-column" style="display:none;">
+            <div> <div class="pb-3">
+                <b class="pb-3">RA Checks:</b> 
+                <span class="badge bg-secondary ">
+                    <a href="{% url 'check_choice_add' %}" class="text-white">
+                        Create New
+                    </a>
+                </span>
+            </div>
+
+                <span class="form-check pb-4" >
+                    {% for checkchoice in form.ra_check %}
+                        <label class="pb-1 pe-0 form-check-label" style="display:block;" for="{{ checkchoice.id_for_label }}">
+                            {{ checkchoice.tag }}
+                            <small class="fw-normal text-secondary">  
+                                {{ checkchoice.choice_label }}
+                            </small>
+                        </label>
+                    {% endfor %}
+                </span>
+            </div>
+            {% if form.instance.note %}
+            <div>
+                <small> RA Note:  {{ form.instance.note }}</small>
+            </div>
+            {% endif %}
+            <div>
+                <small style="background: rgb(88, 226, 226)">     * Any Futre RA <b>notes</b>  on the LLM or Seshat record should be added to the private comment section at the top of the page.</small>
+         
+            </div>
+            <div class="pb-4" style="vertical-align: top; display:none; ">
+                <button type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit" style="font-family: 'Roboto Mono', monospace; ">
+                    Submit Your Check
+                </button>
+            </div>
+    </div>
+    </div>
+</div>

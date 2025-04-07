@@ -1,0 +1,75 @@
+{% load humanize %}
+{% load mathfilters %}
+<tr class="highlighted-value-title-full">
+    <td class="fw-normal text-dark" style="text-align: left;">                           
+        <span> {{ form.instance.name}}</span>
+    </td>
+    <td class="fw-normal text-dark" style="text-align: left;">
+        {% if form.instance.polity.long_name %}
+        <span class="fw-bold">
+            <a href="{% url 'polity-detail-main' form.instance.polity.id %}#instability_event_var">{{ form.instance.polity.long_name }}</a>
+        </span>
+        {% else %}
+        <span class="fw-bold">
+            <a href="{% url 'polity-detail-main' form.instance.polity.id %}">{{ form.instance.polity.name }}</a>
+        </span>
+        {% endif %}
+    </td>
+    <td class="fw-normal text-dark" style="text-align: left;">{{ form.instance.get_instability_types }}
+    </td>
+    <td class="fw-normal text-dark" style="text-align: right;">                        
+        {% if form.instance.year_from == None %}                        
+        {% elif form.instance.year_from == form.instance.year_to %}
+            {% if form.instance.year_from < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% elif form.instance.year_to == None %}
+            {% if form.instance.year_from < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small></span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% elif form.instance.year_to == None and form.instance.year_from == None %}
+        <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+        {% else %}
+            {% if form.instance.year_from < 0 and form.instance.year_to < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+            {% elif form.instance.year_from < 0 and form.instance.year_to >= 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% endif %}
+        </td>
+    <td class="fw-bold text-dark" style="text-align: center;">
+        <span> {{ form.instance.inst_intensity}}</span>
+    </td>
+    <td class="fw-bold text-dark" style="text-align: center;"><span> {{ form.instance.inst_extent}}</span></td>
+    <td class="fw-normal text-dark" style="text-align: center;">
+        {{ form.instance.real_event_check }}
+
+    </td>
+        <td class="fw-normal text-dark" style="text-align: left;">
+            {% if form.instance.researchers_list and form.instance.seshat_experts_list  %}
+            <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
+                <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ form.instance.researchers_list }}">
+                <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+                <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ form.instance.seshat_experts_list }}">
+                    <span><i class="fas fa-check-circle p-0 m-0"></i> Expert</span>
+            </a></span>
+             
+            {% elif form.instance.researchers_list  %}
+
+            <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;"><a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ form.instance.researchers_list }}">
+                <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+            </a></span>
+             
+            {% else %}
+            <span class="badge bg-success-light px-1 rounded border-1 fw-light" style="background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
+            {{ form.instance.get_instability_checks }}
+            {% endif %} 
+               </td>
+
+</tr>

@@ -1,0 +1,176 @@
+<div class="col-md-12 my-3">
+
+    <div class="mt-1">
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item pb-0 mb-0" role="presentation">
+                <button class="nav-link active pb-0 mb-0" id="table1-tab" data-bs-toggle="tab" data-bs-target="#table1" type="button" role="tab" aria-controls="table1" aria-selected="true">
+                    {% if form.instance.comment  %}
+                    <div class="fw-bold" style=" border-bottom:5px solid maroon;">
+                        <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                            Seshat Data (Final)
+                        </div>
+                    </div>
+                    {% elif form.instance.researchers_list %}
+                    <div class="fw-bold pb-0 mb-0" style=" border-bottom:5px solid maroon;">
+                        <div class="fs-6 pb-0 mb-0" style="font-family: Roboto Mono; color:#800000;">
+                            Seshat Data (Check in Progress)
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="fw-bold text-secondary" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
+                        <div class="fs-6" style="font-family: Roboto Mono; color: black;">
+                            LLM Data                       </div>
+                    </div>
+                    {% endif %}                
+                </button>
+            </li>
+            <li class="nav-item" role="presentation" style="display:
+            
+            {% if form.instance.comment or form.instance.researchers_list %}
+            normal
+            {% else %}
+            none
+            {% endif %}                
+;">
+                <button class="nav-link" id="table2-tab" data-bs-toggle="tab" data-bs-target="#table2" type="button" role="tab" aria-controls="table2" aria-selected="false">
+
+                    <div class="fw-bold" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
+                        <div class="fs-6" style="font-family: Roboto Mono; color: lightgray;">
+                            LLM Data
+                        </div>
+                    </div>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation" style="display:none;">
+                <button class="nav-link" id="table3-tab" data-bs-toggle="tab" data-bs-target="#table3" type="button" role="tab" aria-controls="table3" aria-selected="false">
+                  XXXX3
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Tab 1 -->
+            <div class="tab-pane fade show active  " id="table1" role="tabpanel" aria-labelledby="table1-tab">
+                <div class="table-container pb-0" >
+                    <table id="table_id" class="table align-middle table-hover" style="border-width:0;">
+                        {% if form.instance.comment or form.instance.researchers_lis %}
+                            <thead> 
+                                <tr style="border-width:0;">
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Event</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Polity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Type(s)</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Intensity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Extent</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Data Point</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Checks</th>
+
+                                </tr>
+                            </thead>
+                        {% else %}
+                            <thead> 
+                                <tr style="border-width:0;">
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Event Name</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Polity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Type(s)</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Real?</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">RA&nbsp;Checks 
+                                    </th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">LLM Details 
+                                    </th>
+                                </tr>
+                            </thead>
+                        {% endif %}
+    
+                        <tbody>
+                      
+                            {% autoescape off %}
+                            {% if form.instance.comment or form.instance.researchers_list %}
+                                {% include "core/partials/_seshat_data_row_after.html" %}
+                    
+                                        {% include "core/partials/_llm_data_row_hidden.html" %}
+                            
+                            {% else %}
+                            {% include "core/partials/_llm_data_row_before.html" %}
+    
+                            <tr id="details-row" style="display: none;">
+                                <td colspan="12">
+                                    {% include "core/partials/_llm_extras.html" %}
+                                </td>
+                              </tr>
+                           
+                            {% endif %}
+                         
+                           
+                            {% endautoescape %}
+                        </tbody>
+                    </table>
+    
+                </div>
+
+            </div>
+
+            <!-- Tab 2 -->
+            <div class="tab-pane fade row gutters-sm" id="table2" role="tabpanel" aria-labelledby="table2-tab">
+                <div class="table-container pb-0" >
+                    <table id="table_id" class="table align-middle table-hover" style="border-width:0;">
+
+                            <thead> 
+                                <tr style="border-width:0;">
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Event Name</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Polity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">Type(s)</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Real?</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">RA&nbsp;Checks 
+                                    </th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">LLM Details 
+                                    </th>
+                                </tr>
+                            </thead>
+    
+                        <tbody>
+                      
+                            {% autoescape off %}
+
+                            {% include "core/partials/_llm_data_row_hidden.html" %}
+                            
+
+                            {% include "core/partials/_llm_data_row_before.html" %}
+                            <tr id="details-row" style="display: none;">
+                                <td colspan="12">
+                                    {% include "core/partials/_llm_extras.html" %}
+                                </td>
+                              </tr>
+                         
+                           
+                            {% endautoescape %}
+                        </tbody>
+                    </table>
+    
+                </div>
+
+            </div>
+
+            <!-- Tab 3 -->
+            <div class="tab-pane fade row gutters-sm" id="table3" role="tabpanel" aria-labelledby="table3-tab">
+
+              {% if form.instance.comment  %}
+
+              {% else %}
+              <h5>No Notifications for you.</h5>
+              {% endif %}
+
+          </div>
+        </div>
+    </div>
+
+
+</div>

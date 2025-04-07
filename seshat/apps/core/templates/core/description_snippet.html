@@ -4,7 +4,11 @@
 
 {% if obj.comment and obj.comment.id > 1 %}
 <b>Seshat Approved Description: </b>
-    {{ obj.comment }}
+    
+    <span style="line-height:1.0rem;">
+        {{ obj.comment }}
+    </span>
+    
     <a class="p-0 m-0 float-end" 
     style=" overflow: hidden;" 
     href="{% url 'seshatcomment-update' obj.comment.id %}">
@@ -12,42 +16,55 @@
             <i class="fa-solid fa-pen-to-square"></i>
         </span>
     </a>
+    <hr>
+
 {% endif %}
-<hr>
 
 {% if obj.description and obj.llm_description %}
-    {{ obj.description|make_references_look_nicer }}
+    <span style="line-height:1.0rem;">
+        {{ obj.description|make_references_look_nicer }}
+
+    </span>
     <br>
-    {{ obj.llm_description }}
+    <span style="line-height:1.0rem;">
+        {{ obj.llm_description }}
+    </span>
+
     <br>
-    xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 {% elif obj.description  %}
-    {{ obj.description|make_references_look_nicer }}
+    <span style="line-height:1.0rem;">
+        {{ obj.description|make_references_look_nicer }}
+    </span>
+
     <br>
 {% elif obj.llm_description  %}
 <div class="row">
-    <div class="col-md-6">
-        <b>LLM Description: </b>
+    <div class="col-md-7" >
+        <span style="line-height:1.0rem;">
+            <b>LLM Description: </b>
+
+            {{ obj.llm_description }}
+
+        </span>
         <br>
-        {{ obj.llm_description }}
-        <br>
-        <b>LLM References: </b>
-        <br>
-        {{ obj.get_instability_refs }}
-        <hr>
+        <small class="text-secondary pt-2" style="line-height:1.0rem;">
+            {{ obj.get_instability_refs }}
+        </small>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5">
         <b>Rationale:</b>
-        {{ obj.sorokin_rationale }}
+        <small style="line-height:1.0rem;">
+            {{ obj.sorokin_rationale }}
+        </small> 
     </div>
-    <div class="col-md-6">
+    <div class="col-md-7 pt-2" style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
         <small>
             <b>General Chain of Thought: </b>
             {{ obj.general_cot }}
         </small>
      
     </div>
-    <div class="col-md-6">
+    <div class="col-md-5 pt-2"  style="height: 150px; overflow:auto; line-height:1.0rem;" readonly>
         <small>
             <b>Classification Chain of Thought: </b>
             {{ obj.classification_cot }}
@@ -58,7 +75,6 @@
 
 
 </div>
-
 
     
 {% else %}

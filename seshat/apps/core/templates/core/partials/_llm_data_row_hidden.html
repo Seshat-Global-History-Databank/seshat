@@ -1,0 +1,66 @@
+{% load humanize %}
+{% load mathfilters %}
+
+<tr id="hidden-row-llm" style="border-width:0; display:none;">
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">                           
+        <span class="highlighted-value-title"> {{ form.instance.llm_name}}</span>
+    </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
+        {% if form.instance.polity.long_name %}
+        <span class="fw-bold">
+            <a href="{% url 'polity-detail-main' form.instance.polity.id %}#instability_event_var">{{ form.instance.polity.long_name }}</a>
+        </span>
+        {% else %}
+        <span class="fw-bold">
+            <a href="{% url 'polity-detail-main' form.instance.polity.id %}">{{ form.instance.polity.name }}</a>
+        </span>
+        {% endif %}
+    </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_llm_instability_types }}
+    </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: right;">                        
+        {% if form.instance.llm_year_from == None %}                        
+        {% elif form.instance.llm_year_from == form.instance.llm_year_to %}
+            {% if form.instance.llm_year_from < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs|intcomma }} <small class="text-secondary">BCE</small> </span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% elif form.instance.llm_year_to == None %}
+            {% if form.instance.llm_year_from < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small></span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% elif form.instance.llm_year_to == None and form.instance.llm_year_from == None %}
+        <span style="text-align: right; border-width: 0;"> <i class="fa-solid fa-minus"></i> </span>
+        {% else %}
+            {% if form.instance.llm_year_from < 0 and form.instance.llm_year_to < 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to|abs }}&nbsp;<small class="text-secondary">BCE</small></span>
+            {% elif form.instance.llm_year_from < 0 and form.instance.llm_year_to >= 0 %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from|abs }} <small class="text-secondary">BCE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+            {% else %}
+            <span style="text-align: right; border-width: 0;">{{ form.instance.llm_year_from }} <small class="text-secondary">CE</small> <i class="fa-solid fa-arrow-right-long"></i> {{ form.instance.llm_year_to }}&nbsp;<small class="text-secondary">CE</small></span>
+            {% endif %}
+        {% endif %}
+        </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">
+        <span class="highlighted-value-title"> {{ form.instance.llm_inst_intensity}}</span>
+    </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;"><span class="highlighted-value-title"> {{ form.instance.llm_inst_extent}}</span></td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">
+        {% if form.instance.real_event_check %}
+        <i class="fa-solid fa-square-check text-success"></i>                           
+        {% else %}
+        <i class="fa-solid fa-square-xmark text-danger"></i>                           
+        {% endif %}
+    </td>
+        <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_instability_checks}}
+        </td>
+        <td style="text-align: right;">
+            <span class="btn btn-sm px-1 py-0 text-teal" onclick="toggleRow(this)">
+                <span id="toggle-icon">See more ▼</span>
+            </span>
+        </td>
+    
+</tr>

@@ -60,8 +60,10 @@
     
           <div class="row">
             <div class="col-md-3">
-                      <h5> {{user.first_name}} {{user.last_name}}</h5>
-           
+              <span class="h3 bg-colorful p-1 rounded border border-2 border-dark"> {{user.profile.get_initials}}</span>
+
+                      <span clasS="h5"> {{user.first_name}} {{user.last_name}}</span>
+
             </div>
             <div class="col-md-2">
                      <span class="text-secondary"><i class="fa-solid fa-circle-user"></i> {{user.profile.get_role_display}}</span>
@@ -82,13 +84,12 @@
     </div>
 
         {% if user.profile.bio %}
-        <span class="text-muted font-size-sm"> <span class="text-dark">Bio: </span> {{user.profile.bio}}</span>
+        <span class="text-muted font-size-sm pt-3"> <span class="text-dark">Bio: </span> {{user.profile.bio}}</span>
 
         {% endif %}
 
 
               </div>
-              <hr>
               <div class="col-md-12 my-3">
 
                     <div class="mt-1">

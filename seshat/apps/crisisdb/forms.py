@@ -308,7 +308,7 @@ class Instability_eventForm(ExpertReviewedForm):
         labels['general_cot'] = "<span class='fs-6'> General Chain of Thought: </span>"
         labels['classification_cot'] = "<span class='fs-6'> Classification Chain of Thought </span>"
         labels['sorokin_rationale'] = "<span class='fs-6'> Sorokin Rationale </span>"
-        labels['real_event_check'] = "<span class='fs-6'> Real Event? </span>"
+        labels['real_event_check'] = "<span class='fs-6'> Data Point </span>"
         labels['ra_check'] = "<span class='fs-6'> RA Check: </span>"
         labels['inst_type'] = "<span class='fs-6'>Event Type</span>"
 

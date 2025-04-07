@@ -7750,9 +7750,9 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
-                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+                logged_in_staff = Seshat_Expert.objects.get(user=logged_in_user)
             except:
-                logged_in_expert = None
+                logged_in_staff = None
 
 
             if suggested_experts:
@@ -7761,7 +7761,7 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
                 new_object.private_comment = father_private_comment
                 seshat_private_comment_part = SeshatPrivateCommentPart(
                     private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
-                    private_comment_owner=logged_in_expert, 
+                    private_comment_owner=logged_in_staff, 
                     private_comment= father_private_comment
                 )
 
@@ -7787,12 +7787,12 @@ def dynamic_create_view(request, form_class, x_name, coded_value, myvar, my_exp,
             # logged_in_user = request.user
 
             # try:
-            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+            #     seshat_staff_instance = Seshat_Expert.objects.get(user=logged_in_user)
             # except:
-            #     seshat_expert_instance = None
-            # if seshat_expert_instance:
+            #     seshat_staff_instance = None
+            # if seshat_staff_instance:
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
-            #     new_object.curator.add(seshat_expert_instance)
+            #     new_object.curator.add(seshat_staff_instance)
 
     else:
         polity_id_x = request.GET.get('polity_id_x')
@@ -7945,9 +7945,9 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
             suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
-                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+                logged_in_staff = Seshat_Expert.objects.get(user=logged_in_user)
             except:
-                logged_in_expert = None
+                logged_in_staff = None
 
 
             if suggested_experts:
@@ -7960,7 +7960,7 @@ def dynamic_update_view_old(request, object_id, form_class, model_class, x_name,
                     new_object.private_comment = father_private_comment
                 seshat_private_comment_part = SeshatPrivateCommentPart(
                     private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
-                    private_comment_owner=logged_in_expert, 
+                    private_comment_owner=logged_in_staff, 
                     private_comment= father_private_comment
                 )
 
@@ -8248,9 +8248,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
-                logged_in_expert = Seshat_Expert.objects.get(user=logged_in_user)
+                logged_in_staff = Seshat_Expert.objects.get(user=logged_in_user)
             except:
-                logged_in_expert = None
+                logged_in_staff = None
+
+
+            # Update the is_expert_checked attribute
 
 
             if suggested_experts:
@@ -8264,13 +8267,13 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 if x_name == "instability_event":
                     seshat_private_comment_part = SeshatPrivateCommentPart(
                         private_comment_part_text=f"We have used LLM to generate a new Instability Event: '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
-                        private_comment_owner=logged_in_expert, 
+                        private_comment_owner=logged_in_staff, 
                         private_comment= father_private_comment
                     )
                 else:
                     seshat_private_comment_part = SeshatPrivateCommentPart(
                     private_comment_part_text=f"I have coded a new record for the variable '{new_object.name}' on the polity: '{new_object.polity}'. I would appreciate it if you could review it.",
-                    private_comment_owner=logged_in_expert, 
+                    private_comment_owner=logged_in_staff, 
                     private_comment= father_private_comment
                 )
 
@@ -8285,13 +8288,27 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             new_object.expert_reviewed = False
             # Save ManyToMany relationships
             new_object.save()  # Save the object to persist the association
+
+            #new_object.curator.set([logged_in_staff]) 
+            print(logged_in_staff)
+            existing_curators = list(new_object.curator.all())  # Get current curators as a list
+
+            new_object.save()  # Save the object to persist the association
+
             my_form.save_m2m()
+
+            #new_object.curator.add(logged_in_staff)
+            #new_object.curator.add(logged_in_staff)
+            if logged_in_staff not in existing_curators:
+                existing_curators.append(logged_in_staff)  # Add only if not already present
+            new_object.curator.set(existing_curators)  # Update the ManyToMany field
+            new_object.save()  # Save the object to persist the association
 
             
             action = request.POST.get('action')
             if action == 'redirect_one':
-                print('4444444444444444444')
                 url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+
                 return redirect(url)
                 #return redirect("polity-detail-main", pk=new_object.polity.id) + "#{x_name}"
             elif action == 'redirect_two':
@@ -8308,12 +8325,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             # logged_in_user = request.user
 
             # try:
-            #     seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+            #     seshat_staff_instance = Seshat_Expert.objects.get(user=logged_in_user)
             # except:
-            #     seshat_expert_instance = None
-            # if seshat_expert_instance:
+            #     seshat_staff_instance = None
+            # if seshat_staff_instance:
             #     print("Alllllllloooooooooooooooo: ", logged_in_user)
-            #     new_object.curator.add(seshat_expert_instance)
+            #     new_object.curator.add(seshat_staff_instance)
             #return redirect(f"{x_name}-detail", pk=my_object.id)
 
 
@@ -8336,18 +8353,24 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                 model_instance = get_object_or_404(model_class, id=object_id)
                 model_instance.comment = big_father
 
+                logged_in_user = request.user
+
+
+                try:
+                    seshat_staff_instance = Seshat_Expert.objects.get(user=logged_in_user)
+                except:
+                    seshat_staff_instance = None
+                
+                model_instance.curator.add(seshat_staff_instance)
+
                 model_instance.save()
                 if form_inline_new.is_valid():
                     comment_text = form_inline_new.cleaned_data['comment_text']
                     comment_order = form_inline_new.cleaned_data['comment_order']
-                    user_logged_in = request.user
 
-                    try:
-                        seshat_expert_instance = Seshat_Expert.objects.get(user=user_logged_in)
-                    except:
-                        seshat_expert_instance = None
 
-                    seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_expert_instance, comment= big_father)
+
+                    seshat_comment_part = SeshatCommentPart(comment_part_text=comment_text, comment_order=1, comment_curator=seshat_staff_instance, comment= big_father)
 
                     seshat_comment_part.save()
 
@@ -8438,7 +8461,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
                         #return redirect('your_second_url_name')  # Replace with yours
                         return redirect(reverse('seshatcomment-update', kwargs={'pk': com_id}))
             print('555555555555')
-            return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
+            url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+            return redirect(url)
+            #return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
         else:
             form_inline_new = None
 
@@ -8953,6 +8978,8 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
             x_name_1, x_name_2, x_name_3 = "order", "widespread_religion", "degree_of_prevalence"
         elif x_name == "lux_precious_metal":
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
+        elif x_name == "instability_event":
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 
         elif db_section == 'ec':
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -9014,6 +9041,24 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 x_name_11: obj[x_name_11],
                 x_name_12: obj[x_name_12],
                 x_name_1: obj[x_name_1],
+            })
+        elif x_name in ['instability_event']:
+            check_status_tag = 'LLM'
+            if objj.researchers_list() and objj.seshat_experts_list():
+                check_status_tag = 'Expert Checked'
+            elif objj.researchers_list() or objj.get_llm_instability_checks_str():
+                check_status_tag = 'RA Checked'
+                
+            coded_cols.update({
+                'event_name': obj[x_name_1],
+                'intensity': obj[x_name_2],
+                'extent': obj[x_name_3],
+                'data_point': obj[x_name_4],
+                 x_name_5: objj.get_instability_types_str(),
+                 x_name_6: objj.get_llm_instability_checks_str(),
+                 x_name_7: check_status_tag,
+                'rationale': obj[x_name_8],
+                 x_name_9: obj[x_name_9],
             })
         elif x_name == "lux_precious_metal":
             place_pols = []
@@ -9088,28 +9133,35 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
 
         ############
 
-        if objj.curators_list():
+        if objj.seshat_experts_list():
             is_expert_reviewed = True
         else:
             is_expert_reviewed = False
 
-        sublist_1_row = ['variable_set', 'section', 'subsection', 'variable_name', 'polity_name', 'polity_new_ID', 'polity_old_ID', ]
+        sublist_1_row = ['variable_set', 'section', 'subsection', 'variable_name', 'polity_name', 'polity_new_ID',]
 
         # special case of widespread religion. Merge order into variable name
-        if coded_value in ['widespread_religion']:
-            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_dynamic(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
-        elif db_section == 'rt':
-            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+        if coded_value in ['widespread_religion'] and  objj.polity:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_dynamic(), objj.polity.long_name, objj.polity.new_name,]
+        elif db_section == 'rt' and objj.polity:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name,]
+        elif x_name in ['instability_event'] and objj.polity:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name,]
+        elif objj.polity:
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), objj.polity.long_name, objj.polity.new_name,]
         else:
-            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), objj.polity.long_name, objj.polity.new_name, objj.polity.name,]
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), '-', '-', '-',]
 
 
-        if objj.clean_name_spaced() == 'Polity Duration':
+        if objj.clean_name_spaced() == 'Polity Duration' and objj.polity:
             sublist_3_row = ['confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
-        elif coded_value in ['power_transition']:
+        elif coded_value in ['power_transition'] and objj.polity:
             sublist_3_row = ['transition_year', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
+        elif x_name in ['instability_event'] and objj.polity:
+            sublist_3_row = ['llm_references', 'RA_approved_description', ]
+            sublist_3 = [objj.get_llm_instability_refs_str().replace('<b>', '').replace('</b>', ''), objj.comment,  ]
         else:
             sublist_3_row = ['year_from', 'year_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_from, objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
@@ -9224,7 +9276,7 @@ def generic_json_download(request, model_class, var_name, x_name, var_section, v
             "confidence": objj.get_tag_display(),
             "is_disputed": objj.is_disputed,
             "is_uncertain": objj.is_uncertain,
-            "expert_checked": bool(objj.curators_list()),  # Check if it has been reviewed
+            "expert_checked": bool(objj.seshat_experts_list()),  # Check if it has been reviewed
             "coded_values": coded_cols
         }
 
