@@ -3747,7 +3747,7 @@ def seshatindex(request):
         'general_examples': [('Alternative Name', 'polity_alternative_names_all', 'Identity and Location'),
                             ('Polity Peak Years', 'polity_peak_yearss_all', 'Temporal Bounds'), 
                             ('Polity Capital', 'polity_capitals_all', 'Identity and Location'),
-                            ('Polity City', 'polity_cities_all', 'Identity and Location'), 
+                            ('Polity City', 'polity_citys_all', 'Identity and Location'), 
                             ('Polity Language', 'polity_languages_all', 'Language'),
                             ('Polity Religion', 'polity_religions_all', 'Religion'),
                             ('Degree of Centralization', 'polity_degree_of_centralizations_all', 'Temporal Bounds'),

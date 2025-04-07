@@ -2858,7 +2858,7 @@ class Polity_cityListViewAll(generic.ListView):
         Returns:
             str: The absolute URL of the view.
         """
-        return reverse('polity_cities_all')
+        return reverse('polity_citys_all')
 
     def get_queryset(self):
         """

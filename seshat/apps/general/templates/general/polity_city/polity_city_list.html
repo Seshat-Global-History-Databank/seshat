@@ -6,7 +6,7 @@
 {% block download_button %}
     <a href="{% url 'polity_city-create' %}" class="btn btn-outline-success mx-3 my-4 float-end"><i class="fas fa-plus"></i> &nbsp; Add More Facts</a>
     <a href="{% url 'polity_city-download' %}" class="btn btn-outline-primary ms-auto my-4 float-end"><i class="fas fa-download"></i> &nbsp; Download All</a>
-    <a href="{% url 'polity_cities_all' %}" class="btn btn-warning mx-3 my-4 float-end"><i class="fa-solid fa-table-list"></i> &nbsp; See One-Page Mode</a>
+    <a href="{% url 'polity_citys_all' %}" class="btn btn-warning mx-3 my-4 float-end"><i class="fa-solid fa-table-list"></i> &nbsp; See One-Page Mode</a>
 
 {% endblock download_button %}
 
@@ -20,7 +20,7 @@
 
 {% block myheadings_list %}
 <th class = "fw-bold" style="text-align: center;" scope="col"><span>
-    <a href="{% url 'polity_cities_all' %}?orderby=city&orderby2=tag"><i class="fa-solid fa-caret-down"></i></a>
+    <a href="{% url 'polity_citys_all' %}?orderby=city&orderby2=tag"><i class="fa-solid fa-caret-down"></i></a>
 </span>City
 </th>
 <th class = "fw-bold" style="text-align: center;" scope="col">City Object
