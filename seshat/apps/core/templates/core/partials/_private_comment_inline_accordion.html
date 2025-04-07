@@ -4,189 +4,174 @@
 {% load custom_filters %}
 
 <div class="accordion accordion-flush  rounded" id="accordionFlushExample">
-    <div class="accordion-item  rounded" style="background-color:#fefae6; border: 1px solid lightgray;">
-    <h5 class="accordion-header rounded border border-1 border-secondary" id="flush-headingOne">
-        
-        <button class="accordion-button collapsed rounded p-2" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" style="background-color:#fefae6;"> 
-            <span class="fs-5 text-teal fw-bold"><i class="fa-solid fa-comments"></i> &nbsp; Private Comments 
-                <span class="badge bg-success-light">
-                    {{ form.instance.private_comment.inner_private_comments_related.all|length }}
-                </span>
 
+    <div class="accordion-item  rounded" style="background-color:#fefae6; ">
 
-            <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-          
-            </span></span> 
-        </button>
-    </h5>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-        <div class="accordion-body pt-3 ps-3 row">
+        <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body pt-3 ps-2 row">
+                {% if form.instance.private_comment %}
+                <div class="col-sm-6">
 
-
-
-            {% if form.instance.private_comment %}
-            <div class="col-sm-6">
-
-            <form action="{% url 'xxyyzz' com_id=form.instance.private_comment.id %}" method="post">
-                {% csrf_token %}
-    
-                {% if form.instance.private_comment.inner_private_comments_related.all %}
-
-
-            <table id="table_id" class="table table-borderless table-hover align-middle pt-0 mt-0"> 
-
-                  <tbody class="py-1 ">
-                    {% autoescape off %}
-    
-                    {% if form.instance.private_comment.inner_private_comments_related.all %}
-                        {% for subcom in form.instance.private_comment.inner_private_comments_related.all %}
-        
-                            <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
-                                <div class="row">
-        
-                                <td class="col-md-9 ps-1 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
-                                    <span class="{% if subcom.is_done %} bg-light fw-light {% else %} fs-6 fw-bold {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{subcom.private_comment_owner.id|give_me_a_color}}; color: {{subcom.private_comment_owner.id|give_me_a_color}};  {% endif %};">{{subcom.private_comment_owner}}</span> 
-                                    {% if subcom.private_comment_reader.all %}
-                                    <b>@</b>
-                                    {% endif %}
-
-                                    {% for an_expert in  subcom.private_comment_reader.all %}
-                                    <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
-                                border: 1px solid {{an_expert.id|give_me_a_color}}; border-left: 5px solid {{an_expert.id|give_me_a_color}}
-                                {% endif %};  border-radius:5px;">{{an_expert}}</span>
-                                    {% endfor %}
-                                    {% if subcom.created_date %}
-                                    <small class="text-secondary extra-small">&nbsp; {{ subcom.created_date|naturaltime }}</small> 
-                                    {% else %}
-                                    <i class="fa-solid fa-minus text-danger"></i>
-                                    {% endif %}
-                                    <br>
-                                    <div class="comment-box" style="
-                                    {% if subcom.is_done %} font-size:12px; {% else %} border-color: {{subcom.private_comment_owner.id|give_me_a_color}}55; background: {{subcom.private_comment_owner.id|give_me_a_color}}11; {% endif %} 
-                                    
-                                    ">
-                                    <small >
-                                        {{ subcom.private_comment_part_text }}  
-                                    </small>
-                                    </div>    
-                                </td>
-
-                                </div>
-                            </tr>
-        
-                        {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td class="col-md-8 text-secondary" scope="row" style="text-align: left;">
-                        No Private Comments yet.
-                        </td>
-                        <td class="col-md-2" style="text-align: left">
-                            -
-                        </td>
-                        <td class="col-md-2" style="text-align: left">
-                        -
-                        </td>
-                        <td class="col-md-2" style="text-align: center">
-                            -
-                            </td>
-    
-                    </tr>
-                    {% endif %}
-    
-                    {% endautoescape %}
-    
-                </tbody>
-              </table>
-
-              {% endif %}
-    
-             
-            </form>
-        </div>
-
-            <div class="col-sm-6">
-
-                {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-                <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=form.instance.private_comment.id %}">
+                <form action="{% url 'xxyyzz' com_id=form.instance.private_comment.id %}" method="post">
                     {% csrf_token %}
         
+                    {% if form.instance.private_comment.inner_private_comments_related.all %}
+
+
+                <table id="table_id" class="table table-borderless table-hover align-middle pt-0 mt-0"> 
+
+                    <tbody class="py-1 ">
+                        {% autoescape off %}
         
-                    
-                        <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
-                            {% if user.full_name %}
-                            {{user.full_name}}
-                            {% else %}
-                            {{user}}
-                            {% endif %}
-                            :</span>  
-        
-                        {{ another_form.private_comment_part_text }}
-                
+                        {% if form.instance.private_comment.inner_private_comments_related.all %}
+                            {% for subcom in form.instance.private_comment.inner_private_comments_related.all %}
+            
+                                <tr class="py-1 {% if subcom.is_done %}bg-light text-secondary{% endif %}">
+                                    <div class="row">
+            
+                                    <td class="col-md-9 ps-1 {% if subcom.is_done %} text-secondary {% else %} text-dark {% endif %}  py-1" style="text-align: left;">
+                                        <span class="{% if subcom.is_done %} bg-light fw-light {% else %} fs-6 fw-bold {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{subcom.private_comment_owner.id|give_me_a_color}}; color: {{subcom.private_comment_owner.id|give_me_a_color}};  {% endif %};">{{subcom.private_comment_owner}}</span> 
+                                        {% if subcom.private_comment_reader.all %}
+                                        <b>@</b>
+                                        {% endif %}
 
-                            <span class="co">
-                                <small class="fw-normal">Researchers or Experts to be informed:</small>  
-
-                                {{ another_form.private_comment_reader }}
-                            </span>
-
-
-                            <span class="co">
-                                <input type="submit" class="btn border border-dark bg-colorful fw-bold"   value="Insert Your Comment">
-                            </span>
-
+                                        {% for an_expert in  subcom.private_comment_reader.all %}
+                                        <span class="badge text-dark p-1" style="{% if subcom.is_done %}background: lightgray{% else %}
+                                    border: 1px solid {{an_expert.id|give_me_a_color}}; border-left: 5px solid {{an_expert.id|give_me_a_color}}
+                                    {% endif %};  border-radius:5px;">{{an_expert}}</span>
+                                        {% endfor %}
+                                        {% if subcom.created_date %}
+                                        <small class="text-secondary extra-small">&nbsp; {{ subcom.created_date|naturaltime }}</small> 
+                                        {% else %}
+                                        <i class="fa-solid fa-minus text-danger"></i>
+                                        {% endif %}
+                                        <br>
+                                        <div class="comment-box" style="
+                                        {% if subcom.is_done %} font-size:12px; {% else %} border-color: {{subcom.private_comment_owner.id|give_me_a_color}}55; background: {{subcom.private_comment_owner.id|give_me_a_color}}11; {% endif %} 
                                         
+                                        ">
+                                        <small >
+                                            {{ subcom.private_comment_part_text }}  
+                                        </small>
+                                        </div>    
+                                    </td>
+
+                                    </div>
+                                </tr>
+            
+                            {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td class="col-md-8 text-secondary" scope="row" style="text-align: left;">
+                            No Private Comments yet.
+                            </td>
+                            <td class="col-md-2" style="text-align: left">
+                                -
+                            </td>
+                            <td class="col-md-2" style="text-align: left">
+                            -
+                            </td>
+                            <td class="col-md-2" style="text-align: center">
+                                -
+                                </td>
+        
+                        </tr>
+                        {% endif %}
+        
+                        {% endautoescape %}
+        
+                    </tbody>
+                </table>
+
+                {% endif %}
+        
                 
                 </form>
-                {% endif %}
             </div>
 
+                <div class="col-sm-6">
+
+                    {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+                    <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=form.instance.private_comment.id %}">
+                        {% csrf_token %}
+            
+            
+                        
+                            <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
+                                {% if user.full_name %}
+                                {{user.full_name}}
+                                {% else %}
+                                {{user}}
+                                {% endif %}
+                                :</span>  
+            
+                            {{ another_form.private_comment_part_text }}
+                    
+
+                                <span class="co">
+                                    <small class="fw-normal">Researchers or Experts to be informed:</small>  
+
+                                    {{ another_form.private_comment_reader }}
+                                </span>
 
 
+                                <span class="co">
+                                    <input type="submit" class="btn border border-dark bg-colorful fw-bold"   value="Insert Your Comment">
+                                </span>
 
-          {% else %}
-
-
-
-          <a class="p-0 m-0"  
-          style="overflow: hidden;" 
-          href="{% url 'create_private_subcomment_new' app_name='crisisdb' model_name='instability_event' instance_id=form.instance.id %}">
-              <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c" data-bs-toggle="popover" title="Add Private Comment" >
-                  <i class="fa-regular fa-comment"></i>
-  
-              </span>
-          </a>
-
-
-          {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-          <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=0 %}">
-              {% csrf_token %}
-              <div class="row mt-3">
-    
-                <div class="col-md-9 my-1 ps-3">
-    
-                 
-                  <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
-                      {% if user.full_name %}
-                      {{user.full_name}}
-                      {% else %}
-                      {{user}}
-                      {% endif %}
-                      :</span>  
-    
-                  {{ another_form.private_comment_part_text }}
-          
+                                            
+                    
+                    </form>
+                    {% endif %}
                 </div>
-                <div class="col-md-3 my-1">
-                  <span class="fw-bold">Researchers or Experts to be informed:</span>  
-                  {{ another_form.private_comment_reader }}
-                      <input type="submit" class="btn mt-5 border border-dark bg-colorful fw-bold px-4"  value="Insert the New Private Comment">
-                  </div>
-          
-            </div>
-            </form>
+
+
+
+
+            {% else %}
+
+
+
+            <a class="p-0 m-0"  
+            style="overflow: hidden;" 
+            href="{% url 'create_private_subcomment_new' app_name='crisisdb' model_name='instability_event' instance_id=form.instance.id %}">
+                <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:999; background-color:#edd0284c" data-bs-toggle="popover" title="Add Private Comment" >
+                    <i class="fa-regular fa-comment"></i>
+    
+                </span>
+            </a>
+
+
+            {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+            <form method="post" action="{% url 'seshatprivatecommentpart-create2' private_com_id=0 %}">
+                {% csrf_token %}
+                <div class="row mt-3">
+        
+                    <div class="col-md-9 my-1 ps-3">
+        
+                    
+                    <span class="fw-bold {% if subcom.is_done %} {% else %} fs-6 {% endif %}" style="{% if subcom.is_done %}background: lightgray {% else %} border-bottom: 4px solid {{user|get_seshat_expert|give_me_a_color}}; color: {{user|get_seshat_expert|give_me_a_color}};  {% endif %};">
+                        {% if user.full_name %}
+                        {{user.full_name}}
+                        {% else %}
+                        {{user}}
+                        {% endif %}
+                        :</span>  
+        
+                    {{ another_form.private_comment_part_text }}
+            
+                    </div>
+                    <div class="col-md-3 my-1">
+                    <span class="fw-bold">Researchers or Experts to be informed:</span>  
+                    {{ another_form.private_comment_reader }}
+                        <input type="submit" class="btn mt-5 border border-dark bg-colorful fw-bold px-4"  value="Insert the New Private Comment">
+                    </div>
+            
+                </div>
+                </form>
+                {% endif %}
             {% endif %}
-          {% endif %}
+            </div>
         </div>
-    </div>
     </div>
 </div>

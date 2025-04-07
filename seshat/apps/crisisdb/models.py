@@ -395,6 +395,8 @@ class Instability_event(SeshatCommon):
     llm_inst_intensity = models.CharField(max_length=5, choices=INST_INTENSITY_CHOICES, null=True, blank=True)
     llm_real_event_check = models.CharField(max_length=20, choices=REAL_EVENT_CHECK_CHOICES, null=True, blank=True)
     llm_name = models.CharField(max_length=200, null=True, blank=True)
+    llm_year_from = models.IntegerField(blank=True, null=True)
+    llm_year_to = models.IntegerField(blank=True, null=True,)
 
 
 
@@ -413,6 +415,9 @@ class Instability_event(SeshatCommon):
     def get_instability_types(self):
         return " ".join(str(t) for t in self.inst_type.all())
     
+    def get_instability_types_str(self):
+        return ";".join(t.name for t in self.inst_type.all())
+    
     def get_instability_checks(self):
         return " ".join(ch.compact_str() for ch in self.ra_check.all())
     
@@ -426,9 +431,16 @@ class Instability_event(SeshatCommon):
     def get_llm_instability_checks(self):
         return " ".join(ch.compact_str() for ch in self.ra_check.all())
     
+    def get_llm_instability_checks_str(self):
+        return ";".join(ch.name for ch in self.ra_check.all())
+    
     def get_llm_instability_refs(self):
         #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
         return "<br>".join(str(ref) for ref in self.inst_llm_ref.all())
+    
+    def get_llm_instability_refs_str(self):
+        #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
+        return ";".join(ref.name for ref in self.inst_llm_ref.all())
 
     def __str__(self) -> str:
         if self.name:

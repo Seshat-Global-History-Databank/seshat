@@ -6,6 +6,20 @@
 {% load mathfilters %}
 
 
+{% block download_button %}
+
+    <!-- Add Another Fact Button -->
+
+
+<a href="{% url download_url %}" 
+class="btn btn-outline-primary btn-sm float-end mt-1 ms-1" 
+data-bs-toggle="tooltip" 
+data-bs-placement="top" 
+title="Click to Download all such coded records">
+<i class="fa-solid fa-file-arrow-down"></i> &nbsp; <b>.</b>CSV 
+</a>
+
+{% endblock download_button %}
 
 
 {% block myheadings_list %}
