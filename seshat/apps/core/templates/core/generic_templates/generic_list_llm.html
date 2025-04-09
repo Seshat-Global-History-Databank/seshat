@@ -29,9 +29,15 @@ title="Click to Download all such coded records">
 </span>
 
 </th>
-<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
+<th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
     <span> 
+        <a href="{% url list_all_url %}?orderby=year_from">
+            <i class="fa-solid fa-arrow-up-wide-short fa-rotate-180"></i>        </a>
+
     Year(s)
+    <a href="{% url list_all_url %}?orderby=-year_from">
+        <i class="fa-solid fa-arrow-up-short-wide fa-rotate-180"></i>        </a>
+
 </span>
 </th>
 <th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
@@ -64,7 +70,7 @@ title="Click to Download all such coded records">
     {% endautoescape %}
 
 </td>
-<td  style="text-align: left; z-index:890; border-width:0;" >
+<td  style="text-align: center; z-index:890; border-width:0;" >
     {% if obj.year_from == None %}
 
     {% elif obj.year_from == obj.year_to %}
@@ -116,6 +122,7 @@ title="Click to Download all such coded records">
 
     {% if obj.researchers_list and obj.seshat_experts_list  %}
     <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
+        <span data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
         <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
         <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
         <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">

@@ -9,7 +9,8 @@ from seshat.apps.general.models import Polity_expert, Polity_original_name, Poli
 
 from seshat.apps.crisisdb.models import Instability_event, Instability_type, Instability_ref
 
-from seshat.apps.crisisdb.instability_events_dic_list import ultimate_dics_list
+#from seshat.apps.crisisdb.instability_events_dic_list import ultimate_dics_list
+from seshat.apps.crisisdb.instability_events_dic_list_2 import ultimate_dics_list
 
 from django.db import transaction
 
@@ -43,11 +44,18 @@ class Command(BaseCommand):
         for event_data in ultimate_dics_list:
             # Create or get Instability_type records
             instability_types = []
+            inst_type_str_list = []
             for type_name in event_data['all_types']:
                 if type_name in ['Execution (contextually framed as a consequence of rebellion)','Execution (linked to military failure/revolt)',]:
                     type_name= 'Execution'
+                elif type_name in ['Political disturbance (non-violent)',]:
+                    type_name= 'Political Disturbance'
+                elif type_name in ['Coup d’état (de facto political takeover)',]:
+                    type_name= 'Coup d’état'
                 inst_type, created = Instability_type.objects.get_or_create(name=type_name)
+                inst_type_str_list.append(type_name)
                 instability_types.append(inst_type)
+            isntabilty_types_str = '; '.join(inst_type_str_list)
 
             # Create or get Instability_ref records
             instability_refs = []
@@ -68,15 +76,22 @@ class Command(BaseCommand):
 
             event = Instability_event.objects.create(
                 name=event_data['event'],
+                llm_name=event_data['event'],
                 year_from=event_data['year_from'],
                 year_to=event_data['year_to'],
+                llm_year_from=event_data['year_from'],
+                llm_year_to=event_data['year_to'],
                 llm_description=event_data['llm_description'],
                 inst_extent=event_data['extent'],
                 inst_intensity=event_data['intensity'],
+                llm_inst_extent=event_data['extent'],
+                llm_inst_intensity=event_data['intensity'],
                 classification_cot=event_data['class_cot'],
                 sorokin_rationale=event_data['sorokin'],
                 general_cot=event_data['general_cot'],
                 real_event_check=real_check,
+                llm_real_event_check=real_check,
+                llm_inst_type=isntabilty_types_str,
                 polity_id=my_pol.id,
                 private_comment_id=my_pc.id,
             )

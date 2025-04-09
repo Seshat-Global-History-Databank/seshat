@@ -45,6 +45,11 @@
     }
 
 
+    .bg-colorful {
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+      }
+
+
     .bg-absent-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: gray;
@@ -157,12 +162,17 @@
 
     <div class="table-container pb-3">
         <table id="table_id" class="table align-middle table-hover borderless" style="padding: 0.25 rem !important;">
-            <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; height:40px; border-bottom:1px solid #782823;  top: 55px; z-index:900;">{{myvar}}</legend>
+            <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; height:40px; border-bottom:1px solid #782823;  top: 55px; z-index:900;">
+                <span class="h6 bg-colorful p-1 rounded border border-1 border-dark"> {{object_list|length}}</span> 
+                <span>{{myvar}}</span>   <small class="fs-6 text-secondary">Records</small>
+
+       
+            </legend>
             <thead> 
             <tr  class="sticky-top"  style="background-color:#fffdf2; height:40px; border: 1px solid #782823; top: 95px; z-index:900;">
                 <th class="text-secondary"  style="text-align: left; ">#</th>
                 <th scope="col" style="text-align: left;  width:15%; " class="fw-light"> 
-                    <a href="{% url list_all_url %}?orderby=polity_id"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Polity
+                    <a href="{% url list_all_url %}?orderby=polity_long_name"><i class="fa-solid fa-arrow-up-z-a"></i>&nbsp;</a>Polity
                 </th>
                 <!-- headings for extra vars -->
                 {% block myheadings_list %}
