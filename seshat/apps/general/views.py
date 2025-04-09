@@ -8809,9 +8809,17 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
     orderby = request.GET.get('orderby', None)
 
+    if orderby and orderby.startswith('-') and hasattr(model_class, orderby):
+        order_field = orderby[1:]
+        object_list = object_list.order_by(-order_field)
+        is_descending = True
+    else:
+        order_field = orderby
+        object_list = object_list.order_by(order_field)
+        is_descending = False
     # Apply sorting if orderby is provided and is a valid field name
-    if orderby and hasattr(model_class, orderby):
-        object_list = object_list.order_by(orderby)
+    #if orderby and hasattr(model_class, orderby):
+    #    object_list = object_list.order_by(orderby)
 
     if db_section == 'rt' and not request.user.has_perm('core.add_capital'):
         if model_class in {Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga}:
@@ -8858,6 +8866,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         'myvar': var_name_display,
         'extra_var_dict': extra_var_dict,  # Add the dictionary to the context
         #'extra_var': obj[var_name],
+        'current_order_field': order_field,
+        'is_descending': is_descending,
 
         #'obj_var': my_form[x_name], 
         #"myvar": myvar,
@@ -9048,9 +9058,11 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
                 check_status_tag = 'Expert Checked'
             elif objj.researchers_list() or objj.get_llm_instability_checks_str():
                 check_status_tag = 'RA Checked'
-                
+
             coded_cols.update({
                 'event_name': obj[x_name_1],
+                'year_from': obj['year_from'],
+                'year_to': obj['year_to'],
                 'intensity': obj[x_name_2],
                 'extent': obj[x_name_3],
                 'data_point': obj[x_name_4],
@@ -9138,7 +9150,10 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         else:
             is_expert_reviewed = False
 
-        sublist_1_row = ['variable_set', 'section', 'subsection', 'variable_name', 'polity_name', 'polity_new_ID',]
+        if x_name in ['instability_event']:
+            sublist_1_row = ['variable_set', 'variable_name', 'polity_name', 'polity_new_ID',]
+        else:
+            sublist_1_row = ['variable_set', 'section', 'subsection', 'variable_name', 'polity_name', 'polity_new_ID',]
 
         # special case of widespread religion. Merge order into variable name
         if coded_value in ['widespread_religion'] and  objj.polity:
@@ -9146,7 +9161,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         elif db_section == 'rt' and objj.polity:
             sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name,]
         elif x_name in ['instability_event'] and objj.polity:
-            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name,]
+            sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), objj.clean_name_spaced(), objj.polity.long_name, objj.polity.new_name,]
         elif objj.polity:
             sublist_1 = [db_section_mapper[db_section].replace('_', ' ').title(), var_section, var_subsection, var_name.replace('_', ' ').title(), objj.polity.long_name, objj.polity.new_name,]
         else:
@@ -9160,8 +9175,12 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
             sublist_3_row = ['transition_year', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]
         elif x_name in ['instability_event'] and objj.polity:
+            if objj.comment:
+                ra_comment = objj.comment.__str__().replace('\n', ' ').replace('<br>', ' ').replace('\r', ' ')
+            else:
+                ra_comment= None
             sublist_3_row = ['llm_references', 'RA_approved_description', ]
-            sublist_3 = [objj.get_llm_instability_refs_str().replace('<b>', '').replace('</b>', ''), objj.comment,  ]
+            sublist_3 = [objj.get_llm_instability_refs_str().replace('<b>', '').replace('</b>', ''), ra_comment ]
         else:
             sublist_3_row = ['year_from', 'year_to', 'confidence', 'is_disputed', 'is_uncertain', 'expert_checked',]
             sublist_3 = [objj.year_from, objj.year_to, objj.get_tag_display(), objj.is_disputed, objj.is_uncertain, is_expert_reviewed, ]

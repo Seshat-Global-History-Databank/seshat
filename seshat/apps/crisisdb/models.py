@@ -54,11 +54,11 @@ REAL_EVENT_CHECK_CHOICES = (
 
 
 INST_EXTENT_CHOICES = (
-('1',	'1. Highly localized: a neighborhood within a town'),
-('2',	'2. A small town or rural location'),
-('4',	'4. One or few districts within a single province'),
-('6',	'6. One or two provinces, or only the capital'),
-('8',	'8. Several provinces, including the capital'),
+('1',	'1. Highly localized: a neighborhood within a town or a village'),
+('2',	'2. A small town or rural district'),
+('4',	'4. A single province'),
+('6',	'6. Two or more provinces; or the polity capital'),
+('8',	'8. Several provinces and the capital'),
 ('10',  '10. Whole polity'),
 )
 
