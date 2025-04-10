@@ -327,23 +327,27 @@ class Instability_eventForm(ExpertReviewedForm):
         widgets['ra_check'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})  
         #widgets['inst_llm_ref'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})   
 
-    def save(self, commit=True):
-        """Override save() to remove unchecked items from inst_type."""
-        instance = super().save(commit=False)  # Get the model instance without saving yet
+    # def save(self, commit=True):
+    #     """Override save() to remove unchecked items from inst_type."""
+    #     instance = super().save(commit=False)  # Get the model instance without saving yet
 
-        # Get the new selection from the form
-        new_inst_types = self.cleaned_data.get('inst_type', [])
-        print(new_inst_types)
+    #     # Get the new selection from the form
+    #     new_inst_types = self.cleaned_data.get('inst_type', [])
+    #     print(new_inst_types)
+    #     #new_ra_checks = self.cleaned_data.get('ra_check', [])
+    #     #print(new_ra_checks)
 
-        if instance.pk:  # Ensure the instance already exists in the DB
-            # Remove all previously selected inst_type values that are no longer checked
-            instance.inst_type.set(new_inst_types)
+    #     if instance.pk:  # Ensure the instance already exists in the DB
+    #         # Remove all previously selected inst_type values that are no longer checked
+    #         instance.inst_type.set(new_inst_types)
+    #         #instance.ra_check.set(new_ra_checks)
 
-        if commit:
-            instance.save()
-            self.save_m2m()  # Save many-to-many relations
 
-        return instance
+    #     if commit:
+    #         instance.save()
+    #         self.save_m2m()  # Save many-to-many relations
+
+    #     return instance
 
 
 class Human_sacrificeForm(ExpertReviewedForm):

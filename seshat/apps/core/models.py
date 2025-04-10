@@ -1260,13 +1260,13 @@ class SeshatCommon(models.Model):
 
         
     def researchers_list(self):
-        researchers = self.curator.filter(role__in=['Researcher', 'Lead Researcher'])  
+        researchers = self.curator.filter(role__in=['Researcher', 'Seshat Admin', 'Lead Researcher'])  
         my_list = [f'{curator.user.full_name} ({curator.role})' for curator in researchers]
         return ", ".join(my_list) if my_list else None
     
         
     def researchers_list_ids(self):
-        researchers = self.curator.filter(role__in=['Researcher', 'Lead Researcher'])  
+        researchers = self.curator.filter(role__in=['Researcher', 'Seshat Admin', 'Lead Researcher'])  
         my_list = [curator.id for curator in researchers]
         return my_list if my_list else None
     
