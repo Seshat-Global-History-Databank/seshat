@@ -429,11 +429,12 @@
             </div>
         </div>
 
-        {% include "core/partials/_three_tab_template.html" %}
 
 
         <form id="regForm" action="" method="post" >
             {% csrf_token %}
+            {% include "core/partials/_three_tab_template.html" %}
+
             {% if form.errors %}
             <div class="alert alert-danger">
                 <strong>There were some errors in your submission:</strong>
@@ -614,6 +615,9 @@
                     </div>
                     <div class="col-sm-6">
                         {% autoescape off %}
+                        <div class="col-sm-6 pb-1" style="display:none">
+                            {{ extra_var9|as_crispy_field }}
+                        </div>
                         <div class="col-sm-6 pb-1" style="display:none">
                             {{ extra_var6|as_crispy_field }}
                         </div>

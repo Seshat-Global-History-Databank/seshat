@@ -8245,7 +8245,12 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
             logged_in_user = request.user
             new_object = my_form.save(commit=False)
-            suggested_experts = my_form.cleaned_data['suggested_expert']  # Adjust the field name
+            suggested_experts = my_form.cleaned_data['suggested_expert']
+            all_ra_checks = my_form.cleaned_data['ra_check'] 
+            all_ra_checks_names = []
+            for aa in all_ra_checks:
+                all_ra_checks_names.append(aa.name)
+            print('fffffffffffffffffffff', '; '.join(all_ra_checks_names))
             #is_reviewed_by_me = my_form.cleaned_data['expert_reviewed_by_me']  # Adjust the field name
             try:
                 logged_in_staff = Seshat_Expert.objects.get(user=logged_in_user)
@@ -8292,6 +8297,11 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             #new_object.curator.set([logged_in_staff]) 
             print(logged_in_staff)
             existing_curators = list(new_object.curator.all())  # Get current curators as a list
+            existing_ra_checks = list(new_object.ra_check.all())  # Get current ra_checks as a list
+            all_ra_checks_names_2 = []
+            for aa in existing_ra_checks:
+                all_ra_checks_names_2.append(aa.name)
+            print('gggggggggggggggg', '; '.join(all_ra_checks_names_2))
 
             new_object.save()  # Save the object to persist the association
 
@@ -8302,6 +8312,19 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             if logged_in_staff not in existing_curators:
                 existing_curators.append(logged_in_staff)  # Add only if not already present
             new_object.curator.set(existing_curators)  # Update the ManyToMany field
+
+
+            #new_object.ra_check.add(logged_in_staff)
+            #new_object.ra_check.add(logged_in_staff)
+            # existing_ra_checks = []
+            # for a_ra_check in all_ra_checks:
+            #     #if a_ra_check not in existing_ra_checks:
+            #     existing_ra_checks.append(a_ra_check)  # Add only if not already present
+            # new_object.ra_check.set(existing_ra_checks)  
+
+
+
+
             new_object.save()  # Save the object to persist the association
 
             
@@ -8813,10 +8836,14 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         order_field = orderby[1:]
         object_list = object_list.order_by(-order_field)
         is_descending = True
-    else:
+    elif orderby:
         order_field = orderby
         object_list = object_list.order_by(order_field)
         is_descending = False
+    else:
+        order_field = None
+        is_descending = False
+
     # Apply sorting if orderby is provided and is a valid field name
     #if orderby and hasattr(model_class, orderby):
     #    object_list = object_list.order_by(orderby)
