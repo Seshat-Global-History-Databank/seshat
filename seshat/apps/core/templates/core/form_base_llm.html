@@ -568,13 +568,16 @@
                                 {% endfor %}
                                 {% endautoescape %}
                             </div>
-                            <div class="col-sm-4 mb-3 mt-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
-                                {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
-                                {{ form.suggested_expert|as_crispy_field }}
-                                <small>These Seshat Experts will get Notifications to review this record.</small>
-                                {% else %}
-                                {{ form.expert_reviewed_by_me|as_crispy_field }}
-                                {% endif %}
+                            <div class="col-sm-4 mb-3 mt-2 ps-2">
+                                <div class="ps-2" style="border: 1px solid #368f7a; border-top: 10px solid #368f7a; color: #368f7a; border-radius:10px">
+                                    {% if request.user.is_authenticated and 'core.add_capital' in request.user.get_all_permissions %}
+                                    {{ form.suggested_expert|as_crispy_field }}
+                                    <small>These Seshat Experts will get Notifications to review this record.</small>
+                                    {% else %}
+                                    {{ form.expert_reviewed_by_me|as_crispy_field }}
+                                    {% endif %}
+                                </div>
+               
                             </div>
                             <div class="col-sm-1 mt-2">
                             </div>
@@ -592,22 +595,59 @@
                         {% else %}
                             <div class="col-sm-8 pt-4" >
                                 {% autoescape off %}
-                                <b>Seshat Approved Description: </b>  <br>
-                                {{ form.instance.comment }}
-                                {% endautoescape %}
-                                <a class="p-0 m-0" 
-                                style=" overflow: hidden;" 
-                                href="{% url 'seshatcomment-update' form.instance.comment.id %}">
-                                    <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
-                                        <i class="fa-solid fa-pen-to-square"></i>
+                                <b>Seshat-approved Description: </b>  <br>
+                                {% for subcom in form.instance.comment.inner_comments_related.all %}
+                                <span>
+                                    <span class="jidtext_{{ forloop.counter }}">
+                                        {% if forloop.counter0 == 0 %}
+                                            <span class="fw-bold rounded">
+                                            <a class="newinsert-trigger" style="color:steelblue;" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:0 %}" data-counter="0"><i class="fa-regular fa-square-plus ms-1 " title="Insert a New Subdescription Here"  ></i>
+                    
+                                            </a>
+                                             </span>
+                                             {{ subcom.comment_part_text }}
+                    
+                                        {% else %}
+                                        {{ subcom.comment_part_text }}
+                                        {% endif %}
                                     </span>
-                                </a>
+                                    <span class="jidtextref_{{ forloop.counter }} fs-6 inner-link" style="color:#2978ce !important;">
+                                        {% if subcom.display_citations_plus %}
+                                         <span style="color:#2978ce !important;">  {{ subcom.display_citations_plus }} </span> 
+                                        {% else %}
+                                        <span class="text-danger">[No Refs]</span>
+                                        {% endif %}
+                                    </span>
+                                    <span>
+                                        <span class="ps-1">
+                                            {% if subcom.citations_count >= 10 %}
+                                            <a class="underline-trigger" href="{% url 'seshatcommentpart-update' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" title="Edit this chunk of the description"  style="color:lightcoral;"></i></a>
+                                        {% else %}
+                                            <a class="underline-trigger" href="{% url 'seshatcommentpart-update2' subcom.pk %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-pen-to-square" title="Edit this chunk of the description" style="color:lightcoral;"></i></a>
+                                        {% endif %}
+                                        </span>
+                                        <span class="pe-1">
+                                            <a class="newinsert-trigger" style="color:steelblue;" href="{% url 'seshatcommentpart-create2' com_id=subcom.comment_id subcom_order=subcom.comment_order|add:1 %}" data-counter="{{ forloop.counter }}"><i class="fa-regular fa-square-plus" title="Insert a new chunk of description here"  ></i>
+                                         
+                                            </a>
+                                        </span>
+                                    </span>
+                    
+                            </span>
+                    
+                    
+                            {% endfor %}
+
+
+
+
+
+                                {% endautoescape %}
                             </div>
                             <div class="col-sm-4 mt-2 pt-2 ">
                                 <button type="submit" name="action_comment" value="redirect_one" 
                                 type="submit" name="action" value="redirect_one" class="btn py-2 my-auto btn-block goodsubmit fs-4" style="font-family: 'Roboto Mono', monospace; width:100%;">Submit Check </button>
                                 <small class="text-secondary">You can always Edit or Expand the description by clicking on the Edit button at the end of it.</small>
-
                             </div>
                         {% endif %}
                     </div>
@@ -705,6 +745,38 @@
         });
     });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const underlineTriggers = document.querySelectorAll('.underline-trigger');
+        const newinsertTriggers = document.querySelectorAll('.newinsert-trigger');
+
+        underlineTriggers.forEach(trigger => {
+            trigger.addEventListener('mouseover', function() {
+                const counter = this.getAttribute('data-counter');
+                const jidtext = document.querySelector(`.jidtext_${counter}`);
+                const jidtextref = document.querySelector(`.jidtextref_${counter}`);
+                if (jidtext) {
+                    jidtext.style.backgroundColor = 'blanchedalmond';  
+                }
+                if (jidtextref) {
+                    jidtextref.style.backgroundColor = 'blanchedalmond';  
+                }
+            });
+    
+            trigger.addEventListener('mouseout', function() {
+                const counter = this.getAttribute('data-counter');
+                const jidtext = document.querySelector(`.jidtext_${counter}`);
+                const jidtextref = document.querySelector(`.jidtextref_${counter}`);
+
+                if (jidtext) {
+                    jidtext.style.backgroundColor = 'transparent';  
+                }
+                if (jidtextref) {
+                    jidtextref.style.backgroundColor = 'transparent';
+
+                }
+            });
+        });
+    });
     
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
@@ -762,26 +834,6 @@ for (let i = 0; i <= 5; i++) {
     $(ctl).text(msg);
     return true;
 }
-    function toggleRow() {
-        const row = document.getElementById("details-row");
-        const icon = document.getElementById("toggle-icon");
-    
-        const isHidden = row.style.display === "none";
-        row.style.display = isHidden ? "table-row" : "none";
-        icon.textContent = isHidden ? "See less ▲" : "See more ▼";
-        icon.style.color = isHidden ? "maroon" : "teal";
 
-    }
-
-    function toggleRow2() {
-        const row2 = document.getElementById("hidden-row-llm");
-        const icon2 = document.getElementById("toggle-icon-llm");
-    
-        const isHidden = row2.style.display === "none";
-        row2.style.display = isHidden ? "table-row" : "none";
-        icon2.textContent = isHidden ? "Hide LLM ▲" : "See LLM ▼";
-        icon2.style.color = isHidden ? "maroon" : "teal";
-
-    }
 </script>
 {% endblock %}

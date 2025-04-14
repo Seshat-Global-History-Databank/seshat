@@ -56,9 +56,14 @@ title="Click to Download all such coded records">
 </span>
 </th>
 
-<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: right; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
     Checks
+</span>
+</th>
+<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+    <span> 
+    Progress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>
 </th>
 {% endblock myheadings_list %}
@@ -66,7 +71,7 @@ title="Click to Download all such coded records">
 {% block extra_vars_list %}
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <small class="fw-normal highlighted-value-title">{{obj.name}}</small>
+    <small class="fw-normal highlighted-value-title-light" style="border-left:5px solid lightpink; color:black; padding-top:1px; padding-bottom:1px;">{{obj.name}}</small>
     {% endautoescape %}
 
 </td>
@@ -101,49 +106,72 @@ title="Click to Download all such coded records">
 
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span >{{obj.get_instability_types}}</span>
+    <small >{{obj.get_instability_types}}</small>
+
     {% endautoescape %}
 
 </td>
-<td class="fw-normal" style="text-align: center; z-index:890; border-width:0;" >
+<td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span class="fw-normal highlighted-value-title">{{obj.inst_intensity}}</span>
+    <span class="fw-bold highlighted-value-title">
+        <a data-bs-toggle="tooltip" data-bs-html="true" class="px-1 rounded fw-bold text-dark" title="{{obj.get_inst_intensity_display}}">{{obj.inst_intensity}}</a>
+    </span>
     {% endautoescape %}
 
 </td>
-<td class="fw-normal" style="text-align: center; z-index:890; border-width:0;" >
+<td class="fw-bold" style="text-align: center; z-index:890; border-width:0;" >
     {% autoescape off %}
-    <span class="fw-normal highlighted-value-title">{{obj.inst_extent}}</span>
+    <span class="fw-bold highlighted-value-title">
+        <a data-bs-toggle="tooltip" data-bs-html="true" class="px-1 rounded fw-bold text-dark" title="{{obj.get_inst_extent_display}}">{{obj.inst_extent}}</a>
+    </span>
     {% endautoescape %}
 
+</td>
+
+<td  style="text-align: right; z-index:890; border-width:0;" >
+    {% autoescape off %}
+    <small >{{obj.get_instability_checks}}</small>
+    {% endautoescape %}
 </td>
 <td  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
 
     {% if obj.researchers_list and obj.seshat_experts_list  %}
-    <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
-        <span data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
+    <small style="vertical-align: bottom;  display:inline-block;">
+        <a data-bs-toggle="tooltip" data-bs-html="true" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
         <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-        <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
+        <i class="fa-solid fa-user-tie fa-lg pb-1" style="color: #138086" aria-hidden="true"></i></a>
         <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-            <span><i class="fas fa-check-circle p-0 m-0"></i> Expert</span>
-    </a></span>
+            <span>
+                <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
+            </span>
+            </a>
+        </small>
      
     {% elif obj.researchers_list  %}
-
-    <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;"><a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-        <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
-    </a></span>
-     
+    <small style="vertical-align: bottom; ">
+        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
+        </a>
+    </small>
+        
     {% else %}
-    <span class="badge bg-success-light px-1 rounded border-1 fw-light" style="background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
-    <small >{{obj.get_instability_checks}}</small>
+    <small style="vertical-align: bottom; ">
+        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+    </small>
+
+    {% endif %}
+    {% if obj.comment %}
+    <small style="vertical-align: bottom; ">
+        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
+    </small>
+
     {% endif %}
 
-
     {% endautoescape %}
-
 </td>
+
 {% endblock extra_vars_list %}
 
 

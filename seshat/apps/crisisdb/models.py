@@ -333,10 +333,12 @@ class Instability_ref(models.Model):
 
 class Instability_type(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
+    description = models.TextField(blank=True, null=True,)
 
     def __str__(self):
         if self.name:
-            return mark_safe(f'<small class="badge bg-absent-light small-knopf p-1">{self.name}</small>')
+            return mark_safe(f'<small class="border rounded px-1" style="border-top:2px solid lightgray; color:gray;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
+        
 
 class Check_choice(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
