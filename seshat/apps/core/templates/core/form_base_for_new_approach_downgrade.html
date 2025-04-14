@@ -311,26 +311,7 @@
 
                                 {% endif %}
                             {% endif %}
-                        
-                            {% if form.instance.pk %}
-                            {% if form.instance.researchers_list %}
-                            <div class="p-2 mb-3" style="background: #daf1de;  border-radius:10px;">
-                                <div class="fs-6" style="font-family: Roboto Mono; color:#163832;"> <i class="fa-regular fa-square-check fa-lg"></i>  This record has been <b>RA Reviewed</b> by:
-                                    <span class="fw-bold">form.instance.researchers_list </span>
-                            </div>
-    
-                            </div>
-            
-
-                            {% else %}
-                            <div class="p-2 mb-3" style="background: #ffdddd; border-radius:10px;">
-                                <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
-                                    <i class="fa-regular fa-circle-xmark fa-lg"></i> This record has <b><u> not</u> been Expert Reviewed yet</b>.
-                                </div>
-                            </div>
-
-                            {% endif %}
-                        {% endif %}
+ 
                         </div>
 
                           {% block extra_vars %}

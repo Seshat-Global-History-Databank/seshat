@@ -5714,6 +5714,37 @@ def verify_expert(request, pk, my_app_name, my_model):
     # If GET request, you can redirect or show an error
     return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
 
+def delete_verify_expert(request, pk, my_app_name, my_model):
+    """
+    View to handle the expert review verification form when `my_inst` is passed directly.
+
+    Args:
+        request: The HTTP request object.
+        my_inst: The instance to verify.
+
+    Returns:
+        A redirect to the appropriate page or an error response.
+    """
+    if request.method == "POST":
+        # Check if the user has permission to verify
+        # if not request.user.has_perm('your_app.can_verify_expert'):  # Replace with actual permission
+        #     return HttpResponseForbidden("You do not have permission to verify.")
+        MyModel = apps.get_model(my_app_name, my_model)
+        my_inst = get_object_or_404(MyModel, pk=pk)
+
+        logged_in_user = request.user
+        seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
+
+        # Update the is_expert_checked attribute
+        my_inst.curator.remove(seshat_expert_instance)
+
+        return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
+    # If GET request, you can redirect or show an error
+    return redirect(request.META.get('HTTP_REFERER', 'seshat-index'))  # Fallback to 'seshat-index' if no referrer
+
+
 
 def verify_expert_bulk(request, pk, my_app_name, my_model):
     if request.method == "POST":
@@ -5734,6 +5765,7 @@ def verify_expert_bulk(request, pk, my_app_name, my_model):
 def bulk_verify_expert(request):
     if request.method == "POST":
         selected_items = request.POST.getlist("selected_items_experts")  # Expecting values like "app_name|model_name|pk"
+
         logged_in_user = request.user
         seshat_expert_instance = Seshat_Expert.objects.get(user=logged_in_user)
 
@@ -5743,6 +5775,7 @@ def bulk_verify_expert(request):
                 app_name, model_name, pk = item.split("|")
                 MyModel = apps.get_model(app_name, model_name)
                 my_inst = get_object_or_404(MyModel, pk=pk)
+                #print('#########', my_inst)
                 
                 my_inst.curator.add(seshat_expert_instance)  # Add curator
                 my_inst.save()
@@ -5753,7 +5786,7 @@ def bulk_verify_expert(request):
         messages.success(request, f"Successfully verified {success_count} items.")
         
     #return redirect(request.META.get("HTTP_REFERER", "seshat-index"))
-    url = reverse("polity-detail-main", kwargs={'pk': my_inst.polity.id}) + f"#{app_name}_{model_name}"
+    url = reverse("polity-detail-main", kwargs={'pk': my_inst.polity.id}) + f"#{model_name}_var"
     return redirect(url)
 
 

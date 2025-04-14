@@ -40,18 +40,6 @@ href="{% url key|lower|add:'-update' value.id %}">
                         </span>
                     </span>
                 </a>
-
-        {% else  %}
-            <a class="p-0 m-0" 
-            style="display:block; overflow: hidden;" 
-            href="{% url 'seshatcomment-update' value.comment.id %}">
-                <span class="badge badge-jid text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                    <span>
-                        &nbsp;&nbsp;Edit Description (NEW)
-                    </span>
-                </span>
-            </a>
         {% endif %}  
     {% endif %}   
     {% endif %}  

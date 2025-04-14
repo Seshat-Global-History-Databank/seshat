@@ -144,6 +144,8 @@
                     {% if user|get_seshat_expert in my_inst.my_curators_list_ids %}
                     <b><u> You</u> </b>: 
                     {% endif %} {{ my_inst.my_curators_list }} 
+
+
                 </span> 
             </div>
             </div>
@@ -161,10 +163,42 @@
 
 
         {% if user|get_seshat_expert in my_inst.my_curators_list_ids %}
+
+        <div class="pt-3 mb-3" style="background: rgba(128, 0, 0, 0.096); border: 2px solid rgba(128, 0, 0, 0.226); border-radius:20px;">
+
+
+            <form  method="post" action="{% url 'delete_verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
+                {% csrf_token %}
+                <div class="h3 mb-1" style="font-family: Roboto Mono; color:maroon;"> &nbsp;<i class="fa-solid fa-file-contract"></i> Delete Expert Review
+                    <button 
+                    type="submit" 
+                    class="btn btn-outline-danger bg-colorful-light px-3 py-1 fw-bold" 
+                    id="saveButton" 
+                    style="display: none; vertical-align: top;"
+                >
+                <i class="fa-solid fa-signature"></i> Sign and Save
+                </button>
+                </div>
+                <div class="form-check pt-2 ps-5">
+                    <input 
+                        type="checkbox" 
+                        name="verify" 
+                        class="form-check-input checkboxinput" 
+                        style="transform: scale(1.5); margin-right: 10px;" 
+                        id="id_verify" 
+                        onclick="toggleButton()"
+                    >
+                    <label class="form-check-label ps-2" for="id_verify">I ({{user.full_name}}) would like to remove my check.</label>
+                </div>
+                <div class="mt-3">
+
+                </div>
+            </form>
+        </div>
         {% else %}
             {% if user|in_group:"Chief Seshat External Experts" and my_inst.my_model != 'polity' %}
 
-            <div class="pt-3 mb-3" style="background: #daf1de; border: 3px solid #235347; border-radius:20px;">
+            <div class="pt-3 mb-3" style="background: #daf1de; border: 2px solid #235347; border-radius:20px;">
 
 
                 <form  method="post" action="{% url 'verify_expert' my_inst.my_id my_inst.my_app_name my_inst.my_model %}">
