@@ -120,6 +120,7 @@ urlpatterns += [
     path('core/seshatcomments/<int:pk>/update/',
          views.SeshatCommentUpdate.as_view(), name="seshatcomment-update"),
     path('core/seshatcomments/verify_expert/<int:pk>/<str:my_app_name>/<str:my_model>/', views.verify_expert, name='verify_expert'),
+    path('core/seshatcomments/delete_verify_expert/<int:pk>/<str:my_app_name>/<str:my_model>/', views.delete_verify_expert, name='delete_verify_expert'),
      path("bulk-verify-expert/", views.bulk_verify_expert, name="bulk-verify-expert"),
 
     #path('core/seshatcomments/bulk_verify_expert/<int:pk>/<str:my_app_name>/<str:my_model>/', views.bulk_verify_expert, name='bulk_verify_expert'),

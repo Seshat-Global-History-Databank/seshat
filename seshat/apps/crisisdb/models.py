@@ -337,7 +337,7 @@ class Instability_type(models.Model):
 
     def __str__(self):
         if self.name:
-            return mark_safe(f'<small class="border rounded px-1" style="border-top:2px solid lightgray; color:gray;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
+            return mark_safe(f'<small class="rounded px-1 pb-0 pt-1" style="background:#2f4f4f11; color: darkslategrey; display:inline-block; padding-bottom:0 !important ; padding-top:0 !important;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
         
 
 class Check_choice(models.Model):

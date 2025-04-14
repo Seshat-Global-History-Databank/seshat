@@ -286,10 +286,12 @@
 
 
     
-      .bg-info-light {
+    .bg-info-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: dodgerblue;
-        border: 1px solid dodgerblue;   
+        border: 1px solid rgba(30, 143, 255, 0.178);   
+        background: rgba(30, 143, 255, 0.06);   
+
        }
     
        .bg-danger-light {
@@ -301,11 +303,13 @@
           color:navajowhite;
         }
     
-       .bg-success-light {
-        background: #fffdf2; /* rgb(134, 134, 134);*/
-        color: teal;
-        border: 1px solid teal;   
-        }
+        .bg-success-light {
+            background: #fffdf2; /* rgb(134, 134, 134);*/
+            color: teal;
+            border: 1px solid rgba(0, 128, 128, 0.18);   
+            background: rgba(0, 128, 128, 0.08);   
+    
+            }
     
        .bg-warning-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
@@ -337,11 +341,11 @@
     
        .bg-secondary-light {
         background: #fffdf2;
-        color: lightcoral;
-        border: 1px solid lightcoral;
-    
-    
+        color: crimson;
+        border: 1px solid rgba(220, 20, 60, 0.18);
+        background: rgba(220, 20, 60, 0.06);
        }
+
     
        .bg-absent-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
@@ -1970,7 +1974,7 @@
                   <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                     {% include 'core/partials/_table_header_polity.html' %}
                   <tbody>
-                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+                    {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
 
                     <form method="post" action="{% url 'bulk-verify-expert' %}" >
                         {% csrf_token %}
@@ -2084,7 +2088,7 @@
 
                   {% endif %}
               {% endfor %}
-            {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+            {% if user|in_group:"Chief Seshat Externallllll Experts" %}   
             </form>
             {% endif %}
               </tbody>
@@ -2460,31 +2464,47 @@
                             <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                                 {% include 'core/partials/_table_header_polity_instability.html' %}
                                 <tbody>
-                                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}
-                                    <form method="post" action="{% url 'bulk-verify-expert' %}" >
-                                        {% csrf_token %}
-                                        <div class="h3 mb-1" style="font-family: Roboto Mono; color:#163832;"> &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
-                                            <button 
-                                            type="submit" 
-                                            class="btn btn-outline-success bg-colorful-light px-3 py-1 fw-bold" 
-                                            id="saveButton" 
-                                            style="display: none; vertical-align: top;"
-                                        >
-                                        <i class="fa-solid fa-signature"></i> Sign and Save
-                                        </button>
-                                        </div>
-                                        <div class="form-check pt-2 ps-5">
-                                            <input 
-                                                type="checkbox" 
-                                                name="verify" 
-                                                class="form-check-input checkboxinput" 
-                                                style="transform: scale(1.5); margin-right: 10px;" 
-                                                id="id_verify" 
-                                                onclick="toggleButton('instability_events', '{{ obj.pk }}')"
-                                            >
-                                            <label class="form-check-label" for="id_verify" style="background: #daf1de; border: 2px solid #235347; border-radius:10px;">I ({{user.full_name}}) have checked and verified these coded records and would like to mark it as expert reviewed under my name.</label>
-                                        </div>
-                                        {% endif %}
+
+                                        {% if user|in_group:"Chief Seshat External Experts" %}   
+
+                                        <form method="post" action="{% url 'bulk-verify-expert' %}" >
+                                            {% csrf_token %}
+                                            <div class="fs-6 mb-1 ps-1 sticky-top" style="background-color:#fffdf2; color:#163832;  height:70px;top: 95px; z-index:900;">
+                                                <span > 
+                                                
+                                                    &nbsp;<i class="fa-solid fa-file-contract"></i>  Expert Review
+                                                   
+                                                </span>
+                                                <span class="form-check ps-1">
+                                                    <span class="ps-1 pe-3 py-2" style="background: #daf1de77; border: 1px solid #23534736; border-radius:5px;">
+                                                        
+                                                <label class="form-check-label fs-6 ps-2 py-2 text-dark" for="id_verify_crisisdb_Instability_event" >
+                                                    <input 
+                                                    type="checkbox" 
+                                                    name="verify" 
+                                                    class="form-check-input" 
+                                                    style="transform: scale(1.25); margin-left: 10px; margin-right: 10px; display:none;" 
+                                                    id="id_verify_crisisdb_Instability_event" 
+                                                    onclick="toggleButton('crisisdb', 'Instability_event')"
+                                                >
+                                                <span style="color:darkslategrey">
+                                                    I ({{user.full_name}}) have checked and verified the coded records that I have ticked below, and would like to mark them as <u>Expert Reviewed</u> under my name.
+                                                </span>
+                                                    </label>
+                                                    </span>
+                                                  
+                                                    <button 
+                                                    type="submit" 
+                                                    class="btn btn-outline-success bg-colorful-light ps-2 py-1 fw-bold" 
+                                                    id="saveButton_crisisdb_Instability_event" 
+                                                    style="display: none; vertical-align: bottom;"
+                                                >
+                                                <i class="fa-solid fa-signature"></i> Sign and Save
+                                                </button>
+                                                </span>
+                                            </div>
+                                       
+                                            {% endif %}
 
 
                         {% for obj in values%}
@@ -2498,13 +2518,24 @@
                                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{obj.clean_name}}_{{ forloop.counter }}">
                                     <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
                                         <span class="accordion-header  p-0 m-0" id="headingOne_{{obj.clean_name}}_{{ forloop.counter }}">
+                                            {% if user|in_group:"Chief Seshat External Experts" %}
+                                 
+
+                                            <td>
+                                                
+                                              
+
+                                                {% with request.user.seshat_expert_set.first as current_expert %}
+                                                <input type="checkbox" name="selected_items_experts"  style="transform: scale(1.5); " value="crisisdb|{{obj.clean_name}}|{{obj.pk}}" onclick="toggleButton('crisisdb', 'Instability_event')" {% if current_expert.id in obj.seshat_experts_list_ids %}Checked disabled{% endif %}> 
+                                                    
+                                                {% endwith %}
+
+                                              </td>
+                                            {% endif %}
                                             {% if obj.polity %}
                                             <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0;">
 
-                                                {% if user|in_group:"Chief Seshat Externallllllllll Experts" %}
-                                                <input type="checkbox" name="selected_items_experts" value="crisisdb|instability_event|{{obj.pk}}">
-
-                                                {% endif %}
+                                       
                                        
 
                                                 <span class="fw-bold ps-1" style="display:inline-block; text-align: left; vertical-align: bottom;">
@@ -2551,39 +2582,28 @@
                                                 </td>
                                                 <td  style="text-align: left; z-index:890; border-width:0;" >
                                                     {% autoescape off %}
-                                                
-                                                    {% if obj.researchers_list and obj.seshat_experts_list  %}
                                                     <small style="vertical-align: bottom;  display:inline-block;">
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                        <i class="fa-solid fa-user-tie fa-lg pb-1" style="color: #138086" aria-hidden="true"></i></a>
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-                                                            <span>
-                                                                <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
-                                                            </span>
-                                                            </a>
-                                                        </small>
-                                                     
-                                                    {% elif obj.researchers_list  %}
-                                                    <small style="vertical-align: bottom; ">
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
-                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
-                                                        </a>
-                                                    </small>
-                                                        
-                                                    {% else %}
-                                                    <small style="vertical-align: bottom; ">
                                                         <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
-                                                    </small>
-                                                
-                                                    {% endif %}
-                                                    {% if obj.comment %}
-                                                        <small style="vertical-align: bottom; ">
+
+                                                        {% if obj.researchers_list  %}
+                                                            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                                <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
+                                                            </a>
+                                                        {% endif %}
+                                                        {% if obj.comment %}
                                                             <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
-                                                        </small>
 
                                                         {% endif %}
+
+                                                        {% if obj.seshat_experts_list  %}
+                                                            <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+                                                                <span>
+                                                                    <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
+                                                                </span>
+                                                            </a>
+                                                        {% endif %}
+
+                                                    </small>
                                                     {% endautoescape %}
                                                 </td>
                                                 
@@ -2617,7 +2637,7 @@
                             {% endif %}
                         {% endfor %}
 
-                    {% if user|in_group:"Chief Seshat Externalllllll Experts" %}   
+                    {% if user|in_group:"Chief Seshat External Experts" %}   
                     </form>
                     {% endif %}
 
@@ -2851,14 +2871,35 @@
         });
     });
     
-    function toggleButton(modelName, objPk) {
-        const checkbox = document.getElementById(`id_verify_${modelName}_${objPk}`);
-        const button = document.getElementById(`saveButton_${modelName}_${objPk}`);
-        if (checkbox && button) {
-            button.style.display = checkbox.checked ? 'inline-block' : 'none';
-        }
+    function toggleButton(secName, modelName) {
+        const mainCheckbox = document.getElementById(`id_verify_${secName}_${modelName}`);
+        const button = document.getElementById(`saveButton_${secName}_${modelName}`);
+
+    if (mainCheckbox && button) {
+        button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
     }
+
+        // Get all checkboxes with name="verify", excluding disabled ones
+        const verifyCheckboxes = document.querySelectorAll('input[name="selected_items_experts"]:not(:disabled)');
+
+        // Check if any of the non-disabled checkboxes is checked
+        let anyChecked = false;
+        verifyCheckboxes.forEach(cb => {
+            if (cb !== mainCheckbox && cb.checked) {
+                anyChecked = true;
+            }
+        });
     
+        // Set the state of the hidden main checkbox
+        if (mainCheckbox) {
+            mainCheckbox.checked = anyChecked;
+        }
+    
+        // Show or hide the button based on the main checkbox state
+        if (mainCheckbox && button) {
+            button.style.display = mainCheckbox.checked ? 'inline-block' : 'none';
+        }
+}
 
   </script>
   

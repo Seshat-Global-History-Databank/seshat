@@ -700,7 +700,7 @@ def get_all_rt_data_for_a_polity(request, polity_id):
         # Skip restricted models if user does not have permission
         if model_name in RESTRICTED_MODELS and this_polity_new_name not in RELEASED_POLS:
             if not user or not user.has_perm('core.add_capital'):
-                print(model_name)
+                #print(model_name)
                 continue
 
         s_value = str(model().subsection())

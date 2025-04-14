@@ -33,14 +33,6 @@
                             <i class="fa-solid fa-pen"></i>
                     </a>
                 {% endwith %}
-            {% else  %}
-                <a class="p-0 m-0" 
-                style=" overflow: hidden;" 
-                href="{% url 'seshatcomment-update' obj.comment.id %}">
-                    <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:998; background-color:#0887064c" data-bs-toggle="popover" title="Edit Description" >
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </span>
-                </a>
             {% endif %}  
         {% else  %}
         {% with dynamic_url=obj.clean_name|add:"-detail" %}
