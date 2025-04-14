@@ -10,7 +10,8 @@ from seshat.apps.general.models import Polity_expert, Polity_original_name, Poli
 from seshat.apps.crisisdb.models import Instability_event, Instability_type, Instability_ref
 
 #from seshat.apps.crisisdb.instability_events_dic_list import ultimate_dics_list
-from seshat.apps.crisisdb.instability_events_dic_list_2 import ultimate_dics_list
+#from seshat.apps.crisisdb.instability_events_dic_list_2 import ultimate_dics_list
+from seshat.apps.crisisdb.instability_events_dic_list_russia import ultimate_dics_list
 
 from django.db import transaction
 

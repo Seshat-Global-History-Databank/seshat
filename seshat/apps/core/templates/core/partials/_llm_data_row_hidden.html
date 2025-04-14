@@ -1,9 +1,9 @@
 {% load humanize %}
 {% load mathfilters %}
 
-<tr id="hidden-row-llm" style="border-width:0; display:none;">
+<tr  id="hidden-row-llm" style="border-width:0; display:none; background-image: linear-gradient(to left, rgb(246, 127, 127, 0.056),rgb(242, 199, 119, 0.056),rgb(151, 230, 151, 0.056));">
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">                           
-        <span class="highlighted-value-title"> {{ form.instance.llm_name}}</span>
+        <span > {{ form.instance.llm_name}}</span>
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
         {% if form.instance.polity.long_name %}
@@ -44,23 +44,10 @@
             {% endif %}
         {% endif %}
         </td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">
-        <span class="highlighted-value-title"> {{ form.instance.llm_inst_intensity}}</span>
+    <td class="fw-bold text-dark" style="border-width: 0; text-align: center;">
+        <span> {{ form.instance.llm_inst_intensity}}</span>
     </td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;"><span class="highlighted-value-title"> {{ form.instance.llm_inst_extent}}</span></td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">
-        {% if form.instance.real_event_check %}
-        <i class="fa-solid fa-square-check text-success"></i>                           
-        {% else %}
-        <i class="fa-solid fa-square-xmark text-danger"></i>                           
-        {% endif %}
-    </td>
+    <td class="fw-bold text-dark" style="border-width: 0; text-align: center;"><span> {{ form.instance.llm_inst_extent}}</span></td>
         <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_instability_checks}}
-        </td>
-        <td style="text-align: right;">
-            <span class="btn btn-sm px-1 py-0 text-teal" onclick="toggleRow(this)">
-                <span id="toggle-icon">See more ▼</span>
-            </span>
-        </td>
-    
+        </td>    
 </tr>

@@ -4,22 +4,22 @@
         <!-- Nav Tabs -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item pb-0 mb-0" role="presentation">
-                <button class="nav-link active pb-0 mb-0" id="table1-tab" data-bs-toggle="tab" data-bs-target="#table1" type="button" role="tab" aria-controls="table1" aria-selected="true">
+                <button class="nav-link active pb-0 mb-0" style="padding:0px !important;"  id="table1-tab" data-bs-toggle="tab" data-bs-target="#table1" type="button" role="tab" aria-controls="table1" aria-selected="true">
                     {% if form.instance.comment  %}
                     <div class="fw-bold" style=" border-bottom:5px solid maroon;">
-                        <div class="fs-6" style="font-family: Roboto Mono; color:#800000;">
+                        <div class="fs-5 pb-0 mb-0 px-3" style="font-family: Roboto Mono; color:#800000;">
                             Seshat Data (Final)
                         </div>
                     </div>
                     {% elif form.instance.researchers_list %}
                     <div class="fw-bold pb-0 mb-0" style=" border-bottom:5px solid maroon;">
-                        <div class="fs-6 pb-0 mb-0" style="font-family: Roboto Mono; color:#800000;">
+                        <div class="fs-5 pb-0 mb-0  px-3" style="font-family: Roboto Mono; color:#800000;">
                             Seshat Data (Check in Progress)
                         </div>
                     </div>
                     {% else %}
                     <div class="fw-bold text-secondary" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
-                        <div class="fs-6" style="font-family: Roboto Mono; color: black;">
+                        <div class="fs-5 pb-0 mb-0 px-3" style="font-family: Roboto Mono; color: black;">
                             LLM Data                       </div>
                     </div>
                     {% endif %}                
@@ -33,10 +33,10 @@
             none
             {% endif %}                
 ;">
-                <button class="nav-link" id="table2-tab" data-bs-toggle="tab" data-bs-target="#table2" type="button" role="tab" aria-controls="table2" aria-selected="false">
+                <button class="nav-link" id="table2-tab" style="padding:0px !important;"  data-bs-toggle="tab" data-bs-target="#table2" type="button" role="tab" aria-controls="table2" aria-selected="false">
 
                     <div class="fw-bold" style=" border-bottom: 5px solid lightpink; vertical-align:bottom;">
-                        <div class="fs-6" style="font-family: Roboto Mono; color: lightgray;">
+                        <div class="fs-5  pb-0 mb-0 px-3" style="font-family: Roboto Mono; color: lightgray;">
                             LLM Data
                         </div>
                     </div>
@@ -65,8 +65,8 @@
                                     <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Intensity</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Extent</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="text-align: center;">Data Point</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Checks</th>
-
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">LLM Checks</th>
+                                    <th class="px-2 py-0 fw-light text-secondary" style="text-align: left;">Progress</th>
                                 </tr>
                             </thead>
                         {% else %}
@@ -78,11 +78,9 @@
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Real?</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">RA&nbsp;Checks 
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">LLM Checks 
                                     </th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">LLM Details 
-                                    </th>
+
                                 </tr>
                             </thead>
                         {% endif %}
@@ -98,7 +96,7 @@
                             {% else %}
                             {% include "core/partials/_llm_data_row_before.html" %}
     
-                            <tr id="details-row" style="display: none;">
+                            <tr id="details-row">
                                 <td colspan="12">
                                     {% include "core/partials/_llm_extras.html" %}
                                 </td>
@@ -128,10 +126,7 @@
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Years</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Intensity</th>
                                     <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Extent</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: center;">Real?</th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">RA&nbsp;Checks 
-                                    </th>
-                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: right;">LLM Details 
+                                    <th class="px-2 py-0 fw-light text-secondary" style="border-width:0; text-align: left;">LLM Checks 
                                     </th>
                                 </tr>
                             </thead>
@@ -144,7 +139,7 @@
                             
 
                             {% include "core/partials/_llm_data_row_before.html" %}
-                            <tr id="details-row" style="display: none;">
+                            <tr id="details-row">
                                 <td colspan="12">
                                     {% include "core/partials/_llm_extras.html" %}
                                 </td>

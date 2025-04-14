@@ -44,6 +44,19 @@
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
     }
 
+    .highlighted-value-title-light {
+        display: inline-block; 
+        border: 0px solid rgba(78, 28, 23, 0.25);
+        padding: 1px; 
+        padding-right: 5px;
+        padding-left: 5px;
+        border-radius: 5px;
+        margin:0px;
+        /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
+        /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
+        background-color:#fefae6; /* fffdf2   fefae6*/
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.116),rgb(242, 199, 119, 0.116),rgb(151, 230, 151, 0.116));
+    }
 
     .bg-colorful {
         background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
@@ -198,7 +211,7 @@
             </thead>
             <tbody>
                 {% for obj in object_list %}
-                <tr class="p-0 m-0" >
+                <tr class="p-0 m-0">
                 <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}">
                     <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2;">
                       <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">

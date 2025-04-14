@@ -2526,51 +2526,68 @@
                                             {% else %}
                                             <td style="text-align: left;">-</td>
                                             {% endif %}
+                                            {% include "core/partials/_years_block_new_obj.html" %}
 
-                                            <td  style="border-width:0;">
+                                            <td  style="border-width:0; width:15%;">
                                                 {{ obj.get_instability_types }}                                                
                                             </td>
 
                                             <td  style="border-width:0;">
-                                                <span class="highlighted-value-title fw-normal mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;" data-bs-toggle="popover" title="{{ obj.get_inst_intensity_display }}" >
+                                                <span class="highlighted-value-title fw-bold mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;" data-bs-toggle="popover" title="{{ obj.get_inst_intensity_display }}" >
                                                     {{ obj.inst_intensity }}
                                                 </span> 
                                             </td>
                                             <td  style="border-width:0;">
-                                                <span class="highlighted-value-title fw-normal mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;" data-bs-toggle="popover" title="{{ obj.get_inst_extent_display }}" >
+                                                <span class="highlighted-value-title fw-bold mb-1" style="display:inline-block; text-align: left; vertical-align: bottom;" data-bs-toggle="popover" title="{{ obj.get_inst_extent_display }}" >
                                                     {{ obj.inst_extent }}
                                                 </span> 
                                      
                                             </td>
     
-                                                {% include "core/partials/_years_block_new_obj.html" %}
-    
-                                            <td  style="border-width:0; text-align: right;">
-
-                                                {% if obj.researchers_list and obj.seshat_experts_list  %}
-                                                <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;">
-                                                    <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                    <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
-                                                    <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
-                                                        <span><i class="fas fa-check-circle p-0 m-0"></i> Expert</span>
-                                                </a></span>
-                                                 
-                                                {% elif obj.researchers_list  %}
-
-                                                <span class="bg-success-light px-1 rounded border-1 fw-light" style="vertical-align: top; background:#01798911;"><a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
-                                                    <span><i class="fas fa-check-circle p-0 m-0"></i> RA</span>
-                                                </a></span>
-                                                 
-                                                {% else %}
-                                                <span class="badge bg-success-light px-1 rounded border-1 fw-light" style="background:#01798911;" data-bs-toggle="popover" title="Generated using LLMs.">AI</span>
-                                                {{ obj.get_instability_checks }}
-                                                {% endif %}
-
-
-
+                                                <td  style="text-align: right; z-index:890; border-width:0; width:15%;" >
+                                                    {% autoescape off %}
+                                                    <small >{{obj.get_instability_checks}}</small>
+                                                    {% endautoescape %}
+                                                </td>
+                                                <td  style="text-align: left; z-index:890; border-width:0;" >
+                                                    {% autoescape off %}
                                                 
-    
-                                            </td>
+                                                    {% if obj.researchers_list and obj.seshat_experts_list  %}
+                                                    <small style="vertical-align: bottom;  display:inline-block;">
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                        <i class="fa-solid fa-user-tie fa-lg pb-1" style="color: #138086" aria-hidden="true"></i></a>
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Expert Reviewed By: {{ obj.seshat_experts_list }}">
+                                                            <span>
+                                                                <i class="fa-solid fa-user-graduate fa-lg" style="color: #843b62" aria-hidden="true"></i>
+                                                            </span>
+                                                            </a>
+                                                        </small>
+                                                     
+                                                    {% elif obj.researchers_list  %}
+                                                    <small style="vertical-align: bottom; ">
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true"  title="Checked By: {{ obj.researchers_list }}">
+                                                            <i class="fa-solid fa-user-tie fa-lg" style="color: #138086" aria-hidden="true"></i>
+                                                        </a>
+                                                    </small>
+                                                        
+                                                    {% else %}
+                                                    <small style="vertical-align: bottom; ">
+                                                        <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-light text-teal" title="Generated using LLMs."><span class="text-secondary border border-1 rounded  border-secondary" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">AI</span></a>
+                                                    </small>
+                                                
+                                                    {% endif %}
+                                                    {% if obj.comment %}
+                                                        <small style="vertical-align: bottom; ">
+                                                            <a data-bs-toggle="tooltip" data-bs-html="true" class="fw-normal text-teal" title="Seshat-approved Description added."><span class="text-success border border-1 rounded  border-success" style="padding-top:2px; padding-bottom:0px; padding-left:3px; padding-right:3px; ">D</span></a>
+                                                        </small>
+
+                                                        {% endif %}
+                                                    {% endautoescape %}
+                                                </td>
+                                                
+
      
                                             <td  style="text-align: right; vertical-align: center; border-width:0;">
                                                 {% with my_app_name='crisisdb' %}
