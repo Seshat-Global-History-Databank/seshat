@@ -2320,15 +2320,28 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
         #import time
         #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
-        all_mrs_unsorted = Macro_region.objects.all()
-
+        #all_mrs_unsorted = Macro_region.objects.all()
+        all_mrs_unsorted = Macro_region.objects.exclude(name='World')
 
         custom_order = [5, 2, 11, 3, 4, 9, 10, 8, 7, 6, 1, 23, 24, 27, 26,25, 29,28, 31,33,32,30, ]  
 
         custom_order_sr = [20, 18, 17, 15, 19, 16, 3, 4, 5, 7, 1, 2, 6, 43, 61, 62, 44, 45, 10, 13, 8, 9, 11, 12, 14, 58, 59, 38, 39, 37, 36, 40, 41, 42, 28, 29, 30, 26,25, 27,24, 22, 23, 21, 32, 31, 33, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 ]
 
-        all_mrs = sorted(all_mrs_unsorted, key=lambda item: custom_order.index(item.id))
-        all_srs = sorted(all_srs_unsorted, key=lambda item: custom_order_sr.index(item.id))
+        #all_mrs = sorted(all_mrs_unsorted, key=lambda item: custom_order.index(item.id))
+        #all_srs = sorted(all_srs_unsorted, key=lambda item: custom_order_sr.index(item.id))
+
+        all_mrs = sorted(
+            all_mrs_unsorted, 
+            key=lambda item: custom_order.index(item.id) if item.id in custom_order else len(custom_order)
+        )
+
+        all_srs = sorted(
+            all_srs_unsorted, 
+            key=lambda item: custom_order_sr.index(item.id) if item.id in custom_order_sr else len(custom_order_sr)
+        )
+
+        for sr in all_srs:
+            print(sr)
 
         all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
@@ -2407,7 +2420,8 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         #import time
         #start_time = time.time()
         all_srs_unsorted = Seshat_region.objects.all()
-        all_mrs_unsorted = Macro_region.objects.all()
+        #all_mrs_unsorted = Macro_region.objects.all()
+        all_mrs_unsorted = Macro_region.objects.exclude(name='World')
 
         # 1 | World
         # 2 | Africa
@@ -2425,8 +2439,18 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
 
         custom_order_sr = [20, 18, 17, 15, 19, 16, 3, 4, 5, 7, 1, 2, 6, 43, 61, 62, 44, 45, 10, 13, 8, 9, 11, 12, 14, 58, 59, 38, 39, 37, 36, 40, 41, 42, 28, 29, 30, 26,25, 27,24, 22, 23, 21, 32, 31, 33, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 ]
 
-        all_mrs = sorted(all_mrs_unsorted, key=lambda item: custom_order.index(item.id))
-        all_srs = sorted(all_srs_unsorted, key=lambda item: custom_order_sr.index(item.id))
+        #all_mrs = sorted(all_mrs_unsorted, key=lambda item: custom_order.index(item.id))
+        #all_srs = sorted(all_srs_unsorted, key=lambda item: custom_order_sr.index(item.id))
+
+        all_mrs = sorted(
+            all_mrs_unsorted, 
+            key=lambda item: custom_order.index(item.id) if item.id in custom_order else len(custom_order)
+        )
+
+        all_srs = sorted(
+            all_srs_unsorted, 
+            key=lambda item: custom_order_sr.index(item.id) if item.id in custom_order_sr else len(custom_order_sr)
+        )
 
         all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)

@@ -8857,7 +8857,7 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
 
-    if var_name in ['human_sacrifice', 'power_transition', 'instability_event'] and not request.user.has_perm('core.add_capital'):
+    if var_name in ['human_sacrifice', 'power_transition', 'instability_event'] and not request.user.has_perm('core.add_seshatprivatecommentpart'):
 
         #return HttpResponseForbidden("You do not have permission to access this data.")
         return render(request, 'core/permission_denied.html', status=403)
