@@ -1284,6 +1284,31 @@ class Polity_degree_of_centralization(SeshatCommon):
             str: The citations of the model instance, separated by comma.
         """
         return return_citations(self)
+    
+    @property
+    def formatted_years(self):
+        if self.year_from is None and self.year_to is None:
+            return '<i class="fa-solid fa-minus"></i>'
+        if self.year_from == self.year_to:
+            if self.year_from is None:
+                return '&nbsp;'
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        else:
+            arrow = '<i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i>'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
 
     def clean(self):
         """
@@ -1420,6 +1445,31 @@ class Polity_suprapolity_relations(SeshatCommon):
             str: The citations of the model instance, separated by comma.
         """
         return return_citations(self)
+    
+    @property
+    def formatted_years(self):
+        if self.year_from is None and self.year_to is None:
+            return '<i class="fa-solid fa-minus"></i>'
+        if self.year_from == self.year_to:
+            if self.year_from is None:
+                return '&nbsp;'
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        else:
+            arrow = '<i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i>'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
 
     def clean(self):
         """
@@ -1471,7 +1521,7 @@ class Polity_suprapolity_relations(SeshatCommon):
         if self.supra_polity_relations and self.other_polity and self.polity:
             polity_url = reverse('polity-detail-main', args=[self.polity.id]) 
             other_polity_url = reverse('polity-detail-main', args=[self.other_polity.id]) 
-            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a> <span class='badge bg-warning text-dark'><i class='fa-solid fa-left-long'></i>  {self.get_supra_polity_relations_display()}  <i class='fa-solid fa-right-long'></i></span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>"
+            return f"<a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.polity.long_name}' href='{polity_url}'>{self.polity.new_name}</a> <span class='badge bg-warning text-dark'> {self.get_supra_polity_relations_display()} </span> <a  data-bs-toggle='tooltip' data-bs-html='true'  title='{self.other_polity.long_name}' href='{other_polity_url}'>{self.other_polity.new_name}</a>"
         elif self.supra_polity_relations == "none":
             return self.get_supra_polity_relations_display()
         elif self.supra_polity_relations:

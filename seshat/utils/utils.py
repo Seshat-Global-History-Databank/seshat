@@ -3,6 +3,8 @@ from seshat.apps.core.models import Polity, Variablehierarchy, Section, Subsecti
 import django.apps
 import pprint
 from seshat.apps.crisisdb.models import Crisis_consequence, Power_transition, Human_sacrifice, Instability_event
+
+from seshat.apps.general.models import Polity_degree_of_centralization, Polity_suprapolity_relations
 # from seshat.apps.crisisdb.models import Us_location, Us_violence_subtype, Us_violence_data_source, Us_violence, External_conflict, Internal_conflict, External_conflict_side, Agricultural_population, Arable_land, Arable_land_per_farmer, Gross_grain_shared_per_agricultural_population, Net_grain_shared_per_agricultural_population, Surplus, Military_expense, Silver_inflow, Silver_stock, Total_population, Gdp_per_capita, Drought_event, Locust_event, Socioeconomic_turmoil_event, Crop_failure_event, Famine_event, Disease_outbreak
 
 from django.contrib.contenttypes.models import ContentType
@@ -1011,10 +1013,76 @@ def get_all_instability_data_for_a_polity(polity_id):
 #     print(f"Elapsed time: {elapsed_time} seconds")
 
 #     return contain_dic
+import time
+
+def time_it(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)
+        end = time.time()
+        print(f"{func.__name__} took {end - start:.2f} seconds to run")
+        return result
+    return wrapper
+
+@time_it
+def give_polity_app_data(my_tag=None):
+    contain_dic = {}
+    freq_dic = {
+        'g': 0,
+        'sc': 0,
+        'wf': 0,
+        'rt': 0,
+        'ec': 0,
+        'hs': 0,
+        'cc': 0,
+        'pt': 0,
+        'instability': 0,
+    }
+
+    # Get polity sets for each app
+    def get_polity_ids(app_label):
+        ids = set()
+        for model in apps.get_app_config(app_label).get_models():
+            if hasattr(model, 'polity_id'):
+                ids.update(model.objects.values_list('polity_id', flat=True))
+        return ids
+
+    polity_ids_by_app = {
+        'g': get_polity_ids('general'),
+        'sc': get_polity_ids('sc'),
+        'wf': get_polity_ids('wf'),
+        'ec': get_polity_ids('ec'),
+        'rt': get_polity_ids('rt'),
+    }
+
+    # Filter base set of polities
+    polity_qs = Polity.objects.filter(polity_tag=my_tag) if my_tag else Polity.objects.all()
+    all_polity_ids = list(polity_qs.values_list('id', flat=True))
+
+    # Bulk fetch related models (only once)
+    hs_ids = set(Human_sacrifice.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
+    cc_ids = set(Crisis_consequence.objects.filter(Q(polity__in=all_polity_ids) | Q(other_polity__in=all_polity_ids)).values_list('polity_id', flat=True))
+    pt_ids = set(Power_transition.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
+    in_ids = set(Instability_event.objects.filter(polity__in=all_polity_ids).values_list('polity_id', flat=True))
+
+    for polity_id in all_polity_ids:
+        contain_dic[polity_id] = {
+            key: polity_id in polity_ids_by_app[key] for key in ['g', 'sc', 'wf', 'ec', 'rt']
+        }
+        contain_dic[polity_id]['hs'] = polity_id in hs_ids
+        contain_dic[polity_id]['cc'] = polity_id in cc_ids
+        contain_dic[polity_id]['pt'] = polity_id in pt_ids
+        contain_dic[polity_id]['instability'] = polity_id in in_ids
+
+        for key in contain_dic[polity_id]:
+            if contain_dic[polity_id][key]:
+                freq_dic[key] += 1
+
+    return contain_dic, freq_dic
 
 
-
-def give_polity_app_data():
+@time_it
+def give_polity_app_data_xxx(my_tag=None):
     from django.apps import apps
 
     contain_dic = {}
@@ -1023,13 +1091,16 @@ def give_polity_app_data():
             'sc': 0,
             'wf': 0,
             'rt': 0,
+            'ec': 0,
             'hs': 0,
             'cc': 0,
             'pt': 0,
+            'instability': 0,
         }
     unique_polity_ids_general = set()
     unique_polity_ids_sc = set()
     unique_polity_ids_wf = set()
+    unique_polity_ids_ec = set()
     unique_polity_ids_rt = set()
 
 
@@ -1037,6 +1108,7 @@ def give_polity_app_data():
     app_models_general = apps.get_app_config('general').get_models()
     app_models_sc = apps.get_app_config('sc').get_models()
     app_models_wf = apps.get_app_config('wf').get_models()
+    app_models_ec = apps.get_app_config('ec').get_models()
     app_models_rt = apps.get_app_config('rt').get_models()
 
 
@@ -1054,13 +1126,20 @@ def give_polity_app_data():
         if hasattr(model, 'polity_id'):
             polity_ids_wf = model.objects.values_list('polity_id', flat=True).distinct()
             unique_polity_ids_wf.update(polity_ids_wf)
+    
+    for model in app_models_ec:
+        if hasattr(model, 'polity_id'):
+            polity_ids_ec = model.objects.values_list('polity_id', flat=True).distinct()
+            unique_polity_ids_ec.update(polity_ids_ec)
 
     for model in app_models_rt:
         if hasattr(model, 'polity_id'):
             polity_ids_rt = model.objects.values_list('polity_id', flat=True).distinct()
             unique_polity_ids_rt.update(polity_ids_rt)
-
-    all_polity_ids = Polity.objects.values_list('id', flat=True)
+    if my_tag:
+        all_polity_ids = Polity.objects.filter(polity_tag=my_tag).values_list('id', flat=True)
+    else:
+        all_polity_ids = Polity.objects.values_list('id', flat=True)
     for polity_id in all_polity_ids:
         has_hs =  Human_sacrifice.objects.filter(polity=polity_id).exists()
         if has_hs:
@@ -1072,16 +1151,21 @@ def give_polity_app_data():
         has_pt =  Power_transition.objects.filter(polity=polity_id).exists()
         if has_pt:
             freq_dic["pt"] += 1
+        has_in =  Instability_event.objects.filter(polity=polity_id).exists()
+        if has_in:
+            freq_dic["instability"] += 1
 
             
         contain_dic[polity_id] = {
             'g': False,
             'sc': False,
             'wf': False,
+            'ec': False,
             'rt': False,
             'hs': has_hs,
             'cc': has_cc,
             'pt': has_pt,
+            'instability': has_in,
         }
         if polity_id in unique_polity_ids_general:
             contain_dic[polity_id]["g"] = True
@@ -1092,9 +1176,13 @@ def give_polity_app_data():
         if polity_id in unique_polity_ids_wf:
             contain_dic[polity_id]["wf"] = True
             freq_dic["wf"] += 1
+        if polity_id in unique_polity_ids_ec:
+            contain_dic[polity_id]["ec"] = True  
+            freq_dic["ec"] += 1   
         if polity_id in unique_polity_ids_rt:
             contain_dic[polity_id]["rt"] = True
             freq_dic["rt"] += 1
+
     #freq_dic["pol_count"] = len(all_polity_ids)
 
     return contain_dic, freq_dic

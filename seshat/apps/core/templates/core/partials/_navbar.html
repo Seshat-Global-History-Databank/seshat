@@ -119,6 +119,11 @@
                         <li>
                             <a class="dropdown-item fw-bold" href="{% url 'capitals' %}">Capitals</a>
                         </li>
+                        {%  if 'core.add_seshatprivatecommentpart' in user.get_all_permissions and 'core.add_capital' in user.get_all_permissions %}
+                        <li>
+                            <a  class="dropdown-item fw-bold" href="{% url 'settlements' %}">Settlements</a>
+                        </li>
+                        {% endif %}
                      </ul>
                 </li>
                 <li class="nav-item">

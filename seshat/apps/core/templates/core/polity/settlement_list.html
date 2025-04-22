@@ -1,0 +1,343 @@
+{% extends "core/seshat-base.html" %}
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% load mathfilters %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<style>
+    .accordion-button{
+        text-align: left;
+        display:block;
+        padding-left: 0px;
+        padding-right: 0px;
+
+    }
+    .bce-color {
+        color: #f0778c !important;
+    }
+
+    .ce-color {
+        color: #00ab41 !important;
+    }
+
+    .custom-left-border-shadowed {
+        border-left: none; /* Adjust the border color and thickness as desired */
+        box-shadow: 0 0 4px teal; 
+        padding-right: 10px;
+        padding-top: 5px;
+        margin-top: 5px;
+        padding-bottom: 5px;
+        border-radius: 15px;
+        padding-left: 10px; /* Adjust the padding to create spacing between the border and content */
+        text-align: justify;
+        background-color:antiquewhite;
+    }
+
+    .custom-left-border-shadowed_2 {
+        border-left: none; /* Adjust the border color and thickness as desired */
+        padding-right: 10px;
+        padding-top: 2px;
+        margin-top: 5px;
+        padding-bottom: 2px;
+        border: solid 1px teal;
+        border-radius: 15px;
+        padding-left: 10px; /* Adjust the padding to create spacing between the border and content */
+        text-align: justify;
+        background-color:rgb(252, 244, 234);
+    }
+
+    .custom-left-border-shadowed_4 {
+        border-left: none; /* Adjust the border color and thickness as desired */
+        padding-top: 10px;
+        margin-top: 0px;
+        padding-bottom: 10px;
+        text-align: justify;
+    }
+
+    .progress {
+        height: 1.3rem !important;
+        font-size: 0.75rem !important;
+    }
+
+    .progress-bar {
+        display: flex; 
+        flex-direction: row;
+    }
+
+    .shadowed_text {
+        text-shadow: 0 0 4px gray;
+        color: gray; /* Text color */      
+    }
+
+    .bg-violet {
+      background: purple,
+    }
+
+    .table.dense_table > :not(caption) > * > * {
+        padding: 0rem 0rem;
+        border-bottom-width: 0px;
+    }
+    
+    .bg-success-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: teal;
+        border: 1px solid rgba(0, 128, 128, 0.18);   
+        background: rgba(0, 128, 128, 0.08);   
+
+        }
+
+    .tight-link {
+        margin: 0;
+        padding: 0;
+    }
+
+    .tight-group {
+        display: flex;
+        gap: 0; /* ensures no space */
+        justify-content: center; /* optional: center badges horizontally */
+      }
+      
+        
+
+</style>
+
+<div class="container pt-2">
+
+
+
+
+    <div class="sticky-top pb-1 pt-2 px-0 m-0" style="background-color: #fffdf2; height:50px; top: 55px; z-index:901;" id="xxx">
+        <span class="sticky-top fs-4" style="background: #fffdf2; border: 0px solid red !important; height:45px; top: 55px !important;  z-index:900;">Settlements 
+             
+        </span>
+    </div>
+
+
+    {% if object_list %}
+    <div class="table-container pb-0 mb-0" >
+        
+                <div class="text-secondary">* A Settlemnent (or habitation site) might be a city, town, or another habitation site, within the historical and geopolitical framework of the Seshat databank. A settlement may serve various roles depending on its relationship to a polity, including being a capital, major city, or a smaller settlement. Settlements are central to linking population data, political transitions, and socio-cultural complexity across time and space.
+
+Key attributes of a Settlement include:
+<ul>
+    <li>Canonical and alternative historical names
+    </li>
+    <li>Current country and continent affiliations
+    </li>
+    <li>Latitude and longitude coordinates
+    </li>
+</ul>
+
+                </div>
+
+
+                <div class="row pt-4">
+                    {% for continent, countries in grouped_settlements.items %}
+
+                    <div class="table-responsive pb-4 
+                    {% if continent|length > 21 %}
+                    col-md-3
+                    {% else %}
+                    col-md-2
+                    {% endif %}
+                    ">
+                        <table id="table_id_3" class="table align-middle caption-top">
+                            <div style="border-bottom: 10px solid #A52A2A76; "> 
+                                <h5 style="margin-bottom: 0rem; color: #A52A2A;">
+                                    <a class="fw-bold" style="color: #A52A2A;" href="#{{continent}}"> 
+                                        {% if continent == "Europe" %}
+                                        <i class="fa-solid fa-earth-europe"></i>
+                                        {% elif continent == "Africa" %}
+                                        <i class="fa-solid fa-earth-africa"></i>
+                                        {% elif continent == "Southwest Asia" or continent == "Southeast Asia" or continent == "Central and Northern Eurasia" or continent == "East Asia" or continent == "South Asia" %}
+                                        <i class="fa-solid fa-earth-asia"></i>
+                                        {% elif continent == "Oceania-Australia" %}
+                                        <i class="fa-solid fa-earth-oceania"></i>
+                                        {% elif continent == "North America" or continent == "South America and Caribbean" %}
+                                        <i class="fa-solid fa-earth-americas"></i>
+                                        {% else %}
+                                        <i class="fa-solid fa-map-location-dot"></i>        
+                                        {% endif %}
+                                        {{ continent }}                            
+                                    </a>          
+                                </h5>                       
+                                               
+                            </div>
+                            <tbody style="border-style: none;">
+                                        {% for country, cities in countries.items %}
+
+                                        {% if a_subregion == "Somewhere" and not cities|length %}
+            
+                                        {% elif not cities %}
+                                        <tr>
+                                            <td style="border-style:none;" class="text-info">
+                                                <a class="fw-bold text-info" href="#{{a_subregion}}_{{continent}}" title="{{sub_reg_meta.0}}">
+                                                    <span class="text-info fw-bold border border-info px-1">{{cities|length}}</span> 
+                                                    {{ country }}
+                                                </a>
+                                            </td>
+                                        </tr>  
+                                        {% else %}
+                                        <tr>
+                                            <td style="border-style:none;">
+                                                <a class="fw-bold" href="#{{country}}_{{continent}}" title="{{sub_reg_meta.0}}" style="color: #800000">
+                                                    <span class="fw-bold rounded px-1" style="background:#A52A2A16; border: 1px solid #A52A2A96;">{{cities|length}}</span> 
+                                                    &nbsp;{{ country }}
+                                                </a>
+                                            </td>
+                                        </tr>        
+                                        {% endif %}
+                                        {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endfor %}
+                </div>
+    </div>
+      {% endif %}
+
+
+{% for continent, countries in grouped_settlements.items %}
+
+    <div class="text-success py-2 ms-2" id="{{continent}}"><i class="fa-solid fa-up-long"></i><a href="#">&nbsp; top of the page</a>
+    </div>
+    <h2 class="fs-2 ps-2 ms-2 py-2 mt-3 custom-left-border-shadowed" style="display:inline-block;"> 
+    {% if continent == "Europe" %}
+    <i class="fa-solid fa-earth-europe"></i>
+    {% elif continent == "Africa" %}
+    <i class="fa-solid fa-earth-africa"></i>
+    {% elif continent == "Southwest Asia" or continent == "Southeast Asia" or continent == "Central Eurasia" or continent == "East Asia" or continent == "South Asia" %}
+    <i class="fa-solid fa-earth-asia"></i>
+    {% elif continent == "Oceania-Australia" %}
+    <i class="fa-solid fa-earth-oceania"></i>
+    {% elif continent == "North America" or continent == "South America" %}
+    <i class="fa-solid fa-earth-americas"></i>
+    {% else %}
+    <i class="fa-solid fa-map-location-dot"></i>        
+    {% endif %}
+    {{ continent }}
+    </h2>
+    {% for country, cities in countries.items %}
+
+        {% if country == "Somewhere" and not cities %}
+
+        {% else %}
+
+        <div class="sticky-top pb-1 pt-2 px-0 m-0" style="background-color: #fffdf2; height:50px; top: 55px; z-index:901;" id="{{country}}_{{continent}}">
+        <span class="fs-4 text-teal"> &nbsp;
+            <i class="fa-solid fa-circle-chevron-right"></i> {{ country }} 
+            <span class="h6 text-secondary">({{continent}})</span> 
+            <span class="h6 text-secondary">
+                <a href="#"><i class="fa-solid fa-turn-up"></i></a>
+            </span>
+        </span>
+        </div>
+            {% if cities %}
+            <div class="table-container pb-0 mb-0" >
+
+            <table id="table_id" class="table align-middle table-hover pb-4 mb-4" style="border-width:0px;">
+
+                <thead style=" border: 0px solid red !important; ">
+                    <tr  class="sticky-top" style="background: linear-gradient(to bottom, #fffdf2, #f3e2d5); border: 0px solid red !important; height:45px; top: 95px !important;  z-index:900;">
+                    <th class="ps-2 fw-normal" style="border: 0px solid red !important;"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; City Name
+                        <small class="text-secondary"> &nbsp;(Alternative Names)</small> </th>
+                        <th class="ps-2 fw-normal" style="border: 0px solid red !important;"> Coordinates </th>
+                        <th class="ps-2 fw-normal" style="border: 0px solid red !important; text-align:right;"> Current Country </th>
+                    </tr>
+                </thead>
+            <tbody>
+                    {% for a_city in cities %}
+                    <tr>
+                        <td class="col-md-3 ps-2 py-2" style="text-align: left; "> 
+                            {% if a_city.name %}
+                                <span class="fw-bold h5">
+                                    <a href="{% url 'settlement-detail-main' a_city.id %}" class="fs-6 fw-normal"><b>{{ a_city.name }}</b></a>
+                                </span>
+                            {% endif %}
+                            {% if a_city.alternative_names %}
+                            <small class="text-muted">({{ a_city.alternative_names }})</small>
+                        {% endif %}
+
+                        </td>
+                        <td class="col-md-3 ps-2 py-2 fw-bold" style="text-align: left; "> 
+                            ({{ a_city.latitude|floatformat:2  }}, {{ a_city.longitude|floatformat:2 }})   
+                        </td>
+                        <td class="col-md-3 ps-2 py-2" style="text-align: right; "> 
+                            <span >
+                                <img src="https://flagsapi.com/{{a_city.current_country_obj.flag_code }}/flat/24.png" style="border-radius: 50%;">
+                            </span>
+                            <span class="fs-6 fw-bold" style="vertical-align:bottom;">&nbsp;{{a_city.current_country_obj.name }} </span>
+       
+                        </td>
+
+
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+            </table>
+            </div>
+            {% else %}
+            <div class="row">
+
+            </div>
+            {% endif %}
+        {% endif %}
+
+    {% endfor %}
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const OFFSET = 100; // pixels to offset above the anchor
+
+        // Check if there's a hash in the URL
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            const element = document.getElementById(targetId);
+
+            if (element) {
+                // Scroll with offset
+                const yOffset = -OFFSET;
+                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+
+        // For in-page clicks
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href').substring(1);
+                const element = document.getElementById(targetId);
+
+                if (element) {
+                    e.preventDefault();
+                    const yOffset = -OFFSET;
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+
+                    // Update URL hash without jumping
+                    history.pushState(null, null, '#' + targetId);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+{% endblock %}

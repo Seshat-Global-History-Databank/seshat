@@ -170,13 +170,13 @@ title="Click to Download all such coded records">
 {% if obj.description and obj.description != 'None' %}
     <td colspan="1" style="text-align: center; border-width:0;">
         <small>
-            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i></a>
+            <a href="{% url update_url obj.id %}">Edit<i class="fa-solid fa-pen-to-square text-secondary"></i> &nbsp;</a>
         </small>
     </td>
 {% else %}
 <td colspan="1" style="text-align: center; border-width:0;">
     <small>
-        <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i></a>
+        <a href="{% url update_url_new obj.id %}">Edit<i class="fa-solid fa-pen-to-square text-danger"></i>&nbsp;</a>
     </small>
 </td>
 {% endif %}

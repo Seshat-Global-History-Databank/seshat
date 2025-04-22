@@ -7,6 +7,8 @@ from collections import defaultdict
 from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic_of_all_vars_in_sections
 
 from seshat.apps.crisisdb.models import Human_sacrifice
+from seshat.apps.stlm.models import Settlement_population
+ 
 
 from django.contrib.sites.shortcuts import get_current_site
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
@@ -38,10 +40,9 @@ from django.utils.decorators import method_decorator
 
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from seshat.apps.accounts.models import Seshat_Expert
-from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years, Polity_suprapolity_relations
+from seshat.apps.general.models import Polity_preceding_entity, Polity_peak_years, Polity_suprapolity_relations, Polity_degree_of_centralization
 from seshat.apps.sc.models import Token, Precious_metal
 from seshat.apps.ec.models import Lux_precious_metal
-
 
 from django.core.paginator import Paginator
 
@@ -76,7 +77,8 @@ from ..sc.models import Settlement_hierarchy, Religious_level, Military_level, A
 
 from ..crisisdb.models import Power_transition
 
-from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion
+from .models import Citation, Polity, Section, Subsection, Variablehierarchy, Reference, SeshatComment, SeshatCommentPart, Nga, Ngapolityrel, Capital, Seshat_region, Macro_region, Cliopatria, GADMCountries, GADMProvinces, SeshatCommon, ScpThroughCtn, SeshatPrivateComment, SeshatPrivateCommentPart, Religion, HabitationSite, CityPolityRelation
+
 import pprint
 import requests
 from requests.structures import CaseInsensitiveDict
@@ -2340,8 +2342,8 @@ class PolityListViewLight(SuccessMessageMixin, generic.ListView):
             key=lambda item: custom_order_sr.index(item.id) if item.id in custom_order_sr else len(custom_order_sr)
         )
 
-        for sr in all_srs:
-            print(sr)
+        #for sr in all_srs:
+        #    print(sr)
 
         all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
@@ -2403,6 +2405,7 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
             str: The absolute URL of the view.
         """
         return reverse('polities')
+    
 
     def get_context_data(self, **kwargs):
         """
@@ -2416,6 +2419,7 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         Returns:
             dict: The context data of the view.
         """
+        start3 = time.time()
         context = super().get_context_data(**kwargs)
         #import time
         #start_time = time.time()
@@ -2452,9 +2456,22 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
             key=lambda item: custom_order_sr.index(item.id) if item.id in custom_order_sr else len(custom_order_sr)
         )
 
-        all_pols = Polity.objects.all().order_by('start_year')
+        context['tags'] = set(Polity.objects.values_list('polity_tag', flat=True).distinct())
+        user_selected_tag = self.request.GET.get('tag')
+        context['selected_tag'] = user_selected_tag
+
+
+        if user_selected_tag:
+            all_pols = Polity.objects.filter(polity_tag=user_selected_tag).order_by('start_year')
+        else:
+            all_pols = Polity.objects.all().order_by('start_year')
         pol_count = len(all_pols)
 
+        end3 = time.time()
+
+        print(f"33333333333333333333333 took {end3 - start3:.2f} seconds to run")
+        start2 = time.time()
+        print('HIIIIIIIIIIIIIIIII')
         ultimate_wregion_dic = {}
         ultimate_wregion_dic_top = {}
         for a_mr in all_mrs:
@@ -2469,89 +2486,121 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
                     if a_sr.name not in ultimate_wregion_dic_top[a_mr.name]:
                         ultimate_wregion_dic_top[a_mr.name][a_sr.name] = [a_sr.subregions_list, 0]
 
-        all_polities_g_sc_wf, freq_dic = give_polity_app_data()
+
+        print('---------------------------')
+        all_polities_g_sc_wf, freq_dic = give_polity_app_data(user_selected_tag)
         #all_polities_g_sc_wf = give_polity_app_data()
         #freq_dic = {}
         freq_dic["d"] = 0
+        
+        end2 = time.time()
+
+        print(f"cccccccccccccccccccccccc took {end2 - start2:.2f} seconds to run")
+
+        start = time.time()
+
+        # Pre-fetch related data to reduce DB hits
+
+        all_pols = all_pols.select_related(
+            'home_seshat_region__mac_region'
+        )
 
         for a_polity in all_pols:
-            if a_polity.home_seshat_region:
-                ultimate_wregion_dic[a_polity.home_seshat_region.mac_region.name][a_polity.home_seshat_region.name].append(a_polity)
-                ultimate_wregion_dic_top[a_polity.home_seshat_region.mac_region.name][a_polity.home_seshat_region.name][1] += 1
+            hs_region = a_polity.home_seshat_region
+            if hs_region:
+                mac_name = hs_region.mac_region.name
+                sr_name = hs_region.name
+                ultimate_wregion_dic[mac_name][sr_name].append(a_polity)
+                ultimate_wregion_dic_top[mac_name][sr_name][1] += 1
+
             if a_polity.general_description:
                 freq_dic["d"] += 1
+
+            # Assuming reverse relationships (related_name) or default naming conventions:
+            #a_polity.d_o_c = list(a_polity.polity_degree_of_centralization_set.all())
+            #a_polity.s_p_r = list(a_polity.polity_suprapolity_relations_set.all())
+            a_polity.d_o_c = Polity_degree_of_centralization.objects.filter(polity_id=a_polity.id)
+            a_polity.s_p_r = Polity_suprapolity_relations.objects.filter(polity_id=a_polity.id)
+
+        # for a_polity in all_pols:
+        #     if a_polity.home_seshat_region:
+        #         ultimate_wregion_dic[a_polity.home_seshat_region.mac_region.name][a_polity.home_seshat_region.name].append(a_polity)
+        #         ultimate_wregion_dic_top[a_polity.home_seshat_region.mac_region.name][a_polity.home_seshat_region.name][1] += 1
+        #     if a_polity.general_description:
+        #         freq_dic["d"] += 1
+
+        #     a_polity.d_o_c = Polity_degree_of_centralization.objects.filter(polity_id=a_polity.id)
+        #     a_polity.s_p_r = Polity_suprapolity_relations.objects.filter(polity_id=a_polity.id)
+
+        #start = time.time()
 
         for a_polity in all_pols:
             try:
                 a_polity.has_g_sc_wf = all_polities_g_sc_wf[a_polity.id]
+                #print(a_polity.id)
             except:
                 a_polity.has_g_sc_wf = None
 
-            all_durations = {
-                "intr": [],
-                "gv": [],
-                "pt": [],
-                "color": "xyz",
-            }
-            all_durations["intr"] = [a_polity.start_year, a_polity.end_year]
-            # Pol_dur object
-            try:
-                Polity_duration_object = Polity_duration.objects.get(polity_id=a_polity.id)
 
-                polity_duration_coded = []
-                polity_duration_coded.extend([f'{Polity_duration_object.polity_year_from}, {Polity_duration_object.polity_year_to}'])
-                all_durations["gv"] = [Polity_duration_object.polity_year_from, Polity_duration_object.polity_year_to]
-            except:
-                polity_duration_coded = [-10000, 2000]
+            # # Pol_dur object
+            # try:
+            #     Polity_duration_object = Polity_duration.objects.get(polity_id=a_polity.id)
 
-            # Pow Trans Data
-            try:
-                Polity_pt_objects = Power_transition.objects.filter(polity_id=a_polity.id)
+            #     polity_duration_coded = []
+            #     polity_duration_coded.extend([f'{Polity_duration_object.polity_year_from}, {Polity_duration_object.polity_year_to}'])
+            #     all_durations["gv"] = [Polity_duration_object.polity_year_from, Polity_duration_object.polity_year_to]
+            # except:
+            #     polity_duration_coded = [-10000, 2000]
 
-                polity_duration_implied = []
-                pol_dur_min_list = []
-                pol_dur_max_list = []
+            # # Pow Trans Data
+            # try:
+            #     Polity_pt_objects = Power_transition.objects.filter(polity_id=a_polity.id)
 
-                for a_pt in Polity_pt_objects:
-                    if a_pt.year_from is not None:
-                        pol_dur_min_list.append(a_pt.year_from)
-                    if a_pt.year_to is not None:
-                        pol_dur_max_list.append(a_pt.year_to)
+            #     polity_duration_implied = []
+            #     pol_dur_min_list = []
+            #     pol_dur_max_list = []
 
-                polity_duration_implied = [min(pol_dur_min_list), max(pol_dur_max_list)]
-                all_durations["pt"] = polity_duration_implied
-            except:
-                polity_duration_implied = [-10000, 2000]
+            #     for a_pt in Polity_pt_objects:
+            #         if a_pt.year_from is not None:
+            #             pol_dur_min_list.append(a_pt.year_from)
+            #         if a_pt.year_to is not None:
+            #             pol_dur_max_list.append(a_pt.year_to)
 
-            a_polity.all_durations = all_durations
-            if all_durations["intr"] and all_durations["gv"] and all_durations["pt"]:
-                if (all_durations["intr"] == all_durations["gv"] == all_durations["pt"]):
-                    a_polity.color = "ggg"
-                elif (all_durations["intr"] == all_durations["gv"]):
-                    a_polity.color = "ggr"
-                elif (all_durations["intr"] == all_durations["pt"]):
-                    a_polity.color = "grg"
-                elif (all_durations["gv"] == all_durations["pt"]):
-                    a_polity.color = "rgg"
-            elif all_durations["intr"] and all_durations["gv"]:
-                if (all_durations["intr"] == all_durations["gv"]):
-                    a_polity.color = "ggm"
-                else:
-                    a_polity.color = "grm"
-            elif all_durations["intr"] and all_durations["pt"]:
-                if (all_durations["intr"] == all_durations["pt"]):
-                    a_polity.color = "gmg"
-                elif all_durations["intr"][0] == -10000:
-                    a_polity.color = "rmr"
-                else:
-                    a_polity.color = "gmr"
-            elif all_durations["intr"] and all_durations["intr"][0] == -10000:
-                a_polity.color = "rmm"
-            elif all_durations["intr"]:
-                a_polity.color = "gmm"
+            #     polity_duration_implied = [min(pol_dur_min_list), max(pol_dur_max_list)]
+            #     all_durations["pt"] = polity_duration_implied
+            # except:
+            #     polity_duration_implied = [-10000, 2000]
+
+            # a_polity.all_durations = all_durations
+            # if all_durations["intr"] and all_durations["gv"] and all_durations["pt"]:
+            #     if (all_durations["intr"] == all_durations["gv"] == all_durations["pt"]):
+            #         a_polity.color = "ggg"
+            #     elif (all_durations["intr"] == all_durations["gv"]):
+            #         a_polity.color = "ggr"
+            #     elif (all_durations["intr"] == all_durations["pt"]):
+            #         a_polity.color = "grg"
+            #     elif (all_durations["gv"] == all_durations["pt"]):
+            #         a_polity.color = "rgg"
+            # elif all_durations["intr"] and all_durations["gv"]:
+            #     if (all_durations["intr"] == all_durations["gv"]):
+            #         a_polity.color = "ggm"
+            #     else:
+            #         a_polity.color = "grm"
+            # elif all_durations["intr"] and all_durations["pt"]:
+            #     if (all_durations["intr"] == all_durations["pt"]):
+            #         a_polity.color = "gmg"
+            #     elif all_durations["intr"][0] == -10000:
+            #         a_polity.color = "rmr"
+            #     else:
+            #         a_polity.color = "gmr"
+            # elif all_durations["intr"] and all_durations["intr"][0] == -10000:
+            #     a_polity.color = "rmm"
+            # elif all_durations["intr"]:
+            #     a_polity.color = "gmm"
                 
+        #end = time.time()
 
-
+        #print(f"hoooooooooooooooy took {end - start:.2f} seconds to run")
 
 
         context["ultimate_wregion_dic"] = ultimate_wregion_dic
@@ -2566,6 +2615,199 @@ class PolityListView(SuccessMessageMixin, generic.ListView):
         #print('elapsed_time ', end_time-start_time)
 
         return context
+
+
+class SettlementListView(SuccessMessageMixin, generic.ListView):
+    """
+    List all polities.
+    """
+    model = HabitationSite
+    template_name = "core/polity/settlement_list.html"
+    context_object_name = "settlements"
+
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        grouped = defaultdict(lambda: defaultdict(list))
+
+        for site in HabitationSite.objects.all():
+            continent = site.current_country_obj.continent.name if site.current_country_obj and site.current_country_obj.continent else "Unknown Continent"
+            country = site.current_country_obj.name if site.current_country_obj else "Unknown Country"
+            grouped[continent][country].append(site)
+
+        # Sort the grouping (optional)
+        #sorted_grouped = dict(sorted(grouped.items(), key=lambda x: x[0]))
+
+        # Define your desired continent order
+        continent_order = {
+            "Europe": 0,
+            "Africa": 1,
+            "Asia": 2,
+            "North America": 3,
+            "South America": 4,
+            "Oceania": 5,
+        }
+
+        # Sort the grouped dict by your custom continent order
+        sorted_grouped = dict(
+            sorted(grouped.items(), key=lambda x: continent_order.get(x[0], 99))  # fallback 99 for unknowns
+        )
+        for continent in sorted_grouped:
+            #sorted_grouped[continent] = dict(sorted(sorted_grouped[continent].items(), key=lambda x: x[0]))
+            sorted_grouped[continent] = dict(
+                    sorted(
+                        sorted_grouped[continent].items(),
+                        key=lambda x: len(x[1]),  # x[1] is the list of habitation sites
+                        reverse=True
+                    )
+                )
+        context["grouped_settlements"] = sorted_grouped
+        return context
+
+
+class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
+    """
+    Show details of a Settlement.
+    """
+    model = HabitationSite
+    template_name = "core/polity/settlement_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Add related polity relations to context
+        context['polity_relations'] = CityPolityRelation.objects.filter(settlement=self.object)
+
+        if 'pk' in self.kwargs:
+            context['pk'] = self.kwargs['pk']
+        elif 'name' in self.kwargs:
+            my_pol = HabitationSite.objects.get(name=self.kwargs['name'])
+            context['pk'] = my_pol.pk
+
+        try:
+            context["all_population_data"] = get_all_instability_data_for_a_polity(self.object.pk)
+        except:
+            context["all_population_data"] = None
+
+        # 🧠 Real population data grouped by scientific source
+        settlement_pops = Settlement_population.objects.filter(settlement=self.object).select_related('general_ref')
+
+        if settlement_pops and len(settlement_pops) <= 1:
+            context['table_pop_data'] = settlement_pops
+            return context
+
+        plot_dict = defaultdict(list)
+
+        for pop in settlement_pops:
+            if not pop.general_ref:
+                continue  # Skip entries without source
+
+            # Calculate midpoints
+            year = None
+            if pop.year_from and pop.year_to:
+                year = (pop.year_from + pop.year_to) // 2
+            elif pop.year_from:
+                year = pop.year_from
+            elif pop.year_to:
+                year = pop.year_to
+
+            population = None
+            if pop.population_from and pop.population_to:
+                population = (pop.population_from + pop.population_to) // 2
+            elif pop.population_from:
+                population = pop.population_from
+            elif pop.population_to:
+                population = pop.population_to
+
+            if year is not None and population is not None:
+                plot_dict[pop.general_ref.title or f"Source #{pop.general_ref.pk}"].append(
+                    (year, population)
+                )
+
+        # Sort by year and prepare datasets
+        fixed_colors = ['teal', 'maroon', 'darkorange', 'red', 'blue']
+        datasets = []   
+
+        used_datasets = []     
+        
+        for idx, (source, data) in enumerate(plot_dict.items()):
+            sorted_data = sorted(data, key=lambda x: x[0])
+            years = [y for y, _ in sorted_data]
+            print(years)
+            values = [p for _, p in sorted_data]
+
+            if source not in used_datasets:
+                used_datasets.append(source)
+
+            datasets.append({
+                'label': source,
+                'data': values,
+                'years': years,
+                'color': fixed_colors[idx] if idx < len(fixed_colors) else self._random_color()
+            })
+
+        # Prepare JSON data for template
+        context['plot_data'] = json.dumps({
+            'datasets': datasets
+        })
+
+        context['pop_sources'] = ", ".join(used_datasets)
+        context['table_pop_data'] = settlement_pops
+
+        return context
+
+    def _random_color(self):
+        import random
+        return f"rgb({random.randint(20,230)}, {random.randint(20,230)}, {random.randint(20,230)})"
+    
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # Add related polity relations to context
+    #     context['polity_relations'] = CityPolityRelation.objects.filter(settlement=self.object)
+
+    #     if 'pk' in self.kwargs:
+    #         context['pk'] = self.kwargs['pk']
+    #     elif 'name' in self.kwargs:
+    #         my_pol = HabitationSite.objects.get(name=self.kwargs['name'])
+    #         context['pk'] = my_pol.pk
+    #     try:
+    #         context["all_population_data"] = get_all_instability_data_for_a_polity(self.object.pk)
+
+    #     except:
+    #         context["all_population_data"] = None
+
+    #     # Population data for the graph
+    #     population_data = HabitationSite.objects.filter(city=self.object).order_by('year')
+
+    #     # Fake population data for demo: from year 1000 to 2020
+    #     years = list(range(-1000, 2021, 1000))
+    #     populations_1 = [random.randint(1000, 1000000) for _ in years]
+    #     populations_2 = [random.randint(500, 500000) for _ in years]
+
+    #     context['plot_data'] = json.dumps({
+    #         'years': years,
+    #         'datasets': [
+    #             {
+    #                 'label': 'Dataset A',
+    #                 'data': populations_1,
+    #                 'color': 'maroon',
+    #             },
+    #             {
+    #                 'label': 'Dataset B',
+    #                 'data': populations_2,
+    #                 'color': 'teal',
+    #             },
+    #         ]
+    #     })
+
+
+    #     return context
+
+
+
     
 
 class PolityListViewCommented(PermissionRequiredMixin, SuccessMessageMixin, generic.ListView):
