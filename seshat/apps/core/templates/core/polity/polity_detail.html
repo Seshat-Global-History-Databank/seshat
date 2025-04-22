@@ -75,11 +75,10 @@
         padding-left: 10px;
         border-radius: 5px;
         margin:0px;
-        font-family: 'Roboto Mono', monospace;
         /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
         /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
-        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.216),rgb(242, 199, 119, 0.216),rgb(151, 230, 151, 0.216));
+        background-image: linear-gradient(to right, rgb(246, 127, 127, 0.116),rgb(242, 199, 119, 0.116),rgb(151, 230, 151, 0.116));
     }
 
     .highlighted-value-title-empty {
@@ -90,7 +89,6 @@
         padding-left: 10px;
         border-radius: 5px;
         margin:0px;
-        font-family: 'Roboto Mono', monospace;
         /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
         /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
@@ -105,7 +103,6 @@
         padding-left: 10px;
         border-radius: 5px;
         margin:0px;
-        font-family: 'Roboto Mono', monospace;
         /*box-shadow: -4px 4px 0px rgba(78, 28, 23, 0.5); 
         /*box-shadow: -2px 0px 4px rgba(25, 135, 84, 0.5); */
         background-color:#fefae6; /* fffdf2   fefae6*/
@@ -354,6 +351,17 @@
     
        }
 
+       .tight-link {
+        margin: 0;
+        padding: 0;
+    }
+
+    .tight-group {
+        display: flex;
+        gap: 0; /* ensures no space */
+      }
+      
+
 
 </style>
 
@@ -385,62 +393,64 @@
 
 			 <div class="pb-1">
 
-                        {% if object.general_description %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#" class="mx-0 px-0">    
-                            <span class="badge text-dark p-1 mx-0 fs-5" style="background-color: rgb(195, 195, 195);">D</span>
+                <div class="tight-group">
+
+                    {% if object.general_description %}
+                        <a href="#" class="tight-link" title="General Description">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #212529; background:#21252922; padding-left:3px; padding-right:3px; padding-top:2px; color: #212529;">D</span>
                         </a>
-                        </span>
-                        {% endif %}
-                        {% if has_any_general_data %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="General Variables" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#general_var"><span class="badge bg-warning text-dark p-1 mx-0 fs-5 ">G</span></a>
-                        </span>
-                        {% endif %}
+                    {% endif %} 
+                
+                    {% if has_any_general_data %}
+                        <a href="#general_var" class="tight-link" title="General Variables">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #9b7810; background:#9b781022; padding-left:3px; padding-right:3px; padding-top:2px; color: #9b7810;">G</span>
+                        </a>
+                    {% endif %} 
+                
+                    {% if has_any_sc_data %}
+                        <a href="#sc_var" class="tight-link" title="Social Complexity Variables">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #0d6efd; background:#0d6efd22; padding-left:3px; padding-right:3px; padding-top:2px; color: #0d6efd;">SC</span>
+                        </a>
+                    {% endif %} 
+                
+                    {% if has_any_wf_data %}
+                        <a href="#wf_var" class="tight-link" title="Warfare Variables (MilTech)">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #dc3545; background:#dc354522; padding-left:3px; padding-right:3px; padding-top:2px; color: #dc3545;">WF</span>
+                        </a>
+                    {% endif %}
+                    {% if has_any_ec_data %}
+                        <a href="#ec_var" class="tight-link" title="Economy Variables">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #2fa196; background:#2fa19622; padding-left:3px; padding-right:3px; padding-top:2px; color: #2fa196;">EC</span>
+                        </a>
+                    {% endif %} 
+                
+                    {% if has_any_rt_data %}
+                        <a href="#rt_var" class="tight-link" title="Religion Variables">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #59007f; background:#59007f22;  padding-left:3px; padding-right:3px; padding-top:2px; color: #59007f;">R</span>
+                        </a>
+                    {% endif %}
+                
+                    {% if all_crisis_cases_data %}
+                        <a href="#crisis_case_var" class="tight-link" title="Crisis Consequences">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #212529; background:#21252955; padding-left:3px; padding-right:3px; padding-top:2px; color: #212529;">CC</span>
+                        </a>
+                    {% endif %}
+                
+                    {% if all_power_transitions_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
+                        <a href="#power_transition_var" class="tight-link" title="Power Transition">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #0b869e; background:#0b869e22; padding-left:3px; padding-right:3px; padding-top:2px; color: #0b869e;">PT</span>
+                        </a>
+                    {% endif %} 
+                
+                    {% if all_instability_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+                        <a href="#instability_event_var" class="tight-link" title="Instability Events">
+                            <span class="fs-5 fw-bold" style="border-bottom:3px solid #20c997; background:#20c99722; padding-left:3px; padding-right:3px; padding-top:2px; color: #20c997;">IN</span>
+                        </a>
+                    {% endif %} 
 
-                        {% if has_any_sc_data %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Social Complexity Variables" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#sc_var"><span class="badge bg-primary p-1 mx-0 fs-5 ">SC</span></a>
-                        </span>
-                        {% endif %}
-
-                        {% if has_any_wf_data %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Warfare Variables (MilTech)" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#wf_var"><span class="badge bg-danger p-1 mx-0 fs-5 ">WF</span></a>
-                        </span>
-                        {% endif %} 
-
-                        {% if has_any_ec_data %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Economy Variables (Luxury Goods)" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#ec_var"><span class="badge p-1 mx-0 fs-5" style="background: #40e0d0;">EC</span></a>
-                        </span>
-                        {% endif %} 
-
-                        {% if has_any_rt_data  %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Religion Variables" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#rt_var"><span class="badge p-1 mx-0 fs-5 " style="background: #59007f;">RG</span></a>
-                        </span>
-                        {% endif %}
-
-                        {% if all_crisis_cases_data %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Crisis Consequences" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#crisis_case_var"><span class="badge bg-dark p-1 mx-0 fs-5 ">CC</span></a>
-                        </span>
-                        {% endif %}
+                </div>
 
 
-                        {% if all_instability_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Instability Events" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#instability_event_var"><span class="badge bg-teal p-1 mx-0 fs-5 ">IN</span></a>
-                        </span>
-                        {% endif %}
-
-
-                        {% if all_power_transitions_data and user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
-                        <span type="button" class="mx-0 px-0"  tabindex="0" data-bs-toggle="popover" title="Power Transition" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="#power_transition_var"><span class="badge bg-info text-dark  p-1 me-2 fs-5">PT</span></a>
-                    </span>
-                        {% endif %}
                         <!-- tag -->
                         {% if object.polity_tag == 'POL_AFR_WEST' %}
                         <span type="button"  tabindex="0" data-bs-toggle="popover" title="A NEW West African Polity" data-bs-html="true" data-bs-trigger="focus">
@@ -484,7 +494,7 @@
                 <div class="h6 pb-4">
                     {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}
  
-                    <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger"><i class="fa-regular fa-pen-to-square"></i></a> 
+                    <a href="{% url 'polity-update' object.pk  %}" class="btn btn-outline-danger"><i class="fa-solid fa-pen-to-square"></i></a> 
                     {% endif %}
 
                     {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions  %}

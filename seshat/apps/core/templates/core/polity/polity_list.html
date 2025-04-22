@@ -1,6 +1,8 @@
 {% extends "core/seshat-base.html" %}
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
+
 {% load mathfilters %}
 {% load crispy_forms_tags %}
 
@@ -50,17 +52,15 @@
 
     .custom-left-border-shadowed_4 {
         border-left: none; /* Adjust the border color and thickness as desired */
-        box-shadow: 0 0 2px teal; 
-        padding-right: 10px;
         padding-top: 10px;
-        margin-top: 5px;
+        margin-top: 0px;
         padding-bottom: 10px;
         text-align: justify;
     }
 
     .progress {
-        height: 1.75rem !important;
-        font-size: 0.85rem !important;
+        height: 1.3rem !important;
+        font-size: 0.75rem !important;
     }
 
     .progress-bar {
@@ -77,12 +77,43 @@
       background: purple,
     }
 
+    .table.dense_table > :not(caption) > * > * {
+        padding: 0rem 0rem;
+        border-bottom-width: 0px;
+    }
+    
+    .bg-success-light {
+        background: #fffdf2; /* rgb(134, 134, 134);*/
+        color: teal;
+        border: 1px solid rgba(0, 128, 128, 0.18);   
+        background: rgba(0, 128, 128, 0.08);   
+
+        }
+
+    .tight-link {
+        margin: 0;
+        padding: 0;
+    }
+
+    .tight-group {
+        display: flex;
+        gap: 0; /* ensures no space */
+        justify-content: center; /* optional: center badges horizontally */
+      }
+      
+        
+
 </style>
 
-<div class="container pt-3">
+<div class="container pt-2">
     <div class="row">
     <div class="col-md-6">
-        <h2>Polities</h2>
+        <span class="fs-4">Polities 
+     
+        </span>
+        {% if selected_tag %}
+        <small class="text-secondary">({{ selected_tag }})</small> 
+      {% endif %}
         <div class="pb-3 text-right">
             <a href="{% url 'polity-create'  %}" class="btn btn-sm btn-outline-success me-1 my-1"><i class="fa-solid fa-plus"></i> &nbsp; New Polity</a>
             <a href="{% url 'download_csv_all_polities' %}" class="btn btn-sm btn-outline-danger me-1 my-1"><i class="fa-solid fa-file-arrow-down"></i> &nbsp; Download All <b>({{pol_count}})</b> Polities</a>
@@ -97,161 +128,39 @@
         <div class="col-md-6">
         <table style="width: 100%">
             <tbody>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                    <span type="button" tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                        <span class="badge text-dark px-2 py-2 custom-left-border-shadowed_4" style="background-color: rgb(195, 195, 195);">D</span>                                    
-                    </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar text-dark py-2" role="progressbar" style="width: {{ freq_data.d|div:freq_data.pol_count|mul:100|floatformat:0 }}%; background-color: rgb(195, 195, 195);" aria-valuenow="{{ freq_data.d|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                            {{freq_data.d}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                            <b>{{ freq_data.d|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b>                        
-                         </div>
-                    </div>
-                </td>
-                </tr>
-                <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="General Variables" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge bg-warning text-dark px-2 py-2 custom-left-border-shadowed_4">G</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-warning text-dark py-2" role="progressbar" style="width: {{ freq_data.g|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.g|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.g}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.g|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Social Complexity Variables" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge bg-primary px-2 py-2 custom-left-border-shadowed_4">SC</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-primary py-2" role="progressbar" style="width: {{ freq_data.sc|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.sc|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.sc}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.sc|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Warfare Variables (MilTech)" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge bg-danger px-2 py-2 custom-left-border-shadowed_4">WF</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-danger py-2" role="progressbar" style="width: {{ freq_data.wf|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.wf|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.wf}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.wf|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Religion Variables" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge px-2 py-2 custom-left-border-shadowed_4" style="background: #59007f;">RT</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-violet py-2" role="progressbar" style="width: {{ freq_data.rt|div:freq_data.pol_count|mul:100|floatformat:0 }}%; background: #59007f;" aria-valuenow="{{ freq_data.rt|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.rt}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.rt|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Human Sacrifice" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge bg-success text-light px-2 py-2 custom-left-border-shadowed_4">HS</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-success py-2" role="progressbar" style="width: {{ freq_data.hs|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.hs|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.hs}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.hs|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Crisis Consequences" data-bs-html="true" data-bs-trigger="focus">
-                    <span class="badge bg-dark px-2 py-2 custom-left-border-shadowed_4">CC</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-dark py-2" role="progressbar" style="width: {{ freq_data.cc|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.cc|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.cc}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.cc|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
-              <tr>
-                <td class="text-end pe-1" style="width:5%;">
-                  <span type="button" tabindex="0" data-bs-toggle="popover" title="Power Transition" data-bs-html="true" data-bs-trigger="focus" >
-                    <span class="badge bg-info text-dark px-2 py-2 custom-left-border-shadowed_4">PT</span>
-                  </span>
-                </td>
-                <td style="vertical-align: bottom">                    
-                    <div class="progress align-items-center custom-left-border-shadowed_4">
-                        <div class="progress-bar bg-info text-dark py-2" role="progressbar" style="width: {{ freq_data.pt|div:freq_data.pol_count|mul:100|floatformat:0 }}%;" aria-valuenow="{{ freq_data.pt|div:freq_data.pol_count|mul:100|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100">
-                           {{freq_data.pt}}/{{freq_data.pol_count}}&nbsp;&nbsp;&nbsp;
-                           <b>{{ freq_data.pt|div:freq_data.pol_count|mul:100|floatformat:0 }}&nbsp;%</b> 
-                        </div>
-                    </div>
-                </td>
-              </tr>
+
+
+
+              {% render_progress_row freq_data "d" "D" "General Description" "" "rgb(195, 195, 195)" "text-dark" %}
+                {% render_progress_row freq_data "g" "G" "General Variables" "bg-warning" "" "text-dark" %}
+                {% render_progress_row freq_data "sc" "SC" "Social Complexity Variables" "bg-primary" "" "text-white" %}
+                {% render_progress_row freq_data "wf" "WF" "Warfare Variables (MilTech)" "bg-danger" "" "text-white" %}
+                {% render_progress_row freq_data "ec" "EC" "Economy Variables" "" "#2fa196" "text-white" %}
+                {% render_progress_row freq_data "rt" "RT" "Religion Variables" "" "#59007f" "text-white" %}
+                {% render_progress_row freq_data "cc" "CC" "Crisis Consequences" "bg-dark" "" "text-white" %}
+                {% render_progress_row freq_data "pt" "PT" "Power Transition" "bg-info" "" "text-dark" %}
+                {% render_progress_row freq_data "instability" "IN" "Instability Event" "bg-teal" "" "text-white" %}
+
             </tbody>
           </table>
     </div>
 
     </div>
-    <hr class="bg-colorful">
 
-    {% if messages %}
-    <ul class="messages mt-3">
-        {% for message in messages %}
-        <div class="container-fluid p-0">
-            <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
-                <i class="fa-solid fa-circle-info"></i> Thank you <b>{{ user }}</b>. {{ message }}
-            </div>
-        </div>
-        {% endfor %}
-        {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-        <div class="container-fluid p-0">
-          <div class="text-danger" role="alert" >
-            <i class="fa-solid fa-triangle-exclamation"></i>  {{ error }}
-          </div>
-        </div>
-        {% endfor %}
-        <hr> 
-        {% endif %}
-    </ul>
-    <hr>
-    {% endif %}
-    <div class="row">
+
+
+    <div class="row pt-4">
         {% for a_world_region, a_dic_of_subregions in ultimate_wregion_dic_top.items %}
-        <div class="table-responsive pb-2 col-md-3">
+        <div class="table-responsive pb-4 
+        {% if a_world_region|length > 21 %}
+        col-md-3
+        {% else %}
+        col-md-2
+        {% endif %}
+        ">
             <table id="table_id_3" class="table align-middle caption-top">
-                <caption style="border-bottom: 2px solid rgb(177, 175, 175); "> 
-                    <h5 style="margin-bottom: 0.25rem;">
+                <div style="border-bottom: 10px solid rgba(0, 128, 128, 0.535); "> 
+                    <h5 style="margin-bottom: 0rem;">
                         <a class="fw-bold" href="#{{a_world_region}}"> 
                             {% if a_world_region == "Europe" %}
                             <i class="fa-solid fa-earth-europe"></i>
@@ -270,7 +179,7 @@
                         </a>          
                     </h5>                       
                                    
-                </caption>
+                </div>
                 <tbody style="border-style: none;">
                             {% for a_subregion, sub_reg_meta in a_dic_of_subregions.items %}
                             {% if a_subregion == "Somewhere" and not sub_reg_meta.1 %}
@@ -278,52 +187,77 @@
                             {% elif not sub_reg_meta.1 %}
                             <tr>
                                 <td style="border-style:none;" class="text-info">
-                                    <span class="h6">
-                                        <a class="fw-bold text-info" href="#{{a_subregion}}_{{a_world_region}}">
-                                            <span class="text-info fw-bold  border border-info px-1">{{sub_reg_meta.1}}</span> 
-                                            {{ a_subregion }}
-                                        </a>
-                                    </span>
+                                    <a class="fw-bold text-info" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-info fw-bold border border-info px-1">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
                             </tr>  
                             {% elif a_subregion == "Somewhere" %}
                             <tr>
                                 <td style="border-style:none;" class="text-danger">
-                                    <span class="h6">
-                                        <a class="fw-bold text-danger" href="#{{a_subregion}}_{{a_world_region}}">
-                                            <span class="text-danger fw-bold border border-danger px-1">{{sub_reg_meta.1}}</span> 
-                                            {{ a_subregion }}
-                                        </a>
-                                    </span>
+                                    <a class="fw-bold text-teal" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-teal fw-bold border border-success rounded px-1" style="background:rgba(0, 128, 128, 0.082)">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
                             </tr>  
                             {% else %}
                             <tr>
                                 <td style="border-style:none;">
-                                    <span class="h6">
-                                        <span type="button" tabindex="0" data-bs-toggle="popover" title="{{sub_reg_meta.0}}" data-bs-html="true" data-bs-trigger="focus">   
-                                            <a class="fw-bold" href="#{{a_subregion}}_{{a_world_region}}">
-                                                <span class="text-teal fw-bold border border-success px-1">{{sub_reg_meta.1}}</span>  {{ a_subregion }}
-                                            </a>                             
-                                        </span>
-                                    </span>
-
+                                    <a class="fw-bold text-teal" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-teal fw-bold border border-success rounded px-1" style="background:rgba(0, 128, 128, 0.082)">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
                             </tr>        
                             {% endif %}
                             {% endfor %}
-
                 </tbody>
             </table>
         </div>
         {% endfor %}
     </div>
 
-    <hr>
-    {% for a_world_region, a_dic_of_subregions in ultimate_wregion_dic.items %}
-        <div class="text-success py-2" id="{{a_world_region}}"><i class="fa-solid fa-up-long"></i><a href="#">&nbsp; top of the page</a>
+    <hr class="bg-colorful">
+
+    <div class="mb-3">
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            Filter on Polity Tag:
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if selected_tag %}
+              {{ selected_tag }}
+            {% else %}
+              Select a Tag
+            {% endif %}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item {% if selected_tag == 'All' %}active{% endif %}" href="" onclick="clearTag(); event.preventDefault();">-------</a></li>
+            {% for tag in tags %}
+              <li>
+                <a class="dropdown-item {% if tag == selected_tag %}active{% endif %}" href="#" onclick="setTag('{{ tag }}'); event.preventDefault();">
+                  {{ tag }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
         </div>
-    <h2 class="display-5 py-4 custom-left-border-shadowed"> 
+      
+        <!-- Finalize Button -->
+        <form action="{% url 'polities' %}" method="get" class="mt-2">
+          <!-- Hidden Input to Store the Selected Tag -->
+          <input type="hidden" name="tag" id="selectedTagInput" value="{{ selected_tag }}">
+          
+          <!-- Finalize Button -->
+          <button type="submit" class="btn btn-outline-success">Filter</button>
+        </form>
+      </div>
+
+    {% for a_world_region, a_dic_of_subregions in ultimate_wregion_dic.items %}
+        <div class="text-success py-2 ms-2" id="{{a_world_region}}"><i class="fa-solid fa-up-long"></i><a href="#">&nbsp; top of the page</a>
+        </div>
+    <h2 class="fs-2 ps-2 ms-2 py-2 mt-3 custom-left-border-shadowed" style="display:inline-block;"> 
         {% if a_world_region == "Europe" %}
         <i class="fa-solid fa-earth-europe"></i>
         {% elif a_world_region == "Africa" %}
@@ -344,171 +278,173 @@
 
     {% else %}
 
-
-    <div class="pb-3" id="{{a_subregion}}_{{a_world_region}}"></div>
-    <h2 class="text-teal pt-5"><i class="fa-solid fa-circle-chevron-right"></i> {{ a_subregion }} <span class="h6 text-secondary">({{a_world_region}})</span> <span class="h6 text-secondary"><a href="#"><i class="fa-solid fa-turn-up"></i></a></span></h2>
+    <div class="sticky-top pb-1 pt-2 px-0 m-0" style="background-color: #fffdf2; height:50px; top: 55px; z-index:901;" id="{{a_subregion}}_{{a_world_region}}">
+        <span class="fs-4 text-teal"> &nbsp;
+            <i class="fa-solid fa-circle-chevron-right"></i> {{ a_subregion }} 
+            <span class="h6 text-secondary">({{a_world_region}})</span> 
+            <span class="h6 text-secondary">
+                <a href="#"><i class="fa-solid fa-turn-up"></i></a>
+            </span>
+        </span>
+    </div>
     {% if a_list_of_polities %}
-    <div class="table-responsive pb-0 mb-0" style="border: solid 2px teal;border-radius:10px">
-    <table id="table_id" class="table align-middle table-striped table-bordered pb-0 mb-0">
-        <thead>
-          <tr>
-            <th class="ps-2"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; Polity Name</th>
-            <th class="ps-2"> <i class="fa-solid fa-key"></i> &nbsp;Polity ID</th>
-            <th  class="text-dark" style="text-align: center;"><i class="fa-solid fa-database fa-sm"></i> &nbsp;Coded Data</th>
-            <th  style="text-align: right;"> <i class="fa-regular fa-calendar-check"></i> &nbsp; Year Range &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;<i class="fa-solid fa-clock"></i>&nbsp;<i class="fa-solid fa-clock"></i></th>
+    <div class="table-container pb-0 mb-0" >
 
-          </tr>
-        </thead>
+        <table id="table_id" class="table align-middle table-hover pb-4 mb-4" style="border-width:0px;">
+
+            <thead style=" border: 0px solid red !important; ">
+                <tr  class="sticky-top" style="background: linear-gradient(to bottom, #fffdf2, #f3f1d5); border: 0px solid red !important; height:45px; top: 95px !important;  z-index:900;">
+                  <th class="ps-2 fw-light" style="border: 0px solid red !important;"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; Polity Name
+                       <small class="text-secondary"> &nbsp;Polity ID</small> </th>
+                  <th class="fw-light" style="text-align: center; border: 0px solid red !important;"> <i class="fa-regular fa-calendar-check"></i> &nbsp; Year Range </th>
+                  <th class="ps-1 fw-light">  Degree of Centralization</th>
+                  <th class="ps-1 fw-light">  Supra-Polity Relations</th>
+      
+                  <th  class="text-dark fw-light" style="text-align: center;"><i class="fa-solid fa-database fa-sm"></i> &nbsp;Coded Data</th>
+      
+                </tr>
+              </thead>
         <tbody>
                 {% for a_polity in a_list_of_polities %}
-                {% if a_polity.home_seshat_region.name == "Somewhere" %}
-                <tr style="background-color:#f78ea0">
-                {% else %}
                 <tr>
-                {% endif %}
-
-                <td class="col-md-3 ps-2 py-2" style="text-align: left;"> 
-
+                <td class="col-md-3 ps-2 py-2" style="text-align: left; "> 
                     {% if a_polity.long_name %}
-                        <span class="fw-bold h6"><i class="fa-solid fa-location-dot fa-xs text-secondary"></i>&nbsp; {{ a_polity.long_name }}</span>
+                        <span class="fw-bold h5">
+                            <a href="{% url 'polity-detail-main' a_polity.id %}" class="fs-6 fw-normal"><b>{{ a_polity.long_name }}</b></a>
+                        </span>
+                        <small class="text-secondary fw-light"> {{ a_polity.new_name }}</small>
+
                     {% else %}
-                    <span class="text-danger fw-bold h6"> <i class="fa-solid fa-location-dot fa-xs text-secondary"></i> &nbsp; No Long Name</span> <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-small bg-warning text-dark">EDIT</span></a> 
+                    <span class="text-danger fw-bold h6"> &nbsp; No Long Name</span> <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-small bg-warning text-dark">EDIT</span></a> 
                     {% endif %}
-
-
                     {% if a_polity.home_seshat_region.name == "Somewhere" %}
                     <sup>
                         <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-warning text-dark">EDIT</span></a> 
                     </sup>
-
-                    {% endif %}
-
-                </td>
-                <td class="col-md-3 ps-2 py-2" style="text-align: left;"> 
-                    {% if a_polity.new_name %}
-                    <a href="{% url 'polity-detail-main' a_polity.id %}" class="fs-6 fw-normal"><b>{{ a_polity.new_name }}</b></a>
-
-                    {% if a_polity.new_name != a_polity.name %}
-                    <span class="text-secondary"> {{ a_polity.name }}</span>
-                    {% endif %}
-
-
-                    {% else %}
-                    (<a href="{% url 'polity-detail-main' a_polity.id %}"><b>{{ a_polity.name }}</b></a>) 
-                    <span class="text-danger"><b>NEW_Polity_ID</b>  missing</span>  
-                    <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-small bg-warning text-dark">update</span></a>
                     {% endif %}
                 </td>
-
-                <td class="col-md-2"  style="text-align: center;"> 
-                    {% if a_polity.general_description %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#general_desc"><span class="badge text-dark p-1" style="background-color: rgb(195, 195, 195);">D</span></a>
-                    </span>
-                {% endif %}
-                    {% if a_polity.has_g_sc_wf.g %}
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Variables" data-bs-html="true" data-bs-trigger="focus">
-                            <a href="{% url 'polity-detail-main' a_polity.id %}#general_var"><span class="badge bg-warning text-dark p-1">G</span></a>
-                        </span>
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.sc %}
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="Social Complexity Variables" data-bs-html="true" data-bs-trigger="focus">
-                            <a href="{% url 'polity-detail-main' a_polity.id %}#sc_var"><span class="badge bg-primary p-1">SC</span></a>
-                    </span>                   
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.wf %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="Warfare Variables (MilTech)" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#wf_var"><span class="badge bg-danger p-1">WF</span></a>
-                    </span>                  
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.rt %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="Religion Variables" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#rt_var"><span class="badge p-1" style="background: #59007f;">RT</span></a>
-                    </span>                  
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.hs %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="Human Sacrifice" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#hs_var"><span class="badge bg-success text-light p-1">HS</span></a>
-                    </span>                   
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.cc %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="Crisis Consequences" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#crisis_case_var"><span class="badge bg-dark p-1">CC</span></a>
-                    </span>                   
-                    {% endif %}
-                    {% if a_polity.has_g_sc_wf.pt %}
-                    <span type="button"  tabindex="0" data-bs-toggle="popover" title="Power Transition" data-bs-html="true" data-bs-trigger="focus">
-                        <a href="{% url 'polity-detail-main' a_polity.id %}#power_transition_var"><span class="badge bg-info text-dark p-1">PT</span></a>
-                    </span>                   
-
-                    {% endif %}
-
+                <td class="col-md-3 fw-normal fs-6  "  style="text-align: center; width:12%;">
+                    {{ a_polity.formatted_years|safe }}
                 </td>
-                <td class="col-md-3 fw-bold fs-6 "  style="text-align: right;">
-                    {% block years_short_for_top_pol %}
-                    {% if  a_polity.start_year == a_polity.end_year %}
-                        {% if  a_polity.start_year < 0 %}
-                            {{ a_polity.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> 
-                        {% else %}
-                            {{ a_polity.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                        {% endif %}
-                    {% elif a_polity.end_year == None %}
-                        {% if  a_polity.start_year < 0 %}
-                            {{ a_polity.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
-                        {% else %}
-                            {{ a_polity.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                        {% endif %}
-                    {% elif a_polity.end_year == None and  a_polity.start_year == None %}
-                        <i class="fa-solid fa-minus"></i> 
-                    {% else %}
-                        {% if  a_polity.start_year < 0 and a_polity.end_year < 0 %}
-                            {{ a_polity.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ a_polity.end_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span>
-                        {% elif  a_polity.start_year < 0 and a_polity.end_year >= 0 %}
-                            {{ a_polity.start_year|abs }} <span class="text-secondary fw-normal bce-color fs-6">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ a_polity.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                        {% else %}
-                            {{ a_polity.start_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ a_polity.end_year }} <span class="text-secondary fw-normal ce-color fs-6">CE</span>
-                        {% endif %}
-                    {% endif %}
-                    {% endblock years_short_for_top_pol %}
- 
-                    {% autoescape off %}   
+                {% autoescape off %}   
+                <td>
+                    <table class="table dense_table" style="width: auto; padding:0px;">
+                        {% for vv in a_polity.d_o_c %}
+                        <tr>
+                            <td class="ps-1">
+                                <a href="{% url 'polity-detail-main' vv.polity.id %}#general_Polity_degree_of_centralization" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                    <small>
 
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="3 Durations for: {{a_polity.new_name}}" data-bs-html="true" data-bs-trigger="focus" data-bs-content='<b>{{a_polity.all_durations.intr}}</b>: Intrinsic (PolsVars) <br> <b>{{a_polity.all_durations.gv}}</b>: Coded on GV <br> <b>{{a_polity.all_durations.pt}}</b>: Implied by PT'>
-                            
-                    {% if a_polity.color.0 == "g" %}
-                    &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-check text-success"></i>
-                    {% elif a_polity.color.0 == "m" %}
-                    &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle text-secondary"></i>
-                    {% elif a_polity.color.0 == "r" %}
-                    &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-xmark text-danger"></i>
-                    {% else %}
-                    &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-circle-exclamation text-warning"></i>
-                    {% endif %}
-                    {% if a_polity.color.1 == "g" %}
-                    <i class="fa-solid fa-circle-check text-success"></i>
-                    {% elif a_polity.color.1 == "m" %}
-                    <i class="fa-solid fa-circle text-secondary"></i>
-                    {% elif a_polity.color.1 == "r" %}
-                    <i class="fa-solid fa-circle-xmark text-danger"></i>
-                    {% else %}
-                    <i class="fa-solid fa-circle-exclamation text-warning"></i>
-                    {% endif %}
-                    {% if a_polity.color.2 == "g" %}
-                    <i class="fa-solid fa-circle-check text-success"></i>
-                    {% elif a_polity.color.2 == "m" %}
-                    <i class="fa-solid fa-circle text-secondary"></i>
-                    {% elif a_polity.color.2 == "r" %}
-                    <i class="fa-solid fa-circle-xmark text-danger"></i>
-                    {% else %}
-                    <i class="fa-solid fa-circle-exclamation text-warning"></i>
-                    {% endif %}
-                </span>
-
+                                    {% if  vv.tag == 'IFR' %}
+                                    <span class="text-secondary fw-normal">inferred</span> 
+                                    {% endif %}
+                                    <span class="text-dark fw-normal bg-success-light rounded px-1" style="display:inline-block">{{ vv.show_value }}</span> 
+                                </small>
+                                </a> 
+                            </td>
+                            {% if vv.year_from == None and vv.year_to == None %}
+                            <td>
+                            </td>
+                            {% else %}
+                            <td class="ps-2">
+                                <small class="text-secondary fw-light" >
+                                    {{ vv.formatted_years|safe }}
+                                </small>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </table>
+                </td>
+                <td>
+                    <table class="table shadow-box dense_table" style="width: auto; padding:0px;">
+                        {% for vv in a_polity.s_p_r %}
+                        <tr>
+                            <td class="ps-1">
+                                <a href="{% url 'polity-detail-main' vv.polity.id %}#general_Polity_suprapolity_relations" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                    {% if  vv.tag == 'IFR' %}
+                                    <span class="text-secondary fw-normal">inferred</span> 
+                                    {% endif %}
+                                    <span class="text-dark fw-normal bg-success-light rounded px-1 me-1 mb-1" style="display:inline-block">{{ vv.display_value_2 }} &nbsp;</span> 
+                                </a> 
+                            </td>
+                            {% if vv.year_from == None and vv.year_to == None %}
+                            <td>
+                            </td>
+                            {% else %}
+                            <td class="ps-2">
+                                <small class="text-secondary fw-light" style="border-radius:5px">
+                                    {{ vv.formatted_years|safe }}
+                                </small>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                        </table>
+                </td>
                 {% endautoescape %}   
+                <td class="col-md-2" style="text-align: center; width:12%; white-space: nowrap;"> 
+                    <div class="tight-group">
 
+                    {% if a_polity.general_description %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#general_desc" class="tight-link" title="General Description">
+                            <small class="fw-bold" style="border-bottom:3px solid #212529; background:#21252922; padding-left:3px; padding-right:3px; padding-top:2px; color: #212529;">D</small>
+                        </a>
+                    {% endif %} 
+                
+                    {% if a_polity.has_g_sc_wf.g %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#general_var" class="tight-link" title="General Variables">
+                            <small class="fw-bold" style="border-bottom:3px solid #9b7810; background:#9b781022; padding-left:3px; padding-right:3px; padding-top:2px; color: #9b7810;">G</small>
+                        </a>
+                    {% endif %} 
+                
+                    {% if a_polity.has_g_sc_wf.sc %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#sc_var" class="tight-link" title="Social Complexity Variables">
+                            <small class="fw-bold" style="border-bottom:3px solid #0d6efd; background:#0d6efd22; padding-left:3px; padding-right:3px; padding-top:2px; color: #0d6efd;">SC</small>
+                        </a>
+                    {% endif %} 
+                
+                    {% if a_polity.has_g_sc_wf.wf %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#wf_var" class="tight-link" title="Warfare Variables (MilTech)">
+                            <small class="fw-bold" style="border-bottom:3px solid #dc3545; background:#dc354522; padding-left:3px; padding-right:3px; padding-top:2px; color: #dc3545;">WF</small>
+                        </a>
+                    {% endif %}
+                    {% if a_polity.has_g_sc_wf.ec %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#ec_var" class="tight-link" title="Economy Variables">
+                            <small class="fw-bold" style="border-bottom:3px solid #2fa196; background:#2fa19622; padding-left:3px; padding-right:3px; padding-top:2px; color: #2fa196;">EC</small>
+                        </a>
+                    {% endif %} 
+                
+                    {% if a_polity.has_g_sc_wf.rt %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#rt_var" class="tight-link" title="Religion Variables">
+                            <small class="fw-bold" style="border-bottom:3px solid #59007f; background:#59007f22;  padding-left:3px; padding-right:3px; padding-top:2px; color: #59007f;">R</small>
+                        </a>
+                    {% endif %}
+                
+                    {% if a_polity.has_g_sc_wf.cc %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#crisis_case_var" class="tight-link" title="Crisis Consequences">
+                            <small class="fw-bold" style="border-bottom:3px solid #212529; background:#21252955; padding-left:3px; padding-right:3px; padding-top:2px; color: #212529;">CC</small>
+                        </a>
+                    {% endif %}
+                
+                    {% if a_polity.has_g_sc_wf.pt %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#power_transition_var" class="tight-link" title="Power Transition">
+                            <small class="fw-bold" style="border-bottom:3px solid #0b869e; background:#0b869e22; padding-left:3px; padding-right:3px; padding-top:2px; color: #0b869e;">PT</small>
+                        </a>
+                    {% endif %} 
+                
+                    {% if a_polity.has_g_sc_wf.instability %}
+                        <a href="{% url 'polity-detail-main' a_polity.id %}#instability_event_var" class="tight-link" title="Instability Events">
+                            <small class="fw-bold" style="border-bottom:3px solid #20c997; background:#20c99722; padding-left:3px; padding-right:3px; padding-top:2px; color: #20c997;">IN</small>
+                        </a>
+                    {% endif %} 
 
+                </div>
 
+                
                 </td>
+                
+
 
             </tr>
             {% endfor %}
@@ -518,9 +454,7 @@
     </div>
       {% else %}
       <div class="row">
-          <div class="col-md-12 mt-4">
-              <h3> <i class="fa-solid fa-triangle-exclamation"></i> There are no Polities in the Database for this region.</h3>
-          </div>
+
       </div>
       {% endif %}
       {% endif %}
@@ -534,7 +468,54 @@
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
       return new bootstrap.Popover(popoverTriggerEl)
     })
-    
+
+  // Function to set the selected tag in the hidden input and update button text
+  function setTag(tag) {
+    document.getElementById('selectedTagInput').value = tag;
+    document.getElementById('dropdownMenuButton').innerHTML = tag; // Update button text with selected tag
+  }
+
+  // Function to clear the selected tag (for the "All" option)
+  function clearTag() {
+    document.getElementById('selectedTagInput').value = '';
+    document.getElementById('dropdownMenuButton').innerHTML = 'Select a Tag'; // Reset button text
+  }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const OFFSET = 100; // pixels to offset above the anchor
+
+        // Check if there's a hash in the URL
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            const element = document.getElementById(targetId);
+
+            if (element) {
+                // Scroll with offset
+                const yOffset = -OFFSET;
+                const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+
+        // For in-page clicks
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href').substring(1);
+                const element = document.getElementById(targetId);
+
+                if (element) {
+                    e.preventDefault();
+                    const yOffset = -OFFSET;
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+
+                    // Update URL hash without jumping
+                    history.pushState(null, null, '#' + targetId);
+                }
+            });
+        });
+    });
 </script>
 
   {% endblock %}

@@ -57,6 +57,11 @@ urlpatterns += [
      path('core/polities/<int:pk>/update/',
          views.PolityUpdate.as_view(), name="polity-update"),
 
+     # City/Settlement
+    path('core/settlements/', views.SettlementListView.as_view(), name='settlements'),
+    path('core/settlement/<int:pk>', views.SettlementDetailView.as_view(), name='settlement-detail-main'),
+
+
 
     path('core/ngas/create/', views.NgaCreate.as_view(),
          name="nga-create"),

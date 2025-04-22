@@ -138,6 +138,13 @@ Tags = (
     ('UND', 'Undecided'),
 )
 
+CityTags = (
+    ('1', '1'),
+    ('2', '2'),
+    ('3', '3'),
+    ('4', '4'),
+)
+
 APS = 'A;P*'
 AP = 'A;P'
 NFY = 'NFY'
@@ -492,6 +499,30 @@ class Nga(models.Model):
 
 
 
+
+class Continent(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class CurrentCountry(models.Model):
+    flag_code = models.CharField(max_length=2, help_text="ISO 3166-1 alpha-2 country code (e.g., 'AF')", blank=True, null=True)
+    name = models.CharField(max_length=100, unique=True)
+    continent = models.ForeignKey(Continent, on_delete=models.PROTECT, related_name='countries')
+
+    class Meta:
+        verbose_name_plural = "Countries"
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
 class Polity(models.Model):
     """
     Model representing a polity.
@@ -541,6 +572,30 @@ class Polity(models.Model):
             raise ValidationError("End year cannot be greater than the current year")
         if self.start_year is not None and self.start_year > current_year:
             raise ValidationError("Start year cannot be greater than the current year")
+        
+    @property
+    def formatted_years(self):
+        if self.start_year == self.end_year:
+            if self.start_year is None:
+                return '<i class="fa-solid fa-minus"></i>'
+            if self.start_year < 0:
+                return f'{abs(self.start_year)} <small class="text-secondary fw-normal bce-color">BCE</small>'
+            else:
+                return f'{self.start_year} <small class="text-secondary fw-normal ce-color">CE</small>'
+        elif self.end_year is None:
+            if self.start_year is None:
+                return '<i class="fa-solid fa-minus"></i>'
+            if self.start_year < 0:
+                return f'{abs(self.start_year)} <small class="text-secondary fw-normal bce-color">BCE</small>'
+            else:
+                return f'{self.start_year} <small class="text-secondary fw-normal ce-color">CE</small>'
+        else:
+            if self.start_year < 0 and self.end_year < 0:
+                return f'{abs(self.start_year)} <small class="text-secondary fw-normal bce-color">BCE</small> <i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i> {abs(self.end_year)} <small class="text-secondary fw-normal bce-color">BCE</small>'
+            elif self.start_year < 0 and self.end_year >= 0:
+                return f'{abs(self.start_year)} <small class="text-secondary fw-normal bce-color">BCE</small> <i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i> {self.end_year} <small class="text-secondary fw-normal ce-color">CE</small>'
+            else:
+                return f'{self.start_year} <small class="text-secondary fw-normal ce-color">CE</small> <i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i> {self.end_year} <small class="text-secondary fw-normal ce-color">CE</small>'
 
     def __str__(self) -> str:
         if self.long_name and self.new_name:
@@ -548,6 +603,25 @@ class Polity(models.Model):
         else:
             return self.name
 
+class Country(models.Model):
+    """
+    Model representing a country.
+    """
+    name = models.CharField(max_length=200)
+    polity = models.ForeignKey(
+        Polity, on_delete=models.SET_NULL, null=True, related_name="countries")
+
+    class Meta:
+        """
+        :noindex:
+        """
+        verbose_name = 'country'
+        verbose_name_plural = 'countries'
+        unique_together = ("name",)
+
+    def __str__(self) -> str:
+        return self.name
+    
 
 class Capital(models.Model):
     """
@@ -590,6 +664,87 @@ class Capital(models.Model):
         #ordering = ['-year']
         ordering = ['is_verified']
 
+class HabitationSite(models.Model):
+    """
+    Model representing a habitation site. Can be capital, major, or regular habitation site depending on its relation to a polity.
+    """
+    name = models.CharField(max_length=100)
+    alternative_names = models.CharField(max_length=300, blank=True, null=True)
+    current_country = models.CharField(max_length=100, blank=True, null=True)
+    current_country_obj = models.ForeignKey(CurrentCountry, on_delete=models.PROTECT, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s",  null=True, blank=True)
+    latitude = models.DecimalField(max_digits=11, decimal_places=8, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=11, decimal_places=8, blank=True, null=True)
+    url_on_the_map = models.URLField(max_length=200, blank=True, null=True)
+
+    is_verified = models.BooleanField(default=False, blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+
+    private_comment_n = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+
+
+    def __str__(self):
+        if self.name and self.alternative_names:
+            return f"{self.name} [{self.alternative_names}]"
+        return self.name
+
+    class Meta:
+        ordering = ['is_verified']
+
+
+
+
+class CityPolityRelation(models.Model):
+    """
+    Relationship between a City and a Polity over time.
+    """
+    CITY_ROLE_CHOICES = [
+        ("CAPITAL", "Capital"),
+        ("MAJOR", "Major Settlement"),
+        ("NORMAL", "Normal Settlement"),
+    ]
+
+    settlement = models.ForeignKey(HabitationSite, on_delete=models.CASCADE)
+    polity = models.ForeignKey(Polity, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=CITY_ROLE_CHOICES)
+
+    year_from = models.IntegerField(blank=True, null=True)
+    year_to = models.IntegerField(blank=True, null=True)
+
+    is_verified = models.BooleanField(default=False, blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.city.name} ({self.role}) in {self.polity.name}"
+
+    class Meta:
+        verbose_name = "Settlement-Polity Relation"
+        verbose_name_plural = "Settlement-Polity Relations"
+
+    @property
+    def formatted_years(self):
+        if self.year_from is None and self.year_to is None:
+            return '<i class="fa-solid fa-minus"></i>'
+        if self.year_from == self.year_to:
+            if self.year_from is None:
+                return '&nbsp;'
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        else:
+            arrow = '<i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i>'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+
     
 class Ngapolityrel(models.Model):
     """
@@ -610,24 +765,7 @@ class Ngapolityrel(models.Model):
         else:
             return str(self.id)
 
-class Country(models.Model):
-    """
-    Model representing a country.
-    """
-    name = models.CharField(max_length=200)
-    polity = models.ForeignKey(
-        Polity, on_delete=models.SET_NULL, null=True, related_name="countries")
 
-    class Meta:
-        """
-        :noindex:
-        """
-        verbose_name = 'country'
-        verbose_name_plural = 'countries'
-        unique_together = ("name",)
-
-    def __str__(self) -> str:
-        return self.name
 
 
 class Section(models.Model):
@@ -1281,6 +1419,108 @@ class SeshatCommon(models.Model):
         seshat_experts = self.curator.filter(role__in=['Seshat Expert',])  
         my_list = [curator.id for curator in seshat_experts]
         return my_list if my_list else None
+
+
+class ScientificResource(models.Model):
+    RESOURCE_TYPES = [
+        ('article', 'Article'),
+        ('dataset', 'Dataset'),
+        ('book', 'Book'),
+        ('report', 'Report'),
+        ('thesis', 'Thesis'),
+        ('code', 'Code Repository'),
+        ('other', 'Other'),
+    ]
+
+    title = models.CharField(max_length=500)
+    description = models.TextField(blank=True, null=True)
+    authors = models.CharField(max_length=500, help_text="List of authors, separated by commas", blank=True, null=True)
+    publication_year = models.PositiveIntegerField(blank=True, null=True)
+    resource_type = models.CharField(max_length=20, choices=RESOURCE_TYPES, default='article')
+    url = models.URLField(blank=True, null=True)
+    doi = models.CharField(max_length=100, blank=True, null=True, help_text="Digital Object Identifier if available")
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True,)
+    last_updated = models.DateTimeField(auto_now=True, blank=True, null=True,)
+    is_peer_reviewed = models.BooleanField(default=False, blank=True, null=True,)
+    file_name = models.CharField(max_length=500, blank=True, null=True)
+
+    class Meta:
+        ordering = ['-publication_year', 'title']
+
+    def __str__(self):
+        return f"{self.title} ({self.publication_year})"
+    
+
+class SeshatCityCommon(models.Model):
+    """
+    Model representing a common Seshat model.
+    """
+    settlement = models.ForeignKey(HabitationSite, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related",
+                               related_query_name="%(app_label)s_%(class)s", null=True,)
+    name = models.CharField(
+        max_length=200,)
+    year_from = models.IntegerField(blank=True, null=True)
+    year_to = models.IntegerField(blank=True, null=True,)
+    # exra vars will be added in between
+    description = models.TextField(
+        blank=True, null=True,)
+    note = models.TextField(
+        blank=True, null=True,)
+    general_ref = models.ForeignKey(ScientificResource, on_delete=models.SET_NULL,  related_name="%(app_label)s_%(class)s_related",
+                               related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    finalized = models.BooleanField(default=False)
+    created_date = models.DateTimeField(
+        auto_now_add=True, blank=True, null=True)
+    modified_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+    tag = models.CharField(max_length=5, choices=CityTags, default="1")
+    is_disputed = models.BooleanField(default=False, blank=True, null=True)
+    is_uncertain = models.BooleanField(default=False, blank=True, null=True)
+    expert_reviewed = models.BooleanField(null=True, blank=True, default=True)
+    curator = models.ManyToManyField(Seshat_Expert,  related_name="%(app_label)s_%(class)s_related",
+                               related_query_name="%(app_label)s_%(class)ss", blank=True,)
+    comment = models.ForeignKey(SeshatComment, on_delete=models.SET_NULL, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+    private_comment = models.ForeignKey(SeshatPrivateComment, on_delete=models.DO_NOTHING, related_name="%(app_label)s_%(class)s_related", related_query_name="%(app_label)s_%(class)s", null=True, blank=True)
+
+    class Meta:
+        """
+        :noindex:
+        """
+        abstract = True
+        ordering = ['settlement']
+
+    def curators_list(self):
+        my_list = [f'{curator.user.full_name} ({curator.role})' for curator in self.curator.all()]
+        return ", ".join(my_list) if my_list else None
+
+        
+    def curators_list_ids(self):
+        my_list = [curator.id for curator in self.curator.all()]
+        return my_list if my_list else None
+
+        
+    def researchers_list(self):
+        researchers = self.curator.filter(role__in=['Researcher', 'Seshat Admin', 'Lead Researcher'])  
+        my_list = [f'{curator.user.full_name} ({curator.role})' for curator in researchers]
+        return ", ".join(my_list) if my_list else None
+    
+        
+    def researchers_list_ids(self):
+        researchers = self.curator.filter(role__in=['Researcher', 'Seshat Admin', 'Lead Researcher'])  
+        my_list = [curator.id for curator in researchers]
+        return my_list if my_list else None
+    
+        
+    def seshat_experts_list(self):
+        seshat_experts = self.curator.filter(role__in=['Seshat Expert',])  
+        my_list = [f'{curator.user.full_name} ({curator.role})' for curator in seshat_experts]
+        return ", ".join(my_list) if my_list else None
+    
+        
+    def seshat_experts_list_ids(self):
+        seshat_experts = self.curator.filter(role__in=['Seshat Expert',])  
+        my_list = [curator.id for curator in seshat_experts]
+        return my_list if my_list else None
+
 
 # class Annual_wages(SeshatCommon):
 #     name = models.CharField(max_length=100, default="Annual_wages")

@@ -377,3 +377,20 @@ def track_last(context, current_name):
 
     context['last_clean_name'] = current_name  # Update the last seen name
     return result
+
+
+@register.inclusion_tag('core/partials/_progress_row.html')
+def render_progress_row(freq_data, key, label, title, color_class="", bg_color="", text_class="text-dark"):
+    value = freq_data.get(key, 0)
+    total = freq_data.get("pol_count", 1)
+    percent = round((value / total) * 100) if total else 0
+    return {
+        "value": value,
+        "total": total,
+        "percent": percent,
+        "label": label,
+        "title": title,
+        "color_class": color_class,
+        "bg_color": bg_color,
+        "text_class": text_class,
+    }

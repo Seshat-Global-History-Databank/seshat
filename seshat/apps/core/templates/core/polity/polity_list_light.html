@@ -160,10 +160,17 @@
     {% endif %}
     <div class="row">
         {% for a_world_region, a_dic_of_subregions in ultimate_wregion_dic_top.items %}
-        <div class="table-responsive pb-2 col-md-3">
+        <div class="table-responsive pb-4 
+        {% if a_world_region|length > 21 %}
+        col-md-3
+        {% else %}
+        col-md-2
+        {% endif %}
+        ">
+
             <table id="table_id_3" class="table align-middle caption-top">
-                <caption style="border-bottom: 2px solid rgb(177, 175, 175); "> 
-                    <h5 style="margin-bottom: 0.25rem;">
+                <div style="border-bottom: 10px solid rgba(0, 128, 128, 0.535); "> 
+                    <h5 style="margin-bottom: 0rem;">
                         <a class="fw-bold" href="#{{a_world_region}}"> 
                             {% if a_world_region == "Europe" %}
                             <i class="fa-solid fa-earth-europe"></i>
@@ -182,7 +189,7 @@
                         </a>          
                     </h5>                       
                                    
-                </caption>
+                </div>
                 <tbody style="border-style: none;">
                             {% for a_subregion, sub_reg_meta in a_dic_of_subregions.items %}
                             {% if a_subregion == "Somewhere" and not sub_reg_meta.1 %}
@@ -190,38 +197,30 @@
                             {% elif not sub_reg_meta.1 %}
                             <tr>
                                 <td style="border-style:none;" class="text-info">
-                                    <span class="h6">
-                                        <a class="fw-bold text-info" href="#{{a_subregion}}_{{a_world_region}}">
-                                            <span class="text-info fw-bold  border border-info px-1">{{sub_reg_meta.1}}</span> 
-                                            {{ a_subregion }}
-                                        </a>
-                                    </span>
+                                    <a class="fw-bold text-info" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-info fw-bold border border-info px-1">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
                             </tr>  
                             {% elif a_subregion == "Somewhere" %}
                             <tr>
                                 <td style="border-style:none;" class="text-danger">
-                                    <span class="h6">
-                                        <a class="fw-bold text-danger" href="#{{a_subregion}}_{{a_world_region}}">
-                                            <span class="text-danger fw-bold border border-danger px-1">{{sub_reg_meta.1}}</span> 
-                                            {{ a_subregion }}
-                                        </a>
-                                    </span>
+                                    <a class="fw-bold text-teal" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-teal fw-bold border border-success rounded px-1" style="background:rgba(0, 128, 128, 0.082)">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
                             </tr>  
                             {% else %}
                             <tr>
                                 <td style="border-style:none;">
-                                    <span class="h6">
-                                        <span type="button" tabindex="0" data-bs-toggle="popover" title="{{sub_reg_meta.0}}" data-bs-html="true" data-bs-trigger="focus">   
-                                            <a class="fw-bold" href="#{{a_subregion}}_{{a_world_region}}">
-                                                <span class="text-teal fw-bold border border-success px-1">{{sub_reg_meta.1}}</span>  {{ a_subregion }}
-                                            </a>                             
-                                        </span>
-                                    </span>
-
+                                    <a class="fw-bold text-teal" href="#{{a_subregion}}_{{a_world_region}}" title="{{sub_reg_meta.0}}">
+                                        <span class="text-teal fw-bold border border-success rounded px-1" style="background:rgba(0, 128, 128, 0.082)">{{sub_reg_meta.1}}</span> 
+                                        {{ a_subregion }}
+                                    </a>
                                 </td>
-                            </tr>        
+                            </tr>   
                             {% endif %}
                             {% endfor %}
 
@@ -233,9 +232,9 @@
 
     <hr>
     {% for a_world_region, a_dic_of_subregions in ultimate_wregion_dic.items %}
-        <div class="text-success py-2" id="{{a_world_region}}"><i class="fa-solid fa-up-long"></i><a href="#">&nbsp; top of the page</a>
+        <div class="text-success py-2 ms-2" id="{{a_world_region}}"><i class="fa-solid fa-up-long"></i><a href="#">&nbsp; top of the page</a>
         </div>
-    <h2 class="display-5 py-4 custom-left-border-shadowed"> 
+    <h2 class="fs-2 ps-2 ms-2 py-2 mt-3 custom-left-border-shadowed" style="display:inline-block;"> 
         {% if a_world_region == "Europe" %}
         <i class="fa-solid fa-earth-europe"></i>
         {% elif a_world_region == "Africa" %}
@@ -257,19 +256,29 @@
     {% else %}
 
 
-    <div class="pb-3" id="{{a_subregion}}_{{a_world_region}}"></div>
-    <h2 class="text-teal pt-5"><i class="fa-solid fa-circle-chevron-right"></i> {{ a_subregion }} <span class="h6 text-secondary">({{a_world_region}})</span> <span class="h6 text-secondary"><a href="#"><i class="fa-solid fa-turn-up"></i></a></span></h2>
+    <div class="sticky-top pb-1 pt-2 px-0 m-0" style="background-color: #fffdf2; height:50px; top: 55px; z-index:901;" id="{{a_subregion}}_{{a_world_region}}">
+        <span class="fs-4 text-teal"> &nbsp;
+            <i class="fa-solid fa-circle-chevron-right"></i> {{ a_subregion }} 
+            <span class="h6 text-secondary">({{a_world_region}})</span> 
+            <span class="h6 text-secondary">
+                <a href="#"><i class="fa-solid fa-turn-up"></i></a>
+            </span>
+        </span>
+    </div>
     {% if a_list_of_polities %}
-    <div class="table-responsive pb-0 mb-0" style="border: solid 2px teal;border-radius:10px">
-    <table id="table_id" class="table align-middle table-striped table-bordered pb-0 mb-0">
-        <thead>
-          <tr>
-            <th class="ps-2"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; Polity Name</th>
-            <th class="ps-2"> <i class="fa-solid fa-key"></i> &nbsp;Polity ID</th>
-            <th  style="text-align: right;"> <i class="fa-regular fa-calendar-check"></i> &nbsp; Year Range </th>
 
-          </tr>
-        </thead>
+    <div class="table-container mb-0">
+    <table id="table_id" class="table align-middle table-hover pb-4 mb-4" style="border-width:0px;">
+
+            <thead style=" border: 0px solid red !important; ">
+                <tr  class="sticky-top" style="background: linear-gradient(to bottom, #fffdf2, #f3f1d5); border: 0px solid red !important; height:45px; top: 95px !important;  z-index:900;">
+                  <th class="ps-2 fw-light" style="border: 0px solid red !important;"> <i class="fa-solid fa-circle-chevron-right fa-xs text-secondary"></i> &nbsp; Polity Name
+                       <small class="text-secondary"> &nbsp;Polity ID</small> </th>
+                  <th class="fw-light" style="text-align: right; border: 0px solid red !important;"> <i class="fa-regular fa-calendar-check"></i> &nbsp; Year Range </th>
+      
+                </tr>
+              </thead>
+
         <tbody>
                 {% for a_polity in a_list_of_polities %}
                 {% if a_polity.home_seshat_region.name == "Somewhere" %}
@@ -283,7 +292,11 @@
 
 
                     {% if a_polity.long_name %}
-                        <span class="fw-bold h5"><i class="fa-solid fa-location-dot fa-xs text-secondary"></i>&nbsp; {{ a_polity.long_name }}</span>
+                        <span class="fw-bold h5"><i class="fa-solid fa-location-dot fa-xs text-secondary"></i>&nbsp;
+                            <a href="{% url 'polity-detail-main' a_polity.id %}" class="fs-6 fw-normal"><b>{{ a_polity.long_name }}</b></a>
+                            
+                           <small class="text-secondary fs-6 fw-light"> {{ a_polity.new_name }}</small>
+                        </span>
                     {% else %}
                     <span class="text-danger fw-bold h6"> <i class="fa-solid fa-location-dot fa-xs text-secondary"></i> &nbsp; No Long Name</span> <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-small bg-warning text-dark">EDIT</span></a> 
                     {% endif %}
@@ -300,22 +313,7 @@
 
 
                 </td>
-                <td class="col-md-4 ps-2 py-2" style="text-align: left;"> 
-                    {% if a_polity.new_name %}
-                    <a href="{% url 'polity-detail-main' a_polity.id %}" class="fs-6 fw-normal"><b>{{ a_polity.new_name }}</b></a>
-
-                    {% if a_polity.new_name != a_polity.name %}
-                    <span class="text-secondary"> {{ a_polity.name }}</span>
-                    {% endif %}
-
-
-                    {% else %}
-                    (<a href="{% url 'polity-detail-main' a_polity.id %}"><b>{{ a_polity.name }}</b></a>) 
-                    <span class="text-danger"><b>NEW_Polity_ID</b>  missing</span>  
-                    <a href="{% url 'polity-update' a_polity.id %}"><span class="badge bg-small bg-warning text-dark">update</span></a>
-                    {% endif %}
-                </td>
-                <td class="col-md-3 fw-bold fs-5 "  style="text-align: right;">
+                <td class="col-md-3 fw-bold fs-6 fw-normal "  style="text-align: right;">
                     {% block years_short_for_top_pol %}
                     {% if  a_polity.start_year == a_polity.end_year %}
                         {% if  a_polity.start_year < 0 %}
@@ -377,5 +375,39 @@
         });
     });
     
+        document.addEventListener("DOMContentLoaded", function () {
+            const OFFSET = 100; // pixels to offset above the anchor
+    
+            // Check if there's a hash in the URL
+            if (window.location.hash) {
+                const targetId = window.location.hash.substring(1);
+                const element = document.getElementById(targetId);
+    
+                if (element) {
+                    // Scroll with offset
+                    const yOffset = -OFFSET;
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                }
+            }
+    
+            // For in-page clicks
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href').substring(1);
+                    const element = document.getElementById(targetId);
+    
+                    if (element) {
+                        e.preventDefault();
+                        const yOffset = -OFFSET;
+                        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+    
+                        // Update URL hash without jumping
+                        history.pushState(null, null, '#' + targetId);
+                    }
+                });
+            });
+        });
 </script>
   {% endblock %}

@@ -1,0 +1,26 @@
+<tr style="padding:0px; margin:0px;">
+    <td class="text-end pe-1" style="width:5%; padding:0px; margin:0px;">
+      <span type="button" tabindex="0" data-bs-toggle="popover" title="{{ title }}" data-bs-html="true" data-bs-trigger="focus">
+        <span class="badge px-2 py-1 custom-left-border-shadowed_4 {{ color_class }} {{ text_class }}" style="background-color: {{ bg_color }};">{{ label }}</span>
+      </span>
+    </td>
+    <td style="vertical-align: bottom; padding:0px; margin:0px;">
+      <div class="progress align-items-center custom-left-border-shadowed_4">
+        <div class="progress-bar py-2 {{ color_class }} {{ text_class }}" role="progressbar"
+             style="width: {{ percent }}%; background-color: {{ bg_color }};"
+             aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">
+          {% if percent > 20 %}
+            {{ value }}/{{ total }}&nbsp;&nbsp;&nbsp;
+            <b>{{ percent }}&nbsp;%</b>
+          {% endif %}
+          &nbsp;
+        </div>
+        &nbsp;
+        {% if percent <= 20 %}
+          {{ value }}/{{ total }}&nbsp;&nbsp;&nbsp;
+          <b>{{ percent }}&nbsp;%</b>
+        {% endif %}
+      </div>
+    </td>
+  </tr>
+  
