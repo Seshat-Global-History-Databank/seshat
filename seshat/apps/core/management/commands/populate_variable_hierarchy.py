@@ -1171,14 +1171,26 @@ VARIABLE_DATA = [{'name': 'Long Wall',
 class Command(BaseCommand):
     help = 'Populates the Section, Subsection, and Variablehierarchy models with predefined data'
 
+
+
     def handle(self, *args, **options):
+        db_section_mapper = {'General': 'general', 
+                         'Social Complexity': 'sc', 
+                         'Warfare': 'wf', 
+                         'Economy': 'ec', 
+                         'Religion': 'rt', 
+                         'Crisisdb': 'crisisdb'}
         for var in VARIABLE_DATA:
             section_name = var['section']
             subsection_name = var['subsection']
+            seshat_db_section_name = var['db_section']
+            db_table = db_section_mapper[seshat_db_section_name]
             variable_name = var['name']
+            if variable_name == "Human Sacrifice":
+                db_table = 'crisisdb'
 
             # Get or create Section
-            section_obj, _ = Section.objects.get_or_create(name=section_name)
+            section_obj, _ = Section.objects.get_or_create(name=section_name, seshat_db_section=seshat_db_section_name, db_table_name=db_table)
 
             # Get or create Subsection (if any)
             subsection_obj = None

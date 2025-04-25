@@ -773,6 +773,9 @@ class Section(models.Model):
     Model representing a section.
     """
     name = models.CharField(max_length=200)
+    seshat_db_section = models.CharField(max_length=200, null=True, blank=True,)
+    db_table_name = models.CharField(max_length=100, null=True, blank=True,)
+
 
     def __str__(self) -> str:
         return self.name
@@ -781,7 +784,7 @@ class Section(models.Model):
         """
         :noindex:
         """
-        unique_together = ("name",)
+        unique_together = ("name", 'seshat_db_section')
 
 
 class Subsection(models.Model):
@@ -800,38 +803,6 @@ class Subsection(models.Model):
         :noindex:
         """
         unique_together = ("name", "section")
-
-
-# def get_all_vars_for_hierarchy():
-#     my_vars = []
-#     for ct in ContentType.objects.all():
-#         m = ct.model_class()
-#         if m.__module__ == "seshat.apps.crisisdb.models":
-#             app_name = m.__module__.split('.')[-2] + '_'
-#             better_key = app_name + m.__name__
-#             better_value = m.__name__.replace('_', ' ')
-#             inner_tuple = (better_key, better_value)
-#             my_vars.append(inner_tuple)
-#             #print(better_key, ': ', better_value)
-#             # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#     return (my_vars)
-
-
-# def ready(self):
-#     def get_all_vars_for_hierarchy():
-#         my_vars = []
-#         for ct in ContentType.objects.all():
-#             m = ct.model_class()
-#             if m.__module__ == "seshat.apps.crisisdb.models":
-#                 app_name = m.__module__.split('.')[-2] + '_'
-#                 better_key = app_name + m.__name__
-#                 better_value = m.__name__.replace('_', ' ')
-#                 inner_tuple = (better_key, better_value)
-#                 my_vars.append(inner_tuple)
-#                 #print(better_key, ': ', better_value)
-#                 # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#         return (my_vars)
-#     print(get_all_vars_for_hierarchy())
 
 
 class Variablehierarchy(models.Model):
