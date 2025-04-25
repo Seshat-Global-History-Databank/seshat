@@ -54,6 +54,38 @@ class MixinSeshatAPIAuth:
         ]
 
 
+class MixinSeshatAPISerializerNEW:
+    def get_serializer_class(self):
+        # Set model to self.model
+        GeneralSerializer.Meta.model = self.model
+
+        # Set fields to self.fields or apply custom logic
+        try:
+            # Set fields dynamically or include/exclude specific fields
+            if hasattr(self, 'fields'):
+                GeneralSerializer.Meta.fields = self.fields
+            else:
+                GeneralSerializer.Meta.fields = "__all__"
+        except AttributeError:
+            GeneralSerializer.Meta.fields = "__all__"
+
+        # Modify or exclude fields here if needed
+        if hasattr(self, 'exclude_fields'):
+            exclude_fields = self.exclude_fields  # A list of field names to exclude
+            if exclude_fields:
+                print(exclude_fields)
+                # Modify fields to exclude
+                fields = GeneralSerializer.Meta.fields
+                if fields == "__all__":
+                    fields = [field.name for field in self.model._meta.fields]  # Get all fields dynamically
+                GeneralSerializer.Meta.fields = [f for f in fields if f not in exclude_fields]
+
+        # Return the dynamically created serializer class
+        return GeneralSerializer
+
+    def get_queryset(self):
+        return self.model.objects.all()
+
 class MixinSeshatAPISerializer:
     def get_serializer_class(self):
         # Set model to self.model

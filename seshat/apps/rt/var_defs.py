@@ -174,7 +174,7 @@ rt_var_defs = {
     'Moralizing enforcement is agentic': 'Moralizing enforcement is administered by a supernatural agent, such as a deity or spirit (as opposed to an impersonal supernatural force, such as karma).',
 
     # HS
-    'Human sacrifice': "Human Sacrifice Definition",
+    'Human sacrifice': "Human Sacrifice is the deliberate and ritualized killing of a person to please or placate supernatural entities (including gods, spirits, and ancestors) or gain other supernatural benefits.",
 
 
 }

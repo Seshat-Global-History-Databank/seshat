@@ -1,7 +1,10 @@
 {% load humanize %}
 {% load mathfilters %}
 {% load custom_filters %}
-<tr>
+
+
+
+<tr >
     <td class="text-secondary">                    
         {{ good_key|replace_underscore_and_capitalize }} 
     </td>
@@ -11,19 +14,24 @@
         </span>
     </td>
     <td></td>
-    <td></td>
-    <td style="text-align: right;">   <a class="p-0 m-0"  
+    <td>   
+        <div class="tight-group float-end" style="text-align: right;">
+
+        <a class="p-0 m-0 tight-link"  
         style="overflow: hidden;" 
         href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}">
-        <span class="badge text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed4c" data-bs-toggle="popover" title="Add a new row of Data" >
+        <span class="badge p-1 text-dark text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#28a8ed1c" data-bs-toggle="popover" title="Add a new row of Data" >
             <i class="fa-solid fa-plus"></i>
         </span>
         </a> 
-        <a class="pt-1 m-0"  
+        <a class="p-0 m-0 tight-link"  
             style="overflow: hidden;" 
             href="{% url key|lower|add:'s_all' %}?polity_id_x={{object.id}}">
-            <span class="badge" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:BlanchedAlmond; color:black;" data-bs-toggle="popover" title="See all Such Values" >
+            <span class="badge p-1 text-dark" style="vertical-align:bottom; white-space: nowrap; z-index:995; background-color:#FFEBCD82; color:black;" data-bs-toggle="popover" title="See all Such Values" >
                 <i class="fa-solid fa-list-ul"></i>        </span>
             </a> 
+        </div>
+
     </td>
 </tr>
+    

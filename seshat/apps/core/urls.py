@@ -10,6 +10,8 @@ urlpatterns += [path('downloads_page/', views.seshatolddownloads, name='seshat-o
 urlpatterns += [
     path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),
     path('get-description/<str:model_name>/<int:obj_id>/', views.get_description, name='get-description'),
+     path('download-settlements/', views.download_habitation_sites_csv, name='download_settlements'),
+
 
 ]
 urlpatterns += [path('download_oldcsv/<str:file_name>/', views.download_oldcsv, name='download_oldcsv'),]
@@ -23,7 +25,7 @@ urlpatterns += [path('code_book_new_1', views.seshatcodebooknew1, name='code_boo
 
 urlpatterns  += [path('download_csv_all_polities/', views.download_csv_all_polities,name='download_csv_all_polities'),]
 
-    
+
 
 
 urlpatterns += [path('polity_filter_options/', views.polity_filter_options_view, name='polity_filter_options'),]
@@ -93,8 +95,8 @@ urlpatterns += [
          name='account_activation_sent'),
     path('activate/<slug:uidb64>/<slug:token>/',
          views.activate, name='activate'),
-    path('variablehierarchy/', views.variablehierarchysetting,
-         name='variablehierarchysetting'),
+    #path('variablehierarchy/', views.variablehierarchysetting,
+     #    name='variablehierarchysetting'),
      path('synczotero/', views.synczotero, name='synczotero'),
      path('synczoteromanually/', views.synczoteromanually, name='synczoteromanually'),
      path('synczotero100/', views.synczotero100, name='synczotero100'),

@@ -5,6 +5,9 @@
   </style>
     
 {% if user.is_authenticated and 'core.add_seshatprivatecommentpart' in user.get_all_permissions %}
+
+
+
 <span class="px-0 pt-1 pb-0 m-0" style="vertical-align:top;line-height:normal; margin:0px !important;" data-bs-toggle="popover" title="Edit coded value" >
     {% if value.description and 'core.add_capital' in user.get_all_permissions  %}
     <a class="p-0 m-0" 

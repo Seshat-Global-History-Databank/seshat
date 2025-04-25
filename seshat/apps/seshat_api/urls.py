@@ -71,7 +71,7 @@ router.register(
     NGAPolityRelationsViewSet,
     basename="api_nga-polity-relation",
 )
-router.register(r"core/countries", CountryViewSet, basename="api_country")
+#router.register(r"core/countries", CountryViewSet, basename="api_country")
 router.register(r"core/sections", SectionViewSet, basename="api_section")
 router.register(r"core/subsections", SubsectionViewSet, basename="api_subsection")
 router.register(
@@ -104,14 +104,14 @@ router.register(
 #     GADMShapefileViewSet,
 #     basename="api_gadm-shapefile",
 # )
-router.register(
-    r"core/gadm-countries", GADMCountriesViewSet, basename="api_gadm-country"
-)
-router.register(
-    r"core/gadm-provinces",
-    GADMProvincesViewSet,
-    basename="api_gadm-province",
-)
+# router.register(
+#     r"core/gadm-countries", GADMCountriesViewSet, basename="api_gadm-country"
+# )
+# router.register(
+#     r"core/gadm-provinces",
+#     GADMProvincesViewSet,
+#     basename="api_gadm-province",
+# )
 
 
 # Register views for "crisisdb" app
@@ -173,93 +173,93 @@ router.register(
 #     HumanSacrificeViewSet,
 #     basename="api_human-sacrifice",
 # )
-router.register(
-    r"crisisdb/external-conflicts",
-    ExternalConflictViewSet,
-    basename="api_external-conflict",
-)
-router.register(
-    r"crisisdb/external-conflict-sides",
-    ExternalConflictSideViewSet,
-    basename="api_external-conflict-side",
-)
-router.register(
-    r"crisisdb/agricultural-populations",
-    AgriculturalPopulationViewSet,
-    basename="api_agricultural-population",
-)
-router.register(r"crisisdb/arable-lands", ArableLandViewSet, basename="api_arable-land")
-router.register(
-    r"crisisdb/arable-land-per-farmer",
-    ArableLandPerFarmerViewSet,
-    basename="api_arable-land-per-farmer",
-)
-router.register(
-    r"crisisdb/gross-grain-shared-per-agricultural-populations",
-    GrossGrainSharedPerAgriculturalPopulationViewSet,
-    basename="api_gross-grain-shared-per-agricultural-population",
-)
-router.register(
-    r"crisisdb/net-grain-shared-per-agricultural-populations",
-    NetGrainSharedPerAgriculturalPopulationViewSet,
-    basename="api_net-grain-shared-per-agricultural-population",
-)
-router.register(r"crisisdb/surpluses", SurplusViewSet, basename="api_surplus")
-router.register(
-    r"crisisdb/military-expenses",
-    MilitaryExpenseViewSet,
-    basename="api_military-expense",
-)
-router.register(
-    r"crisisdb/silver-inflows",
-    SilverInflowViewSet,
-    basename="api_silver-inflow",
-)
-router.register(
-    r"crisisdb/silver-stocks",
-    SilverStockViewSet,
-    basename="api_silver-stock",
-)
-router.register(
-    r"crisisdb/total-populations",
-    TotalPopulationViewSet,
-    basename="api_total-population",
-)
-router.register(
-    r"crisisdb/gdp-per-capitas",
-    GDPPerCapitaViewSet,
-    basename="api_gdp-per-capita",
-)
-router.register(
-    r"crisisdb/drought-events",
-    DroughtEventViewSet,
-    basename="api_drought-event",
-)
-router.register(
-    r"crisisdb/locust-events",
-    LocustEventViewSet,
-    basename="api_locust-event",
-)
-router.register(
-    r"crisisdb/socioeconomic-turmoil-events",
-    SocioeconomicTurmoilEventViewSet,
-    basename="api_socioeconomic-turmoil-event",
-)
-router.register(
-    r"crisisdb/crop-failure-events",
-    CropFailureEventViewSet,
-    basename="api_crop-failure-event",
-)
-router.register(
-    r"crisisdb/famine-events",
-    FamineEventViewSet,
-    basename="api_famine-event",
-)
-router.register(
-    r"crisisdb/disease-outbreaks",
-    DiseaseOutbreakViewSet,
-    basename="api_disease-outbreak",
-)
+# router.register(
+#     r"crisisdb/external-conflicts",
+#     ExternalConflictViewSet,
+#     basename="api_external-conflict",
+# )
+# router.register(
+#     r"crisisdb/external-conflict-sides",
+#     ExternalConflictSideViewSet,
+#     basename="api_external-conflict-side",
+# )
+# router.register(
+#     r"crisisdb/agricultural-populations",
+#     AgriculturalPopulationViewSet,
+#     basename="api_agricultural-population",
+# )
+# router.register(r"crisisdb/arable-lands", ArableLandViewSet, basename="api_arable-land")
+# router.register(
+#     r"crisisdb/arable-land-per-farmer",
+#     ArableLandPerFarmerViewSet,
+#     basename="api_arable-land-per-farmer",
+# )
+# router.register(
+#     r"crisisdb/gross-grain-shared-per-agricultural-populations",
+#     GrossGrainSharedPerAgriculturalPopulationViewSet,
+#     basename="api_gross-grain-shared-per-agricultural-population",
+# )
+# router.register(
+#     r"crisisdb/net-grain-shared-per-agricultural-populations",
+#     NetGrainSharedPerAgriculturalPopulationViewSet,
+#     basename="api_net-grain-shared-per-agricultural-population",
+# )
+# router.register(r"crisisdb/surpluses", SurplusViewSet, basename="api_surplus")
+# router.register(
+#     r"crisisdb/military-expenses",
+#     MilitaryExpenseViewSet,
+#     basename="api_military-expense",
+# )
+# router.register(
+#     r"crisisdb/silver-inflows",
+#     SilverInflowViewSet,
+#     basename="api_silver-inflow",
+# )
+# router.register(
+#     r"crisisdb/silver-stocks",
+#     SilverStockViewSet,
+#     basename="api_silver-stock",
+# )
+# router.register(
+#     r"crisisdb/total-populations",
+#     TotalPopulationViewSet,
+#     basename="api_total-population",
+# )
+# router.register(
+#     r"crisisdb/gdp-per-capitas",
+#     GDPPerCapitaViewSet,
+#     basename="api_gdp-per-capita",
+# )
+# router.register(
+#     r"crisisdb/drought-events",
+#     DroughtEventViewSet,
+#     basename="api_drought-event",
+# )
+# router.register(
+#     r"crisisdb/locust-events",
+#     LocustEventViewSet,
+#     basename="api_locust-event",
+# )
+# router.register(
+#     r"crisisdb/socioeconomic-turmoil-events",
+#     SocioeconomicTurmoilEventViewSet,
+#     basename="api_socioeconomic-turmoil-event",
+# )
+# router.register(
+#     r"crisisdb/crop-failure-events",
+#     CropFailureEventViewSet,
+#     basename="api_crop-failure-event",
+# )
+# router.register(
+#     r"crisisdb/famine-events",
+#     FamineEventViewSet,
+#     basename="api_famine-event",
+# )
+# router.register(
+#     r"crisisdb/disease-outbreaks",
+#     DiseaseOutbreakViewSet,
+#     basename="api_disease-outbreak",
+# )
 
 
 # app: general

@@ -202,6 +202,10 @@ class PolityTerritoryViewSet(
     pagination_class = SeshatAPIPagination
     filterset_class = PolityTerritoryFilter
 
+    #exclude_fields = ['drb_reviewed', 'note', 'finalized', 'id']  # Exclude this field
+
+
+
 
 class PolityPopulationViewSet(
     FilterBackends,

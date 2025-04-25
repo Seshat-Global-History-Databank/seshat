@@ -238,6 +238,71 @@ def make_references_look_nicer(value):
 
 
 @register.filter
+def make_references_look_nicer2(value):
+    import re
+    import uuid
+
+    value = value.replace("'", "&rsquo;").replace("\n", "MJD_BNM_NEWLINE_TAG_XYZ")
+    pattern = r'§REF§(.*?)§REF§'
+    replacement = r"""<sup class="fw-bold" id="sup_{ref_id}">
+        <a href="#{ref_id}">[{ref_num}]</a>
+    </sup>
+    """
+    new_string = value
+    references = re.findall(pattern, value)
+    
+    reference_data = {}
+    
+    for index, reference in enumerate(references):
+        if reference not in reference_data:
+            ref_num = len(reference_data) + 1
+            ref_id = f"ref_{ref_num}_{str(uuid.uuid4())[:8]}"
+            reference_data[reference] = {
+                'ref_num': ref_num,
+                'ref_id': ref_id
+            }
+        
+        data = reference_data[reference]
+        sup_tag = replacement.format(ref_num=data['ref_num'], ref_id=data['ref_id'])
+        new_string = new_string.replace(f'§REF§{reference}§REF§', sup_tag, 1)
+    
+    # Split references into two columns
+    if reference_data:
+        reference_items = list(reference_data.items())
+        mid_index = len(reference_items) // 2 + len(reference_items) % 2  # Ensure the first column gets the extra one if odd
+
+        first_col = reference_items[:mid_index]
+        second_col = reference_items[mid_index:]
+
+        def make_column_html(items):
+            return '\n'.join([
+                f'<p id="{data["ref_id"]}" class="px-0 pt-1 pb-0 m-0 text-secondary">'
+                f'<span class="fw-bold"><a href="#sup_{data["ref_id"]}">[{data["ref_num"]}]</a></span>: '
+                f'<span>{reference.replace("MJD_BNM_NEWLINE_TAG_XYZ", " ")}</span>'
+                '</p>'
+                for reference, data in items
+            ])
+
+        reference_tags = f"""
+        <div class="row mt-2">
+            <div class="col-md-6">
+                {make_column_html(first_col)}
+            </div>
+            <div class="col-md-6">
+                {make_column_html(second_col)}
+            </div>
+        </div>
+        """
+
+        new_string += reference_tags
+
+    paargraphed_new_str = new_string.replace("MJD_BNM_NEWLINE_TAG_XYZ", "<br>")
+    return paargraphed_new_str
+
+
+
+
+@register.filter
 def give_me_a_color(value):
     light_colors = [
         '#b86354',  # Darker red tone of #e6b8af

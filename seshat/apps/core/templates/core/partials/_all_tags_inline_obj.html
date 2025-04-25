@@ -1,4 +1,3 @@
-<td style="vertical-align: center; border-width: 0;">
 
     <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="
     
@@ -18,15 +17,15 @@ The value is backed up by sufficient evidence.
         {% if obj.tag == "DSP" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f39b9b11; color:#f39b9b; border:2px solid #f39b9b88;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "SSP" %}
-        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#d4507c11; color:#d4507c; border:2px solid #d4507c88;"> {{ obj.get_tag_display }}</span>
+        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#e05e1e11; color:#e05e1e; border:2px solid #e05e1e88;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "UNK" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f9b9b9; color:#510c0c;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "IFR" %}
-        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee11; color:#7ac5ee; border:2px solid #7ac5ee88;"> {{ obj.get_tag_display }}</span>
+        <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#7ac5ee11; color:#1a638a; border:2px solid #1a638a88;"> {{ obj.get_tag_display }}</span>
         {% elif  obj.tag == "UND" %}
         <span class="badge" style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#6a6a6b11; color:#6a6a6b; border:2px solid #6a6a6b88;"> {{ obj.get_tag_display }}</span>
         {% else  %}
-            <span class="badge" style=" font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; border:2px solid #6aaa6488; background: #6aaa6411;  color:#6aaa64;">{{ obj.get_tag_display }}</span>
+
         {% endif %}
         </a>
     
@@ -34,7 +33,7 @@ The value is backed up by sufficient evidence.
     {% if obj.is_disputed %}
     
     <a type="button" class="fs-6" data-bs-toggle="tooltip" data-bs-html="true"  title="Scholarly Disagreement (Disputed)">
-        <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f39b9b11; color:#f39b9b; border:2px solid #f39b9b88;"><i class="fa-regular fa-star-half-stroke"></i> Disputed</span>
+        <span class="badge"  style="font-family: 'Roboto Mono', monospace; font-optical-sizing: auto; font-weight: 700; background:#f39b9b11; color:#c53636; border:2px solid #c5363688;"><i class="fa-regular fa-star-half-stroke"></i> Disputed</span>
     </a>
     
     {% endif %}
@@ -53,4 +52,3 @@ The value is backed up by sufficient evidence.
         </a>
     {% endif %}
         
-    </td>

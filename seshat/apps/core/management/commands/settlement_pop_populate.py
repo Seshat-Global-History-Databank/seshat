@@ -3,7 +3,7 @@ from seshat.apps.core.models import HabitationSite, CurrentCountry, ScientificRe
 from seshat.apps.stlm.models import Settlement_population
 
 # Replace 'your_app' with the name of the app where your models are defined
-from seshat.apps.stlm.settlements_population import ultimate_dics_list
+from seshat.apps.stlm.settlements_population_1 import ultimate_dics_list
 
 ultimate_dics_list_2 = [
     {
@@ -45,7 +45,7 @@ class Command(BaseCommand):
             populations = entry.get('pop', {})
 
             # Create or get the HabitationSite
-            settlement, created = HabitationSite.objects.get_or_create(
+            settlement, already_created = HabitationSite.objects.get_or_create(
                 name=city,
                 current_country_obj_id=my_country_obj.id,
                 defaults={
@@ -55,10 +55,12 @@ class Command(BaseCommand):
                 }
             )
 
-            if not created:
+            if not already_created:
                 # Update fields if needed
                 print("OLD CITY: ",city )
-                if alt_name and settlement.alternative_names:
+                if alt_name and settlement.alternative_names and  alt_name == settlement.alternative_names:
+                    settlement.alternative_names = settlement.alternative_names
+                elif alt_name and settlement.alternative_names:
                     settlement.alternative_names = settlement.alternative_names +', ' + alt_name
                 elif alt_name:
                     settlement.alternative_names = alt_name

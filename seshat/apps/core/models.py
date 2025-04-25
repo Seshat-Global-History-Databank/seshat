@@ -773,6 +773,9 @@ class Section(models.Model):
     Model representing a section.
     """
     name = models.CharField(max_length=200)
+    seshat_db_section = models.CharField(max_length=200, null=True, blank=True,)
+    db_table_name = models.CharField(max_length=100, null=True, blank=True,)
+
 
     def __str__(self) -> str:
         return self.name
@@ -781,7 +784,7 @@ class Section(models.Model):
         """
         :noindex:
         """
-        unique_together = ("name",)
+        unique_together = ("name", 'seshat_db_section')
 
 
 class Subsection(models.Model):
@@ -802,42 +805,15 @@ class Subsection(models.Model):
         unique_together = ("name", "section")
 
 
-# def get_all_vars_for_hierarchy():
-#     my_vars = []
-#     for ct in ContentType.objects.all():
-#         m = ct.model_class()
-#         if m.__module__ == "seshat.apps.crisisdb.models":
-#             app_name = m.__module__.split('.')[-2] + '_'
-#             better_key = app_name + m.__name__
-#             better_value = m.__name__.replace('_', ' ')
-#             inner_tuple = (better_key, better_value)
-#             my_vars.append(inner_tuple)
-#             #print(better_key, ': ', better_value)
-#             # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#     return (my_vars)
-
-
-# def ready(self):
-#     def get_all_vars_for_hierarchy():
-#         my_vars = []
-#         for ct in ContentType.objects.all():
-#             m = ct.model_class()
-#             if m.__module__ == "seshat.apps.crisisdb.models":
-#                 app_name = m.__module__.split('.')[-2] + '_'
-#                 better_key = app_name + m.__name__
-#                 better_value = m.__name__.replace('_', ' ')
-#                 inner_tuple = (better_key, better_value)
-#                 my_vars.append(inner_tuple)
-#                 #print(better_key, ': ', better_value)
-#                 # print(f"{m.__module__}.{m.__name__}\t{m._default_manager.count()}")
-#         return (my_vars)
-#     print(get_all_vars_for_hierarchy())
-
-
 class Variablehierarchy(models.Model):
     """
     Model representing a variable hierarchy.
     """
+    ACCESS_TYPES = [
+        ('public', 'public'),
+        ('private', 'private'),
+        ('some_polities_are_public', 'some_polities_are_public'),
+    ]
     name = models.CharField(
         max_length=200)
     section = models.ForeignKey(
@@ -846,6 +822,7 @@ class Variablehierarchy(models.Model):
         Subsection, on_delete=models.SET_NULL, null=True, blank=True,)
     is_verified = models.BooleanField(default=False)
     explanation = models.TextField(blank=True, null=True,)
+    who_can_access = models.CharField(max_length=50, choices=ACCESS_TYPES, default='private')
 
     def __str__(self) -> str:
         return self.name
@@ -1419,6 +1396,37 @@ class SeshatCommon(models.Model):
         seshat_experts = self.curator.filter(role__in=['Seshat Expert',])  
         my_list = [curator.id for curator in seshat_experts]
         return my_list if my_list else None
+    
+    @property
+    def formatted_years(self):
+        if self.year_from is None and self.year_to is None:
+            return '<i class="fa-solid fa-minus"></i>'
+
+        if self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_from is None:
+            if self.year_to < 0:
+                return f'{abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_to} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_from == self.year_to:
+            if self.year_from is None:
+                return '&nbsp;'
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        else:
+            arrow = '<i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i>'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
 
 
 class ScientificResource(models.Model):
