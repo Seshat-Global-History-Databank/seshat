@@ -191,9 +191,7 @@
                 <!-- headings for extra vars -->
                 {% block myheadings_list %}
                 {% endblock myheadings_list %}
-                {% if var_name_display != 'Instability Event' %}
-                <th scope="col" style="text-align: left" >Tags</th>
-                {% endif %}
+
 
                 {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
 
@@ -242,9 +240,7 @@
                             <!-- extra vars come here -->
                             {% block extra_vars_list %}
                             {% endblock extra_vars_list %}
-                            {% if var_name_display != 'Instability Event' %}
-                            {% include "core/partials/_all_tags_inline_obj.html" %}
-                            {% endif %}
+                          
 
                            
 

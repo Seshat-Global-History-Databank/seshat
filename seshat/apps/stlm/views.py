@@ -36,7 +36,7 @@ def settlement_population_download(request):
     response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
     writer = csv.writer(response, delimiter='|')
-    writer.writerow(['variable_name',  'settlement_name', 'settlement_alternative_names', 'Current Country', 'Latitude' , 'Longitude', 'year_from', 'year_to', 'population_from', 'population_to', 'certainty', 'scientific_resource' ])
+    writer.writerow(['variable_name',  'settlement_name', 'settlement_alternative_names', 'current_country', 'latitude' , 'longitude', 'year_from', 'year_to', 'population_from', 'population_to', 'certainty', 'scientific_resource' ])
 
     for obj in items:
         if obj.settlement.current_country_obj:

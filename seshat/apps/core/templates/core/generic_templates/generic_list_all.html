@@ -39,17 +39,18 @@ title="Click to Download all such coded records">
 {% block myheadings_list %}
 <th class = "fw-bold" style="text-align: left; white-space: nowrap;  border-left: 2px solid gray;  border-right: 2px solid gray; " scope="col">
     <span> 
-    <a href="{% url list_all_url %}{{ordering_tag}}"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Coded Value
+    <a href="{% url list_all_url %}{{ordering_tag}}"><i class="fa-solid fa-arrow-up-short-wide"></i>&nbsp;</a>Coded Value / <small>Tags</small>
 </span>
 </th>
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
-<td colspan="1"  style="text-align: left; z-index:890;" >
+<td colspan="1"  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
     <span class="fw-bold highlighted-value-title">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
     {% endautoescape %}
 
+    {% include "core/partials/_all_tags_inline_obj.html" %}
 </td>
 {% endblock extra_vars_list %}
 
