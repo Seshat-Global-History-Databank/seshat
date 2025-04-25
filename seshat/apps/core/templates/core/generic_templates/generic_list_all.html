@@ -45,7 +45,7 @@ title="Click to Download all such coded records">
 {% endblock myheadings_list %}
 
 {% block extra_vars_list %}
-<td colspan="1"  style="text-align: left; z-index:890;" >
+<td colspan="1"  style="text-align: left; z-index:890; border-width:0;" >
     {% autoescape off %}
     <span class="fw-bold highlighted-value-title">{{extra_var_dict|get_item_from_dic:obj.id}}</span>
     {% endautoescape %}
