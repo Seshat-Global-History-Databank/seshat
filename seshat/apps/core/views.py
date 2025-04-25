@@ -3355,146 +3355,146 @@ def account_activation_sent(request):
     return render(request, 'core/account_activation_sent.html')
 
 
-def variablehierarchysetting(request):
-    """
-    Handle variable hierarchy setting. This is a view for the admin to set the
-    variable hierarchy.
+# def variablehierarchysetting(request):
+#     """
+#     Handle variable hierarchy setting. This is a view for the admin to set the
+#     variable hierarchy.
 
-    Args:
-        request: The request object.
+#     Args:
+#         request: The request object.
 
-    Returns:
-        HttpResponse: The HTTP response.
-    """
-    my_vars = dic_of_all_vars()
-    my_vars_keys = list(my_vars.keys())
-    my_vars_good_keys = []
-    for item in my_vars_keys:
-        good_key = item[0:9] + item[9].lower() + item[10:]
-        good_key = good_key.replace('gdp', 'GDP')
-        good_key = good_key.replace('gDP', 'GDP')
-        my_vars_good_keys.append(good_key)
-    all_var_hiers_to_be_hidden = Variablehierarchy.objects.filter(is_verified=True)
-    all_var_hiers_to_be_hidden_names = []
-    for var in all_var_hiers_to_be_hidden:
-        with_crisisdb_name = "crisisdb_" + var.name
-        var_name = with_crisisdb_name[0:9] + with_crisisdb_name[9].lower() + with_crisisdb_name[10:]
-        var_name = var_name.replace('gdp', 'GDP')
-        var_name = var_name.replace('gDP', 'GDP')
+#     Returns:
+#         HttpResponse: The HTTP response.
+#     """
+#     my_vars = dic_of_all_vars()
+#     my_vars_keys = list(my_vars.keys())
+#     my_vars_good_keys = []
+#     for item in my_vars_keys:
+#         good_key = item[0:9] + item[9].lower() + item[10:]
+#         good_key = good_key.replace('gdp', 'GDP')
+#         good_key = good_key.replace('gDP', 'GDP')
+#         my_vars_good_keys.append(good_key)
+#     all_var_hiers_to_be_hidden = Variablehierarchy.objects.filter(is_verified=True)
+#     all_var_hiers_to_be_hidden_names = []
+#     for var in all_var_hiers_to_be_hidden:
+#         with_crisisdb_name = "crisisdb_" + var.name
+#         var_name = with_crisisdb_name[0:9] + with_crisisdb_name[9].lower() + with_crisisdb_name[10:]
+#         var_name = var_name.replace('gdp', 'GDP')
+#         var_name = var_name.replace('gDP', 'GDP')
 
-        if with_crisisdb_name in my_vars_good_keys:
-            var_name = with_crisisdb_name[0:9] + with_crisisdb_name[9].lower() + with_crisisdb_name[10:]
-            var_name = var_name.replace('gdp', 'GDP')
-            var_name = var_name.replace('gDP', 'GDP')
+#         if with_crisisdb_name in my_vars_good_keys:
+#             var_name = with_crisisdb_name[0:9] + with_crisisdb_name[9].lower() + with_crisisdb_name[10:]
+#             var_name = var_name.replace('gdp', 'GDP')
+#             var_name = var_name.replace('gDP', 'GDP')
 
-            all_var_hiers_to_be_hidden_names.append(var_name)
-    print('I am here...\n\n')
-    #print(all_var_hiers_to_be_hidden_names)
-    my_vars_tuple = [('', ' -- Select a CrisisDB Variable -- ')]
-    for var in my_vars_good_keys:
-        if var not in all_var_hiers_to_be_hidden_names:
-            without_crisisdb_var = var[9:]
-            var_name = without_crisisdb_var[0].lower() + without_crisisdb_var[1:]
-            var_name = var_name.replace('gdp', 'GDP')
-            var_name = var_name.replace('gDP', 'GDP')
+#             all_var_hiers_to_be_hidden_names.append(var_name)
+#     print('I am here...\n\n')
+#     #print(all_var_hiers_to_be_hidden_names)
+#     my_vars_tuple = [('', ' -- Select a CrisisDB Variable -- ')]
+#     for var in my_vars_good_keys:
+#         if var not in all_var_hiers_to_be_hidden_names:
+#             without_crisisdb_var = var[9:]
+#             var_name = without_crisisdb_var[0].lower() + without_crisisdb_var[1:]
+#             var_name = var_name.replace('gdp', 'GDP')
+#             var_name = var_name.replace('gDP', 'GDP')
 
-            my_var_tuple = (var_name, var_name)
-            my_vars_tuple.append(my_var_tuple)
+#             my_var_tuple = (var_name, var_name)
+#             my_vars_tuple.append(my_var_tuple)
 
-    all_sections = Section.objects.all()
-    all_sections_tuple = [('', ' -- Select Section -- ')]
-    for section in all_sections:
-        my_section = section.name
-        my_section_tuple = (my_section, my_section)
-        all_sections_tuple.append(my_section_tuple)
-    # subsections
-    all_subsections = Subsection.objects.all()
-    all_subsections_tuple = [('', ' -- Select Section First -- ')]
-    for subsection in all_subsections:
-        my_subsection = subsection.name
-        my_subsection_tuple = (my_subsection, my_subsection)
-        all_subsections_tuple.append(my_subsection_tuple)
-    # Let's create an API serializer for section and subsection heierarchy
-    url = "http://127.0.0.1:8000/api/sections/"
-    #url = "https://www.majidbenam.com/api/sections/"
-    #url = settings.MY_CURRENT_SERVER + "/api/sections/"
+#     all_sections = Section.objects.all()
+#     all_sections_tuple = [('', ' -- Select Section -- ')]
+#     for section in all_sections:
+#         my_section = section.name
+#         my_section_tuple = (my_section, my_section)
+#         all_sections_tuple.append(my_section_tuple)
+#     # subsections
+#     all_subsections = Subsection.objects.all()
+#     all_subsections_tuple = [('', ' -- Select Section First -- ')]
+#     for subsection in all_subsections:
+#         my_subsection = subsection.name
+#         my_subsection_tuple = (my_subsection, my_subsection)
+#         all_subsections_tuple.append(my_subsection_tuple)
+#     # Let's create an API serializer for section and subsection heierarchy
+#     url = "http://127.0.0.1:8000/api/sections/"
+#     #url = "https://www.majidbenam.com/api/sections/"
+#     #url = settings.MY_CURRENT_SERVER + "/api/sections/"
 
-    headers = CaseInsensitiveDict()
-    headers["Accept"] = "application/json"
+#     headers = CaseInsensitiveDict()
+#     headers["Accept"] = "application/json"
 
-    resp = requests.get(url, headers=headers)
+#     resp = requests.get(url, headers=headers)
 
-    all_my_data = resp.json()['results']
-    sections_tree = {}
-    sections_options_for_JS = {}
-    for list_item in all_my_data:
-        subsect_dic = {}
-        subsects_only_list = []
-        for subsec in list_item['subsections']:
-            list_to_be = []
-            subsects_only_list.append(subsec)
-            sel_sect = Section.objects.get(name=list_item['name'])
-            sel_subsect = Subsection.objects.get(name=subsec)
-            my_selected_vars_objects = Variablehierarchy.objects.filter( section=sel_sect, subsection=sel_subsect,)
-            for var_obj in my_selected_vars_objects:
-                #print(var_obj)
-                list_to_be.append(var_obj.name)
-            subsect_dic[subsec] = list_to_be
-        sections_tree[list_item['name']] = subsect_dic
-        sections_options_for_JS[list_item['name']] = subsects_only_list
-    context = {
-        'sectionOptions': sections_options_for_JS, 
-        'section_tree_data': sections_tree,
-    }
-    #print(context['sectionOptions'])
-    #print(context['section_tree_data'])
+#     all_my_data = resp.json()['results']
+#     sections_tree = {}
+#     sections_options_for_JS = {}
+#     for list_item in all_my_data:
+#         subsect_dic = {}
+#         subsects_only_list = []
+#         for subsec in list_item['subsections']:
+#             list_to_be = []
+#             subsects_only_list.append(subsec)
+#             sel_sect = Section.objects.get(name=list_item['name'])
+#             sel_subsect = Subsection.objects.get(name=subsec)
+#             my_selected_vars_objects = Variablehierarchy.objects.filter( section=sel_sect, subsection=sel_subsect,)
+#             for var_obj in my_selected_vars_objects:
+#                 #print(var_obj)
+#                 list_to_be.append(var_obj.name)
+#             subsect_dic[subsec] = list_to_be
+#         sections_tree[list_item['name']] = subsect_dic
+#         sections_options_for_JS[list_item['name']] = subsects_only_list
+#     context = {
+#         'sectionOptions': sections_options_for_JS, 
+#         'section_tree_data': sections_tree,
+#     }
+#     #print(context['sectionOptions'])
+#     #print(context['section_tree_data'])
 
 
-    if request.method == 'POST':
-        form = VariablehierarchyFormNew(request.POST)
-        if True:
-            data = request.POST
-            variable_name = data["variable_name"]
-            #is_verified_str = data["is_verified"]
-            is_verified_str = data.get("is_verified", False)
-            if is_verified_str == 'on':
-                is_verified = True
-            elif is_verified_str == 'off':
-                is_verified = False
-            else:
-                is_verified = False
-            section_name = Section.objects.get(name=data["section_name"])
-            subsection_name = Subsection.objects.get(
-                name=data["subsection_name"])
-            # check to see if subsection and section match
-            if data["subsection_name"] in sections_tree[data["section_name"]]:
-                new_var_hierarchy = Variablehierarchy(
-                    name=variable_name, section=section_name, subsection=subsection_name,  is_verified=is_verified)
-                new_var_hierarchy.save()
-                #print('Valid Foooooooooooorm: \n\n',)
-                # print(data)
-                my_message = f'''You have successfully submitted {variable_name} to: {section_name} >  {subsection_name}'''
-                messages.success(request, my_message)
-                return HttpResponseRedirect(reverse('variablehierarchysetting'))
-            else:
-                messages.warning(request, 'Form submission unssuccessful, section and subsection do not match.')
-                #return render(request, 'core/Variablehierarchy.html', {'form': VariablehierarchyFormNew()})
+#     if request.method == 'POST':
+#         form = VariablehierarchyFormNew(request.POST)
+#         if True:
+#             data = request.POST
+#             variable_name = data["variable_name"]
+#             #is_verified_str = data["is_verified"]
+#             is_verified_str = data.get("is_verified", False)
+#             if is_verified_str == 'on':
+#                 is_verified = True
+#             elif is_verified_str == 'off':
+#                 is_verified = False
+#             else:
+#                 is_verified = False
+#             section_name = Section.objects.get(name=data["section_name"])
+#             subsection_name = Subsection.objects.get(
+#                 name=data["subsection_name"])
+#             # check to see if subsection and section match
+#             if data["subsection_name"] in sections_tree[data["section_name"]]:
+#                 new_var_hierarchy = Variablehierarchy(
+#                     name=variable_name, section=section_name, subsection=subsection_name,  is_verified=is_verified)
+#                 new_var_hierarchy.save()
+#                 #print('Valid Foooooooooooorm: \n\n',)
+#                 # print(data)
+#                 my_message = f'''You have successfully submitted {variable_name} to: {section_name} >  {subsection_name}'''
+#                 messages.success(request, my_message)
+#                 return HttpResponseRedirect(reverse('variablehierarchysetting'))
+#             else:
+#                 messages.warning(request, 'Form submission unssuccessful, section and subsection do not match.')
+#                 #return render(request, 'core/Variablehierarchy.html', {'form': VariablehierarchyFormNew()})
 
-        else:
-            data = request.POST
-            #print('halllooooooooo:', data["variable_name"])
-            messages.error(request, 'Invalid form submission.')
-            messages.error(request, form.errors)
+#         else:
+#             data = request.POST
+#             #print('halllooooooooo:', data["variable_name"])
+#             messages.error(request, 'Invalid form submission.')
+#             messages.error(request, form.errors)
 
-    else:
-        form = VariablehierarchyFormNew()
-    context['form'] = form
-    context['variable_list'] = list(my_vars_tuple)
-    context['section_list'] = list(all_sections_tuple)
-    context['subsection_list'] = list(all_subsections_tuple)
+#     else:
+#         form = VariablehierarchyFormNew()
+#     context['form'] = form
+#     context['variable_list'] = list(my_vars_tuple)
+#     context['section_list'] = list(all_sections_tuple)
+#     context['subsection_list'] = list(all_subsections_tuple)
 
-    #context['SuccessMessage'] = "Done Perfectly."
-    return render(request, 'core/variablehierarchy.html', context)
+#     #context['SuccessMessage'] = "Done Perfectly."
+#     return render(request, 'core/variablehierarchy.html', context)
 
 
 
@@ -6152,3 +6152,29 @@ def get_description(request, model_name, obj_id):
         return HttpResponse(content.strip())  # Remove leading/trailing whitespace
     except ContentType.DoesNotExist:
         return HttpResponse("Invalid model name.", status=400)
+
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
+def download_habitation_sites_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="habitation_sites.csv"'
+
+    writer = csv.writer(response, delimiter='|')
+    writer.writerow([
+        'Name',
+        'Alternative Names',
+        'Current Country',
+        'Latitude',
+        'Longitude',
+    ])
+
+    for site in HabitationSite.objects.all().order_by('current_country_obj__name'):
+        writer.writerow([
+            site.name,
+            site.alternative_names or '',
+            site.current_country_obj.name if site.current_country_obj else '',
+            site.latitude,
+            site.longitude,
+        ])
+
+    return response

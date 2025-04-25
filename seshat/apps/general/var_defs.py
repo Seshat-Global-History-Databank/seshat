@@ -41,4 +41,3 @@ general_var_defs = {
 
 }
 
-

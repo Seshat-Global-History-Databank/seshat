@@ -231,43 +231,43 @@ def subsection_dic_extractor():
 #     print(all_var_hiers)
 #     print(my_secs)
 
-# GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD Function
-def test_for_varhier_dic():
-    """
-    Extracts a dictionary of all variables in the database. This dictionary is
-    structured in a way that it can be used to generate a hierarchical
-    representation of the variables.
+# # GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOD Function
+# def test_for_varhier_dic():
+#     """
+#     Extracts a dictionary of all variables in the database. This dictionary is
+#     structured in a way that it can be used to generate a hierarchical
+#     representation of the variables.
 
-    Returns:
-        dict: A dictionary of all variables.
-    """
-    all_sections = Section.objects.all()
-    all_subsections = Subsection.objects.all()
-    all_varhiers = Variablehierarchy.objects.all()
-    meta_data_dict = {}
-    # for ct in my_sections_dic.items():
-    #     m = ct.model_class()
-    #     #full_name = m.__module__ + m.__name__
-    #     full_name = m.__name__
-    #     meta_data_dict[full_name.lower()] = [full_name.split('.')[-1].replace("_", ' '), m._default_manager.count(), full_name.lower()+"-create",full_name.lower()+"s"]
-    #     print (f".{m.__name__}	{m._default_manager.count()}")
-    my_dict = {}
-    context = {}
+#     Returns:
+#         dict: A dictionary of all variables.
+#     """
+#     all_sections = Section.objects.all()
+#     all_subsections = Subsection.objects.all()
+#     all_varhiers = Variablehierarchy.objects.all()
+#     meta_data_dict = {}
+#     # for ct in my_sections_dic.items():
+#     #     m = ct.model_class()
+#     #     #full_name = m.__module__ + m.__name__
+#     #     full_name = m.__name__
+#     #     meta_data_dict[full_name.lower()] = [full_name.split('.')[-1].replace("_", ' '), m._default_manager.count(), full_name.lower()+"-create",full_name.lower()+"s"]
+#     #     print (f".{m.__name__}	{m._default_manager.count()}")
+#     my_dict = {}
+#     context = {}
 
-    for sect in all_sections:
-        my_dict[sect.name] = {}
-        for subsect in all_subsections:
-            list_of_all_varhiers_in_here = []
-            for item in all_varhiers:
-                #print(item, item.section, item.subsection, sect.name, subsect.name)
-                if item.section.name == sect.name and item.subsection.name == subsect.name:
-                    print("We hit it")
-                    list_of_all_varhiers_in_here.append(item.name.lower())
-            if list_of_all_varhiers_in_here:
-                my_dict[sect.name][subsect.name] = list_of_all_varhiers_in_here
-    context["my_dict"] = my_dict
-    pprint.pprint(my_dict)
-    return my_dict
+#     for sect in all_sections:
+#         my_dict[sect.name] = {}
+#         for subsect in all_subsections:
+#             list_of_all_varhiers_in_here = []
+#             for item in all_varhiers:
+#                 #print(item, item.section, item.subsection, sect.name, subsect.name)
+#                 if item.section.name == sect.name and item.subsection.name == subsect.name:
+#                     print("We hit it")
+#                     list_of_all_varhiers_in_here.append(item.name.lower())
+#             if list_of_all_varhiers_in_here:
+#                 my_dict[sect.name][subsect.name] = list_of_all_varhiers_in_here
+#     context["my_dict"] = my_dict
+#     pprint.pprint(my_dict)
+#     return my_dict
     #return render(request, 'crisisdb/qing-vars.html', context=context)
 
 

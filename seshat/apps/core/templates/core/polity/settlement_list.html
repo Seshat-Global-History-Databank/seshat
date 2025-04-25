@@ -114,6 +114,13 @@
         <span class="sticky-top fs-4" style="background: #fffdf2; border: 0px solid red !important; height:45px; top: 55px !important;  z-index:900;">Settlements 
              
         </span>
+        <span class="float-end">
+            {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}            
+
+            <a href="{% url 'download_settlements' %}" class="btn btn-sm btn-outline-primary me-1 my-1"><i class="fa-solid fa-file-arrow-down"></i> &nbsp; Download All <b>({{object_list|length}})</b> Settlements </a>
+            {% endif %}
+
+        </span>
     </div>
 
 

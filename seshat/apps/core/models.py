@@ -838,6 +838,11 @@ class Variablehierarchy(models.Model):
     """
     Model representing a variable hierarchy.
     """
+    ACCESS_TYPES = [
+        ('public', 'public'),
+        ('private', 'private'),
+        ('some_polities_are_public', 'some_polities_are_public'),
+    ]
     name = models.CharField(
         max_length=200)
     section = models.ForeignKey(
@@ -846,6 +851,7 @@ class Variablehierarchy(models.Model):
         Subsection, on_delete=models.SET_NULL, null=True, blank=True,)
     is_verified = models.BooleanField(default=False)
     explanation = models.TextField(blank=True, null=True,)
+    who_can_access = models.CharField(max_length=50, choices=ACCESS_TYPES, default='private')
 
     def __str__(self) -> str:
         return self.name
@@ -1419,6 +1425,37 @@ class SeshatCommon(models.Model):
         seshat_experts = self.curator.filter(role__in=['Seshat Expert',])  
         my_list = [curator.id for curator in seshat_experts]
         return my_list if my_list else None
+    
+    @property
+    def formatted_years(self):
+        if self.year_from is None and self.year_to is None:
+            return '<i class="fa-solid fa-minus"></i>'
+
+        if self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_from is None:
+            if self.year_to < 0:
+                return f'{abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_to} <small class="text-secondary fw-light">CE</small>'
+        elif self.year_from == self.year_to:
+            if self.year_from is None:
+                return '&nbsp;'
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small>'
+        else:
+            arrow = '<i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i>'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {abs(self.year_to)} <small class="text-secondary fw-light">BCE</small>'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            else:
+                return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
 
 
 class ScientificResource(models.Model):
