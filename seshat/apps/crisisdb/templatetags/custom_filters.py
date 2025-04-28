@@ -459,3 +459,21 @@ def render_progress_row(freq_data, key, label, title, color_class="", bg_color="
         "bg_color": bg_color,
         "text_class": text_class,
     }
+
+
+@register.filter
+def extract_macro_event(value):
+    if not value:
+        return ''
+    match = re.search(r'\(Macro Event:\s*(.*?)\)', value)
+    if match:
+        return match.group(1)
+    return '-'
+
+@register.filter
+def remove_macro_event(value):
+    if not value:
+        return ''
+    # Remove (Macro Event: ...)
+    cleaned = re.sub(r'\s*\(Macro Event:.*?\)', '', value)
+    return cleaned.strip()

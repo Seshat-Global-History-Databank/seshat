@@ -8231,6 +8231,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
     # Handle POST request
     if request.method == 'POST':
         my_form = form_class(request.POST, instance=my_object)
+        print('zzzzzzzzzzzzzzzz', my_object.id)
 
         # if "submit_with_formset" in request.POST:
         #     form_inline_new = SeshatCommentPartForm2(request.POST)
@@ -8331,6 +8332,7 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             action = request.POST.get('action')
             if action == 'redirect_one':
                 url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+                print('qqqqqqqqqqqq')
 
                 return redirect(url)
                 #return redirect("polity-detail-main", pk=new_object.polity.id) + "#{x_name}"
@@ -8359,6 +8361,8 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 
 
 #################################   
+        print('yyyyyyyyyyyyyy ', coded_value)
+        print('yyyyyyyyyyyyyy ', my_object.comment)
         if coded_value in ['instability_event'] and not my_object.comment:
 
             # if "submit_with_formset" in request.POST:
@@ -8487,6 +8491,9 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
             url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
             return redirect(url)
             #return redirect(request.META.get('HTTP_REFERER', 'seshat-index')) 
+        elif coded_value in ['instability_event'] and my_object.comment:
+            url = reverse("polity-detail-main", kwargs={'pk': new_object.polity.id}) + f"#{x_name}_{new_object.id}"
+            return redirect(url)
         else:
             form_inline_new = None
 

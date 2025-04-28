@@ -1,8 +1,23 @@
 {% load humanize %}
 {% load mathfilters %}
+{% load custom_filters %}
+
+
 <tr class="highlighted-value-title-full">
-    <td class="fw-normal text-dark" style="text-align: left;">                           
+    <td class="fw-normal text-dark" style="text-align: left;">     
+        <small style="vertical-align: top;">
+            {% if form.instance.created_date|date:"Y-m-d" < "2025-03-29" %}
+            <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+          {% elif form.instance.created_date|date:"Y-m-d" < "2025-04-11" %}
+            <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+          {% else %}
+            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+          {% endif %}
+        </small>                      
         <span> {{ form.instance.name}}</span>
+    </td>
+    <td class="fw-normal text-dark" style="text-align: left;">
+        {{form.instance.llm_name|extract_macro_event}}
     </td>
     <td class="fw-normal text-dark" style="text-align: left;">
         {% if form.instance.polity.long_name %}

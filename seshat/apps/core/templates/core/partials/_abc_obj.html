@@ -61,17 +61,17 @@
         </a>
         {% else %}
         <button  class="p-0 m-0 tight-link"  
-        style="overflow: hidden; border: 0px solid white; border-radius:5px; " >
-    <span class="accordion-button collapsed badge text-dark" type="button"  style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb" 
-    title="See Private Comments" 
-    data-bs-toggle="collapse" 
-    data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
-    aria-expanded="false" 
-    aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
-    <i class="fa-solid fa-comments"></i>
-</span>
+        style="overflow: hidden; border: 0px solid red; " >
+        <span class="accordion-button collapsed badge text-dark p-1" type="button"  style="vertical-align:bottom; white-space: nowrap; background-color:#edd028bb;" 
+        title="See Private Comments" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#commentRow_{{ obj.clean_name }}_{{ forloop.counter }}" 
+        aria-expanded="false" 
+        aria-controls="commentRow_{{ obj.clean_name }}_{{ forloop.counter }}">
+        <i class="fa-solid fa-comments"></i>
+    </span>
 
-</button>
+    </button>
     {% endif %}  
     {% endif %}   
     {% if 'core.add_capital' in user.get_all_permissions  %}

@@ -3,24 +3,24 @@
 
 {% if concise_rel.0.0 == concise_rel.0.1 %}
     {% if concise_rel.0.0 < 0 %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> )</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> )</td>
     {% else %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span>)</td>
     {% endif %}
 {% elif concise_rel.0.1 == None %}
     {% if concise_rel.0.0 < 0 %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span>)</td>
     {% else %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span>)</td>
     {% endif %}
     {% elif concise_rel.0.1 == None and concise_rel.0.0 == None %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;( <i class="fa-solid fa-minus"></i> )</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;( <i class="fa-solid fa-minus"></i> )</td>
 {% else %}
     {% if concise_rel.0.0 < 0 and concise_rel.0.1 < 0 %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1|abs }} <span class="text-secondary">BCE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1|abs }} <span class="text-secondary">BCE</span>)</td>
     {% elif concise_rel.0.0 < 0 and concise_rel.0.1 >= 0 %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1 }} <span class="text-secondary">CE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1 }} <span class="text-secondary">CE</span>)</td>
     {% else %}
-    <td class="fs-6 p-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1 }} <span class="text-secondary">CE</span>)</td>
+    <td class="fs-6 px-2" style="text-align: left;"><i class="fa-regular fa-calendar-check fa-xs"></i>&nbsp;({{concise_rel.0.0 }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ concise_rel.0.1 }} <span class="text-secondary">CE</span>)</td>
     {% endif %}
 {% endif %}

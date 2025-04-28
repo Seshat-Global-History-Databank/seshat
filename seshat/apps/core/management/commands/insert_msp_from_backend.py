@@ -10,7 +10,7 @@ from seshat.apps.general.models import Polity_expert, Polity_original_name, Poli
 
 from seshat.apps.rt.models import Moralizing_supernatural_punishment_and_reward, Moralizing_supernatural_concern_is_primary, Moralizing_enforcement_is_certain, Moralizing_enforcement_is_broad, Moralizing_enforcement_is_targeted, Moralizing_enforcement_of_rulers, Moralizing_religion_adopted_by_elites, Moralizing_religion_adopted_by_commoners, Moralizing_enforcement_in_afterlife, Moralizing_enforcement_in_this_life, Moralizing_enforcement_is_agentic
 
-from seshat.apps.rt.final_dic_insert_msp_2 import my_final_dic_extra_with_citations_stripped
+from seshat.apps.rt.final_dic_insert_msp_3 import my_final_dic_extra_with_citations_stripped
 
 
 
@@ -36,35 +36,13 @@ class Command(BaseCommand):
             }
 
         var_to_coded_var = {'coded_value': 'coded_value'}
-        xyzp = {
-            ('kh_angkor_3', 'Moralizing Enforcement is Broad', ): {'age': 'new',
-            'coded_value': 'present',
-            'tag': 'TRS',
-            'content': [{'sub_text': '“Indeed, karma is the principle on which most moralizing supernatural punishment and reward (MSP) in Buddhism is based. According to doctrine, intentional actions plant a “seed” that bears their moral valence. At some future time, whether in this life or the following one or more reincarnations, this seed bears karmic “fruit,” bringing about outcomes that are good or bad to the extent the action was good or bad. The moral valence of actions may be judged by their conformity with Buddhist ethics, which includes the five precepts (prohibitions on killing, theft, “sexual misconduct,” lying, and intoxication); a set of special rules for monks and nuns (the Vinaya); and injunctions such as making charitable donations (dana).”',
-                'sub_order': 1,
-                'citations': [{'my_ref': '76FKAHS3', 'my_pages': (106, 106)}]}]},
+        xyzp = {('et_ethiopian_k_3', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('tr_byzantine_emp_1', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('tr_byzantine_emp_3', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('ru_romanov_dyn_2', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('tr_byzantine_emp_2', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('ru_moskva_rurik_dyn', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('et_ethiopian_k', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('et_ethiopian_k_2', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('ru_romanov_dyn_1', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}, ('tr_east_roman_emp', 'Moralizing Enforcement is Broad'): {'age': 'new', 'coded_value': 'present', 'tag': 'TRS', 'content': [{'sub_text': "The idea of loving one's neighbour implies a broad range of moral activity. “We have said that deification means ‘following the commandments’; and these commandments were briefly described by Christ as love of God and love of neighbour. The two forms of love are inseparable. A man can love his neighbour as himself only if he loves God above all; and a man cannot love God if he does not love his fellow men (1 John iv, 20).”", 'sub_order': 1, 'citations': [{'my_ref': 'N4A4ZTEH', 'my_pages': (0, 0)}]}]}}
 
-            ('fr_beaker_eba', 'Moralizing Enforcement is Broad'): 
-            {
-                'age': 'new',
-                'coded_value': 'absent',
-                'tag': 'IFR',
-                'content': [{'sub_text': 'Based on current knowledge, broad moralizing enforcement is absent from most pre-Christian polytheistic cultures, especially in Europe. We are inferring this absence backwards to the Bell Beaker period.',
-                    'sub_order': 1,
-                    'citations': [{'my_ref': 'DYW2LWKS', 'my_pages': (0, 0)}]}]},
-            ('fr_hallstatt_a_b1', 'Moralizing Enforcement is Broad'): {'age': 'new',
-                'coded_value': 'absent',
-                'tag': 'IFR',
-                'content': [{'sub_text': 'Based on current knowledge, broad moralizing enforcement is absent from most pre-Christian polytheistic cultures, especially in Europe. We are inferring this absence backwards to the Bell Beaker period.',
-                    'sub_order': 1,
-                    'citations': [{'my_ref': 'DYW2LWKS', 'my_pages': (0, 0)}]}]
-                },
-        }
         # my_final_dic_extra_with_citations_stripped
         bad_zots = []
         bad_pols = []
-        for pol_var_tuple, age_content in my_final_dic_extra_with_citations_stripped.items():
-        #for pol_var_tuple, age_content in xyzp.items():
+        #for pol_var_tuple, age_content in my_final_dic_extra_with_citations_stripped.items():
+        for pol_var_tuple, age_content in xyzp.items():
             polity_old_id, var_name = pol_var_tuple
 
             try:
@@ -192,3 +170,4 @@ class Command(BaseCommand):
         print(set(bad_pols))
 
         self.stdout.write("Done.")
+

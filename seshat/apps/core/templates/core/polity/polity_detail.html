@@ -396,19 +396,6 @@
         <div class="col-md-12">
             <div class="row d-flex align-items-center mb-1">
                     <div class="col-md-6">
-
-
-                        {% if all_instability_data %}
-                        {% for item, values in all_instability_data.items %}
-                        {{ item }}: {{value.name}}
-                        {% endfor %}
-
-                        {% endif %}
-
-
-
-
-
                         <span class="h6 text-dark" id="top_of_the_page">Home Region:&nbsp;</span> <span class="h3 text-dark federicka-medium">{{ object.home_seshat_region }}</span> 
                         <h1 class="text-teal federicka-big"> {{ object.long_name }}</h1> 
                         <div class="h5 pb-3">
@@ -753,24 +740,22 @@
             {% endif %}
 
             {% endif %}
-           
-            <div class="row m-0 p-0">
-                <div class="col-md-12 pb-3 m-0 pt-0 ps-0 pe-0">
-                    {% if object.general_description %}
-                    <p>   <span class="fs-4 text-teal fw-bold">  <span class="badge text-dark p-1  me-2 fs-4" style="background-color: rgb(195, 195, 195);">&nbsp; General Description &nbsp;</span>     
-                        <span type="button"  tabindex="0" data-bs-toggle="popover" title="General Description" data-bs-html="true" data-bs-trigger="focus">
-                        </span></span> 
-                        
+            {% if object.general_description %}
+            <div>
+                <span class="fs-4 text-teal fw-bold p-0 m-0">  <span class="badge text-dark p-1  me-2 fs-4" style="background-color: rgb(214, 214, 214);">&nbsp; General Description &nbsp;</span>  
+            </div>
+            <div class="row m-0 pb-1">
+                <div class="col-md-12 pb-3 m-0 pt-0 ps-2 pe-2" style="max-height: 200px; overflow-y: auto; border-bottom: 1px solid gray; border-top: 1px solid gray; border-left: 10px solid gray;">
+                    <div>      
                         <small >
                             {{object.general_description|make_references_look_nicer|safe}}
-
                         </small>
-                    </p>
-
-                    {% endif %}
+                    </div>
                 </div>
-
             </div>
+            {% endif %}
+
+
 
 
 <!-- GV -->
@@ -779,11 +764,10 @@
             <div class="col-md-12 m-0 p-0">
                 <span class="h1 fw-bold m-0 p-0 ">  
                     <span class="badge mt-5 ms-3 mb-2 px-3 py-2 fw-bold text-dark" style="text-align: left; background: #ffc10742; border-left: 5px solid #ffc10772;">
-                       General Variables
+                       <a href="#general_var" class=" text-dark">General Variables</a> 
+
                     </span>   
-                    <span class="mt-3 fs-5">
-                        <a href="#general_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
-                    </span>                 
+                   
                 </span>
             </div>
             <div class="row">
@@ -810,7 +794,7 @@
                                 {% if values %}
                                 <div class=" mt-0 pb-0 mx-0 text-dark" >
                                     <div class="fw-normal">
-                                        <span class="badge bg-success-light-small fw-normal">
+                                        <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
                                             {{values|length}}
                                         </span>
                                         <a class="fs-6 text-dark" href="#general_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
@@ -826,6 +810,10 @@
                                         </a> 
                                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
                                         {% if key == "Polity_succeeding_entity" or key == "Polity_relationship_to_preceding_entity" %}
+                                        <a class="h6"  href="#" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> 
+                                       
+                                            <i class="fa-solid fa-plus fa-xs" style="color:#fffdf2"></i>
+                                        </a> 
                                         {% else %}
 
                                             <a class="h6"  href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> 
@@ -848,7 +836,7 @@
                                 {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                                 <div>
                                     <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
-                                        <span class="badge bg-secondary-light-small">
+                                        <span class="badge bg-secondary-light-small" style="vertical-align:top;">
                                             -
                                         </span>
                                         {{ key|slice:"7:"|replace_underscore_and_capitalize }}
@@ -917,7 +905,7 @@
                             {% if values %}
                             <div class="mt-0 pb-0 mx-0 text-dark">
                                 <div class="fw-normal"> 
-                                    <span class="badge bg-success-light-small">
+                                    <span class="badge bg-success-light-small fw-bormal" style="vertical-align:top;">
                                         {{values|length}}
                                     </span>
                                     <a class="fs-6 text-dark" href="#sc_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
@@ -936,7 +924,7 @@
                                 <div>
 
                                 <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
-                                    <span class="badge bg-secondary-light-small">
+                                    <span class="badge bg-secondary-light-small" style="vertical-align:top;">
                                         -                        
                                     </span>
                                     {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
@@ -978,7 +966,6 @@
         {% for key_m, values_m in values_top.items %} 
         {% if values_m %}
         <div class=" mt-2 pt-1 
-            
             {% if key_top == 'Military use of Metals' or key_top == 'Handheld weapons' or key_top == 'Animals used in warfare'  or key_top == 'Armor' %}
             col-md-2
             {% else %}
@@ -987,20 +974,17 @@
         align-items-top">
             <div class="fs-6 fw-bold pt-1 px-2 rounded mb-1"  style="text-align: left; color:#000; background: #dc354512; border-bottom: 5px solid #dc354532; ">   
                 <a href="#{% if key_m != 'None' %}wf_{{key_top|slugify}}_{{key_m|slugify}}{% else %}wf_{{key_top|slugify}}{% endif %}" class="text-dark">
-
                     <span class="fw-bold"> {{key_top}}</span> 
                     {% if key_m != 'None' %}
                     <span class="fw-light">/ {{key_m}}</span> 
                     {% endif %}
-
             </div>
-
                 <div id="table_id_wf"  style="line-height:1rem;">
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <div class="mt-0 pb-0 mx-0 text-dark">
                     <div class="fw-normal"> 
-                        <span class="badge bg-success-light-small fw-normal">
+                        <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
                             {{values|length}}
                         </span>
                         <a class="fs-6 text-dark" href="#wf_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
@@ -1008,41 +992,28 @@
                         </a> 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
                         <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
-
                         </a> 
                         {% endif %}
                     </div>
-
-
-
                         </div>
                 {% endif %}
-
                 {% endfor %}
-
                 {% for key, values in values_m.items %}
                     {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                   <div>
 
                     <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
-                        <span class="badge bg-secondary-light-small">
+                        <span class="badge bg-secondary-light-small" style="vertical-align:top;">
                             -                        
                         </span>
-                        
                         {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
-                    </small>
-                                        
+                    </small>               
                   </div>
                     {% endif %}
                 {% endfor %}
-
             </div>
-
-
     </div>
     {% endif %}
-
-
     {% endfor %}
     {% endfor %}
 </div>
@@ -1073,7 +1044,6 @@
         {% for key_m, values_m in values_top.items %} 
         {% if values_m %}
         <div class=" mt-2 pt-1 
-            
             {% if key_top == 'Military use of Metals' or key_top == 'Handheld weapons' or key_top == 'Animals used in warfare'  or key_top == 'Armor' %}
             col-md-2
             {% else %}
@@ -1087,15 +1057,13 @@
                     {% if key_m != 'None' %}
                     <span class="fw-light">/ {{key_m}}</span> 
                     {% endif %}
-
             </div>
-
                 <div id="table_id_ec"  style="line-height:1rem;">
                 {% for key, values in values_m.items %}
                 {% if values %}
                 <div class="mt-0 pb-0 mx-0 text-dark">
                     <div class="fw-normal"> 
-                        <span class="badge bg-success-light-small fw-normal">
+                        <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
                             {{values|length}}
                         </span>
                         <a class="fs-6 text-dark" href="#ec_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
@@ -1103,40 +1071,27 @@
                         </a> 
                         {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
                         <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
-
                         </a> 
                         {% endif %}
                     </div>
-
-
-
                         </div>
                 {% endif %}
-
                 {% endfor %}
-
                 {% for key, values in values_m.items %}
                     {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
                   <div>
-
                     <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
-                        <span class="badge bg-secondary-light-small">
+                        <span class="badge bg-secondary-light-small" style="vertical-align:top;">
                             -                        
                         </span>
-                        
                         {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
-                    </small>
-                                        
+                    </small>             
                   </div>
                     {% endif %}
                 {% endfor %}
-
             </div>
-
-
     </div>
     {% endif %}
-
 
     {% endfor %}
     {% endfor %}
@@ -1154,323 +1109,125 @@
 </div>
 {% endif %}
 
-<!-- ec -->
-{% if all_ec_data %}
-<div class="col-md-12 m-0 p-0">
-    <span class=" h3 fw-bold m-0 p-0 ">  
-        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #40e0d032; border-left: 2px solid #40e0d082;">
-            Economy Variables (Luxury Goods)
-        </span>   
-        <span class=" mt-3 fs-5">
-            <a href="#ec_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
-        </span>                 
-
-    </span>
-</div>
-
-<div class="row">
-    {% for key_top, values_top in all_ec_data.items %}
-
-        {% for key_m, values_m in values_top.items %}
-        {% if values_m %}
-
-        <div class="col-md-2 mt-2 pt-1 d-flex align-items-top" style="border-top: 1px solid #40e0d082;">
-
-            <span class=" fs-6 text-dark"  style="text-align: left;">
-                <i class="fa-solid fa-circle fa-2xs" style="color: #40e0d082;"></i>
-                <span class="fw-bold"> {{key_top}}</span> 
-                {% if key_m != 'None' %}
-                <span class="fw-light">/ {{key_m}}</span> 
-                {% endif %}
-            </span>
-
-         </div>
-         {% endif %}
-
-         {% if values_m %}
-
-                <div class="col-md-10 py-2" id="table_id_sc">
-    
-                {% for key, values in values_m.items %}
-                {% if values %}
-                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#40e0d012; border-left: 2px solid #40e0d042;">
-                    <div class="fs-6 pb-1"> 
-                        <a class="h6 text-dark" href="#ec_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
-                            {{ values.0.clean_name_spaced}}
-                        </a> 
-                    {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                    <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
-                    </a> 
-                    {% endif %}
-                </div>
-                    <table class="table mb-2 shadow-box fs-6" style="width: auto;">
-
-                    {% for vv in values %}
-
-                    {% if vv.year_from == None and vv.year_to == None %}
-                        
-
-                    {% else %}
-                    <tr style="border-top:5px solid lightgray; margin-bottom: 10px;">
-
-                        <td class="text-end ps-5 bg-light" style="padding-top:5px;">
-                            <span class="text-secondary fw-light fs-6" style="border-radius:5px">
-                                {% if vv.year_from == None %}
-                                    &nbsp;
-                                {% elif  vv.year_from == vv.year_to %}
-                                    {% if  vv.year_from < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                    <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                    <span class="text-secondary fw-light fs-6">CE</span>
-                                    {% endif %}
-                                {% elif vv.year_to == None %}
-                                    {% if  vv.year_from < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6">BCE</span>
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                        <span class="text-secondary fw-light fs-6">CE</span>
-                                    {% endif %}
-                                {% elif vv.year_to == None and  vv.year_from == None %}
-                                    <i class="fa-solid fa-minus"></i> 
-                                {% else %}
-                                    {% if  vv.year_from < 0 and vv.year_to < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
-                                    {{ vv.year_from|abs }}         
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
-                                <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
-                                        <span class="text-secondary fw-light fs-6">CE</span> 
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                        <span class="text-secondary fw-light fs-6">CE</span>
-                                <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
-                                        <span class="text-secondary fw-light fs-6">CE</span> 
-                                    {% endif %}
-                                {% endif %}
-                            </span>
-                        </td>
-                    </tr>
-
-                    {% endif %}
-                    <tr>
-                        <td class="ps-2">
-                            <a href="#ec_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
-
-                            {% autoescape off %}
-
-                            <span>
-                                {{ vv.show_value }}   
-                            </span>
-                            {% endautoescape %}
-
-                        </a> 
-
-                        </td>
-                    </tr>
-
-
-                    {% endfor %}
-                </table>
-                <br>
-
-
-                        </span>
-                {% endif %}
-
-                {% endfor %}
-
-                {% for key, values in values_m.items %}
-                    {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                    <small class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2; white-space: nowrap;">{{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus text-secondary"></i>&nbsp;</a>
-                    </small>
-                    {% endif %}
-                {% endfor %}
-
-    </div>
-    {% endif %}
-
-
-    {% endfor %}
-    {% endfor %}
-</div>
-{% else %}
-<div class="col-md-9">
-    <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
-        <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #dc35453b; border:1px solid #dc3545">
-            Economy Variables (Luxury Goods)
-        </span>   
-        <span class=" mt-3 fs-5">
-    Coding in Progress.
-        </span>                 
-    </span>
-</div>
-
-{% endif %}
-
-
-<!-- RT -->
+<!-- rtttttt -->
 {% if all_rt_data and 'core.view_capital' in user.get_all_permissions or object.new_name == "kh_chenla" or object.new_name == "pe_wari_emp" or object.new_name == "in_kampili_k" or object.new_name == "in_kalyani_chalukya_emp" or object.new_name == "in_hoysala_k" or object.new_name == "et_aksum_emp_3" or object.new_name == "et_aksum_emp_2" or object.new_name == "ni_proto_yoruboid" or object.new_name == "ni_sokoto" or object.new_name == "gm_kaabu_emp" %}
 <div class="col-md-12 m-0 p-0">
-    <span class=" h3 fw-bold m-0 p-0 ">  
-        <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #59007f32; border-left: 2px solid #59007f82;">
-            Religion Variables
+    <span class="h1 fw-bold m-0 p-0 ">  
+        <span class="badge mt-3 ms-3 mb-2 px-3 py-2 fw-bold text-dark" style="text-align: left; background: #59007f42; border-left: 5px solid #59007f72;">
+            <a href="#rt_var" class=" text-dark">Religion Variables</a> 
         </span>   
-        <span class=" mt-3 fs-5">
-            <a href="#rt_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
-        </span>                 
-
     </span>
 </div>
-
 <div class="row">
     {% for key_top, values_top in all_rt_data.items %}
+        {% if key_top != 'Human Sacrifice' %}
 
-        {% for key_m, values_m in values_top.items %}
-        {% if values_m  %}
-
-        <div class="col-md-2 mt-2 pt-1 d-flex align-items-top" style="border-top: 1px solid #59007f82;">
-
-            <span class=" fs-6 text-dark"  style="text-align: left;">
-                <i class="fa-solid fa-circle fa-2xs" style="color:#59007f82;"></i>
-                <span class="fw-bold"> {{key_top}}</span> 
-                {% if key_m != 'None' %}
-                <span class="fw-light">/ {{key_m}}</span> 
+            {% for key_m, values_m in values_top.items %} 
+                {% if values_m %}
+            <div class=" mt-2 pt-1 
+                {% if key_top == 'Religious Demography' or key_top == 'Moralizing Supernatural Punishment and Reward'%}
+                col-md-5
+                {% else %}
+                col-md-7
                 {% endif %}
-            </span>
-
-         </div>
-         {% endif %}
-
-         {% if values_m  %}
-
-                <div class="col-md-10 py-2" id="table_id_sc">
-    
-                {% for key, values in values_m.items %}
-                {% if values %}
-                <span class="badge mb-1 mt-0 pb-0 mx-0 text-dark" style="text-align: left; background:#59007f12; border-left: 2px solid #59007f42;">
-                    <div class="fs-6 pb-1"> 
-                        <a class="h6 text-dark" href="#rt_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
-                            {{ values.0.clean_name_spaced}}
-                        </a> 
-                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
-                        <a class="h6"  style="float:right;" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}" data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize_for_long_vars }})'> &nbsp;&nbsp;&nbsp;<i class="fa-solid fa-plus text-secondary"></i>
-                        </a> 
+            align-items-top">
+                <div class="fs-6 fw-bold pt-1 px-2 rounded mb-1"  style="text-align: left; color:#000; background: #59007f12; border-bottom: 5px solid #59007f32; ">   
+                    <a href="#{% if key_m != 'None' %}rt_{{key_top|slugify}}_{{key_m|slugify}}{% else %}rt_{{key_top|slugify}}{% endif %}" class="text-dark">
+                        <span class="fw-bold"> {{key_top}}</span> 
+                        {% if key_m != 'None' %}
+                        <span class="fw-light">/ {{key_m}}</span> 
                         {% endif %}
-                    
-                    </div>
-
-                    <table class="table mb-2 shadow-box" style="width: auto;">
-
-                    {% for vv in values %}
-                    <tr>
-
-                        {% if values.0.clean_name_spaced == 'Widespread Religion' %}
-                        <td>
-                            <span class="h6 text-secondary fw-bold ps-1 pe-5">{{ vv.get_order_display }}</span> 
-                        </td>
-                        <td class="title-top-highlight">
-                            <span class="h6 text-teal fw-bold">{{ vv.widespread_religion }}</span> 
-                            {% if vv.get_degree_of_prevalence_display and  vv.get_degree_of_prevalence_display != 'unknown' and vv.get_degree_of_prevalence_display != 'uncoded' %}
-
-                            <span class="h6 text-secondary fw-normal">({{ vv.get_degree_of_prevalence_display }})</span> 
-                            {% endif %}
-
-                        </td>
-
-                        {% else %}
-
-                        <td class="ps-2 title-top-highlight">
-                            <a href="#rt_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
-                                {% if  vv.tag == 'IFR' %}
-                                <span class="h6 text-secondary fw-bold">inferred</span> 
-                                {% endif %}
-                                {% if vv.show_value == "absent" %}
-                                <span class="h6 text-secondary fw-bold">{{ vv.show_value }}</span> 
-                                {% else %}
-                                <span class="h6 text-dark fw-bold">{{ vv.show_value }}</span> 
-                                {% endif %}
-                            </a> 
-
-                        </td>
-                        {% endif %}
-                        {% if vv.year_from == None and vv.year_to == None %}
-                        <td>
-                        </td>
-
-                        {% else %}
-
-                        <td class="text-end ps-5" style="padding-top:5px;">
-                            <span class="text-secondary fs-6">
-                                {% if vv.year_from == None %}
-                                    &nbsp;
-                                {% elif  vv.year_from == vv.year_to %}
-                                    {% if  vv.year_from < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                    <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                    <span class="text-secondary fw-light fs-6 ">CE</span>
-                                    {% endif %}
-                                {% elif vv.year_to == None %}
-                                    {% if  vv.year_from < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6">BCE</span>
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                        <span class="text-secondary fw-light fs-6">CE</span>
-                                    {% endif %}
-                                {% elif vv.year_to == None and  vv.year_from == None %}
-                                    <i class="fa-solid fa-minus"></i> 
-                                {% else %}
-                                    {% if  vv.year_from < 0 and vv.year_to < 0 %}
-                                    {{ vv.year_from|abs }} 
-                                        <span class="text-secondary fw-light fs-6 pt-3">BCE</span> 
-                                    <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to|abs }}         
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
-                                    {% elif  vv.year_from < 0 and vv.year_to >= 0 %}
-                                    {{ vv.year_from|abs }}         
-                                        <span class="text-secondary fw-light fs-6">BCE</span> 
-                                 <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
-                                        <span class="text-secondary fw-light fs-6">CE</span> 
-                                    {% else %}
-                                    {{ vv.year_from }} 
-                                        <span class="text-secondary fw-light fs-6">CE</span>
-                                  <i class="fas fa-long-arrow-alt-right"></i> {{ vv.year_to }}         
-                                        <span class="text-secondary fw-light fs-6">CE</span> 
-                                    {% endif %}
-                                {% endif %}
+                </div>
+                    <div id="table_id_rt"  style="line-height:1rem;">
+                    {% for key, values in values_m.items %}
+                    {% if values %}
+                    <div class="mt-0 pb-0 mx-0 text-dark">
+                        <div class="fw-normal"> 
+                            <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
+                                {{values|length}}
                             </span>
-                        </td>
-                        {% endif %}
-
-                    </tr>
-
+                            <a class="fs-6 text-dark" href="#rt_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                {{ values.0.clean_name_spaced}}
+                            </a> 
+                            {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                            <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
+                            </a> 
+                            {% endif %}
+                        </div>
+                            </div>
+                    {% endif %}
                     {% endfor %}
-                </table>
-                        </span>
+                    {% for key, values in values_m.items %}
+                        {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                    <div>
 
-                {% endif %}
-
-                {% endfor %}
-
-                {% for key, values in values_m.items %}
-                {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                <small class="my-1 me-1 off-vars" style="text-align: left; background: #fffdf2; white-space: nowrap;">{{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus text-secondary"></i>&nbsp;</a>
-                </small>
+                        <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
+                            <span class="badge bg-secondary-light-small" style="vertical-align:top;">
+                                -                        
+                            </span>
+                            {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
+                        </small>               
+                    </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                </div>
                 {% endif %}
             {% endfor %}
-
-    </div>
-    {% endif %}
-
-
+        {% endif %}
     {% endfor %}
+
+
+    {% for key_top, values_top in all_rt_data.items %}
+        {% if key_top == 'Human Sacrifice' %}
+
+            {% for key_m, values_m in values_top.items %} 
+                {% if values_m %}
+            <div class=" mt-2 pt-1 col-md-2 align-items-top">
+                <div class="fs-6 fw-bold pt-1 px-2 rounded mb-1"  style="text-align: left; color:#000; background: #59007f12; border-bottom: 5px solid #59007f32; ">   
+                    <a href="#{% if key_m != 'None' %}rt_{{key_top|slugify}}_{{key_m|slugify}}{% else %}rt_{{key_top|slugify}}{% endif %}" class="text-dark">
+                        <span class="fw-bold"> {{key_top}}</span> 
+                        {% if key_m != 'None' %}
+                        <span class="fw-light">/ {{key_m}}</span> 
+                        {% endif %}
+                </div>
+                    <div id="table_id_rt"  style="line-height:1rem;">
+                    {% for key, values in values_m.items %}
+                    {% if values %}
+                    <div class="mt-0 pb-0 mx-0 text-dark">
+                        <div class="fw-normal"> 
+                            <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
+                                {{values|length}}
+                            </span>
+                            <a class="fs-6 text-dark" href="#rt_{{key}}" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                {{ values.0.clean_name_spaced}}
+                            </a> 
+                            {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                            <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
+                            </a> 
+                            {% endif %}
+                        </div>
+                            </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% for key, values in values_m.items %}
+                        {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                    <div>
+
+                        <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
+                            <span class="badge bg-secondary-light-small" style="vertical-align:top;">
+                                -                        
+                            </span>
+                            {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
+                        </small>               
+                    </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
     {% endfor %}
 </div>
 {% else %}
@@ -1486,130 +1243,214 @@
 </div>
 
 {% endif %}
-        
-<!-- CC -->
 
-            {% if all_crisis_cases_data and 'core.view_capital' in user.get_all_permissions %}
+<!-- ccccccccccc ppppppppppppppppp innnnnnnnnnnnn-->
+ <div class="row pt-3">
+    <div class="col-md-4">
 
-            <div class="col-md-12 m-0 p-0">
-                <span class=" h3 fw-bold m-0 p-0 ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #2125293b;">
-                        Crisis Consequences
-                    </span>   
-                    <span class=" mt-3 fs-5">
-                        <a href="#crisis_case_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
-                    </span> 
-                    {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                    <span class="fs-6 text-teal">Add another Crisis Consequence: </span>  <a class="h6" href="{% url 'crisis_consequence-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                    </a>
-                    {% endif %}               
-            
-                </span>
-            </div>
-            <div class="row px-1">
-                <div class="mb-2 col-md-12">
+        {% if all_crisis_cases_data %}
+        <div class="col-md-12 m-0 p-0">
+            <span class="h1 fw-bold m-0 p-0 ">  
+                <span class="badge mt-3 ms-1 mb-2 px-3 py-2 fw-bold text-dark" style="text-align: left; background: #21252942; border-left: 5px solid #21252972;">
+                    <a href="#crisis_case_var" class=" text-dark"> Crisis Consequence Cases</a> 
+                </span>   
+            </span>
+        </div>
+        <div class="row">
 
-                    {% for key, values in all_crisis_cases_data.items %}
-                    {% if values %}
-                        <div class="py-2"  id="{{key}}">
-                                {% for value in values %}
-                                <span class="fs-5 text-teal pt-2 pb-1 pe-2 me-2 ms-2 mb-1 mt-1 highlighted-value">
-                                    {% if value.is_first_100 == True %}
-                                    <sup>
-                                        <span class="badge bg-warning text-dark pb-1 pt-1 px-2" style="padding:3px;"><b> First 100</b> </span>
-                                    </sup>
-                                        {% endif %}
-                                    {{value.name}} 
-                                        
-                                    <span class="fs-5">
-                                        {% include "core/partials/_year_block_value_inline.html" %}
-                                    </span> 
+                        <div id="table_id_crisis_cases"  style="line-height:1rem;">
+                        {% for key, values in all_crisis_cases_data.items %}
+                        {% if values %}
+                        <div class="mt-0 pb-0 mx-0 text-dark ms-2">
+                            <div class="fw-normal"> 
+                                <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
+                                    {{values|length}}
                                 </span>
-            
-                                {% endfor %}                                        
+                                <a class="fs-6 text-dark" href="#crisis_case_var" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                    {{ values.0.clean_name_spaced}}
+                                </a> 
+                                {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
+                                </a> 
+                                {% endif %}
                             </div>
+                                </div>
                         {% endif %}
                         {% endfor %}
+                        {% for key, values in values_m.items %}
+                            {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                        <div>
 
-                </div>
-            </div>
+                            <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
+                                <span class="badge bg-secondary-light-small" style="vertical-align:top;">
+                                    -                        
+                                </span>
+                                {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
+                            </small>               
+                        </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+        
+        </div>
+        {% else %}
+        <div class="col-md-9">
+            <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #2125293b; border:1px solid #212529">
+                    Crisis Consequence Cases
+                </span>   
+                <span class=" mt-3 fs-5">
+            Coding in Progress.
+                </span>                 
+            </span>
+        </div>
 
-            {% else %}
-            <div class="col-md-9">
-                <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #2125293b; border:1px solid #212529">
-                        Crisis Consequences
-                    </span>   
-                    <span class=" mt-3 fs-5">
-                Coding in Progress. 
-                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                        <span class="text-success">Add a new Crisis Consequence: </span>  <a class="h6" href="{% url 'crisis_consequence-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                        </a>
-                        {% endif %}                    </span>                 
-                </span>
-            </div>
-            {% endif %}
+        {% endif %}
+                
+    </div>
+
+    <div class="col-md-4">
+
+        {% if all_power_transitions_data %}
+        <div class="col-md-12 m-0 p-0">
+            <span class="h1 fw-bold m-0 p-0 ">  
+                <span class="badge mt-3 ms-1 mb-2 px-3 py-2 fw-bold text-dark" style="text-align: left; background: #0b869e42; border-left: 5px solid #0b869e72;">
+                    <a href="#power_transition_var" class=" text-dark"> Power Transitions</a> 
+                </span>   
+            </span>
+        </div>
+        <div class="row">
+
+                        <div id="table_id_power_transitions"  style="line-height:1rem;">
+                        {% for key, values in all_power_transitions_data.items %}
+                        {% if values %}
+                        <div class="mt-0 pb-0 mx-0 text-dark ms-2">
+                            <div class="fw-normal"> 
+                                <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
+                                    {{values|length}}
+                                </span>
+                                <a class="fs-6 text-dark" href="#power_transition_var" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                    {{ values.0.clean_name_spaced}}
+                                </a> 
+                                {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
+                                </a> 
+                                {% endif %}
+                            </div>
+                                </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for key, values in values_m.items %}
+                            {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                        <div>
+
+                            <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
+                                <span class="badge bg-secondary-light-small" style="vertical-align:top;">
+                                    -                        
+                                </span>
+                                {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
+                            </small>               
+                        </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+        
+        </div>
+        {% else %}
+        <div class="col-md-9">
+            <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #0b869e3b; border:1px solid #0b869e">
+                    Power Transitions
+                </span>   
+                <span class=" mt-3 fs-5">
+            Coding in Progress.
+                </span>                 
+            </span>
+        </div>
+
+        {% endif %}
+                
+    </div>
+
+    <div class="col-md-4">
+        {% if all_instability_data %}
+        <div class="col-md-12 m-0 p-0">
+            <span class="h1 fw-bold m-0 p-0 ">  
+                <span class="badge mt-3 ms-1 mb-2 px-3 py-2 fw-bold text-dark" style="text-align: left; background: #20c99742; border-left: 5px solid #20c99772;">
+                    <a href="#instability_event_var" class=" text-dark"> Instability Events</a> 
+                </span>   
+            </span>
+        </div>
+        <div class="row">
+
+                        <div id="table_id_instability"  style="line-height:1rem;">
+                        {% for key, values in all_instability_data.items %}
+                        {% if values %}
+                        <div class="mt-0 pb-0 mx-0 ms-2 text-dark">
+                            <div class="fw-normal"> 
+                                <span class="badge bg-success-light-small fw-normal" style="vertical-align:top;">
+                                    {{values|length}}
+                                </span>
+                                <a class="fs-6 text-dark" href="#instability_event_var" data-bs-toggle='tooltip' data-bs-html='true'  title='See more details'>
+                                    {{ values.0.clean_name_spaced}}
+                                </a> 
+                                {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %} 
+                                <a class="h6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'> <i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i>
+                                </a> 
+                                {% endif %}
+                            </div>
+                                </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% for key, values in values_m.items %}
+                            {% if not values and user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
+                        <div>
+
+                            <small class="me-1 off-vars" style="text-align: left; background: #fffdf2; display:inline-block;">
+                                <span class="badge bg-secondary-light-small" style="vertical-align:top;">
+                                    -                        
+                                </span>
+                                {{ key|replace_underscore_and_capitalize }}<a class="fs-6" href="{% url key|lower|add:'-create' %}?polity_id_x={{object.id}}"  data-bs-toggle='tooltip' data-bs-html='true'  title='Add a new Record ({{key|replace_underscore_and_capitalize }})'>&nbsp;<i class="fa-solid fa-plus fa-xs" style="color:lightgray"></i></a>
+                            </small>               
+                        </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+        
+        </div>
+        {% else %}
+        <div class="col-md-9">
+            <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
+                <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #20c9973b; border:1px solid #20c997">
+                    Instability Events
+                </span>   
+                <span class=" mt-3 fs-5">
+            Coding in Progress.
+                </span>                 
+            </span>
+        </div>
+
+        {% endif %}
+                
+    </div>
+</div>
+
+<!-- CC -->
 
 <!-- PT -->
 
-            {% if all_power_transitions_data and 'core.add_capital' in user.get_all_permissions %}
-            <div class="col-md-12 m-0 p-0">
-                <span class=" h3 fw-bold m-0 p-0 ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-dark" style="text-align: left; background: #0dcaf03b;">
-                        Power Transitions
-                    </span>   
-                    <span class=" mt-3 fs-5">
-                        <a href="#power_transition_var"><i class="fa-solid fa-circle-arrow-down mt-3 fa-lg"></i></a>
-                    </span>   
-                    {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                    <span class="fs-6 text-teal">Add another Power Transition: </span>  <a class="h6" href="{% url 'power_transition-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                    </a>
-                    {% endif %}              
-            
-                </span>
-            </div>
-            <div class="row px-1">
-                <div class="mb-2 col-md-12">
-                    {% for key, values in all_power_transitions_data.items %}
+
+</div>
 
 
-                        {% include "core/partials/_pt_snippet_top.html" %}
-
-                    {% endfor %}
-
-                </div>
-            </div>
-
-            {% else %}
-            <div class="col-md-9">
-                <span class=" h3 fw-bold m-0 p-0 text-secondary ">  
-                    <span class="badge mt-5 mb-2 p-3 fw-bold text-secondary rounded-pill" style="text-align: left; background: #0dcaf03b; border:1px solid #0dcaf0">
-                        Power Transitions
-                    </span>   
-                    <span class=" mt-3 fs-5">
-                Coding in Progress. 
-                        {% if user.is_authenticated and 'core.add_capital' in user.get_all_permissions %}
-                        <span class="text-success">Add a Power Transition: </span>  <a class="h6" href="{% url 'power_transition-create' %}?polity_id_x={{object.id}}"> &nbsp;<i class="fa-solid fa-plus text-dark"></i>
-                        </a>
-                        {% endif %}
-
-                    </span>                 
-                </span>
-            </div>
-            {% endif %}
-            <hr class="light-narrow-hr">
-
-
-
-        </div>
         <div class="table-responsive mb-2">
-            <h3 class="fw-bold pb-2 pt-3"> NGA Settlements:</h3>
+            <h4 class="fw-bold pb-2 pt-4 mt-4"> NGA Settlements:</h4>
 
-            <table class="table table-bordered p-1">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Year Range</th>
-                        <th>{{ object.long_name }} ({{object.new_name}}) was in: </th>
+                        <th class="text-secondary">Year Range</th>
+                        <th class="text-secondary">{{ object.long_name }} ({{object.new_name}}) was in: </th>
                     </tr>
                 </thead>
             <tbody>
@@ -1617,8 +1458,7 @@
                 <tr>
                     {% include "core/partials/_year_block_nga.html" %}
 
-                    <td class="text-success fw-bold fs-6 p-2">
-                        <i class="fa-solid fa-earth-americas fa-xs"></i>&nbsp;
+                    <td class="text-success fw-bold fs-6 px-2 py-0">
                         {% for nga in concise_rel.1 %}
                         {% if not forloop.last %}
                         {% if nga.name == object.home_nga.name %}
@@ -1629,7 +1469,7 @@
                         {% else %}
                         {{ nga.name }} 
                         {% endif %}
-                        &nbsp; <i class="fa-solid fa-earth-americas fa-xs"></i> &nbsp;                        
+                        &nbsp; /  &nbsp;                        
                         {% else %}
                     
                         {% if nga.name == object.home_nga.name %}
@@ -2048,8 +1888,9 @@
             {% for key_m, values_m in values_top.items %}
                 <div class="table-container pb-3">
                     <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
-                      {% include 'core/partials/_table_header_polity.html' %}
-                    <tbody>
+                        {% with my_section='ec' %}
+                            {% include 'core/partials/_table_header_polity.html' %}
+                        {% endwith %}                       <tbody>
                 {% for key, values in values_m.items %}
                     <span id="ec_{{key}}"></span>
                     {% if values %}
@@ -2081,7 +1922,6 @@
                                             <small class="highlighted-value-title fw-bold" style="display:inline-block"> 
                                                 {{ obj.show_value }}
                                             </small>
-                                            {% include "core/partials/_all_tags_inline_obj.html" %}
 
                                     </td>
                                     {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' %}
@@ -2145,8 +1985,10 @@
                 {% for key_m, values_m in values_top.items %}
                     <div class="table-container pb-3">
                         <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
-                            {% include 'core/partials/_table_header_polity.html' %}
-                            <tbody>
+                            {% with my_section='rt' %}
+                                {% include 'core/partials/_table_header_polity.html' %}
+                            {% endwith %}     
+                    <tbody>
                     {% for key, values in values_m.items %}
                         <span id="rt_{{key}}"></span>
                         {% if values %}
@@ -2259,7 +2101,7 @@
                 {% if 'core.add_capital' in user.get_all_permissions  or user|in_group:"Chief Seshat External Experts" %}
                     <div class="py-2 ps-0 ms-0">
                         <div class="table-container pb-3">
-                            <table id="table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
+                            <table id="crisis_cases_table_id" class="table align-middle table-hover" style="padding: 0.25 rem !important; border-bottom:1px solid #e9ecef88;">
                                 {% include 'core/partials/_table_header_polity_cc.html' %}
                                 <tbody>
                         {% for obj in values%}
@@ -2470,9 +2312,18 @@
                                             <td class="fw-bold" style="text-align: left !important; vertical-align: center !important; border-width:0;">
 
                                        
-                                       
+                                                <small style="vertical-align: top;">
+                                                    {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
+                                                    <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+                                                  {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
+                                                    <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+                                                  {% else %}
+                                                    <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+                                                  {% endif %}
+                                                </small>
 
                                                 <span class="fw-bold ps-1" style="display:inline-block; text-align: left; vertical-align: bottom;">
+                                                  
                                                     {{ obj.name }}
                                                 </span> 
 
@@ -2491,6 +2342,14 @@
                                             {% else %}
                                             <td style="text-align: left;">-</td>
                                             {% endif %}
+                                            <td>
+
+                                                {% autoescape off %}
+                                                <small class="fw-normal" >{{obj.llm_name|extract_macro_event}}     
+                                                    
+                                                </small>
+                                                {% endautoescape %}
+                                            </td>
                                             {% include "core/partials/_years_block_new_obj.html" %}
 
                                             <td  style="border-width:0; width:15%;">
