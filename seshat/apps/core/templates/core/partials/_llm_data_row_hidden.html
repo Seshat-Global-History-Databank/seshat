@@ -1,9 +1,22 @@
 {% load humanize %}
 {% load mathfilters %}
+{% load custom_filters %}
 
 <tr  id="hidden-row-llm" style="border-width:0; display:none; background-image: linear-gradient(to left, rgb(246, 127, 127, 0.056),rgb(242, 199, 119, 0.056),rgb(151, 230, 151, 0.056));">
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">                           
-        <span > {{ form.instance.llm_name}}</span>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">  
+        <small style="vertical-align: top;">
+            {% if form.instance.created_date|date:"Y-m-d" < "2025-03-29" %}
+            <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+          {% elif form.instance.created_date|date:"Y-m-d" < "2025-04-11" %}
+            <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+          {% else %}
+            <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+          {% endif %}
+        </small>                         
+        <span> {{ form.instance.llm_name|remove_macro_event}}</span>
+    </td>
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">        
+        {{form.instance.llm_name|extract_macro_event}}
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">
         {% if form.instance.polity.long_name %}
@@ -18,7 +31,7 @@
     </td>
     <td class="fw-normal text-dark" style="border-width: 0; text-align: left;">{{ form.instance.get_llm_instability_types }}
     </td>
-    <td class="fw-normal text-dark" style="border-width: 0; text-align: right;">                        
+    <td class="fw-normal text-dark" style="border-width: 0; text-align: center;">                        
         {% if form.instance.llm_year_from == None %}                        
         {% elif form.instance.llm_year_from == form.instance.llm_year_to %}
             {% if form.instance.llm_year_from < 0 %}

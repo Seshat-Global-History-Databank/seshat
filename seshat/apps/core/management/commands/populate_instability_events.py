@@ -11,7 +11,7 @@ from seshat.apps.crisisdb.models import Instability_event, Instability_type, Ins
 
 #from seshat.apps.crisisdb.instability_events_dic_list import ultimate_dics_list
 #from seshat.apps.crisisdb.instability_events_dic_list_2 import ultimate_dics_list
-from seshat.apps.crisisdb.instability_events_dic_list_russia import ultimate_dics_list
+from seshat.apps.crisisdb.instability_events_dic_list_batch_3 import ultimate_dics_list
 
 from django.db import transaction
 
@@ -75,9 +75,15 @@ class Command(BaseCommand):
             # Create Instability_event
             real_check = 'Real' if event_data['is_real'] else 'Uncertain'
 
+            if event_data['macro_event']:
+                llm_new_name = event_data['event'] + f" (Macro Event: {event_data['macro_event']})"
+            else:
+                llm_new_name = event_data['event']
+
+
             event = Instability_event.objects.create(
                 name=event_data['event'],
-                llm_name=event_data['event'],
+                llm_name=llm_new_name,
                 year_from=event_data['year_from'],
                 year_to=event_data['year_to'],
                 llm_year_from=event_data['year_from'],

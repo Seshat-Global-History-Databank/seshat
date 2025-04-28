@@ -23,12 +23,23 @@ title="Click to Download all such coded records">
 
 
 {% block myheadings_list %}
+<th class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:3%;  " scope="col">
+    <small class="text-secondary">Batch</small>
+    
+    </th>
 <th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:25%;  " scope="col">
     <span> 
-    Event Name
-</span>
+        Event Name
+    </span>
 
 </th>
+<th class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray; width:10%;  " scope="col">
+    <span> 
+        Macro Event
+    </span>
+
+</th>
+
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
     <span> 
         <a href="{% url list_all_url %}?orderby=year_from">
@@ -61,7 +72,7 @@ title="Click to Download all such coded records">
     Checks
 </span>
 </th>
-<th  class = "fw-light" style="text-align: left; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
+<th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray;  border-right: 1px solid gray; " scope="col">
     <span> 
     Progress&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span>
@@ -70,10 +81,32 @@ title="Click to Download all such coded records">
 
 {% block extra_vars_list %}
 <td  style="text-align: left; z-index:890; border-width:0;" >
+    <small>
+        {% if obj.created_date|date:"Y-m-d" < "2025-03-29" %}
+        <span class="badge bg-secondary"  data-bs-toggle="tooltip" data-bs-html="true" title="Generated in March 2025.">Batch 1</span>
+      {% elif obj.created_date|date:"Y-m-d" < "2025-04-11" %}
+        <span class="badge bg-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Generated from March 28th, to April 28th, 2025.">Batch 2</span>
+      {% else %}
+        <span class="badge bg-success" data-bs-toggle="tooltip" data-bs-html="true" title="Generated after April 28th, 2025.">Batch 3</span>
+      {% endif %}
+    </small>
+</td>
+<td  style="text-align: left; z-index:890; border-width:0;" >
+
     {% autoescape off %}
-    <small class="fw-normal highlighted-value-title-light" style="border-left:5px solid lightpink; color:black; padding-top:1px; padding-bottom:1px;">{{obj.name}}</small>
+    <span class="fw-normal highlighted-value-title-light" style="border-left:5px solid lightpink; color:black; padding-top:1px; padding-bottom:1px;">{{obj.name}}     </span>
     {% endautoescape %}
 
+
+
+</td>
+<td  style="text-align: left; z-index:890; border-width:0;" >
+
+    {% autoescape off %}
+    <span class="fw-normal">{{obj.llm_name|extract_macro_event}}     
+
+    </span>
+    {% endautoescape %}
 </td>
 <td  style="text-align: center; z-index:890; border-width:0;" >
     {% if obj.year_from == None %}
@@ -170,13 +203,13 @@ title="Click to Download all such coded records">
 {% if obj.description and obj.description != 'None' %}
     <td colspan="1" style="text-align: center; border-width:0;">
         <small>
-            <a href="{% url update_url obj.id %}">Edit<i class="fa-solid fa-pen-to-square text-secondary"></i> &nbsp;</a>
+            <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i> &nbsp;</a>
         </small>
     </td>
 {% else %}
 <td colspan="1" style="text-align: center; border-width:0;">
     <small>
-        <a href="{% url update_url_new obj.id %}">Edit<i class="fa-solid fa-pen-to-square text-danger"></i>&nbsp;</a>
+        <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i>&nbsp;</a>
     </small>
 </td>
 {% endif %}
