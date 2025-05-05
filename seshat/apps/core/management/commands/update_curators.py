@@ -110,3 +110,4 @@ class Command(BaseCommand):
                     self.stdout.write(f"Added curator {new_curator} to {model.__name__} with polity_id {item[0]}")
 
         self.stdout.write("Update completed.")
+        

@@ -196,6 +196,19 @@ VIOLENCE_TYPE_CHOICES = (
 
 ########## END of  tuple choices for CrisisDB Models
 
+import re
+
+def extract_macro_event_from_llm_name(value):
+    if not value:
+        return ''
+    match = re.search(r'\(Macro Event:\s*(.*?)\)', value)
+    if match:
+        return match.group(1)
+    return None
+
+
+
+
 def return_beautiful_abs_pres(item):
     if item == "P":
         return '<i class="fa-solid fa-check text-success"></i>'
@@ -321,7 +334,7 @@ def has_a_polity(self):
     
 ################# INSATABILITY
 class Instability_ref(models.Model):
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=500)
     is_real = models.BooleanField(default=False)
 
     def __str__(self):
@@ -337,7 +350,7 @@ class Instability_type(models.Model):
 
     def __str__(self):
         if self.name:
-            return mark_safe(f'<small class="rounded px-1 pb-0 pt-1" style="background:#2f4f4f11; color: darkslategrey; display:inline-block; padding-bottom:0 !important ; padding-top:0 !important;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
+            return mark_safe(f'<small class="rounded fw-light px-1 pb-0 pt-1" style="color: darkslategrey; display:inline-block; padding-bottom:0 !important ; padding-top:0 !important;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
         
 
 class Check_choice(models.Model):
@@ -443,6 +456,33 @@ class Instability_event(SeshatCommon):
     def get_llm_instability_refs_str(self):
         #return "<br>".join(self.inst_llm_ref.values_list("name", flat=True))
         return ";".join(ref.name for ref in self.inst_llm_ref.all())
+    
+    @property
+    def made_up_macro_event(self):
+        return extract_macro_event_from_llm_name(self.llm_name or self.name)
+    
+    @property
+    def batch_number(self):
+        if not self.created_date:
+            return "Unknown"
+        if self.created_date.date() < date(2025, 3, 29):
+            return "Batch 1"
+        elif self.created_date.date() < date(2025, 4, 11):
+            return "Batch 2"
+        else:
+            return "Batch 3"
+        
+    @property
+    def batch_tooltip(self):
+        if not self.created_date:
+            return "Unknown creation date"
+        if self.created_date.date() < date(2025, 3, 29):
+            return "Generated in March 2025."
+        elif self.created_date.date() < date(2025, 4, 11):
+            return "Generated from March 28th, to April 28th, 2025."
+        else:
+            return "Generated after April 28th, 2025."
+
 
     def __str__(self) -> str:
         if self.name:

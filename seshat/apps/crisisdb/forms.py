@@ -260,6 +260,23 @@ class CheckChoiceForm(forms.ModelForm):
             'color': forms.Select(attrs={'class': 'form-select'}),
         }
 
+
+# class DisabledByNameCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+#     def __init__(self, *args, disabled_names=None, **kwargs):
+#         self.disabled_names = [name.lower() for name in (disabled_names or [])]
+#         super().__init__(*args, **kwargs)
+
+#     def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+#         option = super().create_option(name, value, label, selected, index, subindex=subindex, attrs=attrs)
+#         if str(label).lower() in self.disabled_names:
+#             option['attrs']['disabled'] = 'disabled'
+#             option['attrs']['class'] += ' text-muted'
+#             option['selected'] = False  # <- always uncheck
+#         return option
+    
+# DISABLED_INST_TYPE_NAMES = ["Military campaign", "Military Mutiny"]  # example names to disable
+
+
 class Instability_eventForm(ExpertReviewedForm):
 
     #formset = CommentPartFormSet(prefix='commentpart')  # Include formset
@@ -323,7 +340,7 @@ class Instability_eventForm(ExpertReviewedForm):
         widgets['sorokin_rationale'] = forms.Textarea(attrs={'class': 'form-control  mb-3',  'style': 'height: 100px'})
         widgets['real_event_check'] = forms.Select(attrs={'class': 'form-control  mb-1', })
  
-        widgets['inst_type'] = forms.SelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple-inst-type', 'text':'inst_types[]' , 'style': 'height: 340px', 'multiple': 'multiple'})
+        widgets['inst_type'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-control mb-3 js-states js-example-basic-multiple-inst-type', 'text':'inst_types[]' , 'style': 'height: 340px', 'multiple': 'multiple'})
         widgets['ra_check'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})  
         #widgets['inst_llm_ref'] = forms.CheckboxSelectMultiple(attrs={'class': 'form-check-input'})   
 

@@ -51,11 +51,9 @@
         box-shadow: none;
         padding-right: 1px;
         margin-top:10px;
-        width:100%;
+
 
     }
-
-
 
     /* Style the dropdown */
     .select2-container .select2-selection--single {
@@ -115,7 +113,6 @@
     .select2-container .select2-selection__arrow {
       height: 36px;
       margin-top: 4px; /* Adjust the margin-top as needed */
-      width:100%;
 
     }
 
@@ -213,7 +210,7 @@
 
     
     .mainform {
-        background:rgba(255, 235, 205, 0.464); 
+        background:#fffdf2; 
         border: 0px #78292366 solid;
         border-radius: 5px;
         box-shadow: 0 6px 6px hsl(0deg 0% 0% / 0.3);
@@ -486,11 +483,8 @@
                 {% endif %}
                 <div class="row pt-2 ps-2">
                     <div class="col-sm-12 row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             {{ extra_var|as_crispy_field }}
-                        </div>
-                        <div class="col-sm-5 pb-0">
-                            {{ form.polity|as_crispy_field }}
                         </div>
                         <div class="col-sm-1 pb-0">
                             {{ form.year_from|as_crispy_field }}
@@ -498,21 +492,26 @@
                           <div class="col-sm-1 pb-0">
                             {{ form.year_to|as_crispy_field }}
                           </div>
-        
-                        <div class="col-sm-1 pb-3">
-                            {{ form.real_event_check|as_crispy_field }}
+                        <div class="col-sm-7 pb-1" >
+                            {{ extra_var10|as_crispy_field }}
                         </div>
+
+
+                          <div class="col-sm-4 pb-0">
+                            {{ form.polity|as_crispy_field }}
+                        </div>
+
                         <div class="col-sm-12 pb-3" style="display:none;">
                             {{ extra_var4|as_crispy_field }}
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             {{ extra_var2|as_crispy_field }}
                         </div>
                         <div class="col-sm-4">
                             {{ extra_var3|as_crispy_field }}
                         </div>
-                        <div class="col-sm-4" >
-                            {{ extra_var10|as_crispy_field }}
+                        <div class="col-sm-1 pb-3">
+                            {{ form.real_event_check|as_crispy_field }}
                         </div>
                         {% if not form.instance.comment %}
                             <div class="col-sm-6">
@@ -702,15 +701,14 @@
 </div> 
 
 <script>
+
     $(document).ready(function() {
         // Initialize Select2 with an empty dataset
         $(".js-example-basic-single").select2({
             width: 'resolve',  // Keeps it within the initial width
             dropdownAutoWidth: true,  // Ensures it doesn’t resize
-            minimumResultsForSearch: -1, // Removes search box if unnecessary
         });    
         $('.js-example-basic-multiple-inst-type').select2({
-            placeholder: "Select one or more",
             allowClear: true,
         });
 

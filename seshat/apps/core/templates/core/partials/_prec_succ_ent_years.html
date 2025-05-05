@@ -9,64 +9,21 @@
         <div>
             Succeeding Entity  
         </div>
-            <div class="px-1 border border-dark rounded fw-normal" style="background:#fefae6; display:inline-block;">
-
-            {% if  obj.polity.start_year == obj.polity.end_year %}
-                {% if  obj.polity.start_year < 0 %}
-                {{ obj.polity.start_year|abs }} <span class="text-secondary">BCE</span> 
-                {% else %}
-                {{ obj.polity.start_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-            {% elif obj.polity.end_year == None %}
-                {% if  obj.polity.start_year < 0 %}
-                {{ obj.polity.start_year|abs }} <span class="text-secondary">BCE</span>
-                {% else %}
-                {{ obj.polity.start_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-            {% elif obj.polity.end_year == None and  obj.polity.start_year == None %}
-                <i class="fa-solid fa-minus"></i> 
-            {% else %}
-                {% if  obj.polity.start_year < 0 and obj.polity.end_year < 0 %}
-                {{ obj.polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.polity.end_year|abs }} <span class="text-secondary">BCE</span>
-                {% elif  obj.polity.start_year < 0 and obj.polity.end_year >= 0 %}
-                {{ obj.polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.polity.end_year }} <span class="text-secondary">CE</span>
-                {% else %}
-                {{ obj.polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.polity.end_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-
-            {% endif %}
+        {% if obj.polity %}
+            <div class="px-1 border border-secondary rounded fw-normal" style="background:#ffffff; display:inline-block;">
+                {{obj.polity.formatted_years|safe}}
             </div>
-         
+        {% endif %}
+
         {% else %}
         <div>
             Preceding Entity   
         </div>
-        <div class="px-1 border border-dark rounded fw-normal" style="background:#fefae6; display:inline-block;" >
-
-            {% if  obj.other_polity.start_year == obj.other_polity.end_year %}
-                {% if  obj.other_polity.start_year < 0 %}
-                {{ obj.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> 
-                {% else %}
-                {{ obj.other_polity.start_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-            {% elif obj.other_polity.end_year == None %}
-                {% if  obj.other_polity.start_year < 0 %}
-                {{ obj.other_polity.start_year|abs }} <span class="text-secondary">BCE</span>
-                {% else %}
-                {{ obj.other_polity.start_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-            {% elif obj.other_polity.end_year == None and  obj.other_polity.start_year == None %}
-                <i class="fa-solid fa-minus"></i> 
-            {% else %}
-                {% if  obj.other_polity.start_year < 0 and obj.other_polity.end_year < 0 %}
-                {{ obj.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.other_polity.end_year|abs }} <span class="text-secondary">BCE</span>
-                {% elif  obj.other_polity.start_year < 0 and obj.other_polity.end_year >= 0 %}
-                {{ obj.other_polity.start_year|abs }} <span class="text-secondary">BCE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.other_polity.end_year }} <span class="text-secondary">CE</span>
-                {% else %}
-                {{ obj.other_polity.start_year }} <span class="text-secondary">CE</span> <i class="fas fa-long-arrow-alt-right"></i> {{ obj.other_polity.end_year }} <span class="text-secondary">CE</span>
-                {% endif %}
-            {% endif %}
-        </div>
+        {% if obj.other_polity %}
+            <div class="px-1 border border-secondary rounded fw-normal" style="background:#ffffff; display:inline-block;" >
+                {{obj.other_polity.formatted_years|safe}}
+            </div>
+        {% endif %}
         {% endif %}
     {% else %}
         {% track_last obj.clean_name_spaced|slice:"7:" %}

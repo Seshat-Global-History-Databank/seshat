@@ -15,6 +15,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from ..core.models import Citation, Reference, Polity, Section, Subsection, Country, Variablehierarchy, SeshatPrivateComment, SeshatPrivateCommentPart, SeshatComment, SeshatCommentPart, ScpThroughCtn
 
 from seshat.apps.accounts.models import Seshat_Expert
+from django.utils.dateparse import parse_date
 
 
 from seshat.apps.core.forms import SignUpForm, VariablehierarchyFormNew, CitationForm, ReferenceForm, SeshatCommentForm, SeshatCommentPartForm, PolityForm, PolityUpdateForm, CapitalForm, NgaForm, SeshatCommentPartForm2, SeshatCommentPartForm5,  SeshatCommentPartForm10, SeshatPrivateCommentPartForm, ReferenceFormSet2, ReferenceFormSet5, ReferenceFormSet10, CommentPartFormSet, ReferenceWithPageForm, SeshatPrivateCommentForm, ReligionForm, ExpertCheckedForm
@@ -25,7 +26,7 @@ from django.http import HttpResponseRedirect, response, JsonResponse, HttpRespon
 from django.conf import settings
 
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, F
 
 from django.views import generic
 import csv
@@ -50,15 +51,28 @@ from django.core.mail import send_mail
 from .mixins import PolityIdMixin
 from .var_defs import swapped_dict
 
+from django.db.models.functions import Coalesce
+
 
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
 
 
 from .forms import Polity_research_assistantForm, Polity_utm_zoneForm, Polity_original_nameForm, Polity_alternative_nameForm, Polity_peak_yearsForm, Polity_durationForm, Polity_degree_of_centralizationForm, Polity_suprapolity_relationsForm, Polity_capitalForm, Polity_languageForm, Polity_linguistic_familyForm, Polity_language_genusForm, Polity_religion_genusForm, Polity_religion_familyForm, Polity_religionForm, Polity_relationship_to_preceding_entityForm, Polity_preceding_entityForm, Polity_succeeding_entityForm, Polity_supracultural_entityForm, Polity_scale_of_supracultural_interactionForm, Polity_alternate_religion_genusForm, Polity_alternate_religion_familyForm, Polity_alternate_religionForm, Polity_expertForm, Polity_editorForm, Polity_religious_traditionForm
 
-
+from ..crisisdb.models import Instability_type, Check_choice, INST_EXTENT_CHOICES, INST_INTENSITY_CHOICES
 
 from ..rt.models import Widespread_religion, Official_religion, Elites_religion, Theo_sync_dif_rel, Sync_rel_pra_ind_beli, Religious_fragmentation, Gov_vio_freq_rel_grp, Gov_res_pub_wor, Gov_res_pub_pros, Gov_res_conv, Gov_press_conv, Gov_res_prop_own_for_rel_grp, Tax_rel_adh_act_ins, Gov_obl_rel_grp_ofc_reco, Gov_res_cons_rel_buil, Gov_res_rel_edu, Gov_res_cir_rel_lit, Gov_dis_rel_grp_occ_fun, Soc_vio_freq_rel_grp, Soc_dis_rel_grp_occ_fun, Gov_press_conv_for_aga
+
+BATCH_1_END = datetime.date(2025, 3, 29)
+BATCH_2_END = datetime.date(2025, 4, 11)
+
+def get_batch_tag(created_date):
+    if created_date < BATCH_1_END:
+        return "Batch 1"
+    elif created_date < BATCH_2_END:
+        return "Batch 2"
+    else:
+        return "Batch 3"
 
 
 # Define a custom test function to check for the 'core.add_capital' permission
@@ -8819,12 +8833,70 @@ def dynamic_update_view(request, object_id, form_class, model_class, x_name, cod
 def generic_list_view(request, model_class, var_name, coded_value, var_name_display, var_section, var_subsection, db_section, var_main_desc):
     # Only enforce authentication and permissions if db_section is not 'rt'
     # special case of RT:
+
+
     rt_allowed_polities = ["kh_chenla", "pe_wari_emp", "in_kampili_k", "in_kalyani_chalukya_emp", "in_hoysala_k", "et_aksum_emp_3", "et_aksum_emp_2", "ni_proto_yoruboid", "ni_sokoto", "gm_kaabu_emp"]
 
     if var_name in ["widespread_religion",]:
         object_list = model_class.objects.all().order_by('polity_id', 'order')
     else:
         object_list = model_class.objects.all()
+
+    year_from_min = request.GET.get('year_from_min')
+    year_to_max = request.GET.get('year_to_max')
+    created_before = request.GET.get('created_before')
+    selected_batch = request.GET.get('selected_batch')
+    polity_id = request.GET.get('polity')
+    inst_type_ids = request.GET.getlist("inst_type")  # handles multiple selections
+    ra_check_ids = request.GET.getlist("ra_check")
+    inst_extent = request.GET.get("inst_extent")
+    inst_intensity = request.GET.get("inst_intensity")
+
+
+    if inst_type_ids:
+        object_list = object_list.filter(inst_type__in=inst_type_ids).distinct()
+
+    if ra_check_ids:
+        object_list = object_list.filter(ra_check__in=ra_check_ids).distinct()
+
+    if inst_extent:
+        object_list = object_list.filter(inst_extent=inst_extent)
+
+    if inst_intensity:
+        object_list = object_list.filter(inst_intensity=inst_intensity)
+
+    if polity_id:
+        object_list = object_list.filter(polity__id=polity_id)
+
+    # Annotate fallback values
+    object_list = object_list.annotate(
+        start_year_effective=Coalesce('year_from', F('polity__start_year')),
+        end_year_effective=Coalesce('year_to', F('polity__end_year')),
+    )
+
+    if year_from_min:
+        object_list = object_list.filter(start_year_effective__gte=int(year_from_min))
+
+    if year_to_max:
+        object_list = object_list.filter(end_year_effective__lte=int(year_to_max))
+
+    if created_before:
+        parsed_date = parse_date(created_before)
+        if parsed_date:
+            object_list = object_list.filter(created_date__lt=parsed_date)
+
+    if selected_batch:
+        if selected_batch == "Batch 1":
+            object_list = object_list.filter(created_date__lt=BATCH_1_END)
+        elif selected_batch == "Batch 2":
+            object_list = object_list.filter(
+                created_date__gte=BATCH_1_END,
+                created_date__lt=BATCH_2_END
+            )
+        elif selected_batch == "Batch 3":
+            object_list = object_list.filter(created_date__gte=BATCH_2_END)
+
+
     #extra_var_dict = {obj.id: obj.__dict__.get(var_name) for obj in object_list}
     if coded_value == "suprapolity_relations":
         extra_var_dict = {obj.id: obj.display_value_2() for obj in object_list}
@@ -8880,6 +8952,11 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     # else:
     #     ordering_tag_value = "coded_value"
 
+    if coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall']:
+        good_ordering_tag = coded_value + "_from"
+    else:
+        good_ordering_tag = coded_value 
+
     # Define any additional context variables you want to pass to the template
     context = {
         'object_list': object_list,
@@ -8893,7 +8970,8 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         'metadownload_url':  f'{var_name}-metadownload',
         'list_all_url':  f'{var_name}s_all',
         'var_name_display': var_name_display,
-        'ordering_tag': f"?orderby={coded_value}",
+        'ordering_tag': f"?orderby={good_ordering_tag}",
+        'des_ordering_tag': f"?orderby=-{good_ordering_tag}",
         'var_section': var_section,
         'var_subsection': var_subsection,
         'var_main_desc': var_main_desc,
@@ -8908,6 +8986,58 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #"my_exp": my_exp,
     }
 
+    if var_name in ['instability_event',]:
+        paginator = Paginator(object_list, 100)  # Show 100 items per page
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        paginated = True
+        context['page_obj'] = page_obj
+        context['paginated'] = paginated
+        context["instability_types"] = Instability_type.objects.all()
+        context["check_choices"] = Check_choice.objects.all()
+        context["INST_EXTENT_CHOICES"] = INST_EXTENT_CHOICES
+        context["INST_INTENSITY_CHOICES"] = INST_INTENSITY_CHOICES
+        
+        context["selected_inst_type_ids"] = inst_type_ids
+        context["selected_ra_check_ids"] = ra_check_ids
+
+    elif var_name in ['widespread_religion',]:
+        paginator = Paginator(object_list, 100)  # Show 100 items per page
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        paginated = True
+        context['page_obj'] = page_obj
+        context['paginated'] = paginated
+    else:
+        context['page_obj'] = object_list
+        context['paginated'] = False
+
+
+
+    # After applying all filters to object_list
+    polity_ids_in_list = model_class.objects.all().values_list('polity_id', flat=True).distinct()
+    polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')
+
+    if var_name in ['instability_event',]:
+        my_polities = []
+        for polity in polities:
+            events = model_class.objects.filter(polity=polity).values_list('created_date', flat=True).distinct()
+            batches = set()
+
+            for created in events:
+                batch = get_batch_tag(created.date())
+                batches.add(batch)
+
+            # Convert to sorted list for display order
+            batch_list = sorted(batches, key=lambda t: ["Batch 1", "Batch 2", "Batch 3"].index(t))
+            setattr(polity, 'batch_list', batch_list)
+            my_polities.append(polity)
+            context['polities'] = my_polities
+
+    else:
+        context['polities'] = polities
 
     context["inner_vars"] = {
         var_name_display: {
@@ -9023,7 +9153,7 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
         elif x_name == "lux_precious_metal":
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10, x_name_11 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'which_metals', 'place_of_provenance_pol'
         elif x_name == "instability_event":
-            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 
+            x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6,  x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'inst_intensity', 'inst_extent', 'real_event_check', 'types', 'RA_checks', 'checking_status', 'sorokin_rationale', 'llm_description', 'made_up_macro_event'
         elif db_section == 'ec':
             x_name_1, x_name_2, x_name_3, x_name_4, x_name_5, x_name_6, x_name_7, x_name_8, x_name_9, x_name_10 =  'name', 'coded_value', 'place_of_provenance_str', 'ruler_consumption', 'ruler_consumption_tag', 'elite_consumption', 'elite_consumption_tag', 'common_people_consumption', 'common_people_consumption_tag', 'place_of_provenance_pol'
         elif coded_value in ['polity_population', 'polity_territory', 'population_of_the_largest_settlement', "administrative_level", "settlement_hierarchy", "religious_level", "military_level", "largest_communication_distance", "fastest_individual_communication", 'long_wall' ]:
@@ -9095,16 +9225,18 @@ def generic_download(request, model_class, var_name, x_name, var_section, var_su
 
             coded_cols.update({
                 'event_name': obj[x_name_1],
+                'macro_event': objj.made_up_macro_event,
                 'year_from': obj['year_from'],
                 'year_to': obj['year_to'],
                 'intensity': obj[x_name_2],
                 'extent': obj[x_name_3],
                 'data_point': obj[x_name_4],
-                 x_name_5: objj.get_instability_types_str(),
-                 x_name_6: objj.get_llm_instability_checks_str(),
-                 x_name_7: check_status_tag,
+                x_name_5: objj.get_instability_types_str(),
+                x_name_6: objj.get_llm_instability_checks_str(),
+                x_name_7: check_status_tag,
                 'rationale': obj[x_name_8],
-                 x_name_9: obj[x_name_9],
+                x_name_9: obj[x_name_9],
+                'batch_number': objj.batch_number,
             })
         elif x_name == "lux_precious_metal":
             place_pols = []

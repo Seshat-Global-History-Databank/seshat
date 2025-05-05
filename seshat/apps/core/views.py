@@ -87,7 +87,7 @@ from seshat.utils.utils import adder, dic_of_all_vars, list_of_all_Polities, dic
 
 from django.shortcuts import HttpResponse
 
-from math import floor, ceil
+from math import floor, ceil, log10
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.db.models.functions import AsGeoJSON
 from django.views.generic import ListView
@@ -2729,6 +2729,8 @@ class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
         # Sort by year and prepare datasets
         fixed_colors = ['teal', 'maroon', 'darkorange', 'red', 'blue']
         datasets = []   
+        log_datasets = []
+
 
         used_datasets = []     
         
@@ -2737,6 +2739,8 @@ class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
             years = [y for y, _ in sorted_data]
             print(years)
             values = [p for _, p in sorted_data]
+            # Logarithmic values (skip or filter out 0 and negative)
+            log_values = [log10(p) if p > 0 else None for p in values]
 
             if source not in used_datasets:
                 used_datasets.append(source)
@@ -2748,9 +2752,20 @@ class SettlementDetailView(SuccessMessageMixin, generic.DetailView):
                 'color': fixed_colors[idx] if idx < len(fixed_colors) else self._random_color()
             })
 
+            log_datasets.append({
+                'label': source,
+                'data': log_values,
+                'years': years,
+                'color': fixed_colors[idx] if idx < len(fixed_colors) else self._random_color()
+            })
+
         # Prepare JSON data for template
         context['plot_data'] = json.dumps({
             'datasets': datasets
+        })
+        
+        context['log_plot_data'] = json.dumps({
+            'datasets': log_datasets
         })
 
         context['pop_sources'] = ", ".join(used_datasets)
@@ -6152,6 +6167,25 @@ def get_description(request, model_name, obj_id):
         return HttpResponse(content.strip())  # Remove leading/trailing whitespace
     except ContentType.DoesNotExist:
         return HttpResponse("Invalid model name.", status=400)
+    
+def get_description_brief(request, model_name, obj_id):
+    try:
+        # Dynamically get the model class based on the model name
+        # make sure we bring in app_label to add more safety and security
+        if model_name not in ['token', 'lux_precious_metal', 'precious_metal'] :
+            model = ContentType.objects.get(model=model_name.lower()).model_class()
+            obj = get_object_or_404(model, id=obj_id)  # Fetch the object dynamically
+        elif model_name == 'lux_precious_metal':
+            obj = get_object_or_404(Lux_precious_metal, id=obj_id) 
+        elif model_name == 'precious_metal':
+            obj = get_object_or_404(Precious_metal, id=obj_id) 
+        else:
+            obj = get_object_or_404(Token, id=obj_id) 
+        content = render_to_string('core/description_snippet_brief.html', {'obj': obj})
+        return HttpResponse(content.strip())  # Remove leading/trailing whitespace
+    except ContentType.DoesNotExist:
+        return HttpResponse("Invalid model name.", status=400)
+
 
 
 @user_passes_test(lambda u: u.groups.filter(name__in=['Chief Seshat Researchers', 'Chief Seshat Admins']).exists())
