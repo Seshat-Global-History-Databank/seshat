@@ -281,7 +281,7 @@ class Examination_systemForm(ExpertReviewedForm):
         labels = commonlabels
         
         widgets = dict(commonwidgets)
-        widgets['examination_system'] = forms.Select(attrs={'class': 'form-control  mb-3', })
+        widgets['examination_system'] = forms.Select(attrs={'class': 'form-control mb-3', })
         
 
 class Merit_promotionForm(ExpertReviewedForm):

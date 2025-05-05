@@ -533,16 +533,17 @@
 <h4>Population Over Time</h4>
 
 <div class="row">
-  <div class="col-md-12 py-1">
     {% if plot_data %}
-    <div class="col-md-12" id="population-plot" style="height: 500px;"></div>
+    <div class="col-md-6" id="population-plot" style="height: 500px;"></div>
+    {% endif %}
+    {% if plot_data %}
+    <div class="col-md-6" id="log-population-plot" style="height: 500px;"></div>
+    {% endif %}
     <div class="pb-3">
       Scientific Resource(s): 
       <b> {{pop_sources}}</b>
     </div>
 
-
-    {% endif %}
     <div class="col-md-12" id="population-table">
 
 
@@ -657,78 +658,104 @@
 </div>  
 
 
-
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var lat = {{ object.latitude }};
-      var lon = {{ object.longitude }};
-  
-      // Only show map if coordinates are available
-      if (lat && lon) {
-        var map = L.map('map').setView([lat, lon], 6); // zoom level 6
-  
-        // Define the OpenStreetMap layer
-        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap contributors'
-        });
-  
-        // Define the ESRI satellite layer
-        var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: '&copy; Esri, Maxar, Earthstar Geographics, and the GIS community'
-        });
-  
-        // Add OpenStreetMap by default
-        osmLayer.addTo(map);
-  
-        // Add marker
-        L.marker([lat, lon]).addTo(map)
-          .bindPopup('<b>{{ object.name }}</b>').openPopup();
-  
-        // Add a layer control to switch between map views
-        var baseMaps = {
-          "OpenStreetMap": osmLayer,
-          "Satellite": satelliteLayer
-        };
-  
-        L.control.layers(baseMaps).addTo(map);
-      }
+  document.addEventListener("DOMContentLoaded", function () {
+    var lat = {{ object.latitude }};
+    var lon = {{ object.longitude }};
 
-    });
+    // Only show map if coordinates are available
+    if (lat && lon) {
+      var map = L.map('map').setView([lat, lon], 6); // zoom level 6
 
+      var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      });
 
+      var satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; Esri, Maxar, Earthstar Geographics, and the GIS community'
+      });
+
+      osmLayer.addTo(map);
+
+      L.marker([lat, lon]).addTo(map)
+        .bindPopup('<b>{{ object.name }}</b>').openPopup();
+
+      L.control.layers({
+        "OpenStreetMap": osmLayer,
+        "Satellite": satelliteLayer
+      }).addTo(map);
+    }
+
+    // Population Plot - Linear
     const plotData = JSON.parse('{{ plot_data|safe }}');
-
     const traces = plotData.datasets.map(dataset => ({
-        x: dataset.years,
-        y: dataset.data,
-        mode: 'lines+markers',
-        name: dataset.label,
-        marker: {
-            color: dataset.color,
-            size: 6
-        },
-        line: { color: dataset.color, width: 1}
+      x: dataset.years,
+      y: dataset.data,
+      mode: 'lines+markers',
+      name: dataset.label,
+      marker: {
+        color: dataset.color,
+        size: 6
+      },
+      line: { color: dataset.color, width: 1 }
     }));
 
     const layout = {
-        xaxis: { title: '<b>Year</b>' },
-        yaxis: { title: '<b>Population</b>' },
-        paper_bgcolor: '#fffdf2',
-        plot_bgcolor: '#fffdf2',
-        legend: {
-          x: 0.0,  // Shift the legend leftwards
-          y: 1,     // Align vertically to top
-          xanchor: 'left',
-          yanchor: 'top',
-          bgcolor: '#fffdf2',  // white with some transparency
-          bordercolor: 'teal',
-          orientation: 'v'  // Keep vertical layout
+      xaxis: { title: '<b>Year</b>' },
+      yaxis: { title: '<b>Population</b>' },
+      paper_bgcolor: '#fffdf2',
+      plot_bgcolor: '#fffdf2',
+      legend: {
+        x: 0.0,
+        y: 1,
+        xanchor: 'left',
+        yanchor: 'top',
+        bgcolor: '#fffdf2',
+        bordercolor: 'teal',
+        orientation: 'v'
       }
     };
 
     Plotly.newPlot('population-plot', traces, layout, { responsive: true });
 
-  </script>
+    // Population Plot - Logarithmic
+    const logData = JSON.parse('{{ log_plot_data|safe }}');
+    const logTraces = logData.datasets.map(dataset => ({
+      x: dataset.years,
+      y: dataset.data,
+      mode: 'lines+markers',
+      name: dataset.label,
+      marker: {
+        color: dataset.color,
+        size: 6
+      },
+      line: { color: dataset.color, width: 1 }
+    }));
+
+    const logLayout = {
+      xaxis: { title: '<b>Year</b>' },
+      yaxis: {
+        title: '<b>Log (Population)</b>',
+        type: 'log'
+      },
+      paper_bgcolor: '#fffdf2',
+      plot_bgcolor: '#fffdf2',
+      legend: {
+        x: 0.0,
+        y: 1,
+        xanchor: 'left',
+        yanchor: 'top',
+        bgcolor: '#fffdf2',
+        bordercolor: 'teal',
+        orientation: 'v'
+      }
+    };
+
+    Plotly.newPlot('log-population-plot', logTraces, logLayout, { responsive: true });
+
+  });
+</script>
+
   
 
 {% endblock content%}

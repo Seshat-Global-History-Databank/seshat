@@ -10,6 +10,7 @@ urlpatterns += [path('downloads_page/', views.seshatolddownloads, name='seshat-o
 urlpatterns += [
     path('acknowledgements/', views.seshatacknowledgements, name='seshat-acknowledgements'),
     path('get-description/<str:model_name>/<int:obj_id>/', views.get_description, name='get-description'),
+    path('get-description-brief/<str:model_name>/<int:obj_id>/', views.get_description_brief, name='get-description-brief'),
      path('download-settlements/', views.download_habitation_sites_csv, name='download_settlements'),
 
 

@@ -69,7 +69,7 @@ commonfields = ['polity', 'year_from', 'year_to',
                 'description', 'tag', 'is_disputed', 'is_uncertain',  'drb_reviewed', 'finalized', 'citations', 'curator',]
 
 commonwidgets = {
-    'polity': forms.Select(attrs={'class': 'form-control  mb-2 js-example-basic-single', 'id': 'id_polity', 'name': 'polity'}),    
+    'polity': forms.Select(attrs={'class': 'form-control  mb-2 js-example-basic-single', 'id': 'id_polity', 'name': 'polity',}),    
     'year_from': forms.NumberInput(attrs={'class': 'form-control  mb-2',}),
     'year_to': forms.NumberInput(attrs={'class': 'form-control  mb-2', }),
     'description': Textarea(attrs={'class': 'form-control  mb-1', 'style': 'height: 240px; line-height: 1.2;', 'placeholder':'Add a meaningful description (optional)\nNote: Use §REF§ opening and closing tags to include citations to the description.\nExample: §REF§Chadwick, J. 1976. The Mycenaean World, Cambridge, p.78.§REF§.'}),

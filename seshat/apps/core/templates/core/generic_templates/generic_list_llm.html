@@ -42,12 +42,14 @@ title="Click to Download all such coded records">
 
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; width:15%; " scope="col">
     <span> 
-        <a href="{% url list_all_url %}?orderby=year_from">
-            <i class="fa-solid fa-arrow-up-wide-short fa-rotate-180"></i>        </a>
+        <a href="?{% query_transform request orderby='year_from' %}">
+            <i class="fa-solid fa-arrow-up-long fa-xs"></i>
+        </a>
 
     Year(s)
-    <a href="{% url list_all_url %}?orderby=-year_from">
-        <i class="fa-solid fa-arrow-up-short-wide fa-rotate-180"></i>        </a>
+    <a href="?{% query_transform request orderby='-year_from' %}">
+        <i class="fa-solid fa-arrow-down-long fa-xs"></i>
+    </a>
 
 </span>
 </th>
@@ -58,12 +60,27 @@ title="Click to Download all such coded records">
 </th>
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
+        <a href="?{% query_transform request orderby='inst_intensity' %}">
+            <i class="fa-solid fa-arrow-up-long fa-xs"></i>
+        </a>
+
     Intensity
+    <a href="?{% query_transform request orderby='-inst_intensity' %}">
+        <i class="fa-solid fa-arrow-down-long fa-xs"></i>
+    </a>
 </span>
 </th>
 <th  class = "fw-light" style="text-align: center; white-space: nowrap;  border-left: 1px solid gray; " scope="col">
     <span> 
+        <a href="?{% query_transform request orderby='inst_extent' %}">
+            <i class="fa-solid fa-arrow-up-long fa-xs"></i>
+        </a>
+
     Extent
+        <a href="?{% query_transform request orderby='-inst_extent' %}">
+
+        <i class="fa-solid fa-arrow-down-long fa-xs"></i>
+    </a>
 </span>
 </th>
 
@@ -94,20 +111,35 @@ title="Click to Download all such coded records">
 <td  style="text-align: left; z-index:890; border-width:0;" >
 
     {% autoescape off %}
-    <span class="fw-normal highlighted-value-title-light" style="border-left:5px solid lightpink; color:black; padding-top:1px; padding-bottom:1px;">{{obj.name}}     </span>
+    <span class="fw-normal highlighted-value-title-light" >{{obj.name}}     </span>
     {% endautoescape %}
 
 
 
 </td>
-<td  style="text-align: left; z-index:890; border-width:0;" >
+    {% if obj.made_up_macro_event %}
+    <td  style="text-align: left; z-index:890; border-width:0;" >
 
-    {% autoescape off %}
-    <span class="fw-normal">{{obj.llm_name|extract_macro_event}}     
+        {% autoescape off %}
+        <span class="fw-normal">{{obj.made_up_macro_event}}  
 
-    </span>
-    {% endautoescape %}
-</td>
+        </span>
+        {% endautoescape %}
+
+    </td>
+
+    {% else %}
+    <td  style="text-align: center; z-index:890; border-width:0;" >
+
+        {% autoescape off %}
+        <span class="fw-normal">- 
+
+        </span>
+        {% endautoescape %}
+
+    </td>
+    {% endif %}
+
 <td  style="text-align: center; z-index:890; border-width:0;" >
     {% if obj.year_from == None %}
 
@@ -201,13 +233,13 @@ title="Click to Download all such coded records">
 <!-- Update Button -->
 {% block update_button %}
 {% if obj.description and obj.description != 'None' %}
-    <td colspan="1" style="text-align: center; border-width:0;">
+    <td  style="text-align: center; border-width:0;">
         <small>
             <a href="{% url update_url obj.id %}"><i class="fa-solid fa-pen-to-square text-secondary"></i> &nbsp;</a>
         </small>
     </td>
 {% else %}
-<td colspan="1" style="text-align: center; border-width:0;">
+<td  style="text-align: center; border-width:0;">
     <small>
         <a href="{% url update_url_new obj.id %}"><i class="fa-solid fa-pen-to-square text-danger"></i>&nbsp;</a>
     </small>

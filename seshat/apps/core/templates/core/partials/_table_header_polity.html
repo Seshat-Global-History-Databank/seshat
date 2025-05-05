@@ -1,7 +1,7 @@
 <!-- templates/_table_header.html -->
 {% load custom_filters %}
 
-    <legend class="sticky-top py-0 px-0 m-0" style="background-color:#fffdf2; height:40px; top: 55px; z-index:900;" id="{% if key_m != 'None' %}{{my_section|slugify}}_{{key_top|slugify}}_{{key_m|slugify}}{% else %}{{my_section|slugify}}_{{key_top|slugify}}{% endif %}">
+    <legend class="sticky-top py-0 px-0 m-0" style="background-color:#ffffff; height:40px; top: 55px; z-index:900;" id="{% if key_m != 'None' %}{{my_section|slugify}}_{{key_top|slugify}}_{{key_m|slugify}}{% else %}{{my_section|slugify}}_{{key_top|slugify}}{% endif %}">
     {% if values_m %}
         <span>{{ key_top }}</span> 
         {% if key_m != 'None' %}
@@ -16,7 +16,7 @@
     </span>
 </legend>
 <thead> 
-    <tr class="sticky-top" style="background-color:#fffdf2; height:40px; border: 1px solid #78282355; top: 85px; z-index:900;">
+    <tr class="sticky-top" style="background-color:#ffffff; height:40px; border: 1px solid #78282355; top: 85px; z-index:900;">
         {% if user|in_group:"Chief Seshat Externalllllllll Experts" %}   
         <th scope="col" class="fw-light text-secondary" style="text-align: left;">#</th>
         {% endif %}

@@ -477,3 +477,32 @@ def remove_macro_event(value):
     # Remove (Macro Event: ...)
     cleaned = re.sub(r'\s*\(Macro Event:.*?\)', '', value)
     return cleaned.strip()
+
+
+@register.simple_tag
+def query_transform(request, **kwargs):
+    updated = request.GET.copy()
+    for k, v in kwargs.items():
+        if v is None:
+            updated.pop(k, None)
+        else:
+            updated[k] = v
+    return updated.urlencode()
+
+@register.filter
+def get_item_by_id(queryset, value):
+    try:
+        return queryset.get(id=value).new_name
+    except:
+        return value
+    
+
+@register.simple_tag
+def query_without(request, key, value):
+    """Remove `value` from request.GET[key] and return query string"""
+    query_params = request.GET.copy()
+    values = query_params.getlist(key)
+    if value in values:
+        values.remove(value)
+        query_params.setlist(key, values)
+    return '?' + query_params.urlencode()
