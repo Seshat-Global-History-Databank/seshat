@@ -596,6 +596,30 @@ class Polity(models.Model):
                 return f'{abs(self.start_year)} <small class="text-secondary fw-normal bce-color">BCE</small> <i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i> {self.end_year} <small class="text-secondary fw-normal ce-color">CE</small>'
             else:
                 return f'{self.start_year} <small class="text-secondary fw-normal ce-color">CE</small> <i class="fa-solid fa-arrow-right-long fa-2xs" style="color:rgb(151, 151, 151)"></i> {self.end_year} <small class="text-secondary fw-normal ce-color">CE</small>'
+            
+    @property
+    def formatted_years_text(self):
+        if self.start_year == self.end_year:
+            if self.start_year is None:
+                return '-'
+            if self.start_year < 0:
+                return f'{abs(self.start_year)} BCE'
+            else:
+                return f'{self.start_year} CE'
+        elif self.end_year is None:
+            if self.start_year is None:
+                return '-'
+            if self.start_year < 0:
+                return f'{abs(self.start_year)} BCE'
+            else:
+                return f'{self.start_year} CE'
+        else:
+            if self.start_year < 0 and self.end_year < 0:
+                return f'{abs(self.start_year)} BCE to {abs(self.end_year)} BCE'
+            elif self.start_year < 0 and self.end_year >= 0:
+                return f'{abs(self.start_year)} BCE to {self.end_year} CE'
+            else:
+                return f'{self.start_year} CE to {self.end_year} CE'
 
     def __str__(self) -> str:
         if self.long_name and self.new_name:
@@ -744,6 +768,7 @@ class CityPolityRelation(models.Model):
                 return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
             else:
                 return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            
 
     
 class Ngapolityrel(models.Model):
@@ -1427,6 +1452,38 @@ class SeshatCommon(models.Model):
                 return f'{abs(self.year_from)} <small class="text-secondary fw-light">BCE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
             else:
                 return f'{self.year_from} <small class="text-secondary fw-light">CE</small> {arrow} {self.year_to} <small class="text-secondary fw-light">CE</small>'
+            
+    @property
+    def formatted_years_text(self):
+        if self.year_from is None and self.year_to is None:
+            return '-'
+
+        if self.year_to is None:
+            if self.year_from < 0:
+                return f'{abs(self.year_from)}  BCE'
+            else:
+                return f'{self.year_from}  CE'
+        elif self.year_from is None:
+            if self.year_to < 0:
+                return f'{abs(self.year_to)}  BCE'
+            else:
+                return f'{self.year_to}  CE'
+        elif self.year_from == self.year_to:
+            if self.year_from is None:
+                return ' '
+            elif self.year_from < 0:
+                return f'{abs(self.year_from)}  BCE'
+            else:
+                return f'{self.year_from}  CE'
+        else:
+            arrow = 'to'
+            if self.year_from < 0 and self.year_to < 0:
+                return f'{abs(self.year_from)}  BCE {arrow} {abs(self.year_to)}  BCE'
+            elif self.year_from < 0 and self.year_to >= 0:
+                return f'{abs(self.year_from)}  BCE {arrow} {self.year_to}  CE'
+            else:
+                return f'{self.year_from}  CE {arrow} {self.year_to}  CE'
+
 
 
 class ScientificResource(models.Model):

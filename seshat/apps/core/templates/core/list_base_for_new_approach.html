@@ -12,20 +12,26 @@
         color: red;
     }
 
-    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-        color: darkred;
+    .select2-container .select2-selection--multiple {
         cursor: pointer;
-        display: inline-block;
-        font-weight: bold;
-        margin-right: 20px;
+        display: block;
+        border: 1px solid #ccc;
+        min-height: 24px;
+        user-select: none;
+        -webkit-user-select: none;
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        display: none;
 
 
     }
         .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
-            color:rgb(2, 57, 2);
-            padding-left: 2px;
-            width:100%;
-
+            color:rgb(6, 51, 6);
+            margin-top:3px;
+            padding-left:0px;
+            font-size: 14px;
+            vertical-align: top;
     }
 
     .select2-results {
@@ -37,25 +43,29 @@
 
     }
 
+    th {
+        border-left: 1px solid #78282322 !important;
+    }
+
+
     .select2-container--default .select2-search--inline .select2-search__field {
-        background: white;
+        /* background: white; */
         border: none;
         outline: 0;
-        margin-left:-20px;
-        cursor:text;
+        margin-left: 1px;
+        cursor: text;
         box-shadow: none;
-        padding-right: 1px;
-        margin-top:10px;
-
-
+        padding: 0px;
+        margin-top: 0px;
     }
+
 
     .select2-container--default .select2-selection--single .select2-selection__rendered {
         color: #444;
-        line-height: 24px;
+        line-height: 30px;
     }
     .form-select{
-        height: 28px;
+        height: 30px;
         padding-top:1px;
         padding-bottom:1px;
         padding-left:5px;
@@ -65,7 +75,7 @@
     }
 
     .form-control{
-        height: 28px;
+        height: 30px;
         padding-top:1px;
         padding-bottom:1px;
         padding-left:5px;
@@ -78,6 +88,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 1px;
+      height:30px !important;
     }
 
     .select2-container .select2-results__option:hover {
@@ -86,16 +97,6 @@
 
       }
 
-      .select2-container .select2-selection--multiple {
-        box-sizing: border-box;
-        cursor: pointer;
-        display: block;
-        min-height: 28px;
-        user-select: none;
-        -webkit-user-select: none;
-        width: 300px;
-
-    }
 
 
       .select2-container--default .select2-results__option--highlighted[aria-selected] {
@@ -107,7 +108,7 @@
 
           /* Style the dropdown arrow */
     .select2-container .select2-selection__arrow {
-        height: 28px;
+        height: 30px;
         width:100%;
   
       }
@@ -171,26 +172,29 @@
     .bg-absent-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: gray;
-        border: 1px solid lightgray;   
+        border: 0px solid lightgray;   
        }
 
        .bg-secondary-light {
-        background: #fffdf2;
         color: crimson;
-        border: 1px solid rgba(220, 20, 60, 0.18);
-        background: rgba(220, 20, 60, 0.06);
+        border: 0px solid rgba(220, 20, 60, 0.18);
+        background: rgba(220, 20, 60, 0.16);
        }
 
 
     
        .bg-info-light {
-        background: #fffdf2; /* rgb(134, 134, 134);*/
         color: dodgerblue;
-        border: 1px solid rgba(30, 143, 255, 0.178);   
-        background: rgba(30, 143, 255, 0.06);   
+        border: 0px solid rgba(30, 143, 255, 0.178);   
+        background: rgba(30, 143, 255, 0.16);   
 
        }
     
+       .bg-violet-light {
+        color: #8a4fff;
+        border: 0px solid rgba(138, 79, 255, 0.2);
+        background: rgba(138, 79, 255, 0.12);
+      }
        .bg-danger-light {
         background: lightpink;
     
@@ -200,24 +204,35 @@
           color:navajowhite;
         }
 
+        .bg-indianred-light {
+            color: #cd5c5c;
+            border: 0px solid rgba(139, 69, 19, 0.2);
+            background: rgba(139, 69, 19, 0.12);
+          }
+          
         .bg-success-light {
-            background: #fffdf2; /* rgb(134, 134, 134);*/
             color: teal;
-            border: 1px solid rgba(0, 128, 128, 0.18);   
-            background: rgba(0, 128, 128, 0.08);   
+            border: 0px solid rgba(0, 128, 128, 0.18);   
+            background: rgba(0, 128, 128, 0.18);   
     
             }
 
+        .bg-orange-light {
+            color: #FF8C00;
+            border: 0px solid rgba(255, 140, 0, 0.2);
+            background: rgba(255, 140, 0, 0.12);
+            }
+
        .bg-warning-light {
-        background: #fffdf2; /* rgb(134, 134, 134);*/
+        background: #e8c87680; /* rgb(134, 134, 134);*/
         color: darkorange;
-        border: 1px solid goldenrod;   
+        border: 0px solid goldenrod;   
        }
     
        .bg-uncoded-light {
-        background: #fffdf2; /* rgb(134, 134, 134);*/
+        background: rgba(55, 178, 227, 0.261); /* rgb(134, 134, 134);*/
         color: darkred;
-        border: 1px solid rosybrown;
+        border: 0px solid rosybrown;
        }
        
        .bg-trans-light {
@@ -233,10 +248,20 @@
        .bg-unknown-light {
         background: #fffdf2; /* rgb(134, 134, 134);*/
         color: hotpink;
-        border: 1px solid hotpink;
+        border: 0px solid hotpink;
+        }
+
+        .form-select {
+            background-position-x:calc(100% - 2px);
         }
 
 
+        .bg-colorful-light {
+            background-image: linear-gradient(to right, rgb(246, 127, 127, 0.46),rgb(242, 199, 119, 0.46),rgb(151, 230, 151, 0.46));
+            border-radius: 10px;
+            color:#782823;
+            border: 1px solid rgba(0, 128, 128, 0.33);
+          }
 
 
 </style>
@@ -244,7 +269,7 @@
 
       
       
-    {% if object_list %}
+    {% if object_list or request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event %}
     <div class="row d-flex">
         <div class="col-md-9">
             <!-- <h5 class="lead-2">List of all the data for: {{object_list.0.section}}</h5> -->
@@ -284,7 +309,7 @@
 <div class="border border-secondary rounded px-3 pt-2 mb-2" style="background: #fffdf2;">
     <form method="get" class="row mb-3">
         <div class="col-md-12 row">
-            <div class="col-md-5 pb-2">
+            <div class="col-md-6 pb-2">
                 <label for="polity" class="text-secondary">Polity <small class="text-secondary"> (total: {{polities|length}})</small></label>
                 <br>
                 <select name="polity" id="polity" class="form-select js-example-basic-single "
@@ -292,19 +317,7 @@
                   <option value="">All</option>
                   {% for p in polities %}
                     <option value="{{ p.id }}" {% if request.GET.polity == p.id|stringformat:"s" %}selected{% endif %} >
-                        {{ p.long_name }} ({{ p.new_name }}) &nbsp; &nbsp; &nbsp; &nbsp;
-                        {% if p.batch_list %}
-                            {% for batch in p.batch_list %}
-    
-                                {% if batch == "Batch 1" %}
-                                <span>[Batch 1]</span>
-                                {% elif batch == "Batch 2" %}
-                                    <span class="badge bg-primary">[Batch 2]</span>
-                                {% else %}
-                                    <span class="badge bg-success">[Batch 3]</span>
-                                {% endif %}
-                            {% endfor %}
-                      {% endif %}
+                        {{ p.long_name }} ({{ p.new_name }}) &nbsp; &nbsp; [{{ p.formatted_years_text }}]
                     </option>
                   {% endfor %}
                 </select>
@@ -317,10 +330,27 @@
                 {% endfor %}
             </div>
             {% if var_name_display == 'Instability Event' %}
-              
+            <div class="col-md-4 pb-2">
+                <label for="macro_event" class="text-secondary">Macro Event:</label>
+                <br>
+                <select name="macro_event" id="macro_event"  class="form-select js-example-basic-single " onchange="this.form.submit()">
+                  <option value="">All</option>
+                  {% for macro in macro_events %}
+                    <option value="{{ macro }}" {% if macro == selected_macro %}selected{% endif %}>
+                      {{ macro }}
+                    </option>
+                  {% endfor %}
+                </select>
+            </div>
             <div class="col-md-2 pb-2">
+                <label for="searched_name" class="text-secondary">Event Name:</label>
+                <input type="text" name="searched_name" id="searched_name" class="form-control" value="{{ name_query }}">
+            </div>
+
+
+            <div class="col-md-4 pb-2">
                 <label class="text-secondary">Intensity</label>
-                <select name="inst_intensity" class="form-select">
+                <select name="inst_intensity" class="form-select" onchange="this.form.submit()">
                   <option value="">All</option>
                   {% for val, label in INST_INTENSITY_CHOICES %}
                     <option value="{{ val }}" {% if request.GET.inst_intensity == val %}selected{% endif %}>{{ label }}</option>
@@ -328,9 +358,9 @@
                 </select>
               </div>
 
-            <div class="col-md-2 pb-2">
+            <div class="col-md-5 pb-2">
                 <label class="text-secondary">Extent</label>
-                <select name="inst_extent" class="form-select">
+                <select name="inst_extent" class="form-select" onchange="this.form.submit()">
                   <option value="">All</option>
                   {% for val, label in INST_EXTENT_CHOICES %}
                     <option value="{{ val }}" {% if request.GET.inst_extent == val %}selected{% endif %}>{{ label }}</option>
@@ -349,6 +379,8 @@
               <input type="number" name="year_to_max" class="form-control" value="{{ request.GET.year_to_max }}">
             </div>
             {% if var_name_display == 'Instability Event' %}
+
+
             <div class="col-md-1 pb-2">
                 <label for="selected_batch" class="text-secondary">Batch</label>
                 <select name="selected_batch" id="selected_batch" class="form-select" onchange="this.form.submit()">
@@ -359,52 +391,42 @@
                 </select>
               </div>
                   
-
-              
-    
-              <div class="col-md-6 pb-2">
-                <label class="text-secondary d-block">Instability Types</label>
-                <div class="row">
-                    {% for type in instability_types %}
-                      <div class="col-md-4">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox" name="inst_type"
-                                 id="inst_type_{{ type.id }}"
-                                 value="{{ type.id }}"
-                                 {% if type.id|stringformat:"s" in selected_inst_type_ids %}checked disabled{% endif %}>
-                          <label class="form-check-label fw-normal" for="inst_type_{{ type.id }}">
-                            {{ type.name }}
-                          </label>
-                        </div>
-                      </div>
-                    {% endfor %}
-                  </div>
-              </div>
     
               <div class="col-md-4 pb-2">
-                <label class="text-secondary d-block mb-1">RA Checks</label>
-                <div class="row">
-                  {% for check in check_choices %}
-                    <div class="col-md-6">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="ra_check"
-                               id="ra_check_{{ check.id }}"
-                               value="{{ check.id }}" {% if check.id|stringformat:"s" in selected_ra_check_ids %}checked disabled{% endif %}>
-                        <label class="form-check-label fw-normal" for="ra_check_{{ check.id }}">
-                          {{ check.name }}
-                        </label>
-                      </div>
-                    </div>
+                <label for="inst_type_select" class="text-secondary d-block">Event Types</label>
+                <select id="inst_type_select" name="inst_type" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
+                  {% for type in instability_types %}
+                    <option value="{{ type.id }}"
+                      {% if type.id|stringformat:"s" in selected_inst_type_ids %}selected{% endif %}>
+                      {{ type.name }}
+                    </option>
                   {% endfor %}
-                </div>
+                </select>
               </div>
+
+              <div class="col-md-4 pb-2">
+                <label for="ra_check_select" class="text-secondary d-block">RA Checks</label>
+                <select id="ra_check_select" name="ra_check" class="form-select js-example-basic-multiple" multiple onchange="this.form.submit()">
+                    {% for check in check_choices %}
+                    <option value="{{ check.id }}"
+                      {% if check.id|stringformat:"s" in selected_ra_check_ids %}selected{% endif %}>
+                      {{ check.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              
+
               
     
 
               
               {% endif %}
-              <div class="col-md-2 d-flex align-items-center">
-                <button type="submit" class="btn btn-warning w-100 fw-bold"> <i class="fa-solid fa-filter-list"></i> Apply Filters</button>
+              <div class="col-md-1 d-flex align-items-center pt-2">
+            </div>
+
+              <div class="col-md-3 d-flex align-items-center pt-2">
+                <button type="submit" class="btn w-100 fw-bold bg-colorful-light"> <i class="fa-solid fa-filter"></i> Apply Filters</button>
             </div>
         </div>
 
@@ -416,30 +438,30 @@
           <input type="date" name="created_before" class="form-control" value="{{ request.GET.created_before }}">
         </div> -->
         <div class="col-auto align-self-end pb-0 mb-0">
-          {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity  %}
+          {% if request.GET.year_from_min or request.GET.year_to_max or request.GET.created_before or request.GET.polity or request.GET.selected_batch or request.GET.inst_type  or request.GET.ra_check or request.GET.inst_extent or request.GET.inst_intensity or request.GET.searched_name or request.GET.macro_event %}
 
           <div class="py-1 px-0  d-inline-block" >
             <strong class="pb-2">Filters applied:</strong>
             <ul class="list-inline mb-1">
               {% if request.GET.year_from_min %}
-                <li class="list-inline-item px-2 mb-1 rounded  bg-primary text-white">
-                    <span class="fw-light">From Year ≥  </span>  <span class="fw-bold"> {{ request.GET.year_from_min }}</span>
+                <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
+                    <span class="fw-light">Year ≥  </span>  <span class="fw-bold"> {{ request.GET.year_from_min }}</span>
 
-                  <a href="?{% query_transform request year_from_min=None %}" class="text-white ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                  <a href="?{% query_transform request year_from_min=None %}" class="text-dark ms-1" style="vertical-align:center;">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
               {% if request.GET.year_to_max %}
-                <li class="list-inline-item px-2 mb-1 rounded  bg-success text-white">
-                    <span class="fw-light">To Year ≤ </span>  <span class="fw-bold"> {{ request.GET.year_to_max }}</span>
+                <li class="list-inline-item px-2 mb-1 rounded  bg-orange-light text-dark">
+                    <span class="fw-light">Year ≤ </span>  <span class="fw-bold"> {{ request.GET.year_to_max }}</span>
 
-                  <a href="?{% query_transform request year_to_max=None %}" class="text-white ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                  <a href="?{% query_transform request year_to_max=None %}" class="text-dark ms-1" style="text-decoration: none;">&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
               {% for type in instability_types %}
               {% if type.id|stringformat:"s" in selected_inst_type_ids %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-info text-white">
+                <li class="list-inline-item px-2 mb-1 rounded bg-info-light text-dark">
                 <small class="fw-light">Type:</small>  <span class="fw-bold"> {{ type.name }}</span>
-                  <a href="?{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-white ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                  <a href="?{% query_without request 'inst_type' type.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
             {% endfor %}
@@ -447,9 +469,9 @@
             {% if request.GET.inst_intensity %}
             {% for val, label in INST_INTENSITY_CHOICES %}
               {% if val == request.GET.inst_intensity %}
-                <li class="list-inline-item px-2 mb-1 rounded bg-danger text-white">
+                <li class="list-inline-item px-2 mb-1 rounded bg-danger-light text-dark">
                     <small class="fw-light">Intensity:</small>  <span class="fw-bold"> {{ label }}</span>
-                  <a href="?{% query_transform request inst_intensity=None %}" class="text-white ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                  <a href="?{% query_transform request inst_intensity=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
                 </li>
               {% endif %}
             {% endfor %}
@@ -458,19 +480,37 @@
           {% if request.GET.inst_extent %}
           {% for val, label in INST_EXTENT_CHOICES %}
             {% if val == request.GET.inst_extent %}
-              <li class="list-inline-item px-2 mb-1 rounded bg-secondary text-white">
+              <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
                 <small class="fw-light">Extent:</small>  <span class="fw-bold"> {{ label }}</span>
-                <a href="?{% query_transform request inst_extent=None %}" class="text-white ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+                <a href="?{% query_transform request inst_extent=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
               </li>
             {% endif %}
           {% endfor %}
         {% endif %}
+
+        {% if request.GET.searched_name %}
+ 
+            <li class="list-inline-item px-2 mb-1 rounded bg-uncoded-light text-dark">
+              <small class="fw-light">Searched Name:</small>  <span class="fw-bold"> {{ request.GET.searched_name }}</span>
+              <a href="?{% query_transform request searched_name=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+            </li>
+
+      {% endif %}
+
+      {% if request.GET.macro_event %}
+ 
+        <li class="list-inline-item px-2 mb-1 rounded bg-secondary-light text-dark">
+            <small class="fw-light">Macro Event:</small>  <span class="fw-bold"> {{ request.GET.macro_event }}</span>
+            <a href="?{% query_transform request macro_event=None %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+        </li>
+
+    {% endif %}
         
         {% for check in check_choices %}
         {% if check.id|stringformat:"s" in selected_ra_check_ids %}
-          <li class="list-inline-item px-2 mb-1 rounded bg-dark text-white">
+          <li class="list-inline-item px-2 mb-1 rounded bg-violet-light text-dark">
             <small class="fw-light">RA Check:</small>  <span class="fw-bold"> {{ check.name }}</span>
-            <a href="?{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-white ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
+            <a href="?{% query_without request 'ra_check' check.id|stringformat:'s' %}" class="text-dark ms-1">&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-square-xmark"></i></a>
           </li>
         {% endif %}
       {% endfor %}
@@ -483,7 +523,7 @@
                 </li>
               {% endif %} -->
               {% if request.GET.selected_batch %}
-                <li class="list-inline-item px-2 mb-1 rounded  bg-warning text-dark">
+                <li class="list-inline-item px-2 mb-1 rounded  bg-warning-light text-dark">
                     {{ request.GET.selected_batch }}
                     <a href="?{% query_transform request selected_batch=None %}" class="text-dark ms-1" style="text-decoration: none;">
                     &nbsp;<i class="fa-solid fa-square-xmark"></i>
@@ -495,14 +535,16 @@
               {% with request.GET.polity as selected_polity_id %}
                 {% for p in polities %}
                   {% if p.id|stringformat:"s" == selected_polity_id %}
-                  <li class="list-inline-item px-2 mb-1 rounded  bg-secondary text-white">
+                  <li class="list-inline-item px-2 mb-1 rounded  bg-success-light text-dark">
                     Polity: <b> {{ p.long_name }} </b>({{ p.new_name }})
-                      <a href="?{% query_transform request polity=None %}" class="text-white text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a></a>
+                      <a href="?{% query_transform request polity=None %}" class="text-dark text-decoration-none ms-1">&nbsp;<i class="fa-solid fa-square-xmark"></i></a></a>
                   </li>
                   {% endif %}
                 {% endfor %}
               {% endwith %}
             {% endif %}
+
+            
             </ul>
     
           </div>
@@ -518,14 +560,14 @@
     <div class="table-container pb-3">
               
         <table id="table_id" class="table align-middle table-hover borderless" style="padding: 0.25 rem !important;">
-            <div class="row sticky-top py-0 px-0 m-0" style="background-color:#ffffff; height:40px; border-bottom:1px solid #782823;  top: 55px; z-index:900;">
-                <legend class="sticky-top py-0 px-0 m-0 col-md-6" style="background-color:#ffffff; height:40px; border-bottom:1px solid #782823;  top: 55px; z-index:900;">
+            <div class="row sticky-top py-0 px-0 m-0" style="background-color:#ffffff; height:40px; border-bottom:1px solid #78282311;  top: 55px; z-index:900;">
+                <legend class="sticky-top py-0 px-0 m-0 col-md-6" style="background-color:#ffffff; height:40px; border-bottom:1px solid #78282311;  top: 55px; z-index:900;">
                     <span class="h6 bg-colorful p-1 rounded border border-1 border-dark"> {{object_list|length}}</span> 
                     <span>{{myvar}}</span>   <small class="fs-6 text-secondary">Records</small>
     
            
                 </legend>
-                <div class="col-md-6 sticky-top ">
+                <div class="col-md-6 sticky-top " >
                     {% if paginated %}
 
                     <form method="get" style="display: inline-block; margin-left: 10px; margin-right: 10px; padding-right: 10px;">
@@ -567,7 +609,7 @@
             </div>
    
             <thead> 
-            <tr  class="sticky-top"  style="background-color:#ffffff; border-left:5px solid red; height:40px; border: 1px solid #782823; top: 95px; z-index:900;">
+            <tr  class="sticky-top"  style="background-color:#ffffff;height:40px; top: 95px; z-index:900;">
                 <th scope="col" style="text-align: left;  width:15%; " class="fw-light"> 
                     <a href="?{% query_transform request orderby='-polity__long_name' %}"><i class="fa-solid fa-arrow-up-z-a"></i>&nbsp;</a>Polity <a href="?{% query_transform request orderby='polity__long_name' %}"><i class="fa-solid fa-arrow-up-a-z"></i>&nbsp;</a>
                 </th>
@@ -579,81 +621,101 @@
                 {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
 
                 <th scope="col" style="text-align: center" class="fw-bold">
-                    <a href="?{% query_transform request orderby='year_from' %}"><i class="fa-solid fa-arrow-up-short-wide"></i></a>
+                    <span> 
+                        <a href="?{% query_transform request orderby='year_from' %}">
+                            <i class="fa-solid fa-arrow-up-long fa-xs"></i>
+                        </a>
+                
                     Year(s)
+                    <a href="?{% query_transform request orderby='-year_from' %}">
+                        <i class="fa-solid fa-arrow-down-long fa-xs"></i>
+                    </a>
+                
+                </span>
                 </th>
 
                 {% endif %}
 
                 <th scope="col"  class = "fw-light" style="text-align: center">Edit</th>
-                <th scope="col"  class = "fw-light"  style="text-align: center; border-left:1px solid #782823;"><i class="fa-solid fa-caret-down"></i></th>
+                <th scope="col"  class = "fw-light"  style="text-align: center; border-left:0px solid #782823;"><i class="fa-solid fa-caret-down"></i></th>
 
               </tr>
 
             </thead>
             <tbody>
-                {% for obj in page_obj %}
-                <tr class="p-0 m-0" style="border-top:5px solid red !important;">
-                <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}" style="border-left:5px solid red !important;">
-                    <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2; ">
-                      <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">
+                {% if page_obj %}
+                    {% for obj in page_obj %}
+                    <tr class="p-0 m-0" style="border-top:5px solid red !important;">
+                    <div class="accordion accordion-flush p-0 m-0" id="accordionExample_{{ forloop.counter }}" style="border-left:5px solid red !important;">
+                        <span class="accordion-item  p-0 m-0" style="background-color:#fffdf2; ">
+                        <span class="accordion-header  p-0 m-0" id="headingOne_{{ forloop.counter }}">
 
 
-                            {% if obj.polity %}
-                            <td  style="text-align: left; border-left:5px solid lightgray !important; border-top-left-radius:5px; border-bottom-left-radius:5px; border-width:0;">
-                                {% if obj.polity.long_name %}
-                                <small class="fw-normal">
-                                    <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.long_name }}</a>
-                                </small>
+                                {% if obj.polity %}
+                                <td  style="text-align: left; border-left:5px solid lightgray !important; border-top-left-radius:5px; border-bottom-left-radius:5px; border-width:0;">
+                                    {% if obj.polity.long_name %}
+                                    <small class="fw-normal">
+                                        <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.long_name }}</a>
+                                    </small>
+                                    {% else %}
+                                    <small class="fw-normal">
+                                        <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.name }}</a>
+                                    </small>
+                                    {% endif %}
+            
+                                </td>
                                 {% else %}
-                                <small class="fw-normal">
-                                    <a href="{% url 'polity-detail-main' obj.polity.id %}">{{ obj.polity.name }}</a>
-                                </small>
+                                <td  style="text-align: left;">-</td>
+                                {% endif%}
+            
+                                <!-- extra vars come here -->
+                                {% block extra_vars_list %}
+                                {% endblock extra_vars_list %}
+                            
+
+                            
+
+                                <!-- Years -->
+                                {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
+                                {% include "core/partials/_years_block_new_obj.html" %}
+                                <!-- Tag tag (Disputed/Suspected etc.) -->
                                 {% endif %}
-        
-                            </td>
-                            {% else %}
-                            <td  style="text-align: left;">-</td>
-                            {% endif%}
-        
-                            <!-- extra vars come here -->
-                            {% block extra_vars_list %}
-                            {% endblock extra_vars_list %}
-                          
 
-                           
+                                {% block update_button %}
+                                {% endblock update_button %}
+                                <td class="text-secondary" style="border-width:0;"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
+                                    </span>
+                                </td>
 
-                            <!-- Years -->
-                            {% if var_name_display != 'Polity Duration' and var_name_display != 'Polity Peak Years' and var_name_display != 'Instability Event' %}
-                            {% include "core/partials/_years_block_new_obj.html" %}
-                            <!-- Tag tag (Disputed/Suspected etc.) -->
-                            {% endif %}
-
-                            {% block update_button %}
-                            {% endblock update_button %}
-                            <td class="text-secondary" style="border-width:0;"><span class="accordion-button collapsed p-0 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_{{ forloop.counter }}" aria-expanded="false" aria-controls="collapseOne_{{ forloop.counter }}">
-                                </span>
-                            </td>
-
-                        </span>
-                        </span>
-                    </div>
-                </tr>
-                <tr class="p-0 m-0">
-                    <td colspan="12" class="p-0 my-0" style="width:100%">
-                        <div id="collapseOne_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ forloop.counter }}">
-                            <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
-                                <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                            </span>
                             </span>
                         </div>
-                    </td>    
-                </tr>
-                
+                    </tr>
+                    <tr class="p-0 m-0">
+                        <td colspan="12" class="p-0 my-0" style="width:100%">
+                            <div id="collapseOne_{{ forloop.counter }}" class="accordion-collapse collapse border border-2 px-2 py-2 m-0" aria-labelledby="headingOne_{{ forloop.counter }}">
+                                <span id="accordion-body-{{ obj.id }}" data-obj-id="{{ obj.id }}" data-model-name="{{obj.clean_name}}" class="accordion-body m-0">
+                                    <i class="fa-solid fa-spinner fa-spin"></i> Loading...
+                                </span>
+                            </div>
+                        </td>    
+                    </tr>
+                    
 
-                {% endfor %}
+                    {% endfor %}
+                    {% else %}
+                    <tr class="p-0 m-0">
+                        <td colspan="12" class="p-2 my-0" style="width:100%">
+                            <i class="fa-solid fa-ban fa-lg text-danger"></i> No Results to show for the selected filers.                       
+                        </td>    
+                    </tr>                    
+                    {% endif %}
+
             </tbody>
           </table>
         </div>
+
+
 
 
     {% else %}
