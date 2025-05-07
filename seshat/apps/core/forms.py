@@ -249,7 +249,7 @@ class CapitalForm(forms.ModelForm):
         model = Capital
         fields = ('name', 'latitude', 'longitude', 'current_country', 'alternative_names','is_verified', 'url_on_the_map', 'note')
         labels = {
-        'name': 'City Name',
+        'name': 'Name',
         'latitude': 'Latitude',
         'longitude': 'Longitude',
         'alternative_names': 'Alternative Names',

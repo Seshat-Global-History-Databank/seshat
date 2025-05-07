@@ -26,7 +26,7 @@ from django.http import HttpResponseRedirect, response, JsonResponse, HttpRespon
 from django.conf import settings
 
 from django.urls import reverse, reverse_lazy
-from django.db.models import Q, F
+from django.db.models import Q, F, IntegerField
 
 from django.views import generic
 import csv
@@ -51,7 +51,7 @@ from django.core.mail import send_mail
 from .mixins import PolityIdMixin
 from .var_defs import swapped_dict
 
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Cast
 
 
 from .models import Polity_research_assistant, Polity_utm_zone, Polity_original_name, Polity_alternative_name, Polity_peak_years, Polity_duration, Polity_degree_of_centralization, Polity_suprapolity_relations, Polity_capital, Polity_language, Polity_linguistic_family, Polity_language_genus, Polity_religion_genus, Polity_religion_family, Polity_religion, Polity_relationship_to_preceding_entity, Polity_preceding_entity, Polity_succeeding_entity, Polity_supracultural_entity, Polity_scale_of_supracultural_interaction, Polity_alternate_religion_genus, Polity_alternate_religion_family, Polity_alternate_religion, Polity_expert, Polity_editor, Polity_religious_tradition
@@ -8851,6 +8851,10 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
     ra_check_ids = request.GET.getlist("ra_check")
     inst_extent = request.GET.get("inst_extent")
     inst_intensity = request.GET.get("inst_intensity")
+    selected_macro = request.GET.get('macro_event')
+
+    name_query = request.GET.get('searched_name', '').strip()
+
 
 
     if inst_type_ids:
@@ -8867,6 +8871,16 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
     if polity_id:
         object_list = object_list.filter(polity__id=polity_id)
+
+    
+    # Filter manually if selected
+    if selected_macro:
+        desired_str = '(macro event: ' + selected_macro.lower()
+        object_list = object_list.filter(llm_name__icontains=desired_str)
+
+    if name_query:
+        object_list = object_list.filter(name__icontains=name_query)
+
 
     # Annotate fallback values
     object_list = object_list.annotate(
@@ -8910,18 +8924,54 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         extra_var_dict = {obj.id: obj.show_value() for obj in object_list}
 
     orderby = request.GET.get('orderby', None)
+    is_descending = False
 
-    if orderby and orderby.startswith('-') and hasattr(model_class, orderby):
-        order_field = orderby[1:]
-        object_list = object_list.order_by(-order_field)
-        is_descending = True
-    elif orderby:
+    if var_name in ['instability_event',]:
+        object_list = object_list.annotate(
+            inst_intensity_num=Cast(F('inst_intensity'), output_field=IntegerField()),
+            inst_extent_num=Cast(F('inst_extent'), output_field=IntegerField())
+        )
+
+
+
+    if orderby:
+
+                
+        if orderby.lstrip('-') == 'year_from':
+            field = 'start_year_effective'
+        elif orderby.lstrip('-') == 'year_to':
+            field = 'end_year_effective'
+        else:
+            field = orderby.lstrip('-')
+
+        # Handle descending
+        if orderby in ['inst_intensity', '-inst_intensity']:
+            order_field = 'inst_intensity_num'
+            if orderby.startswith('-'):
+                object_list = object_list.order_by(F(order_field).desc())
+                is_descending = True
+            else:
+                object_list = object_list.order_by(F(order_field).asc())
+                is_descending = False
+
+        elif orderby in ['inst_extent', '-inst_extent']:
+            order_field = 'inst_extent_num'
+            if orderby.startswith('-'):
+                object_list = object_list.order_by(F(order_field).desc())
+                is_descending = True
+            else:
+                object_list = object_list.order_by(F(order_field).asc())
+                is_descending = False
+        elif orderby.startswith('-'):
+            object_list = object_list.order_by(F(field).desc(nulls_last=True))
+            is_descending = True
+        else:
+            object_list = object_list.order_by(F(field).asc(nulls_last=True))
+            is_descending = False
+
         order_field = orderby
-        object_list = object_list.order_by(order_field)
-        is_descending = False
     else:
         order_field = None
-        is_descending = False
 
     # Apply sorting if orderby is provided and is a valid field name
     #if orderby and hasattr(model_class, orderby):
@@ -8986,6 +9036,9 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         #"my_exp": my_exp,
     }
 
+    all_object_list = model_class.objects.all()
+    polity_ids_in_list = all_object_list.values_list('polity_id', flat=True).distinct()
+
     if var_name in ['instability_event',]:
         paginator = Paginator(object_list, 100)  # Show 100 items per page
 
@@ -8996,8 +9049,14 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
         context['paginated'] = paginated
         context["instability_types"] = Instability_type.objects.all()
         context["check_choices"] = Check_choice.objects.all()
+        macro_events = sorted(set(obj.made_up_macro_event for obj in object_list if obj.made_up_macro_event))
+
         context["INST_EXTENT_CHOICES"] = INST_EXTENT_CHOICES
         context["INST_INTENSITY_CHOICES"] = INST_INTENSITY_CHOICES
+        context["selected_macro"] = selected_macro
+        context["macro_events"] = macro_events
+        context["name_query"] = name_query
+
         
         context["selected_inst_type_ids"] = inst_type_ids
         context["selected_ra_check_ids"] = ra_check_ids
@@ -9017,7 +9076,6 @@ def generic_list_view(request, model_class, var_name, coded_value, var_name_disp
 
 
     # After applying all filters to object_list
-    polity_ids_in_list = model_class.objects.all().values_list('polity_id', flat=True).distinct()
     polities = Polity.objects.filter(id__in=polity_ids_in_list).order_by('new_name')
 
     if var_name in ['instability_event',]:

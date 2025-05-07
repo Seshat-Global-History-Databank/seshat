@@ -349,8 +349,20 @@ class Instability_type(models.Model):
     description = models.TextField(blank=True, null=True,)
 
     def __str__(self):
-        if self.name:
-            return mark_safe(f'<small class="rounded fw-light px-1 pb-0 pt-1" style="color: darkslategrey; display:inline-block; padding-bottom:0 !important ; padding-top:0 !important;"><a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a></small>')
+        if not self.name:
+            return ""
+
+        # Use strikethrough if no description
+        if not self.description:
+            styled_name = f'<span style="text-decoration: line-through dotted red;" title=\'Not to be chosen by RAs, as it is not a valid type.\'>{self.name}</span>'
+        else:
+            styled_name = f'<a data-bs-toggle="tooltip" data-bs-html="true" title="{self.description}">{self.name}</a>'
+
+        return mark_safe(
+            f'<small class="rounded fw-light px-1 pb-0 pt-1" '
+            f'style="color: darkslategrey; display:inline-block; padding-bottom:0 !important; padding-top:0 !important;">'
+            f'{styled_name}</small>'
+        )
         
 
 class Check_choice(models.Model):
